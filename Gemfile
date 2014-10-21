@@ -1,25 +1,75 @@
 source 'https://rubygems.org'
 
-
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+ruby '2.1.2'
 gem 'rails', '4.1.6'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+
+# Core gems - common to all environments
+gem 'aws-sdk' # enables AWS functionality
+gem 'bootstrap-sass' # loads Twitter Bootstrap UI framework
+gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
+gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
+gem 'geocoder' # a public API for geo-locating IP addresses
+gem 'haml-rails' # a replacement system for HTML
+gem 'intercom-rails', '~> 0.2.24' # communicate with Intercom.io
+gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
+gem 'jquery-rails' # include jQuery for Rails
+gem 'mathjax-rails' # maths functions in the UI
+gem 'mixpanel-ruby' # support for MixPanel
+gem 'paperclip', '~> 4.1' # for uploading files (works with RemotiPart)
+gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
+gem 'remotipart' # enables file upload in forms that work using AJAX
+gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
+gem 'stripe' # support for Stripe.com payment processing
+gem 'turbolinks' # speeds up page loading - has negative side-effects
+gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
+gem 'will_paginate' # manage long web pages
+gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
+
+# Environment-specific gems
+
+group :development do
+  gem 'annotate' # adds the list of fields in each table to the models and test files
+  gem 'better_errors' # gives more useful error report in the browser
+  gem 'bullet' # Warnings about n+1 and other query problems
+  gem 'pry' # halts code so you can experiment with it: see RailsCast 280
+end
+
+group :development, :test do
+  gem 'rspec-rails' # our core testing environment
+end
+
+group :test do
+  gem 'shoulda-matchers' # adds more RSpec test types
+  gem 'shoulda-callback-matchers' # adds more RSpec test types
+  gem 'factory_girl_rails' # FactoryGirl generates fake objects
+  gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
+  gem 'webrat' # Runs tests in a "headless" browser
+  gem 'capybara' # Runs tests in a browser
+
+end
+
+group :staging do
+
+end
+
+group :staging, :production do
+  gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
+  gem 'pg' # PostgreSQL database engine
+  gem 'rails_serve_static_assets' # needed for Heroku
+  gem 'rails_12factor' # needed for Heroku
+end
+
+group :production do
+
+end
+
+#############################################
+## Optional things to think about later on ##
+#############################################
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer',  platforms: :ruby
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0',          group: :doc
 
