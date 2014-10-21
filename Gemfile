@@ -16,6 +16,7 @@ gem 'jquery-rails' # include jQuery for Rails
 gem 'mathjax-rails' # maths functions in the UI
 gem 'mixpanel-ruby' # support for MixPanel
 gem 'paperclip', '~> 4.1' # for uploading files (works with RemotiPart)
+gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
@@ -54,7 +55,6 @@ end
 
 group :staging, :production do
   gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
-  gem 'pg' # PostgreSQL database engine
   gem 'rails_serve_static_assets' # needed for Heroku
   gem 'rails_12factor' # needed for Heroku
 end
