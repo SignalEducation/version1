@@ -21,3 +21,50 @@
 
 en:
   hello: "Hello world"
+
+  controllers:
+    application:
+      you_are_not_permitted_to_do_that: 'You are not permitted to do that'
+      date_formats:
+        simple: "%-e %b %Y"
+        standard: "%-e %b %Y %H:%M %Z"
+      logged_in_required:
+        flash_error: 'You must be signed in to access that page - please sign in'
+      logged_out_required:
+        flash_error: 'You must be logged out to do that'
+
+  models:
+    general:
+      dependencies_exist: Couldn't be deleted because dependencies exist
+
+  views:
+    general:
+      active: Active
+      approve: Approve
+      approve_tooltip: Click to approve
+      at_date_time: At
+      back: Back
+      by: By
+      cancel: Cancel
+      close: Close
+      coming_soon: Coming soon
+      delete: Delete
+      delete_confirmation: Are you sure?
+      edit: Edit
+      example: Example
+      new: New
+      no: No
+      ok: Ok
+      or: or
+      review: Review
+      save: Save
+      send: Send
+      select: Select...
+      toggle_navigation: Toggle Navigation
+      view: View
+      view_tooltip: click to view
+      yes: Yes
+      tooltips:
+        click_to_edit: Click to edit
+        click_to_search: Click to search
+        click_to_view: Click to view
