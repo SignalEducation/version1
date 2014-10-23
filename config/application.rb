@@ -19,5 +19,15 @@ module LearnsignalV3
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
+
+    # see http://guides.rubyonrails.org/generators.html
+    config.generators do |g|
+      g.orm             :active_record
+      g.template_engine :haml
+      #g.test_framework  :rspec
+      g.stylesheets     false
+      g.javascripts     false
+      g.helper          false
+    end
   end
 end

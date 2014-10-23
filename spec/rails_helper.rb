@@ -1,8 +1,12 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
+require 'factory_girl_rails' # suggested by stack overflow
+#require 'rspec/autorun'
+#require 'authlogic/test_case' # required for Authlogic
+#include Authlogic::TestCase   # required for Authlogic
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -48,3 +52,23 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 end
+
+# see https://github.com/rspec/rspec-rails/issues/255
+# and https://github.com/dp90219/jianshu-patients/commit/4148918912f11bf7c2bc1f858f07ba1e20e3b247
+
+class ActionView::TestCase::TestController
+  def default_url_options(options={})
+    { locale: I18n.default_locale }
+  end
+end
+
+class ActionDispatch::Routing::RouteSet
+  def default_url_options(options={})
+    { locale: I18n.default_locale }
+  end
+end
+
+Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.date_formats.simple')
+Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.date_formats.standard')
+
+

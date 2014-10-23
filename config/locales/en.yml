@@ -33,6 +33,18 @@ en:
       logged_out_required:
         flash_error: 'You must be logged out to do that'
 
+    products:
+      create:
+        flash:
+          success: Yes!
+      update:
+        flash:
+          success: 'Yes'
+      destroy:
+        flash:
+          success: 'Yay'
+          error: 'Oops!'
+
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
@@ -49,10 +61,13 @@ en:
       close: Close
       coming_soon: Coming soon
       delete: Delete
+      delete_tooltip: click to delete
       delete_confirmation: Are you sure?
       edit: Edit
+      edit_tooltip: click to edit
       example: Example
       new: New
+      new_tooltip: click to add a new one
       no: No
       ok: Ok
       or: or
@@ -68,3 +83,50 @@ en:
         click_to_edit: Click to edit
         click_to_search: Click to search
         click_to_view: Click to view
+
+    products:
+      form:
+        name: Namen
+        name_placeholder: 'Sony walkman'
+        price: Prieze
+        price_placeholder: 123.99
+        category_id: Categoriess
+        available_from: Available from
+        available_from_placeholder: 12345
+        active: 'Active?'
+        description: Deskriptynn
+        description_placeholder: small and mightey!
+
+      edit:
+        h1: Eddeh eh produkt
+
+      index:
+        h1: Das Produkten
+
+      new:
+        h1: New Produzie
+
+      show:
+        h1: Der Projduckn
+
+    categories:
+      form:
+        name: Name
+        name_placeholder: First category name
+        category_id: Category
+        active: 'Active?'
+        sorting_order: Sorting Order
+        sorting_order_placeholder: 100
+
+
+      index:
+        h1: Categoreez
+
+      show:
+        h1: Category
+
+      edit:
+        h1: Edit Category
+
+      new:
+        h1: New Category

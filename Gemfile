@@ -5,7 +5,8 @@ gem 'rails', '4.1.6'
 
 # Core gems - common to all environments
 gem 'aws-sdk' # enables AWS functionality
-gem 'bootstrap-sass' # loads Twitter Bootstrap UI framework
+gem 'autoprefixer-rails' # required by bootstrap-sass
+gem 'bootstrap-sass', '~> 3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'geocoder' # a public API for geo-locating IP addresses
@@ -37,16 +38,17 @@ end
 
 group :development, :test do
   gem 'rspec-rails' # our core testing environment
+  gem 'factory_girl_rails' # FactoryGirl generates fake objects
 end
 
 group :test do
+  # https://semaphoreapp.com/blog/2013/08/14/setting-up-bdd-stack-on-a-new-rails-4-application.html
+  gem 'capybara' # Runs tests in a browser
+  gem 'database_cleaner' # tidies up the test database
+  gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
-  gem 'factory_girl_rails' # FactoryGirl generates fake objects
-  gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'webrat' # Runs tests in a "headless" browser
-  gem 'capybara' # Runs tests in a browser
-
 end
 
 group :staging do

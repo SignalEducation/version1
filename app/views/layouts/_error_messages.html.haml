@@ -1,0 +1,12 @@
+-if thing.errors.any?
+  .container
+    .panel.panel-danger
+      .panel-heading
+        =pluralize(thing.errors.count, t('views.layouts.error_messages.error'))
+        =message || t('views.layouts.error_messages.preface')
+
+      .panel-body
+        %ul
+          -thing.errors.full_messages.each do |msg|
+            %li
+              =msg
