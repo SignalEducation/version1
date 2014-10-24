@@ -4,8 +4,9 @@ ruby '2.1.2'
 gem 'rails', '4.1.6'
 
 # Core gems - common to all environments
-gem 'aws-sdk' # enables AWS functionality
+gem 'authlogic'
 gem 'autoprefixer-rails' # required by bootstrap-sass
+gem 'aws-sdk' # enables AWS functionality
 gem 'bootstrap-sass', '~> 3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
