@@ -3,10 +3,9 @@ Rails.application.routes.draw do
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
-    resources :categories
+    resources :users
 
-    resources :products
-    root 'products#index'
+    root 'users#new' # temporary
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

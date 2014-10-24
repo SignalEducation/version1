@@ -33,17 +33,29 @@ en:
       logged_out_required:
         flash_error: 'You must be logged out to do that'
 
-    products:
+    duplicate_me_for_controller:
       create:
         flash:
-          success: Yes!
+          success: NameOfThing has been created successfully
       update:
         flash:
-          success: 'Yes'
+          success: NameOfThing details have been updated successfully
       destroy:
         flash:
-          success: 'Yay'
-          error: 'Oops!'
+          success: NameOfThing has been deleted
+          error: NameOfThing was not deleted
+
+    users:
+      create:
+        flash:
+          success: User has been created successfully
+      update:
+        flash:
+          success: User details have been updated successfully
+      destroy:
+        flash:
+          success: User has been deleted
+          error: User was not deleted
 
   models:
     general:
