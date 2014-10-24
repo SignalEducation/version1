@@ -21,6 +21,7 @@
 
 # Ignore some hidden files
 .ruby-*
+Guardfile
 
 # Miscellaneous stuff we want to ignore
 /.idea
