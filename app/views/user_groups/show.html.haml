@@ -1,0 +1,47 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.user_groups.show.h1')
+        \#
+        =@user_group.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.name')
+        %td.col-sm-8=@user_group.name
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.description')
+        %td.col-sm-8=@user_group.description
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.individual_student')
+        %td.col-sm-8=tick_or_cross(@user_group.individual_student)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.tutor')
+        %td.col-sm-8=tick_or_cross(@user_group.tutor)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.content_manager')
+        %td.col-sm-8=tick_or_cross(@user_group.content_manager)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.blogger')
+        %td.col-sm-8=tick_or_cross(@user_group.blogger)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.corporate_customer')
+        %td.col-sm-8=tick_or_cross(@user_group.corporate_customer)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.site_admin')
+        %td.col-sm-8=tick_or_cross(@user_group.site_admin)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.forum_manager')
+        %td.col-sm-8=tick_or_cross(@user_group.forum_manager)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.subscription_required_at_sign_up')
+        %td.col-sm-8=tick_or_cross(@user_group.subscription_required_at_sign_up)
+      %tr
+        %td.col-sm-4=t('views.user_groups.form.subscription_required_to_see_content')
+        %td.col-sm-8=tick_or_cross(@user_group.subscription_required_to_see_content)
+    %p
+      =link_to t('views.general.back'), user_groups_url
+      |
+      =link_to t('views.general.edit'), edit_user_group_url(id: @user_group.id), title: t('views.general.edit_tooltip')

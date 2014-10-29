@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141023154223) do
+ActiveRecord::Schema.define(version: 20141024161011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,23 @@ ActiveRecord::Schema.define(version: 20141023154223) do
     t.text     "description"
     t.boolean  "active"
     t.datetime "available_from"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_groups", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "individual_student",                   default: false, null: false
+    t.boolean  "corporate_student",                    default: false, null: false
+    t.boolean  "tutor",                                default: false, null: false
+    t.boolean  "content_manager",                      default: false, null: false
+    t.boolean  "blogger",                              default: false, null: false
+    t.boolean  "corporate_customer",                   default: false, null: false
+    t.boolean  "site_admin",                           default: false, null: false
+    t.boolean  "forum_manager",                        default: false, null: false
+    t.boolean  "subscription_required_at_sign_up",     default: false, null: false
+    t.boolean  "subscription_required_to_see_content", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

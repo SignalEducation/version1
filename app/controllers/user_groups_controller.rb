@@ -1,0 +1,63 @@
+class UserGroupsController < ApplicationController
+
+  before_action :logged_in_required
+  before_action do
+    ensure_user_is_of_type(['admin'])
+  end
+  before_action :get_variables
+
+  def index
+    @user_groups = UserGroup.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
+  def show
+  end
+
+  def new
+    @user_group = UserGroup.new
+  end
+
+  def edit
+  end
+
+  def create
+    @user_group = UserGroup.new(allowed_params)
+    if @user_group.save
+      flash[:success] = I18n.t('controllers.user_groups.create.flash.success')
+      redirect_to user_groups_url
+    else
+      render action: :new
+    end
+  end
+
+  def update
+    if @user_group.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.user_groups.update.flash.success')
+      redirect_to user_groups_url
+    else
+      render action: :edit
+    end
+  end
+
+  def destroy
+    if @user_group.destroy
+      flash[:success] = I18n.t('controllers.user_groups.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.user_groups.destroy.flash.error')
+    end
+    redirect_to user_groups_url
+  end
+
+  protected
+
+  def get_variables
+    if params[:id].to_i > 0
+      @user_group = UserGroup.where(id: params[:id]).first
+    end
+  end
+
+  def allowed_params
+    params.require(:user_group).permit(:name, :description, :individual_student, :corporate_student, :tutor, :content_manager, :blogger, :corporate_customer, :site_admin, :forum_manager, :subscription_required_at_sign_up, :subscription_required_to_see_content)
+  end
+
+end

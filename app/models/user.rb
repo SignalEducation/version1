@@ -48,7 +48,17 @@ class User < ActiveRecord::Base
   end
 
   # attr-accessible
-  attr_accessible :email, :first_name, :last_name, :active, :address, :country_id, :user_group_id, :password_reset_requested_at, :password_reset_token, :password_reset_at, :stripe_customer_id, :corporate_customer_id, :corporate_customer_user_group_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :marketing_email_permission_given_at, :blog_notification_email_frequency, :forum_notification_email_frequency
+  attr_accessible :email, :first_name, :last_name, :active, :address,
+                  :country_id, :user_group_id, :password_reset_requested_at,
+                  :password_reset_token, :password_reset_at, :stripe_customer_id,
+                  :corporate_customer_id, :corporate_customer_user_group_id,
+                  :operational_email_frequency,
+                  :study_plan_notifications_email_frequency,
+                  :falling_behind_email_alert_frequency, :marketing_email_frequency,
+                  :marketing_email_permission_given_at,
+                  :blog_notification_email_frequency,
+                  :forum_notification_email_frequency, :password,
+                  :password_confirmation
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -57,27 +67,20 @@ class User < ActiveRecord::Base
   # todo belongs_to :corporate_customer
   # todo belongs_to :corporate_customer_user_group
   # todo belongs_to :country
-  # todo belongs_to :stripe_customer
-  # todo belongs_to :user_group
+  belongs_to :user_group
 
   # validation
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true,
+            length: {within: 7..40}#,
+            #format: {with:  /^([^\s]+)((?:[-a-z0-9]\.)[a-z]{2,})$/i,
+            #         message: 'must be a valid email address.'}
+
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
+  validates :password, presence: true, length: {minimum: 6}, on: :create
+  validates_confirmation_of :password, on: :create
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :crypted_password, presence: true
-  validates :password_salt, presence: true
-  validates :persistence_token, presence: true
-  validates :perishable_token, presence: true
-  validates :single_access_token, presence: true
-  validates :login_count, presence: true
-  validates :failed_login_count, presence: true
-  validates :last_request_at, presence: true
-  validates :current_login_at, presence: true
-  validates :last_login_at, presence: true
-  validates :current_login_ip, presence: true
-  validates :last_login_ip, presence: true
   validates :user_group_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :corporate_customer_id, allow_nil: true,
@@ -98,17 +101,35 @@ class User < ActiveRecord::Base
             inclusion: {in: EMAIL_FREQUENCIES}
 
   # callbacks
-  before_validation :de_activate_user, on: :create
+  before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:email) }
+  scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
 
   # class methods
+  def self.find_and_activate(activation_code)
+    user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
+    if user
+      user.account_activated_at = Proc.new{Time.now}.call
+      user.account_activation_code = nil
+      user.active = true
+      user.save!
+    end
+    return user
+  end
 
   # instance methods
+  def admin?
+    self.user_group.site_admin
+  end
+
   def destroyable?
     true
+  end
+
+  def full_name
+    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
   protected
@@ -122,6 +143,7 @@ class User < ActiveRecord::Base
 
   def de_activate_user
     self.active = false
+    self.account_activated_at = nil
     self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 

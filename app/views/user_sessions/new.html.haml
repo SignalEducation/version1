@@ -1,0 +1,25 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.user_sessions.new.h1')
+.row
+  .col-sm-8.col-sm-offset-2
+    .well.well-sm
+      =form_for(@user_session, html: {class: 'form-horizontal', role: 'form'}) do |f|
+        =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+
+        .form-group
+          =f.label :email, t('views.user_sessions.form.email'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :password, t('views.user_sessions.form.password'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            =f.submit t('views.general.save'), class: 'btn btn-success'
+            =t('views.general.or')
+            =link_to t('views.general.cancel'), user_groups_path
+
+    %p=link_to t('views.user_sessions.form.forgot_password'), root_url

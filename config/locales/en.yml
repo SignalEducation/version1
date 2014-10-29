@@ -57,6 +57,31 @@ en:
           success: User has been deleted
           error: User was not deleted
 
+    user_activations:
+      update:
+        success: Your account has been activated, and you have been logged in.
+        error: Sorry, something went wrong. Please contact us for assistance.
+
+    user_groups:
+      create:
+        flash:
+          success: User Group has been created successfully
+      update:
+        flash:
+          success: User Group details have been updated successfully
+      destroy:
+        flash:
+          success: User Group has been deleted
+          error: User Group was not deleted
+
+    user_sessions:
+      create:
+        flash:
+          success: 'Welcome back!'
+      destroy:
+        flash:
+          success: 'You are now logged out'
+
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
@@ -96,32 +121,7 @@ en:
         click_to_search: Click to search
         click_to_view: Click to view
 
-    products:
-      form:
-        name: Namen
-        name_placeholder: 'Sony walkman'
-        price: Prieze
-        price_placeholder: 123.99
-        category_id: Categoriess
-        available_from: Available from
-        available_from_placeholder: 12345
-        active: 'Active?'
-        description: Deskriptynn
-        description_placeholder: small and mightey!
-
-      edit:
-        h1: Eddeh eh produkt
-
-      index:
-        h1: Das Produkten
-
-      new:
-        h1: New Produzie
-
-      show:
-        h1: Der Projduckn
-
-    categories:
+    duplicate_me_for_new_views:
       form:
         name: Name
         name_placeholder: First category name
@@ -129,6 +129,105 @@ en:
         active: 'Active?'
         sorting_order: Sorting Order
         sorting_order_placeholder: 100
+
+      index:
+        h1: Categoreez
+
+      show:
+        h1: Category
+
+      edit:
+        h1: Edit Category
+
+      new:
+        h1: New Category
+
+    layouts:
+      error_messages:
+        error: error
+
+    users:
+      form:
+        email: Email
+        email_placeholder: jay@example.com
+        first_name: First name
+        first_name_placeholder: Jay
+        last_name: Last name
+        last_name_placeholder: Smith
+        full_name: Name
+        password: Password
+        password_placeholder: "******"
+        password_confirmation: Password confirmation
+        password_confirmation_placeholder: "******"
+        address: Address
+        address_placeholder: Your billing address
+        country_id: Country
+        login_count: Login count
+        failed_login_count: Failed login count
+        last_request_at: Last request at
+        current_login_at: Current login at
+        last_login_at: Last login at
+        current_login_ip: Current login IP
+        last_login_ip: Last login IP
+        account_activated_at: Activated at
+        active: Active
+        user_group_id: User group
+        password_reset_requested_at: Password reset requested at
+        password_reset_at: Password reset at
+        stripe_customer_id: Stripe customer ID
+        corporate_customer_id: Corporate customer
+        corporate_customer_user_group_id: Corporate customer user group
+        operational_email_frequency: Operational email frequency
+        study_plan_notifications_email_frequency: Study plan notifications email frequency
+        falling_behind_email_alert_frequency: Falling behind email alert frequency
+        marketing_email_frequency: Marketing email frequency
+        marketing_email_permission_given_at: Marketing email permission given at
+        blog_notification_email_frequency: Blog notification email frequency
+        forum_notification_email_frequency: Forum notification email frequency
+        created_at: Created at
+        updated_at: Updated at
+
+      edit:
+        h1: Edit Account
+
+      index:
+        h1: Users
+
+      new:
+        h1: Create Account
+
+      show:
+        h1: Account Details
+
+    user_groups:
+      form:
+        name: Name
+        name_placeholder: Name of your user group
+        description: Description
+        description_placeholder: Give a general description of your group
+        individual_student: Individual student
+        tutor: Tutor
+        content_manager: Content manager
+        blogger: Blogger
+        corporate_customer: Corporate customer
+        site_admin: Site admin
+        forum_manager: Forum manager
+        subscription_required_at_sign_up: Subscription required at sign up
+        subscription_required_to_see_content: Subscription required to see content
+
+      edit:
+        h1: Edit User Group
+
+      index:
+        h1: User Groups
+
+      new:
+        h1: Create a User Group
+
+      show:
+        h1: User Group
+
+
 
 
       index:
@@ -142,3 +241,14 @@ en:
 
       new:
         h1: New Category
+
+    user_sessions:
+      new:
+        h1: Sign in
+      form:
+        error_message: 'prevented you from signing in'
+        email: Email
+        email_placeholder: 'john@example.com'
+        password: Password
+        password_placeholder: '******'
+        forgot_password: 'Forgot password?'

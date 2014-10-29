@@ -56,14 +56,13 @@ describe User do
   end
 
   # Constants
-  #it { User.const_defined?(:CONSTANT_NAME) }
+  it { User.const_defined?(:EMAIL_FREQUENCIES) }
 
   # relationships
   xit { should belong_to(:corporate_customer) }
   xit { should belong_to(:corporate_customer_user_group) }
   xit { should belong_to(:country) }
-  xit { should belong_to(:stripe_customer) }
-  xit { should belong_to(:user_group) }
+  it { should belong_to(:user_group) }
 
   # validation
   it { should validate_presence_of(:email) }
@@ -74,32 +73,11 @@ describe User do
 
   it { should validate_presence_of(:last_name) }
 
+  it { should validate_presence_of(:password).on(:create) }
+  it { should validate_confirmation_of(:password).on(:create) }
+
   it { should validate_presence_of(:country_id) }
   it { should validate_numericality_of(:country_id) }
-
-  it { should validate_presence_of(:crypted_password) }
-
-  it { should validate_presence_of(:password_salt) }
-
-  it { should validate_presence_of(:persistence_token) }
-
-  it { should validate_presence_of(:perishable_token) }
-
-  it { should validate_presence_of(:single_access_token) }
-
-  it { should validate_presence_of(:login_count) }
-
-  it { should validate_presence_of(:failed_login_count) }
-
-  it { should validate_presence_of(:last_request_at) }
-
-  it { should validate_presence_of(:current_login_at) }
-
-  it { should validate_presence_of(:last_login_at) }
-
-  it { should validate_presence_of(:current_login_ip) }
-
-  it { should validate_presence_of(:last_login_ip) }
 
   it { should validate_presence_of(:user_group_id) }
   it { should validate_numericality_of(:user_group_id) }
@@ -130,10 +108,10 @@ describe User do
   it { expect(User).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(User).to respond_to(:find_and_activate) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:full_name) }
 
 end

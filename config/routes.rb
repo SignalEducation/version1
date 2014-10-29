@@ -4,8 +4,13 @@ Rails.application.routes.draw do
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
     resources :users
+    get 'user_activate/:activation_code', to: 'user_activations#update', as: :user_activation
+    resources :user_groups
+    get 'sign_in', to: 'user_sessions#new', as: :sign_in
+    resources :user_sessions, only: [:create]
+    get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
 
-    root 'users#new' # temporary
+    root 'users#show' # temporary
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

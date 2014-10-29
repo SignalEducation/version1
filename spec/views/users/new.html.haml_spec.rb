@@ -4,8 +4,6 @@ RSpec.describe 'users/new', type: :view do
   before(:each) do
     x = FactoryGirl.create(:user_group)
     @user_groups = UserGroup.all
-    x = FactoryGirl.create(:stripe_customer)
-    @stripe_customers = StripeCustomer.all
     x = FactoryGirl.create(:corporate_customer)
     @corporate_customers = CorporateCustomer.all
     x = FactoryGirl.create(:corporate_customer_user_group)

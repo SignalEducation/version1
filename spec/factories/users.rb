@@ -8,8 +8,8 @@
 #  last_name                                :string(255)
 #  address                                  :text
 #  country_id                               :integer
-#  crypted_password                         :string(128)      default(''), not null
-#  password_salt                            :string(128)      default(''), not null
+#  crypted_password                         :string(128)      default(""), not null
+#  password_salt                            :string(128)      default(""), not null
 #  persistence_token                        :string(255)
 #  perishable_token                         :string(128)
 #  single_access_token                      :string(255)
@@ -46,6 +46,7 @@ FactoryGirl.define do
     sequence(:email)      { |n| "horace.smyth-#{n}@example.com" }
     first_name            'Horace'
     last_name             'Smyth'
+    country_id            1 # todo { Country.first.try(:id) || 1 }
     password              'letSomeone1n'
     password_confirmation 'letSomeone1n'
     operational_email_frequency               'daily'
@@ -55,6 +56,7 @@ FactoryGirl.define do
     marketing_email_permission_given_at       Time.parse('2014-10-24 11:30:00')
     blog_notification_email_frequency         'daily'
     forum_notification_email_frequency        'daily'
+    active                                    true
 
     factory :individual_student_user do
       active                            true
@@ -65,6 +67,8 @@ FactoryGirl.define do
 
       factory :inactive_individual_student_user do
         active                          false
+        account_activation_code         'abcde12345'
+        account_activated_at            nil
       end
    end
 

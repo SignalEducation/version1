@@ -1,8 +1,7 @@
-<%- @user_types = %w(individual_student tutor corporate_student corporate_customer blogger forum_manager content_manager admin) -%>
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
-describe <%= table_name.camelcase -%>Controller, type: :controller do
+describe UserGroupsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
@@ -48,7 +47,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
 
     describe "POST 'create'" do
       it 'should redirect to root' do
-        post :create, <%= singular_table_name -%>: valid_params
+        post :create, user_group: valid_params
         expect(response.status).to eq(302)
         expect(response).to redirect_to(root_url)
         expect(flash[:error]).to eq(I18n.t('controllers.application.logged_in_required.flash_error'))
@@ -57,7 +56,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should redirect to root' do
-        put :update, id: 1, <%= singular_table_name -%>: valid_params
+        put :update, id: 1, user_group: valid_params
         expect(response.status).to eq(302)
         expect(response).to redirect_to(root_url)
         expect(flash[:error]).to eq(I18n.t('controllers.application.logged_in_required.flash_error'))
@@ -79,11 +78,37 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
 
   end
 
-  <%- @user_types.each do |user_type| -%>
-  context 'Logged in as a <%= user_type -%>_user' do
+  context 'Logged in as a individual_student_user' do
     pending
   end
 
-  <%- end -%>
+  context 'Logged in as a tutor_user' do
+    pending
+  end
+
+  context 'Logged in as a corporate_student_user' do
+    pending
+  end
+
+  context 'Logged in as a corporate_customer_user' do
+    pending
+  end
+
+  context 'Logged in as a blogger_user' do
+    pending
+  end
+
+  context 'Logged in as a forum_manager_user' do
+    pending
+  end
+
+  context 'Logged in as a content_manager_user' do
+    pending
+  end
+
+  context 'Logged in as a admin_user' do
+    pending
+  end
+
 
 end

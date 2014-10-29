@@ -5,8 +5,9 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'factory_girl_rails' # suggested by stack overflow
 #require 'rspec/autorun'
-#require 'authlogic/test_case' # required for Authlogic
-#include Authlogic::TestCase   # required for Authlogic
+require 'authlogic/test_case' # required for Authlogic
+include Authlogic::TestCase   # required for Authlogic
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

@@ -5,6 +5,7 @@ gem 'rails', '4.1.6'
 
 # Core gems - common to all environments
 gem 'authlogic'
+gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails' # required by bootstrap-sass
 gem 'aws-sdk' # enables AWS functionality
 gem 'bootstrap-sass', '~> 3.2' # loads Twitter Bootstrap UI framework

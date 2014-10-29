@@ -10,7 +10,7 @@
     %table.table.table-bordered
     <%- attributes.each do |attribute| -%>
       %tr
-        %td.col-sm-4 <%= attribute.name.humanize %>
+        %td.col-sm-4=t('views.<%= table_name -%>.form.<%= attribute.name %>')
         <%- if attribute.type.to_s == 'boolean' -%>
         %td.col-sm-8=tick_or_cross(@<%= singular_table_name %>.<%= attribute.name %>)
         <%- elsif attribute.name[-3..-1] == '_id' -%>
