@@ -98,6 +98,17 @@ en:
         flash:
           success: 'You are now logged out'
 
+  mailers:
+    operational:
+      activate_account:
+        subject_line: Welcome to Learn Signal
+        h1: Welcome to Learn Signal
+        salutation: "Hi %{fname},"
+        paragraph_1: "Thank you so much for signing up to our service. To activate your account, please click the following link:"
+        paragraph_2: "We can't wait for you to get started!"
+        closing: "Best regards,"
+        signature: "Philip @ learnsignal"
+
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist

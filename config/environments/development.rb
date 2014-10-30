@@ -33,5 +33,18 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = true
+
+  # email setup
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+          address:              'smtp.gmail.com',
+          port:                 587,
+          #domain:              'learnsignal.com',
+          user_name:            ENV['development_test_gmail_address'],
+          password:             ENV['development_test_gmail_password'],
+          authentication:       'plain',
+          enable_starttls_auto: true
+  }
+
 end

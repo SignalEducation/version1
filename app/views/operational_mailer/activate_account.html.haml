@@ -1,0 +1,8 @@
+%h1=t('mailers.operational.activate_account.h1')
+%p=t('mailers.operational.activate_account.salutation', fname: @user.first_name)
+%p=t('mailers.operational.activate_account.paragraph_1')
+%p=link_to nil, @url + 'user_activate/' + @user.account_activation_code
+%p=t('mailers.operational.activate_account.paragraph_2')
+%p=t('mailers.operational.activate_account.closing')
+%br/
+%p=t('mailers.operational.activate_account.signature')
