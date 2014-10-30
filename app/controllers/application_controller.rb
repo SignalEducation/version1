@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   def logged_in_required
     unless current_user
       flash[:error] = I18n.t('controllers.application.logged_in_required.flash_error')
-      redirect_to root_url
+      redirect_to sign_in_url
       false
     end
   end
@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless permission_granted
-      flash[:error] = I18n.('controllers.application_controller.you_are_not_permitted_to_do_that')
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to root_url
       false
     end

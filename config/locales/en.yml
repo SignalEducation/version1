@@ -112,6 +112,9 @@ en:
       save: Save
       send: Send
       select: Select...
+      sign_in: Sign in
+      sign_out: Sign out
+      sign_up: Sign up
       toggle_navigation: Toggle Navigation
       view: View
       view_tooltip: click to view

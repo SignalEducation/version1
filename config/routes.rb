@@ -7,9 +7,10 @@ Rails.application.routes.draw do
     get 'user_activate/:activation_code', to: 'user_activations#update', as: :user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
+    get 'sign_up', to: 'users#new', as: :sign_up
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
-
+    get 'profile', to: 'users#show', as: :profile
     root 'users#show' # temporary
   end
 

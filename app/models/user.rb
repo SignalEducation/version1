@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    true
+    !self.admin?
   end
 
   def full_name
