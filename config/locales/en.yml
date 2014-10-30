@@ -68,6 +68,10 @@ en:
         flash:
           success: User has been deleted
           error: User was not deleted
+      change_password:
+        flash:
+          success: Your password has been updated successfully
+          error: Your password was not chnaged
 
     user_activations:
       update:
@@ -170,6 +174,8 @@ en:
         last_name: Last name
         last_name_placeholder: Smith
         full_name: Name
+        current_password: Current password
+        current_password_placeholder: "******"
         password: Password
         password_placeholder: "******"
         password_confirmation: Password confirmation
@@ -213,6 +219,10 @@ en:
 
       show:
         h1: Account Details
+        change_your_password:
+          link: Change your password
+          h4: Change your password
+
 
     user_groups:
       form:

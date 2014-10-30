@@ -102,11 +102,11 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
             user_group_id: 1
     })); print '.'
 
-    User.where(id: 9).first_or_create!(generic_default_values.merge({
+    User.where(id: 2).first_or_create!(generic_default_values.merge({
             email: 'corporate.student@example.com',
             first_name: 'Corporate',
             last_name: 'Student',
-            user_group_id: 9, corporate_customer_id: 1
+            user_group_id: 2, corporate_customer_id: 1
     })); print '.'
 
     User.where(id: 3).first_or_create!(generic_default_values.merge({

@@ -111,6 +111,8 @@ describe User do
   it { expect(User).to respond_to(:find_and_activate) }
 
   # instance methods
+  it { should respond_to(:admin?) }
+  it { should respond_to(:change_the_password) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
 

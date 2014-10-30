@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
                   :marketing_email_permission_given_at,
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
-                  :password_confirmation
+                  :password_confirmation, :current_password
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -122,6 +122,19 @@ class User < ActiveRecord::Base
   # instance methods
   def admin?
     self.user_group.site_admin
+  end
+
+  def change_the_password(options)
+    # options = {current_password: '123123123', password: 'new123',
+    #            password_confirmation: 'new123'}
+    if options[:password] == options[:password_confirmation] && options[:password].to_s != '' && self.valid_password?(options[:current_password].to_s) && options[:current_password].to_s != ''
+      self.update_attributes(
+              password: options[:password],
+              password_confirmation: options[:password_confirmation]
+      )
+    else
+      false
+    end
   end
 
   def destroyable?

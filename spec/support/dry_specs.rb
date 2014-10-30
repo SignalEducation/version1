@@ -96,3 +96,19 @@ def expect_delete_error_with_model(model_name, destination)
   expect(response).to redirect_to(destination)
   expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
 end
+
+def expect_change_password_success_with_model(destination)
+  expect(flash[:success]).to eq(I18n.t('controllers.users.change_password.flash.success'))
+  expect(flash[:error]).to be_nil
+  expect(response.status).to eq(302)
+  expect(response).to redirect_to(destination)
+  expect(assigns(:user).class.name).to eq('User')
+end
+
+def expect_change_password_error_with_model(destination)
+  expect(flash[:success]).to be_nil
+  expect(flash[:error]).to eq(I18n.t('controllers.users.change_password.flash.error'))
+  expect(response.status).to eq(302)
+  expect(response).to redirect_to(destination)
+  expect(assigns(:user).class.name).to eq('User')
+end

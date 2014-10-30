@@ -20,10 +20,14 @@
         %td.col-sm-8=@user.failed_login_count
       %tr
         %td.col-sm-4=t('views.users.form.last_request_at')
-        %td.col-sm-8=@user.last_request_at.to_s(:standard)
+        %td.col-sm-8
+          -if @user.last_request_at
+            =@user.last_request_at.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.users.form.current_login_at')
-        %td.col-sm-8=@user.current_login_at.to_s(:standard)
+        %td.col-sm-8
+          -if @user.current_login_at
+            =@user.current_login_at.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.users.form.last_login_at')
         %td.col-sm-8
@@ -56,10 +60,10 @@
         %td.col-sm-8=@user.stripe_customer_id
       %tr
         %td.col-sm-4=t('views.users.form.corporate_customer_id')
-        %td.col-sm-8=#@user.corporate_customer.try(:name)
+        %td.col-sm-8=# todo @user.corporate_customer.try(:name)
       %tr
         %td.col-sm-4=t('views.users.form.corporate_customer_user_group_id')
-        %td.col-sm-8=#@user.corporate_customer_user_group.try(:name)
+        %td.col-sm-8=# todo @user.corporate_customer_user_group.try(:name)
       %tr
         %td.col-sm-4=t('views.users.form.operational_email_frequency')
         %td.col-sm-8=@user.operational_email_frequency
@@ -74,7 +78,9 @@
         %td.col-sm-8=@user.marketing_email_frequency
       %tr
         %td.col-sm-4=t('views.users.form.marketing_email_permission_given_at')
-        %td.col-sm-8=@user.marketing_email_permission_given_at
+        %td.col-sm-8
+          -if @user.marketing_email_permission_given_at
+            =@user.marketing_email_permission_given_at.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.users.form.blog_notification_email_frequency')
         %td.col-sm-8=@user.blog_notification_email_frequency
@@ -86,3 +92,9 @@
       =link_to(I18n.t('views.general.back'), users_url)
       |
       =link_to(I18n.t('views.general.edit'), edit_user_url(@user), title: t('views.general.edit_tooltip'))
+      -if @user.id == current_user.id
+        |
+        =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
+
+-if @user.id == current_user.id
+  =render partial: 'users/change_password'

@@ -58,6 +58,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "POST 'change_password'" do
+      it 'should redirect to root' do
+        post :change_password
+        expect_bounce_as_not_signed_in
+      end
+    end
+
   end
 
   context 'Logged in as a individual_student_user' do
@@ -135,6 +142,18 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
       end
     end
 
@@ -219,6 +238,18 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
+      end
+    end
+
   end
 
   context 'Logged in as a tutor_user' do
@@ -300,6 +331,18 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
+      end
+    end
+
   end
 
   context 'Logged in as a corporate_customer_user' do
@@ -378,6 +421,18 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
       end
     end
 
@@ -463,6 +518,18 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
+      end
+    end
+
   end
 
   context 'Logged in as a forum_manager_user' do
@@ -541,6 +608,18 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
       end
     end
 
@@ -623,6 +702,18 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(profile_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(profile_url)
       end
     end
 
@@ -713,6 +804,18 @@ describe UsersController, type: :controller do
       it 'should be ERROR if deleting admin user' do
         delete :destroy, id: admin_user.id
         expect_delete_error_with_model('user', users_url)
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(users_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(users_url)
       end
     end
 
