@@ -45,6 +45,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    products:
+      create:
+        flash:
+          success: Product has been created successfully
+      update:
+        flash:
+          success: Product details have been updated successfully
+      destroy:
+        flash:
+          success: Product has been deleted
+          error: Product was not deleted
+
     users:
       create:
         flash:
