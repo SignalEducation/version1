@@ -3,14 +3,22 @@ Rails.application.routes.draw do
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
+    # users and authentication
     resources :users
-    get 'user_activate/:activation_code', to: 'user_activations#update', as: :user_activation
+    get 'user_activate/:activation_code', to: 'user_activations#update',
+        as: :user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     get 'sign_up', to: 'users#new', as: :sign_up
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'profile', to: 'users#show', as: :profile
+
+    # special routes
+
+    # general resources
+
+    # home page
     root 'users#show' # temporary
   end
 

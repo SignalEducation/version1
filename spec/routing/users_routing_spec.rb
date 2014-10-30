@@ -31,5 +31,15 @@ RSpec.describe UsersController, type: :routing do
       expect(delete: '/users/1').to route_to('users#destroy', id: '1')
     end
 
+    # special routes
+
+    it 'routes /profile to #show' do
+      expect(get: '/profile').to route_to('users#show')
+    end
+
+    it 'routes /sign_up to #new' do
+      expect(get: '/sign_up').to route_to('users#new')
+    end
+
   end
 end
