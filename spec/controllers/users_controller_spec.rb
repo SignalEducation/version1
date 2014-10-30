@@ -156,23 +156,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :show, id: corporate_student_user.id
+        expect_show_success_with_model('user', corporate_student_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_show_success_with_model('user', corporate_student_user.id)
       end
     end
 
@@ -185,23 +175,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :edit, id: corporate_student_user.id
+        expect_edit_success_with_model('user', corporate_student_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user', corporate_student_user.id)
       end
     end
 
@@ -214,31 +194,21 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
+        put :update, id: corporate_student_user.id, user: valid_params
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(corporate_student_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(corporate_student_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        put :update, id: corporate_student_user.id, user: {email: 'a'}
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(corporate_student_user.id)
       end
     end
 
@@ -267,23 +237,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :show, id: tutor_user.id
+        expect_show_success_with_model('user', tutor_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_show_success_with_model('user', tutor_user.id)
       end
     end
 
@@ -296,23 +256,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :edit, id: tutor_user.id
+        expect_edit_success_with_model('user', tutor_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user', tutor_user.id)
       end
     end
 
@@ -325,31 +275,21 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
+        put :update, id: tutor_user.id, user: valid_params
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(tutor_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(tutor_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        put :update, id: tutor_user.id, user: {email: 'a'}
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(tutor_user.id)
       end
     end
 
@@ -378,23 +318,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :show, id: corporate_customer_user.id
+        expect_show_success_with_model('user',corporate_customer_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_show_success_with_model('user',corporate_customer_user.id)
       end
     end
 
@@ -407,23 +337,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :edit, id: corporate_customer_user.id
+        expect_edit_success_with_model('user',corporate_customer_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user',corporate_customer_user.id)
       end
     end
 
@@ -436,31 +356,21 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
+        put :update, id: corporate_customer_user.id, user: valid_params
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(corporate_customer_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(corporate_customer_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        put :update, id: corporate_customer_user.id, user: {email: 'a'}
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(corporate_customer_user.id)
       end
     end
 
@@ -489,23 +399,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :show, id: blogger_user.id
+        expect_show_success_with_model('user', blogger_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_show_success_with_model('user', blogger_user.id)
       end
     end
 
@@ -518,23 +418,14 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
+        get :edit, id: blogger_user.id
         expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user', blogger_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user', blogger_user.id)
       end
     end
 
@@ -547,31 +438,21 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
+        put :update, id: blogger_user.id, user: valid_params
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(blogger_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(blogger_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        put :update, id: blogger_user.id, user: {email: 'a'}
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(blogger_user.id)
       end
     end
 
@@ -600,23 +481,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :show, id: forum_manager_user.id
+        expect_show_success_with_model('user', forum_manager_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_show_success_with_model('user', forum_manager_user.id)
       end
     end
 
@@ -629,23 +500,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :edit, id: forum_manager_user.id
+        expect_edit_success_with_model('user', forum_manager_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user', forum_manager_user.id)
       end
     end
 
@@ -658,31 +519,21 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
+        put :update, id: forum_manager_user.id, user: valid_params
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(forum_manager_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(forum_manager_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        put :update, id: forum_manager_user.id, user: {email: 'a'}
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(forum_manager_user.id)
       end
     end
 
@@ -711,23 +562,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :show, id: content_manager_user.id
+        expect_show_success_with_model('user', content_manager_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:show)
-        expect(flash[:error]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_show_success_with_model('user', content_manager_user.id)
       end
     end
 
@@ -740,23 +581,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        get :edit, id: content_manager_user.id
+        expect_edit_success_with_model('user', content_manager_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_edit_success_with_model('user', content_manager_user.id)
       end
     end
 
@@ -769,31 +600,22 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
+        put :update, id: content_manager_user.id, user: valid_params
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(content_manager_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_success_with_model('user', profile_url)
+        expect(assigns(:user).id).to eq(content_manager_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
+        put :update, id: content_manager_user.id, user: {email: 'a'}
         expect(response.status).to eq(200)
-        expect(response).to render_template(:edit)
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(assigns(:user).class).to eq(User)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(content_manager_user.id)
       end
     end
 
