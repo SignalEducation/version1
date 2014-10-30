@@ -6,11 +6,12 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
 
   include_context 'users_and_groups_setup'
 
+  # todo: Try to create children for <%= singular_table_name -%>_1
   let!(:<%= singular_table_name -%>_1) { FactoryGirl.create(:<%= singular_table_name -%>) }
   let!(:<%= singular_table_name -%>_2) { FactoryGirl.create(:<%= singular_table_name -%>) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:<%= singluar_table_name -%>) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:<%= singular_table_name -%>) }
 
-  context 'Not logged in...' do
+  context 'Not logged in: ' do
 
     describe "GET 'index'" do
       it 'should redirect to sign_in' do
@@ -64,7 +65,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
   end
 
   <%- @user_types.each do |user_type| -%>
-  context 'Logged in as a <%= user_type -%>_user' do
+  context 'Logged in as a <%= user_type -%>_user: ' do
 
     before(:each) do
       activate_authlogic
@@ -74,7 +75,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('<%= singular_table_name -%>', 123)
+        expect_index_success_with_model('<%= table_name -%>', 2)
       end
     end
 
@@ -100,25 +101,25 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with <%= singular_table_name -%>_1' do
-        get :edit, id: individual_student_user.id
+        get :edit, id: <%= singular_table_name -%>_1.id
         expect_edit_success_with_model('<%= singular_table_name -%>', <%= singular_table_name -%>_1.id)
       end
 
     # optional
     it 'should respond OK with <%= singular_table_name -%>_2' do
-        get :edit, id: admin_user.id
-        expect_edit_success_with_model('<%= singular_table_name -%>', <%= singular_table_name -%>_1.id)
+        get :edit, id: <%= singular_table_name -%>_2.id
+        expect_edit_success_with_model('<%= singular_table_name -%>', <%= singular_table_name -%>_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, <%= singular_table_name -%>: valid_params
-        expect_create_success_with_model('<= singular_table_name -%>', <%= table_name -%>_url)
+        expect_create_success_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, <%= singular_table_name -%>: {valid_params.first.key => ''}
+        post :create, <%= singular_table_name -%>: {valid_params.keys.first => ''}
         expect_create_error_with_model('<%= singular_table_name -%>')
       end
     end
@@ -132,14 +133,14 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       # optional
       it 'should respond OK to valid params for <%= singular_table_name -%>_2' do
         put :update, id: <%= singular_table_name -%>_2.id, <%= singular_table_name -%>: valid_params
-        expect_update_success_with_model('<%= singular_table_name -%>', users_url)
+        expect_update_success_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
         expect(assigns(:<%= singular_table_name -%>).id).to eq(<%= singular_table_name -%>_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: <%= singular_table_name -%>_1.id, <%= singular_table_name -%>: {valid_params.first.key => ''}
+        put :update, id: <%= singular_table_name -%>_1.id, <%= singular_table_name -%>: {valid_params.keys.first => ''}
         expect_update_error_with_model('<%= singular_table_name -%>')
-        expect(assigns(:<%= singular_table_name -%>).id).to eq(<%= singular_table_name -%>_2.id)
+        expect(assigns(:<%= singular_table_name -%>).id).to eq(<%= singular_table_name -%>_1.id)
       end
     end
 
@@ -149,15 +150,13 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
         expect_delete_success_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
       end
 
-      it 'should be OK as no dependcies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: <%= singular_table_name -%>_2.id
         expect_delete_error_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
       end
     end
 
-
   end
-
   <%- end -%>
 
 end
