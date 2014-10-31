@@ -1,15 +1,15 @@
 <%= t('mailers.operational.activate_account.h1') %>
 <%= '=' * t('mailers.operational.activate_account.h1').length %>
 
-<%= t('mailers.operational.activate_account.salutation', fname: @user.first_name) %>
+<%= t('mailers.general.salutation', fname: @user.first_name) %>
 
 <%= t('mailers.operational.activate_account.paragraph_1') %>
 
-    <%= @url + 'user_activate/' + @user.account_activation_code %>
+    <%= @url + 'user_activate/' + @user.account_activation_code.to_s %>
 
 <%= t('mailers.operational.activate_account.paragraph_2') %>
 
-<%= t('mailers.operational.activate_account.closing') %>
+<%= t('mailers.general.closing') %>
 
 
-<%= t('mailers.operational.activate_account.signature') %>
+<%= t('mailers.general.signature') %>

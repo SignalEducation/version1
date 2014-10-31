@@ -1,10 +1,20 @@
 # Some methods that are auto-loaded by rails_helper.rb into every RSpec test.
 
+######
+## controllers
+##
 def expect_bounce_as_not_signed_in
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to eq(I18n.t('controllers.application.logged_in_required.flash_error'))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(sign_in_url)
+end
+
+def expect_bounce_as_signed_in
+  expect(flash[:success]).to be_nil
+  expect(flash[:error]).to eq(I18n.t('controllers.application.logged_out_required.flash_error'))
+  expect(response.status).to eq(302)
+  expect(response).to redirect_to(root_url)
 end
 
 def expect_bounce_as_not_allowed
@@ -111,4 +121,14 @@ def expect_change_password_error_with_model(destination)
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
   expect(assigns(:user).class.name).to eq('User')
+end
+
+######
+## mailers
+##
+def expect_delivery_to_from_and_subject_success(recipient_email, mailer_name, method_name)
+  expect(ActionMailer::Base.deliveries.count).to eq(1)
+  expect(ActionMailer::Base.deliveries.first.to.first).to eq(recipient_email)
+  expect(ActionMailer::Base.deliveries.first.subject).to eq(I18n.t("mailers.#{mailer_name}.#{method_name}.subject_line"))
+  expect(ActionMailer::Base.deliveries.first.from.first).to eq(ENV['learnsignal_v3_server_email_address'])
 end

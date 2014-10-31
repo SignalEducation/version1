@@ -14,7 +14,9 @@ Rails.application.routes.draw do
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'profile', to: 'users#show', as: :profile
     post 'change_password', to: 'users#change_password', as: :change_password
-
+    resources :user_password_resets, only: [:new, :edit, :create, :update]
+    get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
+    get 'reset_password/:id', to: 'user_password_resets#edit'
     # special routes
 
     # general resources

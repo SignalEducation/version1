@@ -90,6 +90,18 @@ en:
           success: User Group has been deleted
           error: User Group was not deleted
 
+    user_password_resets:
+      create:
+        flash:
+          success: Your request has been received. Please check your email for further instructions
+      edit:
+        flash:
+          error: Sorry, that reset request is invalid. Please start again.
+      update:
+        flash:
+          success: Your password has been successsfully reset; welcome back!
+          error: Your password has not been reset. Please start again.
+
     user_sessions:
       create:
         flash:
@@ -99,15 +111,28 @@ en:
           success: 'You are now logged out'
 
   mailers:
+    general:
+      salutation: "Hi %{fname},"
+      closing: "Best regards,"
+      signature: "Philip @ learnsignal"
+
     operational:
       activate_account:
         subject_line: Welcome to Learn Signal
         h1: Welcome to Learn Signal
-        salutation: "Hi %{fname},"
         paragraph_1: "Thank you so much for signing up to our service. To activate your account, please click the following link:"
         paragraph_2: "We can't wait for you to get started!"
-        closing: "Best regards,"
-        signature: "Philip @ learnsignal"
+
+      your_password_has_changed:
+        subject_line: Your Learn Signal password has changed
+        paragraph_1: We wanted to let you know that someone (hopefully you) has just changed your Learn Signal account password.  If it was you, then you can ingnore this email.
+        paragraph_2: If you did not change your password, please notify us immediately so we can investigate things further.
+
+      reset_your_password:
+        subject_line: Reset your Learn Signal password
+        paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
+        paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
+
 
   models:
     general:
@@ -130,6 +155,7 @@ en:
       edit: Edit
       edit_tooltip: click to edit
       example: Example
+      home: Home
       new: New
       new_tooltip: click to add a new one
       no: No
@@ -263,20 +289,18 @@ en:
       show:
         h1: User Group
 
+    user_password_resets:
+      new:
+        h1: Forgot your password?
+        paragraph_1: No problem! Enter your email address and we will send you further instructions.
 
-
-
-      index:
-        h1: Categoreez
-
-      show:
-        h1: Category
+      create:
+        h1: Forgot your password...
+        paragraph_1: No problem! Check your mailbox for further instructions.
 
       edit:
-        h1: Edit Category
-
-      new:
-        h1: New Category
+        h1: Reset your password
+        paragraph_1: "Choose a new password for your account:"
 
     user_sessions:
       new:

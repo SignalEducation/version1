@@ -64,11 +64,18 @@ FactoryGirl.define do
       stripe_customer_id                'cu_abc123'
       corporate_customer_id             nil
       corporate_customer_user_group_id  nil
+      account_activation_code           'abc123'
 
       factory :inactive_individual_student_user do
         active                          false
         account_activation_code         'abcde12345'
         account_activated_at            nil
+      end
+
+      factory :user_with_reset_requested do
+        active                          false
+        password_reset_token            'A1234567890123456789'
+        password_reset_requested_at     { Time.now - 1.day }
       end
    end
 

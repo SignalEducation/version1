@@ -119,6 +119,33 @@ class User < ActiveRecord::Base
     return user
   end
 
+  def self.start_password_reset_process(the_email_address)
+    if the_email_address.to_s.length > 5 # a@b.co
+      user = User.where(email: the_email_address.to_s).first
+      if user
+        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,        password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        OperationalMailer.reset_your_password(user).deliver
+      end
+    end
+  end
+
+  def self.finish_password_reset_process(reset_token, new_password, new_password_confirmation)
+    if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
+      user = User.where(password_reset_token: reset_token.to_s, active: false).first
+      if user
+        if user.update_attributes(password: new_password.to_s, password_confirmation: new_password_confirmation.to_s, active: true, password_reset_token: nil, password_reset_requested_at: nil, password_reset_at: Proc.new{Time.now}.call)
+          user # return this
+        else
+          false
+        end
+      else
+        false
+      end
+    else
+      false # return false
+    end
+  end
+
   # instance methods
   def admin?
     self.user_group.site_admin

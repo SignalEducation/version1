@@ -9,7 +9,7 @@ RSpec.describe 'users/show', type: :view do
     @user = FactoryGirl.create(:user, user_group_id: @user_group.id, stripe_customer_id: @stripe_customer.id, corporate_customer_id: @corporate_customer.id, corporate_customer_user_group_id: @corporate_customer_user_group.id)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/#{@user.email}/)
     expect(rendered).to match(/#{@user.full_name}/)
