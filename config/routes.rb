@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     # special routes
 
     # general resources
+    resources :institutions
 
     # home page
     root 'users#show' # temporary
