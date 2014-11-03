@@ -246,6 +246,11 @@ en:
       show:
         h1: Institution
 
+    layouts:
+      error_messages:
+        error: error
+        preface: 'prevented this item from being saved:'
+
     users:
       form:
         email: Email
