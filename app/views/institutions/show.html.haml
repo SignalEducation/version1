@@ -1,0 +1,44 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.institutions.show.h1')
+        \#
+        =@institution.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.institutions.form.name')
+        %td.col-sm-8=@institution.name
+      %tr
+        %td.col-sm-4=t('views.institutions.form.short_name')
+        %td.col-sm-8=@institution.short_name
+      %tr
+        %td.col-sm-4=t('views.institutions.form.name_url')
+        %td.col-sm-8=@institution.name_url
+      %tr
+        %td.col-sm-4=t('views.institutions.form.description')
+        %td.col-sm-8=@institution.description
+      %tr
+        %td.col-sm-4=t('views.institutions.form.feedback_url')
+        %td.col-sm-8
+          =link_to @institution.feedback_url, @institution.feedback_url, target: '_blank'
+      %tr
+        %td.col-sm-4=t('views.institutions.form.help_desk_url')
+        %td.col-sm-8
+          =link_to @institution.help_desk_url, @institution.help_desk_url, target: '_blank'
+      %tr
+        %td.col-sm-4=t('views.institutions.form.subject_area_id')
+        %td.col-sm-8
+          -# todo =@institution.subject_area.name
+      %tr
+        %td.col-sm-4=t('views.institutions.form.sorting_order')
+        %td.col-sm-8=@institution.sorting_order
+      %tr
+        %td.col-sm-4=t('views.institutions.form.active')
+        %td.col-sm-8=tick_or_cross(@institution.active)
+    %p
+      =link_to t('views.general.back'), institutions_url
+      |
+      =link_to t('views.general.edit'), edit_institution_url(id: @institution.id), title: t('views.general.edit_tooltip')

@@ -105,8 +105,8 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
         expect_edit_success_with_model('<%= singular_table_name -%>', <%= singular_table_name -%>_1.id)
       end
 
-    # optional
-    it 'should respond OK with <%= singular_table_name -%>_2' do
+      # optional
+      it 'should respond OK with <%= singular_table_name -%>_2' do
         get :edit, id: <%= singular_table_name -%>_2.id
         expect_edit_success_with_model('<%= singular_table_name -%>', <%= singular_table_name -%>_2.id)
       end
@@ -156,7 +156,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       end
     end
 
-  end
-  <%- end -%>
+    end
 
+  <%- end -%>
 end
