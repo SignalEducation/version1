@@ -20,12 +20,12 @@ FactoryGirl.define do
   factory :institution do
     sequence(:name)       {|n| "Institute #{n}"}
     sequence(:short_name) {|n| "ACA#{n}"}
-    sequence(:name_url}   {|n| "institute-#{n}"}
+    sequence(:name_url)   {|n| "institute-#{n}"}
     description           'Lorem ipsum'
     feedback_url          'http://example.com/feedback'
     help_desk_url         'http://help.example.com'
     subject_area_id       1 # todo
-    sequence(:sorting_order} {|n| n * 10}
+    sequence(:sorting_order) {|n| n * 10}
 
     factory :active_institution do
       active              true

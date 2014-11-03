@@ -1,0 +1,44 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.institutions.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @institutions, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %tr
+        %th=t('views.institutions.form.name')
+        %th=t('views.institutions.form.short_name')
+        %th=t('views.institutions.form.name_url')
+        %th=t('views.institutions.form.description')
+        %th
+          =t('views.institutions.form.feedback_url')
+          %br/
+          =t('views.institutions.form.help_desk_url')
+        %th=t('views.institutions.form.subject_area_id')
+        %th=t('views.institutions.form.sorting_order')
+        %th=t('views.institutions.form.active')
+        %th
+      -@institutions.each do |institution|
+        %tr
+          %td=link_to(institution.name, institution, title: t('views.general.view_tooltip'))
+          %td=link_to(institution.short_name, institution, title: t('views.general.view_tooltip'))
+          %td=link_to(institution.name_url, institution, title: t('views.general.view_tooltip'))
+          %td=link_to(institution.description, institution, title: t('views.general.view_tooltip'))
+          %td
+            =link_to(institution.feedback_url, institution.feedback_url, title: t('views.general.view_tooltip'), target: '_blank')
+            %br/
+            =link_to(institution.help_desk_url, institution.help_desk_url, title: t('views.general.view_tooltip'), target: '_blank')
+          %td
+
+            -# todo =link_to(institution.subject_area.name, institution, title: t('views.general.view_tooltip'))
+          %td=link_to(institution.sorting_order, institution, title: t('views.general.view_tooltip'))
+          %td=link_to(tick_or_cross(institution.active), institution, title: t('views.general.view_tooltip'))
+          %td
+            -#=link_to t('views.general.view'), institution
+            =link_to t('views.general.edit'), edit_institution_url(institution), class: 'btn btn-info btn-xs'
+            -if institution.destroyable?
+              =link_to t('views.general.delete'), institution, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_institution_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

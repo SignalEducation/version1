@@ -1,0 +1,46 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@institution, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @institution, message: nil}
+        .form-group
+          =f.label :name, t('views.institutions.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.institutions.form.name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :short_name, t('views.institutions.form.short_name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :short_name, placeholder: t('views.institutions.form.short_name_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :name_url, t('views.institutions.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.institutions.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :description, t('views.institutions.form.description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :description, placeholder: t('views.institutions.form.description_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          =f.label :feedback_url, t('views.institutions.form.feedback_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :feedback_url, placeholder: t('views.institutions.form.feedback_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :help_desk_url, t('views.institutions.form.help_desk_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :help_desk_url, placeholder: t('views.institutions.form.help_desk_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :subject_area_id, t('views.institutions.form.subject_area_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.hidden_field :subject_area_id, value: 1 # todo remove this and re-enable =f.collection_select :subject_area_id, @subject_areas, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :sorting_order, t('views.institutions.form.sorting_order'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :sorting_order, placeholder: t('views.institutions.form.sorting_order_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.institutions.form.active')
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), institutions_path

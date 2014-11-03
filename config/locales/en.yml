@@ -45,6 +45,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    institutions:
+      create:
+        flash:
+          success: Institution has been created successfully
+      update:
+        flash:
+          success: Institution details have been updated successfully
+      destroy:
+        flash:
+          success: Institution has been deleted
+          error: Institution was not deleted
+
     products:
       create:
         flash:
@@ -141,6 +153,7 @@ en:
   views:
     general:
       active: Active
+      admin: Admin
       approve: Approve
       approve_tooltip: Click to approve
       at_date_time: At
@@ -201,6 +214,37 @@ en:
     layouts:
       error_messages:
         error: error
+
+    institutions:
+      form:
+        name: Name
+        name_placeholder: Institute of eTeaching
+        short_name: Short name
+        short_name_placeholder: IeT
+        name_url: URL
+        name_url_placeholder: institute-of-eteaching
+        description: Description
+        description_placeholder: Add some text that describes the institution
+        feedback_url: Feedback URL
+        feedback_url_placeholder: http://iet.com/feedback
+        help_desk_url: Help desk URL
+        help_desk_url_placeholder: http://help.iet.com
+        subject_area_id: Subject area
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+
+      edit:
+        h1: Edit Institution
+
+      index:
+        h1: Institutions
+
+      new:
+        h1: New Institution
+
+      show:
+        h1: Institution
 
     users:
       form:
