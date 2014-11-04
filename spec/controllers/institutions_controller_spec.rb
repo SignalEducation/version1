@@ -553,6 +553,13 @@ describe InstitutionsController, type: :controller do
       end
     end
 
+    describe "POST 'reorder'" do
+      it 'should be OK with valid array' do
+        post :reorder, array_of_ids: [institution_2.id, institution_1.id]
+        expect_reorder_success
+      end
+    end
+
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: institution_1.id

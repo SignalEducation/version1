@@ -44,7 +44,7 @@ class Institution < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
   def self.get_by_name_url(the_name_url)

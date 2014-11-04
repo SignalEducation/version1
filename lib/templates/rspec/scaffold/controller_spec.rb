@@ -55,6 +55,15 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       end
     end
 
+    <%- if attributes.map(&:name).includes?('sorting_order') -%>
+    describe "POST 'reorder'" do
+      it 'should be OK with valid_array' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_signed_in
+      end
+    end
+    <%- end -%>
+
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
@@ -144,15 +153,24 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       end
     end
 
+    <%- if attributes.map(&:name).includes?('sorting_order') -%>
+    describe "POST 'reorder'" do
+      it 'should be OK with valid_array' do
+        post :create, array_of_ids: [<%= singular_table_name -%>_2.id, <%= singular_table_name -%>_1.id]
+        expect_reorder_success
+      end
+    end
+    <%- end -%>
+
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: <%= singular_table_name -%>_1.id
-        expect_delete_success_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
+        expect_delete_error_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: <%= singular_table_name -%>_2.id
-        expect_delete_error_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
+        expect_delete_success_with_model('<%= singular_table_name -%>', <%= table_name -%>_url)
       end
     end
 
