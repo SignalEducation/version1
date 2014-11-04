@@ -156,7 +156,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       end
     end
 
-    end
+  end
 
   <%- end -%>
 end
