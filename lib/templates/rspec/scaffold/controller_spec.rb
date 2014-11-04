@@ -55,7 +55,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       end
     end
 
-    <%- if attributes.map(&:name).includes?('sorting_order') -%>
+    <%- if attributes.map(&:name).include?('sorting_order') -%>
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :create, array_of_ids: [1,2]
@@ -153,7 +153,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
       end
     end
 
-    <%- if attributes.map(&:name).includes?('sorting_order') -%>
+    <%- if attributes.map(&:name).include?('sorting_order') -%>
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :create, array_of_ids: [<%= singular_table_name -%>_2.id, <%= singular_table_name -%>_1.id]
