@@ -27,7 +27,7 @@ class Institution < ActiveRecord::Base
 
   # relationships
   # todo has_many :qualifications
-  # todo belongs_to :subject_area
+  belongs_to :subject_area
 
   # validation
   validates :name, presence: true, uniqueness: true

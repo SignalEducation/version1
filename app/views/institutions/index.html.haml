@@ -29,9 +29,7 @@
             =link_to(institution.feedback_url, institution.feedback_url, title: t('views.general.view_tooltip'), target: '_blank')
             %br/
             =link_to(institution.help_desk_url, institution.help_desk_url, title: t('views.general.view_tooltip'), target: '_blank')
-          %td
-
-            -# todo =link_to(institution.subject_area.name, institution, title: t('views.general.view_tooltip'))
+          %td=link_to(institution.subject_area.name, institution, title: t('views.general.view_tooltip'))
           %td=link_to(institution.sorting_order, institution, title: t('views.general.view_tooltip'))
           %td=link_to(tick_or_cross(institution.active), institution, title: t('views.general.view_tooltip'))
           %td

@@ -82,6 +82,13 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   ); print '.'
 
   puts ' DONE'
+  print 'Subject Areas: '
+  unless Rails.env.test?
+    SubjectArea.where(id: 1).first_or_create!(name: 'Finance', name_url: 'finance',
+                        sorting_order: 100, active: true); print '.'
+  end
+
+  puts ' DONE'
   print 'Users: '
 
   unless Rails.env.production?

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
     # general resources
     resources :institutions
+    resources :subject_areas
 
     # home page
     root 'users#show' # temporary

@@ -54,7 +54,7 @@ class InstitutionsController < ApplicationController
     if params[:id].to_i > 0
       @institution = Institution.where(id: params[:id]).first
     end
-    # todo @subject_areas = SubjectArea.all_in_order
+    @subject_areas = SubjectArea.all_in_order
   end
 
   def allowed_params
