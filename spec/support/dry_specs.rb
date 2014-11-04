@@ -91,6 +91,10 @@ def expect_update_error_with_model(model_name)
   expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
 end
 
+def expect_reorder_success
+  expect(response.status).to eq(200)
+end
+
 def expect_delete_success_with_model(model_name, destination)
   expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.destroy.flash.success"))
   expect(flash[:error]).to be_nil

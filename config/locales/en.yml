@@ -69,6 +69,18 @@ en:
           success: Product has been deleted
           error: Product was not deleted
 
+    subject_areas:
+      create:
+        flash:
+          success: Subject Area has been created successfully
+      update:
+        flash:
+          success: Subject Area details have been updated successfully
+      destroy:
+        flash:
+          success: Subject Area has been deleted
+          error: Subject Area was not deleted
+
     users:
       create:
         flash:
@@ -245,6 +257,28 @@ en:
 
       show:
         h1: Institution
+
+    subject_areas:
+      form:
+        name: Name
+        name_placeholder: Human Resources
+        name_url: Name URL
+        name_url_placeholder: "human-resources"
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+
+      edit:
+        h1: Edit Subject Area
+
+      index:
+        h1: Subject Areas
+
+      new:
+        h1: New Subject Area
+
+      show:
+        h1: Subject Area
 
     layouts:
       error_messages:

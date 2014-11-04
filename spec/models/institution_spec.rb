@@ -35,7 +35,7 @@ describe Institution do
 
   # relationships
   xit { should have_many(:qualifications) }
-  xit { should belong_to(:subject_area) }
+  it { should belong_to(:subject_area) }
 
   # validation
   it { should validate_presence_of(:name) }

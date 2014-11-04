@@ -20,7 +20,9 @@ Rails.application.routes.draw do
     # special routes
 
     # general resources
+    post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
+    resources :subject_areas
 
     # home page
     root 'users#show' # temporary

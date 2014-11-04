@@ -47,6 +47,16 @@ class <%= table_name.gsub('_',' ').titleize.gsub(' ','') %>Controller < Applicat
     end
   end
 
+  <%- if attributes.map(&:name).includes?('sorting_order') -%>
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      <%= class_name -%>.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
+  end
+  <%- end -%>
+
   def destroy
     if @<%= singular_table_name %>.destroy
       flash[:success] = I18n.t('controllers.<%= table_name %>.destroy.flash.success')

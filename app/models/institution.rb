@@ -27,7 +27,7 @@ class Institution < ActiveRecord::Base
 
   # relationships
   # todo has_many :qualifications
-  # todo belongs_to :subject_area
+  belongs_to :subject_area
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -44,7 +44,7 @@ class Institution < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
