@@ -29,6 +29,7 @@ class InstitutionUser < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :student_registration_number, presence: true
+  validate :require_student_id_if_student
 
   # callbacks
   before_destroy :check_dependencies

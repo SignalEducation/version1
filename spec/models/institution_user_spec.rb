@@ -53,6 +53,4 @@ describe InstitutionUser do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
-
 end
