@@ -34,6 +34,7 @@ describe Institution do
   #it { Institution.const_defined?(:CONSTANT_NAME) }
 
   # relationships
+  it { should have_many(:institution_users) }
   xit { should have_many(:qualifications) }
   it { should belong_to(:subject_area) }
 

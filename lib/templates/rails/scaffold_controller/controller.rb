@@ -47,7 +47,7 @@ class <%= table_name.gsub('_',' ').titleize.gsub(' ','') %>Controller < Applicat
     end
   end
 
-  <%- if attributes.map(&:name).includes?('sorting_order') -%>
+  <%- if attributes.map(&:name).include?('sorting_order') -%>
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|

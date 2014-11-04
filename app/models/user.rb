@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
   # todo belongs_to :corporate_customer
   # todo belongs_to :corporate_customer_user_group
   # todo belongs_to :country
+  has_many :institution_users
   belongs_to :user_group
 
   # validation
@@ -165,7 +166,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin?
+    !self.admin? && self.institution_users.empty?
   end
 
   def full_name

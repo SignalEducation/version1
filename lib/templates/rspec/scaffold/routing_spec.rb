@@ -27,7 +27,7 @@ RSpec.describe <%= controller_class_name %>Controller, type: :routing do
       expect(put: '/<%= table_name -%>/1').to route_to('<%= table_name -%>#update', id: '1')
     end
 
-    <%- if attributes.map(&:name).includes?('sorting_order') -%>
+    <%- if attributes.map(&:name).include?('sorting_order') -%>
     it 'routes to #reorder' do
       expect(post: '/<%= table_name -%>/reorder').to route_to('<%= table_name -%>#reorder')
     end

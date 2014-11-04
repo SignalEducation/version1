@@ -162,6 +162,9 @@ en:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
 
+    institution_users:
+      can_t_be_blank_for_students: "Can't be blank for students"
+
   views:
     general:
       active: Active
