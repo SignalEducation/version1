@@ -1,16 +1,32 @@
+# == Schema Information
+#
+# Table name: exam_sections
+#
+#  id                                :integer          not null, primary key
+#  name                              :string(255)
+#  name_url                          :string(255)
+#  exam_level_id                     :integer
+#  active                            :boolean          default(FALSE), not null
+#  sorting_order                     :integer
+#  best_possible_first_attempt_score :float
+#  created_at                        :datetime
+#  updated_at                        :datetime
+#
+
 class ExamSection < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
 
   # Constants
 
   # relationships
   belongs_to :exam_level
+  #todo has_many :course_modules
 
   # validation
   validates :name, presence: true
-  validates :name_url, presence: true
+  validates :name_url, presence: true, uniqueness: true
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
