@@ -45,7 +45,6 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
-
     qualifications:
       create:
         flash:
@@ -170,7 +169,6 @@ en:
         paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
         paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
 
-
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
@@ -243,7 +241,6 @@ en:
       error_messages:
         error: error
 
-
     qualifications:
       form:
         name: Name
@@ -274,8 +271,6 @@ en:
       error_messages:
         error: error
         preface: 'prevented this item from being saved:'
-
-
 
     institutions:
       form:
@@ -392,7 +387,6 @@ en:
         change_your_password:
           link: Change your password
           h4: Change your password
-
 
     user_groups:
       form:

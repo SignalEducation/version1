@@ -217,7 +217,8 @@ describe QualificationsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, qualification: valid_params
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       # optional
       it 'should respond ERROR not permitted' do
@@ -345,24 +346,28 @@ describe QualificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond ERROR not permitted' do
         get :index
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       # optional - some other object
       it 'should respond ERROR not permitted' do
         get :show, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "GET 'new'" do
       it 'should respond ERROR not permitted' do
         get :new
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "GET 'edit/1'" do
@@ -374,23 +379,27 @@ describe QualificationsController, type: :controller do
       # optional
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
         post :create, qualification: valid_params
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       it 'should respond ERROR not permitted' do
         post :create, qualification: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, qualification: valid_params
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       # optional
       it 'should respond ERROR not permitted' do
@@ -407,11 +416,13 @@ describe QualificationsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
   end
@@ -426,51 +437,60 @@ describe QualificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond ERROR not permitted' do
         get :index
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       # optional - some other object
       it 'should respond ERROR not permitted' do
         get :show, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "GET 'new'" do
       it 'should respond ERROR not permitted' do
         get :new
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       # optional
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
         post :create, qualification: valid_params
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       it 'should respond ERROR not permitted' do
         post :create, qualification: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, qualification: valid_params
-        expect_bounce_as_not_allowed      end
+        expect_bounce_as_not_allowed
+      end
 
       # optional
       it 'should respond ERROR not permitted' do

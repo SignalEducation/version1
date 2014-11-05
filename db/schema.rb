@@ -11,12 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20141104075051) do
-
+ActiveRecord::Schema.define(version: 20141104154759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "course_modules", force: true do |t|
+    t.integer  "institution_id"
+    t.integer  "qualification_id"
+    t.integer  "exam_level_id"
+    t.integer  "exam_section_id"
+    t.string   "name"
+    t.string   "name_url"
+    t.text     "description"
+    t.integer  "tutor_id"
+    t.integer  "sorting_order"
+    t.integer  "estimated_time_in_seconds"
+    t.boolean  "compulsory",                default: false, null: false
+    t.boolean  "active",                    default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "exam_levels", force: true do |t|
     t.integer  "qualification_id"
@@ -54,7 +69,6 @@ ActiveRecord::Schema.define(version: 20141104075051) do
     t.datetime "updated_at"
   end
 
-
   create_table "qualifications", force: true do |t|
     t.integer  "institution_id"
     t.string   "name"
@@ -65,6 +79,7 @@ ActiveRecord::Schema.define(version: 20141104075051) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
   create_table "subject_areas", force: true do |t|
     t.string   "name"
     t.string   "name_url"

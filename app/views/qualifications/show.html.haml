@@ -10,7 +10,7 @@
     %table.table.table-bordered
       %tr
         %td.col-sm-4=t('views.qualifications.form.institution_id')
-        %td.col-sm-8=@qualification.institution.name
+        %td.col-sm-8=link_to @qualification.institution.name, @qualification.institution
       %tr
         %td.col-sm-4=t('views.qualifications.form.name')
         %td.col-sm-8=@qualification.name

@@ -41,7 +41,10 @@
       -if @institution.qualifications.count > 0
         %tr
           %td.col-sm-4=t('views.qualifications.index.h1')
-          %td.col-sm-8=(@institution.qualifications.count)
+          %td.col-sm-8
+            -@institution.qualifications.each do |qualification|
+              =link_to qualification.name, qualification
+              %br/
     %p
       =link_to t('views.general.back'), institutions_url
       |

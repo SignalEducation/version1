@@ -27,6 +27,10 @@ RSpec.describe QualificationsController, type: :routing do
       expect(put: '/qualifications/1').to route_to('qualifications#update', id: '1')
     end
 
+    it 'routes to #reorder' do
+      expect(post: '/qualifications/reorder').to route_to('qualifications#reorder')
+    end
+
     it 'routes to #destroy' do
       expect(delete: '/qualifications/1').to route_to('qualifications#destroy', id: '1')
     end

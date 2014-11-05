@@ -55,10 +55,7 @@ describe Qualification do
   # class methods
   it { expect(Qualification).to respond_to(:get_by_name_url) }
 
-
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

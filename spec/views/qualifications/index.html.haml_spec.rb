@@ -13,7 +13,6 @@ RSpec.describe 'qualifications/index', type: :view do
     expect(rendered).to match(/#{@qualifications.first.institution.name.to_s}/)
     expect(rendered).to match(/#{@qualifications.first.name.to_s}/)
     expect(rendered).to match(/#{@qualifications.first.name_url.to_s}/)
-    expect(rendered).to match(/#{@qualifications.first.sorting_order.to_s}/)
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/#{@qualifications.first.cpd_hours_required_per_year.to_s}/)
   end

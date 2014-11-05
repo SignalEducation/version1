@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     # general resources
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
+    post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
     resources :subject_areas
 

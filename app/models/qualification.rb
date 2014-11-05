@@ -36,7 +36,7 @@ class Qualification < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:institution_id) }
+  scope :all_in_order, -> { order(:institution_id, :sorting_order) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
