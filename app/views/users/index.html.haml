@@ -24,7 +24,7 @@
           -user_group_id_tracker = user.user_group_id
           %tr
             %td{colspan: 8}
-              %h2=user.user_group.name
+              %h2=user.user_group.try(:name)
         %tr
           %td
             =link_to(user.full_name, user, title: t('views.general.view_tooltip'))

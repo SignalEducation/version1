@@ -1,14 +1,15 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
-describe InstitutionsController, type: :controller do
+describe QualificationsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:institution_1) { FactoryGirl.create(:institution) }
-  let!(:qualification) { FactoryGirl.create(:qualification, institution_id: institution_1.id) }
-  let!(:institution_2) { FactoryGirl.create(:institution) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:institution) }
+
+  let!(:qualification_1) { FactoryGirl.create(:qualification) }
+  let!(:exam_level) { FactoryGirl.create(:exam_level, qualification_id: qualification_1.id) }
+  let!(:qualification_2) { FactoryGirl.create(:qualification) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:qualification) }
 
   context 'Not logged in: ' do
 
@@ -79,7 +80,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -93,28 +100,55 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -137,7 +171,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: qualification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -151,33 +191,54 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
         expect_bounce_as_not_allowed
       end
 
       it 'should respond ERROR not permitted' do
-        post :create, institution: {valid_params.keys.first => ''}
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -200,7 +261,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -214,28 +281,55 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: qualification_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -258,7 +352,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -272,28 +372,55 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -316,7 +443,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -330,33 +463,60 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-  end
+   end
 
   context 'Logged in as a forum_manager_user: ' do
 
@@ -374,7 +534,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -388,28 +554,55 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: qualification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -432,7 +625,13 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
-        get :show, id: institution_1.id
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -446,28 +645,55 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        post :create, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: institution_1.id, institution: valid_params
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, qualification: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: institution_1.id
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
         expect_bounce_as_not_allowed
       end
     end
@@ -484,91 +710,84 @@ describe InstitutionsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('institutions', 2)
+        expect_index_success_with_model('qualifications', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see institution_1' do
-        get :show, id: institution_1.id
-        expect_show_success_with_model('institution', institution_1.id)
+      it 'should see qualification_1' do
+        get :show, id: qualification_1.id
+        expect_show_success_with_model('qualification', qualification_1.id)
       end
 
       # optional - some other object
-      it 'should see institution_2' do
-        get :show, id: institution_2.id
-        expect_show_success_with_model('institution', institution_2.id)
+      it 'should see qualification_2' do
+        get :show, id: qualification_2.id
+        expect_show_success_with_model('qualification', qualification_2.id)
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('institution')
+        expect_new_success_with_model('qualification')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with institution_1' do
-        get :edit, id: institution_1.id
-        expect_edit_success_with_model('institution', institution_1.id)
+      it 'should respond OK with qualification_1' do
+        get :edit, id: qualification_1.id
+        expect_edit_success_with_model('qualification', qualification_1.id)
       end
 
-    # optional
-    it 'should respond OK with institution_2' do
-        get :edit, id: institution_2.id
-        expect_edit_success_with_model('institution', institution_2.id)
+      # optional
+      it 'should respond OK with qualification_2' do
+        get :edit, id: qualification_2.id
+        expect_edit_success_with_model('qualification', qualification_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, institution: valid_params
-        expect_create_success_with_model('institution', institutions_url)
+        post :create, qualification: valid_params
+        expect_create_success_with_model('qualification', qualifications_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, institution: {valid_params.keys.first => ''}
-        expect_create_error_with_model('institution')
+        post :create, qualification: {valid_params.keys.first => ''}
+        expect_create_error_with_model('qualification')
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for institution_1' do
-        put :update, id: institution_1.id, institution: valid_params
-        expect_update_success_with_model('institution', institutions_url)
+      it 'should respond OK to valid params for qualification_1' do
+        put :update, id: qualification_1.id, qualification: valid_params
+        expect_update_success_with_model('qualification', qualifications_url)
       end
 
       # optional
-      it 'should respond OK to valid params for institution_2' do
-        put :update, id: institution_2.id, institution: valid_params
-        expect_update_success_with_model('institution', institutions_url)
-        expect(assigns(:institution).id).to eq(institution_2.id)
+      it 'should respond OK to valid params for qualification_2' do
+        put :update, id: qualification_2.id, qualification: valid_params
+        expect_update_success_with_model('qualification', qualifications_url)
+        expect(assigns(:qualification).id).to eq(qualification_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: institution_1.id, institution: {valid_params.keys.first => ''}
-        expect_update_error_with_model('institution')
-        expect(assigns(:institution).id).to eq(institution_1.id)
-      end
-    end
-
-    describe "POST 'reorder'" do
-      it 'should be OK with valid array' do
-        post :reorder, array_of_ids: [institution_2.id, institution_1.id]
-        expect_reorder_success
+        put :update, id: qualification_1.id, qualification: {valid_params.keys.first => ''}
+        expect_update_error_with_model('qualification')
+        expect(assigns(:qualification).id).to eq(qualification_1.id)
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: institution_1.id
-        expect_delete_error_with_model('institution', institutions_url)
+        delete :destroy, id: qualification_1.id
+        expect_delete_error_with_model('qualification', qualifications_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: institution_2.id
-        expect_delete_success_with_model('institution', institutions_url)
+        delete :destroy, id: qualification_2.id
+        expect_delete_success_with_model('qualification', qualifications_url)
       end
     end
 

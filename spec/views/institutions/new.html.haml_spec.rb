@@ -7,7 +7,7 @@ RSpec.describe 'institutions/new', type: :view do
     @institution = FactoryGirl.build(:institution)
   end
 
-  xit 'renders edit institution form' do
+  it 'renders edit institution form' do
     render
     assert_select 'form[action=?][method=?]', institutions_path, 'post' do
       assert_select 'input#institution_name[name=?]', 'institution[name]'

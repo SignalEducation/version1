@@ -1,0 +1,34 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@qualification, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @qualification, message: nil}
+        .form-group
+          =f.label :name, t('views.qualifications.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.qualifications.form.name_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :name_url, t('views.qualifications.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.qualifications.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :institution_id,  t('views.qualifications.form.institution_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :institution_id, @institutions, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :sorting_order, t('views.qualifications.form.sorting_order'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :sorting_order, placeholder: t('views.qualifications.form.sorting_order_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.qualifications.form.active')
+        .form-group
+          =f.label :cpd_hours_required_per_year, t('views.qualifications.form.cpd_hours_required_per_year'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :cpd_hours_required_per_year, placeholder: t('views.qualifications.form.cpd_hours_required_per_year_placeholder'), class: 'form-control'
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), qualifications_path
