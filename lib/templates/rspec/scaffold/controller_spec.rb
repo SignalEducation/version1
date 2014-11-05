@@ -156,7 +156,7 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
     <%- if attributes.map(&:name).include?('sorting_order') -%>
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :create, array_of_ids: [<%= singular_table_name -%>_2.id, <%= singular_table_name -%>_1.id]
+        post :reorder, array_of_ids: [<%= singular_table_name -%>_2.id, <%= singular_table_name -%>_1.id]
         expect_reorder_success
       end
     end

@@ -34,11 +34,10 @@ describe Institution do
   #it { Institution.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-
+  it { should have_many(:course_modules) }
   it { should have_many(:institution_users) }
   it { should have_many(:qualifications) }
   it { should belong_to(:subject_area) }
-
 
   # validation
   it { should validate_presence_of(:name) }

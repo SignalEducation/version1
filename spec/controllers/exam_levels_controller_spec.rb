@@ -1,15 +1,15 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
-describe InstitutionsController, type: :controller do
+describe ExamLevelsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:institution_1) { FactoryGirl.create(:institution) }
-  let!(:qualification) { FactoryGirl.create(:qualification,
-                                     institution_id: institution_1.id) }
-  let!(:institution_2) { FactoryGirl.create(:institution) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:institution) }
+  let!(:exam_level_1) { FactoryGirl.create(:exam_level) }
+  # todo let!(:exam_section) { FactoryGirl.create(:exam_section,
+  # todo                                           exam_level_id: exam_level_1.id) }
+  let!(:exam_level_2) { FactoryGirl.create(:exam_level) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:exam_level) }
 
   context 'Not logged in: ' do
 
@@ -101,14 +101,14 @@ describe InstitutionsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -159,19 +159,19 @@ describe InstitutionsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
 
       it 'should respond ERROR not permitted' do
-        post :create, institution: {valid_params.keys.first => ''}
+        post :create, exam_level: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -222,14 +222,14 @@ describe InstitutionsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -273,21 +273,21 @@ describe InstitutionsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond ERROR not permitted' do
-        get :edit, id: institution_1.id
+        get :edit, id: exam_level_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -338,14 +338,14 @@ describe InstitutionsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -396,14 +396,14 @@ describe InstitutionsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -454,14 +454,14 @@ describe InstitutionsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, institution: valid_params
+        post :create, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
+        put :update, id: 1, exam_level: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -485,91 +485,93 @@ describe InstitutionsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('institutions', 2)
+        expect_index_success_with_model('exam_levels', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see institution_1' do
-        get :show, id: institution_1.id
-        expect_show_success_with_model('institution', institution_1.id)
+      it 'should see exam_level_1' do
+        get :show, id: exam_level_1.id
+        expect_show_success_with_model('exam_level', exam_level_1.id)
       end
 
       # optional - some other object
-      it 'should see institution_2' do
-        get :show, id: institution_2.id
-        expect_show_success_with_model('institution', institution_2.id)
+      it 'should see exam_level_2' do
+        get :show, id: exam_level_2.id
+        expect_show_success_with_model('exam_level', exam_level_2.id)
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('institution')
+        expect_new_success_with_model('exam_level')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with institution_1' do
-        get :edit, id: institution_1.id
-        expect_edit_success_with_model('institution', institution_1.id)
+      it 'should respond OK with exam_level_1' do
+        get :edit, id: exam_level_1.id
+        expect_edit_success_with_model('exam_level', exam_level_1.id)
       end
 
-    # optional
-    it 'should respond OK with institution_2' do
-        get :edit, id: institution_2.id
-        expect_edit_success_with_model('institution', institution_2.id)
+      # optional
+      it 'should respond OK with exam_level_2' do
+        get :edit, id: exam_level_2.id
+        expect_edit_success_with_model('exam_level', exam_level_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, institution: valid_params
-        expect_create_success_with_model('institution', institutions_url)
+        post :create, exam_level: valid_params
+        expect_create_success_with_model('exam_level', exam_levels_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, institution: {valid_params.keys.first => ''}
-        expect_create_error_with_model('institution')
+        post :create, exam_level: {valid_params.keys.first => ''}
+        expect_create_error_with_model('exam_level')
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for institution_1' do
-        put :update, id: institution_1.id, institution: valid_params
-        expect_update_success_with_model('institution', institutions_url)
+      it 'should respond OK to valid params for exam_level_1' do
+        put :update, id: exam_level_1.id, exam_level: valid_params
+        expect_update_success_with_model('exam_level', exam_levels_url)
       end
 
       # optional
-      it 'should respond OK to valid params for institution_2' do
-        put :update, id: institution_2.id, institution: valid_params
-        expect_update_success_with_model('institution', institutions_url)
-        expect(assigns(:institution).id).to eq(institution_2.id)
+      it 'should respond OK to valid params for exam_level_2' do
+        put :update, id: exam_level_2.id, exam_level: valid_params
+        expect_update_success_with_model('exam_level', exam_levels_url)
+        expect(assigns(:exam_level).id).to eq(exam_level_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: institution_1.id, institution: {valid_params.keys.first => ''}
-        expect_update_error_with_model('institution')
-        expect(assigns(:institution).id).to eq(institution_1.id)
+        put :update, id: exam_level_1.id, exam_level: {valid_params.keys.first => ''}
+        expect_update_error_with_model('exam_level')
+        expect(assigns(:exam_level).id).to eq(exam_level_1.id)
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid array' do
-        post :reorder, array_of_ids: [institution_2.id, institution_1.id]
+        post :reorder, array_of_ids: [exam_level_2.id, exam_level_1.id]
         expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: institution_1.id
-        expect_delete_error_with_model('institution', institutions_url)
+        delete :destroy, id: exam_level_1.id
+        expect_delete_success_with_model('exam_level', exam_levels_url)
+        # todo fix this when exam_sections are ready
+        # todo expect_delete_error_with_model('exam_level', exam_levels_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: institution_2.id
-        expect_delete_success_with_model('institution', institutions_url)
+        delete :destroy, id: exam_level_2.id
+        expect_delete_success_with_model('exam_level', exam_levels_url)
       end
     end
 
