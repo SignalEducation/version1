@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     # special routes
 
     # general resources
+    post 'course_modules/reorder', to: 'course_modules#reorder'
+    resources :course_modules
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     resources :subject_areas

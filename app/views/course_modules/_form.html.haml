@@ -1,0 +1,63 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    -#=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form'}) do |f|
+    =form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
+        .form-group
+          =f.label :institution_id, t('views.course_modules.form.institution_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :institution_id, @institutions, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :qualification_id, t('views.course_modules.form.qualification_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            -# todo =f.collection_select :qualification_id, @qualifications, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+
+        .form-group
+          =f.label :exam_level_id, t('views.course_modules.form.exam_level_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_related_select :exam_level_id, @exam_levels, :id, :name, :qualification_id, :institution_id, {prompt: t('views.general.select')}, {class: 'form-control'}
+
+        .form-group
+          =f.label :exam_section_id, t('views.course_modules.form.exam_section_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            -# todo =f.collection_select :exam_section_id, @exam_sections, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :name, t('views.course_modules.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :description, t('views.course_modules.form.description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          =f.label :tutor_id, t('views.course_modules.form.tutor_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :tutor_id, @tutors, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :sorting_order, t('views.course_modules.form.sorting_order'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :sorting_order, placeholder: t('views.course_modules.form.sorting_order_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :estimated_time_in_seconds, t('views.course_modules.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_modules.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :compulsory
+                =t('views.course_modules.form.compulsory')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.course_modules.form.active')
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), course_modules_path

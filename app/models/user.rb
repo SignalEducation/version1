@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
   # todo belongs_to :corporate_customer
   # todo belongs_to :corporate_customer_user_group
   # todo belongs_to :country
+  has_many :course_modules, foreign_key: :tutor_id
   has_many :institution_users
   belongs_to :user_group
 
@@ -166,7 +167,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.institution_users.empty?
+    !self.admin? && self.institution_users.empty? && self.course_modules.empty?
   end
 
   def full_name

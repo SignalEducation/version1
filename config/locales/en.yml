@@ -45,6 +45,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    course_modules:
+      create:
+        flash:
+          success: Course Module has been created successfully
+      update:
+        flash:
+          success: Course Module details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module has been deleted
+          error: Course Module was not deleted
+
     institutions:
       create:
         flash:
@@ -167,6 +179,9 @@ en:
 
   views:
     general:
+      numbers:
+        thousands_separator: ","
+        decimal_separator: "."
       active: Active
       admin: Admin
       approve: Approve
@@ -225,6 +240,38 @@ en:
 
       new:
         h1: New Category
+
+    course_modules:
+      form:
+        institution_id: Institution
+        qualification_id: Qualification
+        exam_level_id: Exam level
+        exam_section_id: Exam section
+        name: Name
+        name_placeholder: Introduction to surfing
+        name_url: Name URL
+        name_url_placeholder: introduction-to-surfing
+        description: Description
+        description_placeholder: Describe the course module here
+        tutor_id: Tutor
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        estimated_time_in_seconds: "Time (in seconds)"
+        estimated_time_in_seconds_placeholder: 600
+        compulsory: "Compulsory?"
+        active: "Active?"
+
+      edit:
+        h1: Edit Course Module
+
+      index:
+        h1: Course Modules
+
+      new:
+        h1: New Course Module
+
+      show:
+        h1: Course Module
 
     layouts:
       error_messages:
@@ -374,6 +421,7 @@ en:
 
       show:
         h1: User Group
+        users: Users
 
     user_password_resets:
       new:

@@ -36,7 +36,6 @@ describe ExamLevel do
   xit { should have_many(:exam_sections) }
   xit { should have_many(:course_modules) }
 
-
   # validation
   it { should validate_presence_of(:qualification_id) }
   it { should validate_numericality_of(:qualification_id) }
@@ -60,7 +59,5 @@ describe ExamLevel do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

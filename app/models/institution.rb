@@ -26,6 +26,7 @@ class Institution < ActiveRecord::Base
   # Constants
 
   # relationships
+  has_many :course_modules
   has_many :institution_users
   # todo has_many :qualifications
   belongs_to :subject_area
