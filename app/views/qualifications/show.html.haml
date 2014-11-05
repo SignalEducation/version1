@@ -1,0 +1,32 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.qualifications.show.h1')
+        \#
+        =@qualification.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.institution_id')
+        %td.col-sm-8=@qualification.institution.name
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.name')
+        %td.col-sm-8=@qualification.name
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.name_url')
+        %td.col-sm-8=@qualification.name_url
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.sorting_order')
+        %td.col-sm-8=@qualification.sorting_order
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.active')
+        %td.col-sm-8=tick_or_cross(@qualification.active)
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.cpd_hours_required_per_year')
+        %td.col-sm-8=@qualification.cpd_hours_required_per_year
+    %p
+      =link_to t('views.general.back'), qualifications_url
+      |
+      =link_to t('views.general.edit'), edit_qualification_url(id: @qualification.id), title: t('views.general.edit_tooltip')

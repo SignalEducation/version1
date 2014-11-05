@@ -38,6 +38,10 @@
       %tr
         %td.col-sm-4=t('views.institutions.form.active')
         %td.col-sm-8=tick_or_cross(@institution.active)
+      -if @institution.qualifications.count > 0
+        %tr
+          %td.col-sm-4=t('views.qualifications.index.h1')
+          %td.col-sm-8=(@institution.qualifications.count)
     %p
       =link_to t('views.general.back'), institutions_url
       |

@@ -45,6 +45,19 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+
+    qualifications:
+      create:
+        flash:
+          success: Qualification has been created successfully
+      update:
+        flash:
+          success: Qualification details have been updated successfully
+      destroy:
+        flash:
+          success: Qualification has been deleted
+          error: Qualification was not deleted
+
     institutions:
       create:
         flash:
@@ -214,6 +227,40 @@ en:
     layouts:
       error_messages:
         error: error
+
+
+    qualifications:
+      form:
+        name: Name
+        name_placeholder: CFA Qualification
+        institution_id: Institution
+        name_url: URL
+        name_url_placeholder: cfa-qualification
+        cpd_hours_required_per_year: Required CPD Hours per Year
+        cpd_hours_required_per_year_placeholder: 100
+        category_id: Category
+        active: Active
+        sorting_order: Sorting Order
+        sorting_order_placeholder: 100
+
+      index:
+        h1: Qualifications
+
+      show:
+        h1: Qualification
+
+      edit:
+        h1: Edit Qualifications
+
+      new:
+        h1: New Qualifications
+
+    layouts:
+      error_messages:
+        error: error
+        preface: 'prevented this item from being saved:'
+
+
 
     institutions:
       form:

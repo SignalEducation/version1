@@ -5,8 +5,8 @@ describe InstitutionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for institution_1
   let!(:institution_1) { FactoryGirl.create(:institution) }
+  let!(:qualification) { FactoryGirl.create(:qualification, institution_id: institution_1.id) }
   let!(:institution_2) { FactoryGirl.create(:institution) }
   let!(:valid_params) { FactoryGirl.attributes_for(:institution) }
 
@@ -556,8 +556,7 @@ describe InstitutionsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: institution_1.id
-        expect_delete_success_with_model('institution', institutions_url)
-        # todo remove comment when SubjectArea exists expect_delete_error_with_model('institution', institutions_url)
+        expect_delete_error_with_model('institution', institutions_url)
       end
 
       it 'should be OK as no dependencies exist' do

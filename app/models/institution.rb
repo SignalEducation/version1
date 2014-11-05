@@ -26,7 +26,7 @@ class Institution < ActiveRecord::Base
   # Constants
 
   # relationships
-  # todo has_many :qualifications
+  has_many :qualifications
   # todo belongs_to :subject_area
 
   # validation
@@ -53,7 +53,7 @@ class Institution < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.qualifications.empty?
   end
 
   protected
