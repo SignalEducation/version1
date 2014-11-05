@@ -27,6 +27,10 @@ RSpec.describe InstitutionsController, type: :routing do
       expect(put: '/institutions/1').to route_to('institutions#update', id: '1')
     end
 
+    it 'routes to #reorder' do
+      expect(post: '/institutions/reorder').to route_to('institutions#reorder')
+    end
+
     it 'routes to #destroy' do
       expect(delete: '/institutions/1').to route_to('institutions#destroy', id: '1')
     end

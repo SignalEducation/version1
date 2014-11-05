@@ -26,8 +26,11 @@ class Institution < ActiveRecord::Base
   # Constants
 
   # relationships
+
   has_many :qualifications
-  # todo belongs_to :subject_area
+  has_many :institution_users
+  belongs_to :subject_area
+
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -44,7 +47,7 @@ class Institution < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
@@ -53,7 +56,7 @@ class Institution < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.qualifications.empty?
+    self.qualifications.empty? && self.institution_users.empty?
   end
 
   protected

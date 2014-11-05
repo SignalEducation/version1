@@ -31,7 +31,7 @@
       %tr
         %td.col-sm-4=t('views.institutions.form.subject_area_id')
         %td.col-sm-8
-          -# todo =@institution.subject_area.name
+          =link_to @institution.subject_area.name, @institution.subject_area
       %tr
         %td.col-sm-4=t('views.institutions.form.sorting_order')
         %td.col-sm-8=@institution.sorting_order
