@@ -63,6 +63,7 @@ class CourseModulesController < ApplicationController
       @course_module = CourseModule.where(id: params[:id]).first
     end
     @institutions = Institution.all_in_order
+    @qualifications = Qualification.all_in_order
     @exam_levels = ExamLevel.all_in_order
     #@exam_sections = ExamSection.all_in_order
     @tutors = User.includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true).all_in_order

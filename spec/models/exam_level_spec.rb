@@ -34,7 +34,7 @@ describe ExamLevel do
   # relationships
   it { should belong_to(:qualification) }
   xit { should have_many(:exam_sections) }
-  xit { should have_many(:course_modules) }
+  it { should have_many(:course_modules) }
 
   # validation
   it { should validate_presence_of(:qualification_id) }
@@ -46,9 +46,8 @@ describe ExamLevel do
 
   it { should validate_presence_of(:sorting_order) }
 
-  it { should validate_presence_of(:best_possible_first_attempt_score) }
-
   # callbacks
+  it { should callback(:calculate_best_possible_score).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

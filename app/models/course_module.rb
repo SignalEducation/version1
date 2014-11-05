@@ -22,18 +22,19 @@
 class CourseModule < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :institution_id, :exam_level_id, :exam_section_id, :name, :name_url,
-                  :description, :tutor_id, :sorting_order, :estimated_time_in_seconds,
+  attr_accessible :institution_id, :qualification_id, :exam_level_id,
+                  :exam_section_id, :name, :name_url, :description,
+                  :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :compulsory, :active
 
   # Constants
 
   # relationships
   # todo has_many :course_module_elements
-  # todo belongs_to :exam_level
+  belongs_to :exam_level
   # todo belongs_to :exam_section
   belongs_to :institution
-  # todo belongs_to :qualification
+  belongs_to :qualification
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
@@ -41,7 +42,7 @@ class CourseModule < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_section_id, presence: true,
+  validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :name_url, presence: true

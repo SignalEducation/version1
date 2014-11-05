@@ -11,12 +11,12 @@
         .form-group
           =f.label :qualification_id, t('views.course_modules.form.qualification_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            -# todo =f.collection_select :qualification_id, @qualifications, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_related_select :qualification_id, @qualifications, :id, :name, :institution_id, :institution_id, {prompt: t('views.general.select')}, {class: 'form-control'}
 
         .form-group
           =f.label :exam_level_id, t('views.course_modules.form.exam_level_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_related_select :exam_level_id, @exam_levels, :id, :name, :qualification_id, :institution_id, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_related_select :exam_level_id, @exam_levels, :id, :name, :qualification_id, :qualification_id, {prompt: t('views.general.select')}, {class: 'form-control'}
 
         .form-group
           =f.label :exam_section_id, t('views.course_modules.form.exam_section_id'), class: 'control-label col-sm-4'

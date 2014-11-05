@@ -57,6 +57,18 @@ en:
           success: Course Module has been deleted
           error: Course Module was not deleted
 
+    exam_levels:
+      create:
+        flash:
+          success: Exam Level has been created successfully
+      update:
+        flash:
+          success: Exam Level details have been updated successfully
+      destroy:
+        flash:
+          success: Exam Level has been deleted
+          error: Exam Level was not deleted
+
     institutions:
       create:
         flash:
@@ -284,6 +296,32 @@ en:
 
       show:
         h1: Course Module
+
+    exam_levels:
+      form:
+        qualification_id: Qualification
+        name: Name
+        name_placeholder: First exam level
+        name_url: Name URL
+        name_url_placeholder: first-exam-level
+        is_cpd: 'Is CPD?'
+        sorting_order: Sorting Order
+        sorting_order_placeholder: 100
+        active: 'Active?'
+        best_possible_first_attempt_score: 'Best-possible first attempt score'
+        best_possible_first_attempt_score_placeholder: 200
+
+      index:
+        h1: Exam Levels
+
+      show:
+        h1: Exam Level
+
+      edit:
+        h1: Edit Exam Level
+
+      new:
+        h1: New Exam Level
 
     layouts:
       error_messages:

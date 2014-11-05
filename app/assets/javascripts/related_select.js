@@ -20,5 +20,6 @@ function watchChildSelect(childDomObject, parentDomObject, arrayOfChildren) {
   var parentSelect = $('#' + parentDomObject);
   parentSelect.on('change', function() {
     childSelect.html( getMatchesAsOptionTags(arrayOfChildren, parentSelect.val(), childSelect.val() ) );
+    childSelect.change();
   });
 }

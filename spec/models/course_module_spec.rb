@@ -38,9 +38,9 @@ describe CourseModule do
 
   # relationships
   it { should belong_to(:institution) }
-  xit { should belong_to(:exam_level) }
+  it { should belong_to(:exam_level) }
   xit { should belong_to(:exam_section) }
-  xit { should belong_to(:qualification) }
+  it { should belong_to(:qualification) }
   it { should belong_to(:tutor) }
 
   # validation
@@ -50,7 +50,7 @@ describe CourseModule do
   it { should validate_presence_of(:exam_level_id) }
   it { should validate_numericality_of(:exam_level_id) }
 
-  it { should validate_presence_of(:exam_section_id) }
+  it { should_not validate_presence_of(:exam_section_id) }
   it { should validate_numericality_of(:exam_section_id) }
 
   it { should validate_presence_of(:name) }
