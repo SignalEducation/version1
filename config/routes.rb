@@ -26,8 +26,11 @@ Rails.application.routes.draw do
     resources :exam_sections
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
+    post 'qualifications/reorder', to: 'qualifications#reorder'
+    resources :qualifications
     resources :subject_areas
     resources :exam_sections
+
 
     # home page
     root 'users#show' # temporary

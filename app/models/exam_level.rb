@@ -22,8 +22,9 @@ class ExamLevel < ActiveRecord::Base
   # Constants
 
   # relationships
-  #todo: belongs_to :qualification
+
   has_many :exam_sections
+  belongs_to :qualification
   #todo: has_many :course_modules
 
   # validation

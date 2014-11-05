@@ -26,9 +26,11 @@ class Institution < ActiveRecord::Base
   # Constants
 
   # relationships
+
+  has_many :qualifications
   has_many :institution_users
-  # todo has_many :qualifications
   belongs_to :subject_area
+
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -54,7 +56,7 @@ class Institution < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.institution_users.empty?
+    self.qualifications.empty? && self.institution_users.empty?
   end
 
   protected

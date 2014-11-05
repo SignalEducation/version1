@@ -149,7 +149,7 @@ class User < ActiveRecord::Base
 
   # instance methods
   def admin?
-    self.user_group.site_admin
+    self.user_group.try(:site_admin)
   end
 
   def change_the_password(options)
