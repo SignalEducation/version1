@@ -45,6 +45,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    exam_sections:
+      create:
+        flash:
+          success: Exam Section has been created successfully
+      update:
+        flash:
+          success: Exam Section details have been updated successfully
+      destroy:
+        flash:
+          success: Exam Section has been deleted
+          error: Exam Section was not deleted
+
     institutions:
       create:
         flash:
