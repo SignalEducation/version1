@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :exam_sections
+
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -22,9 +22,12 @@ Rails.application.routes.draw do
     # special routes
 
     # general resources
+    post 'exam_sections/reorder', to: 'exam_sections#reorder'
+    resources :exam_sections
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     resources :subject_areas
+    resources :exam_sections
 
     # home page
     root 'users#show' # temporary

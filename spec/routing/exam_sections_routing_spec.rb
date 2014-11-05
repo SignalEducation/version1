@@ -30,8 +30,6 @@ RSpec.describe ExamSectionsController, type: :routing do
     it 'routes to #reorder' do
       expect(post: '/exam_sections/reorder').to route_to('exam_sections#reorder')
     end
-    # todo move this to routes.rb ABOVE the resource:
-    # post 'exam_sections/reorder', to: 'exam_sections#reorder'
 
     it 'routes to #destroy' do
       expect(delete: '/exam_sections/1').to route_to('exam_sections#destroy', id: '1')
