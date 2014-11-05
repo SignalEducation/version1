@@ -1,0 +1,36 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.qualifications.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @qualifications, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered.sorted_table
+      %thead
+        %tr
+          %th=t('views.qualifications.form.name')
+          %th=t('views.qualifications.form.name_url')
+          %th=t('views.qualifications.form.active')
+          %th=t('views.qualifications.form.cpd_hours_required_per_year')
+          %th
+      -tracker = nil
+      %tbody
+        -@qualifications.each do |qualification|
+          -unless qualification.institution_id == tracker
+            -tracker = qualification.institution_id
+            %tr
+              %td{colspan: 5}
+                %h2=link_to(qualification.institution.name, qualification.institution, title: t('views.general.view_tooltip'))
+          %tr{id: qualification.id}
+            %td=link_to(qualification.name, qualification, title: t('views.general.view_tooltip'))
+            %td=link_to(qualification.name_url, qualification, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(qualification.active), qualification, title: t('views.general.view_tooltip'))
+            %td=link_to(qualification.cpd_hours_required_per_year, qualification, title: t('views.general.view_tooltip'))
+            %td
+              =link_to t('views.general.edit'), edit_qualification_url(qualification), class: 'btn btn-info btn-xs'
+              -if qualification.destroyable?
+                =link_to t('views.general.delete'), qualification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_qualification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

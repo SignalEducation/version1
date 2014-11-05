@@ -81,6 +81,18 @@ en:
           success: Product has been deleted
           error: Product was not deleted
 
+    qualifications:
+      create:
+        flash:
+          success: Qualification has been created successfully
+      update:
+        flash:
+          success: Qualification details have been updated successfully
+      destroy:
+        flash:
+          success: Qualification has been deleted
+          error: Qualification was not deleted
+
     subject_areas:
       create:
         flash:
@@ -169,7 +181,6 @@ en:
         paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
         paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
 
-
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
@@ -199,6 +210,7 @@ en:
       edit_tooltip: click to edit
       example: Example
       home: Home
+      missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one
       no: No
@@ -276,6 +288,37 @@ en:
     layouts:
       error_messages:
         error: error
+
+    qualifications:
+      form:
+        name: Name
+        name_placeholder: CFA Qualification
+        institution_id: Institution
+        name_url: URL
+        name_url_placeholder: cfa-qualification
+        cpd_hours_required_per_year: Required CPD Hours per Year
+        cpd_hours_required_per_year_placeholder: 100
+        category_id: Category
+        active: Active
+        sorting_order: Sorting Order
+        sorting_order_placeholder: 100
+
+      index:
+        h1: Qualifications
+
+      show:
+        h1: Qualification
+
+      edit:
+        h1: Edit Qualifications
+
+      new:
+        h1: New Qualifications
+
+    layouts:
+      error_messages:
+        error: error
+        preface: 'prevented this item from being saved:'
 
     institutions:
       form:
@@ -392,7 +435,6 @@ en:
         change_your_password:
           link: Change your password
           h4: Change your password
-
 
     user_groups:
       form:

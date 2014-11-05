@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -24,7 +25,10 @@ Rails.application.routes.draw do
     resources :course_modules
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
+    post 'qualifications/reorder', to: 'qualifications#reorder'
+    resources :qualifications
     resources :subject_areas
+
 
     # home page
     root 'users#show' # temporary

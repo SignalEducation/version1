@@ -36,7 +36,7 @@ describe Institution do
   # relationships
   it { should have_many(:course_modules) }
   it { should have_many(:institution_users) }
-  xit { should have_many(:qualifications) }
+  it { should have_many(:qualifications) }
   it { should belong_to(:subject_area) }
 
   # validation
