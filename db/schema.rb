@@ -52,6 +52,17 @@ ActiveRecord::Schema.define(version: 20141104145851) do
     t.datetime "updated_at"
   end
 
+  create_table "qualifications", force: true do |t|
+    t.integer  "institution_id"
+    t.string   "name"
+    t.string   "name_url"
+    t.integer  "sorting_order"
+    t.boolean  "active",                      default: false, null: false
+    t.integer  "cpd_hours_required_per_year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "subject_areas", force: true do |t|
     t.string   "name"
     t.string   "name_url"
