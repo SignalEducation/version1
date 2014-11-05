@@ -33,7 +33,7 @@ describe ExamLevel do
 
   # relationships
   xit { should belong_to(:qualification) }
-  xit { should have_many(:exam_sections) }
+  it { should have_many(:exam_sections) }
   xit { should have_many(:course_modules) }
 
 
