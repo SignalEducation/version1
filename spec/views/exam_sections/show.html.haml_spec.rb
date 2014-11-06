@@ -13,7 +13,6 @@ RSpec.describe 'exam_sections/show', type: :view do
     expect(rendered).to match(/#{@exam_section.name_url}/)
     expect(rendered).to match(/#{@exam_section.exam_level.name}/)
     expect(rendered).to match(/nice_boolean/)
-    expect(rendered).to match(/#{@exam_section.sorting_order}/)
     expect(rendered).to match(/#{@exam_section.best_possible_first_attempt_score}/)
   end
 end
