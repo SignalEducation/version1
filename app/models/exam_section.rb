@@ -1,62 +1,51 @@
 # == Schema Information
 #
-# Table name: exam_levels
+# Table name: exam_sections
 #
 #  id                                :integer          not null, primary key
-#  qualification_id                  :integer
 #  name                              :string(255)
 #  name_url                          :string(255)
-#  is_cpd                            :boolean          default(FALSE), not null
-#  sorting_order                     :integer
+#  exam_level_id                     :integer
 #  active                            :boolean          default(FALSE), not null
+#  sorting_order                     :integer
 #  best_possible_first_attempt_score :float
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #
 
-class ExamLevel < ActiveRecord::Base
+class ExamSection < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score
 
   # Constants
 
   # relationships
-  belongs_to :qualification
-  has_many :exam_sections
+  belongs_to :exam_level
   has_many :course_modules
 
-
   # validation
-  validates :qualification_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
-  validates :name_url, presence: true
+  validates :name_url, presence: true, uniqueness: true
+  validates :exam_level_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
+  validates :best_possible_first_attempt_score, presence: true
 
   # callbacks
-  before_save :calculate_best_possible_score
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:qualification_id) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
-  def self.get_by_name_url(the_name_url)
-    where(name_url: the_name_url).first
-  end
 
   # instance methods
   def destroyable?
-    self.exam_sections.empty?
+    self.course_modules.empty?
   end
 
   protected
-
-  def calculate_best_possible_score
-    # todo
-    self.best_possible_first_attempt_score = 100
-  end
 
   def check_dependencies
     unless self.destroyable?

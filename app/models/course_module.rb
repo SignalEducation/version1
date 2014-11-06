@@ -32,7 +32,7 @@ class CourseModule < ActiveRecord::Base
   # relationships
   # todo has_many :course_module_elements
   belongs_to :exam_level
-  # todo belongs_to :exam_section
+  belongs_to :exam_section
   belongs_to :institution
   belongs_to :qualification
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id

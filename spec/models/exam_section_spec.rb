@@ -1,14 +1,13 @@
 # == Schema Information
 #
-# Table name: exam_levels
+# Table name: exam_sections
 #
 #  id                                :integer          not null, primary key
-#  qualification_id                  :integer
 #  name                              :string(255)
 #  name_url                          :string(255)
-#  is_cpd                            :boolean          default(FALSE), not null
-#  sorting_order                     :integer
+#  exam_level_id                     :integer
 #  active                            :boolean          default(FALSE), not null
+#  sorting_order                     :integer
 #  best_possible_first_attempt_score :float
 #  created_at                        :datetime
 #  updated_at                        :datetime
@@ -16,11 +15,11 @@
 
 require 'rails_helper'
 
-describe ExamLevel do
+describe ExamSection do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at best_possible_first_attempt_score)
-  ExamLevel.column_names.each do |column_name|
+  black_list = %w(id created_at updated_at)
+  ExamSection.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
     else
@@ -29,34 +28,36 @@ describe ExamLevel do
   end
 
   # Constants
-  #it { ExamLevel.const_defined?(:CONSTANT_NAME) }
+  #it { ExamSection.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-  it { should have_many(:exam_sections) }
-  it { should belong_to(:qualification) }
+  it { should belong_to(:exam_level) }
   it { should have_many(:course_modules) }
 
   # validation
-  it { should validate_presence_of(:qualification_id) }
-  it { should validate_numericality_of(:qualification_id) }
-
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:name_url) }
+  it { should validate_uniqueness_of(:name_url) }
+
+  it { should validate_presence_of(:exam_level_id) }
+  it { should validate_numericality_of(:exam_level_id) }
 
   it { should validate_presence_of(:sorting_order) }
 
+  it { should validate_presence_of(:best_possible_first_attempt_score) }
+
   # callbacks
-  it { should callback(:calculate_best_possible_score).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
-  it { expect(ExamLevel).to respond_to(:all_in_order) }
+  it { expect(ExamSection).to respond_to(:all_in_order) }
 
   # class methods
-  it { expect(ExamLevel).to respond_to(:get_by_name_url) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+
+
 
 end

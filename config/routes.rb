@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     resources :currencies
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
     resources :exam_levels
+    post 'exam_sections/reorder', to: 'exam_sections#reorder'
+    resources :exam_sections
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     post 'qualifications/reorder', to: 'qualifications#reorder'

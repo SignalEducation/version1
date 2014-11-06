@@ -1,0 +1,33 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.exam_sections.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @exam_sections, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered.sorted_table
+      %thead
+        %tr
+          %th=t('views.exam_sections.form.name')
+          %th=t('views.exam_sections.form.name_url')
+          %th=t('views.exam_sections.form.exam_level_id')
+          %th=t('views.exam_sections.form.active')
+          %th=t('views.exam_sections.form.best_possible_first_attempt_score')
+          %th
+      %tbody
+        -@exam_sections.each do |exam_section|
+          %tr{id: exam_section.id}
+            %td=link_to(exam_section.name, exam_section, title: t('views.general.view_tooltip'))
+            %td=link_to(exam_section.name_url, exam_section, title: t('views.general.view_tooltip'))
+            %td=link_to(exam_section.exam_level.name, exam_section, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(exam_section.active), exam_section, title: t('views.general.view_tooltip'))
+            %td=link_to(exam_section.best_possible_first_attempt_score, exam_section, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), exam_section
+              =link_to t('views.general.edit'), edit_exam_section_url(exam_section), class: 'btn btn-info btn-xs'
+              -if exam_section.destroyable?
+                =link_to t('views.general.delete'), exam_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_exam_section_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

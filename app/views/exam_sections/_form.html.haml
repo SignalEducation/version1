@@ -1,0 +1,31 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@exam_section, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :sorting_order
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @exam_section, message: nil}
+        .form-group
+          =f.label :name, t('views.exam_sections.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.exam_sections.form.name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :name_url, t('views.exam_sections.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.exam_sections.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :exam_level_id, t('views.exam_sections.form.exam_level_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :exam_level_id, @exam_levels, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.exam_sections.form.active')
+        .form-group
+          =f.label :best_possible_first_attempt_score, t('views.exam_sections.form.best_possible_first_attempt_score'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :best_possible_first_attempt_score, placeholder: t('views.exam_sections.form.best_possible_first_attempt_score_placeholder'), class: 'form-control'
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), exam_sections_path

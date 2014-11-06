@@ -56,6 +56,17 @@ ActiveRecord::Schema.define(version: 20141106130441) do
     t.datetime "updated_at"
   end
 
+  create_table "exam_sections", force: true do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.integer  "exam_level_id"
+    t.boolean  "active",                            default: false, null: false
+    t.integer  "sorting_order"
+    t.float    "best_possible_first_attempt_score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "institution_users", force: true do |t|
     t.integer  "institution_id"
     t.integer  "user_id"

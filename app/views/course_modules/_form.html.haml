@@ -21,7 +21,7 @@
         .form-group
           =f.label :exam_section_id, t('views.course_modules.form.exam_section_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            -# todo =f.collection_select :exam_section_id, @exam_sections, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_related_select :exam_section_id, @exam_sections, :id, :name, :exam_level_id, :exam_level_id, {prompt: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :name, t('views.course_modules.form.name'), class: 'control-label col-sm-4'
           .col-sm-8
