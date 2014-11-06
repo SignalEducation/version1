@@ -441,16 +441,20 @@ en:
 
     subscription_plans:
       form:
-        available_to_students:  available to students
-        available to_corporates:  Available to corporates
-        all_you_can_eat:  All you can eat
-        payment_frequency_in_months:  Payment frequency in months
-        currency_id:  Currency
-        price:  Price
-        available_from:  Available from
-        available_to:  Available to
-        stripe_guid:  Stripe ID
-        trial_period_in_days:  Trial period in days
+        available_to_students: available to students
+        available_to_corporates: Available to corporates
+        all_you_can_eat: All you can eat
+        payment_frequency_in_months: Payment frequency in months
+        currency_id: Currency
+        price: Price
+        price_placeholder: '19.99'
+        available_from: Available from
+        available_from_placeholder: "2014-07-31"
+        available_to: Available to
+        available_to_placeholder: "2019-12-31"
+        stripe_guid: Stripe ID
+        trial_period_in_days: Trial period in days
+        trial_period_in_days_placeholder: 14
 
       edit:
         h1: Edit Subscription Plan

@@ -24,7 +24,7 @@
         .form-group
           =f.label :payment_frequency_in_months, t('views.subscription_plans.form.payment_frequency_in_months'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :payment_frequency_in_months, placeholder: t('views.subscription_plans.form.payment_frequency_in_months_placeholder'), class: 'form-control'
+            =f.select :payment_frequency_in_months, @payment_frequencies, {}, {class: 'form-control'}
         .form-group
           =f.label :currency_id, t('views.subscription_plans.form.currency_id'), class: 'control-label col-sm-4'
           .col-sm-8
@@ -41,10 +41,6 @@
           =f.label :available_to, t('views.subscription_plans.form.available_to'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :stripe_guid, t('views.subscription_plans.form.stripe_guid'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :stripe_guid, placeholder: t('views.subscription_plans.form.stripe_guid_placeholder'), class: 'form-control'
         .form-group
           =f.label :trial_period_in_days, t('views.subscription_plans.form.trial_period_in_days'), class: 'control-label col-sm-4'
           .col-sm-8

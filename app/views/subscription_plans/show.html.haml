@@ -25,7 +25,7 @@
         %td.col-sm-8=@subscription_plan.currency.name
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.price')
-        %td.col-sm-8=@subscription_plan.price
+        %td.col-sm-8=number_in_local_currency(@subscription_plan.price, @subscription_plan.currency_id)
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.available_from')
         %td.col-sm-8=@subscription_plan.available_from

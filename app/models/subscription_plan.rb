@@ -39,13 +39,14 @@ class SubscriptionPlan < ActiveRecord::Base
             numericality: {greater_than_or_equal_to: 0}
   validates :available_from, presence: true
   validates :available_to, presence: true
-  validates :stripe_guid, presence: true
   validates :trial_period_in_days, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0,
                            less_than: 32}
 
   # callbacks
   before_destroy :check_dependencies
+  before_create :create_on_stripe_platform
+  before_update :update_on_stripe_platform
 
   # scopes
   scope :all_in_order, -> { order(:available_to_students) }
@@ -66,6 +67,16 @@ class SubscriptionPlan < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def create_on_stripe_platform
+    # todo stripe integration
+    self.stripe_guid = 'plan_PLACEHOLDER-123'
+  end
+
+  def update_on_stripe_platform
+    # todo stripe integration
+    self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
   end
 
 end

@@ -27,9 +27,9 @@
             %td=link_to(tick_or_cross(subscription_plan.all_you_can_eat), subscription_plan, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan.payment_frequency_in_months, subscription_plan, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan.currency.name, subscription_plan, title: t('views.general.view_tooltip'))
-            %td.text-right=link_to(subscription_plan.price, subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.available_from, subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.available_to, subscription_plan, title: t('views.general.view_tooltip'))
+            %td.text-right=link_to(number_in_local_currency(subscription_plan.price, subscription_plan.currency_id), subscription_plan, title: t('views.general.view_tooltip'))
+            %td=link_to(subscription_plan.available_from.to_s(:short), subscription_plan, title: t('views.general.view_tooltip'))
+            %td=link_to(subscription_plan.available_to.to_s(:short), subscription_plan, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan.stripe_guid, subscription_plan, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan.trial_period_in_days, subscription_plan, title: t('views.general.view_tooltip'))
             %td

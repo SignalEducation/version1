@@ -50,13 +50,13 @@ describe SubscriptionPlan do
 
   it { should validate_presence_of(:available_to) }
 
-  it { should validate_presence_of(:stripe_guid) }
-
   it { should validate_presence_of(:trial_period_in_days) }
   it { should validate_numericality_of(:trial_period_in_days) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:create_on_stripe_platform).before(:create) }
+  it { should callback(:update_on_stripe_platform).before(:update) }
 
   # scopes
   it { expect(SubscriptionPlan).to respond_to(:all_in_order) }

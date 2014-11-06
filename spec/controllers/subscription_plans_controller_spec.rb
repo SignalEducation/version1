@@ -72,87 +72,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -166,87 +130,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -260,87 +188,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -354,87 +246,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -448,87 +304,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -542,87 +362,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -636,87 +420,51 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('subscription_plan')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
-      end
-
-      # optional
-      it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
-        expect_create_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subscription_plan')
+      it 'should respond ERROR not permitted' do
+        post :create, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -795,7 +543,7 @@ describe SubscriptionPlansController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {valid_params.keys.first => ''}
+        put :update, id: subscription_plan_1.id, subscription_plan: {payment_frequency_in_months: ''}
         expect_update_error_with_model('subscription_plan')
         expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
       end
@@ -805,7 +553,9 @@ describe SubscriptionPlansController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subscription_plan_1.id
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
+        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+        # todo replace the line above with the line below when subscription plans have children
+        # todo expect_delete_error_with_model('subscription_plan', subscription_plans_url)
       end
 
       it 'should be OK as no dependencies exist' do

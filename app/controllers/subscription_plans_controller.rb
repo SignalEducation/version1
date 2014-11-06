@@ -56,6 +56,7 @@ class SubscriptionPlansController < ApplicationController
       @subscription_plan = SubscriptionPlan.where(id: params[:id]).first
     end
     @currencies = Currency.all_active.all_in_order
+    @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
   end
 
   def allowed_params
