@@ -21,8 +21,9 @@ class Qualification < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :institution
+  has_many :course_modules
   has_many :exam_levels
+  belongs_to :institution
 
   # validation
   validates :institution_id, presence: true,
@@ -45,7 +46,11 @@ class Qualification < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.exam_levels.empty?
+    self.exam_levels.empty? && self.course_modules.empty?
+  end
+
+  def full_name
+    self.institution.name + ' > ' + self.name
   end
 
   protected

@@ -1,0 +1,47 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.course_modules.show.h1')
+        \#
+        =@course_module.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.institution_id')
+        %td.col-sm-8=@course_module.institution.name
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.exam_level_id')
+        %td.col-sm-8=@course_module.exam_level.name
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.exam_section_id')
+        %td.col-sm-8=@course_module.exam_section.name
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.name')
+        %td.col-sm-8=@course_module.name
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.name_url')
+        %td.col-sm-8=@course_module.name_url
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.description')
+        %td.col-sm-8=@course_module.description
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.tutor_id')
+        %td.col-sm-8=@course_module.tutor.name
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.sorting_order')
+        %td.col-sm-8=@course_module.sorting_order
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.estimated_time_in_seconds')
+        %td.col-sm-8=@course_module.estimated_time_in_seconds
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.compulsory')
+        %td.col-sm-8=tick_or_cross(@course_module.compulsory)
+      %tr
+        %td.col-sm-4=t('views.course_modules.form.active')
+        %td.col-sm-8=tick_or_cross(@course_module.active)
+    %p
+      =link_to t('views.general.back'), course_modules_url
+      |
+      =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip')

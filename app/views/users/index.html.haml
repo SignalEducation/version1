@@ -24,7 +24,10 @@
           -user_group_id_tracker = user.user_group_id
           %tr
             %td{colspan: 8}
-              %h2=user.user_group.try(:name)
+              -if user.user_group
+                %h2=link_to user.user_group.name, user.user_group
+              -else
+                %h2=t('views.general.missing_data_error')
         %tr
           %td
             =link_to(user.full_name, user, title: t('views.general.view_tooltip'))
@@ -32,13 +35,16 @@
             =link_to(user.email, user, title: t('views.general.view_tooltip'))
           %td=link_to(tick_or_cross(user.active), user, title: t('views.general.view_tooltip'))
           %td=link_to(user.password_reset_requested_at.to_s, user, title: t('views.general.view_tooltip'))
-          %td=link_to(user.password_reset_at.to_s, user, title: t('views.general.view_tooltip'))
-          %td=link_to(user.stripe_customer_id, user, title: t('views.general.view_tooltip'))
+          %td
+            -if user.password_reset_at
+              =link_to(user.password_reset_at.to_s(:standard), user, title: t('views.general.view_tooltip'))
+          %td
+            -if user.stripe_customer_id
+              =link_to(user.stripe_customer_id, user, title: t('views.general.view_tooltip'))
           %td=#link_to(user.corporate_customer.try(:name), user, title: t('views.general.view_tooltip'))
           %td=#link_to(user.corporate_customer_user_group.try(:name), user, title: t('views.general.view_tooltip'))
 
           %td
-            -#=link_to t('views.general.view'), user
             =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-info btn-xs'
             -if user.destroyable?
               =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'

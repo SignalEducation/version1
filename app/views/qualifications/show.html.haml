@@ -26,6 +26,12 @@
       %tr
         %td.col-sm-4=t('views.qualifications.form.cpd_hours_required_per_year')
         %td.col-sm-8=@qualification.cpd_hours_required_per_year
+      %tr
+        %td.col-sm-4=t('views.exam_levels.index.h1')
+        %td.col-sm-8
+          -@qualification.exam_levels.each do |level|
+            =link_to level.name, level
+            %br
     %p
       =link_to t('views.general.back'), qualifications_url
       |

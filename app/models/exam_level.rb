@@ -22,10 +22,10 @@ class ExamLevel < ActiveRecord::Base
   # Constants
 
   # relationships
-
-  has_many :exam_sections
   belongs_to :qualification
-  #todo: has_many :course_modules
+  has_many :exam_sections
+  has_many :course_modules
+
 
   # validation
   validates :qualification_id, presence: true,
@@ -33,9 +33,9 @@ class ExamLevel < ActiveRecord::Base
   validates :name, presence: true
   validates :name_url, presence: true
   validates :sorting_order, presence: true
-  validates :best_possible_first_attempt_score, presence: true
 
   # callbacks
+  before_save :calculate_best_possible_score
   before_destroy :check_dependencies
 
   # scopes
@@ -48,10 +48,15 @@ class ExamLevel < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.course_modules.empty?
   end
 
   protected
+
+  def calculate_best_possible_score
+    # todo
+    self.best_possible_first_attempt_score = 100
+  end
 
   def check_dependencies
     unless self.destroyable?

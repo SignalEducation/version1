@@ -1,6 +1,16 @@
+// Bootstrap customisation
+// see https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
+$input-color-placeholder: #ccc;
+
+$navbar-inverse-bg: #125;
+$navbar-inverse-color: #7F7;
+$navbar-inverse-link-color: #89A;
+
+// Load Bootstrap 3
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+// Further customisation
 body {
   margin-top: 51px;
   h1, h2, h3, h4, h5, h6 {

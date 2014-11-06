@@ -1,0 +1,37 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@exam_level, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @exam_level, message: nil}
+        .form-group
+          =f.label :qualification_id, t('views.exam_levels.form.qualification_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :qualification_id, @qualifications, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :name, t('views.exam_levels.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.exam_levels.form.name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :name_url, t('views.exam_levels.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.exam_levels.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :is_cpd
+                =t('views.exam_levels.form.is_cpd')
+        .form-group
+          =f.label :sorting_order, t('views.exam_levels.form.sorting_order'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :sorting_order, placeholder: t('views.exam_levels.form.sorting_order_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.exam_levels.form.active')
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), institutions_path

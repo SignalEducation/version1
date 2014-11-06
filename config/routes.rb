@@ -24,6 +24,10 @@ Rails.application.routes.draw do
     # general resources
     post 'exam_sections/reorder', to: 'exam_sections#reorder'
     resources :exam_sections
+    post 'course_modules/reorder', to: 'course_modules#reorder'
+    resources :course_modules
+    post 'exam_levels/reorder', to: 'exam_levels#reorder'
+    resources :exam_levels
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     post 'qualifications/reorder', to: 'qualifications#reorder'

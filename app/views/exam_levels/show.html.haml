@@ -1,0 +1,49 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.exam_levels.show.h1')
+        \#
+        =@exam_level.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.qualification_id')
+        %td.col-sm-8=link_to @exam_level.qualification.name, @exam_level.qualification
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.name')
+        %td.col-sm-8=@exam_level.name
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.name_url')
+        %td.col-sm-8=@exam_level.name_url
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.is_cpd')
+        %td.col-sm-8=tick_or_cross @exam_level.is_cpd
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.sorting_order')
+        %td.col-sm-8=@exam_level.sorting_order
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.active')
+        %td.col-sm-8=tick_or_cross @exam_level.active
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.best_possible_first_attempt_score')
+        %td.col-sm-8=@exam_level.best_possible_first_attempt_score
+      -# todo if @exam_level.exam_sections.count > 0
+        %tr
+          %td.col-sm-4=t('views.exam_sections.index.h1')
+          %td.col-sm-8
+            -@exam_level.exam_sections.each do |exam_section|
+              =link_to exam_section.name, exam_section
+              %br/
+      -if @exam_level.course_modules.count > 0
+        %tr
+          %td.col-sm-4=t('views.course_modules.index.h1')
+          %td.col-sm-8
+            -@exam_level.course_modules.each do |course_module|
+              =link_to course_module.name, course_module
+              %br/
+    %p
+      =link_to t('views.general.back'), exam_levels_url
+      |
+      =link_to t('views.general.edit'), edit_exam_level_url(id: @exam_level.id), title: t('views.general.edit_tooltip')

@@ -26,7 +26,7 @@ class <%= class_name -%> < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:<%= attributes.map(&:name).include?('sorting_order') ? 'sorting_order, ' : '' -%><%= attributes.first.name %>) }
+  scope :all_in_order, -> { order(:<%= attributes.map(&:name).include?(':sorting_order') ? 'sorting_order, ' : '' -%>:<%= attributes.first.name %>) }
 
   # class methods
 
