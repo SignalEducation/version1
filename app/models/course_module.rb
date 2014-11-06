@@ -30,7 +30,7 @@ class CourseModule < ActiveRecord::Base
   # Constants
 
   # relationships
-  # todo has_many :course_module_elements
+  has_many :course_module_elements
   belongs_to :exam_level
   belongs_to :exam_section
   belongs_to :institution
@@ -68,7 +68,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    true # todo self.course_module_elements.empty?
+    self.course_module_elements.empty?
   end
 
   def my_position_among_siblings
@@ -96,7 +96,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def recalculate_estimated_time
-    # todo self.update_attributes(estimated_time_in_seconds: self.course_module_elements.sum(:estimated_time_in_seconds))
+    self.update_attributes(estimated_time_in_seconds: self.course_module_elements.sum(:estimated_time_in_seconds))
   end
 
   protected

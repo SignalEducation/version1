@@ -39,7 +39,7 @@ describe CourseModule do
   # relationships
   it { should belong_to(:institution) }
   it { should belong_to(:exam_level) }
-  xit { should belong_to(:exam_section) }
+  it { should belong_to(:exam_section) }
   it { should belong_to(:qualification) }
   it { should belong_to(:tutor) }
 

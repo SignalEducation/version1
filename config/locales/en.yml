@@ -238,6 +238,10 @@ en:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
 
+    course_module_element:
+      can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
+      must_link_with_a_video_or_quiz: You must link this course module element to a video or quiz
+
     institution_users:
       can_t_be_blank_for_students: "Can't be blank for students"
 
