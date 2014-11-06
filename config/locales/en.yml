@@ -45,23 +45,7 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
-
-
-    exam_sections:
-      create:
-        flash:
-          success: Exam Section has been created successfully
-      update:
-        flash:
-          success: Exam Section details have been updated successfully
-      destroy:
-        flash:
-          success: Exam Section has been deleted
-          error: Exam Section was not deleted
-
-
     course_modules:
-
       create:
         flash:
           success: Course Module has been created successfully
@@ -97,6 +81,17 @@ en:
           success: Exam Level has been deleted
           error: Exam Level was not deleted
 
+    exam_sections:
+      create:
+        flash:
+          success: Exam Section has been created successfully
+      update:
+        flash:
+          success: Exam Section details have been updated successfully
+      destroy:
+        flash:
+          success: Exam Section has been deleted
+          error: Exam Section was not deleted
 
     institutions:
       create:
@@ -240,6 +235,9 @@ en:
 
     institution_users:
       can_t_be_blank_for_students: "Can't be blank for students"
+
+    subscription_plans:
+      must_be_in_the_future: must be in the future
 
   views:
     general:

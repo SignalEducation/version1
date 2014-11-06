@@ -49,6 +49,8 @@ describe SubscriptionPlan do
   it { should validate_presence_of(:available_from) }
 
   it { should validate_presence_of(:available_to) }
+  it { should allow_value(Proc.new{Time.now.gmtime.to_date + 1.day}.call).for(:available_to) }
+  it { should_not allow_value(Proc.new{Time.now.gmtime.to_date }.call).for(:available_to) }
 
   it { should validate_presence_of(:trial_period_in_days) }
   it { should validate_numericality_of(:trial_period_in_days) }
