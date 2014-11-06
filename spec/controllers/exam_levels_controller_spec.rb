@@ -6,8 +6,7 @@ describe ExamLevelsController, type: :controller do
   include_context 'users_and_groups_setup'
 
   let!(:exam_level_1) { FactoryGirl.create(:exam_level) }
-  # todo let!(:exam_section) { FactoryGirl.create(:exam_section,
-  # todo                                           exam_level_id: exam_level_1.id) }
+  let!(:exam_section) { FactoryGirl.create(:exam_section, exam_level_id: exam_level_1.id) }
   let!(:exam_level_2) { FactoryGirl.create(:exam_level) }
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_level) }
 
@@ -564,9 +563,7 @@ describe ExamLevelsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_level_1.id
-        expect_delete_success_with_model('exam_level', exam_levels_url)
-        # todo fix this when exam_sections are ready
-        # todo expect_delete_error_with_model('exam_level', exam_levels_url)
+        expect_delete_error_with_model('exam_level', exam_levels_url)
       end
 
       it 'should be OK as no dependencies exist' do

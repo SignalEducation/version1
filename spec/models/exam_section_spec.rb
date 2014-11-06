@@ -32,7 +32,7 @@ describe ExamSection do
 
   # relationships
   it { should belong_to(:exam_level) }
-  xit { should have_many(:course_modules) }
+  it { should have_many(:course_modules) }
 
   # validation
   it { should validate_presence_of(:name) }
@@ -58,7 +58,6 @@ describe ExamSection do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 
 end

@@ -5,8 +5,8 @@ describe ExamSectionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for exam_section_1
   let!(:exam_section_1) { FactoryGirl.create(:exam_section) }
+  let!(:course_module) { FactoryGirl.create(:course_module, exam_section_id: exam_section_1.id) }
   let!(:exam_section_2) { FactoryGirl.create(:exam_section) }
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_section) }
 
@@ -837,7 +837,7 @@ describe ExamSectionsController, type: :controller do
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
+        post :reorder, array_of_ids: [exam_section_2.id, exam_section_1.id]
         expect_reorder_success
       end
     end

@@ -22,7 +22,7 @@ class ExamSection < ActiveRecord::Base
 
   # relationships
   belongs_to :exam_level
-  #todo has_many :course_modules
+  has_many :course_modules
 
   # validation
   validates :name, presence: true
@@ -42,7 +42,7 @@ class ExamSection < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.course_modules.empty?
   end
 
   protected
