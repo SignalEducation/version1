@@ -5,7 +5,7 @@
 .row
   .col-sm-12
     =will_paginate @<%= table_name %>, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table' end -%>
+    %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table' end %>
       %thead
         %tr
         <%- attributes.each do |attribute| -%>

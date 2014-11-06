@@ -7,8 +7,8 @@ module ApplicationHelper
   end
 
   def number_in_local_currency(amount, currency_id)
-    # todo ccy = Currency.find(currency_id)
-    # todo number_to_currency(amount, unit: ccy.whole_unit_symbol, separator: I18.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
+    ccy = Currency.find(currency_id)
+    number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
   end
 
 end
