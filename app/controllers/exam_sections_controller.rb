@@ -14,7 +14,7 @@ class ExamSectionsController < ApplicationController
   end
 
   def new
-    @exam_section = ExamSection.new
+    @exam_section = ExamSection.new(running_order: 0)
   end
 
   def edit

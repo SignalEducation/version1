@@ -12,7 +12,6 @@
           %th=t('views.exam_sections.form.name_url')
           %th=t('views.exam_sections.form.exam_level_id')
           %th=t('views.exam_sections.form.active')
-          %th=t('views.exam_sections.form.sorting_order')
           %th=t('views.exam_sections.form.best_possible_first_attempt_score')
           %th
       %tbody
@@ -22,7 +21,6 @@
             %td=link_to(exam_section.name_url, exam_section, title: t('views.general.view_tooltip'))
             %td=link_to(exam_section.exam_level.name, exam_section, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(exam_section.active), exam_section, title: t('views.general.view_tooltip'))
-            %td=link_to(exam_section.sorting_order, exam_section, title: t('views.general.view_tooltip'))
             %td=link_to(exam_section.best_possible_first_attempt_score, exam_section, title: t('views.general.view_tooltip'))
             %td
               -#=link_to t('views.general.view'), exam_section

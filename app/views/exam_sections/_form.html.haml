@@ -1,6 +1,7 @@
 .row
   .col-sm-8.col-sm-offset-2
     =form_for(@exam_section, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :sorting_order
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @exam_section, message: nil}
         .form-group
@@ -21,10 +22,6 @@
               %label
                 =f.check_box :active
                 =t('views.exam_sections.form.active')
-        .form-group
-          =f.label :sorting_order, t('views.exam_sections.form.sorting_order'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :sorting_order, placeholder: t('views.exam_sections.form.sorting_order_placeholder'), class: 'form-control'
         .form-group
           =f.label :best_possible_first_attempt_score, t('views.exam_sections.form.best_possible_first_attempt_score'), class: 'control-label col-sm-4'
           .col-sm-8

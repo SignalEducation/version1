@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141105141747) do
+ActiveRecord::Schema.define(version: 20141106130441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 20141105141747) do
     t.integer  "estimated_time_in_seconds"
     t.boolean  "compulsory",                default: false, null: false
     t.boolean  "active",                    default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "currencies", force: true do |t|
+    t.string   "iso_code"
+    t.string   "name"
+    t.string   "leading_symbol"
+    t.string   "trailing_symbol"
+    t.boolean  "active",          default: false, null: false
+    t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -96,6 +107,35 @@ ActiveRecord::Schema.define(version: 20141105141747) do
     t.string   "name_url"
     t.integer  "sorting_order"
     t.boolean  "active",        default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscription_plans", force: true do |t|
+    t.boolean  "available_to_students",       default: false, null: false
+    t.boolean  "available_to_corporates",     default: false, null: false
+    t.boolean  "all_you_can_eat",             default: true,  null: false
+    t.integer  "payment_frequency_in_months", default: 1
+    t.integer  "currency_id"
+    t.decimal  "price"
+    t.date     "available_from"
+    t.date     "available_to"
+    t.string   "stripe_guid"
+    t.integer  "trial_period_in_days",        default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscription_transactions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "subscription_id"
+    t.string   "stripe_transaction_guid"
+    t.string   "transaction_type"
+    t.decimal  "amount"
+    t.integer  "currency_id"
+    t.boolean  "alarm",                   default: false, null: false
+    t.boolean  "live_mode",               default: false, null: false
+    t.text     "original_data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
