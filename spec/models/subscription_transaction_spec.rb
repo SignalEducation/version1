@@ -36,7 +36,7 @@ describe SubscriptionTransaction do
   # relationships
   it { should belong_to(:currency) }
   xit { should belong_to(:invoices) }
-  xit { should belong_to(:subscription) }
+  it { should belong_to(:subscription) }
   it { should belong_to(:user) }
 
   # validation
