@@ -78,93 +78,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permittedt' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -178,93 +176,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -278,93 +274,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -378,93 +372,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -478,93 +470,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -578,93 +568,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -678,93 +666,91 @@ describe ExamSectionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :index
-        expect_index_success_with_model('exam_sections', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_1.id
-        expect_show_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :show, id: exam_section_2.id
-        expect_show_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should respond ERROR not permitted' do
         get :new
-        expect_new_success_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with exam_section_1' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_1.id
-        expect_edit_success_with_model('exam_section', exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with exam_section_2' do
+      it 'should respond ERROR not permitted' do
         get :edit, id: exam_section_2.id
-        expect_edit_success_with_model('exam_section', exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should report error for invalid params' do
+      it 'should respond ERROR not permitted' do
         post :create, exam_section: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_section')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_section_1' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for exam_section_2' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
-        expect(assigns(:exam_section).id).to eq(exam_section_2.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should reject invalid params' do
+      it 'should respond ERROR not permitted' do
         put :update, id: exam_section_1.id, exam_section: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_section')
-        expect(assigns(:exam_section).id).to eq(exam_section_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should respond ERROR not permitted' do
         post :create, array_of_ids: [exam_section_2.id, exam_section_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_1.id
-        expect_delete_error_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should be OK as no dependencies exist' do
+      it 'should respond ERROR not permitted' do
         delete :destroy, id: exam_section_2.id
-        expect_delete_success_with_model('exam_section', exam_sections_url)
+        expect_bounce_as_not_allowed
       end
     end
 

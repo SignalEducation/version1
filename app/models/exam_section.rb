@@ -16,7 +16,7 @@
 class ExamSection < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score
 
   # Constants
 
@@ -36,7 +36,7 @@ class ExamSection < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
 

@@ -18,7 +18,7 @@ require 'rails_helper'
 describe ExamSection do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at best_possible_first_attempt_score)
+  black_list = %w(id created_at updated_at)
   ExamSection.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

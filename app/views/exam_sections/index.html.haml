@@ -5,7 +5,8 @@
 .row
   .col-sm-12
     =will_paginate @exam_sections, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table      %thead
+    %table.table.table-striped.table-bordered.sorted_table
+      %thead
         %tr
           %th=t('views.exam_sections.form.name')
           %th=t('views.exam_sections.form.name_url')

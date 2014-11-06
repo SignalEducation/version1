@@ -15,17 +15,17 @@
 
 FactoryGirl.define do
   factory :exam_section do
-    sequence(:name)       {|n| "Exam Level #{n}"}
-    sequence(:name_url)   {|n| "exam-level-#{n}"}
-    exam_level_id          { ExamLevel.first.try(:id) || 1 }
+    sequence(:name)       {|n| "Exam Section #{n}"}
+    sequence(:name_url)   {|n| "exam-section-#{n}"}
+    exam_level_id         { ExamSection.first.try(:id) || 1 }
     sequence(:sorting_order) {|n| n * 10}
     best_possible_first_attempt_score 1.5
 
-    factory :active_institution do
+    factory :active_exam_level do
       active              true
     end
 
-    factory :inactive_institution do
+    factory :inactive_exam_level do
       active              false
     end
   end

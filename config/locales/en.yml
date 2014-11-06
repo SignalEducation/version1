@@ -255,6 +255,38 @@ en:
       error_messages:
         error: error
 
+
+
+    exam_sections:
+      form:
+        name: Name
+        name_placeholder: Economics
+        name_url: URL
+        name_url_placeholder: economics-
+        exam_level_id: Exam Level
+        category_id: Category
+        active: Active
+        sorting_order: Sorting Order
+        sorting_order_placeholder: 100
+        best_possible_first_attempt_score: Best Possible Fisrt Attempt Score
+        best_possible_first_attempt_score_placeholder: 100
+
+      index:
+        h1: Exam Sections
+
+      show:
+        h1: Exam Section
+
+      edit:
+        h1: Edit Exam Section
+
+      new:
+        h1: New Exam Section
+
+    layouts:
+      error_messages:
+        error: error
+
     qualifications:
       form:
         name: Name
