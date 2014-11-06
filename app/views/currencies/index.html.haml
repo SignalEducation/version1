@@ -1,0 +1,33 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.currencies.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @currencies, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered.sorted_table
+      %thead
+        %tr
+          %th=t('views.currencies.form.iso_code')
+          %th=t('views.currencies.form.name')
+          %th=t('views.currencies.form.leading_symbol')
+          %th=t('views.currencies.form.trailing_symbol')
+          %th=t('views.currencies.form.active')
+          %th
+      %tbody
+        -@currencies.each do |currency|
+          %tr{id: currency.id}
+            %td=link_to(currency.iso_code, currency, title: t('views.general.view_tooltip'))
+            %td=link_to(currency.name, currency, title: t('views.general.view_tooltip'))
+            %td=link_to(currency.leading_symbol, currency, title: t('views.general.view_tooltip'))
+            %td=link_to(currency.trailing_symbol, currency, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(currency.active), currency, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), currency
+              =link_to t('views.general.edit'), edit_currency_url(currency), class: 'btn btn-info btn-xs'
+              -if currency.destroyable?
+                =link_to t('views.general.delete'), currency, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_currency_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

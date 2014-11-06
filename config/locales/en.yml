@@ -57,6 +57,18 @@ en:
           success: Course Module has been deleted
           error: Course Module was not deleted
 
+    currencies:
+      create:
+        flash:
+          success: Currency has been created successfully
+      update:
+        flash:
+          success: Currency details have been updated successfully
+      destroy:
+        flash:
+          success: Currency has been deleted
+          error: Currency was not deleted
+
     exam_levels:
       create:
         flash:
@@ -296,6 +308,32 @@ en:
 
       show:
         h1: Course Module
+
+    currencies:
+      form:
+        iso_code: ISO Code
+        iso_code_placeholder: EUR
+        name: Name
+        name_placeholder: Euro
+        leading_symbol: Leading symbol
+        leading_symbol_placeholder: "€"
+        trailing_symbol: Trailing symbol
+        trailing_symbol_placeholder: "c"
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+
+      edit:
+        h1: Edit Currency
+
+      index:
+        h1: Currencies
+
+      new:
+        h1: New Currency
+
+      show:
+        h1: Currency
 
     exam_levels:
       form:

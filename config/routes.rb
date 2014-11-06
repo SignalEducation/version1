@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -23,6 +22,8 @@ Rails.application.routes.draw do
     # general resources
     post 'course_modules/reorder', to: 'course_modules#reorder'
     resources :course_modules
+    post 'currencies/reorder', to: 'currencies#reorder'
+    resources :currencies
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
     resources :exam_levels
     post 'institutions/reorder', to: 'institutions#reorder'

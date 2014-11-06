@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141104154759) do
+ActiveRecord::Schema.define(version: 20141106103623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 20141104154759) do
     t.integer  "estimated_time_in_seconds"
     t.boolean  "compulsory",                default: false, null: false
     t.boolean  "active",                    default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "currencies", force: true do |t|
+    t.string   "iso_code"
+    t.string   "name"
+    t.string   "leading_symbol"
+    t.string   "trailing_symbol"
+    t.boolean  "active",          default: false, null: false
+    t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

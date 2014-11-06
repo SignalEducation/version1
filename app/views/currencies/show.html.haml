@@ -1,0 +1,29 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.currencies.show.h1')
+        \#
+        =@currency.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.currencies.form.iso_code')
+        %td.col-sm-8=@currency.iso_code
+      %tr
+        %td.col-sm-4=t('views.currencies.form.name')
+        %td.col-sm-8=@currency.name
+      %tr
+        %td.col-sm-4=t('views.currencies.form.leading_symbol')
+        %td.col-sm-8=@currency.leading_symbol
+      %tr
+        %td.col-sm-4=t('views.currencies.form.trailing_symbol')
+        %td.col-sm-8=@currency.trailing_symbol
+      %tr
+        %td.col-sm-4=t('views.currencies.form.active')
+        %td.col-sm-8=tick_or_cross(@currency.active)
+    %p
+      =link_to t('views.general.back'), currencies_url
+      |
+      =link_to t('views.general.edit'), edit_currency_url(id: @currency.id), title: t('views.general.edit_tooltip')
