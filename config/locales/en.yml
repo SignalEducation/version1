@@ -129,6 +129,18 @@ en:
           success: Subject Area has been deleted
           error: Subject Area was not deleted
 
+    subscription_plans:
+      create:
+        flash:
+          success: Subscription Plan has been created successfully
+      update:
+        flash:
+          success: Subscription Plan details have been updated successfully
+      destroy:
+        flash:
+          success: Subscription Plan has been deleted
+          error: Subscription Plan was not deleted
+
     users:
       create:
         flash:
@@ -426,6 +438,31 @@ en:
 
       show:
         h1: Institution
+
+    subscription_plans:
+      form:
+        available_to_students:  available to students
+        available to_corporates:  Available to corporates
+        all_you_can_eat:  All you can eat
+        payment_frequency_in_months:  Payment frequency in months
+        currency_id:  Currency
+        price:  Price
+        available_from:  Available from
+        available_to:  Available to
+        stripe_guid:  Stripe ID
+        trial_period_in_days:  Trial period in days
+
+      edit:
+        h1: Edit Subscription Plan
+
+      index:
+        h1: Subscription Plans
+
+      new:
+        h1: New Subscription Plan
+
+      show:
+        h1: Subscription Plan
 
     subject_areas:
       form:

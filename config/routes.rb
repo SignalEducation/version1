@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
     resources :subject_areas
+    resources :subscription_plans
 
 
     # home page

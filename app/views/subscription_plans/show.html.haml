@@ -1,0 +1,44 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.subscription_plans.show.h1')
+        \#
+        =@subscription_plan.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.available_to_students')
+        %td.col-sm-8=tick_or_cross(@subscription_plan.available_to_students)
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.available_to_corporates')
+        %td.col-sm-8=tick_or_cross(@subscription_plan.available_to_corporates)
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.all_you_can_eat')
+        %td.col-sm-8=tick_or_cross(@subscription_plan.all_you_can_eat)
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.payment_frequency_in_months')
+        %td.col-sm-8=@subscription_plan.payment_frequency_in_months
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.currency_id')
+        %td.col-sm-8=@subscription_plan.currency.name
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.price')
+        %td.col-sm-8=@subscription_plan.price
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.available_from')
+        %td.col-sm-8=@subscription_plan.available_from
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.available_to')
+        %td.col-sm-8=@subscription_plan.available_to
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.stripe_guid')
+        %td.col-sm-8=@subscription_plan.stripe_guid
+      %tr
+        %td.col-sm-4=t('views.subscription_plans.form.trial_period_in_days')
+        %td.col-sm-8=@subscription_plan.trial_period_in_days
+    %p
+      =link_to t('views.general.back'), subscription_plans_url
+      |
+      =link_to t('views.general.edit'), edit_subscription_plan_url(id: @subscription_plan.id), title: t('views.general.edit_tooltip')
