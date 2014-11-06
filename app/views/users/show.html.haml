@@ -44,7 +44,7 @@
         %td.col-sm-8=tick_or_cross(@user.active)
       %tr
         %td.col-sm-4=t('views.users.form.user_group_id')
-        %td.col-sm-8=@user.user_group.name
+        %td.col-sm-8=link_to @user.user_group.name, @user.user_group
       %tr
         %td.col-sm-4=t('views.users.form.password_reset_requested_at')
         %td.col-sm-8

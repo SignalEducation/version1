@@ -26,9 +26,9 @@ class Institution < ActiveRecord::Base
   # Constants
 
   # relationships
-
-  has_many :qualifications
+  has_many :course_modules
   has_many :institution_users
+  has_many :qualifications
   belongs_to :subject_area
 
 
@@ -56,7 +56,7 @@ class Institution < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.qualifications.empty? && self.institution_users.empty?
+    self.qualifications.empty? && self.institution_users.empty? && self.course_modules.empty?
   end
 
   protected

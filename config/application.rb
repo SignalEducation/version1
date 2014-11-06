@@ -20,6 +20,12 @@ module LearnsignalV3
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
 
+    # suggested by Tinfoil Security 29/10/2014
+    config.action_dispatch.default_headers = {
+            'X-Frame-Options' => 'SAMEORIGIN'
+            #       'Content-Security-Policy' => {'frame-ancestors' => 'none'}
+    }
+
     # see http://guides.rubyonrails.org/generators.html
     config.generators do |g|
       g.orm             :active_record

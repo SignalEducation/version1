@@ -31,8 +31,9 @@ describe Qualification do
   #it { Qualification.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-  it { should belong_to(:institution) }
+  it { should have_many(:course_modules) }
   it { should have_many(:exam_levels) }
+  it { should belong_to(:institution) }
 
   # validation
   it { should validate_presence_of(:institution_id) }
@@ -57,5 +58,6 @@ describe Qualification do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
 
 end
