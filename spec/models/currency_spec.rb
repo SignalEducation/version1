@@ -32,6 +32,7 @@ describe Currency do
 
   # relationships
   xit { should have_many(:corporate_customer_prices) }
+  it { should have_many(:subscription_transactions) }
 
   # validation
   it { should validate_presence_of(:iso_code) }

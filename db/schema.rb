@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141106103623) do
+ActiveRecord::Schema.define(version: 20141106113725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,20 @@ ActiveRecord::Schema.define(version: 20141106103623) do
     t.string   "name_url"
     t.integer  "sorting_order"
     t.boolean  "active",        default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscription_transactions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "subscription_id"
+    t.string   "stripe_transaction_guid"
+    t.string   "transaction_type"
+    t.decimal  "amount"
+    t.integer  "currency_id"
+    t.boolean  "alarm",                   default: false, null: false
+    t.boolean  "live_mode",               default: false, null: false
+    t.text     "original_data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

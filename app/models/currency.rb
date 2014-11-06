@@ -22,6 +22,7 @@ class Currency < ActiveRecord::Base
 
   # relationships
   # todo has_many :corporate_customer_prices
+  has_many :subscription_transactions
 
   # validation
   validates :iso_code, presence: true, uniqueness: true
@@ -42,7 +43,7 @@ class Currency < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !self.active
+    !self.active && self.subscription_transactions.empty?
   end
 
   protected
