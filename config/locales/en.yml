@@ -388,12 +388,6 @@ en:
       new:
         h1: New Exam Level
 
-    layouts:
-      error_messages:
-        error: error
-
-
-
     exam_sections:
       form:
         name: Name
@@ -419,41 +413,6 @@ en:
 
       new:
         h1: New Exam Section
-
-    layouts:
-      error_messages:
-        error: error
-
-    qualifications:
-      form:
-        name: Name
-        name_placeholder: CFA Qualification
-        institution_id: Institution
-        name_url: URL
-        name_url_placeholder: cfa-qualification
-        cpd_hours_required_per_year: Required CPD Hours per Year
-        cpd_hours_required_per_year_placeholder: 100
-        category_id: Category
-        active: Active
-        sorting_order: Sorting Order
-        sorting_order_placeholder: 100
-
-      index:
-        h1: Qualifications
-
-      show:
-        h1: Qualification
-
-      edit:
-        h1: Edit Qualifications
-
-      new:
-        h1: New Qualifications
-
-    layouts:
-      error_messages:
-        error: error
-        preface: 'prevented this item from being saved:'
 
     institutions:
       form:
@@ -485,6 +444,37 @@ en:
 
       show:
         h1: Institution
+
+    layouts:
+      error_messages:
+        error: error
+        preface: 'prevented this item from being saved:'
+
+    qualifications:
+      form:
+        name: Name
+        name_placeholder: CFA Qualification
+        institution_id: Institution
+        name_url: URL
+        name_url_placeholder: cfa-qualification
+        cpd_hours_required_per_year: Required CPD Hours per Year
+        cpd_hours_required_per_year_placeholder: 100
+        category_id: Category
+        active: Active
+        sorting_order: Sorting Order
+        sorting_order_placeholder: 100
+
+      index:
+        h1: Qualifications
+
+      show:
+        h1: Qualification
+
+      edit:
+        h1: Edit Qualifications
+
+      new:
+        h1: New Qualifications
 
     subscription_plans:
       form:
@@ -536,11 +526,6 @@ en:
 
       show:
         h1: Subject Area
-
-    layouts:
-      error_messages:
-        error: error
-        preface: 'prevented this item from being saved:'
 
     users:
       form:
