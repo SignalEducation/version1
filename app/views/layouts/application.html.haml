@@ -6,7 +6,13 @@
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
     %title LearnSignal V3
     =stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    -# Bootstrap DateTimePicker
+    %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
+
     =javascript_include_tag 'application', 'data-turbolinks-track' => true
+    -# Bootstrap DateTimePicker
+    %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
+    %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -14,6 +20,7 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
     =csrf_meta_tags
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
@@ -25,3 +32,4 @@
         =render partial: 'layouts/flash_messages'
       =yield
     =render partial: 'layouts/footer'
+    =render partial: 'layouts/misc_javascript'

@@ -31,7 +31,7 @@ class SubscriptionTransaction < ActiveRecord::Base
   # relationships
   belongs_to :currency
   # todo has_many :invoices
-  # todo belongs_to :subscription
+  belongs_to :subscription
   belongs_to :user # the person that owns the transaction
 
   # validation

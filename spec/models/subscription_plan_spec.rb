@@ -22,7 +22,7 @@ require 'rails_helper'
 describe SubscriptionPlan do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at stripe_guid)
   SubscriptionPlan.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -36,6 +36,7 @@ describe SubscriptionPlan do
 
   # relationships
   it { should belong_to(:currency) }
+  it { should have_many(:subscriptions) }
 
   # validation
   it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
@@ -49,6 +50,8 @@ describe SubscriptionPlan do
   it { should validate_presence_of(:available_from) }
 
   it { should validate_presence_of(:available_to) }
+  it { should allow_value(Proc.new{Time.now.gmtime.to_date + 1.day}.call).for(:available_to) }
+  it { should_not allow_value(Proc.new{Time.now.gmtime.to_date }.call).for(:available_to) }
 
   it { should validate_presence_of(:trial_period_in_days) }
   it { should validate_numericality_of(:trial_period_in_days) }

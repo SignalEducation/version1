@@ -63,6 +63,7 @@ describe User do
   xit { should belong_to(:corporate_customer_user_group) }
   xit { should belong_to(:country) }
   it { should have_many(:course_modules) }
+  it { should have_many(:subscriptions) }
   it { should have_many(:subscription_transactions) }
   it { should belong_to(:user_group) }
 

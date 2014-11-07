@@ -20,12 +20,19 @@
             =f.collection_select :<%= attribute.name -%>, @<%= attribute.name[0..-4].pluralize -%>, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
             <%- elsif attribute.type.to_s == 'text' -%>
             =f.text_area :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), rows: 4, class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
+            <%- elsif attribute.type.to_s == 'date' -%>
+            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control datepicker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => 'YYYY-MM-DD'}
+            <%- elsif attribute.type.to_s == 'datetime' -%>
+            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control datetimepicker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => 'YYYY-MM-DD HH:MM'}
+            <%- elsif attribute.type.to_s == 'time' -%>
+            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control time_only_picker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => 'HH:MM'}
             <%- else -%>
             =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
             <%- end -%>
         <%- end -%>
         <%- end -%>
         <%- end -%>
+
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')
       =link_to t('views.general.cancel'), <%= table_name %>_path

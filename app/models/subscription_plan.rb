@@ -23,13 +23,14 @@ class SubscriptionPlan < ActiveRecord::Base
   attr_accessible :available_to_students, :available_to_corporates,
                   :all_you_can_eat, :payment_frequency_in_months,
                   :currency_id, :price, :available_from, :available_to,
-                  :stripe_guid, :trial_period_in_days
+                  :trial_period_in_days
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
 
   # relationships
   belongs_to :currency
+  has_many :subscriptions
 
   # validation
   validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
@@ -39,6 +40,7 @@ class SubscriptionPlan < ActiveRecord::Base
             numericality: {greater_than_or_equal_to: 0}
   validates :available_from, presence: true
   validates :available_to, presence: true
+  validate  :available_to_in_the_future
   validates :trial_period_in_days, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0,
                            less_than: 32}
@@ -57,10 +59,16 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.subscriptions.empty?
   end
 
   protected
+
+  def available_to_in_the_future
+    unless self.available_to && self.available_to.to_date > Proc.new{Time.now.gmtime.to_date}.call
+      errors.add(:available_to, I18n.t('models.subscription_plans.must_be_in_the_future'))
+    end
+  end
 
   def check_dependencies
     unless self.destroyable?

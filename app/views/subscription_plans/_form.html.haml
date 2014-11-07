@@ -36,11 +36,11 @@
         .form-group
           =f.label :available_from, t('views.subscription_plans.form.available_from'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :available_from, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control'
+            =f.text_field :available_from, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control datepicker', data: {'date-format' => 'YYYY-MM-DD'}
         .form-group
           =f.label :available_to, t('views.subscription_plans.form.available_to'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control'
+            =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control datepicker', data: {'date-format' => 'YYYY-MM-DD'}
         .form-group
           =f.label :trial_period_in_days, t('views.subscription_plans.form.trial_period_in_days'), class: 'control-label col-sm-4'
           .col-sm-8
