@@ -34,6 +34,7 @@ describe Subscription do
   # relationships
   it { should belong_to(:user) }
   xit { should belong_to(:corporate_customer) }
+  it { should have_many(:invoices) }
   it { should belong_to(:subscription_plan) }
   it { should have_many(:subscription_transactions) }
 
