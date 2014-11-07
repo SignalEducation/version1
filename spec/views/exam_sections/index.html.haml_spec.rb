@@ -14,7 +14,6 @@ RSpec.describe 'exam_sections/index', type: :view do
     expect(rendered).to match(/#{@exam_sections.first.name_url.to_s}/)
     expect(rendered).to match(/#{@exam_sections.first.exam_level.name.to_s}/)
     expect(rendered).to match(/nice_boolean/)
-    expect(rendered).to match(/#{@exam_sections.first.sorting_order.to_s}/)
     expect(rendered).to match(/#{@exam_sections.first.best_possible_first_attempt_score.to_s}/)
   end
 end

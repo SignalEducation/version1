@@ -16,6 +16,23 @@ ActiveRecord::Schema.define(version: 20141106170331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "course_module_elements", force: true do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.text     "description"
+    t.integer  "estimated_time_in_seconds"
+    t.integer  "course_module_id"
+    t.integer  "course_video_id"
+    t.integer  "course_quiz_id"
+    t.integer  "sorting_order"
+    t.integer  "forum_topic_id"
+    t.integer  "tutor_id"
+    t.integer  "related_quiz_id"
+    t.integer  "related_video_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "course_modules", force: true do |t|
     t.integer  "institution_id"
     t.integer  "qualification_id"
