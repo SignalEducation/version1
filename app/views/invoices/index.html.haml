@@ -9,8 +9,10 @@
       %thead
         %tr
           -if current_user.admin?
-            %th=t('views.invoices.form.user_id')
-          %th=t('views.invoices.form.corporate_customer_id')
+            %th
+              =t('views.invoices.form.user_id')
+              %br/
+              =t('views.invoices.form.corporate_customer_id')
           %th=t('views.invoices.form.number_of_users')
           %th=t('views.invoices.form.currency_id')
           %th.text-right=t('views.invoices.form.unit_price_ex_vat')
@@ -22,12 +24,14 @@
         -@invoices.each do |invoice|
           %tr{id: invoice.id}
             -if current_user.admin?
-              %td=link_to(invoice.user.full_name, invoice.user, title: t('views.general.view_tooltip'))
-            %td=link_to(invoice.corporate_customer.try(:name), invoice, title: t('views.general.view_tooltip'))
+              %td
+                =link_to(invoice.user.full_name, invoice.user, title: t('views.general.view_tooltip'))
+                %br/
+                =link_to(invoice.corporate_customer.try(:name), invoice, title: t('views.general.view_tooltip'))
             %td=link_to(invoice.number_of_users, invoice, title: t('views.general.view_tooltip'))
             %td=link_to(invoice.currency.iso_code, invoice, title: t('views.general.view_tooltip'))
             %td.text-right=link_to(number_in_local_currency(invoice.unit_price_ex_vat, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
             %td.text-right=link_to(number_in_local_currency(invoice.line_total_ex_vat, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
-            %td.text-right=link_to(invoice.vat_rate.name, invoice, title: t('views.general.view_tooltip'))
+            %td.text-right=link_to(invoice.vat_rate.try(:name), invoice, title: t('views.general.view_tooltip'))
             %td.text-right=link_to(number_in_local_currency(invoice.line_total_vat_amount, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
             %td.text-right=link_to(number_in_local_currency(invoice.line_total_inc_vat, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
