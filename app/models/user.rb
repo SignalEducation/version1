@@ -70,6 +70,7 @@ class User < ActiveRecord::Base
   has_many :course_modules, foreign_key: :tutor_id
   has_many :institution_users
   has_many :subscriptions
+  has_many :subscription_payment_cards
   has_many :subscription_transactions
   belongs_to :user_group
 
@@ -169,7 +170,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_transactions.empty?
+    !self.admin? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty?
   end
 
   def full_name

@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141107102135) do
+
+ActiveRecord::Schema.define(version: 20141107095901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +144,22 @@ ActiveRecord::Schema.define(version: 20141107102135) do
     t.datetime "updated_at"
   end
 
+  create_table "subscription_payment_cards", force: true do |t|
+    t.integer  "user_id"
+    t.string   "stripe_card_guid"
+    t.string   "status"
+    t.string   "brand"
+    t.string   "last_4"
+    t.integer  "expiry_month"
+    t.integer  "expiry_year"
+    t.string   "billing_address"
+    t.string   "billing_country"
+    t.integer  "billing_country_id"
+    t.string   "account_email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "subscription_plans", force: true do |t|
     t.boolean  "available_to_students",       default: false, null: false
     t.boolean  "available_to_corporates",     default: false, null: false
@@ -165,11 +182,12 @@ ActiveRecord::Schema.define(version: 20141107102135) do
     t.string   "transaction_type"
     t.decimal  "amount"
     t.integer  "currency_id"
-    t.boolean  "alarm",                   default: false, null: false
-    t.boolean  "live_mode",               default: false, null: false
+    t.boolean  "alarm",                        default: false, null: false
+    t.boolean  "live_mode",                    default: false, null: false
     t.text     "original_data"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "subscription_payment_card_id"
   end
 
   create_table "subscriptions", force: true do |t|

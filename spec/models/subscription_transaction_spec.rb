@@ -2,18 +2,19 @@
 #
 # Table name: subscription_transactions
 #
-#  id                      :integer          not null, primary key
-#  user_id                 :integer
-#  subscription_id         :integer
-#  stripe_transaction_guid :string(255)
-#  transaction_type        :string(255)
-#  amount                  :decimal(, )
-#  currency_id             :integer
-#  alarm                   :boolean          default(FALSE), not null
-#  live_mode               :boolean          default(FALSE), not null
-#  original_data           :text
-#  created_at              :datetime
-#  updated_at              :datetime
+#  id                           :integer          not null, primary key
+#  user_id                      :integer
+#  subscription_id              :integer
+#  stripe_transaction_guid      :string(255)
+#  transaction_type             :string(255)
+#  amount                       :decimal(, )
+#  currency_id                  :integer
+#  alarm                        :boolean          default(FALSE), not null
+#  live_mode                    :boolean          default(FALSE), not null
+#  original_data                :text
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  subscription_payment_card_id :integer
 #
 
 require 'rails_helper'
@@ -37,6 +38,7 @@ describe SubscriptionTransaction do
   it { should belong_to(:currency) }
   xit { should belong_to(:invoices) }
   it { should belong_to(:subscription) }
+  it { should belong_to(:subscription_payment_card) }
   it { should belong_to(:user) }
 
   # validation
