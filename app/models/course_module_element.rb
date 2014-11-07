@@ -2,41 +2,41 @@
 #
 # Table name: course_module_elements
 #
-#  id                        :integer          not null, primary key
-#  name                      :string(255)
-#  name_url                  :string(255)
-#  description               :text
-#  estimated_time_in_seconds :integer
-#  course_module_id          :integer
-#  course_video_id           :integer
-#  course_quiz_id            :integer
-#  sorting_order             :integer
-#  forum_topic_id            :integer
-#  tutor_id                  :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
-#  created_at                :datetime
-#  updated_at                :datetime
+#  id                             :integer          not null, primary key
+#  name                           :string(255)
+#  name_url                       :string(255)
+#  description                    :text
+#  estimated_time_in_seconds      :integer
+#  course_module_id               :integer
+#  course_module_element_video_id :integer
+#  course_module_element_quiz_id  :integer
+#  sorting_order                  :integer
+#  forum_topic_id                 :integer
+#  tutor_id                       :integer
+#  related_quiz_id                :integer
+#  related_video_id               :integer
+#  created_at                     :datetime
+#  updated_at                     :datetime
 #
 
 class CourseModuleElement < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
-                  :course_module_id, :course_video_id, :course_quiz_id,
-                  :sorting_order, :forum_topic_id, :tutor_id, :related_quiz_id,
-                  :related_video_id
+                  :course_module_id, :course_module_element_video_id,
+                  :course_module_element_quiz_id, :sorting_order,
+                  :forum_topic_id, :tutor_id, :related_quiz_id, :related_video_id
 
   # Constants
 
   # relationships
   belongs_to :course_module
-  # todo belongs_to :course_video
-  # todo belongs_to :course_quiz
+  # todo belongs_to :course_module_element_video
+  belongs_to :course_module_element_quiz
   # todo belongs_to :forum_topic
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
-  # todo belongs_to :related_video
+  # todo belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
   # todo has_many :course_module_element_resources
   # todo has_many :course_module_element_user_logs
 
@@ -47,9 +47,9 @@ class CourseModuleElement < ActiveRecord::Base
   validates :estimated_time_in_seconds, presence: true
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_video_id, presence: true,
+  validates :course_module_element_video_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_quiz_id, presence: true,
+  validates :course_module_element_quiz_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -78,9 +78,9 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def video_or_quiz_id_required
-    if self.course_video_id.nil? && self.course_quiz_id.nil?
+    if self.course_module_element_video_id.nil? && self.course_module_element_quiz_id.nil?
       errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
-    elsif self.course_video_id.to_i > 0 && self.course_quiz_id.to_i > 0
+    elsif self.course_module_element_video_id.to_i > 0 && self.course_module_element_quiz_id.to_i > 0
       errors.add(:base, I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both'))
     end
   end
