@@ -37,7 +37,7 @@ class CourseModuleElement < ActiveRecord::Base
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
   # todo belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
-  # todo has_many :course_module_element_resources
+  has_many :course_module_element_resources
   # todo has_many :course_module_element_user_logs
 
   # validation

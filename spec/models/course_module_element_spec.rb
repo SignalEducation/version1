@@ -44,6 +44,7 @@ describe CourseModuleElement do
   it { should belong_to(:tutor) }
   xit { should belong_to(:related_quiz) }
   xit { should belong_to(:related_video) }
+  it { should have_many(:course_module_element_resources)}
 
   # validation
   it { should validate_presence_of(:name) }
