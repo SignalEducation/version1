@@ -1,0 +1,76 @@
+# == Schema Information
+#
+# Table name: course_module_element_quizzes
+#
+#  id                                :integer          not null, primary key
+#  course_module_element_id          :integer
+#  name                              :string(255)
+#  preamble                          :text
+#  expected_time_in_seconds          :integer
+#  time_limit_seconds                :integer
+#  number_of_questions               :integer
+#  question_selection_strategy       :string(255)
+#  best_possible_score_first_attempt :integer
+#  best_possible_score_retry         :integer
+#  course_module_jumbo_quiz_id       :integer
+#  created_at                        :datetime
+#  updated_at                        :datetime
+#
+
+require 'rails_helper'
+
+describe CourseModuleElementQuiz do
+
+  # attr-accessible
+  black_list = %w(id created_at updated_at question_selection_strategy
+                 best_possible_score_first_attempt)
+  CourseModuleElementQuiz.column_names.each do |column_name|
+    if black_list.include?(column_name)
+      it { should_not allow_mass_assignment_of(column_name.to_sym) }
+    else
+      it { should allow_mass_assignment_of(column_name.to_sym) }
+    end
+  end
+
+  # Constants
+  #it { CourseModuleElementQuiz.const_defined?(:CONSTANT_NAME) }
+
+  # relationships
+  it { should belong_to(:course_module_element) }
+  xit { should belong_to(:course_module_jumbo_quiz) }
+
+  # validation
+  it { should validate_presence_of(:course_module_element_id) }
+  it { should validate_numericality_of(:course_module_element_id) }
+
+  it { should validate_presence_of(:name) }
+
+  it { should validate_presence_of(:preamble) }
+
+  it { should validate_presence_of(:expected_time_in_seconds) }
+
+  it { should validate_presence_of(:time_limit_seconds) }
+
+  it { should validate_presence_of(:number_of_questions) }
+  it { should validate_numericality_of(:number_of_questions) }
+
+  it { should validate_presence_of(:best_possible_score_first_attempt) }
+
+  it { should validate_presence_of(:best_possible_score_retry) }
+
+  it { should validate_presence_of(:course_module_jumbo_quiz_id) }
+  it { should validate_numericality_of(:course_module_jumbo_quiz_id) }
+
+  # callbacks
+  it { should callback(:check_dependencies).before(:destroy) }
+
+  # scopes
+  it { expect(CourseModuleElementQuiz).to respond_to(:all_in_order) }
+
+  # class methods
+
+  # instance methods
+  it { should respond_to(:destroyable?) }
+
+
+end
