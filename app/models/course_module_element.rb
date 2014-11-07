@@ -22,7 +22,10 @@
 class CourseModuleElement < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds, :course_module_id, :course_video_id, :course_quiz_id, :sorting_order, :forum_topic_id, :tutor_id, :related_quiz_id, :related_video_id
+  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
+                  :course_module_id, :course_video_id, :course_quiz_id,
+                  :sorting_order, :forum_topic_id, :tutor_id, :related_quiz_id,
+                  :related_video_id
 
   # Constants
 
@@ -38,7 +41,7 @@ class CourseModuleElement < ActiveRecord::Base
   # todo has_many :course_module_element_user_logs
 
   # validation
-  validates :name, presence: true,
+  validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true
   validates :description, presence: true
   validates :estimated_time_in_seconds, presence: true
@@ -48,7 +51,8 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :course_quiz_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :sorting_order, presence: true
+  validates :sorting_order, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :forum_topic_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :tutor_id, presence: true,
@@ -82,7 +86,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_the_module_total_time
-    self.course_module.recalculate_estimated_time
+    self.course_module.try(:recalculate_estimated_time)
   end
 
   def array_of_sibling_ids

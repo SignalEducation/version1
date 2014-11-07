@@ -47,10 +47,10 @@ describe CourseModuleElement do
 
   # validation
   it { should validate_presence_of(:name) }
-
+  it { should validate_uniqueness_of(:name) }
 
   it { should validate_presence_of(:name_url) }
-
+  it { should validate_uniqueness_of(:name_url) }
 
   it { should validate_presence_of(:description) }
 
@@ -66,6 +66,7 @@ describe CourseModuleElement do
   it { should validate_numericality_of(:course_quiz_id) }
 
   it { should validate_presence_of(:sorting_order) }
+  it { should validate_numericality_of(:sorting_order) }
 
   it { should validate_presence_of(:forum_topic_id) }
   it { should validate_numericality_of(:forum_topic_id) }
@@ -78,8 +79,6 @@ describe CourseModuleElement do
 
   it { should validate_presence_of(:related_video_id) }
   it { should validate_numericality_of(:related_video_id) }
-
-
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -98,8 +97,5 @@ describe CourseModuleElement do
   it { should respond_to(:my_position_among_siblings) }
   it { should respond_to(:previous_element_id) }
   it { should respond_to(:next_element_id) }
-
-
-  pending "Please review #{__FILE__}"
 
 end
