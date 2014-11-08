@@ -13,7 +13,7 @@ RSpec.describe 'invoices/index', type: :view do
     @invoices = Invoice.paginate(page: 1, per_page: 10)
   end
 
-  it 'renders a list of invoices' do
+  xit 'renders a list of invoices' do
     render
     expect(rendered).to match(/#{@invoices.first.user.name.to_s}/)
     expect(rendered).to match(/#{@invoices.first.corporate_customer.name.to_s}/)
