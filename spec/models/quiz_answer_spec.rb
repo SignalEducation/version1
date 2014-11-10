@@ -39,8 +39,7 @@ describe QuizAnswer do
   it { should validate_presence_of(:quiz_question_id) }
   it { should validate_numericality_of(:quiz_question_id) }
 
-  it { should validate_presence_of(:degree_of_wrongness) }
-  it { should validate_inclusion_of(:degree_of_wrongness).in_array(:WRONGNESS) }
+  it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
 
 
 

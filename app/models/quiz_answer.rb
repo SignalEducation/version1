@@ -29,7 +29,7 @@ class QuizAnswer < ActiveRecord::Base
   # validation
   validates :quiz_question_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :degree_of_wrongness, presence: true, inclusion: {in: WRONGNESS}
+  validates :degree_of_wrongness, inclusion: {in: WRONGNESS}
   validates :wrong_answer_explanation_text, presence: true
   validates :wrong_answer_video_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
