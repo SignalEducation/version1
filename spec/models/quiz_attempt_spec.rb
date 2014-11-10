@@ -31,7 +31,7 @@ describe QuizAttempt do
 
   # relationships
   it { should belong_to(:user) }
-  it { should belong_to(:quiz_question) }
+  xit { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
   it { should belong_to(:course_module_element_user_log) }
 
@@ -58,7 +58,5 @@ describe QuizAttempt do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
