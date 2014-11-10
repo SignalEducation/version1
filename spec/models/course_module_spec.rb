@@ -42,6 +42,8 @@ describe CourseModule do
   it { should belong_to(:exam_section) }
   it { should belong_to(:qualification) }
   it { should belong_to(:tutor) }
+  it { should have_many(:course_module_elements) }
+  it { should have_many(:course_module_element_user_logs) }
 
   # validation
   it { should validate_presence_of(:institution_id) }

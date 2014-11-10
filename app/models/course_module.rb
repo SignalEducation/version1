@@ -31,6 +31,7 @@ class CourseModule < ActiveRecord::Base
 
   # relationships
   has_many :course_module_elements
+  has_many :course_module_element_user_logs
   belongs_to :exam_level
   belongs_to :exam_section
   belongs_to :institution
