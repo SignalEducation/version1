@@ -243,6 +243,10 @@ en:
     subscription_plans:
       must_be_in_the_future: must be in the future
 
+    quiz_content:
+      can_t_assign_to_question_and_answer: Can't assign this to a question AND an answer
+      must_assign_to_question_or_answer: Must assign this to a question OR an answer
+
   views:
     general:
       numbers:

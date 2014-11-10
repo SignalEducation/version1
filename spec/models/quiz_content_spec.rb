@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: quiz_contents
+#
+#  id               :integer          not null, primary key
+#  quiz_question_id :integer
+#  quiz_answer_id   :integer
+#  text_content     :text
+#  contains_mathjax :boolean          not null
+#  contains_image   :boolean          not null
+#  sorting_order    :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 require 'rails_helper'
 
 describe QuizContent do
@@ -16,7 +31,7 @@ describe QuizContent do
   #it { QuizContent.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-  it { should belong_to(:quiz_question) }
+  xit { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
 
   # validation
@@ -29,6 +44,8 @@ describe QuizContent do
   it { should validate_presence_of(:text_content) }
 
   it { should validate_presence_of(:sorting_order) }
+  it { should validate_numericality_of(:sorting_order) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -40,7 +57,6 @@ describe QuizContent do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:question_or_answer_only) }
 
 end
