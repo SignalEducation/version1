@@ -1,0 +1,47 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.invoices.show.h1')
+        \#
+        =@invoice.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.invoices.form.user_id')
+        %td.col-sm-8=@invoice.user.name
+      %tr
+        %td.col-sm-4=t('views.invoices.form.corporate_customer_id')
+        %td.col-sm-8=@invoice.corporate_customer.name
+      %tr
+        %td.col-sm-4=t('views.invoices.form.subscription_transaction_id')
+        %td.col-sm-8=@invoice.subscription_transaction.name
+      %tr
+        %td.col-sm-4=t('views.invoices.form.subscription_id')
+        %td.col-sm-8=@invoice.subscription.name
+      %tr
+        %td.col-sm-4=t('views.invoices.form.number_of_users')
+        %td.col-sm-8=@invoice.number_of_users
+      %tr
+        %td.col-sm-4=t('views.invoices.form.currency_id')
+        %td.col-sm-8=@invoice.currency.name
+      %tr
+        %td.col-sm-4=t('views.invoices.form.unit_price_ex_vat')
+        %td.col-sm-8=@invoice.unit_price_ex_vat
+      %tr
+        %td.col-sm-4=t('views.invoices.form.line_total_ex_vat')
+        %td.col-sm-8=@invoice.line_total_ex_vat
+      %tr
+        %td.col-sm-4=t('views.invoices.form.vat_rate_id')
+        %td.col-sm-8=@invoice.vat_rate.name
+      %tr
+        %td.col-sm-4=t('views.invoices.form.line_total_vat_amount')
+        %td.col-sm-8=@invoice.line_total_vat_amount
+      %tr
+        %td.col-sm-4=t('views.invoices.form.line_total_inc_vat')
+        %td.col-sm-8=@invoice.line_total_inc_vat
+    %p
+      =link_to t('views.general.back'), invoices_url
+      |
+      =link_to t('views.general.edit'), edit_invoice_url(id: @invoice.id), title: t('views.general.edit_tooltip')

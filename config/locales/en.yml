@@ -105,6 +105,18 @@ en:
           success: Institution has been deleted
           error: Institution was not deleted
 
+    invoices:
+      create:
+        flash:
+          success: Invoice has been created successfully
+      update:
+        flash:
+          success: Invoice details have been updated successfully
+      destroy:
+        flash:
+          success: Invoice has been deleted
+          error: Invoice was not deleted
+
     products:
       create:
         flash:
@@ -448,6 +460,32 @@ en:
 
       show:
         h1: Institution
+
+    invoices:
+      form:
+        user_id: User
+        corporate_customer_id: Corporate customer
+        subscription_transaction_id: Subscription transaction
+        subscription_id: Subscription
+        number_of_users: Number of users
+        currency_id: Currency
+        unit_price_ex_vat: Unit price ex VAT
+        line_total_ex_vat: Line total ex VAT
+        vat_rate_id: VAT rate
+        line_total_vat_amount: Line total VAT amount
+        line_total_inc_vat: Line total inc VAT
+
+      edit:
+        h1: Edit Invoice
+
+      index:
+        h1: Invoices
+
+      new:
+        h1: New Invoice
+
+      show:
+        h1: Invoice
 
     layouts:
       error_messages:
