@@ -41,7 +41,7 @@ describe CourseModuleElement do
   it { should belong_to(:course_module_element_quiz) }
   it { should have_many(:course_module_element_resources)}
   it { should have_many(:course_module_element_user_logs) }
-  xit { should belong_to(:course_module_element_video) }
+  it { should belong_to(:course_module_element_video) }
   xit { should belong_to(:forum_topic) }
   it { should belong_to(:related_quiz) }
   it { should belong_to(:related_video) }

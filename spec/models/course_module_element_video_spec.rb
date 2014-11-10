@@ -1,0 +1,85 @@
+# == Schema Information
+#
+# Table name: course_module_element_videos
+#
+#  id                           :integer          not null, primary key
+#  course_module_element_id     :integer
+#  raw_video_file_id            :integer
+#  name                         :string(255)
+#  run_time_in_seconds          :integer
+#  tutor_id                     :integer
+#  description                  :text
+#  tags                         :string(255)
+#  difficulty_level             :string(255)
+#  estimated_study_time_seconds :integer
+#  transcript                   :text
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#
+
+require 'rails_helper'
+
+describe CourseModuleElementVideo do
+
+  # attr-accessible
+  black_list = %w(id created_at updated_at)
+  CourseModuleElementVideo.column_names.each do |column_name|
+    if black_list.include?(column_name)
+      it { should_not allow_mass_assignment_of(column_name.to_sym) }
+    else
+      it { should allow_mass_assignment_of(column_name.to_sym) }
+    end
+  end
+
+  # Constants
+  it { CourseModuleElementVideo.const_defined?(:BASE_URL) }
+
+  # relationships
+  it { should belong_to(:course_module_element) }
+  xit { should belong_to(:raw_video_file) }
+  it { should belong_to(:tutor) }
+
+  # validation
+  it { should validate_presence_of(:course_module_element_id) }
+  it { should validate_numericality_of(:course_module_element_id) }
+
+  it { should validate_presence_of(:raw_video_file_id) }
+  it { should validate_numericality_of(:raw_video_file_id) }
+  it { should validate_uniqueness_of(:raw_video_file_id) }
+
+  it { should validate_presence_of(:name) }
+
+  it { should validate_presence_of(:run_time_in_seconds) }
+  it { should validate_numericality_of(:run_time_in_seconds) }
+
+  it { should validate_presence_of(:tutor_id) }
+  it { should validate_numericality_of(:tutor_id) }
+
+  it { should validate_presence_of(:description) }
+
+  it { should validate_presence_of(:tags) }
+
+  it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVELS) }
+
+  it { should validate_presence_of(:estimated_study_time_seconds) }
+
+  it { should validate_presence_of(:transcript) }
+
+  # callbacks
+  it { should callback(:set_estimated_study_time).before(:save) }
+  it { should callback(:trigger_transcode).after(:create) }
+  it { should callback(:check_dependencies).before(:destroy) }
+
+  # scopes
+  it { expect(CourseModuleElementVideo).to respond_to(:all_in_order) }
+
+  # class methods
+
+  # instance methods
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:difficulty_factor) }
+  it { should respond_to(:set_estimated_study_time) }
+  it { should respond_to(:trigger_transcode) }
+  it { should respond_to(:url) }
+
+end

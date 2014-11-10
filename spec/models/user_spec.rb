@@ -64,6 +64,7 @@ describe User do
   xit { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
+  it { should have_many(:course_module_element_videos) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
