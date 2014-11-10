@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: course_module_jumbo_quizzes
+#
+#  id                              :integer          not null, primary key
+#  course_module_id                :integer
+#  name                            :string(255)
+#  minimum_question_count_per_quiz :integer
+#  maximum_question_count_per_quiz :integer
+#  total_number_of_questions       :integer
+#  created_at                      :datetime
+#  updated_at                      :datetime
+#
+
+FactoryGirl.define do
+  factory :course_module_jumbo_quiz do
+    course_module_id 1
+    name "MyString"
+    minimum_question_count_per_quiz 1
+    maximum_question_count_per_quiz 1
+    total_number_of_questions 1
+  end
+
+end
