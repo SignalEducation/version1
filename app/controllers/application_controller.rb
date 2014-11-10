@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
 
+
+  DIFFICULTY_LEVELS = %w(easy medium hard)
+
   if Rails.env.staging? || Rails.env.production?
     http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
   end

@@ -31,10 +31,10 @@ class CourseModuleElement < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module
+  belongs_to :course_module_element_video
   belongs_to :course_module_element_quiz
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
-  # todo belongs_to :course_module_element_video
   # todo belongs_to :forum_topic
   belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
   belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
