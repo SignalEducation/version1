@@ -15,7 +15,8 @@
 class QuizAttempt < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :quiz_question_id, :quiz_answer_id, :correct, :course_module_element_user_log_id
+  attr_accessible :user_id, :quiz_question_id, :quiz_answer_id, :correct,
+                  :course_module_element_user_log_id
 
   # Constants
 
@@ -24,7 +25,6 @@ class QuizAttempt < ActiveRecord::Base
   # todo belongs_to :quiz_question
   belongs_to :quiz_answer
   belongs_to :user
-
 
   # validation
   validates :user_id, presence: true,

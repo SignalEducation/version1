@@ -31,8 +31,6 @@ describe QuizAnswer do
 
   # relationships
 
-  xit { should belong_to(:quiz_question) }
-  xit { should belong_to(:wrong_answer_video) }
   it { should have_many(:quiz_attempts) }
   xit { should have_many(:quiz_contents) }
   xit { should belong_to(:quiz_question) }
