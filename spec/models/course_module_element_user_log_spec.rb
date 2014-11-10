@@ -41,7 +41,7 @@ describe CourseModuleElementUserLog do
   it { should belong_to(:user) }
   it { should belong_to(:course_module) }
   xit { should belong_to(:corporate_customer) }
-  xit { should have_many(:quiz_attempts) }
+  it { should have_many(:quiz_attempts) }
 
   # validation
   it { should validate_presence_of(:course_module_element_id) }

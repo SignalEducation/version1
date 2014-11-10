@@ -34,7 +34,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :user
   belongs_to :course_module
   # todo belongs_to :corporate_customer
-  # todo has_many :quiz_attempts
+  has_many :quiz_attempts
 
   # validation
   validates :course_module_element_id, presence: true,
@@ -80,7 +80,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.quiz_attempts.empty?
   end
 
   def mark_previous_attempts_as_latest_false

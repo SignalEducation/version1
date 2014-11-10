@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141110114727) do
+ActiveRecord::Schema.define(version: 20141110151633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -191,6 +191,16 @@ ActiveRecord::Schema.define(version: 20141110114727) do
     t.string   "degree_of_wrongness"
     t.text     "wrong_answer_explanation_text"
     t.integer  "wrong_answer_video_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "quiz_attempts", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "quiz_question_id"
+    t.integer  "quiz_answer_id"
+    t.boolean  "correct",                           default: false, null: false
+    t.integer  "course_module_element_user_log_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
