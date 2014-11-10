@@ -36,20 +36,20 @@ class CourseModuleElementVideo < ActiveRecord::Base
   validates :raw_video_file_id, presence: true, uniqueness: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
-  validates :run_time_in_seconds, presence: true
+  validates :run_time_in_seconds, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
   validates :tags, presence: true
-  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS},
-            presence: true
+  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS}
   validates :estimated_study_time_seconds, presence: true
   validates :transcript, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
   before_save :set_estimated_study_time
   after_create :trigger_transcode
+  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }

@@ -26,7 +26,7 @@ FactoryGirl.define do
     tutor_id 1
     description "MyText"
     tags "MyString"
-    difficulty_level "MyString"
+    difficulty_level 'easy'
     estimated_study_time_seconds 1
     transcript "MyText"
   end

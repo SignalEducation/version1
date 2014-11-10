@@ -47,10 +47,10 @@ describe CourseModuleElementVideo do
   it { should validate_numericality_of(:raw_video_file_id) }
   it { should validate_uniqueness_of(:raw_video_file_id) }
 
-
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:run_time_in_seconds) }
+  it { should validate_numericality_of(:run_time_in_seconds) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
@@ -59,7 +59,6 @@ describe CourseModuleElementVideo do
 
   it { should validate_presence_of(:tags) }
 
-  it { should validate_presence_of(:difficulty_level) }
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVELS) }
 
   it { should validate_presence_of(:estimated_study_time_seconds) }
@@ -67,9 +66,9 @@ describe CourseModuleElementVideo do
   it { should validate_presence_of(:transcript) }
 
   # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_estimated_study_time).before(:save) }
   it { should callback(:trigger_transcode).after(:create) }
+  it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(CourseModuleElementVideo).to respond_to(:all_in_order) }
