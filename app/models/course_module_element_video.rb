@@ -41,8 +41,8 @@ class CourseModuleElementVideo < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
   validates :tags, presence: true
-  # todo validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS},
-  #          presence: true
+  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS},
+            presence: true
   validates :estimated_study_time_seconds, presence: true
   validates :transcript, presence: true
 
@@ -72,11 +72,11 @@ class CourseModuleElementVideo < ActiveRecord::Base
   end
 
   def set_estimated_study_time
-    self.estimated_study_time = self.run_time_in_seconds * difficulty_factor
+    self.estimated_study_time_seconds = self.run_time_in_seconds.to_i * difficulty_factor
   end
 
   def trigger_transcode
-    self.raw_video_file. assign_me_to_cme_video(self.id)
+    # todo self.raw_video_file.assign_me_to_cme_video(self.id)
   end
 
   def url(format)

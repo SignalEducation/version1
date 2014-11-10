@@ -59,7 +59,8 @@ describe CourseModuleElementVideo do
 
   it { should validate_presence_of(:tags) }
 
-  xit { should validate_presence_of(:difficulty_level) }
+  it { should validate_presence_of(:difficulty_level) }
+  it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVELS) }
 
   it { should validate_presence_of(:estimated_study_time_seconds) }
 
