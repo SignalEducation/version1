@@ -33,18 +33,20 @@ class CourseModuleElement < ActiveRecord::Base
   belongs_to :course_module
   belongs_to :course_module_element_video
   belongs_to :course_module_element_quiz
-  # todo belongs_to :forum_topic
-  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
-  belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
-  belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
+  # todo belongs_to :forum_topic
+  has_many :quiz_answers, foreign_key: :wrong_answer_video_id
+  belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
+  belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
+  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
   validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true
   validates :description, presence: true
-  validates :estimated_time_in_seconds, presence: true
+  validates :estimated_time_in_seconds, presence: true,
+            numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_video_id, presence: true,
@@ -64,8 +66,8 @@ class CourseModuleElement < ActiveRecord::Base
   validate :video_or_quiz_id_required
 
   # callbacks
-  before_destroy :check_dependencies
   after_save :update_the_module_total_time
+  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -74,7 +76,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.course_module_element_quiz.empty? && course_module_element_video.empty?
+    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty?
   end
 
   def video_or_quiz_id_required

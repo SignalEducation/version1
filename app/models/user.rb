@@ -69,6 +69,7 @@ class User < ActiveRecord::Base
   # todo belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
+  has_many :course_module_element_videos, foreign_key: :tutor_id
   has_many :quiz_attempts
   has_many :institution_users
   has_many :subscriptions
@@ -172,7 +173,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty?
+    !self.admin? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty?
   end
 
   def full_name

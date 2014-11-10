@@ -26,6 +26,7 @@ class QuizAnswer < ActiveRecord::Base
   has_many :quiz_attempts
   # todo has_many :quiz_contents, -> { order(:sorting_order) }
 
+
   # validation
   validates :quiz_question_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -44,7 +45,7 @@ class QuizAnswer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    true # self.quiz_attempts.empty? && self.quiz_contents.empty?
   end
 
   protected

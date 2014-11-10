@@ -30,18 +30,19 @@ describe QuizAnswer do
   it { QuizAnswer.const_defined?(:WRONGNESS) }
 
   # relationships
+
   xit { should belong_to(:quiz_question) }
   xit { should belong_to(:wrong_answer_video) }
   it { should have_many(:quiz_attempts) }
   xit { should have_many(:quiz_contents) }
+  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:wrong_answer_video) }
 
   # validation
   it { should validate_presence_of(:quiz_question_id) }
   it { should validate_numericality_of(:quiz_question_id) }
 
   it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
-
-
 
   it { should validate_presence_of(:wrong_answer_explanation_text) }
 
@@ -58,6 +59,5 @@ describe QuizAnswer do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
 
 end

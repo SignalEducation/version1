@@ -38,14 +38,15 @@ describe CourseModuleElement do
 
   # relationships
   it { should belong_to(:course_module) }
-  it { should belong_to(:course_module_element_video) }
   it { should belong_to(:course_module_element_quiz) }
+  it { should have_many(:course_module_element_resources)}
+  it { should have_many(:course_module_element_user_logs) }
+  it { should belong_to(:course_module_element_video) }
   xit { should belong_to(:forum_topic) }
-  it { should belong_to(:tutor) }
+  it { should have_many(:quiz_answers) }
   it { should belong_to(:related_quiz) }
   it { should belong_to(:related_video) }
-  it { should have_many(:course_module_element_resources)}
-  it { should have_many(:course_module_element_user_logs)}
+  it { should belong_to(:tutor) }
 
   # validation
   it { should validate_presence_of(:name) }
@@ -57,6 +58,7 @@ describe CourseModuleElement do
   it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:estimated_time_in_seconds) }
+  it { should validate_numericality_of(:estimated_time_in_seconds) }
 
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
@@ -83,8 +85,8 @@ describe CourseModuleElement do
   it { should validate_numericality_of(:related_video_id) }
 
   # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:update_the_module_total_time).after(:save) }
+  it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }

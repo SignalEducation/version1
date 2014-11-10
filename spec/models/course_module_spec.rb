@@ -37,14 +37,14 @@ describe CourseModule do
   #it { CourseModule.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-  it { should belong_to(:institution) }
-  it { should belong_to(:exam_level) }
-  it { should belong_to(:exam_section) }
-  it { should belong_to(:qualification) }
-  it { should belong_to(:tutor) }
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:course_module_jumbo_quizzes) }
+  it { should belong_to(:exam_level) }
+  it { should belong_to(:exam_section) }
+  it { should belong_to(:institution) }
+  it { should belong_to(:qualification) }
+  it { should belong_to(:tutor) }
 
   # validation
   it { should validate_presence_of(:institution_id) }

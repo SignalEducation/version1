@@ -15,7 +15,8 @@
 class CourseModuleJumboQuiz < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_id, :name, :minimum_question_count_per_quiz, :maximum_question_count_per_quiz, :total_number_of_questions
+  attr_accessible :course_module_id, :name, :minimum_question_count_per_quiz,
+                  :maximum_question_count_per_quiz, :total_number_of_questions
 
   # Constants
 

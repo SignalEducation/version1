@@ -70,7 +70,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_elements.empty?
+    self.course_module_elements.empty? && self.course_module_jumbo_quizzes.empty? && self.course_module_element_user_logs.empty?
   end
 
   def my_position_among_siblings
