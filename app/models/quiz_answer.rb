@@ -22,7 +22,7 @@ class QuizAnswer < ActiveRecord::Base
 
   # relationships
   # todo belongs_to :quiz_question
-  # todo belongs_to :wrong_answer_video, class_name: 'CourseModuleElement', foreign_key: :wrong_answer_video_id
+  belongs_to :wrong_answer_video, class_name: 'CourseModuleElement', foreign_key: :wrong_answer_video_id
   has_many :quiz_attempts
   # todo has_many :quiz_contents, -> { order(:sorting_order) }
 
