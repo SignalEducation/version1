@@ -20,10 +20,11 @@ class QuizAttempt < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :user
+  belongs_to :course_module_element_user_log
   # todo belongs_to :quiz_question
   belongs_to :quiz_answer
-  belongs_to :course_module_element_user_log
+  belongs_to :user
+
 
   # validation
   validates :user_id, presence: true,

@@ -30,10 +30,11 @@ describe QuizAttempt do
   #it { QuizAttempt.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-  it { should belong_to(:user) }
-  xit { should belong_to(:quiz_question) }
-  it { should belong_to(:quiz_answer) }
   it { should belong_to(:course_module_element_user_log) }
+  it { should belong_to(:quiz_answer) }
+  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:user) }
+
 
   # validation
   it { should validate_presence_of(:user_id) }
