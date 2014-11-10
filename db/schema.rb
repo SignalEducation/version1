@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141110091201) do
+ActiveRecord::Schema.define(version: 20141110111557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,16 @@ ActiveRecord::Schema.define(version: 20141110091201) do
     t.integer  "tutor_id"
     t.integer  "related_quiz_id"
     t.integer  "related_video_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "course_module_jumbo_quizzes", force: true do |t|
+    t.integer  "course_module_id"
+    t.string   "name"
+    t.integer  "minimum_question_count_per_quiz"
+    t.integer  "maximum_question_count_per_quiz"
+    t.integer  "total_number_of_questions"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

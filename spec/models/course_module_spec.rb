@@ -44,6 +44,7 @@ describe CourseModule do
   it { should belong_to(:tutor) }
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_user_logs) }
+  it { should have_many(:course_module_jumbo_quizzes) }
 
   # validation
   it { should validate_presence_of(:institution_id) }
