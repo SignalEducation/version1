@@ -44,10 +44,8 @@ describe CourseModuleJumboQuiz do
   it { should validate_presence_of(:maximum_question_count_per_quiz) }
   it { should validate_numericality_of(:maximum_question_count_per_quiz) }
 
-
   it { should validate_presence_of(:total_number_of_questions) }
   it { should validate_numericality_of(:total_number_of_questions) }
-
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
