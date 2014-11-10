@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: course_module_element_videos
+#
+#  id                           :integer          not null, primary key
+#  course_module_element_id     :integer
+#  raw_video_file_id            :integer
+#  name                         :string(255)
+#  run_time_in_seconds          :integer
+#  tutor_id                     :integer
+#  description                  :text
+#  tags                         :string(255)
+#  difficulty_level             :string(255)
+#  estimated_study_time_seconds :integer
+#  transcript                   :text
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#
+
 require 'rails_helper'
 
 describe CourseModuleElementVideo do
@@ -13,11 +32,11 @@ describe CourseModuleElementVideo do
   end
 
   # Constants
-  #it { CourseModuleElementVideo.const_defined?(:CONSTANT_NAME) }
+  it { CourseModuleElementVideo.const_defined?(:BASE_URL) }
 
   # relationships
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:raw_video_file) }
+  xit { should belong_to(:raw_video_file) }
   it { should belong_to(:tutor) }
 
   # validation
@@ -26,6 +45,8 @@ describe CourseModuleElementVideo do
 
   it { should validate_presence_of(:raw_video_file_id) }
   it { should validate_numericality_of(:raw_video_file_id) }
+  it { should validate_uniqueness_of(:raw_video_file_id) }
+
 
   it { should validate_presence_of(:name) }
 
@@ -38,7 +59,7 @@ describe CourseModuleElementVideo do
 
   it { should validate_presence_of(:tags) }
 
-  it { should validate_presence_of(:difficulty_level) }
+  xit { should validate_presence_of(:difficulty_level) }
 
   it { should validate_presence_of(:estimated_study_time_seconds) }
 
@@ -46,6 +67,8 @@ describe CourseModuleElementVideo do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:set_estimated_study_time).before(:save) }
+  it { should callback(:trigger_transcode).after(:create) }
 
   # scopes
   it { expect(CourseModuleElementVideo).to respond_to(:all_in_order) }
@@ -54,7 +77,9 @@ describe CourseModuleElementVideo do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:difficulty_factor) }
+  it { should respond_to(:set_estimated_study_time) }
+  it { should respond_to(:trigger_transcode) }
+  it { should respond_to(:url) }
 
 end

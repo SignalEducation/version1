@@ -31,14 +31,14 @@ class CourseModuleElement < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module
-  # todo belongs_to :course_module_element_video
+  belongs_to :course_module_element_video
   belongs_to :course_module_element_quiz
   # todo belongs_to :forum_topic
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
-  # todo belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
+  belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
   has_many :course_module_element_resources
-  # todo has_many :course_module_element_user_logs
+  has_many :course_module_element_user_logs
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -74,7 +74,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.course_module_element_quiz.empty? && course_module_element_video.empty?
   end
 
   def video_or_quiz_id_required

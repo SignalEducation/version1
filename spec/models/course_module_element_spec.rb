@@ -38,13 +38,14 @@ describe CourseModuleElement do
 
   # relationships
   it { should belong_to(:course_module) }
-  xit { should belong_to(:course_module_element_video) }
+  it { should belong_to(:course_module_element_video) }
   it { should belong_to(:course_module_element_quiz) }
   xit { should belong_to(:forum_topic) }
   it { should belong_to(:tutor) }
-  xit { should belong_to(:related_quiz) }
-  xit { should belong_to(:related_video) }
+  it { should belong_to(:related_quiz) }
+  it { should belong_to(:related_video) }
   it { should have_many(:course_module_element_resources)}
+  it { should have_many(:course_module_element_user_logs)}
 
   # validation
   it { should validate_presence_of(:name) }
