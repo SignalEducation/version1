@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: quiz_answers
+#
+#  id                            :integer          not null, primary key
+#  quiz_question_id              :integer
+#  correct                       :boolean          default(FALSE), not null
+#  degree_of_wrongness           :string(255)
+#  wrong_answer_explanation_text :text
+#  wrong_answer_video_id         :integer
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#
+
 require 'rails_helper'
 
 describe QuizAnswer do
@@ -13,17 +27,22 @@ describe QuizAnswer do
   end
 
   # Constants
-  #it { QuizAnswer.const_defined?(:CONSTANT_NAME) }
+  it { QuizAnswer.const_defined?(:WRONGNESS) }
 
   # relationships
-  it { should belong_to(:quiz_question) }
-  it { should belong_to(:wrong_answer_video) }
+  xit { should belong_to(:quiz_question) }
+  xit { should belong_to(:wrong_answer_video) }
+  xit { should have_many(:quiz_attempts) }
+  xit { should have_many(:quiz_contents) }
 
   # validation
   it { should validate_presence_of(:quiz_question_id) }
   it { should validate_numericality_of(:quiz_question_id) }
 
   it { should validate_presence_of(:degree_of_wrongness) }
+  it { should validate_inclusion_of(:degree_of_wrongness).in_array(:WRONGNESS) }
+
+
 
   it { should validate_presence_of(:wrong_answer_explanation_text) }
 
@@ -41,6 +60,5 @@ describe QuizAnswer do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end
