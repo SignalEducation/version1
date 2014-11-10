@@ -31,6 +31,7 @@ class CourseModule < ActiveRecord::Base
 
   # relationships
   has_many :course_module_elements
+  has_many :course_module_element_user_logs
   belongs_to :exam_level
   belongs_to :exam_section
   belongs_to :institution
@@ -68,7 +69,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_elements.empty?
+    self.course_module_elements.empty? && self.course_module_element_user_logs.empty?
   end
 
   def my_position_among_siblings
