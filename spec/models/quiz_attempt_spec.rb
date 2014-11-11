@@ -27,7 +27,7 @@ describe QuizAttempt do
   end
 
   # Constants
-  #it { QuizAttempt.const_defined?(:CONSTANT_NAME) }
+  #it { expect()QuizAttempt.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element_user_log) }

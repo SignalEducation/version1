@@ -26,7 +26,7 @@ describe CourseModuleElementResource do
   end
 
   # Constants
-  #it { CourseModuleElementResource.const_defined?(:CONSTANT_NAME) }
+  #it { expect()CourseModuleElementResource.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }

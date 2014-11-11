@@ -17,7 +17,7 @@ require 'rails_helper'
 describe QuizQuestion do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at course_module_element_id)
   QuizQuestion.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -27,7 +27,6 @@ describe QuizQuestion do
   end
 
   # Constants
-  it { QuizQuestion.const_defined?(:DIFFICULTY_LEVELS) }
 
   # relationships
   it { should belong_to(:course_module_element_quiz) }
@@ -61,6 +60,5 @@ describe QuizQuestion do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:set_course_module_element) }
 
 end

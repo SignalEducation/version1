@@ -32,7 +32,7 @@ describe CourseModuleElementVideo do
   end
 
   # Constants
-  it { CourseModuleElementVideo.const_defined?(:BASE_URL) }
+  it { expect(CourseModuleElementVideo.const_defined?(:BASE_URL)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }

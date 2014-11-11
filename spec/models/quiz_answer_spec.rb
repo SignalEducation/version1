@@ -27,7 +27,7 @@ describe QuizAnswer do
   end
 
   # Constants
-  it { QuizAnswer.const_defined?(:WRONGNESS) }
+  it { expect(QuizAnswer.const_defined?(:WRONGNESS)).to eq(true) }
 
   # relationships
 

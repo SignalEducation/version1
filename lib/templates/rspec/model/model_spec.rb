@@ -14,7 +14,7 @@ describe <%= class_name %> do
   end
 
   # Constants
-  #it { <%= class_name %>.const_defined?(:CONSTANT_NAME) }
+  #it { expect(<%= class_name %>.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   <%- attributes.each do |attribute| -%>

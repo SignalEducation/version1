@@ -15,7 +15,8 @@
 class QuizQuestion < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_quiz_id, :course_module_element_id, :difficulty_level, :solution_to_the_question, :hints
+  attr_accessible :course_module_element_quiz_id,
+                  :difficulty_level, :solution_to_the_question, :hints
 
   # Constants
 
@@ -46,12 +47,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_attempts.empty? && self.quiz_contents.empty?
-  end
-
-
-  def set_course_module_element
-    self.course_module_element_id = self.course_module_element_quiz.course_module_element_id
+    self.quiz_answers.empty? && self.quiz_attempts.empty? && self.quiz_contents.empty?
   end
 
   protected
@@ -61,6 +57,10 @@ class QuizQuestion < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def set_course_module_element
+    self.course_module_element_id = self.course_module_element_quiz.course_module_element_id
   end
 
 end

@@ -32,7 +32,7 @@ describe SubscriptionPlan do
   end
 
   # Constants
-  #it { SubscriptionPlan.const_defined?(:CONSTANT_NAME) }
+  #it { expect()SubscriptionPlan.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }

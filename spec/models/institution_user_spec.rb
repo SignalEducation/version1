@@ -27,7 +27,7 @@ describe InstitutionUser do
   end
 
   # Constants
-  #it { InstitutionUser.const_defined?(:CONSTANT_NAME) }
+  #it { expect()InstitutionUser.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:institution) }

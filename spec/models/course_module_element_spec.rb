@@ -34,7 +34,7 @@ describe CourseModuleElement do
   end
 
   # Constants
-  #it { CourseModuleElement.const_defined?(:CONSTANT_NAME) }
+  #it { expect()CourseModuleElement.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module) }

@@ -27,7 +27,7 @@ describe CourseModuleJumboQuiz do
   end
 
   # Constants
-  #it { CourseModuleJumboQuiz.const_defined?(:CONSTANT_NAME) }
+  #it { expect()CourseModuleJumboQuiz.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module) }
