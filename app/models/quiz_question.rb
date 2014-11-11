@@ -18,11 +18,6 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id, :course_module_element_id, :difficulty_level, :solution_to_the_question, :hints
 
   # Constants
-  DIFFICULTY_LEVELS = [
-      {name: 'easy', score: 3, run_time_multiplier: 1},
-      {name: 'medium', score: 5, run_time_multiplier: 1.5},
-      {name: 'difficult', score: 10, run_time_multiplier: 2.5}
-  ]
 
   # relationships
   belongs_to :course_module_element
@@ -35,9 +30,9 @@ class QuizQuestion < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :difficulty_level, presence: true
+  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS}
   validates :solution_to_the_question, presence: true
-  validates :hints, presence: true
+  validates :hints, allow_nil: true, length: {maximum: 65535}
 
   # callbacks
   before_destroy :check_dependencies

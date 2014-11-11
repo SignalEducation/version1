@@ -42,11 +42,12 @@ describe QuizQuestion do
   it { should validate_presence_of(:course_module_element_id) }
   it { should validate_numericality_of(:course_module_element_id) }
 
-  it { should validate_presence_of(:difficulty_level) }
+  it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVELS) }
 
   it { should validate_presence_of(:solution_to_the_question) }
 
-  it { should validate_presence_of(:hints) }
+  it { should allow_value(nil).for(:hints) }
+  it { should ensure_length_of(:hints).is_at_most(65535) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

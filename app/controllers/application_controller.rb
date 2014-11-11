@@ -1,7 +1,19 @@
 class ApplicationController < ActionController::Base
 
 
-  DIFFICULTY_LEVELS = %w(easy medium hard)
+  DIFFICULTY_LEVELS = [
+      {name: 'easy', score: 3, run_time_multiplier: 1},
+      {name: 'medium', score: 5, run_time_multiplier: 1.5},
+      {name: 'difficult', score: 10, run_time_multiplier: 2.5}
+  ]
+
+  DIFFICULTY_LEVEL_NAMES = DIFFICULTY_LEVELS.map { |x| x[:name] }
+
+  def self.find_multiplier_for_difficulty_level(the_name)
+    DIFFICULTY_LEVEL_NAMES.include?(the_name) ?
+        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] :
+        0
+  end
 
   if Rails.env.staging? || Rails.env.production?
     http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
