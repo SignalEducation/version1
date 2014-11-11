@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     # special routes
 
     # general resources
+    post 'countries/reorder', to: 'countries#reorder'
+    resources :countries
     post 'course_modules/reorder', to: 'course_modules#reorder'
     resources :course_modules
     post 'currencies/reorder', to: 'currencies#reorder'

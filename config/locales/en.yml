@@ -45,6 +45,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    countries:
+      create:
+        flash:
+          success: Country has been created successfully
+      update:
+        flash:
+          success: Country details have been updated successfully
+      destroy:
+        flash:
+          success: Country has been deleted
+          error: Country was not deleted
+
     course_modules:
       create:
         flash:
@@ -323,6 +335,31 @@ en:
 
       new:
         h1: New Category
+
+    countries:
+      form:
+        name: Name
+        name_placeholder: Name of the country
+        iso_code: ISO code
+        iso_code_placeholder: "IE GB CA US etc"
+        country_tld: Country TLD
+        country_tld_placeholder: ".com"
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        in_the_eu: In the EU
+        currency_id: Currency
+
+      index:
+        h1: Countries
+
+      show:
+        h1: Country
+
+      edit:
+        h1: Edit Country
+
+      new:
+        h1: New Country
 
     course_modules:
       form:

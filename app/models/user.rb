@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
   # relationships
   # todo belongs_to :corporate_customer
   # todo belongs_to :corporate_customer_user_group
-  # todo belongs_to :country
+  belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
   has_many :course_module_element_videos, foreign_key: :tutor_id

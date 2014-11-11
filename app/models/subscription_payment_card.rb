@@ -32,7 +32,8 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # relationships
   has_many :subscription_transactions
   belongs_to :user
-  # todo belongs_to :billing_country, class_name: 'Country', foreign_key: :billing_country_id
+  belongs_to :billing_country, class_name: 'Country',
+             foreign_key: :billing_country_id
 
   # validation
   validates :user_id, presence: true,

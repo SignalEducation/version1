@@ -1,0 +1,29 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.countries.show.h1')
+        \#
+        =@country.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.countries.form.name')
+        %td.col-sm-8=@country.name
+      %tr
+        %td.col-sm-4=t('views.countries.form.iso_code')
+        %td.col-sm-8=@country.iso_code
+      %tr
+        %td.col-sm-4=t('views.countries.form.country_tld')
+        %td.col-sm-8=@country.country_tld
+      %tr
+        %td.col-sm-4=t('views.countries.form.in_the_eu')
+        %td.col-sm-8=tick_or_cross(@country.in_the_eu)
+      %tr
+        %td.col-sm-4=t('views.countries.form.currency_id')
+        %td.col-sm-8=@country.currency.name
+    %p
+      =link_to t('views.general.back'), countries_url
+      |
+      =link_to t('views.general.edit'), edit_country_url(id: @country.id), title: t('views.general.edit_tooltip')

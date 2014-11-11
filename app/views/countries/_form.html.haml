@@ -1,0 +1,32 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@country, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :sorting_order
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @country, message: nil}
+        .form-group
+          =f.label :name, t('views.countries.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.countries.form.name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :iso_code, t('views.countries.form.iso_code'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :iso_code, placeholder: t('views.countries.form.iso_code_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :country_tld, t('views.countries.form.country_tld'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :country_tld, placeholder: t('views.countries.form.country_tld_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :in_the_eu
+                =t('views.countries.form.in_the_eu')
+        .form-group
+          =f.label :currency_id, t('views.countries.form.currency_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :currency_id, @currencies, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), countries_path

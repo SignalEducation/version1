@@ -79,7 +79,7 @@ class UsersController < ApplicationController
       @user = User.where(id: params[:id]).first
     end
     @email_frequencies = User::EMAIL_FREQUENCIES
-    # todo @countries = Country.all_in_order
+    @countries = Country.all_in_order
     @user_groups = UserGroup.all_in_order
   end
 
