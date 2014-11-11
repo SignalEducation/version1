@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141110151633) do
+ActiveRecord::Schema.define(version: 20141110180747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,6 +201,17 @@ ActiveRecord::Schema.define(version: 20141110151633) do
     t.integer  "quiz_answer_id"
     t.boolean  "correct",                           default: false, null: false
     t.integer  "course_module_element_user_log_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "quiz_contents", force: true do |t|
+    t.integer  "quiz_question_id"
+    t.integer  "quiz_answer_id"
+    t.text     "text_content"
+    t.boolean  "contains_mathjax", null: false
+    t.boolean  "contains_image",   null: false
+    t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
