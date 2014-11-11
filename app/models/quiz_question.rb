@@ -35,6 +35,7 @@ class QuizQuestion < ActiveRecord::Base
   validates :hints, allow_nil: true, length: {maximum: 65535}
 
   # callbacks
+  before_save :set_course_module_element
   before_destroy :check_dependencies
 
   # scopes
@@ -45,6 +46,11 @@ class QuizQuestion < ActiveRecord::Base
   # instance methods
   def destroyable?
     self.quiz_attempts.empty? && self.quiz_contents.empty?
+  end
+
+
+  def set_course_module_element
+    self.course_module_element_id = self.course_module_element_quiz.course_module_element_id
   end
 
   protected

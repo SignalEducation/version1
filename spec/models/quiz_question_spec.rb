@@ -50,6 +50,7 @@ describe QuizQuestion do
   it { should ensure_length_of(:hints).is_at_most(65535) }
 
   # callbacks
+  it { should callback(:set_course_module_element).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -59,5 +60,6 @@ describe QuizQuestion do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:set_course_module_element) }
 
 end
