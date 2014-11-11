@@ -32,7 +32,7 @@ describe QuizAttempt do
   # relationships
   it { should belong_to(:course_module_element_user_log) }
   it { should belong_to(:quiz_answer) }
-  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:quiz_question) }
   it { should belong_to(:user) }
 
   # validation

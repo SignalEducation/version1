@@ -22,7 +22,7 @@ class QuizContent < ActiveRecord::Base
 
   # relationships
   belongs_to :quiz_answer
-  # todo belongs_to :quiz_question
+  belongs_to :quiz_question
 
   # validation
   validate  :question_or_answer_only

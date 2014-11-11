@@ -37,7 +37,8 @@ describe CourseModuleElementQuiz do
 
   # relationships
   it { should belong_to(:course_module_element) }
-  xit { should belong_to(:course_module_jumbo_quiz) }
+  it { should belong_to(:course_module_jumbo_quiz) }
+  it { should have_many(:quiz_questions) }
 
   # validation
   it { should validate_presence_of(:course_module_element_id) }

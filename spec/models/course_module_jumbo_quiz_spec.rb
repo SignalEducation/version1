@@ -31,6 +31,7 @@ describe CourseModuleJumboQuiz do
 
   # relationships
   it { should belong_to(:course_module) }
+  it { should have_many(:course_module_element_quizzes) }
 
   # validation
   it { should validate_presence_of(:course_module_id) }

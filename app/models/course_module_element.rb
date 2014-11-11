@@ -37,6 +37,7 @@ class CourseModuleElement < ActiveRecord::Base
   has_many :course_module_element_user_logs
   # todo belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
+  has_many :quiz_questions
   belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
   belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
@@ -76,7 +77,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty?
+    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty?
   end
 
   def video_or_quiz_id_required

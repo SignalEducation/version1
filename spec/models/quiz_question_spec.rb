@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: quiz_questions
+#
+#  id                            :integer          not null, primary key
+#  course_module_element_quiz_id :integer
+#  course_module_element_id      :integer
+#  difficulty_level              :string(255)
+#  solution_to_the_question      :text
+#  hints                         :text
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#
+
 require 'rails_helper'
 
 describe QuizQuestion do
@@ -13,11 +27,13 @@ describe QuizQuestion do
   end
 
   # Constants
-  #it { QuizQuestion.const_defined?(:CONSTANT_NAME) }
+  it { QuizQuestion.const_defined?(:DIFFICULTY_LEVELS) }
 
   # relationships
   it { should belong_to(:course_module_element_quiz) }
   it { should belong_to(:course_module_element) }
+  it { should have_many(:quiz_attempts) }
+  it { should have_many(:quiz_contents) }
 
   # validation
   it { should validate_presence_of(:course_module_element_quiz_id) }
@@ -42,7 +58,5 @@ describe QuizQuestion do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

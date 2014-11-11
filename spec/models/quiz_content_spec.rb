@@ -31,7 +31,7 @@ describe QuizContent do
   #it { QuizContent.const_defined?(:CONSTANT_NAME) }
 
   # relationships
-  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
 
   # validation
