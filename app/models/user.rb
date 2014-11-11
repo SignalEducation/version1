@@ -174,7 +174,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty?
+    !self.admin? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty?
   end
 
   def full_name

@@ -44,7 +44,7 @@ class ExamSection < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.course_modules.empty?
+    self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
   protected
