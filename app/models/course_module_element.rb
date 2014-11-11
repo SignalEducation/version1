@@ -25,7 +25,8 @@ class CourseModuleElement < ActiveRecord::Base
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :course_module_id, :course_module_element_video_id,
                   :course_module_element_quiz_id, :sorting_order,
-                  :forum_topic_id, :tutor_id, :related_quiz_id, :related_video_id
+                  :forum_topic_id, :tutor_id, :related_quiz_id,
+                  :related_video_id
 
   # Constants
 
@@ -38,9 +39,9 @@ class CourseModuleElement < ActiveRecord::Base
   # todo belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
-  has_many :student_exam_tracks
   belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
   belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
+  has_many :student_exam_tracks
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
@@ -51,9 +52,9 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_video_id, presence: true,
+  validates :course_module_element_video_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_quiz_id, presence: true,
+  validates :course_module_element_quiz_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -78,15 +79,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty?
-  end
-
-  def video_or_quiz_id_required
-    if self.course_module_element_video_id.nil? && self.course_module_element_quiz_id.nil?
-      errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
-    elsif self.course_module_element_video_id.to_i > 0 && self.course_module_element_quiz_id.to_i > 0
-      errors.add(:base, I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both'))
-    end
+    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty?
   end
 
   def update_the_module_total_time
@@ -123,6 +116,14 @@ class CourseModuleElement < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def video_or_quiz_id_required
+    if self.course_module_element_video_id.nil? && self.course_module_element_quiz_id.nil?
+      errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
+    elsif self.course_module_element_video_id.to_i > 0 && self.course_module_element_quiz_id.to_i > 0
+      errors.add(:base, I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both'))
     end
   end
 

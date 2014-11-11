@@ -16,7 +16,8 @@
 class ExamSection < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score
+  attr_accessible :name, :name_url, :exam_level_id, :active,
+                  :sorting_order, :best_possible_first_attempt_score
 
   # Constants
 
@@ -24,7 +25,6 @@ class ExamSection < ActiveRecord::Base
   belongs_to :exam_level
   has_many :course_modules
   has_many :student_exam_tracks
-
 
   # validation
   validates :name, presence: true

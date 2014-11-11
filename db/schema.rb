@@ -16,6 +16,17 @@ ActiveRecord::Schema.define(version: 20141111132957) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "countries", force: true do |t|
+    t.string   "name"
+    t.string   "iso_code"
+    t.string   "country_tld"
+    t.integer  "sorting_order"
+    t.boolean  "in_the_eu",     default: false, null: false
+    t.integer  "currency_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "course_module_element_quizzes", force: true do |t|
     t.integer  "course_module_element_id"
     t.string   "name"
@@ -170,6 +181,22 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.integer  "subject_area_id"
     t.integer  "sorting_order"
     t.boolean  "active",          default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invoices", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "corporate_customer_id"
+    t.integer  "subscription_transaction_id"
+    t.integer  "subscription_id"
+    t.integer  "number_of_users"
+    t.integer  "currency_id"
+    t.decimal  "unit_price_ex_vat"
+    t.decimal  "line_total_ex_vat"
+    t.integer  "vat_rate_id"
+    t.decimal  "line_total_vat_amount"
+    t.decimal  "line_total_inc_vat"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

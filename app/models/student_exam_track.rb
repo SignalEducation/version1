@@ -15,7 +15,8 @@
 class StudentExamTrack < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :exam_level_id, :exam_section_id, :latest_course_module_element_id, :exam_schedule_id
+  attr_accessible :user_id, :exam_level_id, :exam_section_id,
+                  :latest_course_module_element_id, :exam_schedule_id
 
   # Constants
 

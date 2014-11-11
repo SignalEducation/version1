@@ -27,7 +27,6 @@ class ExamLevel < ActiveRecord::Base
   has_many :course_modules
   has_many :student_exam_tracks
 
-
   # validation
   validates :qualification_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
