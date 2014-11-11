@@ -35,6 +35,7 @@ describe ExamLevel do
   it { should have_many(:exam_sections) }
   it { should belong_to(:qualification) }
   it { should have_many(:course_modules) }
+  it { should have_many(:student_exam_tracks) }
 
   # validation
   it { should validate_presence_of(:qualification_id) }
