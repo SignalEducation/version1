@@ -35,17 +35,36 @@ describe QuizContent do
   it { should belong_to(:quiz_answer) }
 
   # validation
-  it { should validate_presence_of(:quiz_question_id) }
+  # tests for custom-validator 'question_or_answer_only'
+  context 'if both values set...' do
+    before :each do
+      allow(subject).to receive_messages(quiz_question_id: 1,
+                                         quiz_answer_id: 1)
+      subject.valid?
+    end
+
+    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.can_t_assign_to_question_and_answer')) }
+  end
+
+  context 'if neither value set...' do
+    before :each do
+      allow(subject).to receive_messages(quiz_question_id: nil,
+                                         quiz_answer_id: nil)
+      subject.valid?
+    end
+    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.must_assign_to_question_or_answer')) }
+  end
+
+  it { should_not validate_presence_of(:quiz_question_id) }
   it { should validate_numericality_of(:quiz_question_id) }
 
-  it { should validate_presence_of(:quiz_answer_id) }
+  it { should_not validate_presence_of(:quiz_answer_id) }
   it { should validate_numericality_of(:quiz_answer_id) }
 
   it { should validate_presence_of(:text_content) }
 
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
-
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -57,6 +76,5 @@ describe QuizContent do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:question_or_answer_only) }
 
 end
