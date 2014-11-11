@@ -33,6 +33,7 @@ describe ExamSection do
   # relationships
   it { should belong_to(:exam_level) }
   it { should have_many(:course_modules) }
+  it { should have_many(:student_exam_tracks) }
 
   # validation
   it { should validate_presence_of(:name) }

@@ -25,6 +25,7 @@ class ExamLevel < ActiveRecord::Base
   belongs_to :qualification
   has_many :exam_sections
   has_many :course_modules
+  has_many :student_exam_tracks
 
 
   # validation

@@ -75,6 +75,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :subscription_payment_cards
   has_many :subscription_transactions
+  has_many :student_exam_tracks
   belongs_to :user_group
 
   # validation

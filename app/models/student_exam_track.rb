@@ -23,8 +23,9 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :user
   belongs_to :exam_level
   belongs_to :exam_section
-  belongs_to :latest_course_module_element
-  belongs_to :exam_schedule
+  belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
+             foreign_key: :latest_course_module_element_id
+  # todo belongs_to :exam_schedule
 
   # validation
   validates :user_id, presence: true,
