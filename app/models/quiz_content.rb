@@ -27,9 +27,9 @@ class QuizContent < ActiveRecord::Base
 
   # validation
   validate  :question_or_answer_only
-  validates :quiz_question_id, presence: true,
+  validates :quiz_question_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_answer_id, presence: true,
+  validates :quiz_answer_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :text_content, presence: true
   validates :sorting_order, presence: true,
