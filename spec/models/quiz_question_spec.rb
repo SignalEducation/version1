@@ -34,6 +34,7 @@ describe QuizQuestion do
   it { should belong_to(:course_module_element) }
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
+  it { should have_many(:quiz_answers) }
 
   # validation
   it { should validate_presence_of(:course_module_element_quiz_id) }

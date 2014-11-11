@@ -33,7 +33,7 @@ describe QuizAnswer do
 
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
-  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:quiz_question) }
   it { should belong_to(:wrong_answer_video) }
 
   # validation

@@ -23,6 +23,7 @@ class QuizQuestion < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts
+  has_many :quiz_answers
   has_many :quiz_contents, -> { order(:sorting_order) }
 
   # validation
