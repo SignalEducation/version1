@@ -22,7 +22,7 @@ class QuizAnswer < ActiveRecord::Base
 
   # relationships
   has_many :quiz_attempts
-  # todo has_many :quiz_contents, -> { order(:sorting_order) }
+  has_many :quiz_contents, -> { order(:sorting_order) }
   # todo belongs_to :quiz_question
   belongs_to :wrong_answer_video, class_name: 'CourseModuleElement', foreign_key: :wrong_answer_video_id
 
@@ -44,7 +44,7 @@ class QuizAnswer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_attempts.empty? # todo && self.quiz_contents.empty?
+    self.quiz_attempts.empty? && self.quiz_contents.empty?
   end
 
   protected
