@@ -28,7 +28,7 @@ describe ExamSection do
   end
 
   # Constants
-  #it { ExamSection.const_defined?(:CONSTANT_NAME) }
+  #it { expect()ExamSection.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:exam_level) }

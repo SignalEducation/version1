@@ -26,7 +26,7 @@ describe SubjectArea do
   end
 
   # Constants
-  #it { SubjectArea.const_defined?(:CONSTANT_NAME) }
+  #it { expect()SubjectArea.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should have_many(:institutions) }

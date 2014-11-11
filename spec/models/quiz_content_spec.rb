@@ -28,10 +28,10 @@ describe QuizContent do
   end
 
   # Constants
-  #it { QuizContent.const_defined?(:CONSTANT_NAME) }
+  #it { expect()QuizContent.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
 
   # validation

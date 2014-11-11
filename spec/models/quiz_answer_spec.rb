@@ -27,13 +27,13 @@ describe QuizAnswer do
   end
 
   # Constants
-  it { QuizAnswer.const_defined?(:WRONGNESS) }
+  it { expect(QuizAnswer.const_defined?(:WRONGNESS)).to eq(true) }
 
   # relationships
 
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
-  xit { should belong_to(:quiz_question) }
+  it { should belong_to(:quiz_question) }
   it { should belong_to(:wrong_answer_video) }
 
   # validation

@@ -34,7 +34,7 @@ describe UserGroup do
   end
 
   # Constants
-  it { UserGroup.const_defined?(:FEATURES) }
+  it { expect(UserGroup.const_defined?(:FEATURES)).to eq(true) }
 
   # relationships
   it { should have_many(:users) }

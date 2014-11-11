@@ -56,7 +56,7 @@ describe User do
   end
 
   # Constants
-  it { User.const_defined?(:EMAIL_FREQUENCIES) }
+  it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
 
   # relationships
   xit { should belong_to(:corporate_customer) }

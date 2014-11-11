@@ -34,7 +34,7 @@ describe CourseModuleElement do
   end
 
   # Constants
-  #it { CourseModuleElement.const_defined?(:CONSTANT_NAME) }
+  #it { expect()CourseModuleElement.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module) }
@@ -44,6 +44,7 @@ describe CourseModuleElement do
   it { should belong_to(:course_module_element_video) }
   xit { should belong_to(:forum_topic) }
   it { should have_many(:quiz_answers) }
+  it { should have_many(:quiz_questions) }
   it { should belong_to(:related_quiz) }
   it { should belong_to(:related_video) }
   it { should belong_to(:tutor) }

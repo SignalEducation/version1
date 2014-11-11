@@ -28,7 +28,7 @@ describe Currency do
   end
 
   # Constants
-  #it { Currency.const_defined?(:CONSTANT_NAME) }
+  #it { expect()Currency.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   xit { should have_many(:corporate_customer_prices) }

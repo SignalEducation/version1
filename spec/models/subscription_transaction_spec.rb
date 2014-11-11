@@ -32,7 +32,7 @@ describe SubscriptionTransaction do
   end
 
   # Constants
-  it { SubscriptionTransaction.const_defined?(:TRANSACTION_TYPES) }
+  it { expect(SubscriptionTransaction.const_defined?(:TRANSACTION_TYPES)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }

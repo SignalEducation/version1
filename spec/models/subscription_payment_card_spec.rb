@@ -33,7 +33,7 @@ describe SubscriptionPaymentCard do
   end
 
   # Constants
-  it { SubscriptionPaymentCard.const_defined?(:STATUSES) }
+  it { expect(SubscriptionPaymentCard.const_defined?(:STATUSES)).to eq(true) }
 
   # relationships
   it { should have_many(:subscription_transactions) }

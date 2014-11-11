@@ -32,7 +32,7 @@ describe CourseModuleElementVideo do
   end
 
   # Constants
-  it { CourseModuleElementVideo.const_defined?(:BASE_URL) }
+  it { expect(CourseModuleElementVideo.const_defined?(:BASE_URL)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }
@@ -59,7 +59,7 @@ describe CourseModuleElementVideo do
 
   it { should validate_presence_of(:tags) }
 
-  it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVELS) }
+  it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES) }
 
   it { should validate_presence_of(:estimated_study_time_seconds) }
 
@@ -77,7 +77,6 @@ describe CourseModuleElementVideo do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:difficulty_factor) }
   it { should respond_to(:set_estimated_study_time) }
   it { should respond_to(:trigger_transcode) }
   it { should respond_to(:url) }
