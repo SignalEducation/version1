@@ -50,6 +50,27 @@ describe CourseModuleElement do
   it { should belong_to(:tutor) }
 
   # validation
+  # tests for custom-validator 'video_or_quiz_id_required'
+  context 'if both values set...' do
+    before :each do
+      allow(subject).to receive_messages(course_module_element_video_id: 1,
+                                         course_module_element_quiz_id: 1)
+      subject.valid?
+    end
+
+    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both')) }
+  end
+
+  context 'if neither value set...' do
+    before :each do
+      allow(subject).to receive_messages(course_module_element_video_id: nil,
+                                         course_module_element_quiz_id: nil)
+      subject.valid?
+    end
+    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.course_module_element.must_link_with_a_video_or_quiz')) }
+  end
+
+
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
 
@@ -64,10 +85,10 @@ describe CourseModuleElement do
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
 
-  it { should validate_presence_of(:course_module_element_video_id) }
+  it { should_not validate_presence_of(:course_module_element_video_id) }
   it { should validate_numericality_of(:course_module_element_video_id) }
 
-  it { should validate_presence_of(:course_module_element_quiz_id) }
+  it { should_not validate_presence_of(:course_module_element_quiz_id) }
   it { should validate_numericality_of(:course_module_element_quiz_id) }
 
   it { should validate_presence_of(:sorting_order) }
@@ -96,7 +117,6 @@ describe CourseModuleElement do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:video_or_quiz_id_required) }
   it { should respond_to(:update_the_module_total_time) }
   it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:my_position_among_siblings) }
