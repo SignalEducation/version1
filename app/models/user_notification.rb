@@ -23,7 +23,9 @@
 class UserNotification < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :subject_line, :content, :email_required, :email_sent_at, :unread, :destroyed_at, :message_type, :forum_topic_id, :forum_post_id, :tutor_id, :falling_behind, :blog_post_id
+  attr_accessible :user_id, :subject_line, :content, :email_required, :email_sent_at,
+                  :unread, :destroyed_at, :message_type, :forum_topic_id, :forum_post_id,
+                  :tutor_id, :falling_behind, :blog_post_id
 
   # Constants
   MESSAGE_TYPES = %w(blog forum marketing study_plan)
@@ -42,7 +44,7 @@ class UserNotification < ActiveRecord::Base
   validates :content, presence: true
   validates :email_sent_at, presence: true
   validates :destroyed_at, presence: true
-  validates :message_type, presence: true
+  validates :message_type, inclusion: {in: MESSAGE_TYPES}
   validates :forum_topic_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :forum_post_id, presence: true,
@@ -53,16 +55,37 @@ class UserNotification < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  after_create :send_email_if_needed
   before_destroy :check_dependencies
+  before_destroy :mark_as_deleted
 
   # scopes
-  scope :all_in_order, -> { order(:user_id) }
+  scope :all_in_order, -> { order(:user_id, :unread, :created_at) }
+  scope :unread,  -> { where(unread: true) }
+  scope :read,    -> { where(unread: false) }
+  scope :deleted, -> { where('destroyed_at > 0') }
+  scope :visible, -> { where(destroyed_at: nil) }
+  default_scope{visible.all_in_order}
 
   # class methods
 
   # instance methods
   def destroyable?
     true
+  end
+
+  def send_email_if_needed
+    UserMailer.send_notification(self.id).delayed_job if self.email_required
+  end
+
+  def mark_as_read
+    self.unread = false
+    self.save
+  end
+
+  def mark_as_deleted
+    self.destroyed_at = Proc.new { Time.now }.call
+    false # todo - need to test this!
   end
 
   protected

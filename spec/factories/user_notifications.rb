@@ -29,7 +29,7 @@ FactoryGirl.define do
     email_sent_at "2014-11-12 09:30:33"
     unread false
     destroyed_at "2014-11-12 09:30:33"
-    message_type "MyString"
+    message_type 'blog'
     forum_topic_id 1
     forum_post_id 1
     tutor_id 1
