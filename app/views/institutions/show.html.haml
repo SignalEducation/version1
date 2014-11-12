@@ -33,9 +33,6 @@
         %td.col-sm-8
           =link_to @institution.subject_area.name, @institution.subject_area
       %tr
-        %td.col-sm-4=t('views.institutions.form.sorting_order')
-        %td.col-sm-8=@institution.sorting_order
-      %tr
         %td.col-sm-4=t('views.institutions.form.active')
         %td.col-sm-8=tick_or_cross(@institution.active)
       -if @institution.qualifications.count > 0

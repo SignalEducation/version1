@@ -17,7 +17,6 @@
             %br/
             =t('views.institutions.form.help_desk_url')
           %th=t('views.institutions.form.subject_area_id')
-          %th=t('views.institutions.form.sorting_order')
           %th=t('views.institutions.form.active')
           %th
       %tbody
@@ -32,7 +31,6 @@
               %br/
               =link_to(institution.help_desk_url, institution.help_desk_url, title: t('views.general.view_tooltip'), target: '_blank')
             %td=link_to(institution.subject_area.name, institution, title: t('views.general.view_tooltip'))
-            %td=link_to(institution.sorting_order, institution, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(institution.active), institution, title: t('views.general.view_tooltip'))
             %td
               =link_to t('views.general.edit'), edit_institution_url(institution), class: 'btn btn-info btn-xs'

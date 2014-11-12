@@ -14,7 +14,7 @@ class InstitutionsController < ApplicationController
   end
 
   def new
-    @institution = Institution.new
+    @institution = Institution.new(sorting_order: 1)
   end
 
   def edit
