@@ -1,0 +1,1 @@
+json.extract! @user_notification, :id, :user_id, :subject_line, :content, :email_required, :email_sent_at, :unread, :destroyed_at, :message_type, :forum_topic_id, :forum_post_id, :tutor_id, :falling_behind, :blog_post_id, :created_at, :updated_at

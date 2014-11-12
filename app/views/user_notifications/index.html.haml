@@ -1,0 +1,49 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.user_notifications.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @user_notifications, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.user_notifications.form.user_id')
+          %th=t('views.user_notifications.form.subject_line')
+          %th=t('views.user_notifications.form.content')
+          %th=t('views.user_notifications.form.email_required')
+          %th=t('views.user_notifications.form.email_sent_at')
+          %th=t('views.user_notifications.form.unread')
+          %th=t('views.user_notifications.form.destroyed_at')
+          %th=t('views.user_notifications.form.message_type')
+          %th=t('views.user_notifications.form.forum_topic_id')
+          %th=t('views.user_notifications.form.forum_post_id')
+          %th=t('views.user_notifications.form.tutor_id')
+          %th=t('views.user_notifications.form.falling_behind')
+          %th=t('views.user_notifications.form.blog_post_id')
+          %th
+      %tbody
+        -@user_notifications.each do |user_notification|
+          %tr{id: user_notification.id}
+            %td=link_to(user_notification.user.name, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.subject_line, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.content, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(user_notification.email_required), user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.email_sent_at.to_s(:standard), user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(user_notification.unread), user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.destroyed_at.to_s(:standard), user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.message_type, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.forum_topic.name, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.forum_post.name, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.tutor.name, user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(user_notification.falling_behind), user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.blog_post.name, user_notification, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), user_notification
+              =link_to t('views.general.edit'), edit_user_notification_url(user_notification), class: 'btn btn-info btn-xs'
+              -if user_notification.destroyable?
+                =link_to t('views.general.delete'), user_notification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_user_notification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

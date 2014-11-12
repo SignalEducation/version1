@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :user_notifications
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
