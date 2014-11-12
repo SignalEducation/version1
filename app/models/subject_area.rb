@@ -30,7 +30,7 @@ class SubjectArea < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
   scope :all_inactive, -> { where(active: false) }
 
@@ -38,7 +38,7 @@ class SubjectArea < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.institutions.empty?
+    !self.active && self.institutions.empty?
   end
 
   protected

@@ -15,9 +15,6 @@
         %td.col-sm-4=t('views.subject_areas.form.name_url')
         %td.col-sm-8=@subject_area.name_url
       %tr
-        %td.col-sm-4=t('views.subject_areas.form.sorting_order')
-        %td.col-sm-8=@subject_area.sorting_order
-      %tr
         %td.col-sm-4=t('views.subject_areas.form.active')
         %td.col-sm-8=tick_or_cross(@subject_area.active)
       -if @subject_area.institutions

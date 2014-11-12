@@ -11,7 +11,6 @@ RSpec.describe 'subject_areas/index', type: :view do
     render
     expect(rendered).to match(/#{@subject_areas.first.name.to_s}/)
     expect(rendered).to match(/#{@subject_areas.first.name_url.to_s}/)
-    expect(rendered).to match(/#{@subject_areas.first.sorting_order.to_s}/)
     expect(rendered).to match(/nice_boolean/)
   end
 end

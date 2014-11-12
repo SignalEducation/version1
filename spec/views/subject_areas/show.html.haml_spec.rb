@@ -10,7 +10,6 @@ RSpec.describe 'subject_areas/show', type: :view do
     render
     expect(rendered).to match(/#{@subject_area.name}/)
     expect(rendered).to match(/#{@subject_area.name_url}/)
-    expect(rendered).to match(/#{@subject_area.sorting_order}/)
     expect(rendered).to match(/nice_boolean/)
   end
 end

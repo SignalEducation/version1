@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     resources :institutions
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
+    post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :subject_areas
     resources :subscription_plans
 
