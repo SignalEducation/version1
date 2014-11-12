@@ -59,5 +59,6 @@ describe ExamLevel do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
 
 end

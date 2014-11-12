@@ -16,13 +16,19 @@
         %td.col-sm-8=@exam_section.name_url
       %tr
         %td.col-sm-4=t('views.exam_sections.form.exam_level_id')
-        %td.col-sm-8=@exam_section.exam_level.name
+        %td.col-sm-8=link_to @exam_section.exam_level.name, @exam_section.exam_level
       %tr
         %td.col-sm-4=t('views.exam_sections.form.active')
         %td.col-sm-8=tick_or_cross(@exam_section.active)
       %tr
         %td.col-sm-4=t('views.exam_sections.form.best_possible_first_attempt_score')
         %td.col-sm-8=@exam_section.best_possible_first_attempt_score
+      %tr
+        %td.col-sm-4=t('views.course_modules.index.h1')
+        %td.col-sm-8
+          -@exam_section.course_modules.all_in_order.each do |course_module|
+            =link_to course_module.name, course_module
+            %br/
     %p
       =link_to t('views.general.back'), exam_sections_url
       |

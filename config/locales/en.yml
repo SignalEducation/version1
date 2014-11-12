@@ -401,7 +401,7 @@ en:
         name: Name
         name_placeholder: Economics
         name_url: URL
-        name_url_placeholder: economics-
+        name_url_placeholder: economics
         exam_level_id: Exam Level
         category_id: Category
         active: Active

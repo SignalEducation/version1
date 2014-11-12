@@ -51,6 +51,10 @@ class ExamLevel < ActiveRecord::Base
     !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
+  def full_name
+    self.qualification.name + ' > ' + self.name
+  end
+
   protected
 
   def calculate_best_possible_score

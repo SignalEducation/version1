@@ -15,7 +15,7 @@
         .form-group
           =f.label :exam_level_id, t('views.exam_sections.form.exam_level_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :exam_level_id, @exam_levels, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :exam_level_id, @exam_levels, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
