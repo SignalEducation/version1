@@ -13,7 +13,6 @@ RSpec.describe 'institutions/index', type: :view do
     expect(rendered).to match(/#{@institutions.first.name.to_s}/)
     expect(rendered).to match(/#{@institutions.first.short_name.to_s}/)
     expect(rendered).to match(/#{@institutions.first.name_url.to_s}/)
-    expect(rendered).to match(/#{@institutions.first.description.to_s}/)
     expect(rendered).to match(/#{@institutions.first.feedback_url.to_s}/)
     expect(rendered).to match(/#{@institutions.first.help_desk_url.to_s}/)
     expect(rendered).to match(/#{@institutions.first.subject_area.name.to_s}/)
