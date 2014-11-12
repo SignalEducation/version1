@@ -14,7 +14,7 @@ class QualificationsController < ApplicationController
   end
 
   def new
-    @qualification = Qualification.new
+    @qualification = Qualification.new(sorting_order: 1)
   end
 
   def edit
