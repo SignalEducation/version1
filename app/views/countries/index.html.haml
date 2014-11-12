@@ -21,7 +21,7 @@
             %td=link_to(country.iso_code, country, title: t('views.general.view_tooltip'))
             %td=link_to(country.country_tld, country, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(country.in_the_eu), country, title: t('views.general.view_tooltip'))
-            %td=link_to(country.currency.name, country, title: t('views.general.view_tooltip'))
+            %td=link_to(country.currency.name, country.currency, title: t('views.general.view_tooltip'))
             %td
               =link_to t('views.general.edit'), edit_country_url(country), class: 'btn btn-info btn-xs'
               -if country.destroyable?
