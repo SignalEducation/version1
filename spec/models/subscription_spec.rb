@@ -29,7 +29,7 @@ describe Subscription do
   end
 
   # Constants
-  it { Subscription.const_defined?(:STATUSES) }
+  it { expect(Subscription.const_defined?(:STATUSES)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }

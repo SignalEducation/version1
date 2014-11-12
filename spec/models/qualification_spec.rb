@@ -28,7 +28,7 @@ describe Qualification do
   end
 
   # Constants
-  #it { Qualification.const_defined?(:CONSTANT_NAME) }
+  #it { expect()Qualification.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should have_many(:course_modules) }

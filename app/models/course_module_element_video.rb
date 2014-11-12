@@ -42,7 +42,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
   validates :tags, presence: true
-  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS}
+  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
   validates :estimated_study_time_seconds, presence: true
   validates :transcript, presence: true
 
@@ -61,18 +61,10 @@ class CourseModuleElementVideo < ActiveRecord::Base
     true
   end
 
-  def difficulty_factor
-    if self.difficulty_level == 'easy'
-      1
-    elsif self.difficulty_level == 'medium'
-      1.5
-    else
-      2.5
-    end
-  end
 
   def set_estimated_study_time
-    self.estimated_study_time_seconds = self.run_time_in_seconds.to_i * difficulty_factor
+    self.estimated_study_time_seconds = self.run_time_in_seconds.to_i *
+        ApplicationController.find_multiplier_for_difficulty_level(self.difficulty_level)
   end
 
   def trigger_transcode

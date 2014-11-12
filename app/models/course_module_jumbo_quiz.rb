@@ -22,6 +22,8 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module
+  has_many :course_module_element_quizzes
+
 
   # validation
   validates :course_module_id, presence: true,

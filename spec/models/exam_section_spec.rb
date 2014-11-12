@@ -28,11 +28,12 @@ describe ExamSection do
   end
 
   # Constants
-  #it { ExamSection.const_defined?(:CONSTANT_NAME) }
+  #it { expect()ExamSection.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:exam_level) }
   it { should have_many(:course_modules) }
+  it { should have_many(:student_exam_tracks) }
 
   # validation
   it { should validate_presence_of(:name) }

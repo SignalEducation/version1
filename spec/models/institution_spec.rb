@@ -31,7 +31,7 @@ describe Institution do
   end
 
   # Constants
-  #it { Institution.const_defined?(:CONSTANT_NAME) }
+  #it { expect()Institution.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should have_many(:course_modules) }

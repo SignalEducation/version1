@@ -29,7 +29,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
-  # todo belongs_to :course_module_jumbo_quiz
+  belongs_to :course_module_jumbo_quiz
+  has_many :quiz_questions
 
   # validation
   validates :course_module_element_id, presence: true,
@@ -56,7 +57,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.quiz_questions.empty?
   end
 
   protected

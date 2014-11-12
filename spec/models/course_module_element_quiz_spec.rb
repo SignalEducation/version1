@@ -33,11 +33,12 @@ describe CourseModuleElementQuiz do
   end
 
   # Constants
-  #it { CourseModuleElementQuiz.const_defined?(:CONSTANT_NAME) }
+  #it { expect()CourseModuleElementQuiz.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }
-  xit { should belong_to(:course_module_jumbo_quiz) }
+  it { should belong_to(:course_module_jumbo_quiz) }
+  it { should have_many(:quiz_questions) }
 
   # validation
   it { should validate_presence_of(:course_module_element_id) }
