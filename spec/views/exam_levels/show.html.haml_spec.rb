@@ -19,7 +19,6 @@ RSpec.describe 'exam_levels/show', type: :view do
     expect(rendered).to match(/#{@course_module.name_url}/)
     expect(rendered).to match(/#{@course_module.description}/)
     expect(rendered).to match(/#{@course_module.tutor.name}/)
-    expect(rendered).to match(/#{@course_module.sorting_order}/)
     expect(rendered).to match(/#{@course_module.estimated_time_in_seconds}/)
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/nice_boolean/)

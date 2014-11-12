@@ -14,7 +14,7 @@ class ExamLevelsController < ApplicationController
   end
 
   def new
-    @exam_level = ExamLevel.new
+    @exam_level = ExamLevel.new(sorting_order: 1)
   end
 
   def edit

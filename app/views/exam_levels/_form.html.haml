@@ -1,6 +1,7 @@
 .row
   .col-sm-8.col-sm-offset-2
     =form_for(@exam_level, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :sorting_order
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @exam_level, message: nil}
         .form-group
@@ -21,10 +22,6 @@
               %label
                 =f.check_box :is_cpd
                 =t('views.exam_levels.form.is_cpd')
-        .form-group
-          =f.label :sorting_order, t('views.exam_levels.form.sorting_order'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :sorting_order, placeholder: t('views.exam_levels.form.sorting_order_placeholder'), rows: 4, class: 'form-control'
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
