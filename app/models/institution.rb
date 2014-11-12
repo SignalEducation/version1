@@ -56,7 +56,7 @@ class Institution < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.qualifications.empty? && self.institution_users.empty? && self.course_modules.empty?
+    !self.active && self.qualifications.empty? && self.institution_users.empty? && self.course_modules.empty?
   end
 
   protected
