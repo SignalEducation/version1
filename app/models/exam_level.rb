@@ -48,7 +48,7 @@ class ExamLevel < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty?
+    !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
   protected
