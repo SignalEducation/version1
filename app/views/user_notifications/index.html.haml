@@ -8,19 +8,19 @@
     %table.table.table-striped.table-bordered
       %thead
         %tr
-          %th=t('views.user_notifications.form.user_id')
-          %th=t('views.user_notifications.form.subject_line')
-          %th=t('views.user_notifications.form.content')
-          %th=t('views.user_notifications.form.email_required')
-          %th=t('views.user_notifications.form.email_sent_at')
-          %th=t('views.user_notifications.form.unread')
-          %th=t('views.user_notifications.form.destroyed_at')
-          %th=t('views.user_notifications.form.message_type')
-          %th=t('views.user_notifications.form.forum_topic_id')
-          %th=t('views.user_notifications.form.forum_post_id')
-          %th=t('views.user_notifications.form.tutor_id')
-          %th=t('views.user_notifications.form.falling_behind')
-          %th=t('views.user_notifications.form.blog_post_id')
+          %th=t('views.user_notifications.index.user_id')
+          %th=t('views.user_notifications.index.subject_line')
+          %th=t('views.user_notifications.index.content')
+          %th=t('views.user_notifications.index.email_required')
+          %th=t('views.user_notifications.index.email_sent_at')
+          %th=t('views.user_notifications.index.unread')
+          %th=t('views.user_notifications.index.destroyed_at')
+          %th=t('views.user_notifications.index.message_type')
+          %th=t('views.user_notifications.index.forum_topic_id')
+          %th=t('views.user_notifications.index.forum_post_id')
+          %th=t('views.user_notifications.index.tutor_id')
+          %th=t('views.user_notifications.index.falling_behind')
+          %th=t('views.user_notifications.index.blog_post_id')
           %th
       %tbody
         -@user_notifications.each do |user_notification|

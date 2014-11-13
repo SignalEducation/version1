@@ -38,15 +38,15 @@
         .form-group
           =f.label :forum_topic_id, t('views.user_notifications.form.forum_topic_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :forum_topic_id, @forum_topics, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =#todo f.collection_select :forum_topic_id, @forum_topics, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :forum_post_id, t('views.user_notifications.form.forum_post_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :forum_post_id, @forum_posts, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =#todo f.collection_select :forum_post_id, @forum_posts, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :tutor_id, t('views.user_notifications.form.tutor_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :tutor_id, @tutors, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =#todo f.collection_select :tutor_id, @tutors, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
@@ -56,7 +56,7 @@
         .form-group
           =f.label :blog_post_id, t('views.user_notifications.form.blog_post_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :blog_post_id, @blog_posts, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =#todo f.collection_select :blog_post_id, @blog_posts, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
 
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')
