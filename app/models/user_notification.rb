@@ -43,7 +43,6 @@ class UserNotification < ActiveRecord::Base
   validates :subject_line, presence: true
   validates :content, presence: true
   validates :email_sent_at, presence: true
-  validates :destroyed_at, presence: true
   validates :message_type, inclusion: {in: MESSAGE_TYPES}
   validates :forum_topic_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -75,7 +74,7 @@ class UserNotification < ActiveRecord::Base
   end
 
   def send_email_if_needed
-    UserMailer.send_notification(self.id).delayed_job if self.email_required
+   # UserMailer.send_notification(self.id).delayed_job if self.email_required
   end
 
   def mark_as_read
@@ -83,9 +82,9 @@ class UserNotification < ActiveRecord::Base
     self.save
   end
 
-  def mark_as_deleted
+  def destroy
     self.destroyed_at = Proc.new { Time.now }.call
-    false # todo - need to test this!
+    self.save
   end
 
   protected

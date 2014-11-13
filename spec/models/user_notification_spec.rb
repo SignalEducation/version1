@@ -54,8 +54,6 @@ describe UserNotification do
 
   it { should validate_presence_of(:email_sent_at) }
 
-  it { should validate_presence_of(:destroyed_at) }
-
   it { should validate_inclusion_of(:message_type).in_array(UserNotification::MESSAGE_TYPES) }
 
   it { should validate_presence_of(:forum_topic_id) }
