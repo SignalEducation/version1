@@ -1,13 +1,17 @@
 class UserNotificationsController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
-    ensure_user_is_of_type(['admin'])
+  before_action except: [:index, :show, :destroy, :update] do
+    ensure_user_is_of_type(['admin', 'tutor'])
   end
   before_action :get_variables
 
   def index
-    @user_notifications = UserNotification.paginate(per_page: 50, page: params[:page]).all_in_order
+    if current_user.admin?
+      @user_notifications = UserNotification.paginate(per_page: 50, page: params[:page]).all_in_order
+    else
+      @user_notifications = current_user.user_notifications.paginate(per_page: 50, page: params[:page]).all_in_order
+    end
   end
 
   def show
@@ -57,14 +61,19 @@ class UserNotificationsController < ApplicationController
       @user_notification = UserNotification.where(id: params[:id]).first
     end
     @users = User.all_in_order
-    @forum_topics = ForumTopic.all_in_order
-    @forum_posts = ForumPost.all_in_order
-    @tutors = Tutor.all_in_order
-    @blog_posts = BlogPost.all_in_order
+    #@forum_topics = ForumTopic.all_in_order
+    #@forum_posts = ForumPost.all_in_order
+    #@tutors = Tutor.all_in_order
+    #@blog_posts = BlogPost.all_in_order
   end
 
   def allowed_params
-    params.require(:user_notification).permit(:user_id, :subject_line, :content, :email_required, :email_sent_at, :unread, :destroyed_at, :message_type, :forum_topic_id, :forum_post_id, :tutor_id, :falling_behind, :blog_post_id)
+    params.require(:user_notification).permit(:user_id, :subject_line, :content,
+                                              :email_required, :email_sent_at,
+                                              :unread, :destroyed_at, :message_type,
+                                              :forum_topic_id, :forum_post_id,
+                                              :tutor_id, :falling_behind,
+                                              :blog_post_id)
   end
 
 end
