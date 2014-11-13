@@ -44,19 +44,15 @@ class UserNotification < ActiveRecord::Base
   validates :content, presence: true
   validates :email_sent_at, presence: true
   validates :message_type, inclusion: {in: MESSAGE_TYPES}
-  validates :forum_topic_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :forum_post_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :blog_post_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :forum_topic_id, numericality: {only_integer: true, greater_than: 0}
+  validates :forum_post_id, numericality: {only_integer: true, greater_than: 0}
+  validates :tutor_id, numericality: {only_integer: true, greater_than: 0}
+  validates :blog_post_id, numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   after_create :send_email_if_needed
   before_destroy :check_dependencies
-  before_destroy :mark_as_deleted
+  before_destroy :destroy
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :unread, :created_at) }

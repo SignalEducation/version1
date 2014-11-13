@@ -56,22 +56,18 @@ describe UserNotification do
 
   it { should validate_inclusion_of(:message_type).in_array(UserNotification::MESSAGE_TYPES) }
 
-  it { should validate_presence_of(:forum_topic_id) }
   it { should validate_numericality_of(:forum_topic_id) }
 
-  it { should validate_presence_of(:forum_post_id) }
   it { should validate_numericality_of(:forum_post_id) }
 
-  it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 
-  it { should validate_presence_of(:blog_post_id) }
   it { should validate_numericality_of(:blog_post_id) }
 
   # callbacks
   it { should callback(:send_email_if_needed).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:mark_as_deleted).before(:destroy) }
+  it { should callback(:destroy).before(:destroy) }
 
   # scopes
   it { expect(UserNotification).to respond_to(:all_in_order) }
@@ -87,6 +83,6 @@ describe UserNotification do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:send_email_if_needed) }
   it { should respond_to(:mark_as_read) }
-  it { should respond_to(:mark_as_deleted) }
+  it { should respond_to(:destroy) }
 
 end

@@ -656,7 +656,7 @@ en:
             content_placeholder: Content
             email_required: Email Required
             email_sent_at: Email Sent At
-            email_sent_at_placeholder: date??
+            email_sent_at_placeholder: Date
             unread: unread
             destroyed_at:  Destroyed At
             destroyed_at_placeholder: Destroyed At
