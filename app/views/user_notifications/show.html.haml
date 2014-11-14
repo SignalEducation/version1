@@ -2,36 +2,27 @@
   .col-sm-12
     .page-header
       %h1
-        =t('views.user_notifications.show.h1')
-        \#
-        =@user_notification.id
+        =@user_notification.subject_line
+      %p.lead
+        -if @user_notification.tutor_id
+          =t('views.user_notifications.show.from')
+          =@user_notification.tutor.full_name + ', '
+        =t('views.user_notifications.form.created_at')
+        =@user_notification.created_at.to_s(:standard)
 .row
   .col-sm-12
+    %p=sanitize @user_notification.content.gsub("\r\n", '<br/>')
+
+-if current_user.admin?
+  .row
+    .col-sm-12
+      .well.well-sm
+        %p
+          =t('views.user_notifications.form.message_type') + ': '
+          =@user_notification.message_type.capitalize
+-# todo .row
+  .col-sm-12
     %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.user_id')
-        %td.col-sm-8=@user_notification.user.name
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.subject_line')
-        %td.col-sm-8=@user_notification.subject_line
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.content')
-        %td.col-sm-8=@user_notification.content
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.email_required')
-        %td.col-sm-8=tick_or_cross(@user_notification.email_required)
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.email_sent_at')
-        %td.col-sm-8=@user_notification.email_sent_at.to_s(:standard)
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.unread')
-        %td.col-sm-8=tick_or_cross(@user_notification.unread)
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.destroyed_at')
-        %td.col-sm-8=@user_notification.destroyed_at.to_s(:standard)
-      %tr
-        %td.col-sm-4=t('views.user_notifications.form.message_type')
-        %td.col-sm-8=@user_notification.message_type
       %tr
         %td.col-sm-4=t('views.user_notifications.form.forum_topic_id')
         %td.col-sm-8=@user_notification.forum_topic.name
@@ -47,7 +38,11 @@
       %tr
         %td.col-sm-4=t('views.user_notifications.form.blog_post_id')
         %td.col-sm-8=@user_notification.blog_post.name
+.row
+  .col-sm-6
     %p
       =link_to t('views.general.back'), user_notifications_url
-      |
-      =link_to t('views.general.edit'), edit_user_notification_url(id: @user_notification.id), title: t('views.general.edit_tooltip')
+  .col-sm-6.text-right
+    -if @user_notification.destroyable?
+      %p=link_to t('views.general.delete'), @user_notification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+

@@ -34,7 +34,7 @@ class UserNotification < ActiveRecord::Base
   belongs_to :user
   # todo belongs_to :forum_topic
   # todo belongs_to :forum_post
-  # todo belongs_to :tutor
+  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   # todo belongs_to :blog_post
 
   # validation

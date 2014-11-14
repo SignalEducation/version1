@@ -124,5 +124,6 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:tutor) }
 
 end

@@ -185,6 +185,10 @@ class User < ActiveRecord::Base
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
+  def tutor
+    self.user_group.try(:tutor)
+  end
+
   protected
 
   def check_dependencies

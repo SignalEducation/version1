@@ -41,7 +41,7 @@ describe UserNotification do
   it { should belong_to(:user) }
   xit { should belong_to(:forum_topic) }
   xit { should belong_to(:forum_post) }
-  xit { should belong_to(:tutor) }
+  it { should belong_to(:tutor) }
   xit { should belong_to(:blog_post) }
 
   # validation

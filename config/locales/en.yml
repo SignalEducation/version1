@@ -667,15 +667,16 @@ en:
             tutor_id: Tutor ID
             falling_behind: Fall Behind
             blog_post_id: Blog Post ID
+            created_at: Sent at
 
           index:
-            h1: User Notifications
+            h1: Your Notifications
             user_id: User ID
             subject_line: Subject
             content: Content
             email_required: Email Required
             email_sent_at: Email Sent
-            unread: Status
+            unread: Unread
             destroyed_at: Destroyed
             message_type: Type
             forum_topic_id: Forum Topic
@@ -685,13 +686,14 @@ en:
             blog_post_id: Blog Post
 
           show:
-            h1: Notifications
+            h1: Notification
+            from: From
 
           edit:
-            h1: Edit Notifications
+            h1: Edit Notification
 
           new:
-            h1: New Notifications
+            h1: New Notification
 
 
     user_sessions:

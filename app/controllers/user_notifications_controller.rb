@@ -15,6 +15,7 @@ class UserNotificationsController < ApplicationController
   end
 
   def show
+    @user_notification.update_attributes(unread: false) if @user_notification.unread
   end
 
   def new
