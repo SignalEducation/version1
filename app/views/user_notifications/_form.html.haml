@@ -1,0 +1,63 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@user_notification, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @user_notification, message: nil}
+        .form-group
+          =f.label :subject_line, t('views.user_notifications.form.subject_line'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :subject_line, placeholder: t('views.user_notifications.form.subject_line_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :content, t('views.user_notifications.form.content'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :content, placeholder: t('views.user_notifications.form.content_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :email_required
+                =t('views.user_notifications.form.email_required')
+        .form-group
+          =f.label :email_sent_at, t('views.user_notifications.form.email_sent_at'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :email_sent_at, placeholder: t('views.user_notifications.form.email_sent_at_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => 'YYYY-MM-DD HH:MM'}
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :unread
+                =t('views.user_notifications.form.unread')
+        .form-group
+          =f.label :destroyed_at, t('views.user_notifications.form.destroyed_at'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :destroyed_at, placeholder: t('views.user_notifications.form.destroyed_at_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => 'YYYY-MM-DD HH:MM'}
+        .form-group
+          =f.label :message_type, t('views.user_notifications.form.message_type'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :message_type, placeholder: t('views.user_notifications.form.message_type_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :forum_topic_id, t('views.user_notifications.form.forum_topic_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =#todo f.collection_select :forum_topic_id, @forum_topics, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :forum_post_id, t('views.user_notifications.form.forum_post_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =#todo f.collection_select :forum_post_id, @forum_posts, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :tutor_id, t('views.user_notifications.form.tutor_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =#todo f.collection_select :tutor_id, @tutors, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :falling_behind
+                =t('views.user_notifications.form.falling_behind')
+        .form-group
+          =f.label :blog_post_id, t('views.user_notifications.form.blog_post_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =#todo f.collection_select :blog_post_id, @blog_posts, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), user_notifications_path

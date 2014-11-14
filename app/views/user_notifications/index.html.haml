@@ -1,0 +1,44 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.user_notifications.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @user_notifications, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.user_notifications.form.created_at')
+          %th=t('views.user_notifications.index.subject_line')
+          -# todo %th=t('views.user_notifications.index.forum_topic_id')
+          -# todo %th=t('views.user_notifications.index.forum_post_id')
+          -# todo %th=t('views.user_notifications.index.blog_post_id')
+          %th=t('views.user_notifications.index.tutor_id')
+          -if current_user.admin?
+            %th=t('views.user_notifications.form.user_id')
+          %th
+      %tbody
+        -@user_notifications.each do |user_notification|
+          %tr{id: user_notification.id, class: (user_notification.unread ? 'success' : '')}
+            %td=link_to(user_notification.created_at.to_s(:standard))
+            %td
+              %b=link_to(user_notification.subject_line, user_notification, title: t('views.general.view_tooltip'))
+              %br/
+              =link_to(truncate(user_notification.content, length: 100), user_notification, title: t('views.general.view_tooltip'))
+            -# todo %td=link_to(user_notification.forum_topic.try(:name), user_notification, title: t('views.general.view_tooltip'))
+            -# todo %td=link_to(user_notification.forum_post.try(:name), user_notification, title: t('views.general.view_tooltip'))
+            -# todo %td=link_to(user_notification.blog_post.try(:name), user_notification, title: t('views.general.view_tooltip'))
+            %td=link_to(user_notification.tutor.try(:full_name), user_notification, title: t('views.general.view_tooltip'))
+            -if current_user.admin?
+              %td=link_to(user_notification.user.full_name, user_notification, title: t('views.general.view_tooltip'))
+
+            %td
+              -#=link_to t('views.general.view'), user_notification
+              =#link_to t('views.general.edit'), edit_user_notification_url(user_notification), class: 'btn btn-info btn-xs'
+              -if user_notification.destroyable?
+                =link_to t('views.general.delete'), user_notification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+-if current_user.admin? || current_user.tutor?
+  .row
+    .col-sm-12
+      =link_to t('views.general.new'), new_user_notification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
