@@ -60,7 +60,7 @@ class UserNotification < ActiveRecord::Base
   # before_destroy :destroy
 
   # scopes
-  scope :all_in_order, -> { order(:user_id, :unread, :created_at) }
+  scope :all_in_order, -> { order('user_id, unread DESC, created_at DESC') }
   scope :unread,  -> { where(unread: true) }
   scope :read,    -> { where(unread: false) }
   scope :deleted, -> { unscoped.where('destroyed_at IS NOT NULL') }
@@ -71,7 +71,7 @@ class UserNotification < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    !self.unread
   end
 
   def send_email_if_needed
