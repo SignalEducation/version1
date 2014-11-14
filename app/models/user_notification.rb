@@ -22,10 +22,12 @@
 
 class UserNotification < ActiveRecord::Base
 
+  include Archivable
+
   # attr-accessible
   attr_accessible :user_id, :subject_line, :content, :email_required, :email_sent_at,
-                  :unread, :destroyed_at, :message_type, :forum_topic_id, :forum_post_id,
-                  :tutor_id, :falling_behind, :blog_post_id
+                  :unread, :destroyed_at, :message_type, :forum_topic_id,
+                  :forum_post_id, :tutor_id, :falling_behind, :blog_post_id
 
   # Constants
   MESSAGE_TYPES = %w(blog forum marketing study_plan)
@@ -42,23 +44,26 @@ class UserNotification < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_line, presence: true
   validates :content, presence: true
-  validates :email_sent_at, presence: true
   validates :message_type, inclusion: {in: MESSAGE_TYPES}
-  validates :forum_topic_id, numericality: {only_integer: true, greater_than: 0}
-  validates :forum_post_id, numericality: {only_integer: true, greater_than: 0}
-  validates :tutor_id, numericality: {only_integer: true, greater_than: 0}
-  validates :blog_post_id, numericality: {only_integer: true, greater_than: 0}
+  validates :forum_topic_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :forum_post_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :tutor_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :blog_post_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   after_create :send_email_if_needed
   before_destroy :check_dependencies
-  before_destroy :destroy
+  # before_destroy :destroy
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :unread, :created_at) }
   scope :unread,  -> { where(unread: true) }
   scope :read,    -> { where(unread: false) }
-  scope :deleted, -> { where('destroyed_at > 0') }
+  scope :deleted, -> { unscoped.where('destroyed_at IS NOT NULL') }
   scope :visible, -> { where(destroyed_at: nil) }
   default_scope{visible.all_in_order}
 
@@ -75,11 +80,6 @@ class UserNotification < ActiveRecord::Base
 
   def mark_as_read
     self.unread = false
-    self.save
-  end
-
-  def destroy
-    self.destroyed_at = Proc.new { Time.now }.call
     self.save
   end
 
