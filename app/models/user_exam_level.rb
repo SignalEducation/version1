@@ -19,8 +19,8 @@ class UserExamLevel < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :exam_level
-  belongs_to :exam_schedule
+  belongs_to :exam_level # todo de-normalised
+  # todo belongs_to :exam_schedule
 
   # validation
   validates :user_id, presence: true,

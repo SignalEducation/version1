@@ -30,7 +30,7 @@ describe UserExamLevel do
   # relationships
   it { should belong_to(:user) }
   it { should belong_to(:exam_level) }
-  it { should belong_to(:exam_schedule) }
+  xit { should belong_to(:exam_schedule) }
 
   # validation
   it { should validate_presence_of(:user_id) }
