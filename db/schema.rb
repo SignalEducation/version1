@@ -11,21 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141111132957) do
+ActiveRecord::Schema.define(version: 20141114170309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "countries", force: true do |t|
-    t.string   "name"
-    t.string   "iso_code"
-    t.string   "country_tld"
-    t.integer  "sorting_order"
-    t.boolean  "in_the_eu",     default: false, null: false
-    t.integer  "currency_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "course_module_element_quizzes", force: true do |t|
     t.integer  "course_module_element_id"
@@ -185,22 +174,6 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.datetime "updated_at"
   end
 
-  create_table "invoices", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "corporate_customer_id"
-    t.integer  "subscription_transaction_id"
-    t.integer  "subscription_id"
-    t.integer  "number_of_users"
-    t.integer  "currency_id"
-    t.decimal  "unit_price_ex_vat"
-    t.decimal  "line_total_ex_vat"
-    t.integer  "vat_rate_id"
-    t.decimal  "line_total_vat_amount"
-    t.decimal  "line_total_inc_vat"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "qualifications", force: true do |t|
     t.integer  "institution_id"
     t.string   "name"
@@ -330,6 +303,14 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.datetime "updated_at"
   end
 
+  create_table "user_exam_levels", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "exam_level_id"
+    t.integer  "exam_schedule_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_groups", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -343,6 +324,24 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.boolean  "forum_manager",                        default: false, null: false
     t.boolean  "subscription_required_at_sign_up",     default: false, null: false
     t.boolean  "subscription_required_to_see_content", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_notifications", force: true do |t|
+    t.integer  "user_id"
+    t.string   "subject_line"
+    t.text     "content"
+    t.boolean  "email_required", default: false, null: false
+    t.datetime "email_sent_at"
+    t.boolean  "unread",         default: true,  null: false
+    t.datetime "destroyed_at"
+    t.string   "message_type"
+    t.integer  "forum_topic_id"
+    t.integer  "forum_post_id"
+    t.integer  "tutor_id"
+    t.boolean  "falling_behind",                 null: false
+    t.integer  "blog_post_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
