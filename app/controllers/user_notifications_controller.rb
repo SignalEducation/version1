@@ -27,7 +27,7 @@ class UserNotificationsController < ApplicationController
 
   def create
     @user_notification = UserNotification.new(allowed_params)
-    @user_notification.user_id = current_user.id
+    @user_notification.falling_behind = false
     if @user_notification.save
       flash[:success] = I18n.t('controllers.user_notifications.create.flash.success')
       redirect_to user_notifications_url
