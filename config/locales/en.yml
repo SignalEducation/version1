@@ -677,6 +677,7 @@ en:
 
           index:
             h1: Your Notifications
+            h2: You do not have any Notifications
             user_id: User ID
             subject_line: Subject
             content: Content
