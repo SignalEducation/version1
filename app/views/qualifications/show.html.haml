@@ -29,6 +29,7 @@
           -@qualification.exam_levels.each do |level|
             =link_to level.name, level
             %br
+          =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
     %p
       =link_to t('views.general.back'), qualifications_url
       |

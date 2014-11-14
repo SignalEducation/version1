@@ -18,6 +18,14 @@
           %a{href: '#'} Library
 
       %ul.nav.navbar-nav.navbar-right
+        %li
+          = link_to user_notifications_url do
+            -if current_user && current_user.user_notifications.unread.count > 0
+              %span.badge{style: 'background-color: red;'}
+                %span.glyphicon.glyphicon-envelope
+                =current_user.user_notifications.unread.count
+            -else
+              %span.glyphicon.glyphicon-envelope
         -if current_user
           -if current_user.user_group.tutor
             %li.dropdown

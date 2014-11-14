@@ -65,6 +65,7 @@
               %label
                 =f.check_box :subscription_required_to_see_content
                 =t('views.user_groups.form.subscription_required_to_see_content')
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), user_groups_path
+      %p
+        =f.submit t('views.general.save'), class: 'btn btn-success'
+        =t('views.general.or')
+        =link_to t('views.general.cancel'), user_groups_path

@@ -14,7 +14,9 @@ class QualificationsController < ApplicationController
   end
 
   def new
-    @qualification = Qualification.new(sorting_order: 1)
+    @qualification = Qualification.new(sorting_order: 1,
+                              institution_id: (params[:institution_id].to_i > 0 ?
+                              params[:institution_id].to_i : nil))
   end
 
   def edit
@@ -24,7 +26,7 @@ class QualificationsController < ApplicationController
     @qualification = Qualification.new(allowed_params)
     if @qualification.save
       flash[:success] = I18n.t('controllers.qualifications.create.flash.success')
-      redirect_to qualifications_url
+      redirect_to @qualification
     else
       render action: :new
     end
@@ -33,7 +35,7 @@ class QualificationsController < ApplicationController
   def update
     if @qualification.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.qualifications.update.flash.success')
-      redirect_to qualifications_url
+      redirect_to @qualification
     else
       render action: :edit
     end

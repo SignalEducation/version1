@@ -66,10 +66,12 @@ describe User do
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:course_module_element_videos) }
   it { should have_many(:quiz_attempts) }
+  it { should have_many(:student_exam_tracks) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:user_exam_level) }
+  it { should have_many(:user_notifications) }
   it { should belong_to(:user_group) }
 
   # validation
@@ -123,5 +125,6 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:tutor) }
 
 end

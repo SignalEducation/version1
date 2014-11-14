@@ -77,6 +77,7 @@ class User < ActiveRecord::Base
   has_many :subscription_transactions
   has_many :student_exam_tracks
   has_many :user_exam_level
+  has_many :user_notifications
   belongs_to :user_group
 
   # validation
@@ -175,11 +176,15 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty?
+    !self.admin? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty? && self.user_notifications.empty?
   end
 
   def full_name
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
+  end
+
+  def tutor
+    self.user_group.try(:tutor)
   end
 
   protected

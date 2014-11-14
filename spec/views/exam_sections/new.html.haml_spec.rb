@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'exam_sections/new', type: :view do
   before(:each) do
-    x = FactoryGirl.create(:exam_level)
+    qualification = FactoryGirl.create(:qualification)
+    level = FactoryGirl.create(:exam_level, qualification_id: qualification.id)
     @exam_levels = ExamLevel.all
     @exam_section = FactoryGirl.build(:exam_section)
   end

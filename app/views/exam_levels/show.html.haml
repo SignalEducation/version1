@@ -26,20 +26,21 @@
       %tr
         %td.col-sm-4=t('views.exam_levels.form.best_possible_first_attempt_score')
         %td.col-sm-8=@exam_level.best_possible_first_attempt_score
-      -if @exam_level.exam_sections.count > 0
-        %tr
-          %td.col-sm-4=t('views.exam_sections.index.h1')
-          %td.col-sm-8
-            -@exam_level.exam_sections.each do |exam_section|
-              =link_to exam_section.name, exam_section
-              %br/
-      -if @exam_level.course_modules.count > 0
-        %tr
-          %td.col-sm-4=t('views.course_modules.index.h1')
-          %td.col-sm-8
-            -@exam_level.course_modules.each do |course_module|
-              =link_to course_module.name, course_module
-              %br/
+      %tr
+        %td.col-sm-4=t('views.exam_sections.index.h1')
+        %td.col-sm-8
+          -@exam_level.exam_sections.each do |exam_section|
+            =link_to exam_section.name, exam_section
+            %br/
+          =link_to t('views.general.new'), new_exam_section_url(exam_level_id: @exam_level.id), class: 'btn btn-xs btn-success'
+      %tr
+        %td.col-sm-4=t('views.course_modules.index.h1')
+        %td.col-sm-8
+          -@exam_level.course_modules.each do |course_module|
+            =link_to course_module.name, course_module
+            %br/
+          =link_to t('views.general.new'), new_course_module_url(exam_level_id: @exam_level.id), class: 'btn btn-xs btn-success'
+
     %p
       =link_to t('views.general.back'), exam_levels_url
       |

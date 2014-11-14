@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'exam_sections/edit', type: :view do
   before(:each) do
-    x = FactoryGirl.create(:exam_level)
+    qualification = FactoryGirl.create(:qualification)
+    level = FactoryGirl.create(:exam_level, qualification_id: qualification.id)
     @exam_levels = ExamLevel.all
-    @exam_section = FactoryGirl.create(:exam_section)
+    @exam_section = FactoryGirl.create(:exam_section, exam_level_id: level.id)
   end
 
   it 'renders new exam_section form' do
