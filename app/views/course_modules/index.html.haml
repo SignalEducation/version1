@@ -15,7 +15,6 @@
           %th=t('views.course_modules.form.name_url')
           %th=t('views.course_modules.form.description')
           %th=t('views.course_modules.form.tutor_id')
-          %th=t('views.course_modules.form.sorting_order')
           %th=t('views.course_modules.form.estimated_time_in_seconds')
           %th=t('views.course_modules.form.compulsory')
           %th=t('views.course_modules.form.active')
@@ -25,12 +24,13 @@
           %tr{id: course_module.id}
             %td=link_to(course_module.institution.name, course_module, title: t('views.general.view_tooltip'))
             %td=link_to(course_module.exam_level.name, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.exam_section.name, course_module, title: t('views.general.view_tooltip'))
+            %td
+              -if course_module.exam_section_id
+                =link_to(course_module.exam_section.name, course_module, title: t('views.general.view_tooltip'))
             %td=link_to(course_module.name, course_module, title: t('views.general.view_tooltip'))
             %td=link_to(course_module.name_url, course_module, title: t('views.general.view_tooltip'))
             %td=link_to(course_module.description, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.tutor.name, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.sorting_order, course_module, title: t('views.general.view_tooltip'))
+            %td=link_to(course_module.tutor.full_name, course_module, title: t('views.general.view_tooltip'))
             %td=link_to(course_module.estimated_time_in_seconds, course_module, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(course_module.compulsory), course_module, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(course_module.active), course_module, title: t('views.general.view_tooltip'))

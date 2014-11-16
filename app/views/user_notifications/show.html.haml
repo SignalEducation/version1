@@ -1,0 +1,48 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =@user_notification.subject_line
+      %p.lead
+        -if @user_notification.tutor_id
+          =t('views.user_notifications.show.from')
+          =@user_notification.tutor.full_name + ', '
+        =t('views.user_notifications.form.created_at')
+        =@user_notification.created_at.to_s(:standard)
+.row
+  .col-sm-12
+    %p=sanitize @user_notification.content.gsub("\r\n", '<br/>')
+
+-if current_user.admin?
+  .row
+    .col-sm-12
+      .well.well-sm
+        %p
+          =t('views.user_notifications.form.message_type') + ': '
+          =@user_notification.message_type.capitalize
+-# todo .row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.user_notifications.form.forum_topic_id')
+        %td.col-sm-8=@user_notification.forum_topic.name
+      %tr
+        %td.col-sm-4=t('views.user_notifications.form.forum_post_id')
+        %td.col-sm-8=@user_notification.forum_post.name
+      %tr
+        %td.col-sm-4=t('views.user_notifications.form.tutor_id')
+        %td.col-sm-8=@user_notification.tutor.name
+      %tr
+        %td.col-sm-4=t('views.user_notifications.form.falling_behind')
+        %td.col-sm-8=tick_or_cross(@user_notification.falling_behind)
+      %tr
+        %td.col-sm-4=t('views.user_notifications.form.blog_post_id')
+        %td.col-sm-8=@user_notification.blog_post.name
+.row
+  .col-sm-6
+    %p
+      =link_to t('views.general.back'), user_notifications_url
+  .col-sm-6.text-right
+    -if @user_notification.destroyable?
+      %p=link_to t('views.general.delete'), @user_notification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+

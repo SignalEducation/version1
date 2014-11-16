@@ -38,6 +38,15 @@
                 %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
                 %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                 %li=link_to t('views.course_modules.index.h1'), course_modules_url
+          %li
+            = link_to user_notifications_url do
+              -if current_user && current_user.user_notifications.unread.count > 0
+                %span.badge{style: 'background-color: red;'}
+                  %span.glyphicon.glyphicon-envelope
+                  =current_user.user_notifications.unread.count
+              -else
+                %span.glyphicon.glyphicon-envelope
+
           %li.dropdown
             %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
               %span.glyphicon.glyphicon-cog

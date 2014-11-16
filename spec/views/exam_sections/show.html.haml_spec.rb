@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe 'exam_sections/show', type: :view do
   before(:each) do
     allow(view).to receive(:tick_or_cross).and_return('nice_boolean')
-    @exam_level = FactoryGirl.create(:exam_level)
+    @institution = FactoryGirl.create(:institution)
+    @qualification = FactoryGirl.create(:qualification, institution_id: @institution.id)
+    @exam_level = FactoryGirl.create(:exam_level, qualification_id: @qualification.id)
     @exam_section = FactoryGirl.create(:exam_section, exam_level_id: @exam_level.id)
   end
 

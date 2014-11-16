@@ -1,0 +1,15 @@
+-# call me with this line of code:
+  =render partial: 'shared/filter_panel', locals: {controller_name: 'exam_sections', parameters: [{name: 'qualification_id', collection: @qualifications, show_attr: :full_name, value_attr: :name_url}, {name: 'exam_level_id', collection: @exam_levels, show_attr: :full_name, value_attr: :name_url}]}
+
+%p
+  =form_tag(eval(controller_name + '_filter_url'), {class: 'form-inline', role: 'form'}) do
+    .form-group
+      =t('views.shared.filter_panel.filter')
+    -parameters.each do |param|
+      .form-group
+        %label.sr-only{for: param[:name]} Email address
+        =select_tag(param[:name], options_for_select(param[:collection].map { |x| [x[param[:show_attr]], x[param[:value_attr]] ] }), {class: 'form-control col-sm-6'})
+
+    .form-group
+      =submit_tag t('views.general.go'), class: 'btn btn-info'
+

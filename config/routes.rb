@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -17,9 +18,12 @@ Rails.application.routes.draw do
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
     get 'reset_password/:id', to: 'user_password_resets#edit'
+
     # special routes
 
     # general resources
+    get 'course_modules/new_for_exam_level/:exam_level_id',
+        to: 'course_modules#new', as: :new_course_module_child
     post 'course_modules/reorder', to: 'course_modules#reorder'
     resources :course_modules
     post 'currencies/reorder', to: 'currencies#reorder'
@@ -28,17 +32,20 @@ Rails.application.routes.draw do
     resources :exam_levels
     post 'exam_sections/reorder', to: 'exam_sections#reorder'
     resources :exam_sections
+    post 'institutions/filter', to: 'institutions#index', as: :institutions_filter
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
-    resources :subject_areas
+resources :subject_areas
     resources :subscription_plans
+    resources :user_notifications
 
 
     # home page
     root 'users#show' # temporary
+
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

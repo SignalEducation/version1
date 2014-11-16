@@ -9,14 +9,20 @@
   .col-sm-12
     %table.table.table-bordered
       %tr
+        %td.col-sm-4=t('views.qualifications.form.institution_id')
+        %td.col-sm-8=link_to @exam_section.exam_level.qualification.institution.name, @exam_section.exam_level.qualification.institution
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.qualification_id')
+        %td.col-sm-8=link_to @exam_section.exam_level.qualification.name, @exam_section.exam_level.qualification
+      %tr
+        %td.col-sm-4=t('views.exam_sections.form.exam_level_id')
+        %td.col-sm-8=link_to @exam_section.exam_level.name, @exam_section.exam_level
+      %tr
         %td.col-sm-4=t('views.exam_sections.form.name')
         %td.col-sm-8=@exam_section.name
       %tr
         %td.col-sm-4=t('views.exam_sections.form.name_url')
         %td.col-sm-8=@exam_section.name_url
-      %tr
-        %td.col-sm-4=t('views.exam_sections.form.exam_level_id')
-        %td.col-sm-8=link_to @exam_section.exam_level.name, @exam_section.exam_level
       %tr
         %td.col-sm-4=t('views.exam_sections.form.active')
         %td.col-sm-8=tick_or_cross(@exam_section.active)

@@ -9,7 +9,7 @@
       %thead
         %tr
           %th=t('views.qualifications.form.name')
-          %th=t('views.qualifications.form.name_url')
+          %th=t('views.exam_levels.index.h1')
           %th=t('views.qualifications.form.active')
           %th=t('views.qualifications.form.cpd_hours_required_per_year')
           %th
@@ -23,7 +23,8 @@
                 %h2=link_to(qualification.institution.name, qualification.institution, title: t('views.general.view_tooltip'))
           %tr{id: qualification.id}
             %td=link_to(qualification.name, qualification, title: t('views.general.view_tooltip'))
-            %td=link_to(qualification.name_url, qualification, title: t('views.general.view_tooltip'))
+            %td
+              =link_to t('views.exam_levels.index.h1'), exam_levels_url
             %td=link_to(tick_or_cross(qualification.active), qualification, title: t('views.general.view_tooltip'))
             %td=link_to(qualification.cpd_hours_required_per_year, qualification, title: t('views.general.view_tooltip'))
             %td

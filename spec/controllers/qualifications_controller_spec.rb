@@ -750,7 +750,7 @@ describe QualificationsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, qualification: valid_params
-        expect_create_success_with_model('qualification', qualifications_url)
+        expect_create_success_with_model('qualification', qualification_url(Qualification.last.id))
       end
 
       it 'should report error for invalid params' do
@@ -762,13 +762,13 @@ describe QualificationsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for qualification_1' do
         put :update, id: qualification_1.id, qualification: valid_params
-        expect_update_success_with_model('qualification', qualifications_url)
+        expect_update_success_with_model('qualification', qualification_url(qualification_1))
       end
 
       # optional
       it 'should respond OK to valid params for qualification_2' do
         put :update, id: qualification_2.id, qualification: valid_params
-        expect_update_success_with_model('qualification', qualifications_url)
+        expect_update_success_with_model('qualification', qualification_url(qualification_2))
         expect(assigns(:qualification).id).to eq(qualification_2.id)
       end
 

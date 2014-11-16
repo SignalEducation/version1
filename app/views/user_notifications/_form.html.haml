@@ -1,0 +1,31 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@user_notification, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :tutor_id, value: current_user.id
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @user_notification, message: nil}
+        .form-group
+          =f.label :message_type, t('views.user_notifications.form.message_type'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :user_id, User.all, :id, :email, {}, {class: 'form-control'}
+        .form-group
+          =f.label :subject_line, t('views.user_notifications.form.subject_line'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :subject_line, placeholder: t('views.user_notifications.form.subject_line_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :content, t('views.user_notifications.form.content'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :content, placeholder: t('views.user_notifications.form.content_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          =f.label :message_type, t('views.user_notifications.form.message_type'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.select :message_type, UserNotification::MESSAGE_TYPES, {}, class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :email_required
+                =t('views.user_notifications.form.email_required')
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), user_notifications_path
