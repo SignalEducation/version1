@@ -19,7 +19,7 @@ class UserExamLevel < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :exam_level # todo de-normalised
+  belongs_to :exam_level # de-normalised; we could get it from exam-schedule
   # todo belongs_to :exam_schedule
 
   # validation
