@@ -4,6 +4,7 @@ RSpec.describe 'institutions/index', type: :view do
   before(:each) do
     allow(view).to receive(:tick_or_cross).and_return('nice_boolean')
     @subject_area = FactoryGirl.create(:subject_area)
+    @subject_areas = SubjectArea.all_in_order
     temp_institutions = FactoryGirl.create_list(:institution, 2, subject_area_id: @subject_area.id)
     @institutions = Institution.paginate(page: 1, per_page: 10)
   end
