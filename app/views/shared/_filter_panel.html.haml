@@ -8,8 +8,9 @@
     -parameters.each do |param|
       .form-group
         %label.sr-only{for: param[:name]} Email address
-        =select_tag(param[:name], options_for_select(param[:collection].map { |x| [x[param[:show_attr]], x[param[:value_attr]] ] }), {class: 'form-control col-sm-6'})
+        =select_tag(param[:name], options_for_select(param[:collection].map { |x| [x[param[:show_attr]], x[param[:value_attr]] ] }, params[param[:name]]), {class: 'form-control col-sm-6', onchange: (parameters.count == 1 ? 'this.form.submit();' : '') })
 
-    .form-group
-      =submit_tag t('views.general.go'), class: 'btn btn-info'
+    -if parameters.count > 1
+      .form-group
+        =submit_tag t('views.general.go'), class: 'btn btn-info'
 

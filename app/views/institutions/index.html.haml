@@ -21,14 +21,8 @@
             =t('views.institutions.form.help_desk_url')
           %th=t('views.institutions.form.active')
           %th
-      -tracker = @subject_area.id
       %tbody
         -@institutions.each do |institution|
-          -unless tracker == institution.subject_area_id
-            -tracker = institution.subject_area_id
-            %tr
-              %td{colspan: 7}
-                %h2=link_to(institution.subject_area.name, institution.subject_area, title: t('views.general.view_tooltip'))
           %tr{id: institution.id}
             %td
               =link_to(institution.name, institution, title: t('views.general.view_tooltip'))
