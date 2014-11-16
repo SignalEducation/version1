@@ -186,6 +186,18 @@ en:
           success: User Group has been deleted
           error: User Group was not deleted
 
+    user_notifications:
+      create:
+        flash:
+          success: User Notification has been created successfully
+      update:
+        flash:
+          success: User Notification details have been updated successfully
+      destroy:
+        flash:
+          success: User Notification has been deleted
+          error: User Notification was not deleted
+
     user_password_resets:
       create:
         flash:
@@ -640,6 +652,56 @@ en:
       edit:
         h1: Reset your password
         paragraph_1: "Choose a new password for your account:"
+
+    user_notifications:
+          form:
+            user_id: User ID
+            subject_line: Subject
+            subject_line_placeholder: Subject Line
+            content: Content
+            content_placeholder: Content
+            email_required: Email Required
+            email_sent_at: Email Sent At
+            email_sent_at_placeholder: Date
+            unread: unread
+            destroyed_at:  Destroyed At
+            destroyed_at_placeholder: Destroyed At
+            message_type: Message Type
+            message_type_placeholder: blog, study plan, forum, marketing etc
+            forum_topic_id: Forum Topic ID
+            forum_post_id: Forum Post ID
+            tutor_id: Tutor ID
+            falling_behind: Fall Behind
+            blog_post_id: Blog Post ID
+            created_at: Sent at
+
+          index:
+            h1: Your Notifications
+            h2: You do not have any Notifications
+            user_id: User ID
+            subject_line: Subject
+            content: Content
+            email_required: Email Required
+            email_sent_at: Email Sent
+            unread: Unread
+            destroyed_at: Destroyed
+            message_type: Type
+            forum_topic_id: Forum Topic
+            forum_post_id: Forum Post
+            tutor_id: Tutor
+            falling_behind: Fall Behind
+            blog_post_id: Blog Post
+
+          show:
+            h1: Notification
+            from: From
+
+          edit:
+            h1: Edit Notification
+
+          new:
+            h1: New Notification
+
 
     user_sessions:
       new:
