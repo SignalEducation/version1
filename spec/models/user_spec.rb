@@ -70,6 +70,7 @@ describe User do
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
+  it { should have_many(:user_exam_level) }
   it { should have_many(:user_notifications) }
   it { should belong_to(:user_group) }
 
