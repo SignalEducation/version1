@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112093033) do
+
+ActiveRecord::Schema.define(version: 20141114170309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -299,6 +300,14 @@ ActiveRecord::Schema.define(version: 20141112093033) do
     t.date     "next_renewal_date"
     t.boolean  "complementary",         default: false, null: false
     t.string   "current_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_exam_levels", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "exam_level_id"
+    t.integer  "exam_schedule_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
