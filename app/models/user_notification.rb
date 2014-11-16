@@ -57,7 +57,6 @@ class UserNotification < ActiveRecord::Base
   # callbacks
   after_create :send_email_if_needed
   before_destroy :check_dependencies
-  # before_destroy :destroy
 
   # scopes
   scope :all_in_order, -> { order('user_id, unread DESC, created_at DESC') }

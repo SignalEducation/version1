@@ -5,7 +5,8 @@ describe InstitutionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:institution_1) { FactoryGirl.create(:institution) }
+  let!(:subject_area) { FactoryGirl.create(:subject_area) }
+  let!(:institution_1) { FactoryGirl.create(:institution, subject_area_id: subject_area.id) }
   let!(:qualification) { FactoryGirl.create(:qualification,
                                      institution_id: institution_1.id) }
   let!(:institution_2) { FactoryGirl.create(:institution) }
@@ -485,7 +486,7 @@ describe InstitutionsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('institutions', 2)
+        expect_index_success_with_model('institutions', 1)
       end
     end
 
