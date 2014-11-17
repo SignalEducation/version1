@@ -84,6 +84,7 @@ class User < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :user_exam_level
   has_many :user_notifications
+  has_many :forum_topic_users
   belongs_to :user_group
 
   # validation
@@ -183,7 +184,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.owned_corporate_accounts.empty? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty? && self.user_notifications.empty?
+    !self.admin? && self.owned_corporate_accounts.empty? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty? && self.user_notifications.empty? && self.forum_topic_users.empty?
   end
 
   def full_name
