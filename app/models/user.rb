@@ -66,7 +66,11 @@ class User < ActiveRecord::Base
   LOCALES = %w(en)
 
   # relationships
-  # todo belongs_to :corporate_customer
+  belongs_to :corporate_customer
+             # employed by the corporate customer
+  has_many :owned_corporate_accounts,
+           class_name: 'CorporateCustomer', foreign_key: :owner_id
+           # owns these corporate accounts (usually one, but can be more)
   # todo belongs_to :corporate_customer_user_group
   # todo belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
@@ -114,8 +118,7 @@ class User < ActiveRecord::Base
             inclusion: {in: EMAIL_FREQUENCIES}
   validates :locale, inclusion: {in: LOCALES}
 
-
-            # callbacks
+  # callbacks
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_destroy :check_dependencies
 
@@ -180,7 +183,7 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty? && self.user_notifications.empty?
+    !self.admin? && self.owned_corporate_accounts.empty? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.course_modules.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty? && self.user_notifications.empty?
   end
 
   def full_name

@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -22,6 +21,7 @@ Rails.application.routes.draw do
     # special routes
 
     # general resources
+    resources :corporate_customers
     get 'course_modules/new_for_exam_level/:exam_level_id',
         to: 'course_modules#new', as: :new_course_module_child
     post 'course_modules/reorder', to: 'course_modules#reorder'
