@@ -75,6 +75,7 @@ describe User do
   it { should have_many(:user_exam_level) }
   it { should have_many(:user_notifications) }
   it { should have_many(:forum_topic_users) }
+  it { should have_many(:forum_posts) }
   it { should belong_to(:user_group) }
 
   # validation
@@ -131,6 +132,7 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
-  it { should respond_to(:tutor) }
+  it { should respond_to(:frequent_form_user?) }
+  it { should respond_to(:tutor?) }
 
 end
