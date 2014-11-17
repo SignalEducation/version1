@@ -60,7 +60,8 @@ describe User do
   it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
 
   # relationships
-  xit { should belong_to(:corporate_customer) }
+  it { should belong_to(:corporate_customer) }
+  it { should have_many(:owned_corporate_accounts) }
   xit { should belong_to(:corporate_customer_user_group) }
   xit { should belong_to(:country) }
   it { should have_many(:course_modules) }

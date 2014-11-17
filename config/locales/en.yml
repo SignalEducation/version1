@@ -45,6 +45,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    corporate_customers:
+      create:
+        flash:
+          success: Corporate Customer has been created successfully
+      update:
+        flash:
+          success: Corporate Customer details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Customer has been deleted
+          error: Corporate Customer was not deleted
+
     course_modules:
       create:
         flash:
@@ -328,6 +340,31 @@ en:
 
       new:
         h1: New Category
+
+    corporate_customers:
+      form:
+        organisation_name: Organisation name
+        organisation_name_placeholder: 'Smyth & Co. Accountants'
+        address: Address
+        address_placeholder: '123 Fake Street'
+        country_id: Country
+        payments_by_card: Payments by card
+        is_university: Is University
+        owner_id: Owner
+        stripe_customer_guid: Stripe customer ID
+        can_restrict_content: Can restrict content
+
+      index:
+        h1: Corporate Customers
+
+      show:
+        h1: Corporate Customer
+
+      edit:
+        h1: Edit Corporate Customer
+
+      new:
+        h1: New Corporate Customer
 
     course_modules:
       form:
