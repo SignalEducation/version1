@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: forum_posts
+#
+#  id                        :integer          not null, primary key
+#  user_id                   :integer
+#  content                   :text
+#  forum_topic_id            :integer
+#  blocked                   :boolean          default(FALSE), not null
+#  response_to_forum_post_id :integer
+#  created_at                :datetime
+#  updated_at                :datetime
+#
+
 class ForumPost < ActiveRecord::Base
 
   # attr-accessible
