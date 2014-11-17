@@ -39,6 +39,7 @@
 #  forum_notification_email_frequency       :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  locale                                   :string(255)
 #
 
 FactoryGirl.define do

@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: forum_topic_users
+#
+#  id             :integer          not null, primary key
+#  user_id        :integer
+#  forum_topic_id :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
 require 'rails_helper'
 
 describe ForumTopicUser do
