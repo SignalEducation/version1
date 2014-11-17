@@ -23,8 +23,11 @@ class ForumTopic < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :forum_topic
   belongs_to :course_module_element
+  belongs_to :parent, class_name: 'ForumTopic', foreign_key: :forum_topic_id
+  belongs_to :forum_topic
+  # todo belongs_to :reviewer, class_name: 'User', foreign_key: :reviewer_id
+  has_many :forum_posts
 
   # validation
   validates :forum_topic_id, presence: true,

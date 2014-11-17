@@ -35,6 +35,9 @@ describe ForumTopic do
   # relationships
   it { should belong_to(:forum_topic) }
   it { should belong_to(:course_module_element) }
+  it { should belong_to(:parent) }
+  xit { should belong_to(:reviewer) }
+  it { should have_many(:forum_posts) }
 
   # validation
   it { should validate_presence_of(:forum_topic_id) }
@@ -63,7 +66,5 @@ describe ForumTopic do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

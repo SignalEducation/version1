@@ -31,7 +31,7 @@ describe ForumPost do
 
   # relationships
   it { should belong_to(:user) }
-  xit { should belong_to(:forum_topic) }
+  it { should belong_to(:forum_topic) }
   xit { should belong_to(:response_to_forum_post) }
   it { should have_many(:response_posts) }
 
