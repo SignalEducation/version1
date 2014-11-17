@@ -23,6 +23,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(allowed_params)
+    @user.locale = 'en'
     if @user.save
       OperationalMailer.activate_account(@user).deliver
       flash[:success] = I18n.t('controllers.users.create.flash.success')
