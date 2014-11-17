@@ -112,6 +112,9 @@ describe User do
 
   it { should validate_inclusion_of(:forum_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
 
+  it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
+
+
   # callbacks
   it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:check_dependencies).before(:destroy) }

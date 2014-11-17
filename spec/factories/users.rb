@@ -58,6 +58,7 @@ FactoryGirl.define do
     blog_notification_email_frequency         'daily'
     forum_notification_email_frequency        'daily'
     active                                    true
+    locale                                    'en'
 
     factory :individual_student_user do
       active                            true

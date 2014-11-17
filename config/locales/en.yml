@@ -304,6 +304,10 @@ en:
         click_to_search: Click to search
         click_to_view: Click to view
 
+    locales:
+      en: English
+      es: Spanish
+
     duplicate_me_for_new_views:
       form:
         name: Name
