@@ -43,7 +43,7 @@ class ForumPost < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.response_posts.empty
+    self.response_posts.empty?
   end
 
   def background_colour
