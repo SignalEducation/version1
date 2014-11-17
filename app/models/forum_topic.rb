@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: forum_topics
+#
+#  id                       :integer          not null, primary key
+#  forum_topic_id           :integer
+#  course_module_element_id :integer
+#  heading                  :string(255)
+#  description              :text
+#  active                   :boolean          default(TRUE), not null
+#  publish_from             :datetime
+#  publish_until            :datetime
+#  reviewed_by              :integer
+#  created_at               :datetime
+#  updated_at               :datetime
+#
+
 class ForumTopic < ActiveRecord::Base
 
   # attr-accessible
