@@ -39,6 +39,7 @@
 #  forum_notification_email_frequency       :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  locale                                   :string(255)
 #
 
 require 'rails_helper'
@@ -109,6 +110,9 @@ describe User do
   it { should validate_inclusion_of(:blog_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
 
   it { should validate_inclusion_of(:forum_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
+
+  it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
+
 
   # callbacks
   it { should callback(:de_activate_user).before(:validation).on(:create) }

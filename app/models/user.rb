@@ -39,6 +39,7 @@
 #  forum_notification_email_frequency       :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  locale                                   :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -58,10 +59,11 @@ class User < ActiveRecord::Base
                   :marketing_email_permission_given_at,
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
-                  :password_confirmation, :current_password
+                  :password_confirmation, :current_password, :locale
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
+  LOCALES = %w(en)
 
   # relationships
   # todo belongs_to :corporate_customer
@@ -110,8 +112,10 @@ class User < ActiveRecord::Base
             inclusion: {in: EMAIL_FREQUENCIES}
   validates :forum_notification_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}
+  validates :locale, inclusion: {in: LOCALES}
 
-  # callbacks
+
+            # callbacks
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_destroy :check_dependencies
 
