@@ -74,6 +74,7 @@ describe User do
   it { should have_many(:subscription_transactions) }
   it { should have_many(:user_exam_level) }
   it { should have_many(:user_notifications) }
+  it { should have_many(:forum_topic_users) }
   it { should belong_to(:user_group) }
 
   # validation
