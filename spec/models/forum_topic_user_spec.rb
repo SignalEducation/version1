@@ -28,7 +28,7 @@ describe ForumTopicUser do
 
   # relationships
   it { should belong_to(:user) }
-  it { should belong_to(:forum_topic) }
+  xit { should belong_to(:forum_topic) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -47,7 +47,5 @@ describe ForumTopicUser do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
