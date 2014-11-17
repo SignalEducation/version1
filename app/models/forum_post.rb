@@ -21,8 +21,9 @@ class ForumPost < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :forum_topic
-  belongs_to :response_to_forum_post
+  # todo belongs_to :forum_topic
+  # todo belongs_to :response_to_forum_post
+  has_many :response_posts, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
 
   # validation
   validates :user_id, presence: true,
@@ -30,8 +31,7 @@ class ForumPost < ActiveRecord::Base
   validates :content, presence: true
   validates :forum_topic_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :response_to_forum_post_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :response_to_forum_post_id, numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_destroy :check_dependencies
@@ -43,7 +43,19 @@ class ForumPost < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.response_posts.empty
+  end
+
+  def background_colour
+    if self.user.admin?
+       '#ffeebb'
+    elsif self.user.tutor?
+      '#eeffcc'
+    elsif self.user.frequent_form_user?
+      '#eeeeff'
+    else
+      'inherit'
+    end
   end
 
   protected
