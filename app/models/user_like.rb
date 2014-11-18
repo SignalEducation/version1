@@ -19,7 +19,7 @@ class UserLike < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :likeable
+  belongs_to :likeable, polymorphic: true
 
   # validation
   validates :user_id, presence: true,

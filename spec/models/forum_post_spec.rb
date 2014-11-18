@@ -35,6 +35,7 @@ describe ForumPost do
   it { should belong_to(:response_to_forum_post) }
   it { should have_many(:response_posts) }
   it { should have_many(:forum_post_concerns) }
+  it { should have_many(:user_likes) }
 
   # validation
   it { should validate_presence_of(:user_id) }
