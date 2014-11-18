@@ -24,10 +24,11 @@ class ForumTopic < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
-  belongs_to :parent, class_name: 'ForumTopic', foreign_key: :forum_topic_id
-  belongs_to :forum_topic
+  # todo belongs_to :parent, class_name: 'ForumTopic', foreign_key: :forum_topic_id
+  # todo belongs_to :forum_topic
   # todo belongs_to :reviewer, class_name: 'User', foreign_key: :reviewer_id
   has_many :forum_posts
+  has_many :forum_topic_users
 
   # validation
   validates :forum_topic_id, presence: true,
@@ -50,7 +51,7 @@ class ForumTopic < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.forum_posts.empty? && self.forum_topic_users.empty?
   end
 
   protected

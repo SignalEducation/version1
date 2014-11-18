@@ -33,11 +33,12 @@ describe ForumTopic do
   #it { expect(ForumTopic.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:forum_topic) }
+  xit { should belong_to(:forum_topic) }
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:parent) }
+  xit { should belong_to(:parent) }
   xit { should belong_to(:reviewer) }
   it { should have_many(:forum_posts) }
+  it { should have_many(:forum_topic_users) }
 
   # validation
   it { should validate_presence_of(:forum_topic_id) }
