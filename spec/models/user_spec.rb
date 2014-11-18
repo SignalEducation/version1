@@ -77,6 +77,7 @@ describe User do
   it { should have_many(:forum_topic_users) }
   it { should have_many(:forum_posts) }
   it { should have_many(:forum_post_concerns) }
+  it { should have_many(:user_likes) }
   it { should belong_to(:user_group) }
 
   # validation

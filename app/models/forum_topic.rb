@@ -32,6 +32,7 @@ class ForumTopic < ActiveRecord::Base
   belongs_to :reviewer, class_name: 'User', foreign_key: :reviewed_by
   has_many :forum_posts
   has_many :forum_topic_users
+  has_many :user_likes, as: :likeable
   has_many :children, class_name: 'ForumTopic', foreign_key: :forum_topic_id
 
   # validation
