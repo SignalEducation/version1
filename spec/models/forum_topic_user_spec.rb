@@ -28,7 +28,7 @@ describe ForumTopicUser do
 
   # relationships
   it { should belong_to(:user) }
-  xit { should belong_to(:forum_topic) }
+  it { should belong_to(:forum_topic) }
 
   # validation
   it { should validate_presence_of(:user_id) }

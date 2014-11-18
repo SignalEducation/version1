@@ -21,7 +21,7 @@ class ForumPost < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  # todo belongs_to :forum_topic
+  belongs_to :forum_topic
   belongs_to :response_to_forum_post, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
   has_many :response_posts, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
   has_many :forum_post_concerns
