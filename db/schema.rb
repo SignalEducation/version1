@@ -174,6 +174,15 @@ ActiveRecord::Schema.define(version: 20141118134902) do
     t.datetime "updated_at"
   end
 
+  create_table "forum_post_concerns", force: true do |t|
+    t.integer  "forum_post_id"
+    t.integer  "user_id"
+    t.string   "reason"
+    t.boolean  "live",          default: true, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "forum_posts", force: true do |t|
     t.integer  "user_id"
     t.text     "content"

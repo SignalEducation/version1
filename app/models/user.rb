@@ -86,6 +86,7 @@ class User < ActiveRecord::Base
   has_many :user_notifications
   has_many :forum_topic_users
   has_many :forum_posts
+  has_many :forum_post_concerns
   belongs_to :user_group
 
   # validation
@@ -198,7 +199,8 @@ class User < ActiveRecord::Base
         self.user_exam_level.empty? &&
         self.user_notifications.empty? &&
         self.forum_topic_users.empty? &&
-        self.forum_posts.empty?
+        self.forum_posts.empty? &&
+        self.forum_post_concerns.empty?
   end
 
   def full_name
