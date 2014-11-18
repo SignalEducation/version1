@@ -24,6 +24,7 @@ class ForumPost < ActiveRecord::Base
   belongs_to :forum_topic
   belongs_to :response_to_forum_post, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
   has_many :response_posts, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
+  has_many :forum_post_concerns
 
   # validation
   validates :user_id, presence: true,
@@ -44,7 +45,7 @@ class ForumPost < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.response_posts.empty?
+    self.response_posts.empty? && self.forum_post_concerns.empty?
   end
 
   def background_colour
