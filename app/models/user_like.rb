@@ -38,7 +38,7 @@ class UserLike < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true # allows users to reverse their liking of something
   end
 
   protected

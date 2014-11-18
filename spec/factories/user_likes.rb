@@ -12,9 +12,9 @@
 
 FactoryGirl.define do
   factory :user_like do
-    user_id 1
-    likeable_type "MyString"
-    likeable_id 1
+    user_id       1
+    likeable_type 'ForumPost'
+    likeable_id   { ForumPost.first.try(:id) || 1 }
   end
 
 end
