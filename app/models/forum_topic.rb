@@ -13,18 +13,22 @@
 #  reviewed_by              :integer
 #  created_at               :datetime
 #  updated_at               :datetime
+#  created_by               :integer
 #
 
 class ForumTopic < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :forum_topic_id, :course_module_element_id, :heading, :description, :active, :publish_from, :publish_until, :reviewed_by
+  attr_accessible :forum_topic_id, :course_module_element_id, :heading,
+                  :description, :active, :publish_from, :publish_until, :reviewed_by,
+                  :created_by
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
   belongs_to :parent, class_name: 'ForumTopic', foreign_key: :forum_topic_id
+  belongs_to :creator, class_name: 'User', foreign_key: :created_by
   belongs_to :reviewer, class_name: 'User', foreign_key: :reviewed_by
   has_many :forum_posts
   has_many :forum_topic_users
@@ -39,14 +43,17 @@ class ForumTopic < ActiveRecord::Base
   validates :heading, presence: true
   validates :description, presence: true
   validates :publish_from, presence: true
-  validates :publish_until, presence: true
-  validates :reviewed_by, presence: true
+  validates :created_by, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :reviewed_by, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:forum_topic_id) }
+  scope :all_active, -> { where('publish_from < :t AND (publish_until IS NULL OR publish_until > :t) AND reviewed_by IS NOT NULL', t: Proc.new{Time.now}.call) }
   scope :top_levels, -> { where(forum_topic_id: nil) }
 
   # class methods

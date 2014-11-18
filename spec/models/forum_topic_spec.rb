@@ -13,6 +13,7 @@
 #  reviewed_by              :integer
 #  created_at               :datetime
 #  updated_at               :datetime
+#  created_by               :integer
 #
 
 require 'rails_helper'
@@ -35,6 +36,7 @@ describe ForumTopic do
   # relationships
   it { should belong_to(:course_module_element) }
   it { should belong_to(:parent) }
+  it { should belong_to(:creator) }
   it { should belong_to(:reviewer) }
   it { should have_many(:forum_posts) }
   it { should have_many(:forum_topic_users) }
@@ -54,15 +56,18 @@ describe ForumTopic do
 
   it { should validate_presence_of(:publish_from) }
 
-  it { should validate_presence_of(:publish_until) }
+  it { should validate_presence_of(:created_by) }
+  it { should validate_numericality_of(:created_by) }
 
-  it { should validate_presence_of(:reviewed_by) }
+  it { should_not validate_presence_of(:reviewed_by) }
+  it { should validate_numericality_of(:reviewed_by) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(ForumTopic).to respond_to(:all_in_order) }
+  it { expect(ForumTopic).to respond_to(:all_active) }
   it { expect(ForumTopic).to respond_to(:top_levels) }
 
   # class methods
