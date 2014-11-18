@@ -22,7 +22,7 @@ class ForumPost < ActiveRecord::Base
   # relationships
   belongs_to :user
   belongs_to :forum_topic
-  # todo belongs_to :response_to_forum_post
+  belongs_to :response_to_forum_post, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
   has_many :response_posts, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
 
   # validation
@@ -31,13 +31,14 @@ class ForumPost < ActiveRecord::Base
   validates :content, presence: true
   validates :forum_topic_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :response_to_forum_post_id, numericality: {only_integer: true, greater_than: 0}
+  validates :response_to_forum_post_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:user_id) }
+  scope :all_in_order, -> { order(:forum_topic_id) }
 
   # class methods
 

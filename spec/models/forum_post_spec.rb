@@ -31,8 +31,13 @@ describe ForumPost do
 
   # relationships
   it { should belong_to(:user) }
+<<<<<<< HEAD
   it { should belong_to(:forum_topic) }
   xit { should belong_to(:response_to_forum_post) }
+=======
+  xit { should belong_to(:forum_topic) }
+  it { should belong_to(:response_to_forum_post) }
+>>>>>>> master
   it { should have_many(:response_posts) }
 
   # validation
@@ -44,6 +49,7 @@ describe ForumPost do
   it { should validate_presence_of(:forum_topic_id) }
   it { should validate_numericality_of(:forum_topic_id) }
 
+  it { should_not validate_presence_of(:response_to_forum_post_id) }
   it { should validate_numericality_of(:response_to_forum_post_id) }
 
   # callbacks

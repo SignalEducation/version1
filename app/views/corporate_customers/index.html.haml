@@ -1,0 +1,36 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.corporate_customers.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @corporate_customers, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.corporate_customers.form.organisation_name')
+          %th=t('views.corporate_customers.form.country_id')
+          %th=t('views.corporate_customers.form.payments_by_card')
+          %th=t('views.corporate_customers.form.is_university')
+          %th=t('views.corporate_customers.form.owner_id')
+          %th=t('views.corporate_customers.form.can_restrict_content')
+          %th
+      %tbody
+        -@corporate_customers.each do |corporate_customer|
+          %tr{id: corporate_customer.id}
+            %td=link_to(corporate_customer.organisation_name, corporate_customer, title: t('views.general.view_tooltip'))
+            %td
+              -# todo =link_to(corporate_customer.country.name, corporate_customer, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(corporate_customer.payments_by_card), corporate_customer, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(corporate_customer.is_university), corporate_customer, title: t('views.general.view_tooltip'))
+            %td=link_to(corporate_customer.owner.full_name, corporate_customer, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(corporate_customer.can_restrict_content), corporate_customer, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), corporate_customer
+              =link_to t('views.general.edit'), edit_corporate_customer_url(corporate_customer), class: 'btn btn-info btn-xs'
+              -if corporate_customer.destroyable?
+                =link_to t('views.general.delete'), corporate_customer, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_corporate_customer_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

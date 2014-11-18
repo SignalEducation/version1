@@ -1,0 +1,39 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.corporate_customers.show.h1')
+        \#
+        =@corporate_customer.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.organisation_name')
+        %td.col-sm-8=@corporate_customer.organisation_name
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.address')
+        %td.col-sm-8=@corporate_customer.address
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.country_id')
+        %td.col-sm-8
+          -# todo =@corporate_customer.country.name
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.payments_by_card')
+        %td.col-sm-8=tick_or_cross(@corporate_customer.payments_by_card)
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.is_university')
+        %td.col-sm-8=tick_or_cross(@corporate_customer.is_university)
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.owner_id')
+        %td.col-sm-8=@corporate_customer.owner.full_name
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.stripe_customer_guid')
+        %td.col-sm-8=@corporate_customer.stripe_customer_guid
+      %tr
+        %td.col-sm-4=t('views.corporate_customers.form.can_restrict_content')
+        %td.col-sm-8=tick_or_cross(@corporate_customer.can_restrict_content)
+    %p
+      =link_to t('views.general.back'), corporate_customers_url
+      |
+      =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')

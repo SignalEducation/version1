@@ -40,7 +40,7 @@ describe CourseModuleElementUserLog do
   it { should belong_to(:course_module_element) }
   it { should belong_to(:user) }
   it { should belong_to(:course_module) }
-  xit { should belong_to(:corporate_customer) }
+  it { should belong_to(:corporate_customer) }
   it { should have_many(:quiz_attempts) }
 
   # validation
@@ -81,7 +81,6 @@ describe CourseModuleElementUserLog do
 
   # class methods
   it { should respond_to(:for_user_or_session) }
-
 
   # instance methods
   it { should respond_to(:destroyable?) }
