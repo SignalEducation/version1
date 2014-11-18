@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141117120250) do
+ActiveRecord::Schema.define(version: 20141118134902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,6 +189,20 @@ ActiveRecord::Schema.define(version: 20141117120250) do
     t.integer  "forum_topic_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "forum_topics", force: true do |t|
+    t.integer  "forum_topic_id"
+    t.integer  "course_module_element_id"
+    t.string   "heading"
+    t.text     "description"
+    t.boolean  "active",                   default: true, null: false
+    t.datetime "publish_from"
+    t.datetime "publish_until"
+    t.integer  "reviewed_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by"
   end
 
   create_table "institution_users", force: true do |t|
