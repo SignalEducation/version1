@@ -18,7 +18,7 @@ class ForumTopicUser < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  # todo belongs_to :forum_topic
+  belongs_to :forum_topic
 
   # validation
   validates :user_id, presence: true,
