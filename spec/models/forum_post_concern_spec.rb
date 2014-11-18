@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: forum_post_concerns
+#
+#  id            :integer          not null, primary key
+#  forum_post_id :integer
+#  user_id       :integer
+#  reason        :string(255)
+#  live          :boolean          default(TRUE), not null
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
 require 'rails_helper'
 
 describe ForumPostConcern do
@@ -38,7 +51,5 @@ describe ForumPostConcern do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
