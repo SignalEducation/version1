@@ -24,11 +24,11 @@ class ForumTopic < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
-  # todo belongs_to :parent, class_name: 'ForumTopic', foreign_key: :forum_topic_id
-  # todo belongs_to :forum_topic
-  # todo belongs_to :reviewer, class_name: 'User', foreign_key: :reviewer_id
+  belongs_to :parent, class_name: 'ForumTopic', foreign_key: :forum_topic_id
+  belongs_to :reviewer, class_name: 'User', foreign_key: :reviewed_by
   has_many :forum_posts
   has_many :forum_topic_users
+  has_many :children, class_name: 'ForumTopic', foreign_key: :forum_topic_id
 
   # validation
   validates :forum_topic_id, presence: true,
@@ -46,12 +46,13 @@ class ForumTopic < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:forum_topic_id) }
+  scope :top_levels, -> { where(forum_topic_id: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    self.forum_posts.empty? && self.forum_topic_users.empty?
+    self.forum_posts.empty? && self.forum_topic_users.empty? && self.children.empty?
   end
 
   protected
