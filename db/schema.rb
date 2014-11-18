@@ -408,6 +408,14 @@ ActiveRecord::Schema.define(version: 20141118134902) do
     t.datetime "updated_at"
   end
 
+  create_table "user_likes", force: true do |t|
+    t.integer  "user_id"
+    t.string   "likeable_type"
+    t.integer  "likeable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_notifications", force: true do |t|
     t.integer  "user_id"
     t.string   "subject_line"

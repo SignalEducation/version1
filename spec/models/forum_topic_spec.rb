@@ -41,6 +41,7 @@ describe ForumTopic do
   it { should have_many(:forum_posts) }
   it { should have_many(:forum_topic_users) }
   it { should have_many(:children) }
+  it { should have_many(:user_likes) }
 
   # validation
   it { should validate_presence_of(:forum_topic_id) }
