@@ -3,7 +3,7 @@
     =form_for(@vat_code, html: {class: 'form-horizontal', role: 'form'}) do |f|
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @vat_code, message: nil}
-        .form-group
+        -# todo .form-group
           =f.label :country_id, t('views.vat_codes.form.country_id'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}

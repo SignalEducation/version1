@@ -55,7 +55,7 @@ class VatCodesController < ApplicationController
     if params[:id].to_i > 0
       @vat_code = VatCode.where(id: params[:id]).first
     end
-    @countries = Country.all_in_order
+    #@countries = Country.all_in_order
   end
 
   def allowed_params
