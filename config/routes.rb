@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :vat_codes
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -43,6 +42,8 @@ Rails.application.routes.draw do
 resources :subject_areas
     resources :subscription_plans
     resources :user_notifications
+    resources :vat_codes
+
 
 
     # home page
