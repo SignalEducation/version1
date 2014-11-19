@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: vat_rates
+#
+#  id              :integer          not null, primary key
+#  vat_code_id     :integer
+#  percentage_rate :float
+#  effective_from  :date
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class VatRate < ActiveRecord::Base
 
   # attr-accessible
@@ -6,7 +18,7 @@ class VatRate < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :vat_code
+   # todo belongs_to :vat_code
 
   # validation
   validates :vat_code_id, presence: true,
