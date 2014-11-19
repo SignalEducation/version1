@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: vat_codes
+#
+#  id         :integer          not null, primary key
+#  country_id :integer
+#  name       :string(255)
+#  label      :string(255)
+#  wiki_url   :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class VatCode < ActiveRecord::Base
 
   # attr-accessible
@@ -6,14 +19,14 @@ class VatCode < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :country
+  # to belongs_to :country
+  has_many :vat_rates
 
   # validation
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :label, presence: true
-  validates :wiki_url, presence: true
 
   # callbacks
   before_destroy :check_dependencies
@@ -25,7 +38,7 @@ class VatCode < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.vat_rates.empty?
   end
 
   protected

@@ -18,7 +18,7 @@ class VatRate < ActiveRecord::Base
   # Constants
 
   # relationships
-   # todo belongs_to :vat_code
+   belongs_to :vat_code
 
   # validation
   validates :vat_code_id, presence: true,

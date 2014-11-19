@@ -28,7 +28,7 @@ describe VatRate do
   #it { expect(VatRate.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  xit { should belong_to(:vat_code) }
+  it { should belong_to(:vat_code) }
 
   # validation
   it { should validate_presence_of(:vat_code_id) }

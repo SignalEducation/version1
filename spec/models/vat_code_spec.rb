@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: vat_codes
+#
+#  id         :integer          not null, primary key
+#  country_id :integer
+#  name       :string(255)
+#  label      :string(255)
+#  wiki_url   :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 require 'rails_helper'
 
 describe VatCode do
@@ -16,7 +29,8 @@ describe VatCode do
   #it { expect(VatCode.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:country) }
+  xit { should belong_to(:country) }
+  it { should have_many(:vat_rates) }
 
   # validation
   it { should validate_presence_of(:country_id) }
@@ -38,7 +52,5 @@ describe VatCode do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
