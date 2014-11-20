@@ -11,6 +11,7 @@
 #  currency_id   :integer
 #  created_at    :datetime
 #  updated_at    :datetime
+#  continent     :string(255)
 #
 
 FactoryGirl.define do

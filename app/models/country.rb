@@ -11,15 +11,17 @@
 #  currency_id   :integer
 #  created_at    :datetime
 #  updated_at    :datetime
+#  continent     :string(255)
 #
 
 class Country < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :iso_code, :country_tld, :sorting_order,
-                  :in_the_eu, :currency_id
+                  :in_the_eu, :currency_id, :continent
 
   # Constants
+  CONTINENTS = ['Europe', 'North America', 'South America', 'Asia', 'Africa','Australia', 'Antarctic']
 
   # relationships
   belongs_to :currency
@@ -34,6 +36,7 @@ class Country < ActiveRecord::Base
             numericality: {only_integer: true}
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :continent, inclusion: {in: CONTINENTS}
 
   # callbacks
   before_destroy :check_dependencies
