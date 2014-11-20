@@ -11,6 +11,7 @@
 #  currency_id   :integer
 #  created_at    :datetime
 #  updated_at    :datetime
+#  continent     :string(255)
 #
 
 require 'rails_helper'
@@ -28,7 +29,7 @@ describe Country do
   end
 
   # Constants
-  #it { Country.const_defined?(:CONSTANT_NAME) }
+  it { expect(Country.const_defined?(:CONTINENTS)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }
@@ -48,6 +49,8 @@ describe Country do
 
   it { should validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
+
+  it { should validate_inclusion_of(:continent).in_array(Country::CONTINENTS) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

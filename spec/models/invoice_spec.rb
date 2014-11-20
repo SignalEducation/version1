@@ -33,7 +33,7 @@ describe Invoice do
   end
 
   # Constants
-  #it { Invoice.const_defined?(:CONSTANT_NAME) }
+  #it { expect()Invoice.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }

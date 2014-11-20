@@ -27,7 +27,7 @@ describe StudentExamTrack do
   end
 
   # Constants
-  #it { StudentExamTrack.const_defined?(:CONSTANT_NAME) }
+  #it { expect()StudentExamTrack.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
