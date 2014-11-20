@@ -289,7 +289,7 @@ en:
       can_t_be_blank_for_students: "Can't be blank for students"
 
     subscription_plans:
-      must_be_in_the_future: must be in the future
+      must_be_in_the_future: Must be in the future
 
     quiz_content:
       can_t_assign_to_question_and_answer: Can't assign this to a question AND an answer
@@ -300,288 +300,289 @@ en:
       numbers:
         thousands_separator: ","
         decimal_separator: "."
-      active: active
-      admin: admin
-      approve: approve
+      active: Active
+      admin: Admin
+      approve: Approve
       approve_tooltip: click to approve
-      at_date_time: at
-      back: back
+      at_date_time: At
+      back: Back
       by: by
-      cancel: cancel
-      close: close
-      coming_soon: coming soon
-      delete: delete
+      cancel: Cancel
+      close: Close
+      coming_soon: Coming soon
+      delete: Delete
       delete_tooltip: click to delete
-      delete_confirmation: are you sure?
-      edit: edit
+      delete_confirmation: Are you sure?
+      edit: Edit
       edit_tooltip: click to edit
-      example: example
-      go: go
-      home: home
-      missing_data_error: sorry, some data is missing
-      new: new
+      example: Example
+      go: Go
+      home: Home
+      missing_data_error: Sorry, some data is missing
+      new: New
       new_tooltip: click to add a new one
-      no: no
+      no: No
       ok: ok
       or: or
-      review: review
-      save: save
-      send: send
-      select: select...
-      sign_in: sign in
-      sign_out: sign out
-      sign_up: sign up
-      toggle_navigation: toggle navigation
-      view: view
+      review: Review
+      save: Save
+      send: Send
+      select: Select...
+      sign_in: Sign in
+      sign_out: Sign out
+      sign_up: Sign up
+      toggle_navigation: Toggle navigation
+      view: View
       view_tooltip: click to view
-      yes: yes
+      yes: Yes
       tooltips:
         click_to_edit: click to edit
         click_to_search: click to search
         click_to_view: click to view
 
     locales:
-      en: english
-      es: spanish
+      en: English
+      es: Spanish
 
     duplicate_me_for_new_views:
       form:
-        name: name
-        name_placeholder: first category name
-        category_id: category
-        active: 'active?'
-        sorting_order: sorting order
+        name: Name
+        name_placeholder: First category name
+        category_id: Category
+        active: 'Active?'
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
 
       index:
-        h1: categoreez
+        h1: Categoreez
 
       show:
-        h1: category
+        h1: Category
 
       edit:
-        h1: edit category
+        h1: Edit Category
 
       new:
-        h1: new category
+        h1: New Category
 
     countries:
       form:
-        name: name
-        name_placeholder: name of the country
-        iso_code: iso code
+        name: Name
+        name_placeholder: Name of the country
+        iso_code: ISO code
         iso_code_placeholder: "ie gb ca us etc"
-        country_tld: country tld
+        country_tld: Country TLD
         country_tld_placeholder: ".com"
-        sorting_order: sorting order
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
-        in_the_eu: in the eu
-        currency_id: currency
+        in_the_eu: In the EU
+        currency_id: Currency
+        continent: Continent
 
       index:
-        h1: countries
+        h1: Countries
 
       show:
-        h1: country
+        h1: Country
 
       edit:
-        h1: edit country
+        h1: Edit Country
 
       new:
-        h1: new country
+        h1: New Country
 
     corporate_customers:
       form:
-        organisation_name: organisation name
-        organisation_name_placeholder: 'smyth & co. accountants'
-        address: address
-        address_placeholder: '123 fake street'
-        country_id: country
-        payments_by_card: payments by card
-        is_university: is university
-        owner_id: owner
-        stripe_customer_guid: stripe customer id
-        can_restrict_content: can restrict content
+        organisation_name: Organisation name
+        organisation_name_placeholder: 'Smyth & co. Accountants'
+        address: Address
+        address_placeholder: '123 Fake Street'
+        country_id: Country
+        payments_by_card: Payments by card
+        is_university: Is University
+        owner_id: Owner
+        stripe_customer_guid: Stripe Customer ID
+        can_restrict_content: Can restrict content
 
       index:
-        h1: corporate customers
+        h1: Corporate Customers
 
       show:
-        h1: corporate customer
+        h1: Corporate Customer
 
       edit:
-        h1: edit corporate customer
+        h1: Edit Corporate Customer
 
       new:
-        h1: new corporate customer
+        h1: New Corporate Customer
 
     course_modules:
       form:
-        institution_id: institution
-        qualification_id: qualification
-        exam_level_id: exam level
-        exam_section_id: exam section
-        name: name
-        name_placeholder: introduction to surfing
-        name_url: name url
-        name_url_placeholder: introduction-to-surfing
-        description: description
-        description_placeholder: describe the course module here
-        tutor_id: tutor
-        sorting_order: sorting order
+        institution_id: Institution
+        qualification_id: Qualification
+        exam_level_id: Exam level
+        exam_section_id: Exam section
+        name: Name
+        name_placeholder: Introduction to surfing
+        name_url: Name URL
+        name_url_placeholder: Introduction-to-surfing
+        description: Description
+        description_placeholder: Describe the course module here
+        tutor_id: Tutor
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
-        estimated_time_in_seconds: "time (in seconds)"
+        estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
-        compulsory: "compulsory?"
-        active: "active?"
+        compulsory: "Compulsory?"
+        active: "Active?"
 
       edit:
-        h1: edit course module
+        h1: Edit Course Module
 
       index:
-        h1: course modules
+        h1: Course Modules
 
       new:
-        h1: new course module
+        h1: New Course Module
 
       show:
-        h1: course module
+        h1: Course Module
 
     currencies:
       form:
-        iso_code: iso code
+        iso_code: ISO code
         iso_code_placeholder: eur
-        name: name
-        name_placeholder: euro
-        leading_symbol: leading symbol
+        name: Name
+        name_placeholder: Euro
+        leading_symbol: Leading symbol
         leading_symbol_placeholder: "€"
-        trailing_symbol: trailing symbol
+        trailing_symbol: Trailing symbol
         trailing_symbol_placeholder: "c"
-        active: active
-        sorting_order: sorting order
+        active: Active
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
 
       edit:
-        h1: edit currency
+        h1: Edit Currency
 
       index:
-        h1: currencies
+        h1: Currencies
 
       new:
-        h1: new currency
+        h1: New Currency
 
       show:
-        h1: currency
+        h1: Currency
 
     exam_levels:
       form:
-        qualification_id: qualification
-        name: name
-        name_placeholder: first exam level
-        name_url: name url
+        qualification_id: Qualification
+        name: Name
+        name_placeholder: First exam level
+        name_url: Name URL
         name_url_placeholder: first-exam-level
-        is_cpd: 'is cpd?'
-        sorting_order: sorting order
+        is_cpd: 'is CPD?'
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
-        active: 'active?'
-        best_possible_first_attempt_score: 'best-possible first attempt score'
+        active: 'Active?'
+        best_possible_first_attempt_score: 'Best-possible first attempt score'
         best_possible_first_attempt_score_placeholder: 200
 
       index:
-        h1: exam levels
-        new: new exam level
+        h1: Exam Levels
+        new: New Exam Level
 
       show:
-        h1: exam level
+        h1: Exam Level
 
       edit:
-        h1: edit exam level
+        h1: Edit Exam Level
 
       new:
-        h1: new exam level
+        h1: New Exam Level
 
     exam_sections:
       form:
-        name: name
-        name_placeholder: economics
-        name_url: url
+        name: Name
+        name_placeholder: Economics
+        name_url: Name URL
         name_url_placeholder: economics
-        exam_level_id: exam level
-        category_id: category
-        active: active
-        sorting_order: sorting order
+        exam_level_id: Exam level
+        category_id: Category
+        active: Active
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
-        best_possible_first_attempt_score: best possible first attempt score
+        best_possible_first_attempt_score: Best-possible first attempt score
         best_possible_first_attempt_score_placeholder: 100
 
       index:
-        h1: exam sections
+        h1: Exam Sections
 
       show:
-        h1: exam section
+        h1: Exam Section
 
       edit:
-        h1: edit exam section
+        h1: Edit Exam Section
 
       new:
-        h1: new exam section
+        h1: New Exam Section
 
     institutions:
       form:
-        name: name
-        name_placeholder: institute of eteaching
-        short_name: short name
+        name: Name
+        name_placeholder: Institute of eTeaching
+        short_name: Short name
         short_name_placeholder: iet
-        name_url: url
+        name_url: Name URL
         name_url_placeholder: institute-of-eteaching
-        description: description
-        description_placeholder: add some text that describes the institution
-        feedback_url: feedback url
+        description: Description
+        description_placeholder: Add some text that describes the institution
+        feedback_url: Feedback URL
         feedback_url_placeholder: http://iet.com/feedback
-        help_desk_url: help desk url
+        help_desk_url: Help desk URL
         help_desk_url_placeholder: http://help.iet.com
-        subject_area_id: subject area
-        sorting_order: sorting order
+        subject_area_id: Subject area
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
-        active: active
+        active: Active
 
       edit:
-        h1: edit institution
+        h1: Edit Institution
 
       index:
-        h1: institutions
+        h1: Institutions
 
       new:
-        h1: new institution
+        h1: New Institution
 
       show:
-        h1: institution
+        h1: Institution
 
     invoices:
       form:
-        user_id: user
-        corporate_customer_id: corporate customer
-        subscription_transaction_id: subscription transaction
-        subscription_id: subscription
-        number_of_users: number of users
-        currency_id: currency
-        unit_price_ex_vat: unit price ex vat
-        line_total_ex_vat: line total ex vat
-        vat_rate_id: vat rate
-        line_total_vat_amount: line total vat amount
-        line_total_inc_vat: line total inc vat
+        user_id: User
+        corporate_customer_id: Corporate customer
+        subscription_transaction_id: Subscription transaction
+        subscription_id: Subscription
+        number_of_users: Number of users
+        currency_id: Currency
+        unit_price_ex_vat: Unit price ex VAT
+        line_total_ex_vat: Line total ex VAT
+        vat_rate_id: VAT rate
+        line_total_vat_amount: Line total VAT amount
+        line_total_inc_vat: Line total inc VAT
 
       edit:
-        h1: edit invoice
+        h1: Edit Invoice
 
       index:
-        h1: invoices
+        h1: Invoices
 
       new:
-        h1: new invoice
+        h1: New Invoice
 
       show:
-        h1: invoice
+        h1: Invoice
 
     layouts:
       error_messages:
@@ -590,29 +591,29 @@ en:
 
     qualifications:
       form:
-        name: name
-        name_placeholder: cfa qualification
-        institution_id: institution
-        name_url: url
+        name: Name
+        name_placeholder: CFA qualification
+        institution_id: Institution
+        name_url: Name URL
         name_url_placeholder: cfa-qualification
-        cpd_hours_required_per_year: required cpd hours per year
+        cpd_hours_required_per_year: Required CPD hours per year
         cpd_hours_required_per_year_placeholder: 100
-        category_id: category
-        active: active
-        sorting_order: sorting order
+        category_id: Category
+        active: Active
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
 
       index:
-        h1: qualifications
+        h1: Qualifications
 
       show:
-        h1: qualification
+        h1: Qualification
 
       edit:
-        h1: edit qualification
+        h1: Edit Qualification
 
       new:
-        h1: new qualification
+        h1: New Qualification
 
     shared:
       filter_panel:
@@ -620,211 +621,211 @@ en:
 
     subscription_plans:
       form:
-        available_to_students: available to students
-        available_to_corporates: available to corporates
-        all_you_can_eat: all you can eat
-        payment_frequency_in_months: payment frequency in months
-        currency_id: currency
-        price: price
+        available_to_students: Available to students
+        available_to_corporates: Available to corporates
+        all_you_can_eat: All you can eat
+        payment_frequency_in_months: Payment frequency in months
+        currency_id: Currency
+        price: Price
         price_placeholder: '19.99'
-        available_from: available from
+        available_from: Available from
         available_from_placeholder: "2014-07-31"
-        available_to: available to
+        available_to: Available to
         available_to_placeholder: "2019-12-31"
-        stripe_guid: stripe id
-        trial_period_in_days: trial period in days
+        stripe_guid: Stripe ID
+        trial_period_in_days: Trial period in days
         trial_period_in_days_placeholder: 14
 
       edit:
-        h1: edit subscription plan
+        h1: Edit Subscription Plan
 
       index:
-        h1: subscription plans
+        h1: Subscription Plans
 
       new:
-        h1: new subscription plan
+        h1: New Subscription Plan
 
       show:
-        h1: subscription plan
+        h1: Subscription Plan
 
     subject_areas:
       form:
-        name: name
-        name_placeholder: human resources
-        name_url: name url
+        name: Name
+        name_placeholder: Human resources
+        name_url: Name URL
         name_url_placeholder: "human-resources"
-        sorting_order: sorting order
+        sorting_order: Sorting order
         sorting_order_placeholder: 100
-        active: active
+        active: Active
 
       edit:
-        h1: edit subject area
+        h1: Edit Subject Area
 
       index:
-        h1: subject areas
+        h1: Subject Areas
 
       new:
-        h1: new subject area
+        h1: New Subject Area
 
       show:
-        h1: subject area
+        h1: Subject Area
 
     users:
       form:
-        email: email
+        email: Email
         email_placeholder: jay@example.com
-        first_name: first name
-        first_name_placeholder: jay
-        last_name: last name
-        last_name_placeholder: smith
-        full_name: name
-        current_password: current password
+        first_name: First name
+        first_name_placeholder: Jay
+        last_name: Last name
+        last_name_placeholder: Smith
+        full_name: Name
+        current_password: Current password
         current_password_placeholder: "******"
-        password: password
+        password: Password
         password_placeholder: "******"
-        password_confirmation: password confirmation
+        password_confirmation: Password confirmation
         password_confirmation_placeholder: "******"
-        address: address
-        address_placeholder: your billing address
-        country_id: country
-        login_count: login count
-        failed_login_count: failed login count
-        last_request_at: last request at
-        current_login_at: current login at
-        last_login_at: last login at
-        current_login_ip: current login ip
-        last_login_ip: last login ip
-        account_activated_at: activated at
-        active: active
-        user_group_id: user group
-        password_reset_requested_at: password reset requested at
-        password_reset_at: password reset at
-        stripe_customer_id: stripe customer id
-        corporate_customer_id: corporate customer
-        corporate_customer_user_group_id: corporate customer user group
-        operational_email_frequency: operational email frequency
-        study_plan_notifications_email_frequency: study plan notifications email frequency
-        falling_behind_email_alert_frequency: falling behind email alert frequency
-        marketing_email_frequency: marketing email frequency
-        marketing_email_permission_given_at: marketing email permission given at
-        blog_notification_email_frequency: blog notification email frequency
-        forum_notification_email_frequency: forum notification email frequency
-        created_at: created at
-        updated_at: updated at
+        address: Address
+        address_placeholder: Your billing address
+        country_id: Country
+        login_count: Login count
+        failed_login_count: Failed login count
+        last_request_at: Last request at
+        current_login_at: Current login at
+        last_login_at: Last login at
+        current_login_ip: Current login IP
+        last_login_ip: Cast login IP
+        account_activated_at: Activated at
+        active: Active
+        user_group_id: User group
+        password_reset_requested_at: Password reset requested at
+        password_reset_at: Password reset at
+        stripe_customer_id: Stripe customer ID
+        corporate_customer_id: Corporate customer
+        corporate_customer_user_group_id: Corporate customer user group
+        operational_email_frequency: Operational email frequency
+        study_plan_notifications_email_frequency: Study plan notifications email frequency
+        falling_behind_email_alert_frequency: Falling behind email alert frequency
+        marketing_email_frequency: Marketing email frequency
+        marketing_email_permission_given_at: Marketing email permission given at
+        blog_notification_email_frequency: Blog notification email frequency
+        forum_notification_email_frequency: Forum notification email frequency
+        created_at: Created at
+        updated_at: Updated at
 
       edit:
-        h1: edit account
+        h1: Edit Account
 
       index:
-        h1: users
+        h1: Users
 
       new:
-        h1: create account
+        h1: Create Account
 
       show:
-        h1: account details
+        h1: Account Details
         change_your_password:
-          link: change your password
-          h4: change your password
+          link: Change your password
+          h4: Change your password
 
     user_groups:
       form:
-        name: name
-        name_placeholder: name of your user group
-        description: description
-        description_placeholder: give a general description of your group
-        individual_student: individual student
-        tutor: tutor
-        content_manager: content manager
-        blogger: blogger
-        corporate_customer: corporate customer
-        site_admin: site admin
-        forum_manager: forum manager
-        subscription_required_at_sign_up: subscription required at sign up
-        subscription_required_to_see_content: subscription required to see content
+        name: Name
+        name_placeholder: Name of your user group
+        description: Description
+        description_placeholder: Give a general description of your group
+        individual_student: Individual student
+        tutor: Tutor
+        content_manager: Content manager
+        blogger: Blogger
+        corporate_customer: Corporate customer
+        site_admin: Site admin
+        forum_manager: Forum manager
+        subscription_required_at_sign_up: Subscription required at sign up
+        subscription_required_to_see_content: Subscription required to see content
 
       edit:
-        h1: edit user group
+        h1: Edit User Group
 
       index:
-        h1: user groups
+        h1: User Groups
 
       new:
-        h1: create a user group
+        h1: Create a User Group
 
       show:
-        h1: user group
-        users: users
+        h1: User Group
+        users: Users
 
     user_password_resets:
       new:
-        h1: forgot your password?
-        paragraph_1: no problem! enter your email address and we will send you further instructions.
+        h1: Forgot your password?
+        paragraph_1: No problem! Enter your email address and we will send you further instructions.
 
       create:
-        h1: forgot your password...
-        paragraph_1: no problem! check your mailbox for further instructions.
+        h1: Forgot your password...
+        paragraph_1: No problem! check your mailbox for further instructions.
 
       edit:
-        h1: reset your password
-        paragraph_1: "choose a new password for your account:"
+        h1: Reset your password
+        paragraph_1: "Choose a new password for your account:"
 
     user_notifications:
           form:
-            user_id: user id
-            subject_line: subject
-            subject_line_placeholder: subject line
-            content: content
-            content_placeholder: content
-            email_required: email required
-            email_sent_at: email sent at
-            email_sent_at_placeholder: date
-            unread: unread
-            destroyed_at:  destroyed at
-            destroyed_at_placeholder: destroyed at
-            message_type: message type
-            message_type_placeholder: blog, study plan, forum, marketing etc
-            forum_topic_id: forum topic id
-            forum_post_id: forum post id
-            tutor_id: tutor id
-            falling_behind: fall behind
-            blog_post_id: blog post id
-            created_at: sent at
+            user_id: User
+            subject_line: Subject
+            subject_line_placeholder: Subject line
+            content: Content
+            content_placeholder: Content
+            email_required: Email required
+            email_sent_at: Email sent at
+            email_sent_at_placeholder: Date
+            unread: Unread
+            destroyed_at: Destroyed at
+            destroyed_at_placeholder: Destroyed at
+            message_type: Message type
+            message_type_placeholder: Blog, study plan, forum, marketing etc
+            forum_topic_id: Forum topic
+            forum_post_id: Forum post
+            tutor_id: Tutor
+            falling_behind: Falling behind
+            blog_post_id: Blog post
+            created_at: Sent at
 
           index:
-            h1: your notifications
-            h2: you do not have any notifications
-            user_id: user id
-            subject_line: subject
-            content: content
-            email_required: email required
-            email_sent_at: email sent
-            unread: unread
-            destroyed_at: destroyed
-            message_type: type
-            forum_topic_id: forum topic
-            forum_post_id: forum post
-            tutor_id: tutor
-            falling_behind: fall behind
-            blog_post_id: blog post
+            h1: Your Notifications
+            h2: You do not have any notifications
+            user_id: User
+            subject_line: Subject
+            content: Content
+            email_required: Email required
+            email_sent_at: Email sent
+            unread: Unread
+            destroyed_at: Destroyed at
+            message_type: Type
+            forum_topic_id: Forum topic
+            forum_post_id: Forum post
+            tutor_id: Tutor
+            falling_behind: Falling behind
+            blog_post_id: Blog post
 
           show:
-            h1: notification
-            from: from
+            h1: Notification
+            from: From
 
           edit:
-            h1: edit notification
+            h1: Edit Notification
 
           new:
-            h1: new notification
+            h1: New Notification
 
     user_sessions:
       new:
-        h1: sign in
+        h1: Sign in
       form:
         error_message: 'prevented you from signing in'
-        email: email
+        email: Email
         email_placeholder: 'john@example.com'
-        password: password
+        password: Password
         password_placeholder: '******'
-        forgot_password: 'forgot password?'
+        forgot_password: 'Forgot password?'
