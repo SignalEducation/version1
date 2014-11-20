@@ -16,10 +16,15 @@
       %tbody
         -@vat_codes.each do |vat_code|
           %tr{id: vat_code.id}
-            %td=link_to(vat_code.country.name, vat_code, title: t('views.general.view_tooltip'))
+            %td=# todo link_to(vat_code.country.name, vat_code, title: t('views.general.view_tooltip'))
             %td=link_to(vat_code.name, vat_code, title: t('views.general.view_tooltip'))
             %td=link_to(vat_code.label, vat_code, title: t('views.general.view_tooltip'))
             %td=link_to(vat_code.wiki_url, vat_code, title: t('views.general.view_tooltip'))
+            %td
+              -vat_code.vat_rates.each do |rate|
+                =rate.effective_from.to_s(:short)
+                =rate.percentage_rate.to_s + '%'
+                %br/
             %td
               -#=link_to t('views.general.view'), vat_code
               =link_to t('views.general.edit'), edit_vat_code_url(vat_code), class: 'btn btn-info btn-xs'

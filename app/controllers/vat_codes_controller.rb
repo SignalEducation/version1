@@ -15,6 +15,7 @@ class VatCodesController < ApplicationController
 
   def new
     @vat_code = VatCode.new
+    @vat_code.vat_rates.build
   end
 
   def edit
@@ -59,7 +60,8 @@ class VatCodesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:vat_code).permit(:country_id, :name, :label, :wiki_url)
+    params.require(:vat_code).permit(:country_id, :name, :label, :wiki_url,
+    vat_rates_attributes: [:id, :percentage_rate, :effective_from])
   end
 
 end

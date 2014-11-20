@@ -14,13 +14,15 @@
 class VatCode < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :country_id, :name, :label, :wiki_url
+  attr_accessible :country_id, :name, :label, :wiki_url, vat_rate
 
   # Constants
 
   # relationships
   # to belongs_to :country
   has_many :vat_rates
+
+  accepts_nested_attributes_for :vat_rates
 
   # validation
   validates :country_id, presence: true,

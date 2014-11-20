@@ -788,3 +788,10 @@ en:
 
           new:
             h1: New VAT Code
+
+    vat_rates:
+      form:
+        percentage_rate: Percentage Rate
+        percentage_rate_placeholder: "12.5"
+        effective_from: Effective from
+        effective_from_placeholder: "2014-12-31"
