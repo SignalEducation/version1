@@ -40,8 +40,6 @@ describe VatCode do
 
   it { should validate_presence_of(:label) }
 
-  it { should validate_presence_of(:wiki_url) }
-
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
