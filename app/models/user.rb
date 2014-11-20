@@ -39,6 +39,7 @@
 #  forum_notification_email_frequency       :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  locale                                   :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -58,13 +59,18 @@ class User < ActiveRecord::Base
                   :marketing_email_permission_given_at,
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
-                  :password_confirmation, :current_password
+                  :password_confirmation, :current_password, :locale
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
+  LOCALES = %w(en)
 
   # relationships
-  # todo belongs_to :corporate_customer
+  belongs_to :corporate_customer
+             # employed by the corporate customer
+  has_many :owned_corporate_accounts,
+           class_name: 'CorporateCustomer', foreign_key: :owner_id
+           # owns these corporate accounts (usually one, but can be more)
   # todo belongs_to :corporate_customer_user_group
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
@@ -77,6 +83,12 @@ class User < ActiveRecord::Base
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
+  has_many :user_exam_level
+  has_many :user_notifications
+  has_many :forum_topic_users
+  has_many :forum_posts
+  has_many :forum_post_concerns
+  has_many :user_likes
   belongs_to :user_group
 
   # validation
@@ -109,6 +121,7 @@ class User < ActiveRecord::Base
             inclusion: {in: EMAIL_FREQUENCIES}
   validates :forum_notification_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}
+  validates :locale, inclusion: {in: LOCALES}
 
   # callbacks
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
@@ -175,11 +188,36 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.course_module_element_user_logs.empty? && self.course_modules.empty? && self.course_module_element_user_logs.empty? && self.course_module_element_videos.empty? && self.institution_users.empty? && self.invoices.empty? && self.subscriptions.empty? && self.subscription_payment_cards.empty? && self.subscription_transactions.empty? && self.quiz_attempts.empty? && self.student_exam_tracks.empty?
+    !self.admin? &&
+        self.course_modules.empty? &&
+        self.course_module_element_user_logs.empty? &&
+        self.course_module_element_videos.empty? &&
+        self.forum_posts.empty? &&
+        self.forum_post_concerns.empty? &&
+        self.forum_topic_users.empty? &&
+        self.institution_users.empty? &&
+        self.invoices.empty? &&
+        self.owned_corporate_accounts.empty? &&
+        self.quiz_attempts.empty? &&
+        self.student_exam_tracks.empty? &&
+        self.subscriptions.empty? &&
+        self.subscription_payment_cards.empty? &&
+        self.subscription_transactions.empty? &&
+        self.user_exam_level.empty? &&
+        self.user_likes.empty? &&
+        self.user_notifications.empty?
   end
 
   def full_name
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
+  end
+
+  def frequent_forum_user?
+    self.forum_posts.count > 100
+  end
+
+  def tutor?
+    self.user_group.try(:tutor)
   end
 
   protected

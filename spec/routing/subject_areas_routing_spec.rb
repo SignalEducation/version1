@@ -27,6 +27,10 @@ RSpec.describe SubjectAreasController, type: :routing do
       expect(put: '/subject_areas/1').to route_to('subject_areas#update', id: '1')
     end
 
+    it 'routes to #reorder' do
+      expect(post: '/subject_areas/reorder').to route_to('subject_areas#reorder')
+    end
+
     it 'routes to #destroy' do
       expect(delete: '/subject_areas/1').to route_to('subject_areas#destroy', id: '1')
     end

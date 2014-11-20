@@ -10,13 +10,15 @@
     %table.table.table-bordered
       %tr
         %td.col-sm-4=t('views.course_modules.form.institution_id')
-        %td.col-sm-8=@course_module.institution.name
+        %td.col-sm-8=link_to @course_module.institution.name, @course_module.institution
       %tr
         %td.col-sm-4=t('views.course_modules.form.exam_level_id')
-        %td.col-sm-8=@course_module.exam_level.name
+        %td.col-sm-8=link_to @course_module.exam_level.name, @course_module.exam_level
       %tr
         %td.col-sm-4=t('views.course_modules.form.exam_section_id')
-        %td.col-sm-8=@course_module.exam_section.name
+        %td.col-sm-8
+          -if @course_module.exam_section_id
+            =link_to @course_module.exam_section.name, @course_module.exam_section
       %tr
         %td.col-sm-4=t('views.course_modules.form.name')
         %td.col-sm-8=@course_module.name
@@ -28,10 +30,7 @@
         %td.col-sm-8=@course_module.description
       %tr
         %td.col-sm-4=t('views.course_modules.form.tutor_id')
-        %td.col-sm-8=@course_module.tutor.name
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.sorting_order')
-        %td.col-sm-8=@course_module.sorting_order
+        %td.col-sm-8=link_to @course_module.tutor.full_name, 'mailto:' + @course_module.tutor.email
       %tr
         %td.col-sm-4=t('views.course_modules.form.estimated_time_in_seconds')
         %td.col-sm-8=@course_module.estimated_time_in_seconds
@@ -41,6 +40,10 @@
       %tr
         %td.col-sm-4=t('views.course_modules.form.active')
         %td.col-sm-8=tick_or_cross(@course_module.active)
+      %tr
+        %td.col-sm-4
+          -# todo =t('views.course_module_elements.view.h1')
+        %td.col-sm-8
     %p
       =link_to t('views.general.back'), course_modules_url
       |

@@ -32,7 +32,7 @@ class <%= class_name -%> < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    <%= attributes.map(&:name).include? 'active' ? '!self.active' : 'true' %>
   end
 
   protected

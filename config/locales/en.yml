@@ -57,6 +57,18 @@ en:
           success: Country has been deleted
           error: Country was not deleted
 
+    corporate_customers:
+      create:
+        flash:
+          success: Corporate Customer has been created successfully
+      update:
+        flash:
+          success: Corporate Customer details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Customer has been deleted
+          error: Corporate Customer was not deleted
+
     course_modules:
       create:
         flash:
@@ -210,6 +222,18 @@ en:
           success: User Group has been deleted
           error: User Group was not deleted
 
+    user_notifications:
+      create:
+        flash:
+          success: User Notification has been created successfully
+      update:
+        flash:
+          success: User Notification details have been updated successfully
+      destroy:
+        flash:
+          success: User Notification has been deleted
+          error: User Notification was not deleted
+
     user_password_resets:
       create:
         flash:
@@ -276,257 +300,288 @@ en:
       numbers:
         thousands_separator: ","
         decimal_separator: "."
-      active: Active
-      admin: Admin
-      approve: Approve
-      approve_tooltip: Click to approve
-      at_date_time: At
-      back: Back
-      by: By
-      cancel: Cancel
-      close: Close
-      coming_soon: Coming soon
-      delete: Delete
+      active: active
+      admin: admin
+      approve: approve
+      approve_tooltip: click to approve
+      at_date_time: at
+      back: back
+      by: by
+      cancel: cancel
+      close: close
+      coming_soon: coming soon
+      delete: delete
       delete_tooltip: click to delete
-      delete_confirmation: Are you sure?
-      edit: Edit
+      delete_confirmation: are you sure?
+      edit: edit
       edit_tooltip: click to edit
-      example: Example
-      home: Home
-      missing_data_error: Sorry, some data is missing
-      new: New
+      example: example
+      go: go
+      home: home
+      missing_data_error: sorry, some data is missing
+      new: new
       new_tooltip: click to add a new one
-      no: No
-      ok: Ok
+      no: no
+      ok: ok
       or: or
-      review: Review
-      save: Save
-      send: Send
-      select: Select...
-      sign_in: Sign in
-      sign_out: Sign out
-      sign_up: Sign up
-      toggle_navigation: Toggle Navigation
-      view: View
+      review: review
+      save: save
+      send: send
+      select: select...
+      sign_in: sign in
+      sign_out: sign out
+      sign_up: sign up
+      toggle_navigation: toggle navigation
+      view: view
       view_tooltip: click to view
-      yes: Yes
+      yes: yes
       tooltips:
-        click_to_edit: Click to edit
-        click_to_search: Click to search
-        click_to_view: Click to view
+        click_to_edit: click to edit
+        click_to_search: click to search
+        click_to_view: click to view
+
+    locales:
+      en: english
+      es: spanish
 
     duplicate_me_for_new_views:
       form:
-        name: Name
-        name_placeholder: First category name
-        category_id: Category
-        active: 'Active?'
-        sorting_order: Sorting Order
+        name: name
+        name_placeholder: first category name
+        category_id: category
+        active: 'active?'
+        sorting_order: sorting order
         sorting_order_placeholder: 100
 
       index:
-        h1: Categoreez
+        h1: categoreez
 
       show:
-        h1: Category
+        h1: category
 
       edit:
-        h1: Edit Category
+        h1: edit category
 
       new:
-        h1: New Category
+        h1: new category
 
     countries:
       form:
-        name: Name
-        name_placeholder: Name of the country
-        iso_code: ISO code
-        iso_code_placeholder: "IE GB CA US etc"
-        country_tld: Country TLD
+        name: name
+        name_placeholder: name of the country
+        iso_code: iso code
+        iso_code_placeholder: "ie gb ca us etc"
+        country_tld: country tld
         country_tld_placeholder: ".com"
-        sorting_order: Sorting order
+        sorting_order: sorting order
         sorting_order_placeholder: 100
-        in_the_eu: In the EU
-        currency_id: Currency
+        in_the_eu: in the eu
+        currency_id: currency
 
       index:
-        h1: Countries
+        h1: countries
 
       show:
-        h1: Country
+        h1: country
 
       edit:
-        h1: Edit Country
+        h1: edit country
 
       new:
-        h1: New Country
+        h1: new country
+
+    corporate_customers:
+      form:
+        organisation_name: organisation name
+        organisation_name_placeholder: 'smyth & co. accountants'
+        address: address
+        address_placeholder: '123 fake street'
+        country_id: country
+        payments_by_card: payments by card
+        is_university: is university
+        owner_id: owner
+        stripe_customer_guid: stripe customer id
+        can_restrict_content: can restrict content
+
+      index:
+        h1: corporate customers
+
+      show:
+        h1: corporate customer
+
+      edit:
+        h1: edit corporate customer
+
+      new:
+        h1: new corporate customer
 
     course_modules:
       form:
-        institution_id: Institution
-        qualification_id: Qualification
-        exam_level_id: Exam level
-        exam_section_id: Exam section
-        name: Name
-        name_placeholder: Introduction to surfing
-        name_url: Name URL
+        institution_id: institution
+        qualification_id: qualification
+        exam_level_id: exam level
+        exam_section_id: exam section
+        name: name
+        name_placeholder: introduction to surfing
+        name_url: name url
         name_url_placeholder: introduction-to-surfing
-        description: Description
-        description_placeholder: Describe the course module here
-        tutor_id: Tutor
-        sorting_order: Sorting order
+        description: description
+        description_placeholder: describe the course module here
+        tutor_id: tutor
+        sorting_order: sorting order
         sorting_order_placeholder: 100
-        estimated_time_in_seconds: "Time (in seconds)"
+        estimated_time_in_seconds: "time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
-        compulsory: "Compulsory?"
-        active: "Active?"
+        compulsory: "compulsory?"
+        active: "active?"
 
       edit:
-        h1: Edit Course Module
+        h1: edit course module
 
       index:
-        h1: Course Modules
+        h1: course modules
 
       new:
-        h1: New Course Module
+        h1: new course module
 
       show:
-        h1: Course Module
+        h1: course module
 
     currencies:
       form:
-        iso_code: ISO Code
-        iso_code_placeholder: EUR
-        name: Name
-        name_placeholder: Euro
-        leading_symbol: Leading symbol
+        iso_code: iso code
+        iso_code_placeholder: eur
+        name: name
+        name_placeholder: euro
+        leading_symbol: leading symbol
         leading_symbol_placeholder: "€"
-        trailing_symbol: Trailing symbol
+        trailing_symbol: trailing symbol
         trailing_symbol_placeholder: "c"
-        active: Active
-        sorting_order: Sorting order
+        active: active
+        sorting_order: sorting order
         sorting_order_placeholder: 100
 
       edit:
-        h1: Edit Currency
+        h1: edit currency
 
       index:
-        h1: Currencies
+        h1: currencies
 
       new:
-        h1: New Currency
+        h1: new currency
 
       show:
-        h1: Currency
+        h1: currency
 
     exam_levels:
       form:
-        qualification_id: Qualification
-        name: Name
-        name_placeholder: First exam level
-        name_url: Name URL
+        qualification_id: qualification
+        name: name
+        name_placeholder: first exam level
+        name_url: name url
         name_url_placeholder: first-exam-level
-        is_cpd: 'Is CPD?'
-        sorting_order: Sorting Order
+        is_cpd: 'is cpd?'
+        sorting_order: sorting order
         sorting_order_placeholder: 100
-        active: 'Active?'
-        best_possible_first_attempt_score: 'Best-possible first attempt score'
+        active: 'active?'
+        best_possible_first_attempt_score: 'best-possible first attempt score'
         best_possible_first_attempt_score_placeholder: 200
 
       index:
-        h1: Exam Levels
+        h1: exam levels
+        new: new exam level
 
       show:
-        h1: Exam Level
+        h1: exam level
 
       edit:
-        h1: Edit Exam Level
+        h1: edit exam level
 
       new:
-        h1: New Exam Level
+        h1: new exam level
 
     exam_sections:
       form:
-        name: Name
-        name_placeholder: Economics
-        name_url: URL
-        name_url_placeholder: economics-
-        exam_level_id: Exam Level
-        category_id: Category
-        active: Active
-        sorting_order: Sorting Order
+        name: name
+        name_placeholder: economics
+        name_url: url
+        name_url_placeholder: economics
+        exam_level_id: exam level
+        category_id: category
+        active: active
+        sorting_order: sorting order
         sorting_order_placeholder: 100
-        best_possible_first_attempt_score: Best Possible Fisrt Attempt Score
+        best_possible_first_attempt_score: best possible first attempt score
         best_possible_first_attempt_score_placeholder: 100
 
       index:
-        h1: Exam Sections
+        h1: exam sections
 
       show:
-        h1: Exam Section
+        h1: exam section
 
       edit:
-        h1: Edit Exam Section
+        h1: edit exam section
 
       new:
-        h1: New Exam Section
+        h1: new exam section
 
     institutions:
       form:
-        name: Name
-        name_placeholder: Institute of eTeaching
-        short_name: Short name
-        short_name_placeholder: IeT
-        name_url: URL
+        name: name
+        name_placeholder: institute of eteaching
+        short_name: short name
+        short_name_placeholder: iet
+        name_url: url
         name_url_placeholder: institute-of-eteaching
-        description: Description
-        description_placeholder: Add some text that describes the institution
-        feedback_url: Feedback URL
+        description: description
+        description_placeholder: add some text that describes the institution
+        feedback_url: feedback url
         feedback_url_placeholder: http://iet.com/feedback
-        help_desk_url: Help desk URL
+        help_desk_url: help desk url
         help_desk_url_placeholder: http://help.iet.com
-        subject_area_id: Subject area
-        sorting_order: Sorting order
+        subject_area_id: subject area
+        sorting_order: sorting order
         sorting_order_placeholder: 100
-        active: Active
+        active: active
 
       edit:
-        h1: Edit Institution
+        h1: edit institution
 
       index:
-        h1: Institutions
+        h1: institutions
 
       new:
-        h1: New Institution
+        h1: new institution
 
       show:
-        h1: Institution
+        h1: institution
 
     invoices:
       form:
-        user_id: User
-        corporate_customer_id: Corporate customer
-        subscription_transaction_id: Subscription transaction
-        subscription_id: Subscription
-        number_of_users: Number of users
-        currency_id: Currency
-        unit_price_ex_vat: Unit price ex VAT
-        line_total_ex_vat: Line total ex VAT
-        vat_rate_id: VAT rate
-        line_total_vat_amount: Line total VAT amount
-        line_total_inc_vat: Line total inc VAT
+        user_id: user
+        corporate_customer_id: corporate customer
+        subscription_transaction_id: subscription transaction
+        subscription_id: subscription
+        number_of_users: number of users
+        currency_id: currency
+        unit_price_ex_vat: unit price ex vat
+        line_total_ex_vat: line total ex vat
+        vat_rate_id: vat rate
+        line_total_vat_amount: line total vat amount
+        line_total_inc_vat: line total inc vat
 
       edit:
-        h1: Edit Invoice
+        h1: edit invoice
 
       index:
-        h1: Invoices
+        h1: invoices
 
       new:
-        h1: New Invoice
+        h1: new invoice
 
       show:
-        h1: Invoice
+        h1: invoice
 
     layouts:
       error_messages:
@@ -535,188 +590,241 @@ en:
 
     qualifications:
       form:
-        name: Name
-        name_placeholder: CFA Qualification
-        institution_id: Institution
-        name_url: URL
+        name: name
+        name_placeholder: cfa qualification
+        institution_id: institution
+        name_url: url
         name_url_placeholder: cfa-qualification
-        cpd_hours_required_per_year: Required CPD Hours per Year
+        cpd_hours_required_per_year: required cpd hours per year
         cpd_hours_required_per_year_placeholder: 100
-        category_id: Category
-        active: Active
-        sorting_order: Sorting Order
+        category_id: category
+        active: active
+        sorting_order: sorting order
         sorting_order_placeholder: 100
 
       index:
-        h1: Qualifications
+        h1: qualifications
 
       show:
-        h1: Qualification
+        h1: qualification
 
       edit:
-        h1: Edit Qualifications
+        h1: edit qualification
 
       new:
-        h1: New Qualifications
+        h1: new qualification
+
+    shared:
+      filter_panel:
+        filter: 'filter:'
 
     subscription_plans:
       form:
         available_to_students: available to students
-        available_to_corporates: Available to corporates
-        all_you_can_eat: All you can eat
-        payment_frequency_in_months: Payment frequency in months
-        currency_id: Currency
-        price: Price
+        available_to_corporates: available to corporates
+        all_you_can_eat: all you can eat
+        payment_frequency_in_months: payment frequency in months
+        currency_id: currency
+        price: price
         price_placeholder: '19.99'
-        available_from: Available from
+        available_from: available from
         available_from_placeholder: "2014-07-31"
-        available_to: Available to
+        available_to: available to
         available_to_placeholder: "2019-12-31"
-        stripe_guid: Stripe ID
-        trial_period_in_days: Trial period in days
+        stripe_guid: stripe id
+        trial_period_in_days: trial period in days
         trial_period_in_days_placeholder: 14
 
       edit:
-        h1: Edit Subscription Plan
+        h1: edit subscription plan
 
       index:
-        h1: Subscription Plans
+        h1: subscription plans
 
       new:
-        h1: New Subscription Plan
+        h1: new subscription plan
 
       show:
-        h1: Subscription Plan
+        h1: subscription plan
 
     subject_areas:
       form:
-        name: Name
-        name_placeholder: Human Resources
-        name_url: Name URL
+        name: name
+        name_placeholder: human resources
+        name_url: name url
         name_url_placeholder: "human-resources"
-        sorting_order: Sorting order
+        sorting_order: sorting order
         sorting_order_placeholder: 100
-        active: Active
+        active: active
 
       edit:
-        h1: Edit Subject Area
+        h1: edit subject area
 
       index:
-        h1: Subject Areas
+        h1: subject areas
 
       new:
-        h1: New Subject Area
+        h1: new subject area
 
       show:
-        h1: Subject Area
+        h1: subject area
 
     users:
       form:
-        email: Email
+        email: email
         email_placeholder: jay@example.com
-        first_name: First name
-        first_name_placeholder: Jay
-        last_name: Last name
-        last_name_placeholder: Smith
-        full_name: Name
-        current_password: Current password
+        first_name: first name
+        first_name_placeholder: jay
+        last_name: last name
+        last_name_placeholder: smith
+        full_name: name
+        current_password: current password
         current_password_placeholder: "******"
-        password: Password
+        password: password
         password_placeholder: "******"
-        password_confirmation: Password confirmation
+        password_confirmation: password confirmation
         password_confirmation_placeholder: "******"
-        address: Address
-        address_placeholder: Your billing address
-        country_id: Country
-        login_count: Login count
-        failed_login_count: Failed login count
-        last_request_at: Last request at
-        current_login_at: Current login at
-        last_login_at: Last login at
-        current_login_ip: Current login IP
-        last_login_ip: Last login IP
-        account_activated_at: Activated at
-        active: Active
-        user_group_id: User group
-        password_reset_requested_at: Password reset requested at
-        password_reset_at: Password reset at
-        stripe_customer_id: Stripe customer ID
-        corporate_customer_id: Corporate customer
-        corporate_customer_user_group_id: Corporate customer user group
-        operational_email_frequency: Operational email frequency
-        study_plan_notifications_email_frequency: Study plan notifications email frequency
-        falling_behind_email_alert_frequency: Falling behind email alert frequency
-        marketing_email_frequency: Marketing email frequency
-        marketing_email_permission_given_at: Marketing email permission given at
-        blog_notification_email_frequency: Blog notification email frequency
-        forum_notification_email_frequency: Forum notification email frequency
-        created_at: Created at
-        updated_at: Updated at
+        address: address
+        address_placeholder: your billing address
+        country_id: country
+        login_count: login count
+        failed_login_count: failed login count
+        last_request_at: last request at
+        current_login_at: current login at
+        last_login_at: last login at
+        current_login_ip: current login ip
+        last_login_ip: last login ip
+        account_activated_at: activated at
+        active: active
+        user_group_id: user group
+        password_reset_requested_at: password reset requested at
+        password_reset_at: password reset at
+        stripe_customer_id: stripe customer id
+        corporate_customer_id: corporate customer
+        corporate_customer_user_group_id: corporate customer user group
+        operational_email_frequency: operational email frequency
+        study_plan_notifications_email_frequency: study plan notifications email frequency
+        falling_behind_email_alert_frequency: falling behind email alert frequency
+        marketing_email_frequency: marketing email frequency
+        marketing_email_permission_given_at: marketing email permission given at
+        blog_notification_email_frequency: blog notification email frequency
+        forum_notification_email_frequency: forum notification email frequency
+        created_at: created at
+        updated_at: updated at
 
       edit:
-        h1: Edit Account
+        h1: edit account
 
       index:
-        h1: Users
+        h1: users
 
       new:
-        h1: Create Account
+        h1: create account
 
       show:
-        h1: Account Details
+        h1: account details
         change_your_password:
-          link: Change your password
-          h4: Change your password
+          link: change your password
+          h4: change your password
 
     user_groups:
       form:
-        name: Name
-        name_placeholder: Name of your user group
-        description: Description
-        description_placeholder: Give a general description of your group
-        individual_student: Individual student
-        tutor: Tutor
-        content_manager: Content manager
-        blogger: Blogger
-        corporate_customer: Corporate customer
-        site_admin: Site admin
-        forum_manager: Forum manager
-        subscription_required_at_sign_up: Subscription required at sign up
-        subscription_required_to_see_content: Subscription required to see content
+        name: name
+        name_placeholder: name of your user group
+        description: description
+        description_placeholder: give a general description of your group
+        individual_student: individual student
+        tutor: tutor
+        content_manager: content manager
+        blogger: blogger
+        corporate_customer: corporate customer
+        site_admin: site admin
+        forum_manager: forum manager
+        subscription_required_at_sign_up: subscription required at sign up
+        subscription_required_to_see_content: subscription required to see content
 
       edit:
-        h1: Edit User Group
+        h1: edit user group
 
       index:
-        h1: User Groups
+        h1: user groups
 
       new:
-        h1: Create a User Group
+        h1: create a user group
 
       show:
-        h1: User Group
-        users: Users
+        h1: user group
+        users: users
 
     user_password_resets:
       new:
-        h1: Forgot your password?
-        paragraph_1: No problem! Enter your email address and we will send you further instructions.
+        h1: forgot your password?
+        paragraph_1: no problem! enter your email address and we will send you further instructions.
 
       create:
-        h1: Forgot your password...
-        paragraph_1: No problem! Check your mailbox for further instructions.
+        h1: forgot your password...
+        paragraph_1: no problem! check your mailbox for further instructions.
 
       edit:
-        h1: Reset your password
-        paragraph_1: "Choose a new password for your account:"
+        h1: reset your password
+        paragraph_1: "choose a new password for your account:"
+
+    user_notifications:
+          form:
+            user_id: user id
+            subject_line: subject
+            subject_line_placeholder: subject line
+            content: content
+            content_placeholder: content
+            email_required: email required
+            email_sent_at: email sent at
+            email_sent_at_placeholder: date
+            unread: unread
+            destroyed_at:  destroyed at
+            destroyed_at_placeholder: destroyed at
+            message_type: message type
+            message_type_placeholder: blog, study plan, forum, marketing etc
+            forum_topic_id: forum topic id
+            forum_post_id: forum post id
+            tutor_id: tutor id
+            falling_behind: fall behind
+            blog_post_id: blog post id
+            created_at: sent at
+
+          index:
+            h1: your notifications
+            h2: you do not have any notifications
+            user_id: user id
+            subject_line: subject
+            content: content
+            email_required: email required
+            email_sent_at: email sent
+            unread: unread
+            destroyed_at: destroyed
+            message_type: type
+            forum_topic_id: forum topic
+            forum_post_id: forum post
+            tutor_id: tutor
+            falling_behind: fall behind
+            blog_post_id: blog post
+
+          show:
+            h1: notification
+            from: from
+
+          edit:
+            h1: edit notification
+
+          new:
+            h1: new notification
 
     user_sessions:
       new:
-        h1: Sign in
+        h1: sign in
       form:
         error_message: 'prevented you from signing in'
-        email: Email
+        email: email
         email_placeholder: 'john@example.com'
-        password: Password
+        password: password
         password_placeholder: '******'
-        forgot_password: 'Forgot password?'
+        forgot_password: 'forgot password?'

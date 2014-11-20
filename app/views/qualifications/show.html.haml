@@ -18,9 +18,6 @@
         %td.col-sm-4=t('views.qualifications.form.name_url')
         %td.col-sm-8=@qualification.name_url
       %tr
-        %td.col-sm-4=t('views.qualifications.form.sorting_order')
-        %td.col-sm-8=@qualification.sorting_order
-      %tr
         %td.col-sm-4=t('views.qualifications.form.active')
         %td.col-sm-8=tick_or_cross(@qualification.active)
       %tr
@@ -32,6 +29,7 @@
           -@qualification.exam_levels.each do |level|
             =link_to level.name, level
             %br
+          =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
     %p
       =link_to t('views.general.back'), qualifications_url
       |

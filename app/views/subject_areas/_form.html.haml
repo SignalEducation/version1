@@ -1,6 +1,7 @@
 .row
   .col-sm-8.col-sm-offset-2
     =form_for(@subject_area, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :sorting_order
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @subject_area, message: nil}
         .form-group
@@ -11,10 +12,6 @@
           =f.label :name_url, t('views.subject_areas.form.name_url'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_field :name_url, placeholder: t('views.subject_areas.form.name_url_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :sorting_order, t('views.subject_areas.form.sorting_order'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :sorting_order, placeholder: t('views.subject_areas.form.sorting_order_placeholder'), class: 'form-control'
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox

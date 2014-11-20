@@ -19,7 +19,7 @@
           %tr{id: exam_section.id}
             %td=link_to(exam_section.name, exam_section, title: t('views.general.view_tooltip'))
             %td=link_to(exam_section.name_url, exam_section, title: t('views.general.view_tooltip'))
-            %td=link_to(exam_section.exam_level.name, exam_section, title: t('views.general.view_tooltip'))
+            %td=link_to(exam_section.exam_level.name, exam_section.exam_level, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(exam_section.active), exam_section, title: t('views.general.view_tooltip'))
             %td=link_to(exam_section.best_possible_first_attempt_score, exam_section, title: t('views.general.view_tooltip'))
             %td

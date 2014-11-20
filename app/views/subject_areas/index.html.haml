@@ -5,18 +5,16 @@
 .row
   .col-sm-12
     =will_paginate @subject_areas, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered
+    %table.table.table-striped.table-bordered.sorted_table
       %tr
         %th=t('views.subject_areas.form.name')
         %th=t('views.subject_areas.form.name_url')
-        %th=t('views.subject_areas.form.sorting_order')
         %th=t('views.subject_areas.form.active')
         %th
       -@subject_areas.each do |subject_area|
-        %tr
+        %tr{id: subject_area.id}
           %td=link_to(subject_area.name, subject_area, title: t('views.general.view_tooltip'))
           %td=link_to(subject_area.name_url, subject_area, title: t('views.general.view_tooltip'))
-          %td=link_to(subject_area.sorting_order, subject_area, title: t('views.general.view_tooltip'))
           %td=link_to(tick_or_cross(subject_area.active), subject_area, title: t('views.general.view_tooltip'))
           %td
             -#=link_to t('views.general.view'), subject_area

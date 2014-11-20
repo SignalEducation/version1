@@ -11,10 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141111132957) do
+ActiveRecord::Schema.define(version: 20141118134902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "corporate_customers", force: true do |t|
+    t.string   "organisation_name"
+    t.text     "address"
+    t.integer  "country_id"
+    t.boolean  "payments_by_card",     default: false, null: false
+    t.boolean  "is_university",        default: false, null: false
+    t.integer  "owner_id"
+    t.string   "stripe_customer_guid"
+    t.boolean  "can_restrict_content", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "countries", force: true do |t|
     t.string   "name"
@@ -159,6 +172,46 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.float    "best_possible_first_attempt_score"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "forum_post_concerns", force: true do |t|
+    t.integer  "forum_post_id"
+    t.integer  "user_id"
+    t.string   "reason"
+    t.boolean  "live",          default: true, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "forum_posts", force: true do |t|
+    t.integer  "user_id"
+    t.text     "content"
+    t.integer  "forum_topic_id"
+    t.boolean  "blocked",                   default: false, null: false
+    t.integer  "response_to_forum_post_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "forum_topic_users", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "forum_topic_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "forum_topics", force: true do |t|
+    t.integer  "forum_topic_id"
+    t.integer  "course_module_element_id"
+    t.string   "heading"
+    t.text     "description"
+    t.boolean  "active",                   default: true, null: false
+    t.datetime "publish_from"
+    t.datetime "publish_until"
+    t.integer  "reviewed_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by"
   end
 
   create_table "institution_users", force: true do |t|
@@ -330,6 +383,14 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.datetime "updated_at"
   end
 
+  create_table "user_exam_levels", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "exam_level_id"
+    t.integer  "exam_schedule_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_groups", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -343,6 +404,32 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.boolean  "forum_manager",                        default: false, null: false
     t.boolean  "subscription_required_at_sign_up",     default: false, null: false
     t.boolean  "subscription_required_to_see_content", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_likes", force: true do |t|
+    t.integer  "user_id"
+    t.string   "likeable_type"
+    t.integer  "likeable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_notifications", force: true do |t|
+    t.integer  "user_id"
+    t.string   "subject_line"
+    t.text     "content"
+    t.boolean  "email_required", default: false, null: false
+    t.datetime "email_sent_at"
+    t.boolean  "unread",         default: true,  null: false
+    t.datetime "destroyed_at"
+    t.string   "message_type"
+    t.integer  "forum_topic_id"
+    t.integer  "forum_post_id"
+    t.integer  "tutor_id"
+    t.boolean  "falling_behind",                 null: false
+    t.integer  "blog_post_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -384,6 +471,7 @@ ActiveRecord::Schema.define(version: 20141111132957) do
     t.string   "forum_notification_email_frequency"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "locale"
   end
 
 end

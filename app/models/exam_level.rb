@@ -26,6 +26,7 @@ class ExamLevel < ActiveRecord::Base
   has_many :exam_sections
   has_many :course_modules
   has_many :student_exam_tracks
+  has_many :user_exam_level
 
   # validation
   validates :qualification_id, presence: true,
@@ -48,7 +49,11 @@ class ExamLevel < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty?
+    !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty?
+  end
+
+  def full_name
+    self.qualification.name + ' > ' + self.name
   end
 
   protected

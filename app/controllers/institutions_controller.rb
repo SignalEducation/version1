@@ -7,14 +7,17 @@ class InstitutionsController < ApplicationController
   before_action :get_variables
 
   def index
-    @institutions = Institution.paginate(per_page: 50, page: params[:page]).all_in_order
+    @subject_area = SubjectArea.where(name_url: params[:subject_area_url].to_s).first || SubjectArea.all_in_order.first
+    @institutions = Institution.where(subject_area_id: @subject_area.id).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
   end
 
   def new
-    @institution = Institution.new
+    @institution = Institution.new(sorting_order: 1,
+                       subject_area_id: (params[:subject_area].to_i > 0 ?
+                       params[:subject_area].to_i : nil) )
   end
 
   def edit

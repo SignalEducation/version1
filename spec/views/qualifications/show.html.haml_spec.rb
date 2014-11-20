@@ -12,7 +12,6 @@ RSpec.describe 'qualifications/show', type: :view do
     expect(rendered).to match(/#{@qualification.institution.name}/)
     expect(rendered).to match(/#{@qualification.name}/)
     expect(rendered).to match(/#{@qualification.name_url}/)
-    expect(rendered).to match(/#{@qualification.sorting_order}/)
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/#{@qualification.cpd_hours_required_per_year}/)
   end

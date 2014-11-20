@@ -46,7 +46,7 @@ class Qualification < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.exam_levels.empty? && self.course_modules.empty?
+    !self.active && self.exam_levels.empty? && self.course_modules.empty?
   end
 
   def full_name

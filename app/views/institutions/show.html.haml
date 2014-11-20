@@ -9,6 +9,10 @@
   .col-sm-12
     %table.table.table-bordered
       %tr
+        %td.col-sm-4=t('views.institutions.form.subject_area_id')
+        %td.col-sm-8
+          =link_to @institution.subject_area.name, @institution.subject_area
+      %tr
         %td.col-sm-4=t('views.institutions.form.name')
         %td.col-sm-8=@institution.name
       %tr
@@ -29,22 +33,15 @@
         %td.col-sm-8
           =link_to @institution.help_desk_url, @institution.help_desk_url, target: '_blank'
       %tr
-        %td.col-sm-4=t('views.institutions.form.subject_area_id')
-        %td.col-sm-8
-          =link_to @institution.subject_area.name, @institution.subject_area
-      %tr
-        %td.col-sm-4=t('views.institutions.form.sorting_order')
-        %td.col-sm-8=@institution.sorting_order
-      %tr
         %td.col-sm-4=t('views.institutions.form.active')
         %td.col-sm-8=tick_or_cross(@institution.active)
-      -if @institution.qualifications.count > 0
-        %tr
-          %td.col-sm-4=t('views.qualifications.index.h1')
-          %td.col-sm-8
-            -@institution.qualifications.each do |qualification|
-              =link_to qualification.name, qualification
-              %br/
+      %tr
+        %td.col-sm-4=t('views.qualifications.index.h1')
+        %td.col-sm-8
+          -@institution.qualifications.each do |qualification|
+            =link_to qualification.name, qualification
+            %br/
+          =link_to t('views.general.new'), new_qualification_url(institution_id: @institution.id), class: 'btn btn-xs btn-success'
     %p
       =link_to t('views.general.back'), institutions_url
       |

@@ -33,7 +33,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :user
   belongs_to :course_module
-  # todo belongs_to :corporate_customer
+  belongs_to :corporate_customer
   has_many :quiz_attempts
 
   # validation

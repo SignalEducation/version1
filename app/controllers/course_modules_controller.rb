@@ -14,7 +14,15 @@ class CourseModulesController < ApplicationController
   end
 
   def new
-    @course_module = CourseModule.new
+    if params[:exam_level_id]
+      exam_level = ExamLevel.find(params[:exam_level_id])
+      @course_module = CourseModule.new(sorting_order: 1,
+          exam_level_id: exam_level.id,
+          qualification_id: exam_level.qualification_id,
+          institution_id: exam_level.qualification.institution_id )
+    else
+      @course_module = CourseModule.new(sorting_order: 1)
+    end
   end
 
   def edit

@@ -39,6 +39,7 @@
 #  forum_notification_email_frequency       :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  locale                                   :string(255)
 #
 
 require 'rails_helper'
@@ -59,7 +60,8 @@ describe User do
   it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
 
   # relationships
-  xit { should belong_to(:corporate_customer) }
+  it { should belong_to(:corporate_customer) }
+  it { should have_many(:owned_corporate_accounts) }
   xit { should belong_to(:corporate_customer_user_group) }
   it { should belong_to(:country) }
   it { should have_many(:course_modules) }
@@ -68,9 +70,16 @@ describe User do
   it { should have_many(:quiz_attempts) }
   it { should have_many(:invoices) }
   it { should have_many(:institution_users) }
+  it { should have_many(:student_exam_tracks) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
+  it { should have_many(:user_exam_level) }
+  it { should have_many(:user_notifications) }
+  it { should have_many(:forum_topic_users) }
+  it { should have_many(:forum_posts) }
+  it { should have_many(:forum_post_concerns) }
+  it { should have_many(:user_likes) }
   it { should belong_to(:user_group) }
 
   # validation
@@ -109,6 +118,8 @@ describe User do
 
   it { should validate_inclusion_of(:forum_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
 
+  it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
+
   # callbacks
   it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
@@ -124,5 +135,7 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:frequent_forum_user?) }
+  it { should respond_to(:tutor?) }
 
 end

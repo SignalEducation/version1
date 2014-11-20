@@ -14,7 +14,7 @@ class ExamSectionsController < ApplicationController
   end
 
   def new
-    @exam_section = ExamSection.new(running_order: 0)
+    @exam_section = ExamSection.new(sorting_order: 0, exam_level_id: params[:exam_level_id].to_i > 0 ? params[:exam_level_id].to_i : nil)
   end
 
   def edit

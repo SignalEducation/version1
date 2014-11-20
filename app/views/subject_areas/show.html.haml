@@ -15,18 +15,15 @@
         %td.col-sm-4=t('views.subject_areas.form.name_url')
         %td.col-sm-8=@subject_area.name_url
       %tr
-        %td.col-sm-4=t('views.subject_areas.form.sorting_order')
-        %td.col-sm-8=@subject_area.sorting_order
-      %tr
         %td.col-sm-4=t('views.subject_areas.form.active')
         %td.col-sm-8=tick_or_cross(@subject_area.active)
-      -if @subject_area.institutions
-        %tr
-          %td.col-sm-4=t('views.institutions.index.h1')
-          %td.col-sm-8
-            -@subject_area.institutions.each do |institution|
-              =link_to institution.name, institution
-              %br
+      %tr
+        %td.col-sm-4=t('views.institutions.index.h1')
+        %td.col-sm-8
+          -@subject_area.institutions.each do |institution|
+            =link_to institution.name, institution
+            %br
+          =link_to t('views.general.new'), new_institution_url(subject_area: @subject_area.id), class: 'btn btn-xs btn-success'
 
     %p
       =link_to t('views.general.back'), subject_areas_url

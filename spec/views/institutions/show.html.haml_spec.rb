@@ -16,7 +16,6 @@ RSpec.describe 'institutions/show', type: :view do
     expect(rendered).to match(/#{@institution.feedback_url}/)
     expect(rendered).to match(/#{@institution.help_desk_url}/)
     expect(rendered).to match(/#{@institution.subject_area.name}/)
-    expect(rendered).to match(/#{@institution.sorting_order}/)
     expect(rendered).to match(/nice_boolean/)
   end
 end
