@@ -20,6 +20,13 @@
       %tr
         %td.col-sm-4=t('views.vat_codes.form.wiki_url')
         %td.col-sm-8=@vat_code.wiki_url
+      %tr
+        %td.col-sm-4=t('views.vat_codes.form.vat_rates')
+        %td
+          -@vat_code.vat_rates.each do |rate|
+            =rate.effective_from.to_s(:standard)
+            \-
+            =rate.percentage_rate.to_s + '%'
     %p
       =link_to t('views.general.back'), vat_codes_url
       |
