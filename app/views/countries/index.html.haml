@@ -12,6 +12,7 @@
           %th=t('views.countries.form.iso_code')
           %th=t('views.countries.form.country_tld')
           %th=t('views.countries.form.in_the_eu')
+          %th=t('views.countries.form.continent')
           %th=t('views.countries.form.currency_id')
           %th
       %tbody
@@ -21,6 +22,7 @@
             %td=link_to(country.iso_code, country, title: t('views.general.view_tooltip'))
             %td=link_to(country.country_tld, country, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(country.in_the_eu), country, title: t('views.general.view_tooltip'))
+            %td=link_to(country.continent || '--', country, title: t('views.general.view_tooltip'))
             %td=link_to(country.currency.name, country.currency, title: t('views.general.view_tooltip'))
             %td
               =link_to t('views.general.edit'), edit_country_url(country), class: 'btn btn-info btn-xs'

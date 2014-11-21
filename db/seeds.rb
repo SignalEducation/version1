@@ -455,6 +455,9 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   Country.find_by_name('Canada').update_attributes(sorting_order: 40)
 
   puts ' DONE'
+
+  print 'Continents'
+  the_list =
   puts
   puts 'Completed the db/seed process'
   puts '*' * 100

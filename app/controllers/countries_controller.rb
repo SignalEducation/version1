@@ -59,6 +59,7 @@ class CountriesController < ApplicationController
   protected
 
   def get_variables
+    @continents = Country::CONTINENTS
     if params[:id].to_i > 0
       @country = Country.where(id: params[:id]).first
     end
@@ -66,7 +67,7 @@ class CountriesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:country).permit(:name, :iso_code, :country_tld, :sorting_order, :in_the_eu, :currency_id)
+    params.require(:country).permit(:name, :iso_code, :country_tld, :sorting_order, :in_the_eu, :currency_id, :continent)
   end
 
 end

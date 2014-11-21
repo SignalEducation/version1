@@ -21,6 +21,9 @@
         %td.col-sm-4=t('views.countries.form.in_the_eu')
         %td.col-sm-8=tick_or_cross(@country.in_the_eu)
       %tr
+        %td.col-sm-4=t('views.countries.form.continent')
+        %td.col-sm-8=@country.continent
+      %tr
         %td.col-sm-4=t('views.countries.form.currency_id')
         %td.col-sm-8=link_to @country.currency.name, @country.currency
     %p
