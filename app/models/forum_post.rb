@@ -54,7 +54,7 @@ class ForumPost < ActiveRecord::Base
        '#ffeebb'
     elsif self.user.tutor?
       '#eeffcc'
-    elsif self.user.frequent_form_user?
+    elsif self.user.frequent_forum_user?
       '#eeeeff'
     else
       'inherit'

@@ -23,6 +23,11 @@
       %tr
         %td.col-sm-4=t('views.currencies.form.active')
         %td.col-sm-8=tick_or_cross(@currency.active)
+      %tr
+        %td.col-sm-4=t('views.countries.index.h1')
+        %td.col-sm-8
+          -@currency.countries.each do |country|
+            =link_to country.name, country
     %p
       =link_to t('views.general.back'), currencies_url
       |

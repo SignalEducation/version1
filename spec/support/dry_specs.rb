@@ -127,6 +127,12 @@ def expect_change_password_error_with_model(destination)
   expect(assigns(:user).class.name).to eq('User')
 end
 
+def expect_error_bounce(destination_url)
+  expect(flash[:error]).to_not be_nil
+  expect(flash[:success]).to be_nil
+  expect(response).to redirect_to(destination_url)
+end
+
 ######
 ## mailers
 ##

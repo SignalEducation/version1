@@ -26,6 +26,7 @@ class Subscription < ActiveRecord::Base
   # relationships
   belongs_to :user
   # todo belongs_to :corporate_customer
+  has_many :invoices
   belongs_to :subscription_plan
   has_many :subscription_transactions
 
@@ -52,7 +53,7 @@ class Subscription < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.invoices.empty?
   end
 
   protected

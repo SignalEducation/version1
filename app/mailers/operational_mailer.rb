@@ -25,6 +25,7 @@ class OperationalMailer < ActionMailer::Base
          subject: I18n.t('mailers.operational.reset_your_password.subject_line')
     )
   end
+
   protected
 
   def set_the_url

@@ -27,6 +27,7 @@ describe QuizQuestion do
   end
 
   # Constants
+  #it { expect()QuizQuestion.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element_quiz) }

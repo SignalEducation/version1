@@ -24,6 +24,7 @@ FactoryGirl.define do
     stripe_transaction_guid       'tran_ABC123123123'
     currency_id                   1
     subscription_payment_card_id  1
+    original_data                 { {some: 'value', data: 'present'} }
     factory :payment_transaction do
       transaction_type            'payment'
       amount                      19.95

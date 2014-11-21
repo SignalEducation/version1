@@ -72,11 +72,12 @@ class User < ActiveRecord::Base
            class_name: 'CorporateCustomer', foreign_key: :owner_id
            # owns these corporate accounts (usually one, but can be more)
   # todo belongs_to :corporate_customer_user_group
-  # todo belongs_to :country
+  belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
   has_many :course_module_element_videos, foreign_key: :tutor_id
   has_many :quiz_attempts
+  has_many :invoices
   has_many :institution_users
   has_many :subscriptions
   has_many :subscription_payment_cards
@@ -187,29 +188,31 @@ class User < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.admin? && self.owned_corporate_accounts.empty? &&
+    !self.admin? &&
+        self.course_modules.empty? &&
         self.course_module_element_user_logs.empty? &&
         self.course_module_element_videos.empty? &&
+        self.forum_posts.empty? &&
+        self.forum_post_concerns.empty? &&
+        self.forum_topic_users.empty? &&
         self.institution_users.empty? &&
-        self.course_modules.empty? &&
+        self.invoices.empty? &&
+        self.owned_corporate_accounts.empty? &&
+        self.quiz_attempts.empty? &&
+        self.student_exam_tracks.empty? &&
         self.subscriptions.empty? &&
         self.subscription_payment_cards.empty? &&
         self.subscription_transactions.empty? &&
-        self.quiz_attempts.empty? &&
-        self.student_exam_tracks.empty? &&
         self.user_exam_level.empty? &&
-        self.user_notifications.empty? &&
-        self.forum_topic_users.empty? &&
-        self.forum_posts.empty? &&
-        self.forum_post_concerns.empty? &&
-        self.user_likes.empty?
+        self.user_likes.empty? &&
+        self.user_notifications.empty?
   end
 
   def full_name
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
-  def frequent_form_user?
+  def frequent_forum_user?
     self.forum_posts.count > 100
   end
 

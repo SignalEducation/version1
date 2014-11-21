@@ -31,7 +31,7 @@ class SubscriptionTransaction < ActiveRecord::Base
 
   # relationships
   belongs_to :currency
-  # todo has_many :invoices
+  has_many :invoices
   belongs_to :subscription
   belongs_to :subscription_payment_card
   belongs_to :user # the person that owns the transaction
@@ -61,7 +61,7 @@ class SubscriptionTransaction < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !self.live_mode
+    !self.live_mode && self.invoices.empty?
   end
 
   protected
