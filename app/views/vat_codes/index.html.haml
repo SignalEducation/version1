@@ -22,7 +22,7 @@
             %td=link_to(vat_code.label, vat_code, title: t('views.general.view_tooltip'))
             %td
               -if vat_code.wiki_url
-                =link_to(vat_code.wiki_url, vat_code, title: t('views.general.view_tooltip'))
+                =link_to(vat_code.wiki_url, vat_code.wiki_url.to_s, target: '_blank', title: t('views.general.view_tooltip'))
             %td
               -vat_code.vat_rates.each do |rate|
                 =rate.effective_from.to_s(:standard)
