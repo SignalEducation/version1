@@ -12,17 +12,21 @@
           %th=t('views.vat_codes.form.name')
           %th=t('views.vat_codes.form.label')
           %th=t('views.vat_codes.form.wiki_url')
-          %th
+          %th=t('views.vat_codes.form.vat_rates')
+      %th
       %tbody
         -@vat_codes.each do |vat_code|
           %tr{id: vat_code.id}
             %td=# todo link_to(vat_code.country.name, vat_code, title: t('views.general.view_tooltip'))
             %td=link_to(vat_code.name, vat_code, title: t('views.general.view_tooltip'))
             %td=link_to(vat_code.label, vat_code, title: t('views.general.view_tooltip'))
-            %td=link_to(vat_code.wiki_url, vat_code, title: t('views.general.view_tooltip'))
+            %td
+              -if vat_code.wiki_url
+                =link_to(vat_code.wiki_url, vat_code, title: t('views.general.view_tooltip'))
             %td
               -vat_code.vat_rates.each do |rate|
-                =rate.effective_from.to_s(:short)
+                =rate.effective_from.to_s(:standard)
+                \-
                 =rate.percentage_rate.to_s + '%'
                 %br/
             %td

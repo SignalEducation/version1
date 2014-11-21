@@ -23,7 +23,6 @@ class VatCodesController < ApplicationController
 
   def create
     @vat_code = VatCode.new(allowed_params)
-    binding.pry
     if @vat_code.save
       flash[:success] = I18n.t('controllers.vat_codes.create.flash.success')
       redirect_to vat_codes_url

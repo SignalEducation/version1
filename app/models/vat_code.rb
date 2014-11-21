@@ -14,16 +14,15 @@
 class VatCode < ActiveRecord::Base
 
   # attr-accessible
+  attr_accessible :country_id, :name, :label, :wiki_url, :vat_rates_attributes
 
   # Constants
 
   # relationships
   # to belongs_to :country
-  has_many :vat_rates
+  has_many :vat_rates, inverse_of: :vat_code
 
   accepts_nested_attributes_for :vat_rates
-
-  attr_accessible :country_id, :name, :label, :wiki_url, :vat_rates_attributes #[:id, :percentage_rate, :effective_from]
 
   # validation
   validates :country_id, presence: true,
@@ -35,7 +34,7 @@ class VatCode < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:country_id) }
+  scope :all_in_order, -> { order(:country_id, :name) }
 
   # class methods
 

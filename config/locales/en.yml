@@ -25,9 +25,14 @@ en:
   controllers:
     application:
       you_are_not_permitted_to_do_that: 'You are not permitted to do that'
-      date_formats:
+      datetime_formats:
         simple: "%-e %b %Y"
         standard: "%-e %b %Y %H:%M %Z"
+      date_formats:
+        simple: "%-e/%m/%Y"
+        standard: "%-e %b %Y"
+      datepicker_datetime_format: "YYYY-MM-DD HH:MM"
+      datepicker_date_format: "YYYY-MM-DD"
       logged_in_required:
         flash_error: 'You must be signed in to access that page - please sign in'
       logged_out_required:
@@ -768,26 +773,27 @@ en:
         forgot_password: 'Forgot password?'
 
     vat_codes:
-          form:
-            name: Name
-            name_placeholder: Standard or Reduced
-            country_id: Country id
-            label:  Label
-            label_placeholder:  VAT or GST
-            wiki_url: Wiki URL
-            wiki_url_placeholder: wikipedia.com/xyz
+      form:
+        name: Name
+        name_placeholder: Standard or Reduced
+        country_id: Country id
+        label:  Label
+        label_placeholder:  VAT or GST
+        wiki_url: Wiki URL
+        wiki_url_placeholder: wikipedia.com/xyz
+        vat_rates: VAT rates
 
-          index:
-            h1: VAT Codes
+      index:
+        h1: VAT Codes
 
-          show:
-            h1: VAT Code
+      show:
+        h1: VAT Code
 
-          edit:
-            h1: Edit VAT Code
+      edit:
+        h1: Edit VAT Code
 
-          new:
-            h1: New VAT Code
+      new:
+        h1: New VAT Code
 
     vat_rates:
       form:

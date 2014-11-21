@@ -18,11 +18,12 @@ class VatRate < ActiveRecord::Base
   # Constants
 
   # relationships
-   belongs_to :vat_code
+   belongs_to :vat_code, inverse_of: :vat_rates
 
   # validation
   validates :vat_code_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0},
+            on: :update
   validates :percentage_rate, presence: true
   validates :effective_from, presence: true
 
@@ -30,7 +31,7 @@ class VatRate < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:vat_code_id) }
+  scope :all_in_order, -> { order(:vat_code_id, :effective_from) }
 
   # class methods
 
