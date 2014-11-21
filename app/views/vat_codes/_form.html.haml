@@ -21,7 +21,7 @@
           .col-sm-8
             =f.text_field :wiki_url, placeholder: t('views.vat_codes.form.wiki_url_placeholder'), class: 'form-control'
         -if f.object.id.nil?
-          =f.fields_for :vat_rate do |rate|
+          =f.fields_for :vat_rates do |rate|
             .form-group
               =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate'), class: 'control-label col-sm-4'
               .col-sm-8

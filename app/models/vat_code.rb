@@ -14,7 +14,6 @@
 class VatCode < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :country_id, :name, :label, :wiki_url, vat_rate
 
   # Constants
 
@@ -23,6 +22,8 @@ class VatCode < ActiveRecord::Base
   has_many :vat_rates
 
   accepts_nested_attributes_for :vat_rates
+
+  attr_accessible :country_id, :name, :label, :wiki_url, :vat_rates_attributes #[:id, :percentage_rate, :effective_from]
 
   # validation
   validates :country_id, presence: true,
