@@ -565,12 +565,14 @@ en:
         subscription_transaction_id: Subscription transaction
         subscription_id: Subscription
         number_of_users: Number of users
+        number_of_users_placeholder: 2
         currency_id: Currency
-        unit_price_ex_vat: Unit price ex VAT
+        unit_price_ex_vat: Unit price
+        unit_price_ex_vat_placeholder: 10.00
         line_total_ex_vat: Line total ex VAT
         vat_rate_id: VAT rate
         line_total_vat_amount: Line total VAT amount
-        line_total_inc_vat: Line total inc VAT
+        line_total_inc_vat: Line total
 
       edit:
         h1: Edit Invoice

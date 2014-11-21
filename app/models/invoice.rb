@@ -29,7 +29,7 @@ class Invoice < ActiveRecord::Base
 
   # relationships
   belongs_to :currency
-  # todo belongs_to :corporate_customer
+  belongs_to :corporate_customer
   belongs_to :subscription_transaction
   belongs_to :subscription
   belongs_to :user
@@ -48,7 +48,7 @@ class Invoice < ActiveRecord::Base
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :unit_price_ex_vat, presence: true
-  validates :vat_rate_id, presence: true,
+  validates :vat_rate_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
@@ -62,7 +62,7 @@ class Invoice < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    !Rails.env.production?
   end
 
   protected
@@ -70,6 +70,7 @@ class Invoice < ActiveRecord::Base
   def calculate_line_totals
     self.line_total_ex_vat = self.unit_price_ex_vat * self.number_of_users.to_f
     # todo self.line_total_vat_amount = self.line_total_ex_vat * self.vat_rate.percentage_rate / 100.0
+    self.line_total_vat_amount = 0.0 # VAT processing disabled
     self.line_total_inc_vat = self.line_total_ex_vat + self.line_total_vat_amount
   end
 

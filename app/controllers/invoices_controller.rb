@@ -69,10 +69,9 @@ class InvoicesController < ApplicationController
     end
     # @users = User.all_in_order
     # @corporate_customers = CorporateCustomer.all_in_order
-    # @subscription_transactions = SubscriptionTransaction.all_in_order
     # @subscriptions = Subscription.all_in_order
-    # @currencies = Currency.all_in_order
-    # @vat_rates = VatRate.all_in_order
+    @currencies = Currency.all_active.all_in_order
+    # todo VAT processing disabled: @vat_rates = VatRate.all_in_order
   end
 
   def allowed_params

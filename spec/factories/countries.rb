@@ -20,6 +20,7 @@ FactoryGirl.define do
     sequence(:iso_code)       { |n| "CTY-#{n}" }
     country_tld               '.com'
     sequence(:sorting_order)  {|n| n * 10 }
+    continent                 'Europe'
 
     factory :eu_country do
       in_the_eu true
@@ -41,11 +42,13 @@ FactoryGirl.define do
 
     factory :non_eu_country do
       in_the_eu false
+      continent 'Asia'
 
       factory :usa do
         name 'United States'
         iso_code 'US'
         currency_id 3
+        continent 'North America'
       end
     end
   end

@@ -5,6 +5,7 @@ RSpec.describe 'countries/new', type: :view do
     x = FactoryGirl.create(:currency)
     @currencies = Currency.all
     @country = FactoryGirl.build(:country, currency_id: @currencies.first.id)
+    @continents = Country::CONTINENTS
   end
 
   it 'renders edit country form' do

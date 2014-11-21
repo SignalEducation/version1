@@ -37,7 +37,7 @@ describe Invoice do
 
   # relationships
   it { should belong_to(:currency) }
-  xit { should belong_to(:corporate_customer) }
+  it { should belong_to(:corporate_customer) }
   it { should belong_to(:subscription_transaction) }
   it { should belong_to(:subscription) }
   it { should belong_to(:user) }
@@ -63,7 +63,7 @@ describe Invoice do
 
   it { should validate_presence_of(:unit_price_ex_vat) }
 
-  it { should validate_presence_of(:vat_rate_id) }
+  it { should_not validate_presence_of(:vat_rate_id) }
   it { should validate_numericality_of(:vat_rate_id) }
 
   # callbacks
@@ -77,7 +77,5 @@ describe Invoice do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
