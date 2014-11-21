@@ -441,7 +441,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   ]
   countries.each_with_index do |country, counter|
     Country.where(name: country[:name]).first_or_create!(
-        country.merge(sorting_order: ((counter * 10) + 1000), currency_id: 3)
+        country.merge(sorting_order: ((counter * 10) + 1000), currency_id: 3, continent: 'Europe')
     ); print "#{country[:name]} "
   end
 
