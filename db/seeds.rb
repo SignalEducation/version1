@@ -175,13 +175,13 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
                                         active: true, sorting_order: 300); print '.'
   Currency.where(id: 4).first_or_create(iso_code: 'CAD', name: 'Canadian Dollar',
                                         leading_symbol: '$', trailing_symbol: 'c',
-                                        active: true, sorting_order: 400); print '.'
+                                        active: false, sorting_order: 400); print '.'
   Currency.where(id: 5).first_or_create(iso_code: 'HKD', name: 'Hong Kong Dollar',
                                         leading_symbol: '$', trailing_symbol: 'c',
-                                        active: true, sorting_order: 500); print '.'
+                                        active: false, sorting_order: 500); print '.'
   Currency.where(id: 6).first_or_create(iso_code: 'SGD', name: 'Singapore Dollar',
                                         leading_symbol: '$', trailing_symbol: 'c',
-                                        active: true, sorting_order: 600); print '.'
+                                        active: false, sorting_order: 600); print '.'
 
   puts ' DONE'
   print 'Countries: '
@@ -444,9 +444,32 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
         country.merge(sorting_order: ((counter * 10) + 1000), currency_id: 3)
     ); print "#{country[:name]} "
   end
+
+  europe = %w(AD AL AM AT AZ BA BE BG BY CH CY CZ DE DK EE ES FI FO FR GB GE GG GI GR HR HU IE IM IS IT JE LI LT LU LV MC MD ME MK MT NL NO PL PT RO RS RU SE SI SJ SK SM UA VA XK)
+  africa = %w(AO BF BI BJ BW CD CF CG CI CV DJ DZ EH ER ET GA GH GM GN GQ GW KE KM LR LS MA MG ML MR MU MW MZ NA NE NG RE RW SC SD SH SL SN SO SS ST SZ TD TG TN UG YT ZA ZM ZW)
+  asia = %w(AE AF BD BH BN BT CN EG GM HK IL IN IO IQ IR JN JO JP KG KH KP KR KW KZ LA LB LK LY MM MN MO MP MV MY NP OM PF PH PK PS PW QA SA SG SY TH TJ TL TM TR TW UZ VN YE)
+  north_america = %w(BM CA MX GL PM US)
+  central_america = %w(AG BL AI AW AX BB BQ BS BV BZ CC CK CM CR CU CW CX DM DO GD GP GS GT GU HN HT JM KN KY LC MF MH MQ NI PA PR SV SX TC TT UM VG VI)
+  south_america = %w(AR BO BR CL CO EC FK GF GY MS PE PY SR UY VC VE)
+  australia = %w(AS WS AU FJ FM ID KI NC NF NR NU NZ PG PN SB TK TO TV TZ VU WF)
+  antarctic = %w(AQ HM TF)
+
+  Country.where(iso_code: europe).update_all(continent: 'Europe')
+  Country.where(iso_code: africa).update_all(continent: 'Africa')
+  Country.where(iso_code: asia).update_all(continent: 'Asia')
+  Country.where(iso_code: north_america).update_all(continent: 'North America')
+  Country.where(iso_code: central_america).update_all(continent: 'Central America')
+  Country.where(iso_code: south_america).update_all(continent: 'South America')
+  Country.where(iso_code: australia).update_all(continent: 'Australia')
+  Country.where(iso_code: antarctic).update_all(continent: 'Antarctic')
+  if Country.where(continent: nil).count > 0
+    print 'COUNTRIES WITH NO CONTINENT: '
+    puts Country.where(continent: nil).map(&:iso_code).join(', ')
+  end
+
   Country.all_in_eu.each_with_index do |country, counter|
     country.update_attributes!(sorting_order: (counter * 10) + 100,
-                              currency_id: 1)
+                              currency_id: 1, continent: 'Europe')
     print '.'
   end
   Country.find_by_name('Ireland').update_attributes(sorting_order: 10)
@@ -456,8 +479,14 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   puts ' DONE'
 
-  print 'Continents'
-  the_list =
+  print 'Assign Currencies to Countries: '
+  # Currency: 1=eur, 2=gbp, 3=usd -- see above
+  Country.where(continent: ['North America', 'Central America', 'South America']).update_all(currency_id: 3); print '.'
+  Country.where(continent: 'Europe').update_all(currency_id: 1); print '.'
+  Country.where(iso_code: %w(GB IM JE GG GI)).update_all(currency_id: 2); print '.'
+  Country.where(continent: %w(Africa Asia Australia Antarctic)).update_all(currency_id: 2); print '.'
+  puts ' DONE'
+
   puts
   puts 'Completed the db/seed process'
   puts '*' * 100

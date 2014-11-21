@@ -21,7 +21,7 @@ class Country < ActiveRecord::Base
                   :in_the_eu, :currency_id, :continent
 
   # Constants
-  CONTINENTS = ['Europe', 'North America', 'South America', 'Asia', 'Africa','Australia', 'Antarctic']
+  CONTINENTS = ['Europe', 'North America', 'Central America', 'South America', 'Asia', 'Africa','Australia', 'Antarctic']
 
   # relationships
   belongs_to :currency
