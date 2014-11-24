@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141120154210) do
+ActiveRecord::Schema.define(version: 20141124094741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -303,6 +303,14 @@ ActiveRecord::Schema.define(version: 20141120154210) do
     t.string   "difficulty_level"
     t.text     "solution_to_the_question"
     t.text     "hints"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "raw_video_files", force: true do |t|
+    t.string   "file_name"
+    t.integer  "course_module_element_video_id"
+    t.boolean  "transcode_requested",            default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
