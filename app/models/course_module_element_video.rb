@@ -27,7 +27,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
-  # todo belongs_to :raw_video_file
+  belongs_to :raw_video_file
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
