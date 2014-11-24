@@ -52,6 +52,7 @@ describe Qualification do
 
   # scopes
   it { expect(Qualification).to respond_to(:all_in_order) }
+  it { expect(Qualification).to respond_to(:with_url) }
 
   # class methods
   it { expect(Qualification).to respond_to(:get_by_name_url) }
