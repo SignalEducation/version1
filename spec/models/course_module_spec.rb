@@ -84,6 +84,7 @@ describe CourseModule do
   it { expect(CourseModule).to respond_to(:all_in_order) }
   it { expect(CourseModule).to respond_to(:all_active) }
   it { expect(CourseModule).to respond_to(:all_inactive) }
+  it { expect(CourseModule).to respond_to(:with_url) }
 
   # class methods
 

@@ -61,6 +61,7 @@ class CourseModule < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
   scope :all_active, -> { where(active: true) }
   scope :all_inactive, -> { where(active: false) }
+  scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
 
