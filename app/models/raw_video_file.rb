@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: raw_video_files
+#
+#  id                             :integer          not null, primary key
+#  file_name                      :string(255)
+#  course_module_element_video_id :integer
+#  transcode_requested            :boolean          default(FALSE), not null
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#
+
 class RawVideoFile < ActiveRecord::Base
 
   # attr-accessible
