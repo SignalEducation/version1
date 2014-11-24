@@ -475,4 +475,21 @@ ActiveRecord::Schema.define(version: 20141120154210) do
     t.string   "locale"
   end
 
+  create_table "vat_codes", force: true do |t|
+    t.integer  "country_id"
+    t.string   "name"
+    t.string   "label"
+    t.string   "wiki_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "vat_rates", force: true do |t|
+    t.integer  "vat_code_id"
+    t.float    "percentage_rate"
+    t.date     "effective_from"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
 end

@@ -27,9 +27,10 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user_session, :current_user
 
-  Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.date_formats.simple')
-  Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.date_formats.standard')
-
+  Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.datetime_formats.simple')
+  Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.datetime_formats.standard')
+  Date::DATE_FORMATS[:simple] = I18n.t('controllers.application.date_formats.simple')
+  Date::DATE_FORMATS[:standard] = I18n.t('controllers.application.date_formats.standard')
 
   ### User access control and authentication
 

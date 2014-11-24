@@ -41,7 +41,7 @@ describe Invoice do
   it { should belong_to(:subscription_transaction) }
   it { should belong_to(:subscription) }
   it { should belong_to(:user) }
-  xit { should belong_to(:vat_rate) }
+  it { should belong_to(:vat_rate) }
 
   # validation
   it { should validate_presence_of(:user_id) }
