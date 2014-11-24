@@ -23,15 +23,24 @@ class RawVideoFile < ActiveRecord::Base
   # validation
   validates :file_name, presence: true
   validates :course_module_element_video_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:file_name) }
+  scope :not_yet_assigned, -> { where(course_module_element_video_id: nil) }
 
   # class methods
+  def self.get_new_videos
+    current_videos = RawVideoFile.all.map(&:file_name)
+    stuff_in_aws = [] # todo
+    new_items = stuff_in_aws - current_videos
+    new_items.each do |item|
+      RawVideoFile.create(file_name: item)
+    end
+  end
 
   # instance methods
   def destroyable?
@@ -39,12 +48,7 @@ class RawVideoFile < ActiveRecord::Base
   end
 
   def assign_me_to_cme_video(the_id)
-    # todo self.course_module_element_video_id = the_id
-    trigger_transcode(the_id)
-  end
-
-  def trigger_transcode(the_id)
-    # todo AWS::ElasticTranscode(source: self.file_name, folder: "/#{Rails.env}/#{the_id}/")
+    self.update_attributes(course_module_element_video_id: the_id)
   end
 
   protected

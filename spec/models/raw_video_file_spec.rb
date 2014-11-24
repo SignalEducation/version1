@@ -33,8 +33,8 @@ describe RawVideoFile do
   # validation
   it { should validate_presence_of(:file_name) }
 
-  it { should validate_presence_of(:course_module_element_video_id) }
-  it { should validate_numericality_of(:course_module_element_video_id) }
+  it { should validate_presence_of(:course_module_element_video_id).on(:update) }
+  xit { should validate_numericality_of(:course_module_element_video_id).on(:update) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -43,10 +43,10 @@ describe RawVideoFile do
   it { expect(RawVideoFile).to respond_to(:all_in_order) }
 
   # class methods
-  xit { expect(RawVideoFile).to respond_to(:assign_me_to_cme_video) }
-  xit { expect(RawVideoFile).to respond_to(:trigger_transcode) }
+  xit { expect(RawVideoFile).to respond_to(:get_new_videos) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:assign_me_to_cme_video) }
 
 end
