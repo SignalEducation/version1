@@ -27,6 +27,8 @@ Rails.application.routes.draw do
     # todo get 'courses/:study_area_name_url/:institution_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
 
     # general resources
+    post 'countries/reorder', to: 'countries#reorder'
+    resources :countries
     resources :corporate_customers
     get 'course_modules/new_for_exam_level/:exam_level_id',
         to: 'course_modules#new', as: :new_course_module_child
@@ -41,10 +43,11 @@ Rails.application.routes.draw do
     post 'institutions/filter', to: 'institutions#index', as: :institutions_filter
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
+    resources :invoices
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
-resources :subject_areas
+    resources :subject_areas
     resources :subscription_plans
     resources :user_notifications
     resources :vat_codes
@@ -53,7 +56,6 @@ resources :subject_areas
 
     # home page
     root 'users#show' # temporary
-
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

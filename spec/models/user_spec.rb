@@ -63,11 +63,13 @@ describe User do
   it { should belong_to(:corporate_customer) }
   it { should have_many(:owned_corporate_accounts) }
   xit { should belong_to(:corporate_customer_user_group) }
-  xit { should belong_to(:country) }
+  it { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:course_module_element_videos) }
   it { should have_many(:quiz_attempts) }
+  it { should have_many(:invoices) }
+  it { should have_many(:institution_users) }
   it { should have_many(:student_exam_tracks) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
@@ -118,7 +120,6 @@ describe User do
 
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
 
-
   # callbacks
   it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
@@ -134,7 +135,7 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
-  it { should respond_to(:frequent_form_user?) }
+  it { should respond_to(:frequent_forum_user?) }
   it { should respond_to(:tutor?) }
 
 end

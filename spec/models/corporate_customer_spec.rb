@@ -33,8 +33,13 @@ describe CorporateCustomer do
   #it { expect(CorporateCustomer.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
+  xit { should have_many(:corporate_customer_prices) }
+  xit { should have_many(:corporate_customer_users) }
+  it { should have_many(:course_module_element_user_logs) }
+  it { should have_many(:invoices) }
   xit { should belong_to(:country) }
   it { should belong_to(:owner) }
+  it { should have_many(:students) }
 
   # validation
   it { should validate_presence_of(:organisation_name) }

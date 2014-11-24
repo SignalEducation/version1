@@ -29,6 +29,7 @@ class CorporateCustomer < ActiveRecord::Base
   has_many :course_module_element_user_logs
   # todo has_many :corporate_customer_prices
   # todo has_many :corporate_customer_users
+  has_many :invoices
   belongs_to :owner, class_name: 'User', foreign_key: :owner_id
   has_many :students, class_name: 'User', foreign_key: :corporate_customer_id
 
@@ -50,7 +51,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.students.empty? # todo && self.corporate_customer_prices.empty? && self.corporate_customer_users.empty?
+    self.students.empty? && self.course_module_element_user_logs.empty? && self.invoices.empty? # todo && self.corporate_customer_prices.empty? && self.corporate_customer_users.empty?
   end
 
   protected

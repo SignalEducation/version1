@@ -1,0 +1,34 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.countries.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @countries, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered.sorted_table
+      %thead
+        %tr
+          %th=t('views.countries.form.name')
+          %th=t('views.countries.form.iso_code')
+          %th=t('views.countries.form.country_tld')
+          %th=t('views.countries.form.in_the_eu')
+          %th=t('views.countries.form.continent')
+          %th=t('views.countries.form.currency_id')
+          %th
+      %tbody
+        -@countries.each do |country|
+          %tr{id: country.id}
+            %td=link_to(country.name, country, title: t('views.general.view_tooltip'))
+            %td=link_to(country.iso_code, country, title: t('views.general.view_tooltip'))
+            %td=link_to(country.country_tld, country, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(country.in_the_eu), country, title: t('views.general.view_tooltip'))
+            %td=link_to(country.continent || '--', country, title: t('views.general.view_tooltip'))
+            %td=link_to(country.currency.name, country.currency, title: t('views.general.view_tooltip'))
+            %td
+              =link_to t('views.general.edit'), edit_country_url(country), class: 'btn btn-info btn-xs'
+              -if country.destroyable?
+                =link_to t('views.general.delete'), country, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_country_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

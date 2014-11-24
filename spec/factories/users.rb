@@ -47,7 +47,7 @@ FactoryGirl.define do
     sequence(:email)      { |n| "horace.smyth-#{n}@example.com" }
     first_name            'Horace'
     last_name             'Smyth'
-    country_id            1 # todo { Country.first.try(:id) || 1 }
+    country_id            { Country.first.try(:id) || 1 }
     password              'letSomeone1n'
     password_confirmation 'letSomeone1n'
     operational_email_frequency               'daily'

@@ -32,6 +32,8 @@ describe Currency do
 
   # relationships
   xit { should have_many(:corporate_customer_prices) }
+  it { should have_many(:countries) }
+  it { should have_many(:invoices) }
   it { should have_many(:subscription_plans) }
   it { should have_many(:subscription_transactions) }
 

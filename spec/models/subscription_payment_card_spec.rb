@@ -38,7 +38,7 @@ describe SubscriptionPaymentCard do
   # relationships
   it { should have_many(:subscription_transactions) }
   it { should belong_to(:user) }
-  xit { should belong_to(:billing_country) }
+  it { should belong_to(:billing_country) }
 
   # validation
   it { should validate_presence_of(:user_id) }

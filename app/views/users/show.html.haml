@@ -13,6 +13,12 @@
         %td.col-sm-4=t('views.users.form.full_name')
         %td.col-sm-8=@user.full_name
       %tr
+        %td.col-sm-4=t('views.users.form.address')
+        %td.col-sm-8=@user.address
+      %tr
+        %td.col-sm-4=t('views.users.form.country_id')
+        %td.col-sm-8=@user.country.try(:name)
+      %tr
         %td.col-sm-4=t('views.users.form.login_count')
         %td.col-sm-8=@user.login_count
       %tr
