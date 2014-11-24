@@ -75,6 +75,8 @@ en:
           error: Corporate Customer was not deleted
 
     course_modules:
+      show:
+        cant_find: Sorry, that could not be found
       create:
         flash:
           success: Course Module has been created successfully
@@ -458,6 +460,10 @@ en:
 
       index:
         h1: Course Modules
+        lead: You can manage Course Modules for any of the Qualifications and Exam levels shown below, or create a new Qualification or Exam Level.
+        new_qualification: New Qualification
+        new_exam_level: New Exam Level
+        new_exam_section: New Exam Section
 
       new:
         h1: New Course Module

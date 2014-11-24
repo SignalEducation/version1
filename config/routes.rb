@@ -33,6 +33,16 @@ Rails.application.routes.draw do
     get 'course_modules/new_for_exam_level/:exam_level_id',
         to: 'course_modules#new', as: :new_course_module_child
     post 'course_modules/reorder', to: 'course_modules#reorder'
+    get 'course_modules/:qualification_url', to: 'course_modules#show',
+        as: :course_modules_for_qualification
+    get 'course_modules/:qualification_url/:exam_level_url', to: 'course_modules#show',
+        as: :course_modules_for_qualification_and_exam_level
+    get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url',
+        to: 'course_modules#show',
+        as: :course_modules_for_qualification_exam_level_and_exam_section
+    get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url/:course_module_url',
+        to: 'course_modules#show',
+        as: :course_modules_for_qualification_exam_level_exam_section_and_name
     resources :course_modules
     post 'currencies/reorder', to: 'currencies#reorder'
     resources :currencies

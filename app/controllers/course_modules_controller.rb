@@ -4,13 +4,28 @@ class CourseModulesController < ApplicationController
   before_action do
     ensure_user_is_of_type(['tutor','admin'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: :show
 
   def index
-    @course_modules = CourseModule.paginate(per_page: 50, page: params[:page]).all_in_order
+    @qualifications = Qualification.paginate(per_page: 100, page: params[:page]).all_in_order
   end
 
   def show
+    if params[:qualification_url]
+      @qualification = Qualification.with_url(params[:qualification_url]).first
+      if @qualification
+        @exam_level_id = @qualification.exam_levels.first.try(:id)
+        if params[:course_module_url]
+          @course_module = CourseModule.with_url(params[:course_module_url]).first
+        end
+      else
+        flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
+        redirect_to course_modules_url
+      end
+    else
+      flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
+      redirect_to course_modules_url
+    end
   end
 
   def new
