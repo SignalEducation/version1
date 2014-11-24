@@ -33,7 +33,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :subscription_transaction
   belongs_to :subscription
   belongs_to :user
-  # todo belongs_to :vat_rate
+  belongs_to :vat_rate
 
   # validation
   validates :user_id, presence: true,

@@ -18,6 +18,7 @@ class VatRate < ActiveRecord::Base
   # Constants
 
   # relationships
+  has_many :invoices
   belongs_to :vat_code, inverse_of: :vat_rates
 
   # validation
@@ -37,7 +38,9 @@ class VatRate < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    # Can be deleted if no invoices are using this code, and
+    # the effective_date is in the future
+    self.invoices.empty? && self.effective_from > Proc.new{Time.now}.call
   end
 
   protected
