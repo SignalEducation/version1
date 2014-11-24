@@ -18,7 +18,7 @@ class VatRate < ActiveRecord::Base
   # Constants
 
   # relationships
-   belongs_to :vat_code, inverse_of: :vat_rates
+  belongs_to :vat_code, inverse_of: :vat_rates
 
   # validation
   validates :vat_code_id, presence: true,

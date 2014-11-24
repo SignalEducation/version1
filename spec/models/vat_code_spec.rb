@@ -29,7 +29,7 @@ describe VatCode do
   #it { expect(VatCode.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  xit { should belong_to(:country) }
+  it { should belong_to(:country) }
   it { should have_many(:vat_rates) }
 
   # validation

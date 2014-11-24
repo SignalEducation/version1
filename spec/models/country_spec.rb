@@ -35,6 +35,7 @@ describe Country do
   it { should belong_to(:currency) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:users) }
+  it { should have_many(:vat_codes) }
 
   # validation
   it { should validate_presence_of(:name) }

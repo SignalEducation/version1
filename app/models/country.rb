@@ -27,6 +27,7 @@ class Country < ActiveRecord::Base
   belongs_to :currency
   has_many :subscription_payment_cards, foreign_key: :billing_country_id
   has_many :users
+  has_many :vat_codes
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -49,7 +50,7 @@ class Country < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.subscription_payment_cards.empty? && self.users.empty?
+    self.subscription_payment_cards.empty? && self.users.empty? && self.vat_codes.empty?
   end
 
   protected

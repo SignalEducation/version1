@@ -19,7 +19,7 @@ class VatCode < ActiveRecord::Base
   # Constants
 
   # relationships
-  # to belongs_to :country
+  belongs_to :country
   has_many :vat_rates, inverse_of: :vat_code
 
   accepts_nested_attributes_for :vat_rates
