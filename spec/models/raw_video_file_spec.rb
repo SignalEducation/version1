@@ -43,10 +43,10 @@ describe RawVideoFile do
   it { expect(RawVideoFile).to respond_to(:all_in_order) }
 
   # class methods
+  xit { expect(RawVideoFile).to respond_to(:assign_me_to_cme_video) }
+  xit { expect(RawVideoFile).to respond_to(:trigger_transcode) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

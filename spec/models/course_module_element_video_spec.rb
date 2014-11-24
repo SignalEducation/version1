@@ -36,7 +36,7 @@ describe CourseModuleElementVideo do
 
   # relationships
   it { should belong_to(:course_module_element) }
-  xit { should belong_to(:raw_video_file) }
+  it { should belong_to(:raw_video_file) }
   it { should belong_to(:tutor) }
 
   # validation

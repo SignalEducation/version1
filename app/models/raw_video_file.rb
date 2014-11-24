@@ -38,6 +38,15 @@ class RawVideoFile < ActiveRecord::Base
     false
   end
 
+  def assign_me_to_cme_video(the_id)
+    # todo self.course_module_element_video_id = the_id
+    trigger_transcode(the_id)
+  end
+
+  def trigger_transcode(the_id)
+    # todo AWS::ElasticTranscode(source: self.file_name, folder: "/#{Rails.env}/#{the_id}/")
+  end
+
   protected
 
   def check_dependencies
