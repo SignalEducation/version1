@@ -50,6 +50,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    course_module_elements:
+      create:
+        flash:
+          success: Course Module Element has been created successfully
+      update:
+        flash:
+          success: Course Module Element details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module Element has been deleted
+          error: Course Module Element was not deleted
+
     countries:
       create:
         flash:
@@ -350,6 +362,7 @@ en:
       sign_in: Sign in
       sign_out: Sign out
       sign_up: Sign up
+      time: Time
       toggle_navigation: Toggle navigation
       view: View
       view_tooltip: click to view
@@ -437,6 +450,7 @@ en:
 
     course_modules:
       form:
+        course_module_elements: Course Module Elements
         institution_id: Institution
         qualification_id: Qualification
         exam_level_id: Exam level
@@ -470,6 +484,42 @@ en:
 
       show:
         h1: Course Module
+        
+    course_module_elements:
+      form:
+          name: Name
+          name_placeholder: My video title
+          name_url: Name url
+          name_url_placeholder: my-video-title
+          description: Description
+          description_placeholder: Description
+          estimated_time_in_seconds: Time in seconds
+          estimated_time_in_seconds_placeholder: 180
+          course_module_id: Course module id
+          course_module_element_video_id: Course module element video id
+          course_module_element_quiz_id: Course module element quiz id
+          sorting_order: Sorting order
+          forum_topic_id: Forum topic id
+          tutor_id: Tutor id
+          related_quiz_id: Related quiz id
+          related_video_id: Related video id
+          created_at: Created at
+          updated_at: Updated_at
+          new_video: New video
+          new_quiz: New quiz
+        
+
+      edit:
+        h1: Edit Course Module Element
+
+      index:
+        h1: Course Modules Elements
+
+      new:
+        h1: New Course Module Element
+
+      show:
+        h1: Course Module Element
 
     currencies:
       form:

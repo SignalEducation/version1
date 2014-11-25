@@ -21,12 +21,12 @@
               %td
                 -unless qualification.name == qual_tracker
                   -qual_tracker = qualification.name
-                  =link_to qualification.name, course_modules_for_qualification_url(qualification.name_url)
+                  =link_to qualification.name, course_module_special_link(qualification)
               %td
-                =link_to exam_level.name, course_modules_for_qualification_and_exam_level_url(qualification.name_url, exam_level.name_url)
+                =link_to exam_level.name, course_module_special_link(exam_level)
               %td
                 -exam_level.exam_sections.each do |exam_section|
-                  =link_to exam_section.name, course_modules_for_qualification_exam_level_and_exam_section_url(qualification.name_url, exam_level.name_url, exam_section.name_url)
+                  =link_to exam_section.name, course_module_special_link(exam_section)
                   %br/
 
 

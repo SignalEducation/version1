@@ -4,9 +4,6 @@
 #
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
-#  name                              :string(255)
-#  preamble                          :text
-#  expected_time_in_seconds          :integer
 #  time_limit_seconds                :integer
 #  number_of_questions               :integer
 #  question_selection_strategy       :string(255)
@@ -43,12 +40,6 @@ describe CourseModuleElementQuiz do
   # validation
   it { should validate_presence_of(:course_module_element_id) }
   it { should validate_numericality_of(:course_module_element_id) }
-
-  it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:preamble) }
-
-  it { should validate_presence_of(:expected_time_in_seconds) }
 
   it { should validate_presence_of(:time_limit_seconds) }
 

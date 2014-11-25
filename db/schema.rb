@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141124094741) do
+ActiveRecord::Schema.define(version: 20141125171142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,9 +43,6 @@ ActiveRecord::Schema.define(version: 20141124094741) do
 
   create_table "course_module_element_quizzes", force: true do |t|
     t.integer  "course_module_element_id"
-    t.string   "name"
-    t.text     "preamble"
-    t.integer  "expected_time_in_seconds"
     t.integer  "time_limit_seconds"
     t.integer  "number_of_questions"
     t.string   "question_selection_strategy"
@@ -85,10 +82,6 @@ ActiveRecord::Schema.define(version: 20141124094741) do
   create_table "course_module_element_videos", force: true do |t|
     t.integer  "course_module_element_id"
     t.integer  "raw_video_file_id"
-    t.string   "name"
-    t.integer  "run_time_in_seconds"
-    t.integer  "tutor_id"
-    t.text     "description"
     t.string   "tags"
     t.string   "difficulty_level"
     t.integer  "estimated_study_time_seconds"
@@ -103,8 +96,6 @@ ActiveRecord::Schema.define(version: 20141124094741) do
     t.text     "description"
     t.integer  "estimated_time_in_seconds"
     t.integer  "course_module_id"
-    t.integer  "course_module_element_video_id"
-    t.integer  "course_module_element_quiz_id"
     t.integer  "sorting_order"
     t.integer  "forum_topic_id"
     t.integer  "tutor_id"

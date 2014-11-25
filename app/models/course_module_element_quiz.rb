@@ -4,9 +4,6 @@
 #
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
-#  name                              :string(255)
-#  preamble                          :text
-#  expected_time_in_seconds          :integer
 #  time_limit_seconds                :integer
 #  number_of_questions               :integer
 #  question_selection_strategy       :string(255)
@@ -20,8 +17,7 @@
 class CourseModuleElementQuiz < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :name, :preamble,
-                  :expected_time_in_seconds, :time_limit_seconds,
+  attr_accessible :course_module_element_id, :time_limit_seconds,
                   :number_of_questions, :best_possible_score_retry,
                   :course_module_jumbo_quiz_id
 
@@ -35,9 +31,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
-  validates :preamble, presence: true
-  validates :expected_time_in_seconds, presence: true
   validates :time_limit_seconds, presence: true
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 4, less_than_or_equal_to: 10,

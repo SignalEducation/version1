@@ -29,18 +29,21 @@ class CourseModulesController < ApplicationController
   end
 
   def new
-    if params[:exam_level_id]
-      exam_level = ExamLevel.find(params[:exam_level_id])
+    if params[:exam_section_url]
+      exam_section = ExamSection.with_url(params[:exam_section_url]).first
       @course_module = CourseModule.new(sorting_order: 1,
-          exam_level_id: exam_level.id,
-          qualification_id: exam_level.qualification_id,
-          institution_id: exam_level.qualification.institution_id )
+          exam_section_id: exam_section.id,
+          exam_level_id: exam_section.exam_level_id,
+          qualification_id: exam_section.exam_level.qualification_id,
+          institution_id: exam_section.exam_level.qualification.institution_id )
     else
       @course_module = CourseModule.new(sorting_order: 1)
     end
+    set_up_side_nav
   end
 
   def edit
+    set_up_side_nav
   end
 
   def create
@@ -49,6 +52,7 @@ class CourseModulesController < ApplicationController
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
       redirect_to course_modules_url
     else
+      set_up_side_nav
       render action: :new
     end
   end
@@ -56,8 +60,9 @@ class CourseModulesController < ApplicationController
   def update
     if @course_module.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
-      redirect_to course_modules_url
+      redirect_to course_module_special_link(@course_module)
     else
+      set_up_side_nav
       render action: :edit
     end
   end
@@ -89,11 +94,17 @@ class CourseModulesController < ApplicationController
     @qualifications = Qualification.all_in_order
     @exam_levels = ExamLevel.all_in_order
     @exam_sections = ExamSection.all_in_order
-    @tutors = User.includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true).all_in_order
+    @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
     params.require(:course_module).permit(:institution_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :compulsory, :active)
+  end
+
+  def set_up_side_nav
+    @course_module.tutor_id = current_user.id
+    @qualification = @course_module.exam_level.try(:qualification)
+    @exam_level_id = @course_module.exam_level_id
   end
 
 end

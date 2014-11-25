@@ -30,8 +30,7 @@ Rails.application.routes.draw do
     post 'countries/reorder', to: 'countries#reorder'
     resources :countries
     resources :corporate_customers
-    get 'course_modules/new_for_exam_level/:exam_level_id',
-        to: 'course_modules#new', as: :new_course_module_child
+    resources :course_modules
     post 'course_modules/reorder', to: 'course_modules#reorder'
     get 'course_modules/:qualification_url', to: 'course_modules#show',
         as: :course_modules_for_qualification
@@ -43,7 +42,8 @@ Rails.application.routes.draw do
     get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url/:course_module_url',
         to: 'course_modules#show',
         as: :course_modules_for_qualification_exam_level_exam_section_and_name
-    resources :course_modules
+    post 'course_module_elements/reorder', to: 'course_module_elements#reorder'
+    resources :course_module_elements, except: :index
     post 'currencies/reorder', to: 'currencies#reorder'
     resources :currencies
     post 'exam_levels/reorder', to: 'exam_levels#reorder'

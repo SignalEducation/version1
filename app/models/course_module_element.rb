@@ -2,29 +2,26 @@
 #
 # Table name: course_module_elements
 #
-#  id                             :integer          not null, primary key
-#  name                           :string(255)
-#  name_url                       :string(255)
-#  description                    :text
-#  estimated_time_in_seconds      :integer
-#  course_module_id               :integer
-#  course_module_element_video_id :integer
-#  course_module_element_quiz_id  :integer
-#  sorting_order                  :integer
-#  forum_topic_id                 :integer
-#  tutor_id                       :integer
-#  related_quiz_id                :integer
-#  related_video_id               :integer
-#  created_at                     :datetime
-#  updated_at                     :datetime
+#  id                        :integer          not null, primary key
+#  name                      :string(255)
+#  name_url                  :string(255)
+#  description               :text
+#  estimated_time_in_seconds :integer
+#  course_module_id          :integer
+#  sorting_order             :integer
+#  forum_topic_id            :integer
+#  tutor_id                  :integer
+#  related_quiz_id           :integer
+#  related_video_id          :integer
+#  created_at                :datetime
+#  updated_at                :datetime
 #
 
 class CourseModuleElement < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
-                  :course_module_id, :course_module_element_video_id,
-                  :course_module_element_quiz_id, :sorting_order,
+                  :course_module_id, :sorting_order,
                   :forum_topic_id, :tutor_id, :related_quiz_id,
                   :related_video_id
 
@@ -32,8 +29,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module
-  belongs_to :course_module_element_video
-  belongs_to :course_module_element_quiz
+  has_one :course_module_element_video
+  has_one :course_module_element_quiz
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
   belongs_to :forum_topic
@@ -52,21 +49,16 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_video_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :forum_topic_id, presence: true,
+  validates :forum_topic_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :related_quiz_id, presence: true,
+  validates :related_quiz_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :related_video_id, presence: true,
+  validates :related_video_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validate :video_or_quiz_id_required
 
   # callbacks
   after_save :update_the_module_total_time
@@ -116,14 +108,6 @@ class CourseModuleElement < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
-    end
-  end
-
-  def video_or_quiz_id_required
-    if self.course_module_element_video_id.nil? && self.course_module_element_quiz_id.nil?
-      errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
-    elsif self.course_module_element_video_id.to_i > 0 && self.course_module_element_quiz_id.to_i > 0
-      errors.add(:base, I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both'))
     end
   end
 

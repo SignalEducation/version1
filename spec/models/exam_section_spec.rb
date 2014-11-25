@@ -53,12 +53,11 @@ describe ExamSection do
 
   # scopes
   it { expect(ExamSection).to respond_to(:all_in_order) }
+  it { expect(ExamSection).to respond_to(:with_url) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-
 
 end

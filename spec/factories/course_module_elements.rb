@@ -2,21 +2,19 @@
 #
 # Table name: course_module_elements
 #
-#  id                             :integer          not null, primary key
-#  name                           :string(255)
-#  name_url                       :string(255)
-#  description                    :text
-#  estimated_time_in_seconds      :integer
-#  course_module_id               :integer
-#  course_module_element_video_id :integer
-#  course_module_element_quiz_id  :integer
-#  sorting_order                  :integer
-#  forum_topic_id                 :integer
-#  tutor_id                       :integer
-#  related_quiz_id                :integer
-#  related_video_id               :integer
-#  created_at                     :datetime
-#  updated_at                     :datetime
+#  id                        :integer          not null, primary key
+#  name                      :string(255)
+#  name_url                  :string(255)
+#  description               :text
+#  estimated_time_in_seconds :integer
+#  course_module_id          :integer
+#  sorting_order             :integer
+#  forum_topic_id            :integer
+#  tutor_id                  :integer
+#  related_quiz_id           :integer
+#  related_video_id          :integer
+#  created_at                :datetime
+#  updated_at                :datetime
 #
 
 FactoryGirl.define do

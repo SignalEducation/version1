@@ -1,0 +1,31 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :sorting_order
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
+        .form-group
+          =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 6
+        .form-group
+          =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :tutor_id, @tutors, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module)

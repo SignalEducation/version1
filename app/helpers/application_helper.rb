@@ -11,6 +11,10 @@ module ApplicationHelper
     number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
   end
 
+  def seconds_to_time(seconds)
+    Time.at(seconds).utc.strftime('%M:%S')
+  end
+
 end
 
 class DanFormBuilder < ActionView::Helpers::FormBuilder
@@ -37,3 +41,4 @@ class DanFormBuilder < ActionView::Helpers::FormBuilder
   end
 
 end
+
