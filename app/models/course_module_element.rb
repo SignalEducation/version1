@@ -23,7 +23,9 @@ class CourseModuleElement < ActiveRecord::Base
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :course_module_id, :sorting_order,
                   :forum_topic_id, :tutor_id, :related_quiz_id,
-                  :related_video_id
+                  :related_video_id,
+                  :course_module_element_video_attributes,
+                  :course_module_element_quiz_attributes
 
   # Constants
 

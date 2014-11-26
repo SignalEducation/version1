@@ -11,9 +11,9 @@ class CourseModuleElementsController < ApplicationController
 
   def new
     @course_module_element = CourseModuleElement.new(
-        sorting_order: (CourseModuleElement.all.maximum(:sorting_order) + 1),
+        sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
         tutor_id: current_user.id,
-        course_module_id: 1)
+        course_module_id: params[:cm_id].to_i)
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
     end
@@ -24,7 +24,7 @@ class CourseModuleElementsController < ApplicationController
 
   def create
     @course_module_element = CourseModuleElement.new(allowed_params)
-    @course_module_element.build_course_module_element_video(video_params)
+    # @course_module_element.build_course_module_element_video(video_params)
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       redirect_to course_module_special_link(@course_module_element.course_module)
@@ -34,7 +34,6 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def update
-    #@course_module_element.build_course_module_element_video(video_params)
     if @course_module_element.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       redirect_to course_module_special_link(@course_module_element.course_module)
