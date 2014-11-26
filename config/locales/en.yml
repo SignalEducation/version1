@@ -507,7 +507,6 @@ en:
           updated_at: Updated_at
           new_video: New video
           new_quiz: New quiz
-        
 
       edit:
         h1: Edit Course Module Element
@@ -520,6 +519,18 @@ en:
 
       show:
         h1: Course Module Element
+
+    course_module_element_videos:
+      form:
+        raw_video_file_id: Video File
+        tags: "Tags (separate with commas)"
+        tags_placeholder: "economics, macro-economics"
+        difficulty_level: Difficulty Level
+        estimated_study_time_seconds: Estimated Time in Seconds
+        estimated_study_time_seconds_placeholder: 100
+        transcript: Transcript
+        transcript_placeholder: Paste Transcript Here !
+
 
     currencies:
       form:

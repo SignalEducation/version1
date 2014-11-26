@@ -27,7 +27,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :raw_video_file_id, presence: true, uniqueness: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :tags, presence: true
@@ -37,6 +37,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
 
   # callbacks
   before_save :set_estimated_study_time
+  after_save :update_raw_video_file
   before_destroy :check_dependencies
 
   # scopes
@@ -68,4 +69,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
     end
   end
 
+  def update_raw_video_file
+    self.raw_video_file.assign_me_to_cme_video(self.id)
+  end
 end

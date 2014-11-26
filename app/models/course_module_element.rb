@@ -41,6 +41,9 @@ class CourseModuleElement < ActiveRecord::Base
   has_many :student_exam_tracks
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
+  accepts_nested_attributes_for :course_module_element_quiz
+  accepts_nested_attributes_for :course_module_element_video, update_only: true
+
   # validation
   validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true

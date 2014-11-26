@@ -2,6 +2,7 @@
   .col-sm-8.col-sm-offset-2
     =form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}) do |f|
       =f.hidden_field :sorting_order
+      =f.hidden_field :course_module_id
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
         .form-group
@@ -24,7 +25,9 @@
           =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.collection_select :tutor_id, @tutors, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
-
+        -if @course_module_element.course_module_element_video
+          =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
+        -elsif @course_module_element.course_module_element_quiz
 
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')
