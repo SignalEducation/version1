@@ -1,0 +1,13 @@
+=f.fields_for :course_module_element_quiz do |cme_quiz|
+  =cme_quiz.fields_for :quiz_questions do |question|
+    .well.well-sm
+      .row
+        .col-sm-3
+          .form-group
+            .col-sm-12
+              =question.fields_for :quiz_content do |content|
+                =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 8
+        .col-sm-1
+          .form-group
+            .col-sm-12
+              =question.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}

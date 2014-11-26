@@ -51,7 +51,7 @@ describe CourseModuleElementVideo do
   it { should validate_presence_of(:transcript) }
 
   # callbacks
-  it { should callback(:set_estimated_study_time).before(:save) }
+  it { should callback(:set_estimated_study_time).before(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

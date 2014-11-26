@@ -1,34 +1,52 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      =f.hidden_field :sorting_order
-      =f.hidden_field :course_module_id
-      .well.well-sm
+=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .well.well-sm
+    .row
+      .col-sm-12
+        =f.hidden_field :sorting_order
+        =f.hidden_field :course_module_id
         =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
-        .form-group
-          =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 6
-        .form-group
-          =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :tutor_id, @tutors, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+        .col-sm-6
+          .form-group
+            =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 6
+          .form-group
+            =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.collection_select :tutor_id, @tutors, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
         -if @course_module_element.course_module_element_video
-          =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
+          .col-sm-6
+            =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
         -elsif @course_module_element.course_module_element_quiz
+          .col-sm-6
+            =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
 
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module)
+  -if @course_module_element.course_module_element_quiz
+    %h3=t('views.course_module_elements.form.questions')
+    %hr/
+    .row
+      .col-sm-2
+        .text-left=t('views.quiz_questions.form.question_text')
+      .col-sm-2
+        .text-right=t('views.quiz_questions.form.difficulty_level')
+      .col-sm-4
+        =t('views.quiz_questions.form.answers')
+      .col-sm-4
+        .text-right=t('views.quiz_questions.form.solutions')
+    =render partial: 'course_module_element_quizzes/fields_for_question', locals: {f: f}
+
+  =f.submit t('views.general.save'), class: 'btn btn-success'
+  =t('views.general.or')
+  =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module)

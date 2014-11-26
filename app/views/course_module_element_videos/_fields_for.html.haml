@@ -16,11 +16,7 @@
     =cme_video.label :difficulty_level, t('views.course_module_element_videos.form.difficulty_level'), class: 'control-label col-sm-4'
     .col-sm-8
       =cme_video.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
-  .form-group
-    =cme_video.label :estimated_study_time_seconds, t('views.course_module_element_videos.form.estimated_study_time_seconds'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_video.text_field :estimated_study_time_seconds, placeholder: t('views.course_module_element_videos.form.estimated_study_time_seconds_placeholder'), class: 'form-control'
-  .form-group
+    .form-group
     =cme_video.label :transcript, t('views.course_module_element_videos.form.transcript'), class: 'control-label col-sm-4'
     .col-sm-8
       =cme_video.text_area :transcript, placeholder: t('views.course_module_element_videos.form.transcript_placeholder'), class: 'form-control', rows: 6

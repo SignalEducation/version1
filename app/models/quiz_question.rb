@@ -16,7 +16,8 @@ class QuizQuestion < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_quiz_id,
-                  :difficulty_level, :solution_to_the_question, :hints
+                  :difficulty_level, :solution_to_the_question, :hints,
+                  :quiz_answers_attributes, :quiz_contents_attributes
 
   # Constants
 
@@ -26,6 +27,9 @@ class QuizQuestion < ActiveRecord::Base
   has_many :quiz_attempts
   has_many :quiz_answers
   has_many :quiz_contents, -> { order(:sorting_order) }
+
+  accepts_nested_attributes_for :quiz_answers
+  accepts_nested_attributes_for :quiz_contents
 
   # validation
   validates :course_module_element_quiz_id, presence: true,

@@ -16,6 +16,10 @@ class CourseModuleElementsController < ApplicationController
         course_module_id: params[:cm_id].to_i)
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
+    elsif params[:type] == 'quiz'
+      @course_module_element.build_course_module_element_quiz
+      @course_module_element.course_module_element_quiz.quiz_questions.build
+      @course_module_element.course_module_element_quiz.quiz_questions.build
     end
   end
 
@@ -73,8 +77,4 @@ class CourseModuleElementsController < ApplicationController
     params.require(:course_module_element).permit(:name, :name_url, :description, :estimated_time_in_seconds, :course_module_id, :course_module_element_video_id, :course_module_element_quiz_id, :sorting_order, :forum_topic_id, :tutor_id, :related_quiz_id, :related_video_id, course_module_element_video_attributes: [:course_module_element_id, :id, :raw_video_file_id, :tags, :difficulty_level, :estimated_study_time_seconds, :transcript])
   end
 
-  def video_params
-    params[:course_module_element].require(:course_module_element_video_attributes).permit(:course_module_element_id, :id, :raw_video_file_id, :tags, :difficulty_level, :estimated_study_time_seconds, :transcript)
-  end
-
-end
+ end

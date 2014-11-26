@@ -489,7 +489,7 @@ en:
       form:
           name: Name
           name_placeholder: My video title
-          name_url: Name url
+          name_url: Name URL
           name_url_placeholder: my-video-title
           description: Description
           description_placeholder: Description
@@ -499,14 +499,15 @@ en:
           course_module_element_video_id: Course module element video id
           course_module_element_quiz_id: Course module element quiz id
           sorting_order: Sorting order
-          forum_topic_id: Forum topic id
-          tutor_id: Tutor id
-          related_quiz_id: Related quiz id
-          related_video_id: Related video id
+          forum_topic_id: Forum topic
+          tutor_id: Tutor
+          related_quiz_id: Related quiz
+          related_video_id: Related video
           created_at: Created at
           updated_at: Updated_at
           new_video: New video
           new_quiz: New quiz
+          questions: Questions
 
       edit:
         h1: Edit Course Module Element
@@ -519,6 +520,17 @@ en:
 
       show:
         h1: Course Module Element
+
+    course_module_element_quizzes:
+      form:
+        time_limit_seconds: Time Limit in seconds
+        time_limit_seconds_placeholder: 100
+        number_of_questions: Number of Questions
+        number_of_questions_placeholder: 10
+        question_selection_strategy: Question Selection Strategy
+        question_selection_strategy_placeholder: 1
+        best_possible_score_first_attempt: "Max Score (1st. Go)"
+        best_possible_score_retry: "Max Score (Retry)"
 
     course_module_element_videos:
       form:
@@ -704,6 +716,14 @@ en:
     shared:
       filter_panel:
         filter: 'filter:'
+
+    quiz_questions:
+      form:
+        difficulty_level: Difficulty Level
+        question_text: Question Text
+        answers: Answers
+        solutions: Solutions
+        text_content_placeholder: Ask the question
 
     subscription_plans:
       form:

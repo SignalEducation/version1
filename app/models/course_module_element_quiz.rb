@@ -19,7 +19,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_id, :time_limit_seconds,
                   :number_of_questions, :best_possible_score_retry,
-                  :course_module_jumbo_quiz_id
+                  :course_module_jumbo_quiz_id, :quiz_questions_attributes
 
   # Constants
 
@@ -27,6 +27,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :course_module_jumbo_quiz
   has_many :quiz_questions
+
+  accepts_nested_attributes_for :quiz_questions
 
   # validation
   validates :course_module_element_id, presence: true,

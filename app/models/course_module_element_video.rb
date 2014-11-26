@@ -36,7 +36,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   validates :transcript, presence: true
 
   # callbacks
-  before_save :set_estimated_study_time
+  before_update :set_estimated_study_time
   after_save :update_raw_video_file
   before_destroy :check_dependencies
 
