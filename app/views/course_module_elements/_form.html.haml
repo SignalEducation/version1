@@ -37,14 +37,16 @@
     %h3=t('views.course_module_elements.form.questions')
     %hr/
     .row
-      .col-sm-2
+      .col-sm-4
         .text-left=t('views.quiz_questions.form.question_text')
-      .col-sm-2
-        .text-right=t('views.quiz_questions.form.difficulty_level')
-      .col-sm-4
-        =t('views.quiz_questions.form.answers')
-      .col-sm-4
-        .text-right=t('views.quiz_questions.form.solutions')
+      .col-sm-8
+        .row
+          .col-sm-5
+            =t('views.quiz_questions.form.answers')
+          .col-sm-2
+            .text-center=t('views.quiz_questions.form.degree_of_wrongness')
+          .col-sm-5
+            .text-right=t('views.quiz_questions.form.solutions')
     =render partial: 'course_module_element_quizzes/fields_for_question', locals: {f: f}
 
   =f.submit t('views.general.save'), class: 'btn btn-success'

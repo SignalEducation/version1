@@ -19,3 +19,7 @@
     =cme_quiz.label :best_possible_score_retry, t('views.course_module_element_quizzes.form.best_possible_score_retry'), class: 'control-label col-sm-4'
     .col-sm-8
       .form-control-static=cme_quiz.object.best_possible_score_retry || '--'
+  .form-group
+    =f.label :related_video_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
+    .col-sm-8
+      =f.collection_select :related_video_id, @related_cmes, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}

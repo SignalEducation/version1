@@ -15,6 +15,8 @@
 #  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
+#  is_video                  :boolean          default(FALSE), not null
+#  is_quiz                   :boolean          default(FALSE), not null
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -23,7 +25,7 @@ class CourseModuleElement < ActiveRecord::Base
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :course_module_id, :sorting_order,
                   :forum_topic_id, :tutor_id, :related_quiz_id,
-                  :related_video_id,
+                  :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes
 
@@ -38,9 +40,12 @@ class CourseModuleElement < ActiveRecord::Base
   belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
-  belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
-  belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
-  has_many :student_exam_tracks
+  belongs_to :related_quiz, class_name: 'CourseModuleElement',
+             foreign_key: :related_quiz_id
+  belongs_to :related_video, class_name: 'CourseModuleElement',
+             foreign_key: :related_video_id
+  has_many :student_exam_tracks, class_name: 'StudentExamTrack',
+           foreign_key: :latest_course_module_element_id
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   accepts_nested_attributes_for :course_module_element_quiz
@@ -71,6 +76,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_videos, -> { where(is_video: true) }
+  scope :all_quizzes, -> { where(is_quiz: true) }
 
   # class methods
 

@@ -723,7 +723,13 @@ en:
         question_text: Question Text
         answers: Answers
         solutions: Solutions
+        degree_of_wrongness: "Right/Wrong"
         text_content_placeholder: Ask the question
+
+    quiz_answer:
+      form:
+        answer_content_placeholder: Fill in the Answer Here
+        answer_solution_content_placeholder: Enter the Solution or Leave blank for Correct Answer
 
     subscription_plans:
       form:

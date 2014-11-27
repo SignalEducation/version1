@@ -2,12 +2,34 @@
   =cme_quiz.fields_for :quiz_questions do |question|
     .well.well-sm
       .row
-        .col-sm-3
+        .col-sm-4
           .form-group
             .col-sm-12
-              =question.fields_for :quiz_content do |content|
-                =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 8
-        .col-sm-1
+              =question.fields_for :quiz_contents do |content|
+                =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 12
           .form-group
+            =question.label :difficulty_level, t('views.quiz_questions.form.difficulty_level'), class: 'col-sm-12 pull-left'
             .col-sm-12
               =question.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
+
+        .col-sm-8
+          -counter = 0
+          =question.fields_for :quiz_answers do |answer|
+            .row
+              .col-sm-5
+                .row
+                  .col-sm-1
+                    =@letters[counter]
+                  .col-sm-10
+                    =answer.fields_for :quiz_contents do |content|
+                      .form-group
+                        .col-sm-12
+                          =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control', rows: 3
+              .col-sm-2
+                .form-group
+                  =answer.select :degree_of_wrongness, QuizAnswer::WRONGNESS, {}, {class: 'form-control'}
+              .col-sm-5
+                .form-group
+                  .col-sm-12
+                    =answer.text_area :wrong_answer_explanation_text, placeholder: t('views.quiz_answer.form.answer_solution_content_placeholder'), class: 'form-control', rows: 3
+            -counter += 1

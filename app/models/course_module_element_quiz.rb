@@ -32,15 +32,15 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :time_limit_seconds, presence: true
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 4, less_than_or_equal_to: 10,
-             only_integer: true}
-  validates :best_possible_score_first_attempt, presence: true
-  validates :best_possible_score_retry, presence: true
+             only_integer: true}, on: :update
+  validates :best_possible_score_first_attempt, presence: true, on: :update
+  validates :best_possible_score_retry, presence: true, on: :update
   validates :course_module_jumbo_quiz_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
   before_destroy :check_dependencies

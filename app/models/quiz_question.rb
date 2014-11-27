@@ -33,11 +33,11 @@ class QuizQuestion < ActiveRecord::Base
 
   # validation
   validates :course_module_element_quiz_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVELS}
-  validates :solution_to_the_question, presence: true
+            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
+  validates :solution_to_the_question, presence: true, on: :update
   validates :hints, allow_nil: true, length: {maximum: 65535}
 
   # callbacks

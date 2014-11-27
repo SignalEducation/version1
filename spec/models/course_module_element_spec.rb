@@ -15,6 +15,8 @@
 #  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
+#  is_video                  :boolean          default(FALSE), not null
+#  is_quiz                   :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
@@ -83,6 +85,8 @@ describe CourseModuleElement do
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
+  it { expect(CourseModuleElement).to respond_to(:all_videos) }
+  it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
 
   # class methods
 
