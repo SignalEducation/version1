@@ -1,17 +1,21 @@
 =f.fields_for :course_module_element_quiz do |cme_quiz|
   =cme_quiz.fields_for :quiz_questions do |question|
-    .well.well-sm
+    .well.well-sm{id: question.object.id.nil? ? 'the_new_question' : ''}
       .row
         .col-sm-4
           .form-group
             .col-sm-12
               =question.fields_for :quiz_contents do |content|
+                =content.hidden_field :sorting_order
+                =content.hidden_field :contains_mathjax
+                =content.hidden_field :contains_image
                 =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 12
           .form-group
             =question.label :difficulty_level, t('views.quiz_questions.form.difficulty_level'), class: 'col-sm-12 pull-left'
             .col-sm-12
               =question.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
-
+          -if question.object.id.nil?
+            =link_to t('views.general.delete'), '#', onclick: "$('#the_new_question').remove(); return false;"
         .col-sm-8
           -counter = 0
           =question.fields_for :quiz_answers do |answer|
@@ -22,6 +26,9 @@
                     =@letters[counter]
                   .col-sm-10
                     =answer.fields_for :quiz_contents do |content|
+                      =content.hidden_field :sorting_order
+                      =content.hidden_field :contains_mathjax
+                      =content.hidden_field :contains_image
                       .form-group
                         .col-sm-12
                           =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control', rows: 3

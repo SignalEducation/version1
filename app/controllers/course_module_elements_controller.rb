@@ -20,17 +20,15 @@ class CourseModuleElementsController < ApplicationController
     elsif params[:type] == 'quiz'
       @course_module_element.is_quiz = true
       @course_module_element.build_course_module_element_quiz
-      @course_module_element.course_module_element_quiz.quiz_questions.build
-      @course_module_element.course_module_element_quiz.quiz_questions.first.quiz_contents.build
-      4.times do
-        @course_module_element.course_module_element_quiz.quiz_questions.first.quiz_answers.build
-        @course_module_element.course_module_element_quiz.quiz_questions.first.quiz_answers.last.quiz_contents.build
-      end
+      @course_module_element.course_module_element_quiz.add_an_empty_question
     end
     set_related_cmes
   end
 
   def edit
+    if @course_module_element.is_quiz
+      @course_module_element.course_module_element_quiz.add_an_empty_question
+    end
     set_related_cmes
   end
 
@@ -73,6 +71,15 @@ class CourseModuleElementsController < ApplicationController
   end
 
   protected
+
+  def create_new_question
+    @course_module_element.course_module_element_quiz.quiz_questions.build
+    @course_module_element.course_module_element_quiz.quiz_questions.last.quiz_contents.build(sorting_order: 1)
+    4.times do |number|
+      @course_module_element.course_module_element_quiz.quiz_questions.last.quiz_answers.build
+      @course_module_element.course_module_element_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: number + 1)
+    end
+  end
 
   def get_variables
     if params[:id].to_i > 0

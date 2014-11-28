@@ -4,6 +4,8 @@
       .col-sm-12
         =f.hidden_field :sorting_order
         =f.hidden_field :course_module_id
+        =f.hidden_field :is_quiz
+        =f.hidden_field :is_video
         =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
         .col-sm-6
           .form-group

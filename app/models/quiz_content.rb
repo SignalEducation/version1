@@ -6,8 +6,8 @@
 #  quiz_question_id :integer
 #  quiz_answer_id   :integer
 #  text_content     :text
-#  contains_mathjax :boolean          not null
-#  contains_image   :boolean          not null
+#  contains_mathjax :boolean          default(FALSE), not null
+#  contains_image   :boolean          default(FALSE), not null
 #  sorting_order    :integer
 #  created_at       :datetime
 #  updated_at       :datetime
@@ -26,7 +26,7 @@ class QuizContent < ActiveRecord::Base
   belongs_to :quiz_question
 
   # validation
-  validate  :question_or_answer_only
+  validate  :question_or_answer_only, on: :update
   validates :quiz_question_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_answer_id, allow_nil: true,

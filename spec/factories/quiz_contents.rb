@@ -6,8 +6,8 @@
 #  quiz_question_id :integer
 #  quiz_answer_id   :integer
 #  text_content     :text
-#  contains_mathjax :boolean          not null
-#  contains_image   :boolean          not null
+#  contains_mathjax :boolean          default(FALSE), not null
+#  contains_image   :boolean          default(FALSE), not null
 #  sorting_order    :integer
 #  created_at       :datetime
 #  updated_at       :datetime

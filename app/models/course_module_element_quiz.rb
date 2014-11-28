@@ -19,7 +19,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_id, :time_limit_seconds,
                   :number_of_questions, :best_possible_score_retry,
-                  :course_module_jumbo_quiz_id, :quiz_questions_attributes
+                  :quiz_questions_attributes
 
   # Constants
 
@@ -35,14 +35,13 @@ class CourseModuleElementQuiz < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :time_limit_seconds, presence: true
   validates :number_of_questions, presence: true, numericality:
-            {greater_than_or_equal_to: 4, less_than_or_equal_to: 10,
+            {greater_than_or_equal_to: 4, less_than_or_equal_to: 30,
              only_integer: true}, on: :update
   validates :best_possible_score_first_attempt, presence: true, on: :update
   validates :best_possible_score_retry, presence: true, on: :update
-  validates :course_module_jumbo_quiz_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
+  before_save :set_jumbo_quiz_id
   before_destroy :check_dependencies
 
   # scopes
@@ -51,6 +50,16 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  def add_an_empty_question
+    self.quiz_questions.build
+    self.quiz_questions.last.quiz_contents.build(sorting_order: 1)
+    4.times do |number|
+      self.quiz_questions.last.quiz_answers.build
+      self.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: number + 1)
+    end
+  end
+
   def destroyable?
     self.quiz_questions.empty?
   end
@@ -62,6 +71,10 @@ class CourseModuleElementQuiz < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def set_jumbo_quiz_id
+    self.course_module_jumbo_quiz_id = self.course_module_element.try(:course_module).try(:course_module_jumbo_quiz).try(:id)
   end
 
 end
