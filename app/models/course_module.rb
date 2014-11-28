@@ -32,7 +32,7 @@ class CourseModule < ActiveRecord::Base
   # relationships
   has_many :course_module_elements
   has_many :course_module_element_user_logs
-  has_many :course_module_jumbo_quizzes
+  has_one :course_module_jumbo_quiz
   belongs_to :exam_level
   belongs_to :exam_section
   belongs_to :institution

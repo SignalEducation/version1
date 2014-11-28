@@ -46,3 +46,5 @@
     %p
       =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: @course_module.id), class: 'btn btn-success'
       =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: @course_module.id), class: 'btn btn-success'
+
+    =render partial: 'course_module_jumbo_quizzes/show'

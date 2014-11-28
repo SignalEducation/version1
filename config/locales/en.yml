@@ -62,6 +62,18 @@ en:
           success: Course Module Element has been deleted
           error: Course Module Element was not deleted
 
+    course_module_jumbo_quizzes:
+      create:
+        flash:
+          success: Jumbo Quiz has been created successfully
+      update:
+        flash:
+          success: Jumbo Quiz details have been updated successfully
+      destroy:
+        flash:
+          success: Jumbo Quiz has been deleted
+          error: Jumbo Quiz was not deleted
+
     countries:
       create:
         flash:
@@ -484,6 +496,7 @@ en:
 
       show:
         h1: Course Module
+
         
     course_module_elements:
       form:
@@ -521,6 +534,7 @@ en:
       show:
         h1: Course Module Element
 
+
     course_module_element_quizzes:
       form:
         time_limit_seconds: Time Limit in seconds
@@ -543,6 +557,24 @@ en:
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
 
+    course_module_jumbo_quiz:
+      form:
+        name: Name
+        name_placeholder: Intro to Economics Jumbo Quiz
+        minimum_question_count_per_quiz: Min Questions from each Quiz
+        maximum_question_count_per_quiz: Max Questions from each Quiz
+        total_number_of_questions: Total Number of Questions
+        course_module_id: Course Module
+
+      edit:
+        h1: Edit Jumbo Quiz
+
+      new:
+        h1: New Jumbo Quiz
+
+      show:
+        h1: Jumbo Quiz
+        no_jumbo_quizzes_yet: "Sorry, there is no Jumbo Quiz for this Course Module. Why not create one now !"
 
     currencies:
       form:
