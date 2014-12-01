@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 
-
+  # This array must be in ascending score order.
   DIFFICULTY_LEVELS = [
       {name: 'easy', score: 3, run_time_multiplier: 1},
       {name: 'medium', score: 5, run_time_multiplier: 1.5},

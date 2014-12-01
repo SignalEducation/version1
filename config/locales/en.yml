@@ -496,6 +496,7 @@ en:
 
       show:
         h1: Course Module
+        click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
 
         
     course_module_elements:
@@ -521,6 +522,7 @@ en:
           new_video: New video
           new_quiz: New quiz
           questions: Questions
+          save_and_add_another: Save and Created another Question
 
       edit:
         h1: Edit Course Module Element

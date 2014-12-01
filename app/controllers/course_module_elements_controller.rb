@@ -37,7 +37,11 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
-      redirect_to course_module_special_link(@course_module_element.course_module)
+      if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
+        redirect_to edit_course_module_element_url(@course_module_element.id)
+      else
+        redirect_to course_module_special_link(@course_module_element.course_module)
+      end
     else
       render action: :new
     end
@@ -47,7 +51,11 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     if @course_module_element.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
-      redirect_to course_module_special_link(@course_module_element.course_module)
+      if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
+        redirect_to edit_course_module_element_url(@course_module_element.id)
+      else
+        redirect_to course_module_special_link(@course_module_element.course_module)
+      end
     else
       render action: :edit
     end

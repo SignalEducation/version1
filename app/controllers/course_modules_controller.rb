@@ -14,7 +14,7 @@ class CourseModulesController < ApplicationController
     if params[:qualification_url]
       @qualification = Qualification.with_url(params[:qualification_url]).first
       if @qualification
-        @exam_level_id = @qualification.exam_levels.first.try(:id)
+        @exam_level_id = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first.try(:id) || @qualification.exam_levels.first.try(:id)
         if params[:course_module_url]
           @course_module = CourseModule.with_url(params[:course_module_url]).first
         end

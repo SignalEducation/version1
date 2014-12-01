@@ -42,6 +42,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # callbacks
   before_save :set_jumbo_quiz_id
+  before_validation :set_high_score_fields, on: :update
   before_destroy :check_dependencies
 
   # scopes
@@ -70,6 +71,16 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def set_high_score_fields
+    max_score = ApplicationController::DIFFICULTY_LEVELS.last[:score]
+    self.best_possible_score_retry = self.number_of_questions.to_i * max_score
+    # The best possible score for first attempt assumes the first question is easy the next question is medium and all other questions are hard.
+    self.best_possible_score_first_attempt = self.best_possible_score_retry
+    ApplicationController::DIFFICULTY_LEVELS.each do |level|
+      self.best_possible_score_first_attempt -= (max_score - level[:score])
     end
   end
 
