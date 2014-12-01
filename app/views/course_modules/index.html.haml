@@ -21,16 +21,25 @@
               %td
                 -unless qualification.name == qual_tracker
                   -qual_tracker = qualification.name
-                  =link_to qualification.name, course_module_special_link(qualification)
+                  =qualification.name
               %td
                 =link_to exam_level.name, course_module_special_link(exam_level)
               %td
                 -exam_level.exam_sections.each do |exam_section|
                   =link_to exam_section.name, course_module_special_link(exam_section)
                   %br/
+        %tr
+          %td
+            %br/
+            =link_to t('views.course_modules.index.new_qualification'), new_qualification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+          %td
+            %br/
+            =link_to t('views.course_modules.index.new_exam_level'), new_exam_level_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+          %td
+            %br/
+            =link_to t('views.course_modules.index.new_exam_section'), new_exam_section_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
 
-
-.row
+-#.row
   .col-sm-12
     =link_to t('views.course_modules.index.new_qualification'), new_qualification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
     =link_to t('views.course_modules.index.new_exam_level'), new_exam_level_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

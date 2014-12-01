@@ -39,7 +39,9 @@ describe QuizContent do
   context 'if both values set...' do
     before :each do
       allow(subject).to receive_messages(quiz_question_id: 1,
-                                         quiz_answer_id: 1)
+                                         quiz_answer_id: 1, text_content: 'ABC', sorting_order: 1)
+      subject.save!
+      subject.sorting_order = 2
       subject.valid?
     end
 
@@ -49,7 +51,10 @@ describe QuizContent do
   context 'if neither value set...' do
     before :each do
       allow(subject).to receive_messages(quiz_question_id: nil,
-                                         quiz_answer_id: nil)
+                                         quiz_answer_id: nil,
+                        text_content: 'ABC', sorting_order: 1)
+      subject.save!
+      subject.sorting_order = 2
       subject.valid?
     end
     it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.must_assign_to_question_or_answer')) }

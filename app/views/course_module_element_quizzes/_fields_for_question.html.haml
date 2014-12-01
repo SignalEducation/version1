@@ -15,7 +15,7 @@
             .col-sm-12
               =question.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
           -if question.object.id.nil?
-            =link_to t('views.general.delete'), '#', onclick: "$('#the_new_question').remove(); return false;"
+            =link_to t('views.general.delete'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;"
         .col-sm-8
           -counter = 0
           =question.fields_for :quiz_answers do |answer|

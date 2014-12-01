@@ -70,6 +70,8 @@ class CourseModuleElementVideo < ActiveRecord::Base
   end
 
   def update_raw_video_file
-    self.raw_video_file.assign_me_to_cme_video(self.id)
+    if self.raw_video_file
+      self.raw_video_file.assign_me_to_cme_video(self.id)
+    end
   end
 end
