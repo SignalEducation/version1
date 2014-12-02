@@ -89,6 +89,13 @@ describe CourseModule do
   # class methods
 
   # instance methods
+  it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:my_position_among_siblings) }
+  it { should respond_to(:next_module_id) }
+  it { should respond_to(:parent_thing) }
+  it { should respond_to(:previous_module_id) }
+  it { should respond_to(:recalculate_estimated_time) }
+
 
 end

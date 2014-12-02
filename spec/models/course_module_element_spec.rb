@@ -91,11 +91,11 @@ describe CourseModuleElement do
   # class methods
 
   # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:update_the_module_total_time) }
   it { should respond_to(:array_of_sibling_ids) }
+  it { should respond_to(:destroyable?) }
   it { should respond_to(:my_position_among_siblings) }
-  it { should respond_to(:previous_element_id) }
   it { should respond_to(:next_element_id) }
+  it { should respond_to(:previous_element_id) }
+  it { should respond_to(:update_the_module_total_time) }
 
 end

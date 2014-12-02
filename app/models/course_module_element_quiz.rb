@@ -18,7 +18,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_id, :time_limit_seconds,
-                  :number_of_questions, :best_possible_score_retry,
+                  :number_of_questions,
                   :quiz_questions_attributes
 
   # Constants
@@ -42,7 +42,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # callbacks
   before_save :set_jumbo_quiz_id
-  before_validation :set_high_score_fields, on: :update
+  before_update :set_high_score_fields
   before_destroy :check_dependencies
 
   # scopes

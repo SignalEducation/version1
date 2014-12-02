@@ -20,7 +20,7 @@ describe CourseModuleElementQuiz do
 
   # attr-accessible
   black_list = %w(id created_at updated_at question_selection_strategy
-                 best_possible_score_first_attempt course_module_jumbo_quiz_id)
+                 best_possible_score_first_attempt best_possible_score_retry course_module_jumbo_quiz_id)
   CourseModuleElementQuiz.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -46,16 +46,13 @@ describe CourseModuleElementQuiz do
   it { should validate_presence_of(:number_of_questions).on(:update) }
   xit { should validate_numericality_of(:number_of_questions) }
 
-  it { should validate_presence_of(:best_possible_score_first_attempt).on(:update) }
-
-  it { should validate_presence_of(:best_possible_score_retry).on(:update) }
-
   xit { should validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
   xit { should validate_numericality_of(:course_module_jumbo_quiz_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_jumbo_quiz_id).before(:save) }
+  it { should callback(:set_high_score_fields).before(:update) }
 
   # scopes
   it { expect(CourseModuleElementQuiz).to respond_to(:all_in_order) }
