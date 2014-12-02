@@ -763,10 +763,21 @@ en:
         text_content_placeholder: Ask the question
         solution_to_the_question_placeholder: Enter the Solution
 
+      edit:
+        h1: "Edit Quiz Question - Advanced"
+
+      new:
+        h1: "New Quiz Question - Advanced"
+
+      show:
+        h1: "Quiz Question Advanced View"
+
     quiz_answer:
       form:
         answer_content_placeholder: Fill in the Answer Here
         answer_solution_content_placeholder: Enter the Solution or Leave blank for Correct Answer
+        answer_text: Answer Text
+        answer_text_placeholder: Fill in the Answer Here
 
     subscription_plans:
       form:

@@ -45,8 +45,8 @@
           -unless cme_quiz.object.id.nil?
             -if question.object.id.nil?
               -# new link
-              %p.text-right=link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), '#', class: 'btn btn-info'
+              %p.text-right=link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
             -else
               -# edit link
-              %p.text-right=link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), '#', class: 'btn btn-info'
+              %p.text-right=link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
 

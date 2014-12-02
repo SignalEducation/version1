@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
+    resources :quiz_questions, except: [:index]
     resources :subject_areas
     resources :subscription_plans
     resources :user_notifications

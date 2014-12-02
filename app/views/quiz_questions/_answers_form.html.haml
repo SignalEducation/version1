@@ -1,0 +1,13 @@
+.row
+  .col-sm-12
+    .well.well-sm
+      %h2=t('views.quiz_questions.form.answers')
+      =f.fields_for :answer_contents do |c|
+        .form-group
+          =c.label :text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label col-sm-2'
+          .col-sm-10
+            =c.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_text_placeholder'), class: 'form-control', rows: 6
+            =link_to '#' do
+              %span.glyphicon.glyphicon-plus.btn.btn-default
+            =link_to '#' do
+              %span.glyphicon.glyphicon-minus.btn.btn-default

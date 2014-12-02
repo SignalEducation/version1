@@ -1,0 +1,25 @@
+=form_for @quiz_question, html: {class: 'form-horizontal', role: 'form'} do |f|
+  .row
+    .col-sm-12
+      .well.well-sm
+        %h2 Question
+        .form-group
+          =f.label :difficulty_level, class: 'control-label col-sm-2'
+          .col-sm-10
+            =f.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
+            %br/
+          =f.fields_for :quiz_contents do |c|
+            =c.label :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =c.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 6
+              =link_to '#' do
+                %span.glyphicon.glyphicon-plus.btn.btn-default
+              =link_to '#' do
+                %span.glyphicon.glyphicon-minus.btn.btn-default
+  =f.fields_for :quiz_answers do
+    =render partial: 'answers_form', locals: {f: f}
+
+  %p
+    =f.submit t('views.general.save'), class: 'btn btn-success'
+    =t('views.general.or')
+    =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
