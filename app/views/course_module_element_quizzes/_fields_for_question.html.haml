@@ -9,7 +9,9 @@
                 =content.hidden_field :sorting_order
                 =content.hidden_field :contains_mathjax
                 =content.hidden_field :contains_image
-                =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 12
+                =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 7
+                %br/
+                =question.text_area :solution_to_the_question, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 7
           .form-group
             =question.label :difficulty_level, t('views.quiz_questions.form.difficulty_level'), class: 'col-sm-12 pull-left'
             .col-sm-12
@@ -40,3 +42,11 @@
                   .col-sm-12
                     =answer.text_area :wrong_answer_explanation_text, placeholder: t('views.quiz_answer.form.answer_solution_content_placeholder'), class: 'form-control', rows: 3
             -counter += 1
+          -unless cme_quiz.object.id.nil?
+            -if question.object.id.nil?
+              -# new link
+              %p.text-right=link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), '#', class: 'btn btn-info'
+            -else
+              -# edit link
+              %p.text-right=link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), '#', class: 'btn btn-info'
+

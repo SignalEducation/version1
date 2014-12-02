@@ -547,6 +547,7 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
+        advanced_setup_link: Advanced Setup
 
     course_module_element_videos:
       form:
@@ -755,10 +756,12 @@ en:
       form:
         difficulty_level: Difficulty Level
         question_text: Question Text
+        solution_to_the_question: Solution to the Question
         answers: Answers
         solutions: Solutions
         degree_of_wrongness: "Right/Wrong"
         text_content_placeholder: Ask the question
+        solution_to_the_question_placeholder: Enter the Solution
 
     quiz_answer:
       form:
