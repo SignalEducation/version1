@@ -1,10 +1,14 @@
 // Bootstrap customisation
 // see https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
+
 $input-color-placeholder: #ccc;
 
-$navbar-inverse-bg: #125;
-$navbar-inverse-color: #7F7;
-$navbar-inverse-link-color: #89A;
+$navbar-inverse-bg: #ed3c3c; /*#125;*/
+$navbar-inverse-link-active-bg: #ee9a3b;
+$navbar-inverse-color: #eee;
+$navbar-inverse-link-color: #eee; /*#89A;*/
+$navbar-inverse-border: #fff;
+$link-color: #222;
 
 // Load Bootstrap 3
 @import "bootstrap-sprockets";
