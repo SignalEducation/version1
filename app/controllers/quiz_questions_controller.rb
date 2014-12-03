@@ -7,6 +7,7 @@ class QuizQuestionsController < ApplicationController
   before_action :get_variables
 
   def show
+    # This delivers a preview of how the question will look to Users.
   end
 
   def new
@@ -23,9 +24,11 @@ class QuizQuestionsController < ApplicationController
   end
 
   def create
+    redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
   end
 
   def update
+    redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
   end
 
   def destroy
