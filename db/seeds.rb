@@ -100,7 +100,8 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
             falling_behind_email_alert_frequency: 'daily',
             marketing_email_frequency: 'daily',
             blog_notification_email_frequency: 'daily',
-            forum_notification_email_frequency: 'daily'
+            forum_notification_email_frequency: 'daily',
+            locale: 'en'
     }
     User.where(id: 1).first_or_create!(generic_default_values.merge({
             email: 'individual.student@example.com',
