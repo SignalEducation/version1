@@ -27,7 +27,7 @@
     =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
 
 :javascript
-   // todo Set the default value for the radio buttons
+   // todo Set the default value for the radio buttons !!
   function addQuestionContent(me) {
     var theTime = (new Date).getTime();
     var position = $('.question_contents').children().index(me.parent().parent());
@@ -40,6 +40,7 @@
     $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
   }
 
+  // Delete from the database also !!
   function removeContent(me) {
     if (me.parent().parent().is(':first-child')) {
       alert('Sorry you cannot delete the last text block');
