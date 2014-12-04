@@ -196,6 +196,19 @@ en:
           success: Qualification has been deleted
           error: Qualification was not deleted
 
+    quiz_questions:
+      create:
+        flash:
+          success: Quiz Question has been created successfully
+      update:
+        flash:
+          success: Quiz Question details have been updated successfully
+      destroy:
+        flash:
+          success: Quiz Question has been deleted
+          error: Quiz Question was not deleted
+
+
     subject_areas:
       create:
         flash:

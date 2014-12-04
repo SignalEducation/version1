@@ -2,14 +2,16 @@
   .col-sm-12
     .well.well-sm
       %h2=t('views.quiz_questions.form.answers')
-      =f.fields_for :answer_contents do |c|
+      =qa.fields_for :quiz_contents do |c|
         .form-group
           =c.label :text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label col-sm-2'
-          .col-sm-10
+          .col-sm-10{class: "answer_contents_#{qa.options[:child_index]}"}
             .answer_content_block
+              =c.hidden_field :sorting_order, value: (c.options[:child_index] * 100)
               =c.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control', rows: 6
               .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
                 =link_to '#', class: 'btn btn-default', onclick: "addAnswerContent($(this)); return false;" do
                   %span.glyphicon.glyphicon-plus
                 =link_to '#',class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
                   %span.glyphicon.glyphicon-minus
+

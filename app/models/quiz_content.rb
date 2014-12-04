@@ -33,7 +33,7 @@ class QuizContent < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :text_content, presence: true
   validates :sorting_order, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than_or_equal_to: 0}
 
   # callbacks
   before_destroy :check_dependencies

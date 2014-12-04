@@ -28,7 +28,13 @@ class QuizQuestionsController < ApplicationController
   end
 
   def update
-    redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+    @quiz_question = QuizQuestion.find(params[:id])
+    if @quiz_question.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.quiz_questions.update.flash.success')
+      redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+    else
+      render action: :edit
+    end
   end
 
   def destroy
@@ -41,7 +47,38 @@ class QuizQuestionsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:quiz_question).permit()
+    params.require(:quiz_question).permit(
+        :course_module_element_quiz_id,
+        :difficulty_level,
+        :solution_to_the_question,
+        :hints,
+        quiz_answers_attributes: [
+            :id,
+            :quiz_question_id,
+            :correct,
+            :degree_of_wrongness,
+            :wrong_answer_explanation_text,
+            :wrong_answer_video_id,
+            quiz_contents_attributes: [
+                :id,
+                :quiz_question_id,
+                :quiz_answer_id,
+                :text_content,
+                :contains_mathjax,
+                :contains_image,
+                :sorting_order
+            ]
+        ],
+        quiz_contents_attributes: [
+            :id,
+            :quiz_question_id,
+            :quiz_answer_id,
+            :text_content,
+            :contains_mathjax,
+            :contains_image,
+            :sorting_order
+        ]
+    )
   end
 
 end
