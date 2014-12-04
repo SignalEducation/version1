@@ -10,13 +10,12 @@
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
-        %li.active
-          %a{href: '#'} Home
         %li
+          %a{href: 'http://blog.learnsignal.com/', target: '_blank'} Blog
+        %li.active
           %a{href: '#'} Dashboard
         %li
           %a{href: '#'} Library
-
       %ul.nav.navbar-nav.navbar-right
         -if current_user
           -if current_user.user_group.tutor
@@ -64,6 +63,22 @@
                 %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
                 %li.divider
               %li=link_to t('views.general.sign_out'), sign_out_url
+          %li
+            =link_to '#', onclick: "$('#search_form').removeClass('hidden'); $(this).hide(); return false;" do
+              %span.glyphicon.glyphicon-search
+          %li#search_form.hidden
+            =form_tag '/', role: 'form', class: 'navbar-form navbar-right' do
+              .form-group{style: 'padding-top: 3px;'}
+                =text_field_tag :search_terms, nil, placeholder: 'Search...'
+
+
         -else
-          %li=link_to t('views.general.sign_up'), sign_up_url
-          %li=link_to t('views.general.sign_in'), sign_in_url
+          %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;"
+          %li#login_form.hidden
+            =form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
+              .form-group{style: 'padding-top: 3px;padding-right: 5px;'}
+                =f.text_field :email, placeholder: 'john@example.com', autofocus: true
+                =f.password_field :password, placeholder: 'password'
+                =f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
+                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
+          %li=link_to t('views.general.sign_up'), sign_up_url, style: 'background-color: #5391cf;'

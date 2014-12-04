@@ -3,12 +3,27 @@
 
 $input-color-placeholder: #ccc;
 
-$navbar-inverse-bg: #ed3c3c; /*#125;*/
+$navbar-inverse-bg: #d64147; /*#125;*/
 $navbar-inverse-link-active-bg: #ee9a3b;
 $navbar-inverse-color: #eee;
 $navbar-inverse-link-color: #eee; /*#89A;*/
 $navbar-inverse-border: #fff;
+$navbar-height: 75px;
 $link-color: #222;
+
+
+@font-face {
+  font-family: 'BryantWebRegular';
+  src: font-url('BryantWebRegular.eot')  format('eot'),
+       font-url('BryantWebRegular.woff') format('woff'),
+       font-url('BryantWebRegular.ttf')  format('truetype');
+}
+@font-face {
+  font-family: 'BryantWebRegularAlternative';
+  src: font-url('BryantWebRegularAlt.eot')  format('eot'),
+       font-url('BryantWebRegularAlt.woff') format('woff'),
+       font-url('BryantWebRegularAlt.ttf')  format('truetype');
+}
 
 // Load Bootstrap 3
 @import "bootstrap-sprockets";
@@ -16,10 +31,17 @@ $link-color: #222;
 
 // Further customisation
 body {
-  margin-top: 51px;
+  margin-top: 76px;
   h1, h2, h3, h4, h5, h6 {
     font-weight: 100;
+    text-transform: uppercase;
+    font-family: BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   }
+}
+
+.navbar, .navbar-header {
+  font-family: BryantWebRegularAlternative, BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
+  text-transform: uppercase;
 }
 
 #flash_message {
