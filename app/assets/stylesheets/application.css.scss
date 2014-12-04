@@ -7,8 +7,10 @@ $navbar-inverse-bg: #d64147; /*#125;*/
 $navbar-inverse-link-active-bg: #ee9a3b;
 $navbar-inverse-color: #eee;
 $navbar-inverse-link-color: #eee; /*#89A;*/
+$navbar-inverse-link-hover-bg: red;
+//$navbar-inverse-brand-hover-bg: blue;
 $navbar-inverse-border: #fff;
-$navbar-height: 75px;
+$navbar-height: 65px;
 $link-color: #222;
 
 
@@ -31,7 +33,7 @@ $link-color: #222;
 
 // Further customisation
 body {
-  margin-top: 76px;
+  margin-top: 65px;
   h1, h2, h3, h4, h5, h6 {
     font-weight: 100;
     text-transform: uppercase;
