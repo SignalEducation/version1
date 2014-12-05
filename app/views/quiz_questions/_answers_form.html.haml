@@ -1,10 +1,12 @@
 .row
   .col-sm-12
     .well.well-sm
-      %h2=t('views.quiz_questions.form.answers')
       =qa.fields_for :quiz_contents do |c|
         .form-group
-          =c.label :text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label col-sm-2'
+          .col-sm-1
+            .label.label-primary
+              =['A', 'B', 'C', 'D'][qa.options[:child_index]]
+          =c.label :text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label col-sm-1'
           .col-sm-10{class: "answer_contents_#{qa.options[:child_index]}"}
             .answer_content_block
               =c.hidden_field :sorting_order, value: (c.options[:child_index] * 100)

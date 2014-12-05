@@ -20,6 +20,7 @@
                     %span.glyphicon.glyphicon-plus
                   =link_to '#',class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
                     %span.glyphicon.glyphicon-minus
+  %h2=t('views.quiz_questions.form.answers')
   =f.fields_for :quiz_answers do |qa|
     =render partial: 'answers_form', locals: {qa: qa}
 
@@ -58,14 +59,14 @@
   function addAnswerContent(me) {
     var theTime = (new Date).getTime();
     var theClone = me.parent().parent().clone();
-    var questionNumber = theClone.find('textarea').attr('id').split('_')[5];
-    var position = $('.answer_contents_' + questionNumber).children().index(me.parent().parent());
-    theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + questionNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
-    theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + questionNumber + ']quiz_contents_attributes[' + theTime + '][text_content]');
+    var answerNumber = theClone.find('textarea').attr('id').split('_')[5];
+    var position = $('.answer_contents_' + answerNumber).children().index(me.parent().parent());
+    theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
+    theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + ']quiz_contents_attributes[' + theTime + '][text_content]');
     theClone.find('textarea').val('');
     theClone.find('input:hidden').val(parseInt(theClone.find('input:hidden').val()) + 10);
-    $('.answer_contents_' + questionNumber + ' .answer_content_block:nth-child(' + (position + 1) + ')').after(theClone);
-    $('.answer_content_block').each(function(counter) {
+    $('.answer_contents_' + answerNumber + ' .answer_content_block:nth-child(' + (position + 1) + ')').after(theClone);
+    $('.answer_contents_' + answerNumber + ' .answer_content_block').each(function(counter) {
       $(this).find('input:hidden').val(counter * 100);
     })
   }
