@@ -25,11 +25,11 @@ class QuizQuestion < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts
-  has_many :quiz_answers
-  has_many :quiz_contents, -> { order(:sorting_order) }
+  has_many :quiz_answers, dependent: :destroy
+  has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
 
-  accepts_nested_attributes_for :quiz_answers
-  accepts_nested_attributes_for :quiz_contents
+  accepts_nested_attributes_for :quiz_answers, allow_destroy: true
+  accepts_nested_attributes_for :quiz_contents, allow_destroy: true
 
   # validation
   validates :course_module_element_quiz_id, presence: true,
@@ -51,7 +51,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_answers.empty? && self.quiz_attempts.empty? && self.quiz_contents.empty?
+    self.quiz_attempts.empty?
   end
 
   protected

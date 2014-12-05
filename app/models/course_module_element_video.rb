@@ -32,7 +32,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :tags, presence: true
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
-  validates :estimated_study_time_seconds, presence: true
+  validates :estimated_study_time_seconds, presence: true, on: :update
   validates :transcript, presence: true
 
   # callbacks

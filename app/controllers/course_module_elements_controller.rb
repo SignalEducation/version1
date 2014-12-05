@@ -18,9 +18,7 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
     elsif params[:type] == 'quiz'
-      @course_module_element.is_quiz = true
-      @course_module_element.build_course_module_element_quiz
-      @course_module_element.course_module_element_quiz.add_an_empty_question
+      spawn_quiz_children
     end
     set_related_cmes
   end
@@ -33,16 +31,24 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def create
+    if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
+      params[:course_module_element][:course_module_element_quiz_attributes].delete(:quiz_questions_attributes)
+    end
     @course_module_element = CourseModuleElement.new(allowed_params)
     set_related_cmes
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
         redirect_to edit_course_module_element_url(@course_module_element.id)
+      elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
+        redirect_to new_quiz_question_url(cme_quiz_id: @course_module_element.course_module_element_quiz.id)
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
     else
+      if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
+        spawn_quiz_children
+      end
       render action: :new
     end
   end
@@ -170,4 +176,10 @@ class CourseModuleElementsController < ApplicationController
     )
   end
 
- end
+  def spawn_quiz_children
+    @course_module_element.is_quiz = true
+    @course_module_element.build_course_module_element_quiz
+    @course_module_element.course_module_element_quiz.add_an_empty_question
+  end
+
+end

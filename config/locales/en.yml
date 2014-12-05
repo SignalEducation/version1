@@ -791,6 +791,7 @@ en:
         answer_solution_content_placeholder: Enter the Solution or Leave blank for Correct Answer
         answer_text: Answer
         answer_text_placeholder: Fill in the Answer Here
+        wrong_answer_video_id: Related Video
 
     subscription_plans:
       form:

@@ -11,7 +11,6 @@ class QuizQuestionsController < ApplicationController
   end
 
   def new
-    @quiz_question = QuizQuestion.new(course_module_element_quiz_id: params[:cme_quiz_id])
     @quiz_question.quiz_contents.build
     4.times do
       @quiz_question.quiz_answers.build
@@ -20,15 +19,18 @@ class QuizQuestionsController < ApplicationController
   end
 
   def edit
-    @quiz_question = QuizQuestion.find(params[:id])
   end
 
   def create
-    redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+    if @quiz_question.save
+      flash[:success] = I18n.t('controllers.quiz_questions.create.flash.success')
+      redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
+    else
+      render action: :new
+    end
   end
 
   def update
-    @quiz_question = QuizQuestion.find(params[:id])
     if @quiz_question.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.quiz_questions.update.flash.success')
       redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
@@ -38,12 +40,26 @@ class QuizQuestionsController < ApplicationController
   end
 
   def destroy
+    if @quiz_question.destroy
+      flash[:success] = I18n.t('controllers.quiz_questions.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.quiz_questions.destroy.flash.error')
+    end
+    redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
   end
 
   protected
 
   def get_variables
-      @quiz_questions = QuizQuestion.all_in_order
+    if params[:id].to_i > 0
+      @quiz_question = QuizQuestion.find(params[:id])
+    elsif params[:cme_quiz_id].to_i > 0
+      @quiz_question = QuizQuestion.new(course_module_element_quiz_id: params[:cme_quiz_id])
+    else
+      @quiz_question = QuizQuestion.new(allowed_params)
+    end
+    @quiz_questions = QuizQuestion.all_in_order
+    @cme_videos = CourseModuleElement.where(course_module_id: @quiz_question.course_module_element_quiz.course_module_element.course_module_id).all_videos.all_in_order
   end
 
   def allowed_params
@@ -66,7 +82,8 @@ class QuizQuestionsController < ApplicationController
                 :text_content,
                 :contains_mathjax,
                 :contains_image,
-                :sorting_order
+                :sorting_order,
+                :_destroy
             ]
         ],
         quiz_contents_attributes: [
@@ -76,7 +93,8 @@ class QuizQuestionsController < ApplicationController
             :text_content,
             :contains_mathjax,
             :contains_image,
-            :sorting_order
+            :sorting_order,
+            :_destroy
         ]
     )
   end
