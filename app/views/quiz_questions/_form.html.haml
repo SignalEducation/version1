@@ -22,6 +22,10 @@
                     %span.glyphicon.glyphicon-plus
                   =link_to '#', class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
                     %span.glyphicon.glyphicon-minus
+                .pull-right.text-right
+                  -QuizContent::CONTENT_TYPES.each do |t|
+                    =c.radio_button :content_type, t, class: 'content_type_radios'
+                    =c.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
   %h2=t('views.quiz_questions.form.answers')
   =f.fields_for :quiz_answers do |qa|
     =render partial: 'answers_form', locals: {qa: qa}
@@ -48,6 +52,16 @@
     theClone.find('textarea').val('');
     theClone.find('.sorting_order').val(parseInt(theClone.find('.sorting_order').val()) + 10);
     theClone.find('.the_id').val('');
+    theClone.find('.content_type_radios').each(function(counter){
+      console.log(counter);
+      var temp_array = theClone.find('.content_type_radios')[counter].attr('id').split('_');
+      temp_array[5] = theTime;
+      var temp_array2 = theClone.find('.content_type_radios')[counter].attr('name').split('][');
+      temp_array2[1] = theTime;
+      theClone.find('.content_type_radios')[counter].attr('id', temp_array.join('_'));
+      theClone.find('.content_type_radio_labels')[counter].attr('for', temp_array.join('_'));
+      theClone.find('.content_type_radios')[counter].attr('name', temp_array2.join(']['));
+    })
     $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
     $('.question_content_block').each(function(counter) {
       $(this).find('.sorting_order').val(counter * 100);
@@ -91,3 +105,13 @@
       $(this).find('.sorting_order').val(counter * 100);
     })
   }
+
+  function monitorRadioButtons(theButton) {
+    alert($(theButton).val());
+  }
+
+  $(document).on('ready page:load', function() {
+      $('.content_type_radios').on('click', function() {
+        monitorRadioButtons(this);
+      })
+  })

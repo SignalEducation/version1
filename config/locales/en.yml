@@ -765,6 +765,13 @@ en:
       filter_panel:
         filter: 'filter:'
 
+    quiz_contents:
+      form:
+        content_type:
+          text: Text
+          image: Image
+          mathjax: MathJax
+
     quiz_questions:
       form:
         difficulty_level: Difficulty Level

@@ -35,7 +35,6 @@ class QuizContent < ActiveRecord::Base
   validates :text_content, presence: true
   validates :sorting_order, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :content_type, inclusion: {in: CONTENT_TYPES}
 
   # callbacks
   before_save :process_content_type
@@ -56,7 +55,7 @@ class QuizContent < ActiveRecord::Base
 
   # Getter
   def content_type
-    if @content_type
+    if CONTENT_TYPES.include?(@content_type)
       @content_type
     elsif self.contains_image
       'image'

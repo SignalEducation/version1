@@ -19,8 +19,7 @@
               .col-sm-12
                 =question.fields_for :quiz_contents do |content|
                   =content.hidden_field :sorting_order
-                  =content.hidden_field :contains_mathjax
-                  =content.hidden_field :contains_image
+                  =content.hidden_field :content_type
                   =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 7
                   %br/
                   =question.text_area :solution_to_the_question, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 7
@@ -40,8 +39,7 @@
                     .col-sm-10
                       =answer.fields_for :quiz_contents do |content|
                         =content.hidden_field :sorting_order
-                        =content.hidden_field :contains_mathjax
-                        =content.hidden_field :contains_image
+                        =content.hidden_field :content_type
                         .form-group
                           .col-sm-12
                             =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control', rows: 3

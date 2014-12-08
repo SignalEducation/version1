@@ -18,6 +18,11 @@
                   %span.glyphicon.glyphicon-plus
                 =link_to '#', class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
                   %span.glyphicon.glyphicon-minus
+              .pull-right.text-right
+                -QuizContent::CONTENT_TYPES.each do |t|
+                  =c.radio_button :content_type, t, class: 'content_type_radios'
+                  =c.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t)
+
       .form-group
         =qa.label :wrong_answer_video_id, t('views.quiz_answer.form.wrong_answer_video_id'), class: 'control-label col-sm-2'
         .col-sm-10
