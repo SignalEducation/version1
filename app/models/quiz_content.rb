@@ -80,6 +80,7 @@ class QuizContent < ActiveRecord::Base
       self.contains_image = false
       self.contains_mathjax = false
     end
+    true
   end
 
   def question_or_answer_only
