@@ -48,12 +48,23 @@ class QuizContent < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  # Setter
   def content_type=(ct)
     @content_type = ct
   end
 
+  # Getter
   def content_type
-    @content_type
+    if @content_type
+      @content_type
+    elsif self.contains_image
+      'image'
+    elsif self.contains_mathjax
+      'mathjax'
+    else
+      'text'
+    end
   end
 
   def destroyable?

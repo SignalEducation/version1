@@ -46,7 +46,7 @@ describe CourseModuleElementVideo do
 
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES) }
 
-  it { should validate_presence_of(:estimated_study_time_seconds) }
+  it { should validate_presence_of(:estimated_study_time_seconds).on(:update) }
 
   it { should validate_presence_of(:transcript) }
 

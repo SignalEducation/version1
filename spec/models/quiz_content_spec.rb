@@ -55,10 +55,7 @@ describe QuizContent do
                                          quiz_answer_id: nil,
                                          content_type: 'text',
                         text_content: 'ABC', sorting_order: 1)
-      subject.save
-      puts '*' * 100
-      puts subject.errors.inspect
-      binding.pry
+      subject.save!
       subject.sorting_order = 2
       subject.valid?
     end
