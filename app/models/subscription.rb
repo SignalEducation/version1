@@ -18,7 +18,9 @@ class Subscription < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :next_renewal_date, :complementary, :current_status
+                  :complementary, :current_status, :stripe_guid,
+                  :stripe_token
+                  #:next_renewal_date
 
   # Constants
   STATUSES = %w(trial active suspended paused cancelled)
@@ -31,16 +33,19 @@ class Subscription < ActiveRecord::Base
   has_many :subscription_transactions
 
   # validation
-  validates :user_id, presence: true,
+  validates :user_id, presence: true, on: :update
+  validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, presence: true,
+  validates :corporate_customer_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subscription_plan_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}
+  validates :stripe_token, presence: true, on: :create
 
   # callbacks
+  before_validation :set_defaults_on_create, on: :create
   before_create :create_on_stripe_platform
   before_update :update_on_stripe_platform
   before_destroy :check_dependencies
@@ -56,6 +61,14 @@ class Subscription < ActiveRecord::Base
     self.invoices.empty?
   end
 
+  def stripe_token=(t) # setter method
+    @stripe_token = t
+  end
+
+  def stripe_token # getter method
+    @stripe_token
+  end
+
   protected
 
   def check_dependencies
@@ -66,6 +79,17 @@ class Subscription < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
+    if Rails.env.production?
+      prefix = ''
+    elsif Rails.env.staging?
+      prefix = 'Staging: '
+    elsif Rails.env.test?
+      prefix = "Test-#{rand(9999)}: "
+    else
+      prefix = "Dev-#{rand(9999)}"
+    end
+    puts "*" * 100
+    puts @stripe_token
     # todo stripe integration
     self.stripe_guid = 'sub_DUMMY_ABC123'
   end
@@ -73,6 +97,19 @@ class Subscription < ActiveRecord::Base
   def update_on_stripe_platform
     # todo stripe integration
     self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
+  end
+
+  def set_defaults_on_create
+    # runs before 'creation' only
+    if self.subscription_plan
+      if self.subscription_plan.trial_period_in_days > 0
+        self.current_status = 'trial'
+        self.next_renewal_date = Proc.new{Time.now}.call + self.subscription_plan.trial_period_in_days.days
+      else
+        self.current_status = 'current'
+        self.next_renewal_date = Proc.new{Time.now}.call + self.subscription_plan.payment_frequency_in_months.months
+      end
+    end
   end
 
 end

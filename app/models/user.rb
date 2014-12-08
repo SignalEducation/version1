@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   end
 
   # attr-accessible
-  attr_accessible :email, :first_name, :last_name, :active, :address,
+  attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
                   :password_reset_token, :password_reset_at, :stripe_customer_id,
                   :corporate_customer_id, :corporate_customer_user_group_id,
@@ -59,7 +59,8 @@ class User < ActiveRecord::Base
                   :marketing_email_permission_given_at,
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
-                  :password_confirmation, :current_password, :locale
+                  :password_confirmation, :current_password, :locale,
+                  :subscriptions_attributes
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -90,6 +91,8 @@ class User < ActiveRecord::Base
   has_many :forum_post_concerns
   has_many :user_likes
   belongs_to :user_group
+
+  accepts_nested_attributes_for :subscriptions
 
   # validation
   validates :email, presence: true, uniqueness: true,
@@ -177,7 +180,10 @@ class User < ActiveRecord::Base
   def change_the_password(options)
     # options = {current_password: '123123123', password: 'new123',
     #            password_confirmation: 'new123'}
-    if options[:password] == options[:password_confirmation] && options[:password].to_s != '' && self.valid_password?(options[:current_password].to_s) && options[:current_password].to_s != ''
+    if options[:password] == options[:password_confirmation] &&
+            options[:password].to_s != '' &&
+            self.valid_password?(options[:current_password].to_s) &&
+            options[:current_password].to_s != ''
       self.update_attributes(
               password: options[:password],
               password_confirmation: options[:password_confirmation]
@@ -208,12 +214,12 @@ class User < ActiveRecord::Base
         self.user_notifications.empty?
   end
 
-  def full_name
-    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
-  end
-
   def frequent_forum_user?
     self.forum_posts.count > 100
+  end
+
+  def full_name
+    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
   def tutor?

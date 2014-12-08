@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -10,7 +9,7 @@ Rails.application.routes.draw do
         as: :user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
-    get 'sign_up', to: 'users#new', as: :sign_up
+    get 'sign_up', to: 'student_sign_ups#new', as: :sign_up
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'profile', to: 'users#show', as: :profile
@@ -20,6 +19,7 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit'
 
     # special routes
+    get 'personal_sign_up_complete', to: 'users#show', as: :personal_sign_up_complete
     # todo get 'personal_sign_up_complete', to: 'library#index', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
@@ -46,6 +46,7 @@ Rails.application.routes.draw do
     resources :invoices
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
+    resources :student_sign_ups, only: [:new, :create]
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :subject_areas
     resources :subscription_plans

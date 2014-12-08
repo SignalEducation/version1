@@ -19,7 +19,7 @@ require 'rails_helper'
 describe Subscription do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at stripe_guid)
+  black_list = %w(id created_at updated_at stripe_guid, next_renewal_date)
   Subscription.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -39,18 +39,18 @@ describe Subscription do
   it { should have_many(:subscription_transactions) }
 
   # validation
-  it { should validate_presence_of(:user_id) }
+  it { should validate_presence_of(:user_id).on(:update) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:corporate_customer_id) }
+  it { should_not validate_presence_of(:corporate_customer_id) }
   it { should validate_numericality_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:subscription_plan_id) }
   it { should validate_numericality_of(:subscription_plan_id) }
 
-  it { should validate_presence_of(:next_renewal_date) }
-
   it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES) }
+
+  it { should validate_presence_of(:stripe_token).on(:create) }
 
   # callbacks
   it { should callback(:create_on_stripe_platform).before(:create) }

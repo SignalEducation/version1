@@ -488,8 +488,57 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   Country.where(continent: %w(Africa Asia Australia Antarctic)).update_all(currency_id: 2); print '.'
   puts ' DONE'
 
-  puts
-  puts 'Completed the db/seed process'
+  print 'SubscriptionPlans: '
+  subscription_plan_stuff = {
+          available_to_students: true,
+          available_to_corporates: false,
+          all_you_can_eat: true,
+          available_from: '2014-01-01',
+          available_to: '2099-12-31',
+          trial_period_in_days: 7
+  }
+  # Euro
+  SubscriptionPlan.where(id: 1).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 1,
+          currency_id: 1,
+          price: 9.99})); print '.'
+  SubscriptionPlan.where(id: 2).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 3,
+          currency_id: 1,
+          price: 23.99})); print '.'
+  SubscriptionPlan.where(id: 3).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 1,
+          price: 99.99})); print '.'
+  # Sterling
+  SubscriptionPlan.where(id: 4).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 1,
+          currency_id: 2,
+          price: 7.99})); print '.'
+  SubscriptionPlan.where(id: 5).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 3,
+          currency_id: 2,
+          price: 19.99})); print '.'
+  SubscriptionPlan.where(id: 6).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 2,
+          price: 79.99})); print '.'
+  # US Dollar
+  SubscriptionPlan.where(id: 7).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 1,
+          currency_id: 3,
+          price: 14.99})); print '.'
+  SubscriptionPlan.where(id: 8).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 3,
+          currency_id: 3,
+          price: 29.99})); print '.'
+  SubscriptionPlan.where(id: 9).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 3,
+          price: 129.99})); print '.'
+
+  puts ' DONE'
+  puts 'Completed the db:seed process'
   puts '*' * 100
 
 end

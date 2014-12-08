@@ -7,7 +7,8 @@ class SubscriptionPlansController < ApplicationController
   before_action :get_variables
 
   def index
-    @subscription_plans = SubscriptionPlan.paginate(per_page: 50, page: params[:page]).all_in_order
+    @student_subscription_plans = SubscriptionPlan.for_students.paginate(per_page: 50, page: params[:page]).all_in_order
+    @corporate_subscription_plans = SubscriptionPlan.for_corporates.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show

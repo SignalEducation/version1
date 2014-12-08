@@ -2,6 +2,8 @@
 // see https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
 
 $input-color-placeholder: #ccc;
+$link-color: #222;
+$btn-success-bg: #5391cf;
 
 $navbar-inverse-bg: #d64147; /*#125;*/
 $navbar-inverse-link-active-bg: #ee9a3b;
@@ -11,9 +13,15 @@ $navbar-inverse-link-hover-bg: red;
 //$navbar-inverse-brand-hover-bg: blue;
 $navbar-inverse-border: #fff;
 $navbar-height: 65px;
-$link-color: #222;
 
-
+@font-face {
+  font-family: 'EffraRegular';
+  src: font-url('EffraRegular.eot');
+  src: font-url('EffraRegular.eot?#iefix') format('embedded-opentype'),
+       font-url('EffraRegular.woff2') format('woff2'),
+       font-url('EffraRegular.woff') format('woff'),
+       font-url('EffraRegular.ttf') format('truetype');
+}
 @font-face {
   font-family: 'BryantWebRegular';
   src: font-url('BryantWebRegular.eot')  format('eot'),
@@ -33,7 +41,8 @@ $link-color: #222;
 
 // Further customisation
 body {
-  margin-top: 65px;
+  margin-top: 66px;
+  font-family: EffraRegular, "Helvetica Neue", Helvetica, Arial, sans-serif;
   h1, h2, h3, h4, h5, h6 {
     font-weight: 100;
     text-transform: uppercase;
@@ -48,4 +57,19 @@ body {
 
 #flash_message {
   padding-top: 4px;
+}
+
+.subscription-panel {
+  background-color: #faebd7;
+}
+.subscription-panel.active {
+  background-color: lightgreen;
+}
+
+.orange-background {
+  background-color: #ee9a3b;
+}
+
+.btn-success {
+  text-transform: uppercase;
 }

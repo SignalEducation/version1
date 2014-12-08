@@ -64,6 +64,8 @@ describe SubscriptionPlan do
   # scopes
   it { expect(SubscriptionPlan).to respond_to(:all_in_order) }
   it { expect(SubscriptionPlan).to respond_to(:all_active) }
+  it { expect(SubscriptionPlan).to respond_to(:for_corporates) }
+  it { expect(SubscriptionPlan).to respond_to(:for_students) }
   it { expect(SubscriptionPlan).to respond_to(:in_currency) }
 
   # class methods

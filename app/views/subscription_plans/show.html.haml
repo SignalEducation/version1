@@ -22,22 +22,29 @@
         %td.col-sm-8=@subscription_plan.payment_frequency_in_months
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.currency_id')
-        %td.col-sm-8=@subscription_plan.currency.name
+        %td.col-sm-8=link_to @subscription_plan.currency.name, @subscription_plan.currency
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.price')
         %td.col-sm-8=number_in_local_currency(@subscription_plan.price, @subscription_plan.currency_id)
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.available_from')
-        %td.col-sm-8=@subscription_plan.available_from
+        %td.col-sm-8=@subscription_plan.available_from.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.available_to')
-        %td.col-sm-8=@subscription_plan.available_to
+        %td.col-sm-8=@subscription_plan.available_to.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.stripe_guid')
-        %td.col-sm-8=@subscription_plan.stripe_guid
+        %td.col-sm-8=link_to @subscription_plan.stripe_guid, "https://dashboard.stripe.com/#{Rails.env.production? ? '' : 'test/'}plans/#{@subscription_plan.stripe_guid}", title: 'stripe.com', target: '_blank'
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.trial_period_in_days')
         %td.col-sm-8=@subscription_plan.trial_period_in_days
+      %tr
+        %td.h2{colspan: 2}
+          Stripe Details
+      -Stripe::Plan.retrieve(@subscription_plan.stripe_guid).to_hash.each do |attr_key, attr_value|
+        %tr
+          %td.col-sm-4=attr_key.to_s
+          %td.col-sm-8=attr_value.to_s
     %p
       =link_to t('views.general.back'), subscription_plans_url
       |

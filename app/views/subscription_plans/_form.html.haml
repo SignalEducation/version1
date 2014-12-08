@@ -45,6 +45,7 @@
           =f.label :trial_period_in_days, t('views.subscription_plans.form.trial_period_in_days'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_field :trial_period_in_days, placeholder: t('views.subscription_plans.form.trial_period_in_days_placeholder'), class: 'form-control'
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), subscription_plans_path
+      %p
+        =f.submit t('views.general.save'), class: 'btn btn-success'
+        =t('views.general.or')
+        =link_to t('views.general.cancel'), subscription_plans_path

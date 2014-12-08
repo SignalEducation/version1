@@ -170,6 +170,10 @@ en:
           success: Qualification has been deleted
           error: Qualification was not deleted
 
+    student_sign_ups:
+      create:
+        flash:
+          success: "Welcome aboard! Your sign-up was completed successfully"
     subject_areas:
       create:
         flash:
@@ -638,6 +642,31 @@ en:
       filter_panel:
         filter: 'filter:'
 
+    student_sign_ups:
+      form:
+        all_you_can_eat_yes: "Unlimited Access"
+        all_you_can_eat_no: "Limited Access"
+        free_trial: "Free trial - "
+        days: Days
+        credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
+        expiry_month_prompt: "Exp Mth"
+        expiry_year_prompt: "Exp Year"
+        payment_frequency_in_months:
+          a1: Monthly
+          a3: Quarterly
+          a6: Half-yearly
+          a12: Yearly
+        submit: Sign Up Now
+
+      new:
+        h1: Sign Up for Student access
+        lead: "We can't wait to get started helping you to achieve your full potential"
+        h2:
+          emailing: Set your messaging preferences
+          subscription: Choose your subscription plan
+          subscription_text: Choose a subscription by clicking it
+          payment: Enter your payment details
+
     subscription_plans:
       form:
         available_to_students: Available to students
@@ -660,6 +689,8 @@ en:
 
       index:
         h1: Subscription Plans
+        corporates: For Corporates
+        students: For Students
 
       new:
         h1: New Subscription Plan

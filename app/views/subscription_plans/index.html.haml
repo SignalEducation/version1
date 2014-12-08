@@ -2,41 +2,21 @@
   .col-sm-12
     .page-header
       %h1=t('views.subscription_plans.index.h1')
-.row
-  .col-sm-12
-    =will_paginate @subscription_plans, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.subscription_plans.form.available_to_students')
-          %th=t('views.subscription_plans.form.available_to_corporates')
-          %th=t('views.subscription_plans.form.all_you_can_eat')
-          %th=t('views.subscription_plans.form.payment_frequency_in_months')
-          %th=t('views.subscription_plans.form.currency_id')
-          %th.text-right=t('views.subscription_plans.form.price')
-          %th=t('views.subscription_plans.form.available_from')
-          %th=t('views.subscription_plans.form.available_to')
-          %th=t('views.subscription_plans.form.stripe_guid')
-          %th=t('views.subscription_plans.form.trial_period_in_days')
-          %th
-      %tbody
-        -@subscription_plans.each do |subscription_plan|
-          %tr{id: subscription_plan.id}
-            %td=link_to(tick_or_cross(subscription_plan.available_to_students), subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(subscription_plan.available_to_corporates), subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(subscription_plan.all_you_can_eat), subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.payment_frequency_in_months, subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.currency.name, subscription_plan, title: t('views.general.view_tooltip'))
-            %td.text-right=link_to(number_in_local_currency(subscription_plan.price, subscription_plan.currency_id), subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.available_from.to_s(:short), subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.available_to.to_s(:short), subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.stripe_guid, subscription_plan, title: t('views.general.view_tooltip'))
-            %td=link_to(subscription_plan.trial_period_in_days, subscription_plan, title: t('views.general.view_tooltip'))
-            %td
-              -#=link_to t('views.general.view'), subscription_plan
-              =link_to t('views.general.edit'), edit_subscription_plan_url(subscription_plan), class: 'btn btn-info btn-xs'
-              -if subscription_plan.destroyable?
-                =link_to t('views.general.delete'), subscription_plan, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+%div{role: 'tabpanel'}
+  %ul.nav.nav-tabs{role: 'tablist'}
+    %li.active{role: 'presentation'}
+      %a{href: '#students', aria: {controls: 'students'}, role: 'tab', data: {toggle: 'tab'}}
+        =t('views.subscription_plans.index.students')
+    %li{role: 'presentation'}
+      %a{href: '#corporates', aria: {controls: 'corporates'}, role: 'tab', data: {toggle: 'tab'}}
+        =t('views.subscription_plans.index.corporates')
+
+  .tab-content
+    #students.tab-pane.active{role: 'tabpanel'}
+      =render partial: 'subscription_plans/index', locals: {the_plans: @student_subscription_plans}
+    #corporates.tab-pane{role: 'tabpanel'}
+      =render partial: 'subscription_plans/index', locals: {the_plans: @corporate_subscription_plans}
 
 .row
   .col-sm-12
