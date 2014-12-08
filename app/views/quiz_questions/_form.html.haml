@@ -54,13 +54,13 @@
     theClone.find('.the_id').val('');
     theClone.find('.content_type_radios').each(function(counter){
       console.log(counter);
-      var temp_array = theClone.find('.content_type_radios')[counter].attr('id').split('_');
+      var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
       temp_array[5] = theTime;
-      var temp_array2 = theClone.find('.content_type_radios')[counter].attr('name').split('][');
+      var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
       temp_array2[1] = theTime;
-      theClone.find('.content_type_radios')[counter].attr('id', temp_array.join('_'));
-      theClone.find('.content_type_radio_labels')[counter].attr('for', temp_array.join('_'));
-      theClone.find('.content_type_radios')[counter].attr('name', temp_array2.join(']['));
+      theClone.find('.content_type_radios').eq(counter).attr('id', temp_array.join('_'));
+      theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
+      theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
     })
     $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
     $('.question_content_block').each(function(counter) {
