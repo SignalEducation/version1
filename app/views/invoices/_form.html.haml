@@ -6,11 +6,11 @@
         .form-group
           =f.label :corporate_customer_id, t('views.invoices.form.corporate_customer_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :subscription_id, t('views.invoices.form.subscription_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :subscription_id, @subscriptions, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :subscription_id, @subscriptions, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :number_of_users, t('views.invoices.form.number_of_users'), class: 'control-label col-sm-4'
           .col-sm-8
@@ -18,7 +18,7 @@
         .form-group
           =f.label :currency_id, t('views.invoices.form.currency_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :currency_id, @currencies, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :unit_price_ex_vat, t('views.invoices.form.unit_price_ex_vat'), class: 'control-label col-sm-4'
           .col-sm-8
@@ -26,7 +26,7 @@
         -# todo VAT processing disabled.form-group
           =f.label :vat_rate_id, t('views.invoices.form.vat_rate_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :vat_rate_id, @vat_rates, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :vat_rate_id, @vat_rates, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
 
       %p
         =f.submit t('views.general.save'), class: 'btn btn-success'

@@ -1,0 +1,29 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for @course_module_jumbo_quiz, html: {class: 'form-horizontal', role: 'form'} do |jumbo_quiz|
+      =jumbo_quiz.hidden_field :course_module_id
+      .well.well-sm
+        .form-group
+          =jumbo_quiz.label :course_module_id, t('views.course_module_jumbo_quiz.form.course_module_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            .form-control-static=jumbo_quiz.object.course_module.name
+        .form-group
+          =jumbo_quiz.label :name, t('views.course_module_jumbo_quiz.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =jumbo_quiz.text_field :name, placeholder: t('views.course_module_jumbo_quiz.form.name_placeholder'), class: 'form-control'
+        .form-group
+          =jumbo_quiz.label :minimum_question_count_per_quiz, t('views.course_module_jumbo_quiz.form.minimum_question_count_per_quiz'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =jumbo_quiz.select :minimum_question_count_per_quiz, options_for_select([0, 5, 10, 15, 20, 25, 30], 5), {include_blank: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =jumbo_quiz.label :maximum_question_count_per_quiz, t('views.course_module_jumbo_quiz.form.maximum_question_count_per_quiz'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =jumbo_quiz.select :maximum_question_count_per_quiz, options_for_select([5, 10, 15, 20, 25, 30], 20), {include_blank: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =jumbo_quiz.label :total_number_of_questions, t('views.course_module_jumbo_quiz.form.total_number_of_questions'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =jumbo_quiz.select :total_number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], 20), {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %p
+        =jumbo_quiz.submit t('views.general.save'), class: 'btn btn-success'
+        =t('views.general.or')
+        =link_to t('views.general.cancel'), course_module_special_link(@course_module_jumbo_quiz.course_module)

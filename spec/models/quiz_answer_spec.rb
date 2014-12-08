@@ -37,18 +37,19 @@ describe QuizAnswer do
   it { should belong_to(:wrong_answer_video) }
 
   # validation
-  it { should validate_presence_of(:quiz_question_id) }
-  it { should validate_numericality_of(:quiz_question_id) }
+  it { should validate_presence_of(:quiz_question_id).on(:update) }
+  xit { should validate_numericality_of(:quiz_question_id) }
 
   it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
 
   it { should validate_presence_of(:wrong_answer_explanation_text) }
 
-  it { should validate_presence_of(:wrong_answer_video_id) }
-  it { should validate_numericality_of(:wrong_answer_video_id) }
+  it { should validate_presence_of(:wrong_answer_video_id).on(:update) }
+  xit { should validate_numericality_of(:wrong_answer_video_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:set_wrong_answer_video_id).before(:update) }
 
   # scopes
   it { expect(QuizAnswer).to respond_to(:all_in_order) }

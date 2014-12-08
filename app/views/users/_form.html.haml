@@ -31,7 +31,7 @@
         .form-group
           =f.label :country_id, t('views.users.form.country_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         -if current_user && current_user.admin?
           .form-group
             .col-sm-8.col-sm-offset-4
@@ -42,15 +42,15 @@
           .form-group
             =f.label :user_group_id, t('views.users.form.user_group_id'), class: 'control-label col-sm-4'
             .col-sm-8
-              =f.collection_select :user_group_id, @user_groups, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+              =f.collection_select :user_group_id, @user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
           .form-group
             =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label col-sm-4'
             .col-sm-8
-              =# todo f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+              =# todo f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
           .form-group
             =f.label :corporate_customer_user_group_id, t('views.users.form.corporate_customer_user_group_id'), class: 'control-label col-sm-4'
             .col-sm-8
-              =# todo f.collection_select :corporate_customer_user_group_id, @corporate_customer_user_groups, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+              =# todo f.collection_select :corporate_customer_user_group_id, @corporate_customer_user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :operational_email_frequency, t('views.users.form.operational_email_frequency'), class: 'control-label col-sm-4'
           .col-sm-8

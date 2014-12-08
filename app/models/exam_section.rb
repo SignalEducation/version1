@@ -39,6 +39,7 @@ class ExamSection < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
 

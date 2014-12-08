@@ -7,7 +7,7 @@
         .form-group
           =f.label :qualification_id, t('views.exam_levels.form.qualification_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :qualification_id, @qualifications, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :qualification_id, @qualifications, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :name, t('views.exam_levels.form.name'), class: 'control-label col-sm-4'
           .col-sm-8

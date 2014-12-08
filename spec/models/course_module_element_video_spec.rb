@@ -5,10 +5,6 @@
 #  id                           :integer          not null, primary key
 #  course_module_element_id     :integer
 #  raw_video_file_id            :integer
-#  name                         :string(255)
-#  run_time_in_seconds          :integer
-#  tutor_id                     :integer
-#  description                  :text
 #  tags                         :string(255)
 #  difficulty_level             :string(255)
 #  estimated_study_time_seconds :integer
@@ -37,25 +33,14 @@ describe CourseModuleElementVideo do
   # relationships
   it { should belong_to(:course_module_element) }
   it { should belong_to(:raw_video_file) }
-  it { should belong_to(:tutor) }
 
   # validation
-  it { should validate_presence_of(:course_module_element_id) }
-  it { should validate_numericality_of(:course_module_element_id) }
+  it { should validate_presence_of(:course_module_element_id).on(:update) }
+  xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:raw_video_file_id) }
   it { should validate_numericality_of(:raw_video_file_id) }
   it { should validate_uniqueness_of(:raw_video_file_id) }
-
-  it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:run_time_in_seconds) }
-  it { should validate_numericality_of(:run_time_in_seconds) }
-
-  it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
-
-  it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:tags) }
 
@@ -66,8 +51,7 @@ describe CourseModuleElementVideo do
   it { should validate_presence_of(:transcript) }
 
   # callbacks
-  it { should callback(:set_estimated_study_time).before(:save) }
-  it { should callback(:trigger_transcode).after(:create) }
+  it { should callback(:set_estimated_study_time).before(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -78,7 +62,6 @@ describe CourseModuleElementVideo do
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:set_estimated_study_time) }
-  it { should respond_to(:trigger_transcode) }
   it { should respond_to(:url) }
 
 end
