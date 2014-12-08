@@ -7,7 +7,7 @@
         .form-group
           =f.label :difficulty_level, class: 'control-label col-sm-2'
           .col-sm-10
-            =f.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control'}
             %br/
           =f.fields_for :quiz_contents do |c|
             =c.label :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'

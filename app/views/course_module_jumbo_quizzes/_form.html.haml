@@ -14,15 +14,15 @@
         .form-group
           =jumbo_quiz.label :minimum_question_count_per_quiz, t('views.course_module_jumbo_quiz.form.minimum_question_count_per_quiz'), class: 'control-label col-sm-4'
           .col-sm-8
-            =jumbo_quiz.select :minimum_question_count_per_quiz, options_for_select([0, 5, 10, 15, 20, 25, 30], 5), {prompt: t('views.general.select')}, {class: 'form-control'}
+            =jumbo_quiz.select :minimum_question_count_per_quiz, options_for_select([0, 5, 10, 15, 20, 25, 30], 5), {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =jumbo_quiz.label :maximum_question_count_per_quiz, t('views.course_module_jumbo_quiz.form.maximum_question_count_per_quiz'), class: 'control-label col-sm-4'
           .col-sm-8
-            =jumbo_quiz.select :maximum_question_count_per_quiz, options_for_select([5, 10, 15, 20, 25, 30], 20), {prompt: t('views.general.select')}, {class: 'form-control'}
+            =jumbo_quiz.select :maximum_question_count_per_quiz, options_for_select([5, 10, 15, 20, 25, 30], 20), {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =jumbo_quiz.label :total_number_of_questions, t('views.course_module_jumbo_quiz.form.total_number_of_questions'), class: 'control-label col-sm-4'
           .col-sm-8
-            =jumbo_quiz.select :total_number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], 20), {prompt: t('views.general.select')}, {class: 'form-control'}
+            =jumbo_quiz.select :total_number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], 20), {include_blank: t('views.general.select')}, {class: 'form-control'}
       %p
         =jumbo_quiz.submit t('views.general.save'), class: 'btn btn-success'
         =t('views.general.or')

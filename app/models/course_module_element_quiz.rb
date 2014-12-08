@@ -89,9 +89,31 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   def self.user_fields_blank?(the_attributes)
+    the_attributes['course_module_element_quiz_id'].to_i > 0 &&
     the_attributes['solution_to_the_question'].blank? &&
         the_attributes['difficulty_level'].blank? &&
-        the_attributes['quiz_contents_attributes']['0']['text_content'].blank?
+        the_attributes['quiz_contents_attributes']['0']['text_content'].blank? &&
+        # Answer A
+        the_attributes['quiz_answers_attributes']['0']['quiz_contents_attributes']['0']['text_content'].blank? &&
+        the_attributes['quiz_answers_attributes']['0']['degree_of_wrongness'].blank? &&
+        the_attributes['quiz_answers_attributes']['0']['wrong_answer_explanation_text'].blank? &&
+        the_attributes['quiz_answers_attributes']['0']['wrong_answer_explanation_text'].blank? &&
+        # Answer B
+        the_attributes['quiz_answers_attributes']['1']['quiz_contents_attributes']['0']['text_content'].blank? &&
+        the_attributes['quiz_answers_attributes']['1']['degree_of_wrongness'].blank? &&
+        the_attributes['quiz_answers_attributes']['1']['wrong_answer_explanation_text'].blank? &&
+        the_attributes['quiz_answers_attributes']['1']['wrong_answer_explanation_text'].blank? &&
+        # Answer C
+        the_attributes['quiz_answers_attributes']['2']['quiz_contents_attributes']['0']['text_content'].blank? &&
+        the_attributes['quiz_answers_attributes']['2']['degree_of_wrongness'].blank? &&
+        the_attributes['quiz_answers_attributes']['2']['wrong_answer_explanation_text'].blank? &&
+        the_attributes['quiz_answers_attributes']['2']['wrong_answer_explanation_text'].blank? &&
+        # Answer D
+        the_attributes['quiz_answers_attributes']['3']['quiz_contents_attributes']['0']['text_content'].blank? &&
+        the_attributes['quiz_answers_attributes']['3']['degree_of_wrongness'].blank? &&
+        the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank? &&
+        the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank?
+
   end
 
 end

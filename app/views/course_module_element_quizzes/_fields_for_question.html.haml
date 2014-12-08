@@ -27,7 +27,7 @@
             .form-group
               =question.label :difficulty_level, t('views.quiz_questions.form.difficulty_level'), class: 'col-sm-12 pull-left'
               .col-sm-12
-                =question.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {prompt: t('views.general.select')}, {class: 'form-control'}
+                =question.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control'}
           .col-sm-8
             -counter = 0
             =question.fields_for :quiz_answers do |answer|
@@ -47,7 +47,7 @@
                             =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control', rows: 3
                 .col-sm-2
                   .form-group
-                    =answer.select :degree_of_wrongness, QuizAnswer::WRONGNESS, {}, {class: 'form-control'}
+                    =answer.select :degree_of_wrongness, QuizAnswer::WRONGNESS, {include_blank: t('views.general.select')}, {class: 'form-control'}
                 .col-sm-5
                   .form-group
                     .col-sm-12
@@ -55,7 +55,7 @@
               -counter += 1
             .row{style: 'border: 1px solid blue;'}
               .col-sm-7
-                =select_tag :video, options_for_select(@related_cmes.map {|x| [x.name, x.id]}, question.object.quiz_answers.first.try(:wrong_answer_video_id)), {class: 'form-control', prompt: t('views.general.select'), onchange: "$(this).parent().parent().parent().find('.related_video').val($(this).val()); return false;"}
+                =select_tag :video, options_for_select(@related_cmes.map {|x| [x.name, x.id]}, question.object.quiz_answers.first.try(:wrong_answer_video_id)), {class: 'form-control', include_blank: t('views.general.select'), onchange: "$(this).parent().parent().parent().find('.related_video').val($(this).val()); return false;"}
               .col-sm-5.text-right
                 -if cme_quiz.object.id.nil?
                   -# new cme_quiz

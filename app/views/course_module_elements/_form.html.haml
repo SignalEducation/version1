@@ -27,7 +27,7 @@
           .form-group
             =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
             .col-sm-8
-              =f.collection_select :tutor_id, @tutors, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+              =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         -if @course_module_element.course_module_element_video
           .col-sm-6
             =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
