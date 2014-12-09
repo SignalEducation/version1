@@ -18,7 +18,7 @@ gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'mathjax-rails' # maths functions in the UI
 gem 'mixpanel-ruby' # support for MixPanel
-gem 'paperclip', '~> 4.1' # for uploading files (works with RemotiPart)
+gem 'paperclip', '~> 4.2' # for uploading files (works with RemotiPart)
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'remotipart' # enables file upload in forms that work using AJAX

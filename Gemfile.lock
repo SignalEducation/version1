@@ -281,7 +281,7 @@ DEPENDENCIES
   mathjax-rails
   mixpanel-ruby
   newrelic_rpm
-  paperclip (~> 4.1)
+  paperclip (~> 4.2)
   pg
   protected_attributes
   pry

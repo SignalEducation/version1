@@ -62,6 +62,9 @@
       theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
       theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
     })
+    theClone.find('.content_type_radios').on('click', function() {
+      monitorRadioButtons(this);
+    })
     $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
     $('.question_content_block').each(function(counter) {
       $(this).find('.sorting_order').val(counter * 100);
