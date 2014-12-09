@@ -17,7 +17,7 @@ require 'rails_helper'
 describe QuizAnswer do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at correct)
   QuizAnswer.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -48,6 +48,7 @@ describe QuizAnswer do
   xit { should validate_numericality_of(:wrong_answer_video_id) }
 
   # callbacks
+  it { should callback(:set_the_field_correct).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_wrong_answer_video_id).before(:update) }
 

@@ -1,4 +1,4 @@
-=form_for @quiz_question, html: {class: 'form-horizontal', role: 'form'} do |f|
+=form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
   .row
     =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
     .col-sm-12
@@ -16,9 +16,13 @@
                 =c.hidden_field :_destroy, value: false, class: 'destroy'
                 =c.hidden_field :id, class: 'the_id'
                 =c.hidden_field :sorting_order, value: (c.options[:child_index] * 100), class: 'sorting_order'
-                =c.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 6
+                -if c.object.content_type == 'image'
+                  .thumbnail
+                    =image_tag c.object.image.url
+                =c.file_field :image, style: (c.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
+                =c.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 6, style: (c.object.content_type == 'image' ? 'display: none;' : '')
                 .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
-                  =link_to '#', class: 'btn btn-default', onclick: "addQuestionContent($(this)); return false;" do
+                  =link_to '#', class: 'btn btn-default', onclick: "addQuizContent($(this), 'question'); return false;" do
                     %span.glyphicon.glyphicon-plus
                   =link_to '#', class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
                     %span.glyphicon.glyphicon-minus
@@ -26,6 +30,11 @@
                   -QuizContent::CONTENT_TYPES.each do |t|
                     =c.radio_button :content_type, t, class: 'content_type_radios'
                     =c.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+        .form-group
+          =f.label :solution_to_the_question, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
+          .col-sm-10
+            =f.text_area :solution_to_the_question, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 6
+
   %h2=t('views.quiz_questions.form.answers')
   =f.fields_for :quiz_answers do |qa|
     =render partial: 'answers_form', locals: {qa: qa}
@@ -36,39 +45,73 @@
     =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
 
 :javascript
-   // todo Set the default value for the radio buttons !!
-  function addQuestionContent(me) {
+
+  function addQuizContent(me, parent_type) {
     var theTime = (new Date).getTime();
-    var position = $('.question_contents').children().index(me.parent().parent());
     var theClone = me.parent().parent().clone();
-    theClone.find('textarea').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_text_content');
-    theClone.find('textarea').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][text_content]');
-    theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_sorting_order');
-    theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][sorting_order]');
-    theClone.find('.destroy').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '__destroy');
-    theClone.find('.destroy').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][_destroy]');
-    theClone.find('.the_id').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_id');
-    theClone.find('.the_id').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][id]');
-    theClone.find('textarea').val('');
+    if (parent_type == 'question') {
+      var position = $('.question_contents').children().index(me.parent().parent());
+    } else {
+      var answerNumber = theClone.find('textarea').attr('id').split('_')[5];
+      var position = $('.answer_contents_' + answerNumber).children().index(me.parent().parent());
+    }
+    if (parent_type == 'question') {
+      theClone.find('textarea').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_text_content');
+      theClone.find('textarea').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][text_content]');
+      theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_sorting_order');
+      theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][sorting_order]');
+      theClone.find('.destroy').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '__destroy');
+      theClone.find('.destroy').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][_destroy]');
+      theClone.find('.the_id').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_id');
+      theClone.find('.the_id').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][id]');
+    } else {
+      theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
+      theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][text_content]');
+      theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_sorting_order');
+      theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][sorting_order]');
+      theClone.find('.destroy').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '__destroy');
+      theClone.find('.destroy').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][_destroy]');
+      theClone.find('.the_id').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_id');
+      theClone.find('.the_id').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][id]');
+      theClone.find('.quiz_content_image').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_image');
+      theClone.find('.quiz_content_image').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][image]');
+    }
+    theClone.find('textarea').val('').show();
     theClone.find('.sorting_order').val(parseInt(theClone.find('.sorting_order').val()) + 10);
     theClone.find('.the_id').val('');
     theClone.find('.content_type_radios').each(function(counter){
       console.log(counter);
       var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
-      temp_array[5] = theTime;
       var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
-      temp_array2[1] = theTime;
+      if (parent_type == 'question') {
+        temp_array[5] = theTime;
+        temp_array2[1] = theTime;
+      } else {
+        temp_array[9] = theTime;
+        temp_array2[3] = theTime;
+      }
       theClone.find('.content_type_radios').eq(counter).attr('id', temp_array.join('_'));
       theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
       theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
     })
+    theClone.find('.content_type_radios').prop('checked', false);
+    theClone.find('.content_type_radios').eq(0).prop('checked', true);
+    theClone.find('.thumbnail').remove();
+    theClone.find('.quiz_content_image').hide();
     theClone.find('.content_type_radios').on('click', function() {
       monitorRadioButtons(this);
     })
-    $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
-    $('.question_content_block').each(function(counter) {
-      $(this).find('.sorting_order').val(counter * 100);
-    })
+    if (parent_type == 'question') {
+      $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
+      $('.question_content_block').each(function(counter) {
+       $(this).find('.sorting_order').val(counter * 100);
+      })
+    } else {
+      $('.answer_contents_' + answerNumber + ' .answer_content_block:nth-child(' + (position + 1) + ')').after(theClone);
+      $('.answer_contents_' + answerNumber + ' .answer_content_block').each(function(counter) {
+        $(this).find('.sorting_order').val(counter * 100);
+      })
+    }
   }
 
   // Delete from the database also !!
@@ -87,30 +130,16 @@
     }
   }
 
-  function addAnswerContent(me) {
-    var theTime = (new Date).getTime();
-    var theClone = me.parent().parent().clone();
-    var answerNumber = theClone.find('textarea').attr('id').split('_')[5];
-    var position = $('.answer_contents_' + answerNumber).children().index(me.parent().parent());
-    theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
-    theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + ']quiz_contents_attributes[' + theTime + '][text_content]');
-    theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_sorting_order');
-    theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + ']quiz_contents_attributes[' + theTime + '][sorting_order]');
-    theClone.find('.destroy').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '__destroy');
-    theClone.find('.destroy').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + ']quiz_contents_attributes[' + theTime + '][_destroy]');
-    theClone.find('.the_id').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_id');
-    theClone.find('.the_id').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + ']quiz_contents_attributes[' + theTime + '][id]');
-    theClone.find('textarea').val('');
-    theClone.find('.sorting_order').val(parseInt(theClone.find('.sorting_order').val()) + 10);
-    theClone.find('.the_id').val('');
-    $('.answer_contents_' + answerNumber + ' .answer_content_block:nth-child(' + (position + 1) + ')').after(theClone);
-    $('.answer_contents_' + answerNumber + ' .answer_content_block').each(function(counter) {
-      $(this).find('.sorting_order').val(counter * 100);
-    })
-  }
-
   function monitorRadioButtons(theButton) {
-    alert($(theButton).val());
+    if ($(theButton).val() == 'image') {
+      $(theButton).parent().parent().find('.quiz_content_image').show();
+      $(theButton).parent().parent().find('.thumbnail').show();
+      $(theButton).parent().parent().find('textarea').hide();
+    } else {
+      $(theButton).parent().parent().find('.quiz_content_image').hide();
+      $(theButton).parent().parent().find('.thumbnail').hide();
+      $(theButton).parent().parent().find('textarea').show();
+    }
   }
 
   $(document).on('ready page:load', function() {

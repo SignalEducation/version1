@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141127114632) do
+ActiveRecord::Schema.define(version: 20141209110329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,11 +283,15 @@ ActiveRecord::Schema.define(version: 20141127114632) do
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax", default: false, null: false
-    t.boolean  "contains_image",   default: false, null: false
+    t.boolean  "contains_mathjax",   default: false, null: false
+    t.boolean  "contains_image",     default: false, null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   create_table "quiz_questions", force: true do |t|

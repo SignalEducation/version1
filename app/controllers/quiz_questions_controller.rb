@@ -84,7 +84,8 @@ class QuizQuestionsController < ApplicationController
                 :contains_image,
                 :sorting_order,
                 :_destroy,
-                :content_type
+                :content_type,
+                :image
             ]
         ],
         quiz_contents_attributes: [
@@ -96,7 +97,8 @@ class QuizQuestionsController < ApplicationController
             :contains_image,
             :sorting_order,
             :_destroy,
-            :content_type
+            :content_type,
+            :image
         ]
     )
   end

@@ -15,7 +15,7 @@
 class QuizAnswer < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :quiz_question_id, :correct, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
+  attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
 
   # Constants
   WRONGNESS = %w(correct slight medium very)
@@ -37,6 +37,7 @@ class QuizAnswer < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
+  before_save :set_the_field_correct
   before_update :set_wrong_answer_video_id
   before_destroy :check_dependencies
 
@@ -57,6 +58,11 @@ class QuizAnswer < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def set_the_field_correct
+    self.correct = self.degree_of_wrongness == 'correct'
+    true
   end
 
   def set_wrong_answer_video_id

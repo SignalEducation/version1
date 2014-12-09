@@ -2,15 +2,19 @@
 #
 # Table name: quiz_contents
 #
-#  id               :integer          not null, primary key
-#  quiz_question_id :integer
-#  quiz_answer_id   :integer
-#  text_content     :text
-#  contains_mathjax :boolean          default(FALSE), not null
-#  contains_image   :boolean          default(FALSE), not null
-#  sorting_order    :integer
-#  created_at       :datetime
-#  updated_at       :datetime
+#  id                 :integer          not null, primary key
+#  quiz_question_id   :integer
+#  quiz_answer_id     :integer
+#  text_content       :text
+#  contains_mathjax   :boolean          default(FALSE), not null
+#  contains_image     :boolean          default(FALSE), not null
+#  sorting_order      :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
 #
 
 require 'rails_helper'
@@ -18,7 +22,7 @@ require 'rails_helper'
 describe QuizContent do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at contains_mathjax contains_image)
+  black_list = %w(id created_at updated_at contains_mathjax contains_image image_updated_at image_file_size image_file_name image_content_type)
   QuizContent.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -76,6 +80,7 @@ describe QuizContent do
   # callbacks
   it { should callback(:process_content_type).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:check_data_consistency).before(:validation) }
 
   # scopes
   it { expect(QuizContent).to respond_to(:all_in_order) }

@@ -782,6 +782,8 @@ en:
         degree_of_wrongness: "Right/Wrong"
         text_content_placeholder: Ask the question
         solution_to_the_question_placeholder: Enter the Solution
+        wrong_answer_explanation_text: "Why this answer is wrong?"
+        wrong_answer_explanation_text_placeholder: Explain why this answer is incorrect
 
       edit:
         h1: "Edit Quiz Question - Advanced"

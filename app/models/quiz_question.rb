@@ -50,6 +50,12 @@ class QuizQuestion < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  def complex_question?
+    answer_ids = self.quiz_answer_ids
+    self.quiz_contents.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids).count > 4
+  end
+
   def destroyable?
     self.quiz_attempts.empty?
   end
@@ -65,6 +71,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def set_course_module_element
     self.course_module_element_id = self.course_module_element_quiz.course_module_element_id
+    true
   end
 
 end

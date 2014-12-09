@@ -1,6 +1,6 @@
 =f.fields_for :course_module_element_quiz do |cme_quiz|
   =cme_quiz.fields_for :quiz_questions do |question|
-    -if question.object.quiz_contents.count > 1
+    -if question.object.complex_question?
       .well.well-sm
         %h3 Advanced Question
         .row
