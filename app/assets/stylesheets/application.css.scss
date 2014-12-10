@@ -9,7 +9,7 @@ $navbar-inverse-bg: #d64147; /*#125;*/
 $navbar-inverse-link-active-bg: #ee9a3b;
 $navbar-inverse-color: #eee;
 $navbar-inverse-link-color: #eee; /*#89A;*/
-$navbar-inverse-link-hover-bg: red;
+$navbar-inverse-link-hover-bg: #ee9a3b;
 //$navbar-inverse-brand-hover-bg: blue;
 $navbar-inverse-border: #fff;
 $navbar-height: 65px;
@@ -72,4 +72,15 @@ body {
 
 .btn-success {
   text-transform: uppercase;
+}
+
+.blue-hover:hover {
+  background-color: #5391cf !important;
+}
+
+.navbar .nav > li > a {
+  -webkit-transition: all ease .4s;
+     -moz-transition: all ease .4s;
+       -o-transition: all ease .4s;
+          transition: all ease .4s;
 }
