@@ -40,7 +40,8 @@
     %hr/
     .row
       .col-sm-4
-        .text-left=t('views.quiz_questions.form.question_text') + ' / ' + t('views.quiz_questions.form.solution_to_the_question')
+        .text-l
+          eft=t('views.quiz_questions.form.question_text') + ' / ' + t('views.quiz_questions.form.solution_to_the_question')
       .col-sm-8
         .row
           .col-sm-5
@@ -51,8 +52,47 @@
             .text-right=t('views.quiz_questions.form.solutions')
     =render partial: 'course_module_element_quizzes/fields_for_question', locals: {f: f}
 
-  =f.submit t('views.general.save'), class: 'btn btn-success'
-  =t('views.general.or')
-  =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-success'
-  =t('views.general.or')
-  =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module)
+  -elsif @course_module_element.course_module_element_video
+    -if @course_module_element.course_module_element_resources.size > 0
+      %h2=t('views.course_module_element_resources.index.h1')
+      =f.fields_for :course_module_element_resources do |cme_resource|
+        .well.well-sm
+          .row
+            .col-sm-6
+              .form-group
+                =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label col-sm-3'
+                .col-sm-9
+                  =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control'
+              .form-group
+                =cme_resource.label :description, t('views.course_module_element_resources.form.description'), class: 'control-label col-sm-3'
+                .col-sm-9
+                  =cme_resource.text_area :description, placeholder: t('views.course_module_element_resources.form.description_placeholder'), class: 'form-control', rows: 3
+            .col-sm-6
+              .form-group
+                =cme_resource.label :web_url, t('views.course_module_element_resources.form.web_url'), class: 'control-label col-sm-3'
+                .col-sm-9
+                  =cme_resource.text_field :web_url, placeholder: t('views.course_module_element_resources.form.web_url_placeholder'), class: 'form-control'
+              .form-group
+                .col-sm-3.text-right
+                  =t('views.general.or')
+              .form-group
+                =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label col-sm-3'
+                .col-sm-9
+                  -if cme_resource.object.upload_file_name
+                    .form-control-static
+                      =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
+                      =number_to_human_size(cme_resource.object.upload_file_size)
+                      %br/
+                      Upload a replacement if you wish
+                  =cme_resource.file_field :upload, class: 'form-control'
+
+
+
+
+  %p
+    =f.submit t('views.general.save'), class: 'btn btn-success'
+    -if f.object.course_module_element_quiz
+      =t('views.general.or')
+      =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-success'
+    =t('views.general.or')
+    =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module)

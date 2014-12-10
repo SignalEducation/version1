@@ -341,6 +341,9 @@ en:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
       must_link_with_a_video_or_quiz: You must link this course module element to a video or quiz
 
+    course_module_element_resource:
+      web_url_or_upload_error: You must enter a web URL or upload a file
+
     institution_users:
       can_t_be_blank_for_students: "Can't be blank for students"
 
@@ -511,31 +514,30 @@ en:
         h1: Course Module
         click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
 
-
     course_module_elements:
       form:
-          name: Name
-          name_placeholder: My video title
-          name_url: Name URL
-          name_url_placeholder: my-video-title
-          description: Description
-          description_placeholder: Description
-          estimated_time_in_seconds: Time in seconds
-          estimated_time_in_seconds_placeholder: 180
-          course_module_id: Course module id
-          course_module_element_video_id: Course module element video id
-          course_module_element_quiz_id: Course module element quiz id
-          sorting_order: Sorting order
-          forum_topic_id: Forum topic
-          tutor_id: Tutor
-          related_quiz_id: Related quiz
-          related_video_id: Related video
-          created_at: Created at
-          updated_at: Updated_at
-          new_video: New video
-          new_quiz: New quiz
-          questions: Questions
-          save_and_add_another: Save and create another Question
+        name: Name
+        name_placeholder: My video title
+        name_url: Name URL
+        name_url_placeholder: my-video-title
+        description: Description
+        description_placeholder: Description
+        estimated_time_in_seconds: Time in seconds
+        estimated_time_in_seconds_placeholder: 180
+        course_module_id: Course module id
+        course_module_element_video_id: Course module element video id
+        course_module_element_quiz_id: Course module element quiz id
+        sorting_order: Sorting order
+        forum_topic_id: Forum topic
+        tutor_id: Tutor
+        related_quiz_id: Related quiz
+        related_video_id: Related video
+        created_at: Created at
+        updated_at: Updated_at
+        new_video: New video
+        new_quiz: New quiz
+        questions: Questions
+        save_and_add_another: Save and create another Question
 
       edit:
         h1: Edit Course Module Element
@@ -549,7 +551,6 @@ en:
       show:
         h1: Course Module Element
 
-
     course_module_element_quizzes:
       form:
         time_limit_seconds: Time Limit in seconds
@@ -562,6 +563,30 @@ en:
         best_possible_score_retry: "Max Score (Retry)"
         advanced_setup_link: Advanced Setup
         preview_button: Preview
+
+    course_module_element_resources:
+      form:
+        course_module_element_id: Course module element
+        name: Name
+        name_placeholder: Name that users will see
+        description: Description
+        description_placeholder: Description of your resource
+        web_url: Web URL
+        web_url_placeholder: http://en.wikipedia.org/learnsignal
+        upload_file_name: Upload file name
+        upload_content_type: Upload content type
+        upload_file_size: Upload file size
+        upload_updated_at: Upload updated at
+        upload: Upload a file
+
+      edit:
+
+      index:
+        h1: Resources
+
+      new:
+
+      show:
 
     course_module_element_videos:
       form:

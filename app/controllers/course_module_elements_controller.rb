@@ -16,6 +16,7 @@ class CourseModuleElementsController < ApplicationController
         course_module_id: params[:cm_id].to_i)
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
+      @course_module_element.course_module_element_resources.build
       @course_module_element.is_video = true
     elsif params[:type] == 'quiz'
       spawn_quiz_children
@@ -26,6 +27,8 @@ class CourseModuleElementsController < ApplicationController
   def edit
     if @course_module_element.is_quiz
       @course_module_element.course_module_element_quiz.add_an_empty_question
+    else
+      @course_module_element.course_module_element_resources.build
     end
     set_related_cmes
   end
@@ -169,6 +172,18 @@ class CourseModuleElementsController < ApplicationController
                     :content_type,
                     :sorting_order]
             ]
+        ],
+        course_module_element_resources_attributes: [
+                :id,
+                :course_module_element_id,
+                :name,
+                :description,
+                :web_url,
+                :upload,
+                :upload_file_name,
+                :upload_content_type,
+                :upload_file_size,
+                :upload_updated_at
         ]
     )
   end

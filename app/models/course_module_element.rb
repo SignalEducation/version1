@@ -22,12 +22,14 @@
 class CourseModuleElement < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
+  attr_accessible :name, :name_url, :description,
+                  :estimated_time_in_seconds,
                   :course_module_id, :sorting_order,
                   :forum_topic_id, :tutor_id, :related_quiz_id,
                   :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
-                  :course_module_element_quiz_attributes
+                  :course_module_element_quiz_attributes,
+                  :course_module_element_resources_attributes
 
   # Constants
 
@@ -50,6 +52,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video, update_only: true
+  accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -121,6 +124,13 @@ class CourseModuleElement < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def self.nested_resource_is_blank?(attributes)
+    attributes['name'].blank? &&
+            attributes['description'].blank? &&
+            attributes['upload'].blank? &&
+            attributes['the_url'].blank?
   end
 
 end

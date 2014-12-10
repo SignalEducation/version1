@@ -16,7 +16,7 @@
 class CourseModuleElementVideo < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :estimated_study_time_seconds, :transcript
+  attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript
 
   # Constants
   BASE_URL = "https://learnsignal_video_assets.eu-west-1.amazonaws.com/#{Rails.env}/"
@@ -32,7 +32,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :tags, presence: true
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
-  validates :estimated_study_time_seconds, presence: true, on: :update
   validates :transcript, presence: true
 
   # callbacks
@@ -49,7 +48,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   def destroyable?
     true
   end
-
 
   def set_estimated_study_time
     self.estimated_study_time_seconds = self.course_module_element.try(:estimated_time_in_seconds).to_i *
