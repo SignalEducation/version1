@@ -143,11 +143,11 @@ class ApplicationController < ActionController::Base
   def course_module_special_link(the_thing)
     # used for tutor-facing links
 
-    if the_thing.class == CourseModule
+    if the_thing.class == CourseModule && !the_thing.id.nil?
       if the_thing.exam_section_id
         course_modules_for_qualification_exam_level_exam_section_and_name_url(the_thing.exam_level.qualification.name_url, the_thing.exam_level.name_url, the_thing.exam_section.try(:name_url) || 'all', the_thing.name_url)
       else
-        course_module_qualification_exam_level_section_and_name_url(the_thing.qualification.name_url, the_thing.exam_level.name_url, 'all', the_thing.name_url)
+        course_modules_for_qualification_exam_level_exam_section_and_name_url(the_thing.exam_level.qualification.name_url, the_thing.exam_level.name_url, 'all', the_thing.name_url)
       end
 
     elsif the_thing.class == ExamSection

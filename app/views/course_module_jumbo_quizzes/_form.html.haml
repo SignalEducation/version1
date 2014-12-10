@@ -3,6 +3,7 @@
     =form_for @course_module_jumbo_quiz, html: {class: 'form-horizontal', role: 'form'} do |jumbo_quiz|
       =jumbo_quiz.hidden_field :course_module_id
       .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @course_module_jumbo_quiz, message: nil}
         .form-group
           =jumbo_quiz.label :course_module_id, t('views.course_module_jumbo_quiz.form.course_module_id'), class: 'control-label col-sm-4'
           .col-sm-8

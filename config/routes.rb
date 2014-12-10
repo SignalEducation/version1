@@ -64,8 +64,6 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :vat_codes
 
-
-
     # home page
     root 'users#show' # temporary
   end

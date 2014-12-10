@@ -22,4 +22,5 @@
             -exam_level.course_modules.each do |course_module|
               =link_to course_module.name, course_module_special_link(course_module)
               %br/
+            =link_to t('views.general.new'), new_course_module_url(exam_level_url: exam_level.name_url)
 

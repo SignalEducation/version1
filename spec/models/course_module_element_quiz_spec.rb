@@ -63,5 +63,4 @@ describe CourseModuleElementQuiz do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:add_an_empty_question) }
 
-
 end

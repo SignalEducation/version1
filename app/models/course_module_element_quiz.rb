@@ -28,7 +28,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   belongs_to :course_module_jumbo_quiz
   has_many :quiz_questions
 
-  accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| user_fields_blank?(attributes) }
+  accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }
 
   # validation
   validates :course_module_element_id, presence: true,
@@ -37,8 +37,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 4, less_than_or_equal_to: 30,
              only_integer: true}, on: :update
-  validates :best_possible_score_first_attempt, presence: true, on: :update
-  validates :best_possible_score_retry, presence: true, on: :update
 
   # callbacks
   before_save :set_jumbo_quiz_id
@@ -54,6 +52,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def add_an_empty_question
     self.quiz_questions.build
+    self.quiz_questions.last.course_module_element_quiz_id = self.id
     self.quiz_questions.last.quiz_contents.build(sorting_order: 1)
     4.times do |number|
       self.quiz_questions.last.quiz_answers.build
@@ -88,9 +87,13 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     self.course_module_jumbo_quiz_id = self.course_module_element.try(:course_module).try(:course_module_jumbo_quiz).try(:id)
   end
 
-  def self.user_fields_blank?(the_attributes)
-    the_attributes['course_module_element_quiz_id'].to_i > 0 &&
-    the_attributes['solution_to_the_question'].blank? &&
+  def self.quiz_question_fields_blank?(the_attributes)
+    puts '*' * 100
+    puts the_attributes.inspect
+    puts '*' * 100
+    (the_attributes['id'].to_i > 0 && the_attributes['quiz_contents_attributes'].blank?) ||
+      ( the_attributes['course_module_element_quiz_id'].to_i > 0 &&
+        the_attributes['solution_to_the_question'].blank? &&
         the_attributes['difficulty_level'].blank? &&
         the_attributes['quiz_contents_attributes']['0']['text_content'].blank? &&
         # Answer A
@@ -113,7 +116,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
         the_attributes['quiz_answers_attributes']['3']['degree_of_wrongness'].blank? &&
         the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank? &&
         the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank?
-
+      )
   end
 
 end

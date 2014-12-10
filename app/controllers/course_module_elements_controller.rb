@@ -90,22 +90,13 @@ class CourseModuleElementsController < ApplicationController
 
   protected
 
-  def create_new_question
-    @course_module_element.course_module_element_quiz.quiz_questions.build
-    @course_module_element.course_module_element_quiz.quiz_questions.last.quiz_contents.build(sorting_order: 1)
-    4.times do |number|
-      @course_module_element.course_module_element_quiz.quiz_questions.last.quiz_answers.build
-      @course_module_element.course_module_element_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: number + 1)
-    end
-  end
-
   def get_variables
     if params[:id].to_i > 0
       @course_module_element = CourseModuleElement.where(id: params[:id]).first
     end
     @tutors = User.all_tutors.all_in_order
     @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
-    @letters = %w(A B C D)
+    @letters = ('A'..'Z').to_a
   end
 
   def set_related_cmes
@@ -165,6 +156,7 @@ class CourseModuleElementsController < ApplicationController
                         :text_content,
                         :contains_mathjax,
                         :contains_image,
+                        :content_type,
                         :sorting_order]
                 ],
                 quiz_contents_attributes: [
@@ -174,6 +166,7 @@ class CourseModuleElementsController < ApplicationController
                     :text_content,
                     :contains_mathjax,
                     :contains_image,
+                    :content_type,
                     :sorting_order]
             ]
         ]
@@ -184,6 +177,7 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element.is_quiz = true
     @course_module_element.build_course_module_element_quiz
     @course_module_element.course_module_element_quiz.add_an_empty_question
+    @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
   end
 
 end

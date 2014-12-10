@@ -29,7 +29,7 @@ class QuizContent < ActiveRecord::Base
   # relationships
   belongs_to :quiz_answer
   belongs_to :quiz_question
-  has_attached_file :image, default_url: '/images/missing.png'
+  has_attached_file :image, default_url: '/assets/images/missing.png'
 
   # validation
   validate  :question_or_answer_only, on: :update

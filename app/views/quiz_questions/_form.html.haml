@@ -1,4 +1,5 @@
 =form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
+  =f.hidden_field :course_module_element_quiz_id
   .row
     =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
     .col-sm-12
@@ -44,7 +45,10 @@
   %p
     =f.submit t('views.general.save'), class: 'btn btn-success'
     =t('views.general.or')
-    =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
+    -if @quiz_question.id.nil?
+      =link_to t('views.general.cancel'), course_modules_url
+    -else
+      =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
 
 :javascript
 
@@ -119,7 +123,7 @@
   // Delete from the database also !!
   function removeContent(me) {
     if (me.parent().parent().parent().children().length == 1 ) {
-      alert('Sorry you cannot delete the last text block');
+      alert('Sorry, you cannot delete the last text block');
     } else {
       if (confirm('Are you sure?')) {
         if (parseInt(me.parent().parent().find('.the_id').val()) > 0 ) {

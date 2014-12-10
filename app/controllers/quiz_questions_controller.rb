@@ -59,7 +59,11 @@ class QuizQuestionsController < ApplicationController
       @quiz_question = QuizQuestion.new(allowed_params)
     end
     @quiz_questions = QuizQuestion.all_in_order
-    @cme_videos = CourseModuleElement.where(course_module_id: @quiz_question.course_module_element_quiz.course_module_element.course_module_id).all_videos.all_in_order
+    if @quiz_question.id.nil?
+      @cme_videos = CourseModuleElement.all_videos.all_in_order
+    else
+      @cme_videos = CourseModuleElement.where(course_module_id: @quiz_question.course_module_element_quiz.course_module_element.course_module_id).all_videos.all_in_order
+    end
   end
 
   def allowed_params
