@@ -19,6 +19,8 @@
                 -if c.object.content_type == 'image'
                   .thumbnail
                     =image_tag c.object.image.url
+                    =c.object.image_file_name
+                    =number_to_human_size(c.object.image_file_size)
                 =c.file_field :image, style: (c.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
                 =c.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 6, style: (c.object.content_type == 'image' ? 'display: none;' : '')
                 .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}

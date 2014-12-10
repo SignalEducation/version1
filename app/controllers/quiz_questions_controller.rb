@@ -7,7 +7,7 @@ class QuizQuestionsController < ApplicationController
   before_action :get_variables
 
   def show
-    # This delivers a preview of how the question will look to Users.
+
   end
 
   def new

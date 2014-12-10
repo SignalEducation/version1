@@ -561,6 +561,7 @@ en:
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
         advanced_setup_link: Advanced Setup
+        preview_button: Preview
 
     course_module_element_videos:
       form:
@@ -792,7 +793,8 @@ en:
         h1: "New Quiz Question - Advanced"
 
       show:
-        h1: "Quiz Question Advanced View"
+        h1: Quiz Question Preview
+        choose_an_answer: Choose an Answer
 
     quiz_answer:
       form:
