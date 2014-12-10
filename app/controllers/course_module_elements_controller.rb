@@ -43,7 +43,7 @@ class CourseModuleElementsController < ApplicationController
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
         redirect_to new_quiz_question_url(cme_quiz_id: @course_module_element.course_module_element_quiz.id)
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
-        redirect_to @course_module_element.course_module_element_quiz.quiz_questions.first
+        redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
@@ -61,6 +61,8 @@ class CourseModuleElementsController < ApplicationController
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
         redirect_to edit_course_module_element_url(@course_module_element.id)
+      elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
+        redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
       end

@@ -1,8 +1,14 @@
 =f.fields_for :course_module_element_quiz do |cme_quiz|
   =cme_quiz.fields_for :quiz_questions do |question|
+    =question.object.inspect
+    =question.object.quiz_contents.count
     -if question.object.complex_question?
       .well.well-sm
-        %h3 Advanced Question
+        %h3
+          Advanced Question
+          =question.object.quiz_contents.count
+          =question.object.quiz_answers.count
+          =question.object.inspect
         .row
           .col-sm-8
             -if question.object.quiz_contents.first.content_type == 'image'
@@ -11,7 +17,8 @@
               %p=truncate(question.object.quiz_contents.first.text_content, length: 80)
           .col-sm-4.text-right
             =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-info'
-            =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
+            -if question.object.id.to_i > 0
+              =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
             -if question.object.destroyable?
               =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-danger'
 
@@ -65,7 +72,7 @@
                   =f.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-info'
                 -elsif question.object.id.nil?
                   -# new link
-                  =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-info'
+                  =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-info'
                   =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
                 -else
                   -# edit link
