@@ -8,9 +8,9 @@
       -if qc.content_type == 'image'
         =image_tag qc.image.url, class: 'col-sm-12'
       -elsif qc.content_type == 'text'
-        %p=qc.text_content
+        %p=sanitizer qc.text_content
       -elsif qc.content_type == 'mathjax'
-        %p.mathjax=qc.text_content
+        %p.mathjax=sanitizer qc.text_content
     %h2=t('views.quiz_questions.show.choose_an_answer')
 .row
   -@quiz_question.quiz_answers.each_with_index do |qa, counter|

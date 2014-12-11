@@ -51,6 +51,7 @@ class QuizQuestionsController < ApplicationController
   protected
 
   def get_variables
+    @mathjax_required = true
     if params[:id].to_i > 0
       @quiz_question = QuizQuestion.find(params[:id])
     elsif params[:cme_quiz_id].to_i > 0
