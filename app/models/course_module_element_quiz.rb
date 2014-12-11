@@ -54,7 +54,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     self.quiz_questions.build
     self.quiz_questions.last.course_module_element_quiz_id = self.id
     self.quiz_questions.last.quiz_contents.build(sorting_order: 1)
-    (self.course_module_element.try(:course_module).try(:exam_level).try(:default_number_of_possible_exam_answers) || 4) .times do |number|
+    (self.course_module_element.try(:course_module).try(:exam_level).try(:default_number_of_possible_exam_answers) || 4).times do |number|
       self.quiz_questions.last.quiz_answers.build
       self.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: number + 1)
     end
