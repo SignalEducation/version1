@@ -7,10 +7,6 @@ RSpec.describe CourseModuleElementsController, type: :routing do
       expect(get: '/course_module_elements/new').to route_to('course_module_elements#new')
     end
 
-    it 'routes to #show' do
-      expect(get: '/course_module_elements/1').to route_to('course_module_elements#show', id: '1')
-    end
-
     it 'routes to #edit' do
       expect(get: '/course_module_elements/1/edit').to route_to('course_module_elements#edit', id: '1')
     end

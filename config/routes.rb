@@ -43,7 +43,7 @@ Rails.application.routes.draw do
         to: 'course_modules#show',
         as: :course_modules_for_qualification_exam_level_exam_section_and_name
     post 'course_module_elements/reorder', to: 'course_module_elements#reorder'
-    resources :course_module_elements, except: :index
+    resources :course_module_elements, except: [:index, :show]
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     post 'currencies/reorder', to: 'currencies#reorder'
     resources :currencies

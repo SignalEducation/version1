@@ -6,9 +6,6 @@ class CourseModuleElementsController < ApplicationController
   end
   before_action :get_variables
 
-  def show
-  end
-
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
