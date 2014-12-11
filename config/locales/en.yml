@@ -612,6 +612,7 @@ en:
       error_messages:
         error: error
         preface: 'prevented this item from being saved:'
+        is_invalid: is invalid
 
     qualifications:
       form:
@@ -645,6 +646,7 @@ en:
 
     student_sign_ups:
       form:
+        retype_it: Retype it
         all_you_can_eat_yes: "Unlimited Access"
         all_you_can_eat_no: "Limited Access"
         free_trial: "Free trial - "

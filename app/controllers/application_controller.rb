@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
 
-
   DIFFICULTY_LEVELS = [
       {name: 'easy', score: 3, run_time_multiplier: 1},
       {name: 'medium', score: 5, run_time_multiplier: 1.5},
@@ -11,8 +10,7 @@ class ApplicationController < ActionController::Base
 
   def self.find_multiplier_for_difficulty_level(the_name)
     DIFFICULTY_LEVEL_NAMES.include?(the_name) ?
-        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] :
-        0
+        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
   if Rails.env.staging? || Rails.env.production?

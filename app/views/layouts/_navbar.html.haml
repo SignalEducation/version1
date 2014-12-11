@@ -73,12 +73,15 @@
                 =text_field_tag :search_terms, nil, placeholder: t('views.general.search')
 
         -else
-          %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;"
-          %li#login_form.hidden
-            =form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
-              .form-group{style: 'padding-top: 3px;padding-right: 5px;'}
-                =f.text_field :email, placeholder: 'john@example.com', autofocus: true
-                =f.password_field :password, placeholder: 'password'
-                =f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
-                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
+          -if controller_name == 'user_sessions'
+            %li=link_to t('views.general.sign_in'), sign_in_url, class: 'navbar-link'
+          -else
+            %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;"
+            %li#login_form.hidden
+              =form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
+                .form-group{style: 'padding-top: 3px;padding-right: 5px;'}
+                  =f.text_field :email, placeholder: 'john@example.com', autofocus: true
+                  =f.password_field :password, placeholder: 'password'
+                  =f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
+                  =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
           %li=link_to t('views.general.sign_up'), sign_up_url, class: 'blue-hover'
