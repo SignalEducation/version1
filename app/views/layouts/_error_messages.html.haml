@@ -2,7 +2,7 @@
   -field_list = thing.errors.map {|x,y| x}.uniq
   .panel.panel-danger
     .panel-heading
-      =pluralize(field_list.count, t('views.layouts.error_messages.error'))
+      =pluralize(field_list.count, T('views.layouts.error_messages.error'))
       =message || t('views.layouts.error_messages.preface')
 
     .panel-body

@@ -121,6 +121,7 @@ describe User do
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
 
   # callbacks
+  it { should callback(:set_defaults).before(:validation).on(:create) }
   it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 

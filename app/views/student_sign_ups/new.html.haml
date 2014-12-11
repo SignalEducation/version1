@@ -31,7 +31,7 @@
           .form-group
             .col-sm-8.col-sm-offset-2
               =f.label :country_id, t('views.users.form.country_id')
-              =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control', required: true, onchange: 'showPlans(); return false;'}
+              =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control', required: true, onchange: 'clearPlans(); showPlans(); return false;'}
 
         .well.well-sm
           %h2.text-center=t('views.student_sign_ups.new.h2.subscription')
@@ -82,8 +82,13 @@
 
     var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
 
-    function choosePlan(theThing) {
+    function clearPlans() {
       $('.subscription-panel').removeClass('active');
+      $('#user_subscriptions_attributes_0_subscription_plan_id').val();
+    }
+
+    function choosePlan(theThing) {
+      clearPlans();
       $(theThing).find('.subscription-panel').addClass('active');
       $('#user_subscriptions_attributes_0_subscription_plan_id').val( $(theThing).attr('data-plan-id') );
     }

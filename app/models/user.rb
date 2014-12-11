@@ -127,6 +127,7 @@ class User < ActiveRecord::Base
   validates :locale, inclusion: {in: LOCALES}
 
   # callbacks
+  before_validation :set_defaults, on: :create
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_destroy :check_dependencies
 
@@ -155,7 +156,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.finish_password_reset_process(reset_token, new_password, new_password_confirmation)
+  def self.finish_password_reset_process(reset_token, new_password,
+          new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
       user = User.where(password_reset_token: reset_token.to_s, active: false).first
       if user
@@ -239,6 +241,16 @@ class User < ActiveRecord::Base
     self.active = false
     self.account_activated_at = nil
     self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
+  def set_defaults
+    self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
+    self.operational_email_frequency ||= 'weekly'
+    self.study_plan_notifications_email_frequency ||= 'off'
+    self.falling_behind_email_alert_frequency ||= 'off'
+    self.marketing_email_frequency ||= 'off'
+    self.blog_notification_email_frequency ||= 'off'
+    self.forum_notification_email_frequency ||= 'off'
   end
 
 end

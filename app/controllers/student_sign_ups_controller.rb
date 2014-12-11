@@ -9,30 +9,30 @@ class StudentSignUpsController < ApplicationController
   end
 
   def create
-    # we receive params[:stripeToken] = 'tok_5HPtBGagSuY6Nn'
-    @user = User.new(allowed_params.merge(
-                 user_group_id: 1,
-                 marketing_email_permission_given_at: Time.now,
-                 operational_email_frequency: 'weekly',
-                 study_plan_notifications_email_frequency: 'off',
-                 falling_behind_email_alert_frequency: 'off',
-                 marketing_email_frequency: 'off',
-                 blog_notification_email_frequency: 'off',
-                 forum_notification_email_frequency: 'off'
-    ))
+    @user = User.new(allowed_params.merge(user_group_id: 1))
     if @user.save
       @user = User.find_and_activate(@user.account_activation_code)
       UserSession.create(@user)
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url
     else
+      extra_needed = nil
+      @user.errors.each do |field, _|
+        if field.to_s.include?('.')
+          @user.errors.delete(field)
+          extra_needed = true
+        end
+      end
+      if extra_needed
+        @user.errors[:subscription_plan] = I18n.t('views.layouts.error_messages.is_invalid')
+      end
       render 'new'
     end
   end
 
   protected
 
-  def allowed_params
+  def ALLOWED_PARAMS
     params.require(:user).permit(
           :email, :first_name, :last_name,
           :country_id, :locale,
