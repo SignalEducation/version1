@@ -657,6 +657,8 @@ en:
         active: 'Active?'
         best_possible_first_attempt_score: 'Best-possible first attempt score'
         best_possible_first_attempt_score_placeholder: 200
+        default_number_of_possible_exam_answers: Default Number of Exam Answers
+        default_number_of_possible_exam_answers_placeholder: 4
 
       index:
         h1: Exam Levels

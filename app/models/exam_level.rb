@@ -2,22 +2,23 @@
 #
 # Table name: exam_levels
 #
-#  id                                :integer          not null, primary key
-#  qualification_id                  :integer
-#  name                              :string(255)
-#  name_url                          :string(255)
-#  is_cpd                            :boolean          default(FALSE), not null
-#  sorting_order                     :integer
-#  active                            :boolean          default(FALSE), not null
-#  best_possible_first_attempt_score :float
-#  created_at                        :datetime
-#  updated_at                        :datetime
+#  id                                      :integer          not null, primary key
+#  qualification_id                        :integer
+#  name                                    :string(255)
+#  name_url                                :string(255)
+#  is_cpd                                  :boolean          default(FALSE), not null
+#  sorting_order                           :integer
+#  active                                  :boolean          default(FALSE), not null
+#  best_possible_first_attempt_score       :float
+#  created_at                              :datetime
+#  updated_at                              :datetime
+#  default_number_of_possible_exam_answers :integer          default(4)
 #
 
 class ExamLevel < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active
+  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers
 
   # Constants
 
@@ -34,6 +35,8 @@ class ExamLevel < ActiveRecord::Base
   validates :name, presence: true
   validates :name_url, presence: true
   validates :sorting_order, presence: true
+  validates :default_number_of_possible_exam_answers, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_save :calculate_best_possible_score

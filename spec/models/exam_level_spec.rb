@@ -2,16 +2,17 @@
 #
 # Table name: exam_levels
 #
-#  id                                :integer          not null, primary key
-#  qualification_id                  :integer
-#  name                              :string(255)
-#  name_url                          :string(255)
-#  is_cpd                            :boolean          default(FALSE), not null
-#  sorting_order                     :integer
-#  active                            :boolean          default(FALSE), not null
-#  best_possible_first_attempt_score :float
-#  created_at                        :datetime
-#  updated_at                        :datetime
+#  id                                      :integer          not null, primary key
+#  qualification_id                        :integer
+#  name                                    :string(255)
+#  name_url                                :string(255)
+#  is_cpd                                  :boolean          default(FALSE), not null
+#  sorting_order                           :integer
+#  active                                  :boolean          default(FALSE), not null
+#  best_possible_first_attempt_score       :float
+#  created_at                              :datetime
+#  updated_at                              :datetime
+#  default_number_of_possible_exam_answers :integer          default(4)
 #
 
 require 'rails_helper'
@@ -47,6 +48,9 @@ describe ExamLevel do
   it { should validate_presence_of(:name_url) }
 
   it { should validate_presence_of(:sorting_order) }
+
+  it { should validate_presence_of(:default_number_of_possible_exam_answers) }
+  it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
   # callbacks
   it { should callback(:calculate_best_possible_score).before(:save) }

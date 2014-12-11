@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141210175629) do
+ActiveRecord::Schema.define(version: 20141211091300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,12 +153,13 @@ ActiveRecord::Schema.define(version: 20141210175629) do
     t.integer  "qualification_id"
     t.string   "name"
     t.string   "name_url"
-    t.boolean  "is_cpd",                            default: false, null: false
+    t.boolean  "is_cpd",                                  default: false, null: false
     t.integer  "sorting_order"
-    t.boolean  "active",                            default: false, null: false
+    t.boolean  "active",                                  default: false, null: false
     t.float    "best_possible_first_attempt_score"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "default_number_of_possible_exam_answers", default: 4
   end
 
   create_table "exam_sections", force: true do |t|
