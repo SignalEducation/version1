@@ -1,23 +1,17 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 describe QuizQuestionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
 
   # todo: Try to create children for quiz_question_1
-  let!(:quiz_question_1) { FactoryGirl.create(:quiz_question) }
-  let!(:quiz_question_2) { FactoryGirl.create(:quiz_question) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:quiz_question) }
+  let!(:valid_params) { quiz_question_1.attributes }
+  #let!(:valid_params) { FactoryGirl.attributes_for(:quiz_question_1) }
 
   context 'Not logged in: ' do
-
-    describe "GET 'index'" do
-      it 'should redirect to sign_in' do
-        get :index
-        expect_bounce_as_not_signed_in
-      end
-    end
 
     describe "GET 'show/1'" do
       it 'should redirect to sign_in' do
@@ -75,13 +69,6 @@ describe QuizQuestionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(individual_student_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
     end
 
     describe "GET 'show/1'" do
@@ -144,7 +131,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, cme_quiz_id: course_module_element_quiz.id
         expect_new_success_with_model('quiz_question')
       end
     end
@@ -159,33 +146,36 @@ describe QuizQuestionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, quiz_question: valid_params
-        expect_create_success_with_model('quiz_question', quiz_questions_url)
+        expect_create_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for quiz_question_1' do
         put :update, id: quiz_question_1.id, quiz_question: valid_params
-        expect_update_success_with_model('quiz_question', quiz_questions_url)
+        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
+
       it 'should reject invalid params' do
-        put :update, id: quiz_question_1.id, quiz_question: {valid_params.keys.first => ''}
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
         expect_update_error_with_model('quiz_question')
         expect(assigns(:quiz_question).id).to eq(quiz_question_1.id)
       end
     end
 
     describe "DELETE 'destroy'" do
+      let!(:quiz_attempt) { FactoryGirl.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
-        expect_delete_success_with_model('quiz_question', quiz_questions_url)
+        #expect_delete_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
         # todo replace the line above with the line below when quiz_questions have children
-        # todo expect_delete_error_with_model('quiz_question', quiz_questions_url)
+        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: quiz_question_2.id
-        expect_delete_success_with_model('quiz_question', quiz_questions_url)
+        expect_delete_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
     end
 
@@ -196,13 +186,6 @@ describe QuizQuestionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(corporate_student_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
     end
 
     describe "GET 'show/1'" do
@@ -256,13 +239,6 @@ describe QuizQuestionsController, type: :controller do
       UserSession.create!(corporate_customer_user)
     end
 
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
@@ -312,13 +288,6 @@ describe QuizQuestionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
     end
 
     describe "GET 'show/1'" do
@@ -372,13 +341,6 @@ describe QuizQuestionsController, type: :controller do
       UserSession.create!(forum_manager_user)
     end
 
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "GET 'show/1'" do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
@@ -428,13 +390,6 @@ describe QuizQuestionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(content_manager_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
     end
 
     describe "GET 'show/1'" do
@@ -503,7 +458,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, cme_quiz_id: course_module_element_quiz.id
         expect_new_success_with_model('quiz_question')
       end
     end
@@ -524,7 +479,7 @@ describe QuizQuestionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, quiz_question: valid_params
-        expect_create_success_with_model('quiz_question', quiz_questions_url)
+        expect_create_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
 
       it 'should report error for invalid params' do
@@ -536,18 +491,18 @@ describe QuizQuestionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for quiz_question_1' do
         put :update, id: quiz_question_1.id, quiz_question: valid_params
-        expect_update_success_with_model('quiz_question', quiz_questions_url)
+        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
 
       # optional
       it 'should respond OK to valid params for quiz_question_2' do
         put :update, id: quiz_question_2.id, quiz_question: valid_params
-        expect_update_success_with_model('quiz_question', quiz_questions_url)
+        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
         expect(assigns(:quiz_question).id).to eq(quiz_question_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: quiz_question_1.id, quiz_question: {valid_params.keys.first => ''}
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
         expect_update_error_with_model('quiz_question')
         expect(assigns(:quiz_question).id).to eq(quiz_question_1.id)
       end
@@ -555,16 +510,19 @@ describe QuizQuestionsController, type: :controller do
 
 
     describe "DELETE 'destroy'" do
+
+      let!(:quiz_attempt) { FactoryGirl.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
-        expect_delete_success_with_model('quiz_question', quiz_questions_url)
+        #expect_delete_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
         # todo replace the line above with the line below when quiz_questions have children
-        # todo expect_delete_error_with_model('quiz_question', quiz_questions_url)
+        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: quiz_question_2.id
-        expect_delete_success_with_model('quiz_question', quiz_questions_url)
+        expect_delete_success_with_model('quiz_question', edit_course_module_element_url(course_module_element.id))
       end
     end
 

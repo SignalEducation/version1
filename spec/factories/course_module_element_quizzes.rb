@@ -17,14 +17,8 @@
 FactoryGirl.define do
   factory :course_module_element_quiz do
     course_module_element_id 1
-    name "MyString"
-    preamble "MyText"
-    expected_time_in_seconds 1
     time_limit_seconds 1
     number_of_questions 1
-    question_selection_strategy "MyString"
-    best_possible_score_first_attempt 1
-    best_possible_score_retry 1
     course_module_jumbo_quiz_id 1
   end
 
