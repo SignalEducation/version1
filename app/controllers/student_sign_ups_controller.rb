@@ -32,7 +32,7 @@ class StudentSignUpsController < ApplicationController
 
   protected
 
-  def ALLOWED_PARAMS
+  def allowed_params
     params.require(:user).permit(
           :email, :first_name, :last_name,
           :country_id, :locale,
