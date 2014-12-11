@@ -14,6 +14,8 @@ $navbar-inverse-link-hover-bg: #ee9a3b;
 $navbar-inverse-border: #fff;
 $navbar-height: 65px;
 
+$well-bg: #e5e5e5;
+
 @font-face {
   font-family: 'EffraRegular';
   src: font-url('EffraRegular.eot');
@@ -27,12 +29,6 @@ $navbar-height: 65px;
   src: font-url('BryantWebRegular.eot')  format('eot'),
        font-url('BryantWebRegular.woff') format('woff'),
        font-url('BryantWebRegular.ttf')  format('truetype');
-}
-@font-face {
-  font-family: 'BryantWebRegularAlternative';
-  src: font-url('BryantWebRegularAlt.eot')  format('eot'),
-       font-url('BryantWebRegularAlt.woff') format('woff'),
-       font-url('BryantWebRegularAlt.ttf')  format('truetype');
 }
 
 // Load Bootstrap 3
@@ -51,7 +47,7 @@ body {
 }
 
 .navbar, .navbar-header {
-  font-family: BryantWebRegularAlternative, BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
+  font-family: BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   text-transform: uppercase;
 }
 
@@ -83,4 +79,21 @@ body {
      -moz-transition: all ease .4s;
        -o-transition: all ease .4s;
           transition: all ease .4s;
+}
+
+.subscription-outer-panel:hover {
+  cursor: pointer;
+  margin-top: -10px;
+  -webkit-transition: all ease .4s;
+  -moz-transition: all ease .4s;
+  -o-transition: all ease .4s;
+  transition: all ease .4s;
+}
+
+#student-sign-up .well {
+  margin-bottom: 40px;
+}
+
+#student-sign-up form > .row .col-sm-8.col-sm-offset-2 .well:first-child {
+  margin-top: 80px;
 }
