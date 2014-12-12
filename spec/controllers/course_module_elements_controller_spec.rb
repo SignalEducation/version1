@@ -147,7 +147,7 @@ describe CourseModuleElementsController, type: :controller do
       # optional
       it 'should respond OK to valid params for course_module_element_2' do
         put :update, id: course_module_element_2.id, course_module_element: valid_params
-        expect_update_success_with_model('course_module_element', course_module_elements_url)
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1)) # deliberately 1 and not 2.
         expect(assigns(:course_module_element).id).to eq(course_module_element_2.id)
       end
 
