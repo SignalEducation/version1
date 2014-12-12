@@ -25,9 +25,9 @@
           %tr
             %td{colspan: 8}
               -if user.user_group
-                %h2=link_to user.user_group.name, user.user_group
+                .h2=link_to user.user_group.name, user.user_group
               -else
-                %h2=t('views.general.missing_data_error')
+                .h2=t('views.general.missing_data_error')
         %tr
           %td
             =link_to(user.full_name, user, title: t('views.general.view_tooltip'))

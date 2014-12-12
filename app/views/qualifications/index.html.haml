@@ -20,7 +20,7 @@
             -tracker = qualification.institution_id
             %tr
               %td{colspan: 5}
-                %h2=link_to(qualification.institution.name, qualification.institution, title: t('views.general.view_tooltip'))
+                .h2=link_to(qualification.institution.name, qualification.institution, title: t('views.general.view_tooltip'))
           %tr{id: qualification.id}
             %td=link_to(qualification.name, qualification, title: t('views.general.view_tooltip'))
             %td

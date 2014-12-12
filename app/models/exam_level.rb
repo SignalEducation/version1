@@ -17,7 +17,8 @@
 class ExamLevel < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active
+  attr_accessible :qualification_id, :name, :name_url, :is_cpd,
+                  :sorting_order, :active
 
   # Constants
 
