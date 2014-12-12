@@ -26,6 +26,8 @@ class ExamLevel < ActiveRecord::Base
   belongs_to :qualification
   has_many :exam_sections
   has_many :course_modules
+  has_many :course_module_elements, through: :course_modules
+  has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :student_exam_tracks
   has_many :user_exam_level
 
@@ -62,8 +64,7 @@ class ExamLevel < ActiveRecord::Base
   protected
 
   def calculate_best_possible_score
-    # todo
-    self.best_possible_first_attempt_score = 100
+    self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
   end
 
   def check_dependencies

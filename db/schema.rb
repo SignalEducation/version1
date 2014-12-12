@@ -288,8 +288,8 @@ ActiveRecord::Schema.define(version: 20141211091300) do
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax",   default: false, null: false
-    t.boolean  "contains_image",     default: false, null: false
+    t.boolean  "contains_mathjax",   null: false
+    t.boolean  "contains_image",     null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"

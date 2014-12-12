@@ -16,14 +16,15 @@
 class ExamSection < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active,
-                  :sorting_order, :best_possible_first_attempt_score
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
 
   # Constants
 
   # relationships
   belongs_to :exam_level
   has_many :course_modules
+  has_many :course_module_elements, through: :course_modules
+  has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :student_exam_tracks
 
   # validation
@@ -32,9 +33,9 @@ class ExamSection < ActiveRecord::Base
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
-  validates :best_possible_first_attempt_score, presence: true
 
   # callbacks
+  before_save :calculate_best_possible_score
   before_destroy :check_dependencies
 
   # scopes
@@ -49,6 +50,10 @@ class ExamSection < ActiveRecord::Base
   end
 
   protected
+
+  def calculate_best_possible_score
+    self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
+  end
 
   def check_dependencies
     unless self.destroyable?
