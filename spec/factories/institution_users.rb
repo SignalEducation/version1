@@ -10,6 +10,8 @@
 #  qualified                   :boolean          default(FALSE), not null
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  exam_number                 :string(255)
+#  membership_number           :string(255)
 #
 
 FactoryGirl.define do

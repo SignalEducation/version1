@@ -9,6 +9,10 @@
 #  web_url                  :string(255)
 #  created_at               :datetime
 #  updated_at               :datetime
+#  upload_file_name         :string(255)
+#  upload_content_type      :string(255)
+#  upload_file_size         :integer
+#  upload_updated_at        :datetime
 #
 
 require 'rails_helper'

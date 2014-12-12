@@ -2,15 +2,19 @@
 #
 # Table name: quiz_contents
 #
-#  id               :integer          not null, primary key
-#  quiz_question_id :integer
-#  quiz_answer_id   :integer
-#  text_content     :text
-#  contains_mathjax :boolean          not null
-#  contains_image   :boolean          not null
-#  sorting_order    :integer
-#  created_at       :datetime
-#  updated_at       :datetime
+#  id                 :integer          not null, primary key
+#  quiz_question_id   :integer
+#  quiz_answer_id     :integer
+#  text_content       :text
+#  contains_mathjax   :boolean          default(FALSE), not null
+#  contains_image     :boolean          default(FALSE), not null
+#  sorting_order      :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
 #
 
 class QuizContent < ActiveRecord::Base

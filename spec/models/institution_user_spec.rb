@@ -10,6 +10,8 @@
 #  qualified                   :boolean          default(FALSE), not null
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  exam_number                 :string(255)
+#  membership_number           :string(255)
 #
 
 require 'rails_helper'
@@ -40,7 +42,6 @@ describe InstitutionUser do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:student_registration_number) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
