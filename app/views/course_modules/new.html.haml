@@ -2,4 +2,13 @@
   .col-sm-12
     .page-header
       %h1=t('views.course_modules.new.h1')
-=render partial: 'form'
+-if @qualification
+  .row
+    .col-sm-3
+      =render partial: 'course_modules/side_nav'
+    .col-sm-9
+      =render partial: 'form'
+-else
+  .row
+    .col-sm-8.col-sm-offset-2
+      =render partial: 'form'

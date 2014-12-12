@@ -75,7 +75,6 @@ class User < ActiveRecord::Base
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
-  has_many :course_module_element_videos, foreign_key: :tutor_id
   has_many :quiz_attempts
   has_many :invoices
   has_many :institution_users
@@ -131,6 +130,10 @@ class User < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
 
   # class methods
+  def self.all_tutors
+     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
+  end
+
   def self.find_and_activate(activation_code)
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
     if user
@@ -191,7 +194,6 @@ class User < ActiveRecord::Base
     !self.admin? &&
         self.course_modules.empty? &&
         self.course_module_element_user_logs.empty? &&
-        self.course_module_element_videos.empty? &&
         self.forum_posts.empty? &&
         self.forum_post_concerns.empty? &&
         self.forum_topic_users.empty? &&

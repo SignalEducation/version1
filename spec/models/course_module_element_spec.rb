@@ -2,21 +2,21 @@
 #
 # Table name: course_module_elements
 #
-#  id                             :integer          not null, primary key
-#  name                           :string(255)
-#  name_url                       :string(255)
-#  description                    :text
-#  estimated_time_in_seconds      :integer
-#  course_module_id               :integer
-#  course_module_element_video_id :integer
-#  course_module_element_quiz_id  :integer
-#  sorting_order                  :integer
-#  forum_topic_id                 :integer
-#  tutor_id                       :integer
-#  related_quiz_id                :integer
-#  related_video_id               :integer
-#  created_at                     :datetime
-#  updated_at                     :datetime
+#  id                        :integer          not null, primary key
+#  name                      :string(255)
+#  name_url                  :string(255)
+#  description               :text
+#  estimated_time_in_seconds :integer
+#  course_module_id          :integer
+#  sorting_order             :integer
+#  forum_topic_id            :integer
+#  tutor_id                  :integer
+#  related_quiz_id           :integer
+#  related_video_id          :integer
+#  created_at                :datetime
+#  updated_at                :datetime
+#  is_video                  :boolean          default(FALSE), not null
+#  is_quiz                   :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
@@ -38,10 +38,10 @@ describe CourseModuleElement do
 
   # relationships
   it { should belong_to(:course_module) }
-  it { should belong_to(:course_module_element_quiz) }
+  it { should have_one(:course_module_element_quiz) }
   it { should have_many(:course_module_element_resources)}
   it { should have_many(:course_module_element_user_logs) }
-  it { should belong_to(:course_module_element_video) }
+  it { should have_one(:course_module_element_video) }
   it { should belong_to(:forum_topic) }
   it { should have_many(:quiz_answers) }
   it { should have_many(:quiz_questions) }
@@ -50,27 +50,6 @@ describe CourseModuleElement do
   it { should belong_to(:tutor) }
 
   # validation
-  # tests for custom-validator 'video_or_quiz_id_required'
-  context 'if both values set...' do
-    before :each do
-      allow(subject).to receive_messages(course_module_element_video_id: 1,
-                                         course_module_element_quiz_id: 1)
-      subject.valid?
-    end
-
-    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both')) }
-  end
-
-  context 'if neither value set...' do
-    before :each do
-      allow(subject).to receive_messages(course_module_element_video_id: nil,
-                                         course_module_element_quiz_id: nil)
-      subject.valid?
-    end
-    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.course_module_element.must_link_with_a_video_or_quiz')) }
-  end
-
-
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
 
@@ -85,25 +64,19 @@ describe CourseModuleElement do
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
 
-  it { should_not validate_presence_of(:course_module_element_video_id) }
-  it { should validate_numericality_of(:course_module_element_video_id) }
-
-  it { should_not validate_presence_of(:course_module_element_quiz_id) }
-  it { should validate_numericality_of(:course_module_element_quiz_id) }
-
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
 
-  it { should validate_presence_of(:forum_topic_id) }
+  it { should_not validate_presence_of(:forum_topic_id) }
   it { should validate_numericality_of(:forum_topic_id) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 
-  it { should validate_presence_of(:related_quiz_id) }
+  it { should_not validate_presence_of(:related_quiz_id) }
   it { should validate_numericality_of(:related_quiz_id) }
 
-  it { should validate_presence_of(:related_video_id) }
+  it { should_not validate_presence_of(:related_video_id) }
   it { should validate_numericality_of(:related_video_id) }
 
   # callbacks
@@ -112,15 +85,17 @@ describe CourseModuleElement do
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
+  it { expect(CourseModuleElement).to respond_to(:all_videos) }
+  it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
 
   # class methods
 
   # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:update_the_module_total_time) }
   it { should respond_to(:array_of_sibling_ids) }
+  it { should respond_to(:destroyable?) }
   it { should respond_to(:my_position_among_siblings) }
-  it { should respond_to(:previous_element_id) }
   it { should respond_to(:next_element_id) }
+  it { should respond_to(:previous_element_id) }
+  it { should respond_to(:update_the_module_total_time) }
 
 end

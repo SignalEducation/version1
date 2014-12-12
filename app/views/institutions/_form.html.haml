@@ -7,7 +7,7 @@
         .form-group
           =f.label :subject_area_id, t('views.institutions.form.subject_area_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :subject_area_id, @subject_areas, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :subject_area_id, @subject_areas, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :name, t('views.institutions.form.name'), class: 'control-label col-sm-4'
           .col-sm-8

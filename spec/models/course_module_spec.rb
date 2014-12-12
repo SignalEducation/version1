@@ -39,7 +39,7 @@ describe CourseModule do
   # relationships
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_many(:course_module_jumbo_quizzes) }
+  it { should have_one(:course_module_jumbo_quiz) }
   it { should belong_to(:exam_level) }
   it { should belong_to(:exam_section) }
   it { should belong_to(:institution) }
@@ -84,10 +84,18 @@ describe CourseModule do
   it { expect(CourseModule).to respond_to(:all_in_order) }
   it { expect(CourseModule).to respond_to(:all_active) }
   it { expect(CourseModule).to respond_to(:all_inactive) }
+  it { expect(CourseModule).to respond_to(:with_url) }
 
   # class methods
 
   # instance methods
+  it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:my_position_among_siblings) }
+  it { should respond_to(:next_module_id) }
+  it { should respond_to(:parent_thing) }
+  it { should respond_to(:previous_module_id) }
+  it { should respond_to(:recalculate_estimated_time) }
+
 
 end

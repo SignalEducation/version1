@@ -30,10 +30,21 @@ Rails.application.routes.draw do
     post 'countries/reorder', to: 'countries#reorder'
     resources :countries
     resources :corporate_customers
-    get 'course_modules/new_for_exam_level/:exam_level_id',
-        to: 'course_modules#new', as: :new_course_module_child
-    post 'course_modules/reorder', to: 'course_modules#reorder'
     resources :course_modules
+    post 'course_modules/reorder', to: 'course_modules#reorder'
+    get 'course_modules/:qualification_url', to: 'course_modules#show',
+        as: :course_modules_for_qualification
+    get 'course_modules/:qualification_url/:exam_level_url', to: 'course_modules#show',
+        as: :course_modules_for_qualification_and_exam_level
+    get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url',
+        to: 'course_modules#show',
+        as: :course_modules_for_qualification_exam_level_and_exam_section
+    get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url/:course_module_url',
+        to: 'course_modules#show',
+        as: :course_modules_for_qualification_exam_level_exam_section_and_name
+    post 'course_module_elements/reorder', to: 'course_module_elements#reorder'
+    resources :course_module_elements, except: [:index, :show]
+    resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     post 'currencies/reorder', to: 'currencies#reorder'
     resources :currencies
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
@@ -47,12 +58,11 @@ Rails.application.routes.draw do
     post 'qualifications/reorder', to: 'qualifications#reorder'
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
+    resources :quiz_questions, except: [:index]
     resources :subject_areas
     resources :subscription_plans
     resources :user_notifications
     resources :vat_codes
-
-
 
     # home page
     root 'users#show' # temporary

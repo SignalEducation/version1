@@ -5,9 +5,11 @@ describe CourseModulesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:course_module_1) { FactoryGirl.create(:course_module) }
-  # todo: let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
-  let!(:course_module_2) { FactoryGirl.create(:course_module) }
+  let!(:qualification) {FactoryGirl.create(:qualification) }
+  let!(:exam_level) {FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
+  let!(:course_module_1) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
+  let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
+  let!(:course_module_2) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:course_module) }
 
   context 'Not logged in: ' do
@@ -138,20 +140,24 @@ describe CourseModulesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('course_modules', 2)
+        expect(assigns[:qualifications].first.class).to eq(Qualification)
+        expect(response).to render_template(:index)
+        expect(flash[:error]).to eq(nil)
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see course_module_1' do
-        get :show, id: course_module_1.id
+        get :show, id: nil, course_module_url: course_module_1.name_url,
+            qualification_url: qualification.name_url
         expect_show_success_with_model('course_module', course_module_1.id)
       end
 
       # optional - some other object
       it 'should see course_module_2' do
         get :show, id: course_module_2.id
-        expect_show_success_with_model('course_module', course_module_2.id)
+        expect(response).to redirect_to(course_modules_url)
+        expect(flash[:error]).to eq(I18n.t('controllers.course_modules.show.cant_find'))
       end
     end
 
@@ -189,15 +195,20 @@ describe CourseModulesController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_1' do
-        put :update, id: course_module_1.id, course_module: valid_params
-        expect_update_success_with_model('course_module', course_modules_url)
+        put :update, id: course_module_1.id, course_module: {name: 'ABC'}
+        expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
+        expect(flash[:error]).to eq(nil)
+        expect(assigns(:course_module).class).to eq(CourseModule)
+        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_1.exam_level.qualification.name_url, course_module_1.exam_level.name_url, course_module_1.exam_section.try(:name_url) || 'all', course_module_1.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for course_module_2' do
-        put :update, id: course_module_2.id, course_module: valid_params
-        expect_update_success_with_model('course_module', course_modules_url)
-        expect(assigns(:course_module).id).to eq(course_module_2.id)
+        put :update, id: course_module_2.id, course_module: {name: 'ABC'}
+        expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
+        expect(flash[:error]).to eq(nil)
+        expect(assigns(:course_module).class).to eq(CourseModule)
+        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_2.exam_level.qualification.name_url, course_module_2.exam_level.name_url, course_module_2.exam_section.try(:name_url) || 'all', course_module_2.name_url))
       end
 
       it 'should reject invalid params' do
@@ -217,9 +228,7 @@ describe CourseModulesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: course_module_1.id
-        expect_delete_success_with_model('course_module', course_modules_url)
-        # todo when course_module_element exists
-        # todo expect_delete_error_with_model('course_module', course_modules_url)
+        expect_delete_error_with_model('course_module', course_modules_url)
       end
 
       it 'should be OK as no dependencies exist' do
@@ -530,20 +539,24 @@ describe CourseModulesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('course_modules', 2)
+        expect(assigns[:qualifications].first.class).to eq(Qualification)
+        expect(response).to render_template(:index)
+        expect(flash[:error]).to eq(nil)
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see course_module_1' do
-        get :show, id: course_module_1.id
+        get :show, id: nil, course_module_url: course_module_1.name_url,
+            qualification_url: qualification.name_url
         expect_show_success_with_model('course_module', course_module_1.id)
       end
 
       # optional - some other object
       it 'should see course_module_2' do
         get :show, id: course_module_2.id
-        expect_show_success_with_model('course_module', course_module_2.id)
+        expect(response).to redirect_to(course_modules_url)
+        expect(flash[:error]).to eq(I18n.t('controllers.course_modules.show.cant_find'))
       end
     end
 
@@ -581,15 +594,20 @@ describe CourseModulesController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_1' do
-        put :update, id: course_module_1.id, course_module: valid_params
-        expect_update_success_with_model('course_module', course_modules_url)
+        put :update, id: course_module_1.id, course_module: {name: 'ABC'}
+        expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
+        expect(flash[:error]).to eq(nil)
+        expect(assigns(:course_module).class).to eq(CourseModule)
+        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_1.exam_level.qualification.name_url, course_module_1.exam_level.name_url, course_module_1.exam_section.try(:name_url) || 'all', course_module_1.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for course_module_2' do
-        put :update, id: course_module_2.id, course_module: valid_params
-        expect_update_success_with_model('course_module', course_modules_url)
-        expect(assigns(:course_module).id).to eq(course_module_2.id)
+        put :update, id: course_module_2.id, course_module: {name: 'ABC'}
+        expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
+        expect(flash[:error]).to eq(nil)
+        expect(assigns(:course_module).class).to eq(CourseModule)
+        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_2.exam_level.qualification.name_url, course_module_2.exam_level.name_url, course_module_2.exam_section.try(:name_url) || 'all', course_module_2.name_url))
       end
 
       it 'should reject invalid params' do
@@ -609,9 +627,7 @@ describe CourseModulesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: course_module_1.id
-        expect_delete_success_with_model('course_module', course_modules_url)
-        # todo when course_module_element exists
-        # todo expect_delete_error_with_model('course_module', course_modules_url)
+        expect_delete_error_with_model('course_module', course_modules_url)
       end
 
       it 'should be OK as no dependencies exist' do

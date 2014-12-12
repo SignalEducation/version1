@@ -1,0 +1,50 @@
+.row
+  .col-sm-12
+    %h2.no-top-gap=@course_module.name
+    =render partial: 'shared/tutor_breadcrumbs', locals: {the_thing: @course_module}
+    %p=@course_module.description
+    %p
+      =t('views.course_modules.form.tutor_id') + ':'
+      =@course_module.tutor.full_name
+    .row
+      .col-sm-4
+        =t('views.general.time')
+        =seconds_to_time(@course_module.estimated_time_in_seconds)
+      .col-sm-4.text-center
+        -if @course_module.compulsory
+          .label.label-warning Compulsory
+      .col-sm-4.text-right
+        -if @course_module.active
+          .label.label-success Active
+        -else
+          .label.label-danger Inactive
+    %br/
+    .row
+      .col-sm-12
+        %p
+          =link_to t('views.general.back'), course_modules_url
+          |
+          =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip')
+
+.row
+  .col-sm-12
+    %h3=t('views.course_modules.form.course_module_elements')
+    %table.table.table-striped.sorted_table
+      %tbody
+        -@course_module.course_module_elements.each do |cme|
+          %tr{id: cme.id}
+            %td=cme.name
+            %td
+              -if cme.course_module_element_video
+                Video
+              -elsif cme.course_module_element_quiz
+                Quiz
+              -else
+                Unknown
+            %td.text-right=seconds_to_time(cme.estimated_time_in_seconds)
+            %td=link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info'
+    %p
+      =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: @course_module.id), class: 'btn btn-success'
+      =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: @course_module.id), class: 'btn btn-success'
+
+    =render partial: 'course_module_jumbo_quizzes/show'

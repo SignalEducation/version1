@@ -25,11 +25,11 @@
         .form-group
           =f.label :currency_id, t('views.countries.form.currency_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :currency_id, @currencies, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :continent, t('views.countries.form.continent'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.select :continent, @continents, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.select :continent, @continents, {include_blank: t('views.general.select')}, {class: 'form-control'}
       %p
         =f.submit t('views.general.save'), class: 'btn btn-success'
         =t('views.general.or')

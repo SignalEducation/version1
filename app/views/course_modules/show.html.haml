@@ -2,49 +2,14 @@
   .col-sm-12
     .page-header
       %h1
-        =t('views.course_modules.show.h1')
-        \#
-        =@course_module.id
+        =t('views.course_modules.index.h1')
 .row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.institution_id')
-        %td.col-sm-8=link_to @course_module.institution.name, @course_module.institution
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.exam_level_id')
-        %td.col-sm-8=link_to @course_module.exam_level.name, @course_module.exam_level
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.exam_section_id')
-        %td.col-sm-8
-          -if @course_module.exam_section_id
-            =link_to @course_module.exam_section.name, @course_module.exam_section
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.name')
-        %td.col-sm-8=@course_module.name
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.name_url')
-        %td.col-sm-8=@course_module.name_url
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.description')
-        %td.col-sm-8=@course_module.description
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.tutor_id')
-        %td.col-sm-8=link_to @course_module.tutor.full_name, 'mailto:' + @course_module.tutor.email
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.estimated_time_in_seconds')
-        %td.col-sm-8=@course_module.estimated_time_in_seconds
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.compulsory')
-        %td.col-sm-8=tick_or_cross(@course_module.compulsory)
-      %tr
-        %td.col-sm-4=t('views.course_modules.form.active')
-        %td.col-sm-8=tick_or_cross(@course_module.active)
-      %tr
-        %td.col-sm-4
-          -# todo =t('views.course_module_elements.view.h1')
-        %td.col-sm-8
-    %p
-      =link_to t('views.general.back'), course_modules_url
-      |
-      =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip')
+  .col-sm-3
+    =render partial: 'course_modules/side_nav'
+  .col-sm-9
+    -if @course_module
+      =render partial: 'course_modules/show'
+    -else
+      .well.well-sm.text-center
+        %h2=t('views.course_modules.index.h1')
+        %p=t('views.course_modules.show.click_a_module')

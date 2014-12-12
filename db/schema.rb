@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141124094741) do
+ActiveRecord::Schema.define(version: 20141211091300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,9 +43,6 @@ ActiveRecord::Schema.define(version: 20141124094741) do
 
   create_table "course_module_element_quizzes", force: true do |t|
     t.integer  "course_module_element_id"
-    t.string   "name"
-    t.text     "preamble"
-    t.integer  "expected_time_in_seconds"
     t.integer  "time_limit_seconds"
     t.integer  "number_of_questions"
     t.string   "question_selection_strategy"
@@ -63,6 +60,10 @@ ActiveRecord::Schema.define(version: 20141124094741) do
     t.string   "web_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
   end
 
   create_table "course_module_element_user_logs", force: true do |t|
@@ -85,10 +86,6 @@ ActiveRecord::Schema.define(version: 20141124094741) do
   create_table "course_module_element_videos", force: true do |t|
     t.integer  "course_module_element_id"
     t.integer  "raw_video_file_id"
-    t.string   "name"
-    t.integer  "run_time_in_seconds"
-    t.integer  "tutor_id"
-    t.text     "description"
     t.string   "tags"
     t.string   "difficulty_level"
     t.integer  "estimated_study_time_seconds"
@@ -103,8 +100,6 @@ ActiveRecord::Schema.define(version: 20141124094741) do
     t.text     "description"
     t.integer  "estimated_time_in_seconds"
     t.integer  "course_module_id"
-    t.integer  "course_module_element_video_id"
-    t.integer  "course_module_element_quiz_id"
     t.integer  "sorting_order"
     t.integer  "forum_topic_id"
     t.integer  "tutor_id"
@@ -112,6 +107,8 @@ ActiveRecord::Schema.define(version: 20141124094741) do
     t.integer  "related_video_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_video",                  default: false, null: false
+    t.boolean  "is_quiz",                   default: false, null: false
   end
 
   create_table "course_module_jumbo_quizzes", force: true do |t|
@@ -156,12 +153,13 @@ ActiveRecord::Schema.define(version: 20141124094741) do
     t.integer  "qualification_id"
     t.string   "name"
     t.string   "name_url"
-    t.boolean  "is_cpd",                            default: false, null: false
+    t.boolean  "is_cpd",                                  default: false, null: false
     t.integer  "sorting_order"
-    t.boolean  "active",                            default: false, null: false
+    t.boolean  "active",                                  default: false, null: false
     t.float    "best_possible_first_attempt_score"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "default_number_of_possible_exam_answers", default: 4
   end
 
   create_table "exam_sections", force: true do |t|
@@ -290,11 +288,15 @@ ActiveRecord::Schema.define(version: 20141124094741) do
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax", null: false
-    t.boolean  "contains_image",   null: false
+    t.boolean  "contains_mathjax",   null: false
+    t.boolean  "contains_image",     null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   create_table "quiz_questions", force: true do |t|
