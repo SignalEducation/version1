@@ -4,9 +4,6 @@
 #
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
-#  name                              :string(255)
-#  preamble                          :text
-#  expected_time_in_seconds          :integer
 #  time_limit_seconds                :integer
 #  number_of_questions               :integer
 #  question_selection_strategy       :string(255)
