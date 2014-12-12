@@ -86,17 +86,118 @@ class Subscription < ActiveRecord::Base
     elsif Rails.env.test?
       prefix = "Test-#{rand(9999)}: "
     else
-      prefix = "Dev-#{rand(9999)}"
+      prefix = "Dev-#{rand(9999)}: "
     end
-    puts "*" * 100
+    puts '*' * 100
     puts @stripe_token
     # todo stripe integration
-    self.stripe_guid = 'sub_DUMMY_ABC123'
+    # todo see https://stripe.com/docs/guides/subscriptions#step-2-subscribe-customers
+    stripe_customer = Stripe::Customer.create(
+            card: @stripe_token,
+            plan: self.subscription_plan.stripe_guid,
+            email: self.user.email
+    )
+    puts stripe_customer.inspect
+
+    sample_response = {
+            id: 'cus_5JJjWCDxOcq2Yf',
+            object: 'customer',
+            created: 1418343370,
+            livemode: false,
+            description: nil,
+            email: 'dan.laffan.test@gmail.com',
+            delinquent: false,
+            metadata: {},
+            subscriptions: {
+                    object: 'list',
+                    total_count: 1,
+                    has_more: false,
+                    url: '/v1/customers/cus_5JJjWCDxOcq2Yf/subscriptions',
+                    data:[
+                            {id:'sub_5JJjYP1QnQ5iSx',
+                             plan:{
+                                     id: 'development-of5JfmyFLxFjmemVWPAg',
+                                     interval: 'month',
+                                     name: 'LearnSignal Monthly',
+                                     created: 1418342780,
+                                     amount: 999,
+                                     currency: 'eur',
+                                     object: 'plan',
+                                     livemode: false,
+                                     interval_count: 1,
+                                     trial_period_days: 7,
+                                     metadata: {},
+                                     statement_description: 'LearnSignal'
+                             },
+                             object: 'subscription',
+                             start: 1418343370,
+                             status: 'trialing', ########################################
+                             customer: 'cus_5JJjWCDxOcq2Yf',
+                             cancel_at_period_end: false,
+                             current_period_start: 1418343370,
+                             current_period_end: 1418948170,
+                             ended_at: nil,
+                             trial_start: 1418343370,
+                             trial_end: 1418948170,
+                             canceled_at: nil,
+                             quantity: 1,
+                             application_fee_percent: nil,
+                             discount: nil,
+                             metadata:{}
+                            }
+                    ]
+            },
+            discount: null,
+            account_balance: 0,
+            currency: 'eur',
+            cards: {
+                    object: 'list',
+                    total_count: 1,
+                    has_more: false,
+                    url: '/v1/customers/cus_5JJjWCDxOcq2Yf/cards',
+                    data: [
+                            {id: 'card_5JJjkBnrgGtHca',
+                             object: 'card',
+                             last4: '4242',
+                             brand: 'Visa',
+                             funding: 'credit',
+                             exp_month: 1,
+                             exp_year: 2015,
+                             fingerprint: '2JyQfTIvakRtY5NA',
+                             country: 'US',
+                             name: null,
+                             address_line1: null,
+                             address_line2: null,
+                             address_city: null,
+                             address_state: null,
+                             address_zip: null,
+                             address_country: null,
+                             cvc_check: 'pass',
+                             address_line1_check: null,
+                             address_zip_check: null,
+                             dynamic_last4: null,
+                             customer: 'cus_5JJjWCDxOcq2Yf'
+                            }
+                    ]
+            },
+            default_card: 'card_5JJjkBnrgGtHca'
+    }
+
+    self.user.stripe_customer_id = stripe_customer.id
+    self.stripe_guid = stripe_customer.subscriptions.data[0].id
+    if Rails.env.production? && stripe_customer.livemode == false
+      errors.add(:base, 'Non-live transaction on the Live server')
+      Rails.error.log 'models/subscription.rb#create_on_stripe_platform - Non-live transaction on Production platform. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+      false
+    else
+      true
+    end
   end
 
   def update_on_stripe_platform
+
     # todo stripe integration
-    self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
+    #self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
   end
 
   def set_defaults_on_create
