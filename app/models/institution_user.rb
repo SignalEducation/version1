@@ -17,7 +17,7 @@
 class InstitutionUser < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :institution_id, :user_id, :student_registration_number, :student, :qualified
+  attr_accessible :institution_id, :user_id, :student_registration_number, :student, :qualified, :exam_number, :membership_number
 
   # Constants
 
