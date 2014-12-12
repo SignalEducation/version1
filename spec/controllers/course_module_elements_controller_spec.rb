@@ -129,7 +129,7 @@ describe CourseModuleElementsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module_element: valid_params
-        expect_create_success_with_model('course_module_element', edit_course_module_element_url(CourseModuleElement.last.id))
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
       it 'should report error for invalid params' do
@@ -141,7 +141,7 @@ describe CourseModuleElementsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_element_1' do
         put :update, id: course_module_element_1.id, course_module_element: valid_params
-        expect_update_success_with_model('course_module_element', course_module_elements_url)
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
       # optional
@@ -152,7 +152,7 @@ describe CourseModuleElementsController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1.id, course_module_element: {valid_params.keys.first => ''}
+        put :update, id: course_module_element_1.id, course_module_element: {estimated_time_in_seconds: 'abc'}
         expect_update_error_with_model('course_module_element')
         expect(assigns(:course_module_element).id).to eq(course_module_element_1.id)
       end
@@ -431,7 +431,7 @@ describe CourseModuleElementsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module_element: valid_params
-        expect_create_success_with_model('course_module_element', edit_course_module_element_url(CourseModuleElement.last.id))
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
       it 'should report error for invalid params' do
@@ -443,18 +443,18 @@ describe CourseModuleElementsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_element_1' do
         put :update, id: course_module_element_1.id, course_module_element: valid_params
-        expect_update_success_with_model('course_module_element', course_module_elements_url)
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
       # optional
       it 'should respond OK to valid params for course_module_element_2' do
         put :update, id: course_module_element_2.id, course_module_element: valid_params
-        expect_update_success_with_model('course_module_element', course_module_elements_url)
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
         expect(assigns(:course_module_element).id).to eq(course_module_element_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1.id, course_module_element: {valid_params.keys.first => ''}
+        put :update, id: course_module_element_1.id, course_module_element: {estimated_time_in_seconds: 'ABC'}
         expect_update_error_with_model('course_module_element')
         expect(assigns(:course_module_element).id).to eq(course_module_element_1.id)
       end

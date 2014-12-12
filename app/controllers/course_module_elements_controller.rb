@@ -100,8 +100,10 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def set_related_cmes
-    if @course_module_element
+    if @course_module_element && @course_module_element.course_module
       @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
+    else
+      @related_cmes = CourseModuleElement.none
     end
   end
 
