@@ -11,14 +11,19 @@
           %th=t('views.exam_sections.form.name')
           %th=t('views.exam_sections.form.name_url')
           %th=t('views.exam_sections.form.exam_level_id')
-          %th=t('views.exam_sections.form.active')
           %th
       %tbody
+        -tracker = nil
         -@exam_sections.each do |exam_section|
+          -unless tracker == exam_section.exam_level_id
+            -tracker = exam_section.exam_level_id
+            %tr
+              %td{colspan: 4}
+                .h3=link_to(exam_section.exam_level.full_name, exam_section.exam_level)
+                =link_to t('views.general.new'), new_exam_section_url(exam_level_id: exam_section.exam_level_id), class: 'btn btn-success btn-xs'
           %tr{id: exam_section.id}
             %td=link_to(exam_section.name, exam_section, title: t('views.general.view_tooltip'))
             %td=link_to(exam_section.name_url, exam_section, title: t('views.general.view_tooltip'))
-            %td=link_to(exam_section.exam_level.name, exam_section.exam_level, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(exam_section.active), exam_section, title: t('views.general.view_tooltip'))
             %td
               =link_to t('views.general.edit'), edit_exam_section_url(exam_section), class: 'btn btn-info btn-xs'
