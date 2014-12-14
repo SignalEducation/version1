@@ -1,0 +1,26 @@
+.panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
+  -@qualification.exam_levels.each_with_index do |exam_level, counter|
+    .panel.panel-default
+      .panel-heading#headingOne{role: 'tab' }
+        %h4.panel-title
+          %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
+            =exam_level.name
+
+      .panel-collapse.collapse{id: "collapse_#{counter}", class: (exam_level.id == @exam_level_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+        .panel-body
+          -if exam_level.exam_sections.count > 0
+            -exam_level.exam_sections.each do |exam_section|
+              %p=exam_section.name
+              %p
+                -exam_section.course_modules.each do |course_module|
+                  &rarr;
+                  =link_to course_module.name, course_module_special_link(course_module)
+                  %br/
+                &rarr;
+                =link_to t('views.general.new'), new_course_module_url(exam_section_url: exam_section.name_url)
+          -else
+            -exam_level.course_modules.each do |course_module|
+              =link_to course_module.name, course_module_special_link(course_module)
+              %br/
+            =link_to t('views.general.new'), new_course_module_url(exam_level_url: exam_level.name_url)
+

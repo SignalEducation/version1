@@ -23,7 +23,7 @@ class Subscription < ActiveRecord::Base
                   #:next_renewal_date
 
   # Constants
-  STATUSES = %w(trial active suspended paused cancelled)
+  STATUSES = %w(trialing active suspended paused cancelled)
 
   # relationships
   belongs_to :user

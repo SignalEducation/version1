@@ -88,4 +88,17 @@ Rails.application.configure do
           enable_starttls_auto: true
   }
 
+  # see the HerokuDevCenter Article
+  # https://devcenter.heroku.com/articles/paperclip-s3
+  config.paperclip_defaults = {
+      storage: :s3,
+      url: ':s3_domain_url',
+      path: '/:class/:id/:filename',
+      s3_host_name: 's3-eu-west-1.amazonaws.com',
+      s3_credentials: {
+          bucket: ENV['LEARNSIGNAL3_S3_BUCKET_NAME'],
+          access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+          secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
+      }
+  }
 end

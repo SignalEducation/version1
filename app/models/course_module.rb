@@ -32,7 +32,7 @@ class CourseModule < ActiveRecord::Base
   # relationships
   has_many :course_module_elements
   has_many :course_module_element_user_logs
-  has_many :course_module_jumbo_quizzes
+  has_one :course_module_jumbo_quiz
   belongs_to :exam_level
   belongs_to :exam_section
   belongs_to :institution
@@ -61,6 +61,7 @@ class CourseModule < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
   scope :all_active, -> { where(active: true) }
   scope :all_inactive, -> { where(active: false) }
+  scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
 
@@ -70,7 +71,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_elements.empty? && self.course_module_jumbo_quizzes.empty? && self.course_module_element_user_logs.empty?
+    self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty?
   end
 
   def my_position_among_siblings

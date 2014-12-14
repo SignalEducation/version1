@@ -135,8 +135,6 @@ GEM
     lumberjack (1.0.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    mathjax-rails (2.3.0)
-      railties (>= 3.0)
     method_source (0.8.2)
     mime-types (2.4.3)
     mini_portile (0.6.0)
@@ -289,7 +287,7 @@ DEPENDENCIES
   mathjax-rails
   mixpanel-ruby
   newrelic_rpm
-  paperclip (~> 4.1)
+  paperclip (~> 4.2)
   pg
   protected_attributes
   pry

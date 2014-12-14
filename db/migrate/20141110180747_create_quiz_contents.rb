@@ -4,8 +4,8 @@ class CreateQuizContents < ActiveRecord::Migration
       t.integer :quiz_question_id, index: true
       t.integer :quiz_answer_id, index: true
       t.text :text_content
-      t.boolean :contains_mathjax, defualt: false, null: false
-      t.boolean :contains_image, defualt: false, null: false
+      t.boolean :contains_mathjax, default: false, null: false
+      t.boolean :contains_image, default: false, null: false
       t.integer :sorting_order
 
       t.timestamps

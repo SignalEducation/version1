@@ -67,7 +67,7 @@ class ExamLevelsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active)
+    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers)
   end
 
 end

@@ -9,24 +9,31 @@
 #  web_url                  :string(255)
 #  created_at               :datetime
 #  updated_at               :datetime
+#  upload_file_name         :string(255)
+#  upload_content_type      :string(255)
+#  upload_file_size         :integer
+#  upload_updated_at        :datetime
 #
 
 class CourseModuleElementResource < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :name, :description, :web_url
+  attr_accessible :course_module_element_id, :name, :description, :web_url, :upload
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
+  has_attached_file :upload, default_url: '/assets/images/missing.png'
 
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :description, presence: true
-  validates :web_url, presence: true
+  validates_attachment_content_type :upload,
+            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls)
+  validate  :web_url_or_upload_required
 
   # callbacks
   before_destroy :check_dependencies
@@ -47,6 +54,12 @@ class CourseModuleElementResource < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def web_url_or_upload_required
+    if self.web_url.blank? && self.upload.blank? && self.upload_file_name.blank?
+      errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
     end
   end
 

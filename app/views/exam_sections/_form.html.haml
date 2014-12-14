@@ -7,7 +7,7 @@
         .form-group
           =f.label :exam_level_id, t('views.exam_sections.form.exam_level_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :exam_level_id, @exam_levels, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :exam_level_id, @exam_levels, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :name, t('views.exam_sections.form.name'), class: 'control-label col-sm-4'
           .col-sm-8
@@ -22,10 +22,6 @@
               %label
                 =f.check_box :active
                 =t('views.exam_sections.form.active')
-        .form-group
-          =f.label :best_possible_first_attempt_score, t('views.exam_sections.form.best_possible_first_attempt_score'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :best_possible_first_attempt_score, placeholder: t('views.exam_sections.form.best_possible_first_attempt_score_placeholder'), class: 'form-control'
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')
       =link_to t('views.general.cancel'), exam_sections_path

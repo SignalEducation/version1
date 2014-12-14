@@ -7,7 +7,7 @@
         -# todo .form-group
           =f.label :country_id, t('views.vat_codes.form.country_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           =f.label :name, t('views.vat_codes.form.name'), class: 'control-label col-sm-4'
           .col-sm-8

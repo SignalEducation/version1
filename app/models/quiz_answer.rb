@@ -15,26 +15,30 @@
 class QuizAnswer < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :quiz_question_id, :correct, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id
+  attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
 
   # Constants
-  WRONGNESS = %w(slight medium very)
+  WRONGNESS = %w(correct slight medium very)
 
   # relationships
   has_many :quiz_attempts
-  has_many :quiz_contents, -> { order(:sorting_order) }
+  has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
   belongs_to :quiz_question
   belongs_to :wrong_answer_video, class_name: 'CourseModuleElement', foreign_key: :wrong_answer_video_id
 
+  accepts_nested_attributes_for :quiz_contents, allow_destroy: true
+
   # validation
   validates :quiz_question_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :degree_of_wrongness, inclusion: {in: WRONGNESS}
-  validates :wrong_answer_explanation_text, presence: true
+  validates :wrong_answer_explanation_text, presence: true, unless: "degree_of_wrongness == 'correct'"
   validates :wrong_answer_video_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
+  before_save :set_the_field_correct
+  before_update :set_wrong_answer_video_id
   before_destroy :check_dependencies
 
   # scopes
@@ -54,6 +58,15 @@ class QuizAnswer < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def set_the_field_correct
+    self.correct = self.degree_of_wrongness == 'correct'
+    true
+  end
+
+  def set_wrong_answer_video_id
+    self.wrong_answer_video_id = self.quiz_question.course_module_element.related_video_id
   end
 
 end

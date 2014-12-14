@@ -35,6 +35,8 @@
           -@exam_section.course_modules.all_in_order.each do |course_module|
             =link_to course_module.name, course_module
             %br/
+          =link_to t('views.general.new'), new_course_module_url(exam_section_url: @exam_section.name_url), class: 'btn btn-success btn-xs'
+
     %p
       =link_to t('views.general.back'), exam_sections_url
       |

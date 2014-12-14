@@ -41,7 +41,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   UserGroup.where(id: 4).first_or_create!(
           name: 'Tutor', description: 'Can create course content',
-          individual_student: true, tutor: false, content_manager: false,
+          individual_student: true, tutor: true, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up:true,
           subscription_required_to_see_content: true, forum_manager: true

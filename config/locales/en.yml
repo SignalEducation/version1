@@ -50,6 +50,30 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    course_module_elements:
+      create:
+        flash:
+          success: Course Module Element has been created successfully
+      update:
+        flash:
+          success: Course Module Element details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module Element has been deleted
+          error: Course Module Element was not deleted
+
+    course_module_jumbo_quizzes:
+      create:
+        flash:
+          success: Jumbo Quiz has been created successfully
+      update:
+        flash:
+          success: Jumbo Quiz details have been updated successfully
+      destroy:
+        flash:
+          success: Jumbo Quiz has been deleted
+          error: Jumbo Quiz was not deleted
+
     countries:
       create:
         flash:
@@ -75,6 +99,8 @@ en:
           error: Corporate Customer was not deleted
 
     course_modules:
+      show:
+        cant_find: Sorry, that could not be found
       create:
         flash:
           success: Course Module has been created successfully
@@ -174,6 +200,19 @@ en:
       create:
         flash:
           success: "Welcome aboard! Your sign-up was completed successfully"
+
+    quiz_questions:
+      create:
+        flash:
+          success: Quiz Question has been created successfully
+      update:
+        flash:
+          success: Quiz Question details have been updated successfully
+      destroy:
+        flash:
+          success: Quiz Question has been deleted
+          error: Quiz Question was not deleted
+
     subject_areas:
       create:
         flash:
@@ -306,6 +345,9 @@ en:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
       must_link_with_a_video_or_quiz: You must link this course module element to a video or quiz
 
+    course_module_element_resource:
+      web_url_or_upload_error: You must enter a web URL or upload a file
+
     institution_users:
       can_t_be_blank_for_students: "Can't be blank for students"
 
@@ -353,6 +395,7 @@ en:
       sign_in: Log in
       sign_out: Sign out
       sign_up: Sign up
+      time: Time
       toggle_navigation: Toggle navigation
       view: View
       view_tooltip: click to view
@@ -440,6 +483,7 @@ en:
 
     course_modules:
       form:
+        course_module_elements: Course Module Elements
         institution_id: Institution
         qualification_id: Qualification
         exam_level_id: Exam level
@@ -463,17 +507,126 @@ en:
 
       index:
         h1: Course Modules
+        lead: You can manage Course Modules for any of the Qualifications and Exam levels shown below, or create a new Qualification or Exam Level.
+        new_qualification: New Qualification
+        new_exam_level: New Exam Level
+        new_exam_section: New Exam Section
 
       new:
         h1: New Course Module
 
       show:
         h1: Course Module
+        click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
+
+    course_module_elements:
+      form:
+        name: Name
+        name_placeholder: My video title
+        name_url: Name URL
+        name_url_placeholder: my-video-title
+        description: Description
+        description_placeholder: Description
+        estimated_time_in_seconds: Time in seconds
+        estimated_time_in_seconds_placeholder: 180
+        course_module_id: Course module id
+        course_module_element_video_id: Course module element video id
+        course_module_element_quiz_id: Course module element quiz id
+        sorting_order: Sorting order
+        forum_topic_id: Forum topic
+        tutor_id: Tutor
+        related_quiz_id: Related quiz
+        related_video_id: Related video
+        created_at: Created at
+        updated_at: Updated_at
+        new_video: New video
+        new_quiz: New quiz
+        questions: Questions
+        save_and_add_another: Save and create another Question
+
+      edit:
+        h1: Edit Course Module Element
+
+      index:
+        h1: Course Modules Elements
+
+      new:
+        h1: New Course Module Element
+
+      show:
+        h1: Course Module Element
+
+    course_module_element_quizzes:
+      form:
+        time_limit_seconds: Time Limit in seconds
+        time_limit_seconds_placeholder: 100
+        number_of_questions: Number of Questions
+        number_of_questions_placeholder: 10
+        question_selection_strategy: Question Selection Strategy
+        question_selection_strategy_placeholder: 1
+        best_possible_score_first_attempt: "Max Score (1st. Go)"
+        best_possible_score_retry: "Max Score (Retry)"
+        advanced_setup_link: Advanced Setup
+        preview_button: Preview
+
+    course_module_element_resources:
+      form:
+        course_module_element_id: Course module element
+        name: Name
+        name_placeholder: Name that users will see
+        description: Description
+        description_placeholder: Description of your resource
+        web_url: Web URL
+        web_url_placeholder: http://en.wikipedia.org/learnsignal
+        upload_file_name: Upload file name
+        upload_content_type: Upload content type
+        upload_file_size: Upload file size
+        upload_updated_at: Upload updated at
+        upload: Upload a file
+
+      edit:
+
+      index:
+        h1: Resources
+
+      new:
+
+      show:
+
+    course_module_element_videos:
+      form:
+        raw_video_file_id: Video File
+        tags: "Tags (separate with commas)"
+        tags_placeholder: "economics, macro-economics"
+        difficulty_level: Difficulty Level
+        estimated_study_time_seconds: Estimated Time in Seconds
+        estimated_study_time_seconds_placeholder: 100
+        transcript: Transcript
+        transcript_placeholder: Paste Transcript Here !
+
+    course_module_jumbo_quiz:
+      form:
+        name: Name
+        name_placeholder: Intro to Economics Jumbo Quiz
+        minimum_question_count_per_quiz: Min Questions from each Quiz
+        maximum_question_count_per_quiz: Max Questions from each Quiz
+        total_number_of_questions: Total Number of Questions
+        course_module_id: Course Module
+
+      edit:
+        h1: Edit Jumbo Quiz
+
+      new:
+        h1: New Jumbo Quiz
+
+      show:
+        h1: Jumbo Quiz
+        no_jumbo_quizzes_yet: "Sorry, there is no Jumbo Quiz for this Course Module. Why not create one now !"
 
     currencies:
       form:
         iso_code: ISO code
-        iso_code_placeholder: eur
+        iso_code_placeholder: EUR
         name: Name
         name_placeholder: Euro
         leading_symbol: Leading symbol
@@ -509,6 +662,8 @@ en:
         active: 'Active?'
         best_possible_first_attempt_score: 'Best-possible first attempt score'
         best_possible_first_attempt_score_placeholder: 200
+        default_number_of_possible_exam_answers: Default Number of Exam Answers
+        default_number_of_possible_exam_answers_placeholder: 4
 
       index:
         h1: Exam Levels
@@ -639,6 +794,44 @@ en:
 
       new:
         h1: New Qualification
+
+    quiz_contents:
+      form:
+        content_type:
+          text: Text
+          image: Image
+          mathjax: MathJax
+
+    quiz_questions:
+      form:
+        difficulty_level: Difficulty Level
+        question_text: Question Text
+        solution_to_the_question: Solution to the Question
+        answers: Answers
+        solutions: Solutions
+        degree_of_wrongness: "Right/Wrong"
+        text_content_placeholder: Ask the question
+        solution_to_the_question_placeholder: Enter the Solution
+        wrong_answer_explanation_text: "Why this answer is wrong?"
+        wrong_answer_explanation_text_placeholder: Explain why this answer is incorrect
+
+      edit:
+        h1: "Edit Quiz Question - Advanced"
+
+      new:
+        h1: "New Quiz Question - Advanced"
+
+      show:
+        h1: Quiz Question Preview
+        choose_an_answer: Choose an Answer
+
+    quiz_answer:
+      form:
+        answer_content_placeholder: Fill in the Answer Here
+        answer_solution_content_placeholder: Enter the Solution or Leave blank for Correct Answer
+        answer_text: Answer
+        answer_text_placeholder: Fill in the Answer Here
+        wrong_answer_video_id: Related Video
 
     shared:
       filter_panel:
@@ -824,53 +1017,53 @@ en:
         paragraph_1: "Choose a new password for your account:"
 
     user_notifications:
-          form:
-            user_id: User
-            subject_line: Subject
-            subject_line_placeholder: Subject line
-            content: Content
-            content_placeholder: Content
-            email_required: Email required
-            email_sent_at: Email sent at
-            email_sent_at_placeholder: Date
-            unread: Unread
-            destroyed_at: Destroyed at
-            destroyed_at_placeholder: Destroyed at
-            message_type: Message type
-            message_type_placeholder: Blog, study plan, forum, marketing etc
-            forum_topic_id: Forum topic
-            forum_post_id: Forum post
-            tutor_id: Tutor
-            falling_behind: Falling behind
-            blog_post_id: Blog post
-            created_at: Sent at
+      form:
+        user_id: User
+        subject_line: Subject
+        subject_line_placeholder: Subject line
+        content: Content
+        content_placeholder: Content
+        email_required: Email required
+        email_sent_at: Email sent at
+        email_sent_at_placeholder: Date
+        unread: Unread
+        destroyed_at: Destroyed at
+        destroyed_at_placeholder: Destroyed at
+        message_type: Message type
+        message_type_placeholder: Blog, study plan, forum, marketing etc
+        forum_topic_id: Forum topic
+        forum_post_id: Forum post
+        tutor_id: Tutor
+        falling_behind: Falling behind
+        blog_post_id: Blog post
+        created_at: Sent at
 
-          index:
-            h1: Your Notifications
-            h2: You do not have any notifications
-            user_id: User
-            subject_line: Subject
-            content: Content
-            email_required: Email required
-            email_sent_at: Email sent
-            unread: Unread
-            destroyed_at: Destroyed at
-            message_type: Type
-            forum_topic_id: Forum topic
-            forum_post_id: Forum post
-            tutor_id: Tutor
-            falling_behind: Falling behind
-            blog_post_id: Blog post
+      index:
+        h1: Your Notifications
+        h2: You do not have any notifications
+        user_id: User
+        subject_line: Subject
+        content: Content
+        email_required: Email required
+        email_sent_at: Email sent
+        unread: Unread
+        destroyed_at: Destroyed at
+        message_type: Type
+        forum_topic_id: Forum topic
+        forum_post_id: Forum post
+        tutor_id: Tutor
+        falling_behind: Falling behind
+        blog_post_id: Blog post
 
-          show:
-            h1: Notification
-            from: From
+      show:
+        h1: Notification
+        from: From
 
-          edit:
-            h1: Edit Notification
+      edit:
+        h1: Edit Notification
 
-          new:
-            h1: New Notification
+      new:
+        h1: New Notification
 
     user_sessions:
       new:

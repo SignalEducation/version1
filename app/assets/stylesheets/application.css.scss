@@ -55,6 +55,7 @@ body {
   padding-top: 4px;
 }
 
+<<<<<<< HEAD
 .subscription-panel {
   background-color: #faebd7;
 }
@@ -97,4 +98,8 @@ body {
 
 #student-sign-up form > .row .col-sm-8.col-sm-offset-2 .well:first-child {
   margin-top: 80px;
+}
+.no-top-gap {
+  margin-top: 0;
+  padding-top: 0;
 }
