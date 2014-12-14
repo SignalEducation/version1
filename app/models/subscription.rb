@@ -2,28 +2,32 @@
 #
 # Table name: subscriptions
 #
-#  id                    :integer          not null, primary key
-#  user_id               :integer
-#  corporate_customer_id :integer
-#  subscription_plan_id  :integer
-#  stripe_guid           :string(255)
-#  next_renewal_date     :date
-#  complementary         :boolean          default(FALSE), not null
-#  current_status        :string(255)
-#  created_at            :datetime
-#  updated_at            :datetime
+#  id                            :integer          not null, primary key
+#  user_id                       :integer
+#  corporate_customer_id         :integer
+#  subscription_plan_id          :integer
+#  stripe_guid                   :string(255)
+#  next_renewal_date             :date
+#  complementary                 :boolean          default(FALSE), not null
+#  current_status                :string(255)
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  stripe_customer_id            :string(255)
+#  original_stripe_customer_data :text
 #
 
 class Subscription < ActiveRecord::Base
+
+  serialize :original_stripe_subscription_data
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complementary, :current_status, :stripe_guid,
                   :stripe_token
-                  #:next_renewal_date
+                  # next_renewal_date
 
   # Constants
-  STATUSES = %w(trialing active suspended paused cancelled)
+  STATUSES = %w(trialing active past_due canceled unpaid suspended paused)
 
   # relationships
   belongs_to :user
@@ -45,8 +49,8 @@ class Subscription < ActiveRecord::Base
   validates :stripe_token, presence: true, on: :create
 
   # callbacks
-  before_validation :set_defaults_on_create, on: :create
   before_create :create_on_stripe_platform
+  after_create  :create_a_subscription_transaction
   before_update :update_on_stripe_platform
   before_destroy :check_dependencies
 
@@ -58,7 +62,7 @@ class Subscription < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.invoices.empty?
+    self.invoices.empty? && self.subscription_transactions.empty?
   end
 
   def stripe_token=(t) # setter method
@@ -79,112 +83,21 @@ class Subscription < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    if Rails.env.production?
-      prefix = ''
-    elsif Rails.env.staging?
-      prefix = 'Staging: '
-    elsif Rails.env.test?
-      prefix = "Test-#{rand(9999)}: "
-    else
-      prefix = "Dev-#{rand(9999)}: "
-    end
-    puts '*' * 100
-    puts @stripe_token
-    # todo stripe integration
     # todo see https://stripe.com/docs/guides/subscriptions#step-2-subscribe-customers
     stripe_customer = Stripe::Customer.create(
             card: @stripe_token,
             plan: self.subscription_plan.stripe_guid,
             email: self.user.email
     )
-    puts stripe_customer.inspect
 
-    sample_response = {
-            id: 'cus_5JJjWCDxOcq2Yf',
-            object: 'customer',
-            created: 1418343370,
-            livemode: false,
-            description: nil,
-            email: 'dan.laffan.test@gmail.com',
-            delinquent: false,
-            metadata: {},
-            subscriptions: {
-                    object: 'list',
-                    total_count: 1,
-                    has_more: false,
-                    url: '/v1/customers/cus_5JJjWCDxOcq2Yf/subscriptions',
-                    data:[
-                            {id:'sub_5JJjYP1QnQ5iSx',
-                             plan:{
-                                     id: 'development-of5JfmyFLxFjmemVWPAg',
-                                     interval: 'month',
-                                     name: 'LearnSignal Monthly',
-                                     created: 1418342780,
-                                     amount: 999,
-                                     currency: 'eur',
-                                     object: 'plan',
-                                     livemode: false,
-                                     interval_count: 1,
-                                     trial_period_days: 7,
-                                     metadata: {},
-                                     statement_description: 'LearnSignal'
-                             },
-                             object: 'subscription',
-                             start: 1418343370,
-                             status: 'trialing', ########################################
-                             customer: 'cus_5JJjWCDxOcq2Yf',
-                             cancel_at_period_end: false,
-                             current_period_start: 1418343370,
-                             current_period_end: 1418948170,
-                             ended_at: nil,
-                             trial_start: 1418343370,
-                             trial_end: 1418948170,
-                             canceled_at: nil,
-                             quantity: 1,
-                             application_fee_percent: nil,
-                             discount: nil,
-                             metadata:{}
-                            }
-                    ]
-            },
-            discount: null,
-            account_balance: 0,
-            currency: 'eur',
-            cards: {
-                    object: 'list',
-                    total_count: 1,
-                    has_more: false,
-                    url: '/v1/customers/cus_5JJjWCDxOcq2Yf/cards',
-                    data: [
-                            {id: 'card_5JJjkBnrgGtHca',
-                             object: 'card',
-                             last4: '4242',
-                             brand: 'Visa',
-                             funding: 'credit',
-                             exp_month: 1,
-                             exp_year: 2015,
-                             fingerprint: '2JyQfTIvakRtY5NA',
-                             country: 'US',
-                             name: null,
-                             address_line1: null,
-                             address_line2: null,
-                             address_city: null,
-                             address_state: null,
-                             address_zip: null,
-                             address_country: null,
-                             cvc_check: 'pass',
-                             address_line1_check: null,
-                             address_zip_check: null,
-                             dynamic_last4: null,
-                             customer: 'cus_5JJjWCDxOcq2Yf'
-                            }
-                    ]
-            },
-            default_card: 'card_5JJjkBnrgGtHca'
-    }
-
-    self.user.stripe_customer_id = stripe_customer.id
+    #self.subscription_plan_id is set in the UI
     self.stripe_guid = stripe_customer.subscriptions.data[0].id
+    self.next_renewal_date = stripe_customer.subscriptions.data[0].current_period_end
+    self.complementary = false
+    self.current_status = stripe_customer.subscriptions.data[0].status
+    self.stripe_customer_id = stripe_customer.id
+    self.original_stripe_customer_data = stripe_customer
+
     if Rails.env.production? && stripe_customer.livemode == false
       errors.add(:base, 'Non-live transaction on the Live server')
       Rails.error.log 'models/subscription.rb#create_on_stripe_platform - Non-live transaction on Production platform. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
@@ -194,23 +107,111 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def update_on_stripe_platform
-
-    # todo stripe integration
-    #self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
+  def create_a_subscription_transaction
+    SubscriptionTransaction.create_from_stripe_data(self)
   end
 
-  def set_defaults_on_create
-    # runs before 'creation' only
-    if self.subscription_plan
-      if self.subscription_plan.trial_period_in_days > 0
-        self.current_status = 'trial'
-        self.next_renewal_date = Proc.new{Time.now}.call + self.subscription_plan.trial_period_in_days.days
-      else
-        self.current_status = 'current'
-        self.next_renewal_date = Proc.new{Time.now}.call + self.subscription_plan.payment_frequency_in_months.months
-      end
+  def prefix
+    if Rails.env.production?
+      ''
+    elsif Rails.env.staging?
+      'Staging: '
+    elsif Rails.env.test?
+      "Test-#{rand(9999)}: "
+    else
+      "Dev-#{rand(9999)}: "
     end
+  end
+
+  def update_on_stripe_platform
+    # todo stripe integration
+    #self.stripe_guid = self.stripe_guid.split('-')[0] +
+    # '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
+  end
+
+  def sample_data
+    { id: 'cus_5JJjWCDxOcq2Yf',
+      object: 'customer',
+      created: 1418343370,
+      livemode: false,
+      description: nil,
+      email: 'dan.laffan.test@gmail.com',
+      delinquent: false,
+      metadata: {},
+      subscriptions: {
+            object: 'list',
+            total_count: 1,
+            has_more: false,
+            url: '/v1/customers/cus_5JJjWCDxOcq2Yf/subscriptions',
+            data:[
+                  {id:'sub_5JJjYP1QnQ5iSx',
+                   plan:{
+                           id: 'development-of5JfmyFLxFjmemVWPAg',
+                           interval: 'month',
+                           name: 'LearnSignal Monthly',
+                           created: 1418342780,
+                           amount: 999,
+                           currency: 'eur',
+                           object: 'plan',
+                           livemode: false,
+                           interval_count: 1,
+                           trial_period_days: 7,
+                           metadata: {},
+                           statement_description: 'LearnSignal'
+                   },
+                   object: 'subscription',
+                   start: 1418343370,
+                   status: 'trialing',
+                   customer: 'cus_5JJjWCDxOcq2Yf',
+                   cancel_at_period_end: false,
+                   current_period_start: 1418343370,
+                   current_period_end: 1418948170,
+                   ended_at: nil,
+                   trial_start: 1418343370,
+                   trial_end: 1418948170,
+                   canceled_at: nil,
+                   quantity: 1,
+                   application_fee_percent: nil,
+                   discount: nil,
+                   metadata:{}
+            }
+        ]
+      },
+      discount: nil,
+      account_balance: 0,
+      currency: 'eur',
+      cards: {
+            object: 'list',
+            total_count: 1,
+            has_more: false,
+            url: '/v1/customers/cus_5JJjWCDxOcq2Yf/cards',
+            data: [
+                  {id: 'card_5JJjkBnrgGtHca',
+                   object: 'card',
+                   last4: '4242',
+                   brand: 'Visa',
+                   funding: 'credit',
+                   exp_month: 1,
+                   exp_year: 2015,
+                   fingerprint: '2JyQfTIvakRtY5NA',
+                   country: 'US',
+                   name: nil,
+                   address_line1: nil,
+                   address_line2: nil,
+                   address_city: nil,
+                   address_state: nil,
+                   address_zip: nil,
+                   address_country: nil,
+                   cvc_check: 'pass',
+                   address_line1_check: nil,
+                   address_zip_check: nil,
+                   dynamic_last4: nil,
+                   customer: 'cus_5JJjWCDxOcq2Yf'
+                  }
+            ]
+      },
+      default_card: 'card_5JJjkBnrgGtHca'
+    }
   end
 
 end

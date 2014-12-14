@@ -16,6 +16,10 @@ class StudentSignUpsController < ApplicationController
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url
     else
+      puts '*' * 100
+      puts @user.errors.inspect
+      puts @user.subscriptions.first.errors.inspect
+      puts '*' * 100
       extra_needed = nil
       @user.errors.each do |field, _|
         if field.to_s.include?('.')
