@@ -21,7 +21,7 @@ require 'rails_helper'
 describe Subscription do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at stripe_guid, next_renewal_date stripe_customer_id)
+  black_list = %w(id created_at updated_at stripe_guid, next_renewal_date stripe_customer_id original_stripe_customer_data)
   Subscription.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
