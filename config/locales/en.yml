@@ -372,11 +372,13 @@ en:
       delete: Delete
       delete_tooltip: click to delete
       delete_confirmation: Are you sure?
+      details: Details
       edit: Edit
       edit_tooltip: click to edit
       example: Example
       go: Go
       home: Home
+      links: Links
       missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one
