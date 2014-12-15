@@ -35,10 +35,6 @@
       .col-sm-8
         =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
     .form-group
-      =f.label :estimated_time_in_seconds, t('views.course_modules.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_modules.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
-    .form-group
       .col-sm-8.col-sm-offset-4
         .checkbox
           %label

@@ -65,17 +65,8 @@ describe CourseModule do
 
   it { should validate_presence_of(:sorting_order) }
 
-  context 'if active...' do
-    before { allow(subject).to receive_messages(active: true) }
-    it { should validate_presence_of(:estimated_time_in_seconds) }
-  end
-
-  context 'if inactive...' do
-    before { allow(subject).to receive_messages(active: false) }
-    it { should_not validate_presence_of(:estimated_time_in_seconds) }
-  end
-
   # callbacks
+  it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
