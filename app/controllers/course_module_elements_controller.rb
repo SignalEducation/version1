@@ -51,6 +51,9 @@ class CourseModuleElementsController < ApplicationController
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
         spawn_quiz_children
       end
+      if params[:commit] == t('views.general.save') && @course_module_element.is_video && @course_module_element.course_module_element_resources.empty?
+        @course_module_element.course_module_element_resources.build
+      end
       render action: :new
     end
   end
