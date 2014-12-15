@@ -564,6 +564,7 @@ en:
         best_possible_score_retry: "Max Score (Retry)"
         advanced_setup_link: Advanced Setup
         preview_button: Preview
+        video: Video
 
     course_module_element_resources:
       form:

@@ -63,7 +63,9 @@
                       =answer.text_area :wrong_answer_explanation_text, placeholder: t('views.quiz_answer.form.answer_solution_content_placeholder'), class: 'form-control wrong-answer-explanation', style: (answer.object.degree_of_wrongness == 'correct' ? 'display: none;' : ''), rows: 3
               -counter += 1
             .row
-              .col-sm-7
+              .col-sm-1
+                =label_tag :video, t('views.course_module_element_quizzes.form.video'), class: 'control-label'
+              .col-sm-6
                 =select_tag :video, options_for_select(@related_cmes.map {|x| [x.name, x.id]}, question.object.quiz_answers.first.try(:wrong_answer_video_id)), {class: 'form-control', include_blank: t('views.general.select'), onchange: "$(this).parent().parent().parent().find('.related_video').val($(this).val()); return false;"}
               .col-sm-5.text-right
                 -if cme_quiz.object.id.nil?
