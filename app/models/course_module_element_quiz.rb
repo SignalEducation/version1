@@ -68,7 +68,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     medium_ids = self.quiz_questions.all_medium.map(&:id)
     difficult_ids = self.quiz_questions.all_difficult.map(&:id)
     lowest_number_of_questions = [easy_ids.length, medium_ids.length, difficult_ids.length].min
-    lowest_number_of_questions < self.number_of_questions
+    lowest_number_of_questions > self.number_of_questions
   end
 
   protected

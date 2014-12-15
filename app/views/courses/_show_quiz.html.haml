@@ -2,8 +2,8 @@
 -medium_ids = cme.course_module_element_quiz.quiz_questions.all_medium.map(&:id)
 -difficult_ids = cme.course_module_element_quiz.quiz_questions.all_difficult.map(&:id)
 
--if cme.course_module_element_quiz.enough_questions?
-  .well.well-lg
-    Sorry, there are not enough questions to present this quiz
+-if cme.course_module_element_quiz.enough_questions? || current_user.admin?
 
 -else
+  .well.well-lg
+    Sorry, there are not enough questions to present this quiz

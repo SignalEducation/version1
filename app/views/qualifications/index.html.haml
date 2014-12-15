@@ -24,7 +24,9 @@
           %tr{id: qualification.id}
             %td=link_to(qualification.name, qualification, title: t('views.general.view_tooltip'))
             %td
-              =link_to t('views.exam_levels.index.h1'), exam_levels_url
+              -qualification.exam_levels.each do |level|
+                =link_to level.name, level
+                %br/
             %td=link_to(tick_or_cross(qualification.active), qualification, title: t('views.general.view_tooltip'))
             %td=link_to(qualification.cpd_hours_required_per_year, qualification, title: t('views.general.view_tooltip'))
             %td
