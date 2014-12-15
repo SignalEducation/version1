@@ -514,6 +514,7 @@ en:
       show:
         h1: Course Module
         click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
+        link_to_student_ui: "View in the student-facing UI"
 
     course_module_elements:
       form:
