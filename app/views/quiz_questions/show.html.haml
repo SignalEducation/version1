@@ -30,4 +30,10 @@
                 %p.mathjax=qc.text_content
 .row
   .col-sm-8.col-sm-offset-2
+    %h3=t('views.quiz_questions.form.solution_to_the_question')
+    .well.well-sm
+      =@quiz_question.solution_to_the_question
+
+.row
+  .col-sm-8.col-sm-offset-2
     =link_to t('views.general.back'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
