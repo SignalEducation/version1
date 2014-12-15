@@ -18,7 +18,7 @@ class QuizAnswer < ActiveRecord::Base
   attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
 
   # Constants
-  WRONGNESS = %w(correct slight medium very)
+  WRONGNESS = ['correct', 'slightly wrong', 'wrong', 'very wrong']
 
   # relationships
   has_many :quiz_attempts
