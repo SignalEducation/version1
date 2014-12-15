@@ -7,7 +7,13 @@ class CourseModulesController < ApplicationController
   before_action :get_variables, except: :show
 
   def index
-    @qualifications = Qualification.paginate(per_page: 100, page: params[:page]).all_in_order
+    exam_level = Qualification.all_in_order.first.try(:exam_levels).try(:first)
+    if exam_level
+      redirect_to course_module_special_link(exam_level)
+    else
+      redirect_to exam_levels_url
+    end
+    #@qualifications = Qualification.paginate(per_page: 100, page: params[:page]).all_in_order
   end
 
   def show
