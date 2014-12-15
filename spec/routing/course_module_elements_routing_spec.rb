@@ -3,6 +3,10 @@ require 'rails_helper'
 RSpec.describe CourseModuleElementsController, type: :routing do
   describe 'routing' do
 
+    it 'routes to #show' do
+      expect(get: '/course_module_elements/1').to route_to('course_module_elements#show', id: '1')
+    end
+
     it 'routes to #new' do
       expect(get: '/course_module_elements/new').to route_to('course_module_elements#new')
     end

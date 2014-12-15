@@ -49,7 +49,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # class methods
 
   # instance methods
-
   def add_an_empty_question
     self.quiz_questions.build
     self.quiz_questions.last.course_module_element_quiz_id = self.id
@@ -62,6 +61,14 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def destroyable?
     self.quiz_questions.empty?
+  end
+
+  def enough_questions?
+    easy_ids = self.quiz_questions.all_easy.map(&:id)
+    medium_ids = self.quiz_questions.all_medium.map(&:id)
+    difficult_ids = self.quiz_questions.all_difficult.map(&:id)
+    lowest_number_of_questions = [easy_ids.length, medium_ids.length, difficult_ids.length].min
+    lowest_number_of_questions < self.number_of_questions
   end
 
   protected

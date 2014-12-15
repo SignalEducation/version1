@@ -42,7 +42,9 @@
               -else
                 Unknown
             %td.text-right=seconds_to_time(cme.estimated_time_in_seconds)
-            %td=link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info'
+            %td
+              =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info'
+              =link_to t('views.course_module_element_quizzes.form.preview_button'), cme, class: 'btn btn-xs btn-info'
     %p
       =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: @course_module.id), class: 'btn btn-success'
       =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: @course_module.id), class: 'btn btn-success'
