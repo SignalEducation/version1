@@ -28,6 +28,6 @@
             \-
             =rate.percentage_rate.to_s + '%'
     %p
-      =link_to t('views.general.back'), vat_codes_url
+      =link_to sanitize('&larr; ' + t('views.vat_codes.index.h1')), vat_codes_url
       |
       =link_to t('views.general.edit'), edit_vat_code_url(id: @vat_code.id), title: t('views.general.edit_tooltip')

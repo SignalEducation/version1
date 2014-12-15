@@ -39,6 +39,6 @@
         %td.col-sm-4=t('views.subscription_plans.form.trial_period_in_days')
         %td.col-sm-8=@subscription_plan.trial_period_in_days
     %p
-      =link_to t('views.general.back'), subscription_plans_url
+      =link_to sanitize('&larr; ' + t('views.subscription_plans.index.h1')), subscription_plans_url
       |
       =link_to t('views.general.edit'), edit_subscription_plan_url(id: @subscription_plan.id), title: t('views.general.edit_tooltip')
