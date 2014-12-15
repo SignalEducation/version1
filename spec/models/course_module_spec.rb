@@ -60,8 +60,6 @@ describe CourseModule do
 
   it { should validate_presence_of(:name_url) }
 
-  it { should validate_presence_of(:description) }
-
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 

@@ -48,7 +48,6 @@ class CourseModule < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :name_url, presence: true
-  validates :description, presence: true
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
