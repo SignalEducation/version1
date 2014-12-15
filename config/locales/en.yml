@@ -828,7 +828,7 @@ en:
     quiz_answer:
       form:
         answer_content_placeholder: Fill in the Answer Here
-        answer_solution_content_placeholder: Enter the Solution or Leave blank for Correct Answer
+        answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
         answer_text: Answer
         answer_text_placeholder: Fill in the Answer Here
         wrong_answer_video_id: Related Video
