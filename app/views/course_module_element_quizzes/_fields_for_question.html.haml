@@ -14,7 +14,7 @@
           .col-sm-4.text-right
             =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-info'
             -if question.object.id.to_i > 0
-              =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
+              =link_to t('views.general.edit'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
             -if question.object.destroyable?
               -if question.object.id.nil?
                 =link_to t('views.general.delete'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-danger'
