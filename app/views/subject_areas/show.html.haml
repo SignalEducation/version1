@@ -26,6 +26,6 @@
           =link_to t('views.general.new'), new_institution_url(subject_area: @subject_area.id), class: 'btn btn-xs btn-success'
 
     %p
-      =link_to t('views.general.back'), subject_areas_url
+      =link_to sanitize('&larr; ' + t('views.subject_areas.index.h1')), subject_areas_url
       |
       =link_to t('views.general.edit'), edit_subject_area_url(id: @subject_area.id), title: t('views.general.edit_tooltip')
