@@ -59,7 +59,7 @@ class CourseModuleElementResource < ActiveRecord::Base
 
   def web_url_or_upload_required
     if self.web_url.blank? && self.upload.blank? && self.upload_file_name.blank?
-      errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
+      errors.add(:base, I18n.t('models.course_module_element_resources.must_link_with_a_video_or_url'))
     end
   end
 
