@@ -9,8 +9,8 @@ class CourseModuleElementsController < ApplicationController
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        tutor_id: current_user.id,
         course_module_id: params[:cm_id].to_i)
+    @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
       @course_module_element.course_module_element_resources.build
