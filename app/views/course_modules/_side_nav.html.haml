@@ -10,7 +10,7 @@
         .panel-body
           -if exam_level.exam_sections.count > 0
             -exam_level.exam_sections.each do |exam_section|
-              %p=exam_section.name
+              %p=link_to exam_section.name, exam_section, title: t('views.exam_sections.show.h1')
               %p
                 -exam_section.course_modules.each do |course_module|
                   &rarr;
