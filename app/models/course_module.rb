@@ -48,13 +48,12 @@ class CourseModule < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :name_url, presence: true
-  validates :description, presence: true
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
-  validates :estimated_time_in_seconds, presence: true, if: 'active == true'
 
   # callbacks
+  before_save :calculate_estimated_time
   before_destroy :check_dependencies
 
   # scopes
@@ -99,10 +98,15 @@ class CourseModule < ActiveRecord::Base
   end
 
   def recalculate_estimated_time
-    self.update_attributes(estimated_time_in_seconds: self.course_module_elements.sum(:estimated_time_in_seconds))
+    calculate_estimated_time
+    self.save
   end
 
   protected
+
+  def calculate_estimated_time
+    self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
+  end
 
   def check_dependencies
     unless self.destroyable?

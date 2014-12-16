@@ -21,7 +21,7 @@
     .form-group
       =f.label :name, t('views.course_modules.form.name'), class: 'control-label col-sm-4'
       .col-sm-8
-        =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control'
+        =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url'
     .form-group
       =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label col-sm-4'
       .col-sm-8
@@ -34,10 +34,6 @@
       =f.label :tutor_id, t('views.course_modules.form.tutor_id'), class: 'control-label col-sm-4'
       .col-sm-8
         =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    .form-group
-      =f.label :estimated_time_in_seconds, t('views.course_modules.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_modules.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
     .form-group
       .col-sm-8.col-sm-offset-4
         .checkbox

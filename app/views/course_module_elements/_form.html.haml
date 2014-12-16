@@ -11,7 +11,7 @@
           .form-group
             =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label col-sm-4'
             .col-sm-8
-              =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control'
+              =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url'
           .form-group
             =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label col-sm-4'
             .col-sm-8
@@ -54,6 +54,7 @@
   -elsif @course_module_element.course_module_element_video
     -if @course_module_element.course_module_element_resources.size > 0
       %h2=t('views.course_module_element_resources.index.h1')
+      %p=t('views.general.these_are_optional')
       =f.fields_for :course_module_element_resources do |cme_resource|
         .well.well-sm
           .row

@@ -6,11 +6,15 @@ class CourseModuleElementsController < ApplicationController
   end
   before_action :get_variables
 
+  def show
+    @course_module_element = CourseModuleElement.find(params[:id])
+  end
+
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        tutor_id: current_user.id,
         course_module_id: params[:cm_id].to_i)
+    @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
       @course_module_element.course_module_element_resources.build
@@ -50,6 +54,9 @@ class CourseModuleElementsController < ApplicationController
     else
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
         spawn_quiz_children
+      end
+      if params[:commit] == t('views.general.save') && @course_module_element.is_video && @course_module_element.course_module_element_resources.empty?
+        @course_module_element.course_module_element_resources.build
       end
       render action: :new
     end
@@ -97,6 +104,7 @@ class CourseModuleElementsController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
     @letters = ('A'..'Z').to_a
+    @mathjax_required = true
   end
 
   def set_related_cmes

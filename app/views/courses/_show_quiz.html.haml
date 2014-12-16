@@ -1,0 +1,60 @@
+-all_easy_ids = cme.course_module_element_quiz.easy_ids
+-all_medium_ids = cme.course_module_element_quiz.medium_ids
+-all_difficult_ids = cme.course_module_element_quiz.difficult_ids
+-easy_ids = all_easy_ids.sample(cme.course_module_element_quiz.number_of_questions)
+-medium_ids = all_medium_ids.sample(cme.course_module_element_quiz.number_of_questions)
+-difficult_ids = all_difficult_ids.sample(cme.course_module_element_quiz.number_of_questions)
+
+-if cme.course_module_element_quiz.enough_questions? || current_user.admin?
+  .row
+    .col-sm-12
+      .progress
+        .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
+          %span.sr-only 0% Complete
+          0%
+  .row
+    .col-sm-12
+      -(easy_ids + medium_ids + difficult_ids).each do |the_id|
+        =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
+
+
+-else
+  .row
+    .col-sm-12
+      .well.well-lg
+        Sorry, there are not enough questions to present this quiz
+
+:javascript
+
+  var easyList = #{easy_ids},
+      mediumList = #{medium_ids},
+      difficultList = #{difficult_ids},
+      answers = [],
+      numberOfQuestions = #{cme.course_module_element_quiz.number_of_questions},
+      currentQuestion = 1,
+      nextQuestionLevel = 'easy',
+      nextQuestionArray = easyList,
+      progressBar = $('.progress-bar');
+
+  function updateProgressBar() {
+    var percentage = (currentQuestion / numberOfQuestions * 100);
+    progressBar.attr('aria-valuemax', numberOfQuestions);
+    progressBar.attr('aria-valuenow', currentQuestion);
+    progressBar.attr('style', 'width: ' + percentage + '%;');
+    progressBar.text(currentQuestion + ' / ' + numberOfQuestions);
+    progressBar.find('span').text(percentage + '% Complete');
+  }
+
+  function askQuestion(questionNumber) {
+    updateProgressBar();
+    $('.question').hide();
+    $('#question_' + nextQuestionLevel + '_' + nextQuestionArray[questionNumber - 1]).show();
+  }
+
+  function logAnswer(questionId, answerId) {
+    // tomorrow's stuff.
+  }
+
+  $(document).on('ready page:load', function() {
+    askQuestion(1); // 0 is the first quesiton
+  })

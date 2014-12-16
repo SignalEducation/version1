@@ -1,3 +1,4 @@
+%p=sanitize t('views.quiz_questions.form.mathjax_prompt')
 =form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
   =f.hidden_field :course_module_element_quiz_id
   .row
