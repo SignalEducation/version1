@@ -398,6 +398,14 @@ ActiveRecord::Schema.define(version: 20141214224530) do
     t.text     "original_stripe_customer_data"
   end
 
+  create_table "system_defaults", force: true do |t|
+    t.integer  "individual_student_user_group_id"
+    t.integer  "corporate_student_user_group_id"
+    t.integer  "corporate_customer_user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_exam_levels", force: true do |t|
     t.integer  "user_id"
     t.integer  "exam_level_id"
