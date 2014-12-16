@@ -2,8 +2,10 @@
   .col-sm-12
     .page-header
       %h1=t('views.institutions.index.h1')
+      =render partial: 'shared/horizontal_hierarchy'
 
-=render partial: 'shared/filter_panel', locals: {controller_name: 'institutions', parameters: [{name: :subject_area_url, collection: @subject_areas, show_attr: :name, value_attr: 'name_url'}]}
+-if @subject_areas.length > 1
+  =render partial: 'shared/filter_panel', locals: {controller_name: 'institutions', parameters: [{name: :subject_area_url, collection: @subject_areas, show_attr: :name, value_attr: 'name_url'}]}
 
 .row
   .col-sm-12
