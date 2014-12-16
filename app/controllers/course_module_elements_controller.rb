@@ -104,6 +104,7 @@ class CourseModuleElementsController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
     @letters = ('A'..'Z').to_a
+    @mathjax_required = true
   end
 
   def set_related_cmes

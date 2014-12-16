@@ -2,32 +2,9 @@
   .col-sm-8.col-sm-offset-2
     .page-header
       %h1=t('views.quiz_questions.show.h1')
-.row
-  .col-sm-8.col-sm-offset-2
-    -@quiz_question.quiz_contents.each do |qc|
-      -if qc.content_type == 'image'
-        =image_tag qc.image.url, class: 'col-sm-12'
-      -elsif qc.content_type == 'text'
-        %p=sanitizer qc.text_content
-      -elsif qc.content_type == 'mathjax'
-        %p.mathjax=sanitizer qc.text_content
-    %h2=t('views.quiz_questions.show.choose_an_answer')
-.row
-  -@quiz_question.quiz_answers.each_with_index do |qa, counter|
-    .col-sm-8.col-sm-offset-2
-      .row
-        .col-sm-1
-          .well.well-sm.text-center
-            =('A'..'Z').to_a[counter]
-        .col-sm-11
-          .row
-            -qa.quiz_contents.each do |qc|
-              -if qc.content_type == 'image'
-                =image_tag qc.image.url, class: 'col-sm-12'
-              -elsif qc.content_type == 'text'
-                %p=qc.text_content
-              -elsif qc.content_type == 'mathjax'
-                %p.mathjax=qc.text_content
+
+=render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
+
 .row
   .col-sm-8.col-sm-offset-2
     %h3=t('views.quiz_questions.form.solution_to_the_question')

@@ -64,11 +64,20 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   def enough_questions?
-    easy_ids = self.quiz_questions.all_easy.map(&:id)
-    medium_ids = self.quiz_questions.all_medium.map(&:id)
-    difficult_ids = self.quiz_questions.all_difficult.map(&:id)
-    lowest_number_of_questions = [easy_ids.length, medium_ids.length, difficult_ids.length].min
+    lowest_number_of_questions = [self.easy_ids.length, self.medium_ids.length, self.difficult_ids.length].min
     lowest_number_of_questions > self.number_of_questions
+  end
+
+  def easy_ids
+    self.quiz_questions.all_easy.map(&:id)
+  end
+
+  def medium_ids
+    self.quiz_questions.all_medium.map(&:id)
+  end
+
+  def difficult_ids
+    self.quiz_questions.all_difficult.map(&:id)
   end
 
   protected
