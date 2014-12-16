@@ -95,7 +95,7 @@
         %td.col-sm-8=@user.forum_notification_email_frequency
 
     %p
-      =link_to(I18n.t('views.general.back'), users_url)
+      =link_to sanitize('&larr; ' + t('views.users.index.h1')), users_url
       |
       =link_to(I18n.t('views.general.edit'), edit_user_url(@user), title: t('views.general.edit_tooltip'))
       -if @user.id == current_user.id

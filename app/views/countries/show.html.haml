@@ -27,6 +27,6 @@
         %td.col-sm-4=t('views.countries.form.currency_id')
         %td.col-sm-8=link_to @country.currency.name, @country.currency
     %p
-      =link_to t('views.general.back'), countries_url
+      =link_to t('views.countries.index.h1'), countries_url
       |
       =link_to t('views.general.edit'), edit_country_url(id: @country.id), title: t('views.general.edit_tooltip')

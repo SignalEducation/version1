@@ -1,0 +1,16 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    .page-header
+      %h1=t('views.quiz_questions.show.h1')
+
+=render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
+
+.row
+  .col-sm-8.col-sm-offset-2
+    %h3=t('views.quiz_questions.form.solution_to_the_question')
+    .well.well-sm
+      =@quiz_question.solution_to_the_question
+
+.row
+  .col-sm-8.col-sm-offset-2
+    =link_to sanitize('&larr; ' + t('views.course_module_elements.show.h1')), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)

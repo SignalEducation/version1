@@ -22,27 +22,37 @@
 class CourseModuleElement < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
-                  :course_module_id, :course_module_element_video_id,
-                  :course_module_element_quiz_id, :sorting_order,
+  attr_accessible :name, :name_url, :description,
+                  :estimated_time_in_seconds,
+                  :course_module_id, :sorting_order,
                   :forum_topic_id, :tutor_id, :related_quiz_id,
-                  :related_video_id
+                  :related_video_id, :is_video, :is_quiz,
+                  :course_module_element_video_attributes,
+                  :course_module_element_quiz_attributes,
+                  :course_module_element_resources_attributes
 
   # Constants
 
   # relationships
   belongs_to :course_module
-  belongs_to :course_module_element_video
-  belongs_to :course_module_element_quiz
+  has_one :course_module_element_video
+  has_one :course_module_element_quiz
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
   belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
-  belongs_to :related_quiz, class_name: 'CourseModuleElement', foreign_key: :related_quiz_id
-  belongs_to :related_video, class_name: 'CourseModuleElement', foreign_key: :related_video_id
-  has_many :student_exam_tracks
+  belongs_to :related_quiz, class_name: 'CourseModuleElement',
+             foreign_key: :related_quiz_id
+  belongs_to :related_video, class_name: 'CourseModuleElement',
+             foreign_key: :related_video_id
+  has_many :student_exam_tracks, class_name: 'StudentExamTrack',
+           foreign_key: :latest_course_module_element_id
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+
+  accepts_nested_attributes_for :course_module_element_quiz
+  accepts_nested_attributes_for :course_module_element_video, update_only: true
+  accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }
 
   # validation
   validates :name, presence: true, uniqueness: true
@@ -52,21 +62,16 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_video_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :forum_topic_id, presence: true,
+  validates :forum_topic_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :related_quiz_id, presence: true,
+  validates :related_quiz_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :related_video_id, presence: true,
+  validates :related_video_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validate :video_or_quiz_id_required
 
   # callbacks
   after_save :update_the_module_total_time
@@ -74,6 +79,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_videos, -> { where(is_video: true) }
+  scope :all_quizzes, -> { where(is_quiz: true) }
 
   # class methods
 
@@ -119,12 +126,11 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
-  def video_or_quiz_id_required
-    if self.course_module_element_video_id.nil? && self.course_module_element_quiz_id.nil?
-      errors.add(:base, I18n.t('models.course_module_element.must_link_with_a_video_or_quiz'))
-    elsif self.course_module_element_video_id.to_i > 0 && self.course_module_element_quiz_id.to_i > 0
-      errors.add(:base, I18n.t('models.course_module_element.can_only_link_to_a_video_or_quiz_not_both'))
-    end
+  def self.nested_resource_is_blank?(attributes)
+    attributes['name'].blank? &&
+            attributes['description'].blank? &&
+            attributes['upload'].blank? &&
+            attributes['the_url'].blank?
   end
 
 end

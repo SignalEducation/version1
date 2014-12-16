@@ -38,6 +38,7 @@ class Qualification < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:institution_id, :sorting_order) }
+  scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
   def self.get_by_name_url(the_name_url)

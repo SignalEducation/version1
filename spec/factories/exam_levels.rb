@@ -23,7 +23,7 @@ FactoryGirl.define do
     is_cpd false
     sorting_order 1
     active false
-    best_possible_first_attempt_score 1.5
+    default_number_of_possible_exam_answers 4
   end
 
 end

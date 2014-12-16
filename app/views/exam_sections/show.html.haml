@@ -6,8 +6,21 @@
         \#
         =@exam_section.id
 .row
-  .col-sm-12
+  .col-sm-6
     %table.table.table-bordered
+      %h3
+        =t('views.general.links')
+      %tr
+        %td.col-sm-4=t('views.course_modules.index.h1')
+        %td.col-sm-8
+          -@exam_section.course_modules.all_in_order.each do |course_module|
+            =link_to course_module.name, course_module
+            %br/
+          =link_to t('views.general.new'), new_course_module_url(exam_section_url: @exam_section.name_url), class: 'btn btn-success btn-xs'
+  .col-sm-6
+    %table.table.table-bordered
+      %h3
+        =t('views.general.details')
       %tr
         %td.col-sm-4=t('views.qualifications.form.institution_id')
         %td.col-sm-8=link_to @exam_section.exam_level.qualification.institution.name, @exam_section.exam_level.qualification.institution
@@ -29,13 +42,8 @@
       %tr
         %td.col-sm-4=t('views.exam_sections.form.best_possible_first_attempt_score')
         %td.col-sm-8=@exam_section.best_possible_first_attempt_score
-      %tr
-        %td.col-sm-4=t('views.course_modules.index.h1')
-        %td.col-sm-8
-          -@exam_section.course_modules.all_in_order.each do |course_module|
-            =link_to course_module.name, course_module
-            %br/
-    %p
-      =link_to t('views.general.back'), exam_sections_url
-      |
-      =link_to t('views.general.edit'), edit_exam_section_url(id: @exam_section.id), title: t('views.general.edit_tooltip')
+
+  %p
+    =link_to sanitize('&larr; ' + t('views.exam_sections.index.h1')), exam_sections_url
+    |
+    =link_to t('views.general.edit'), edit_exam_section_url(id: @exam_section.id), title: t('views.general.edit_tooltip')

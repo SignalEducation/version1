@@ -1,0 +1,16 @@
+-# Call this partial with:
+  =render partial: 'shared/tutor_breadcrumbs', locals: {the_thing: @course_module}
+
+%p
+  %small.text-muted
+    -if the_thing.class == CourseModule
+      =link_to the_thing.exam_level.qualification.institution.subject_area.name, the_thing.exam_level.qualification.institution.subject_area
+      &gt;
+      =link_to the_thing.exam_level.qualification.institution.name, the_thing.exam_level.qualification.institution
+      &gt;
+      =link_to the_thing.exam_level.qualification.name, the_thing.exam_level.qualification
+      &gt;
+      =link_to the_thing.exam_level.name, the_thing.exam_level
+      -if the_thing.exam_section
+        &gt;
+        =link_to the_thing.exam_section.name, the_thing.exam_section

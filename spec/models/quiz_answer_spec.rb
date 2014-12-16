@@ -17,7 +17,7 @@ require 'rails_helper'
 describe QuizAnswer do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at correct)
   QuizAnswer.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -37,18 +37,18 @@ describe QuizAnswer do
   it { should belong_to(:wrong_answer_video) }
 
   # validation
-  it { should validate_presence_of(:quiz_question_id) }
-  it { should validate_numericality_of(:quiz_question_id) }
+  it { should validate_presence_of(:quiz_question_id).on(:update) }
+  xit { should validate_numericality_of(:quiz_question_id) }
 
   it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
 
-  it { should validate_presence_of(:wrong_answer_explanation_text) }
-
-  it { should validate_presence_of(:wrong_answer_video_id) }
-  it { should validate_numericality_of(:wrong_answer_video_id) }
+  it { should validate_presence_of(:wrong_answer_video_id).on(:update) }
+  xit { should validate_numericality_of(:wrong_answer_video_id) }
 
   # callbacks
+  it { should callback(:set_the_field_correct).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:set_wrong_answer_video_id).before(:update) }
 
   # scopes
   it { expect(QuizAnswer).to respond_to(:all_in_order) }

@@ -2,43 +2,45 @@
   .col-sm-12
     .page-header
       %h1=t('views.course_modules.index.h1')
+      %p.lead=t('views.course_modules.index.lead')
 .row
   .col-sm-12
-    =will_paginate @course_modules, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    =will_paginate @qualifications, renderer: BootstrapPagination::Rails
+    %table.table
       %thead
         %tr
-          %th=t('views.course_modules.form.institution_id')
-          %th=t('views.course_modules.form.exam_level_id')
-          %th=t('views.course_modules.form.exam_section_id')
-          %th=t('views.course_modules.form.name')
-          %th=t('views.course_modules.form.name_url')
-          %th=t('views.course_modules.form.description')
-          %th=t('views.course_modules.form.tutor_id')
-          %th=t('views.course_modules.form.estimated_time_in_seconds')
-          %th=t('views.course_modules.form.compulsory')
-          %th=t('views.course_modules.form.active')
+          %th=t('views.qualifications.index.h1')
+          %th=t('views.exam_levels.index.h1')
+          %th=t('views.exam_sections.index.h1')
           %th
       %tbody
-        -@course_modules.each do |course_module|
-          %tr{id: course_module.id}
-            %td=link_to(course_module.institution.name, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.exam_level.name, course_module, title: t('views.general.view_tooltip'))
-            %td
-              -if course_module.exam_section_id
-                =link_to(course_module.exam_section.name, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.name, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.name_url, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.description, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.tutor.full_name, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(course_module.estimated_time_in_seconds, course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(course_module.compulsory), course_module, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(course_module.active), course_module, title: t('views.general.view_tooltip'))
-            %td
-              =link_to t('views.general.edit'), edit_course_module_url(course_module), class: 'btn btn-info btn-xs'
-              -if course_module.destroyable?
-                =link_to t('views.general.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+        -qual_tracker = nil
+        -@qualifications.each do |qualification|
+          -qualification.exam_levels.each do |exam_level|
+            %tr
+              %td
+                -unless qualification.name == qual_tracker
+                  -qual_tracker = qualification.name
+                  =qualification.name
+              %td
+                =link_to exam_level.name, course_module_special_link(exam_level)
+              %td
+                -exam_level.exam_sections.each do |exam_section|
+                  =link_to exam_section.name, course_module_special_link(exam_section)
+                  %br/
+        %tr
+          %td
+            %br/
+            =link_to t('views.course_modules.index.new_qualification'), new_qualification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+          %td
+            %br/
+            =link_to t('views.course_modules.index.new_exam_level'), new_exam_level_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+          %td
+            %br/
+            =link_to t('views.course_modules.index.new_exam_section'), new_exam_section_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
 
-.row
+-#.row
   .col-sm-12
-    =link_to t('views.general.new'), new_course_module_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.course_modules.index.new_qualification'), new_qualification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.course_modules.index.new_exam_level'), new_exam_level_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.course_modules.index.new_exam_section'), new_exam_section_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

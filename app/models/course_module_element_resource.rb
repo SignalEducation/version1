@@ -18,19 +18,22 @@
 class CourseModuleElementResource < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :name, :description, :web_url
+  attr_accessible :course_module_element_id, :name, :description, :web_url, :upload
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
+  has_attached_file :upload, default_url: '/assets/images/missing.png'
 
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :description, presence: true
-  validates :web_url, presence: true
+  validates_attachment_content_type :upload,
+            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+  validate  :web_url_or_upload_required
 
   # callbacks
   before_destroy :check_dependencies
@@ -51,6 +54,12 @@ class CourseModuleElementResource < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def web_url_or_upload_required
+    if self.web_url.blank? && self.upload.blank? && self.upload_file_name.blank?
+      errors.add(:base, I18n.t('models.course_module_element_resources.must_link_with_an_upload_or_url'))
     end
   end
 

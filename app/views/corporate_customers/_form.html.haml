@@ -16,7 +16,7 @@
         -# todo .form-group
           =f.label :country_id, t('views.corporate_customers.form.country_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
@@ -32,7 +32,7 @@
         .form-group
           =f.label :owner_id, t('views.corporate_customers.form.owner_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.collection_select :owner_id, @owners, :id, :full_name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :owner_id, @owners, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         -if f.object.id.to_i > 0 # is this an existing object
           .form-group
             =f.label :stripe_customer_guid, t('views.corporate_customers.form.stripe_customer_guid'), class: 'control-label col-sm-4'

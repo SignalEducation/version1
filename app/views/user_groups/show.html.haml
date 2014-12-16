@@ -49,6 +49,6 @@
               =link_to user.full_name, user
               %br/
     %p
-      =link_to t('views.general.back'), user_groups_url
+      =link_to sanitize('&larr; ' + t('views.user_groups.index.h1')), user_groups_url
       |
       =link_to t('views.general.edit'), edit_user_group_url(id: @user_group.id), title: t('views.general.edit_tooltip')

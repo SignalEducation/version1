@@ -21,7 +21,7 @@
             -tracker = exam_level.qualification_id
             %tr
               %td{colspan: 10}
-                %h2=link_to exam_level.qualification.name, exam_level.qualification
+                .h3=link_to exam_level.qualification.name, exam_level.qualification
                 =link_to t('views.exam_levels.index.new'), new_exam_level_url(qualification_id: exam_level.qualification_id), class: 'btn btn-xs btn-success'
           %tr{id: exam_level.id}
             %td=link_to(exam_level.name, exam_level, title: t('views.general.view_tooltip'))
@@ -34,6 +34,6 @@
               -if exam_level.destroyable?
                 =link_to t('views.general.delete'), exam_level, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
 
--#.row
+.row
   .col-sm-12
     =link_to t('views.general.new'), new_exam_level_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

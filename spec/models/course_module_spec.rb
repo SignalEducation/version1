@@ -39,7 +39,7 @@ describe CourseModule do
   # relationships
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_many(:course_module_jumbo_quizzes) }
+  it { should have_one(:course_module_jumbo_quiz) }
   it { should belong_to(:exam_level) }
   it { should belong_to(:exam_section) }
   it { should belong_to(:institution) }
@@ -60,34 +60,31 @@ describe CourseModule do
 
   it { should validate_presence_of(:name_url) }
 
-  it { should validate_presence_of(:description) }
-
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:sorting_order) }
 
-  context 'if active...' do
-    before { allow(subject).to receive_messages(active: true) }
-    it { should validate_presence_of(:estimated_time_in_seconds) }
-  end
-
-  context 'if inactive...' do
-    before { allow(subject).to receive_messages(active: false) }
-    it { should_not validate_presence_of(:estimated_time_in_seconds) }
-  end
-
   # callbacks
+  it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(CourseModule).to respond_to(:all_in_order) }
   it { expect(CourseModule).to respond_to(:all_active) }
   it { expect(CourseModule).to respond_to(:all_inactive) }
+  it { expect(CourseModule).to respond_to(:with_url) }
 
   # class methods
 
   # instance methods
+  it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:my_position_among_siblings) }
+  it { should respond_to(:next_module_id) }
+  it { should respond_to(:parent_thing) }
+  it { should respond_to(:previous_module_id) }
+  it { should respond_to(:recalculate_estimated_time) }
+
 
 end

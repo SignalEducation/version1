@@ -42,6 +42,6 @@
         %td.col-sm-4=t('views.invoices.form.line_total_inc_vat')
         %td.col-sm-8=@invoice.line_total_inc_vat
     %p
-      =link_to t('views.general.back'), invoices_url
+      =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
       |
       =link_to t('views.general.edit'), edit_invoice_url(id: @invoice.id), title: t('views.general.edit_tooltip')

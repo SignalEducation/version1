@@ -17,7 +17,7 @@
           =f.label :<%= attribute.name %>, t('views.<%= table_name -%>.form.<%= attribute.name %>'), class: 'control-label col-sm-4'
           .col-sm-8
             <%- if attribute.name[-3..-1] == '_id' -%>
-            =f.collection_select :<%= attribute.name -%>, @<%= attribute.name[0..-4].pluralize -%>, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control'}
+            =f.collection_select :<%= attribute.name -%>, @<%= attribute.name[0..-4].pluralize -%>, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
             <%- elsif attribute.type.to_s == 'text' -%>
             =f.text_area :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), rows: 4, class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
             <%- elsif attribute.type.to_s == 'date' -%>
