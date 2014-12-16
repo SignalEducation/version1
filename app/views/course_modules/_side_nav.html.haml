@@ -1,3 +1,8 @@
+=form_tag course_modules_url, method: :get do
+  .form-group
+    =select_tag :qualification_url, options_for_select(Qualification.all_in_order.map {|q| [q.name, q.name_url]}, @qualification.name_url), class: 'form-control', onchange: 'this.form.submit(); return false;'
+
+
 .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
   -@qualification.exam_levels.each_with_index do |exam_level, counter|
     .panel.panel-default

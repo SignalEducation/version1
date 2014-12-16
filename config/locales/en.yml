@@ -99,6 +99,8 @@ en:
           error: Corporate Customer was not deleted
 
     course_modules:
+      index:
+        no_exam_level: Sorry, there are no Exam Levels for that Qualification
       show:
         cant_find: Sorry, that could not be found
       create:
@@ -372,11 +374,13 @@ en:
       delete: Delete
       delete_tooltip: click to delete
       delete_confirmation: Are you sure?
+      details: Details
       edit: Edit
       edit_tooltip: click to edit
       example: Example
       go: Go
       home: Home
+      links: Links
       missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one

@@ -6,8 +6,21 @@
         \#
         =@qualification.id
 .row
-  .col-sm-12
+  .col-sm-6
     %table.table.table-bordered
+      %h3
+        =t('views.general.links')
+      %tr
+        %td.col-sm-4=t('views.exam_levels.index.h1')
+        %td.col-sm-8
+          -@qualification.exam_levels.each do |level|
+            =link_to level.name, level
+            %br
+          =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
+  .col-sm-6
+    %table.table.table-bordered
+      %h3
+        =t('views.general.details')
       %tr
         %td.col-sm-4=t('views.qualifications.form.institution_id')
         %td.col-sm-8=link_to @qualification.institution.name, @qualification.institution
@@ -23,14 +36,7 @@
       %tr
         %td.col-sm-4=t('views.qualifications.form.cpd_hours_required_per_year')
         %td.col-sm-8=@qualification.cpd_hours_required_per_year
-      %tr
-        %td.col-sm-4=t('views.exam_levels.index.h1')
-        %td.col-sm-8
-          -@qualification.exam_levels.each do |level|
-            =link_to level.name, level
-            %br
-          =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
-    %p
-      =link_to sanitize('&larr; ' + t('views.qualifications.index.h1')), qualifications_url
-      |
-      =link_to t('views.general.edit'), edit_qualification_url(id: @qualification.id), title: t('views.general.edit_tooltip')
+  %p
+    =link_to sanitize('&larr; ' + t('views.qualifications.index.h1')), qualifications_url
+    |
+    =link_to t('views.general.edit'), edit_qualification_url(id: @qualification.id), title: t('views.general.edit_tooltip')
