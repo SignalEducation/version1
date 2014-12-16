@@ -1,8 +1,8 @@
-$(document).on('ready', function() {
+$(document).on('ready page:load', function() {
 
   // add "update-my-url" as a class to the name field.
 
-  $('.update-my-url').on('change page:load', function() {
+  $('.update-my-url').on('change', function() {
     var the_id = '#' +$(this).attr('id') + '_url';
     if ($(the_id).val() == "") {
       $(the_id).val($(this).val().replace(/ |\//g, '-').toLowerCase());
