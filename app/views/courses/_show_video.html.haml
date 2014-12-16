@@ -1,2 +1,16 @@
-%h2 Video Playback Page
-Find me in /views/courses/_show_video.html.haml
+.row
+  .col-sm-12
+    %h2=cme.name
+    %p Find me in /views/courses/_show_video.html.haml
+.row
+  .col-sm-12
+    .well.text-center Video player goes here
+.row
+  .col-sm-12
+    =cme.course_module_element_video.tags
+.row
+  .col-sm-12
+    %h2=t('views.course_module_element_resources.index.h1')
+    %ul
+      %li First item
+      %li second item
