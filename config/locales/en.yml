@@ -99,6 +99,8 @@ en:
           error: Corporate Customer was not deleted
 
     course_modules:
+      index:
+        no_exam_level: Sorry, there are no Exam Levels for that Qualification
       show:
         cant_find: Sorry, that could not be found
       create:
