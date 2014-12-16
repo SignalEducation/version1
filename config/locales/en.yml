@@ -559,6 +559,8 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
+        next_step: Next Step
+        previous_step: Previous Step
 
     course_module_element_quizzes:
       form:
