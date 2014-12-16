@@ -5,14 +5,14 @@
         -if qc.content_type == 'image'
           =image_tag qc.image.url, class: 'col-sm-12'
         -elsif qc.content_type == 'text'
-          %p=sanitizer qc.text_content
+          %p=sanitizer(qc.text_content)
         -elsif qc.content_type == 'mathjax'
           %p.mathjax=sanitizer qc.text_content
       %h3=t('views.quiz_questions.show.choose_an_answer')
   -question.quiz_answers.each_with_index do |qa, counter|
     .row
       .col-sm-12
-        .well.well-sm{onclick: "logAnswer(#{question.id},#{qa.id}); return false;"}
+        .well.well-sm{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}'); return false;"}
           %table
             %tr
               %td.col-xs-2

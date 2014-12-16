@@ -48,14 +48,21 @@
   function askQuestion(questionNumber) {
     updateProgressBar();
     $('.question').hide();
-    $('#question_' + nextQuestionLevel + '_' + nextQuestionArray[questionNumber - 1]).show();
+    $('#question_' + nextQuestionLevel + '_' + nextQuestionArray[questionNumber - 1]).fadeIn();
   }
 
-  function logAnswer(questionId, answerId) {
+  function logAnswer(questionId, answerId, difficultyLevel) {
     // tomorrow's stuff.
-    alert('answer logged');
+    answers[currentQuestion] = [questionId, answerId, difficultyLevel];
+    if (currentQuestion < numberOfQuestions) {
+      currentQuestion++;
+      updateProgressBar();
+      askQuestion(currentQuestion);
+    } else {
+      alert('quiz complete');
+    }
   }
 
   $(document).on('ready page:load', function() {
-    askQuestion(1); // 0 is the first quesiton
+    askQuestion(1); // 1 is the first question
   })
