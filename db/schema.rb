@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141211091300) do
+ActiveRecord::Schema.define(version: 20141212142618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -221,6 +221,8 @@ ActiveRecord::Schema.define(version: 20141211091300) do
     t.boolean  "qualified",                   default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "exam_number"
+    t.string   "membership_number"
   end
 
   create_table "institutions", force: true do |t|
@@ -288,8 +290,8 @@ ActiveRecord::Schema.define(version: 20141211091300) do
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax",   null: false
-    t.boolean  "contains_image",     null: false
+    t.boolean  "contains_mathjax",   default: false, null: false
+    t.boolean  "contains_image",     default: false, null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -390,6 +392,14 @@ ActiveRecord::Schema.define(version: 20141211091300) do
     t.date     "next_renewal_date"
     t.boolean  "complementary",         default: false, null: false
     t.string   "current_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "system_defaults", force: true do |t|
+    t.integer  "individual_student_user_group_id"
+    t.integer  "corporate_student_user_group_id"
+    t.integer  "corporate_customer_user_group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
