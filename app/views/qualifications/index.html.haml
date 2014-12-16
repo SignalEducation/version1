@@ -2,6 +2,7 @@
   .col-sm-12
     .page-header
       %h1=t('views.qualifications.index.h1')
+      =render partial: 'shared/horizontal_hierarchy'
 .row
   .col-sm-12
     =will_paginate @qualifications, renderer: BootstrapPagination::Rails
