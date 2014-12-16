@@ -42,8 +42,6 @@ describe QuizAnswer do
 
   it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
 
-  it { should validate_presence_of(:wrong_answer_explanation_text) }
-
   it { should validate_presence_of(:wrong_answer_video_id).on(:update) }
   xit { should validate_numericality_of(:wrong_answer_video_id) }
 

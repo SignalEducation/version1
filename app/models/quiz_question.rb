@@ -39,6 +39,7 @@ class QuizQuestion < ActiveRecord::Base
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
   validates :solution_to_the_question, presence: true, on: :update
   validates :hints, allow_nil: true, length: {maximum: 65535}
+  # todo validate :at_least_one_answer_is_correct
 
   # callbacks
   before_save :set_course_module_element
@@ -46,6 +47,9 @@ class QuizQuestion < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_quiz_id) }
+  scope :all_easy, -> { where(difficulty_level: 'easy') }
+  scope :all_medium, -> { where(difficulty_level: 'medium') }
+  scope :all_difficult, -> { where(difficulty_level: 'difficult') }
 
   # class methods
 
@@ -61,6 +65,17 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   protected
+
+  def at_least_one_answer_is_correct
+    # todo - this doesn't work
+    counter = 0
+    quiz_answers_attributes.each do |attrs|
+      counter += 1 if attrs[:degree_of_wrongness] == 'correct'
+    end
+    if counter == 0
+      errors.add(:base, "At least one answer must be marked as correct")
+    end
+  end
 
   def check_dependencies
     unless self.destroyable?

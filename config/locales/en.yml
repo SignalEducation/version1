@@ -99,6 +99,8 @@ en:
           error: Corporate Customer was not deleted
 
     course_modules:
+      index:
+        no_exam_level: Sorry, there are no Exam Levels for that Qualification
       show:
         cant_find: Sorry, that could not be found
       create:
@@ -343,10 +345,10 @@ en:
 
     course_module_element:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
-      must_link_with_a_video_or_quiz: You must link this course module element to a video or quiz
 
-    course_module_element_resource:
+    course_module_element_resources:
       web_url_or_upload_error: You must enter a web URL or upload a file
+      must_link_with_an_upload_or_url: You must link this Resource to an upload or URL
 
     institution_users:
       can_t_be_blank_for_students: "Can't be blank for students"
@@ -376,11 +378,13 @@ en:
       delete: Delete
       delete_tooltip: click to delete
       delete_confirmation: Are you sure?
+      details: Details
       edit: Edit
       edit_tooltip: click to edit
       example: Example
       go: Go
       home: Home
+      links: Links
       missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one
@@ -395,6 +399,7 @@ en:
       sign_in: Log in
       sign_out: Sign out
       sign_up: Sign up
+      these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
       view: View
@@ -518,6 +523,8 @@ en:
       show:
         h1: Course Module
         click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
+        link_to_student_ui: "View in the student-facing UI"
+        add_more_questions: More questions needed
 
     course_module_elements:
       form:
@@ -542,7 +549,7 @@ en:
         new_video: New video
         new_quiz: New quiz
         questions: Questions
-        save_and_add_another: Save and create another Question
+        save_and_add_another: Save and add another Question
 
       edit:
         h1: Edit Course Module Element
@@ -555,6 +562,8 @@ en:
 
       show:
         h1: Course Module Element
+        quiz_preview: Quiz Preview
+        video_preview: Video Preview
 
     course_module_element_quizzes:
       form:
@@ -568,6 +577,7 @@ en:
         best_possible_score_retry: "Max Score (Retry)"
         advanced_setup_link: Advanced Setup
         preview_button: Preview
+        video: Video
 
     course_module_element_resources:
       form:
@@ -795,6 +805,18 @@ en:
       new:
         h1: New Qualification
 
+    shared:
+      filter_panel:
+        filter: 'filter:'
+
+    quiz_answer:
+      form:
+        answer_content_placeholder: Fill in the Answer Here
+        answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
+        answer_text: Answer
+        answer_text_placeholder: Fill in the Answer Here
+        wrong_answer_video_id: Related Video
+
     quiz_contents:
       form:
         content_type:
@@ -804,6 +826,7 @@ en:
 
     quiz_questions:
       form:
+        mathjax_prompt: "You can incorporate MathJax using (&shy;math) and (/math)"
         difficulty_level: Difficulty Level
         question_text: Question Text
         solution_to_the_question: Solution to the Question
@@ -824,18 +847,6 @@ en:
       show:
         h1: Quiz Question Preview
         choose_an_answer: Choose an Answer
-
-    quiz_answer:
-      form:
-        answer_content_placeholder: Fill in the Answer Here
-        answer_solution_content_placeholder: Enter the Solution or Leave blank for Correct Answer
-        answer_text: Answer
-        answer_text_placeholder: Fill in the Answer Here
-        wrong_answer_video_id: Related Video
-
-    shared:
-      filter_panel:
-        filter: 'filter:'
 
     student_sign_ups:
       form:

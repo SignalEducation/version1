@@ -10,12 +10,14 @@
 #  qualified                   :boolean          default(FALSE), not null
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  exam_number                 :string(255)
+#  membership_number           :string(255)
 #
 
 class InstitutionUser < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :institution_id, :user_id, :student_registration_number, :student, :qualified
+  attr_accessible :institution_id, :user_id, :student_registration_number, :student, :qualified, :exam_number, :membership_number
 
   # Constants
 
@@ -28,7 +30,6 @@ class InstitutionUser < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :student_registration_number, presence: true
   validate :require_student_id_if_student
 
   # callbacks

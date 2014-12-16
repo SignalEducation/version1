@@ -92,5 +92,4 @@ describe QuizContent do
   it { should respond_to(:content_type=) }
   it { should respond_to(:content_type) }
 
-
 end

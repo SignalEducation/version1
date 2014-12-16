@@ -20,11 +20,14 @@
             -tracker = qualification.institution_id
             %tr
               %td{colspan: 5}
-                .h2=link_to(qualification.institution.name, qualification.institution, title: t('views.general.view_tooltip'))
+                .h3=link_to(qualification.institution.name, qualification.institution, title: t('views.general.view_tooltip'))
+                =link_to t('views.general.new'), new_qualification_url(institution_id: qualification.institution_id), class: 'btn btn-success btn-xs'
           %tr{id: qualification.id}
             %td=link_to(qualification.name, qualification, title: t('views.general.view_tooltip'))
             %td
-              =link_to t('views.exam_levels.index.h1'), exam_levels_url
+              -qualification.exam_levels.each do |level|
+                =link_to level.name, level
+                %br/
             %td=link_to(tick_or_cross(qualification.active), qualification, title: t('views.general.view_tooltip'))
             %td=link_to(qualification.cpd_hours_required_per_year, qualification, title: t('views.general.view_tooltip'))
             %td

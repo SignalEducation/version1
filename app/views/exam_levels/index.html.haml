@@ -21,7 +21,7 @@
             -tracker = exam_level.qualification_id
             %tr
               %td{colspan: 10}
-                .h2=link_to exam_level.qualification.name, exam_level.qualification
+                .h3=link_to exam_level.qualification.name, exam_level.qualification
                 =link_to t('views.exam_levels.index.new'), new_exam_level_url(qualification_id: exam_level.qualification_id), class: 'btn btn-xs btn-success'
           %tr{id: exam_level.id}
             %td=link_to(exam_level.name, exam_level, title: t('views.general.view_tooltip'))

@@ -7,7 +7,14 @@ class CourseModulesController < ApplicationController
   before_action :get_variables, except: :show
 
   def index
-    @qualifications = Qualification.paginate(per_page: 100, page: params[:page]).all_in_order
+    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || Qualification.all_in_order.first
+    exam_level = qualification.try(:exam_levels).try(:first)
+    if exam_level
+      redirect_to course_module_special_link(exam_level)
+    else
+      flash[:error] = I18n.t('controllers.course_modules.index.no_exam_level')
+      redirect_to exam_levels_url
+    end
   end
 
   def show

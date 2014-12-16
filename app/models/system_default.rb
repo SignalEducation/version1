@@ -1,0 +1,55 @@
+# == Schema Information
+#
+# Table name: system_defaults
+#
+#  id                               :integer          not null, primary key
+#  individual_student_user_group_id :integer
+#  corporate_student_user_group_id  :integer
+#  corporate_customer_user_group_id :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#
+
+class SystemDefault < ActiveRecord::Base
+
+  # attr-accessible
+  attr_accessible :individual_student_user_group_id, :corporate_student_user_group_id, :corporate_customer_user_group_id
+
+  # Constants
+
+  # relationships
+  # todo belongs_to :individual_student_user_group
+  # todo belongs_to :corporate_student_user_group
+  # todo belongs_to :corporate_customer_user_group
+
+  # validation
+  validates :individual_student_user_group_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :corporate_student_user_group_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :corporate_customer_user_group_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+
+  # callbacks
+  before_destroy :check_dependencies
+
+  # scopes
+  scope :all_in_order, -> { order(:individual_student_user_group_id) }
+
+  # class methods
+
+  # instance methods
+  def destroyable?
+    false
+  end
+
+  protected
+
+  def check_dependencies
+    unless self.destroyable?
+      errors.add(:base, I18n.t('models.general.dependencies_exist'))
+      false
+    end
+  end
+
+end

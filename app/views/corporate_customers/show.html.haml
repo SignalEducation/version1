@@ -34,6 +34,6 @@
         %td.col-sm-4=t('views.corporate_customers.form.can_restrict_content')
         %td.col-sm-8=tick_or_cross(@corporate_customer.can_restrict_content)
     %p
-      =link_to t('views.general.back'), corporate_customers_url
+      =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
       |
       =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')

@@ -18,12 +18,6 @@
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
 
-    <!-- Mathjax -->
-    -if @mathjax_required
-      %script{type: 'text/x-mathjax-config'}
-        MathJax.Hub.Config({tex2jax: {inlineMath: [["(math)","(/math)"], ['\\(','\\)']]}});
-      %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -43,3 +37,8 @@
       =yield
     =render partial: 'layouts/footer'
     =render partial: 'layouts/misc_javascript'
+    <!-- Mathjax -->
+    -if @mathjax_required
+      %script{type: 'text/x-mathjax-config'}
+        MathJax.Hub.Config({tex2jax: {inlineMath: [["(math)","(/math)"]]}});
+      %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}

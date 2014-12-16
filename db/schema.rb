@@ -221,6 +221,8 @@ ActiveRecord::Schema.define(version: 20141214224530) do
     t.boolean  "qualified",                   default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "exam_number"
+    t.string   "membership_number"
   end
 
   create_table "institutions", force: true do |t|
@@ -394,6 +396,14 @@ ActiveRecord::Schema.define(version: 20141214224530) do
     t.datetime "updated_at"
     t.string   "stripe_customer_id"
     t.text     "original_stripe_customer_data"
+  end
+
+  create_table "system_defaults", force: true do |t|
+    t.integer  "individual_student_user_group_id"
+    t.integer  "corporate_student_user_group_id"
+    t.integer  "corporate_customer_user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "user_exam_levels", force: true do |t|

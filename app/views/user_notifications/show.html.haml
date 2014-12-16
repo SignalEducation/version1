@@ -41,7 +41,7 @@
 .row
   .col-sm-6
     %p
-      =link_to t('views.general.back'), user_notifications_url
+      =link_to sanitize('&larr; ' + t('views.user_notifications.index.h1')), user_notifications_url
   .col-sm-6.text-right
     -if @user_notification.destroyable?
       %p=link_to t('views.general.delete'), @user_notification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'

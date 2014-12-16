@@ -29,6 +29,6 @@
           -@currency.countries.each do |country|
             =link_to country.name, country
     %p
-      =link_to t('views.general.back'), currencies_url
+      =link_to t('views.currencies.index.h1'), currencies_url
       |
       =link_to t('views.general.edit'), edit_currency_url(id: @currency.id), title: t('views.general.edit_tooltip')
