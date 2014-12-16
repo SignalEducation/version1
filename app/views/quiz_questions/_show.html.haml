@@ -8,17 +8,22 @@
           %p=sanitizer qc.text_content
         -elsif qc.content_type == 'mathjax'
           %p.mathjax=sanitizer qc.text_content
-      %h2=t('views.quiz_questions.show.choose_an_answer')
+      %h3=t('views.quiz_questions.show.choose_an_answer')
   -question.quiz_answers.each_with_index do |qa, counter|
     .row
-      .col-sm-2
-        .well.well-sm.text-center
-          =('A'..'Z').to_a[counter]
-      .col-sm-10
-        -qa.quiz_contents.each do |qc|
-          -if qc.content_type == 'image'
-            =image_tag qc.image.url, class: 'col-sm-12'
-          -elsif qc.content_type == 'text'
-            %p=qc.text_content
-          -elsif qc.content_type == 'mathjax'
-            %p.mathjax=qc.text_content
+      .col-sm-12
+        .well.well-sm{onclick: "logAnswer(#{question.id},#{qa.id}); return false;"}
+          %table
+            %tr
+              %td.col-xs-2
+                =('A'..'Z').to_a[counter]
+              %td
+                -qa.quiz_contents.each do |qac|
+                  -if qac.content_type == 'image'
+                    =image_tag qac.image.url, class: 'col-sm-12'
+                  -elsif qac.content_type == 'text'
+                    =qac.text_content
+                    %br/
+                  -elsif qac.content_type == 'mathjax'
+                    .mathjax=qac.text_content
+                    %br/
