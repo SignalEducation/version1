@@ -42,7 +42,7 @@
     progressBar.attr('aria-valuenow', currentQuestion);
     progressBar.attr('style', 'width: ' + percentage + '%;');
     progressBar.text(currentQuestion + ' / ' + numberOfQuestions);
-    progressBar.find('span').text(percentage + '% Complete');
+    progressBar.find('span').text(currentQuestion + ' of ' + numberOfQuestions);
   }
 
   function askQuestion(questionNumber) {
