@@ -1,11 +1,10 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.library.show.h1')
+=render partial: 'shared/breadcrumbs'
 
 .row
   .col-sm-12
-    =render partial: 'shared/breadcrumbs'
+    %h1
+      =@exam_section.try(:name) || @exam_level.try(:name) || @qualification.try(:name) || @institution.try(:name) || t('views.library.show.h1')
+    %hr/
 
 .row
   .col-sm-12
