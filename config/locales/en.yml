@@ -854,6 +854,59 @@ en:
         h1: Quiz Question Preview
         choose_an_answer: Choose an Answer
 
+    static_pages:
+      form:
+        name: Name
+        name_placeholder: Page Name
+        publish_from: Date
+        publish_from_placeholder: Date
+        publish_to: Date
+        publish_to_placeholder: Date
+        allow_multiples: Allow Multiples
+        public_url: Public URL
+        public_url_placeholder: url
+        use_standard_page_template: Use standard page template
+        head_content: Head Content
+        head_content_placeholder: Head Content
+        body_content: Body Content
+        body_content_placeholder: Body Content
+        created_by: Created by
+        created_by_placeholder: Created by
+        updated_by: Created by
+        updated_by_placeholder: Created by
+        add_to_navbar: Add to Navbar
+        add_to_footer: Add to Footer
+        menu_label: Menu Label
+        menu_label_placeholder: Menu Label
+        tooltip_text: Tooltip Text
+        tooltip_text_placeholder: Tooltip Text
+        language: Language
+        language_placeholder: Language
+        mark_as_noindex: Mark ad No Index
+        mark_as_nofollow: Mark ad No Follow
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
+        approved_country_ids: Approved Country Id's
+        approved_country_ids_placeholder: Approved Country Id's
+        default_page_for_this_url: Default page for URL
+        make_this_page_sticky: Make this Page Sticky
+
+
+      index:
+        h1: Static Pages
+
+      show:
+        h1: Static Pages
+
+      edit:
+        h1: Edit Static Pages
+
+      new:
+        h1: New Static Pages
+
+
     subscription_plans:
       form:
         available_to_students: Available to students
