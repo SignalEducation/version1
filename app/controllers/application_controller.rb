@@ -141,7 +141,7 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
-  def course_module_special_link(the_thing)
+  def course_module_special_link(the_thing) # tutor/admin-facing
     # used for tutor-facing links
 
     if the_thing.class == CourseModule && !the_thing.id.nil?
@@ -179,7 +179,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_module_special_link
 
-  def library_special_link(the_thing)
+  def library_special_link(the_thing) # customer-facing
     if the_thing.class == ExamSection
       library_url(the_thing.exam_level.qualification.institution.subject_area.name_url,
                   the_thing.exam_level.qualification.institution.name_url,
@@ -210,4 +210,30 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
+  def course_special_link(the_thing)
+    if the_thing.class == CourseModule
+      course_url(
+              the_thing.exam_level.qualification.institution.subject_area.name_url,
+              the_thing.exam_level.qualification.institution.name_url,
+              the_thing.exam_level.qualification.name_url,
+              the_thing.exam_level.name_url,
+              the_thing.exam_section.name_url || 'all',
+              the_thing.name_url
+      )
+    elsif the_thing.class == CourseModuleElement
+      course_url(
+              the_thing.course_module.exam_level.qualification.institution.subject_area.name_url,
+              the_thing.course_module.exam_level.qualification.institution.name_url,
+              the_thing.course_module.exam_level.qualification.name_url,
+              the_thing.course_module.exam_level.name_url,
+              the_thing.course_module.exam_section.name_url || 'all',
+              the_thing.course_module.name_url,
+              the_thing.name_url
+      )
+    else
+      # shouldn't be here - re-route to /library/bla-bla
+      library_special_link(the_thing)
+    end
+  end
+  helper_method :course_special_link
 end

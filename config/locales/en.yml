@@ -50,6 +50,10 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    courses:
+      show:
+        warning: "Sorry, we couldn't find the exact thing you were looking for"
+
     course_module_elements:
       create:
         flash:
@@ -481,6 +485,10 @@ en:
       new:
         h1: New Corporate Customer
 
+    courses:
+      show:
+        h1: Courses
+
     course_modules:
       form:
         course_module_elements: Course Module Elements
@@ -773,6 +781,10 @@ en:
         error: error
         preface: 'prevented this item from being saved:'
 
+    library:
+      show:
+        h1: Library
+
     qualifications:
       form:
         name: Name
@@ -841,6 +853,10 @@ en:
       show:
         h1: Quiz Question Preview
         choose_an_answer: Choose an Answer
+
+    shared:
+      breadcrumbs:
+        you_are_here: "You are here:"
 
     subscription_plans:
       form:

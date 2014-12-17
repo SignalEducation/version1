@@ -50,8 +50,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :corporate_customer_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_score_actual, presence: true, if: 'course_module_element.try(:course_module_element_quiz_id).to_i > 0'
-  validates :quiz_score_potential, presence: true, if: 'course_module_element.try(:course_module_element_quiz_id).to_i > 0'
+  validates :quiz_score_actual, presence: true, if: 'is_quiz == true'
+  validates :quiz_score_potential, presence: true, if: 'is_quiz == true'
 
   # callbacks
   before_destroy :check_dependencies
