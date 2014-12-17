@@ -25,6 +25,7 @@
 #  approved_country_ids       :text
 #  default_page_for_this_url  :boolean          default(FALSE), not null
 #  make_this_page_sticky      :boolean          default(FALSE), not null
+#  logged_in_required         :boolean          default(FALSE), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #

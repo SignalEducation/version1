@@ -23,6 +23,7 @@ class CreateStaticPages < ActiveRecord::Migration
       t.text :approved_country_ids
       t.boolean :default_page_for_this_url, default: false, null: false
       t.boolean :make_this_page_sticky, default: false, null: false
+      t.boolean :logged_in_required, default: false, null: false
 
       t.timestamps
     end

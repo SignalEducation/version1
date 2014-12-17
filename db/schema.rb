@@ -342,6 +342,7 @@ ActiveRecord::Schema.define(version: 20141217094755) do
     t.text     "approved_country_ids"
     t.boolean  "default_page_for_this_url",  default: false, null: false
     t.boolean  "make_this_page_sticky",      default: false, null: false
+    t.boolean  "logged_in_required",         default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

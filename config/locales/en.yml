@@ -210,6 +210,18 @@ en:
           success: Quiz Question has been deleted
           error: Quiz Question was not deleted
 
+    static_pages:
+      create:
+        flash:
+          success: Static Page has been created successfully
+      update:
+        flash:
+          success: Static Page details have been updated successfully
+      destroy:
+        flash:
+          success: Static Page has been deleted
+          error: Static Page was not deleted
+
 
     subject_areas:
       create:
