@@ -31,18 +31,21 @@
 
 class StaticPage < ActiveRecord::Base
 
+  serialize :approved_country_ids
+
   # attr-accessible
   attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky
 
   # Constants
 
   # relationships
+  belongs_to :creator, class_name: 'User', foreign_key: :created_by
+  belongs_to :updater, class_name: 'User', foreign_key: :updated_by
 
   # validation
   validates :name, presence: true
   validates :publish_from, presence: true
-  validates :publish_to, presence: true
-  validates :public_url, presence: true
+  validates :public_url, presence: true, uniqueness: true, if: 'allow_multiples == false'
   validates :head_content, presence: true
   validates :body_content, presence: true
   validates :created_by, presence: true

@@ -88,6 +88,8 @@ class User < ActiveRecord::Base
   has_many :forum_posts
   has_many :forum_post_concerns
   has_many :user_likes
+  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
+  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   belongs_to :user_group
 
   # validation
@@ -207,7 +209,9 @@ class User < ActiveRecord::Base
         self.subscription_transactions.empty? &&
         self.user_exam_level.empty? &&
         self.user_likes.empty? &&
-        self.user_notifications.empty?
+        self.user_notifications.empty? &&
+        self.created_static_pages.empty? &&
+        self.updated_static_pages.empty?
   end
 
   def full_name

@@ -47,15 +47,16 @@ describe StaticPage do
   #it { expect(StaticPage.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
+  it { should belong_to(:creator) }
+  it { should belong_to(:updater) }
 
   # validation
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:publish_from) }
 
-  it { should validate_presence_of(:publish_to) }
-
   it { should validate_presence_of(:public_url) }
+  it { should validate_uniqueness_of(:public_url) }
 
   it { should validate_presence_of(:head_content) }
 
@@ -87,7 +88,5 @@ describe StaticPage do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
