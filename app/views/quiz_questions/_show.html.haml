@@ -12,7 +12,7 @@
   -question.quiz_answers.each_with_index do |qa, counter|
     .row
       .col-sm-12
-        .well.well-sm{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}'); return false;"}
+        .well.well-sm{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}); return false;"}
           %table
             %tr
               %td.col-xs-2

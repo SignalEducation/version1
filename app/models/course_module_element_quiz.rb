@@ -18,8 +18,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_id, :time_limit_seconds,
-                  :number_of_questions,
-                  :quiz_questions_attributes
+                  :number_of_questions, :quiz_questions_attributes
 
   # Constants
 
@@ -65,7 +64,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def enough_questions?
     lowest_number_of_questions = [self.easy_ids.length, self.medium_ids.length, self.difficult_ids.length].min
-    lowest_number_of_questions > self.number_of_questions
+    lowest_number_of_questions >= self.number_of_questions
   end
 
   def easy_ids
@@ -104,9 +103,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   def self.quiz_question_fields_blank?(the_attributes)
-    puts '*' * 100
-    puts the_attributes.inspect
-    puts '*' * 100
     (the_attributes['id'].to_i > 0 && the_attributes['quiz_contents_attributes'].blank?) ||
       ( the_attributes['course_module_element_quiz_id'].to_i > 0 &&
         the_attributes['solution_to_the_question'].blank? &&

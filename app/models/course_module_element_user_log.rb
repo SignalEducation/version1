@@ -23,9 +23,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_id, :user_id, :session_guid,
-                  :element_completed, :time_taken_in_seconds, :quiz_score_actual,
-                  :quiz_score_potential, :is_video, :is_quiz, :course_module_id,
-                  :corporate_customer_id
+                  :element_completed, :time_taken_in_seconds,
+                  :quiz_score_actual, :quiz_score_potential,
+                  :is_video, :is_quiz, :course_module_id,
+                  :corporate_customer_id,
+                  :quiz_attempts_attributes
 
   # Constants
 
@@ -35,6 +37,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module
   belongs_to :corporate_customer
   has_many :quiz_attempts
+  accepts_nested_attributes_for :quiz_attempts
 
   # validation
   validates :course_module_element_id, presence: true,
@@ -43,8 +46,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true
   validates :time_taken_in_seconds, presence: true
-  validates :quiz_score_actual, presence: true
-  validates :quiz_score_potential, presence: true
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :corporate_customer_id, presence: true,

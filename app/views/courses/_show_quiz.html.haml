@@ -17,6 +17,14 @@
       -(easy_ids + medium_ids + difficult_ids).each do |the_id|
         =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
 
+  =form_for @course_module_element_user_log do |f|
+    =f.text_field :user_id
+    =f.fields_for :quiz_attempts do |attempt|
+      =attempt.text_field :user_id
+      =attempt.text_field :quiz_question_id
+      =attempt.text_field :quiz_answer_id
+      =attempt.text_field :correct
+      =attempt.text_field :course_module_element_user_log_id
 
 -else
   .row
@@ -34,7 +42,8 @@
       currentQuestion = 1,
       nextQuestionLevel = 'easy',
       nextQuestionArray = easyList,
-      progressBar = $('.progress-bar');
+      progressBar = $('.progress-bar'),
+      startTime = #{Time.now.to_i};
 
   function updateProgressBar() {
     var percentage = (currentQuestion / numberOfQuestions * 100);
@@ -51,9 +60,9 @@
     $('#question_' + nextQuestionLevel + '_' + nextQuestionArray[questionNumber - 1]).fadeIn();
   }
 
-  function logAnswer(questionId, answerId, difficultyLevel) {
+  function logAnswer(questionId, answerId, difficultyLevel, isCorrect) {
     // tomorrow's stuff.
-    answers[currentQuestion] = [questionId, answerId, difficultyLevel];
+    answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
     if (currentQuestion < numberOfQuestions) {
       currentQuestion++;
       updateProgressBar();
