@@ -17,14 +17,14 @@
       -(easy_ids + medium_ids + difficult_ids).each do |the_id|
         =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
 
-  =form_for @course_module_element_user_log do |f|
+  =form_for @course_module_element_user_log, url: courses_url do |f|
     =f.text_field :user_id
+    =f.text_field :course_module_id
+    =f.text_field :course_module_element_id
     =f.fields_for :quiz_attempts do |attempt|
       =attempt.text_field :user_id
       =attempt.text_field :quiz_question_id
       =attempt.text_field :quiz_answer_id
-      =attempt.text_field :correct
-      =attempt.text_field :course_module_element_user_log_id
 
 -else
   .row

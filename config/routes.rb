@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -20,16 +19,17 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit'
 
     # special routes
-    # todo get 'personal_sign_up_complete', to: 'library#index', as: :personal_sign_up_complete
+    # todo get 'personal_sign_up_complete', to: 'library#show', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
-    # todo get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
-    # todo get 'courses/:study_area_name_url/:institution_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+    get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
+    get 'courses/:study_area_name_url/:institution_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
 
     # general resources
-    post 'countries/reorder', to: 'countries#reorder'
-    resources :countries
     resources :corporate_customers
+    resources :countries
+    post 'countries/reorder', to: 'countries#reorder'
+    resources :courses, only: [:index, :show, :create]
     resources :course_modules
     post 'course_modules/reorder', to: 'course_modules#reorder'
     get 'course_modules/:qualification_url', to: 'course_modules#show',
