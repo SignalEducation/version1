@@ -74,72 +74,69 @@ describe StaticPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('static_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see static_page_1' do
         get :show, id: static_page_1.id
-        expect_show_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see static_page_2' do
         get :show, id: static_page_2.id
-        expect_show_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with static_page_1' do
         get :edit, id: static_page_1.id
-        expect_edit_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with static_page_2' do
         get :edit, id: static_page_2.id
-        expect_edit_success_with_model('static_page', static_page_2.id)
-      end
+        expect_bounce_as_not_allowed      end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page: valid_params
-        expect_create_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for static_page_1' do
         put :update, id: static_page_1.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for static_page_2' do
         put :update, id: static_page_2.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
-        expect(assigns(:static_page).id).to eq(static_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: static_page_1.id, static_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('static_page')
-        expect(assigns(:static_page).id).to eq(static_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -147,12 +144,12 @@ describe StaticPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: static_page_1.id
-        expect_delete_error_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: static_page_2.id
-        expect_delete_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -168,72 +165,70 @@ describe StaticPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('static_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see static_page_1' do
         get :show, id: static_page_1.id
-        expect_show_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see static_page_2' do
         get :show, id: static_page_2.id
-        expect_show_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with static_page_1' do
         get :edit, id: static_page_1.id
-        expect_edit_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with static_page_2' do
         get :edit, id: static_page_2.id
-        expect_edit_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page: valid_params
-        expect_create_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for static_page_1' do
         put :update, id: static_page_1.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for static_page_2' do
         put :update, id: static_page_2.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
-        expect(assigns(:static_page).id).to eq(static_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: static_page_1.id, static_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('static_page')
-        expect(assigns(:static_page).id).to eq(static_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -241,12 +236,12 @@ describe StaticPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: static_page_1.id
-        expect_delete_error_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: static_page_2.id
-        expect_delete_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -262,72 +257,70 @@ describe StaticPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('static_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see static_page_1' do
         get :show, id: static_page_1.id
-        expect_show_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see static_page_2' do
         get :show, id: static_page_2.id
-        expect_show_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with static_page_1' do
         get :edit, id: static_page_1.id
-        expect_edit_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with static_page_2' do
         get :edit, id: static_page_2.id
-        expect_edit_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page: valid_params
-        expect_create_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for static_page_1' do
         put :update, id: static_page_1.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for static_page_2' do
         put :update, id: static_page_2.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
-        expect(assigns(:static_page).id).to eq(static_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: static_page_1.id, static_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('static_page')
-        expect(assigns(:static_page).id).to eq(static_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -335,12 +328,12 @@ describe StaticPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: static_page_1.id
-        expect_delete_error_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: static_page_2.id
-        expect_delete_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -356,72 +349,70 @@ describe StaticPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('static_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see static_page_1' do
         get :show, id: static_page_1.id
-        expect_show_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see static_page_2' do
         get :show, id: static_page_2.id
-        expect_show_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with static_page_1' do
         get :edit, id: static_page_1.id
-        expect_edit_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with static_page_2' do
         get :edit, id: static_page_2.id
-        expect_edit_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page: valid_params
-        expect_create_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for static_page_1' do
         put :update, id: static_page_1.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for static_page_2' do
         put :update, id: static_page_2.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
-        expect(assigns(:static_page).id).to eq(static_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: static_page_1.id, static_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('static_page')
-        expect(assigns(:static_page).id).to eq(static_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -429,12 +420,12 @@ describe StaticPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: static_page_1.id
-        expect_delete_error_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: static_page_2.id
-        expect_delete_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -450,72 +441,70 @@ describe StaticPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('static_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see static_page_1' do
         get :show, id: static_page_1.id
-        expect_show_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see static_page_2' do
         get :show, id: static_page_2.id
-        expect_show_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with static_page_1' do
         get :edit, id: static_page_1.id
-        expect_edit_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with static_page_2' do
         get :edit, id: static_page_2.id
-        expect_edit_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page: valid_params
-        expect_create_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for static_page_1' do
         put :update, id: static_page_1.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for static_page_2' do
         put :update, id: static_page_2.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
-        expect(assigns(:static_page).id).to eq(static_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: static_page_1.id, static_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('static_page')
-        expect(assigns(:static_page).id).to eq(static_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -523,12 +512,12 @@ describe StaticPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: static_page_1.id
-        expect_delete_error_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: static_page_2.id
-        expect_delete_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -544,72 +533,70 @@ describe StaticPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('static_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see static_page_1' do
         get :show, id: static_page_1.id
-        expect_show_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see static_page_2' do
         get :show, id: static_page_2.id
-        expect_show_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with static_page_1' do
         get :edit, id: static_page_1.id
-        expect_edit_success_with_model('static_page', static_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with static_page_2' do
         get :edit, id: static_page_2.id
-        expect_edit_success_with_model('static_page', static_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page: valid_params
-        expect_create_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('static_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for static_page_1' do
         put :update, id: static_page_1.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for static_page_2' do
         put :update, id: static_page_2.id, static_page: valid_params
-        expect_update_success_with_model('static_page', static_pages_url)
-        expect(assigns(:static_page).id).to eq(static_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: static_page_1.id, static_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('static_page')
-        expect(assigns(:static_page).id).to eq(static_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -617,12 +604,12 @@ describe StaticPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: static_page_1.id
-        expect_delete_error_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: static_page_2.id
-        expect_delete_success_with_model('static_page', static_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
