@@ -1,16 +1,49 @@
 .row
   .col-sm-12
     %h2=cme.name
-    %p Find me in /views/courses/_show_video.html.haml
 .row
   .col-sm-12
     .well.text-center Video player goes here
 .row
-  .col-sm-12
-    =cme.course_module_element_video.tags
+  .col-sm-6
+    =link_to t('views.course_module_elements.show.previous_step'), '#', class: 'btn btn-info btn-sm'
+  .col-sm-6.text-right
+    =link_to t('views.course_module_elements.show.next_step'), '#', class: 'btn btn-info btn-sm'
 .row
   .col-sm-12
-    %h2=t('views.course_module_element_resources.index.h1')
-    %ul
-      %li First item
-      %li second item
+.row
+  .col-sm-12
+    %h3=t('views.course_module_elements.form.description')
+    %p
+      =t('views.user_groups.form.tutor')
+      \:
+      =cme.tutor.full_name
+    %p=cme.description
+.row
+  .col-sm-12
+    %h3=t('views.course_module_element_videos.form.transcript')
+    .well
+      =cme.course_module_element_video.transcript
+
+.row
+  .col-sm-12
+    .glyphicon.glyphicon-tags
+      -cme.course_module_element_video.tags.split(',').each do |tag|
+        .label.label-default=tag
+-if cme.course_module_element_resources.count > 0
+  .row
+    .col-sm-12
+      %h2=t('views.course_module_element_resources.index.h1')
+      %ul
+        -cme.course_module_element_resources.each do |r|
+          -if r.web_url.length > 0
+            %li
+              =link_to r.name, r.web_url, target: '_blank'
+              %br/
+              .text-muted=r.description
+          -else
+            %li
+              =r.name
+              =link_to r.upload_file_name, r.upload.url, target: '_blank'
+              %br/
+              .text-muted=r.description
