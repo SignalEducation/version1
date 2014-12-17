@@ -1,0 +1,4 @@
+json.array!(@static_pages) do |static_page|
+  json.extract! static_page, :id, :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky
+  json.url static_page_url(static_page, format: :json)
+end
