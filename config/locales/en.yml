@@ -858,11 +858,11 @@ en:
       form:
         name: Name
         name_placeholder: Page Name
-        publish_from: Date
+        publish_from: Publish from
         publish_from_placeholder: Date
-        publish_to: Date
+        publish_to: Publish to
         publish_to_placeholder: Date
-        allow_multiples: Allow Multiples
+        allow_multiples: Allow Multiples Versions of this Page
         public_url: Public URL
         public_url_placeholder: url
         use_standard_page_template: Use standard page template
@@ -872,25 +872,25 @@ en:
         body_content_placeholder: Body Content
         created_by: Created by
         created_by_placeholder: Created by
-        updated_by: Created by
-        updated_by_placeholder: Created by
-        add_to_navbar: Add to Navbar
-        add_to_footer: Add to Footer
-        menu_label: Menu Label
-        menu_label_placeholder: Menu Label
-        tooltip_text: Tooltip Text
-        tooltip_text_placeholder: Tooltip Text
+        updated_by: Updated by
+        updated_by_placeholder: Updated by
+        add_to_navbar: Add Link to Navbar
+        add_to_footer: Add Link to Footer
+        menu_label: Navbar/Footer Label
+        menu_label_placeholder: Label
+        tooltip_text: Tooltip Text for Label
+        tooltip_text_placeholder: Tooltip
         language: Language
         language_placeholder: Language
-        mark_as_noindex: Mark ad No Index
-        mark_as_nofollow: Mark ad No Follow
+        mark_as_noindex: Mark ad No-Index
+        mark_as_nofollow: Mark ad No-Follow
         seo_title: SEO Title
         seo_title_placeholder: SEO Title
         seo_description: SEO Description
         seo_description_placeholder: SEO Description
-        approved_country_ids: Approved Country Id's
+        approved_country_ids: Approved Countries
         approved_country_ids_placeholder: Approved Country Id's
-        default_page_for_this_url: Default page for URL
+        default_page_for_this_url: This is the Default page for this URL
         make_this_page_sticky: Make this Page Sticky
 
 
@@ -898,13 +898,13 @@ en:
         h1: Static Pages
 
       show:
-        h1: Static Pages
+        h1: Static Page
 
       edit:
-        h1: Edit Static Pages
+        h1: Edit Static Page
 
       new:
-        h1: New Static Pages
+        h1: New Static Page
 
 
     subscription_plans:
