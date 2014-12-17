@@ -867,9 +867,9 @@ en:
         public_url_placeholder: url
         use_standard_page_template: Use standard page template
         head_content: Head Content
-        head_content_placeholder: Head Content
+        head_content_placeholder: Code for the Head
         body_content: Body Content
-        body_content_placeholder: Body Content
+        body_content_placeholder: Code for the Body
         created_by: Created by
         created_by_placeholder: Created by
         updated_by: Updated by
@@ -892,6 +892,7 @@ en:
         approved_country_ids_placeholder: Approved Country Id's
         default_page_for_this_url: This is the Default page for this URL
         make_this_page_sticky: Make this Page Sticky
+        logged_in_required: Logged in Required
 
 
       index:

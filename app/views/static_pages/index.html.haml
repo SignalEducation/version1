@@ -30,6 +30,7 @@
           %th=t('views.static_pages.form.approved_country_ids')
           %th=t('views.static_pages.form.default_page_for_this_url')
           %th=t('views.static_pages.form.make_this_page_sticky')
+          %th=t('views.static_pages.form.logged_in_required')
           %th
       %tbody
         -@static_pages.each do |static_page|
@@ -56,6 +57,7 @@
             %td=link_to(static_page.approved_country_ids, static_page, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(static_page.default_page_for_this_url), static_page, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(static_page.make_this_page_sticky), static_page, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(static_page.logged_in_required), static_page, title: t('views.general.view_tooltip'))
             %td
               -#=link_to t('views.general.view'), static_page
               =link_to t('views.general.edit'), edit_static_page_url(static_page), class: 'btn btn-info btn-xs'

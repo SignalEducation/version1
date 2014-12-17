@@ -74,6 +74,9 @@
       %tr
         %td.col-sm-4=t('views.static_pages.form.make_this_page_sticky')
         %td.col-sm-8=tick_or_cross(@static_page.make_this_page_sticky)
+      %tr
+        %td.col-sm-4=t('views.static_pages.form.logged_in_required')
+        %td.col-sm-8=tick_or_cross(@static_page.logged_in_required)
     %p
       =link_to t('views.general.back'), static_pages_url
       |
