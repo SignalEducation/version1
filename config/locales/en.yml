@@ -882,8 +882,8 @@ en:
         tooltip_text_placeholder: Tooltip
         language: Language
         language_placeholder: Language
-        mark_as_noindex: Mark ad No-Index
-        mark_as_nofollow: Mark ad No-Follow
+        mark_as_noindex: Mark as No-Index
+        mark_as_nofollow: Mark as No-Follow
         seo_title: SEO Title
         seo_title_placeholder: SEO Title
         seo_description: SEO Description
