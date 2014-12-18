@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141217094755) do
+ActiveRecord::Schema.define(version: 20141218141646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -317,6 +317,17 @@ ActiveRecord::Schema.define(version: 20141217094755) do
     t.boolean  "transcode_requested",            default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "static_page_uploads", force: true do |t|
+    t.string   "description"
+    t.integer  "static_page_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
   end
 
   create_table "static_pages", force: true do |t|

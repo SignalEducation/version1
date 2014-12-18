@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
 
 
+  get 'static_page_uploads/create'
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 

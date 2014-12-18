@@ -1,0 +1,56 @@
+# == Schema Information
+#
+# Table name: static_page_uploads
+#
+#  id                  :integer          not null, primary key
+#  description         :string(255)
+#  static_page_id      :integer
+#  created_at          :datetime
+#  updated_at          :datetime
+#  upload_file_name    :string(255)
+#  upload_content_type :string(255)
+#  upload_file_size    :integer
+#  upload_updated_at   :datetime
+#
+
+class StaticPageUpload < ActiveRecord::Base
+
+  # attr-accessible
+  attr_accessible :description, :static_page_id, :upload_file_name, :upload_content_type, :upload_updated_at, :upload_file_size
+
+  # Constants
+
+  # relationships
+  belongs_to :static_page
+  has_attached_file :upload, default_url: '/assets/images/missing.png'
+
+  # validation
+  validates :description, presence: true
+  validates :static_page_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates_attachment_content_type :upload,
+            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+
+  # callbacks
+  before_destroy :check_dependencies
+
+  # scopes
+  scope :all_in_order, -> { order(:description) }
+
+  # class methods
+
+  # instance methods
+  def destroyable?
+    false
+  end
+
+  protected
+
+  def check_dependencies
+    unless self.destroyable?
+      errors.add(:base, I18n.t('models.general.dependencies_exist'))
+      false
+    end
+  end
+
+end
