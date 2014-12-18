@@ -210,6 +210,18 @@ en:
           success: Quiz Question has been deleted
           error: Quiz Question was not deleted
 
+    static_pages:
+      create:
+        flash:
+          success: Static Page has been created successfully
+      update:
+        flash:
+          success: Static Page details have been updated successfully
+      destroy:
+        flash:
+          success: Static Page has been deleted
+          error: Static Page was not deleted
+
 
     subject_areas:
       create:
@@ -841,6 +853,60 @@ en:
       show:
         h1: Quiz Question Preview
         choose_an_answer: Choose an Answer
+
+    static_pages:
+      form:
+        name: Name
+        name_placeholder: Page Name
+        publish_from: Publish from
+        publish_from_placeholder: Date
+        publish_to: Publish to
+        publish_to_placeholder: Date
+        allow_multiples: Allow Multiples Versions of this Page
+        public_url: Public URL
+        public_url_placeholder: url
+        use_standard_page_template: Use standard page template
+        head_content: Head Content
+        head_content_placeholder: Code for the Head
+        body_content: Body Content
+        body_content_placeholder: Code for the Body
+        created_by: Created by
+        created_by_placeholder: Created by
+        updated_by: Updated by
+        updated_by_placeholder: Updated by
+        add_to_navbar: Add Link to Navbar
+        add_to_footer: Add Link to Footer
+        menu_label: Navbar/Footer Label
+        menu_label_placeholder: Label
+        tooltip_text: Tooltip Text for Label
+        tooltip_text_placeholder: Tooltip
+        language: Language
+        language_placeholder: Language
+        mark_as_noindex: Mark as No-Index
+        mark_as_nofollow: Mark as No-Follow
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
+        approved_country_ids: Approved Countries
+        approved_country_ids_placeholder: Approved Country Id's
+        default_page_for_this_url: This is the Default page for this URL
+        make_this_page_sticky: Make this Page Sticky
+        logged_in_required: Logged in Required
+
+
+      index:
+        h1: Static Pages
+
+      show:
+        h1: Static Page
+
+      edit:
+        h1: Edit Static Page
+
+      new:
+        h1: New Static Page
+
 
     subscription_plans:
       form:
