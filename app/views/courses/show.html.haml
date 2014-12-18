@@ -5,12 +5,21 @@
     .page-header
       %h1=@course_module.name
 
--if @course_module_element
-  -# side_nav
+.row
+  .col-sm-3
+    =render partial: 'courses/side_nav'
+  -if @course_module_element
+    .col-sm-9
+      -if @course_module_element.is_video
+        =render partial: 'courses/show_video', locals: {cme: @course_module_element}
+      -elsif @course_module_element.is_quiz
+        =render partial: 'courses/show_quiz', locals: {cme: @course_module_element}
+      -else
+        %p course module element - type unknown
 
-  -# main feature
-    %p course module element
+  -elsif @course_module
 
--elsif @course_module
+    %p course module
 
-  %p course module
+    -@course_module.course_module_elements.each do |element|
+      =link_to element.name, course_special_link(element)

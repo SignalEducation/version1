@@ -27,7 +27,7 @@
 .row
   .col-sm-12
     %h3=t('views.course_modules.form.course_module_elements')
-    %table.table.table-striped.sorted_table
+    %table.table.table-striped.sorted_table{'data-destination' => course_module_elements_url}
       %tbody
         -@course_module.course_module_elements.each do |cme|
           %tr{id: cme.id}

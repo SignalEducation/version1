@@ -2,8 +2,8 @@ class CoursesController < ApplicationController
 
   def show
     @exam_section = @exam_level = @qualification = @institution = @subject_area = nil
-    @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
+    @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first || @course_module.course_module_elements.all_in_order.first
     if @course_module_element.nil? && @course_module.nil?
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
@@ -28,6 +28,16 @@ class CoursesController < ApplicationController
       @qualification = @exam_level.qualification
       @institution = @qualification.institution
       @subject_area = @institution.subject_area
+      if @course_module_element.is_quiz
+        @course_module_element_user_log = CourseModuleElementUserLog.new(
+              course_module_id: @course_module_element.course_module_id,
+              course_module_element_id: @course_module_element.id,
+              user_id: current_user.try(:id)
+        )
+        @course_module_element.course_module_element_quiz.number_of_questions.times do
+          @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+        end
+      end
     end
   end
 

@@ -8,6 +8,9 @@
 -if cme.course_module_element_quiz.enough_questions? || current_user.admin?
   .row
     .col-sm-12
+      %h2.no-top-gap=cme.name
+  .row
+    .col-sm-12
       .progress
         .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
           %span.sr-only 0% Complete
@@ -17,7 +20,7 @@
       -(easy_ids + medium_ids + difficult_ids).each do |the_id|
         =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
 
-  =form_for @course_module_element_user_log, url: courses_url do |f|
+  =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
     =f.text_field :user_id
     =f.text_field :course_module_id
     =f.text_field :course_module_element_id
@@ -63,12 +66,14 @@
   function logAnswer(questionId, answerId, difficultyLevel, isCorrect) {
     // tomorrow's stuff.
     answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
+    $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
+    $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
     if (currentQuestion < numberOfQuestions) {
       currentQuestion++;
       updateProgressBar();
       askQuestion(currentQuestion);
     } else {
-      alert('quiz complete');
+      $('#new_course_module_element_user_log').submit();
     }
   }
 

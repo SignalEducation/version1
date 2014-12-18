@@ -13,6 +13,7 @@ $(document).on('ready page:load', function() {
 
   function sendDataToServer() {
     var rows, arrayOfIds = [];
+    var theUrl = $('.sorted_table').attr('data-destination');
     rows = $(".sorted_table tbody > tr");
     for (var counter = 0; counter < rows.length; counter++) {
       if (rows[counter].id != '') {
@@ -20,7 +21,8 @@ $(document).on('ready page:load', function() {
       }
     }
     $.ajax({
-      type: 'POST', url: window.location.href + '/reorder',
+      type: 'POST',
+      url: (theUrl || window.location.href) + '/reorder',
       data: {array_of_ids: arrayOfIds},
       success: console.log('Reordered OK')
     });
