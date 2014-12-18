@@ -67,8 +67,16 @@ Rails.application.routes.draw do
     resources :vat_codes
 
     # home page
-    root 'users#show' # temporary
+    root 'static_pages#deliver_page' # temporary
+
+    # Catch-all
+    get '404', to: 'static_pages#deliver_page', first_element: '404-page'
+    get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
+        as: :deliver_static_pages
   end
+
+  # Catch-all
+  get '(:first_element(/:second_element))', to: 'static_pages#deliver_page'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

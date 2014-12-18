@@ -41,6 +41,13 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  def deliver_page
+    if params[:first_element] == '404-page'
+      render 'public/404.html', layout: nil
+    else
+      render 'static_pages/templates/stand_alone_page', layout: nil
+    end
+  end
 
   def destroy
     if @static_page.destroy

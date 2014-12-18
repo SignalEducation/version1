@@ -59,6 +59,7 @@ class StaticPage < ActiveRecord::Base
   validates :approved_country_ids, presence: true
 
   # callbacks
+  before_save :sanitize_public_url
   before_destroy :check_dependencies
 
   # scopes
@@ -78,6 +79,10 @@ class StaticPage < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def sanitize_public_url
+    self.public_url = self.public_url.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end
