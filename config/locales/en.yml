@@ -857,19 +857,19 @@ en:
     static_pages:
       form:
         name: Name
-        name_placeholder: Page Name
+        name_placeholder: "Page Name (internal use only)"
         publish_from: Publish from
         publish_from_placeholder: Date
-        publish_to: Publish to
+        publish_to: Publish until
         publish_to_placeholder: Date
-        allow_multiples: Allow Multiples Versions of this Page
+        allow_multiples: Allow multiple versions of this Page
         public_url: Public URL
-        public_url_placeholder: url
-        use_standard_page_template: Use standard page template
-        head_content: Head Content
-        head_content_placeholder: Code for the Head
-        body_content: Body Content
-        body_content_placeholder: Code for the Body
+        public_url_placeholder: /page-url
+        use_standard_page_template: Use our standard page template
+        head_content: "<head> content"
+        head_content_placeholder: "Code for the <head> tag"
+        body_content: "<body> content"
+        body_content_placeholder: "Code for the <body> tag"
         created_by: Created by
         created_by_placeholder: Created by
         updated_by: Updated by
@@ -878,8 +878,8 @@ en:
         add_to_footer: Add Link to Footer
         menu_label: Navbar/Footer Label
         menu_label_placeholder: Label
-        tooltip_text: Tooltip Text for Label
-        tooltip_text_placeholder: Tooltip
+        tooltip_text: Tooltip text for label
+        tooltip_text_placeholder: click to view the PAGENAME page
         language: Language
         language_placeholder: Language
         mark_as_noindex: Mark as No-Index
@@ -889,11 +889,11 @@ en:
         seo_description: SEO Description
         seo_description_placeholder: SEO Description
         approved_country_ids: Approved Countries
-        approved_country_ids_placeholder: Approved Country Id's
-        default_page_for_this_url: This is the Default page for this URL
-        make_this_page_sticky: Make this Page Sticky
-        logged_in_required: Logged in Required
-
+        approved_country_ids_placeholder: Approved Country IDs
+        default_page_for_this_url: This is the default page for this URL
+        make_this_page_sticky: Make this page sticky
+        logged_in_required: Logged-in required
+        uploads: Uploads
 
       index:
         h1: Static Pages
@@ -906,7 +906,6 @@ en:
 
       new:
         h1: New Static Page
-
 
     subscription_plans:
       form:

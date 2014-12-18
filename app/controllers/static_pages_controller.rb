@@ -14,7 +14,7 @@ class StaticPagesController < ApplicationController
   end
 
   def new
-    @static_page = StaticPage.new
+    @static_page = StaticPage.new(language: 'en')
   end
 
   def edit
@@ -63,6 +63,10 @@ class StaticPagesController < ApplicationController
   def get_variables
     if params[:id].to_i > 0
       @static_page = StaticPage.where(id: params[:id]).first
+      binding.pry
+      @static_page_uploads = StaticPageUpload.orphans_or_for_page(@static_page.id)
+    else
+      @static_page_uploads = StaticPageUpload.orphans.all_in_order
     end
   end
 

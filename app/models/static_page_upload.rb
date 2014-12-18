@@ -36,6 +36,8 @@ class StaticPageUpload < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:description) }
+  scope :orphans, -> { where(static_page_id: nil) }
+  scope :orphans_or_for_page, lambda { |page_id| where('static_page_id IS NULL or static_page_id = ?', page_id)}
 
   # class methods
 

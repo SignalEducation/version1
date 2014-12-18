@@ -1,0 +1,24 @@
+.modal.fade#new-upload-modal{tabindex: -1, role: 'dialog', aria: {labelledby: 'uploadModalLabel', hidden: true} }
+  =form_for StaticPageUpload.new, role: 'form', class: 'form-horizontal', remote: true, multipart: true do |u|
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button{type: 'button', class: 'close', data: {dismiss: 'modal'}}
+            %span{aria: {hidden: true}} &times
+            %span{class: 'sr-only'} Close
+          %h4.modal-title#uploadModalLabel Upload a file
+        .modal-body
+
+          =u.hidden_field :static_page_id, value: @static_page.id
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              =u.file_field :upload, class: 'form-control'
+          .form-group
+            =u.label :description, class: 'control-label col-sm-4'
+            .col-sm-8
+              =u.text_field :description, class: 'form-control'
+
+        .modal-footer
+          %button{type: 'button', class: 'btn btn-default', data: {dismiss: 'modal'}}
+            =t('views.general.close')
+          =u.submit t('views.general.save'), class: 'btn btn-success'

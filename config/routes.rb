@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
 
-
-
-  get 'static_page_uploads/create'
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -63,6 +59,8 @@ Rails.application.routes.draw do
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]
     resources :static_pages
+    resources :static_page_uploads, only: [:create]
+
     resources :subject_areas
     resources :subscription_plans
     resources :user_notifications
