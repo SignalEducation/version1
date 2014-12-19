@@ -11,7 +11,7 @@
           .form-group
             =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label col-sm-4'
             .col-sm-8
-              =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url'
+              =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', autocomplete: false
           .form-group
             =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label col-sm-4'
             .col-sm-8

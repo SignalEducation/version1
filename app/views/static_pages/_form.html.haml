@@ -98,15 +98,8 @@
           %h2=t('views.static_pages.form.uploads')
           #uploads-panel
             -@static_page_uploads.each do |upload|
-              %p=link_to upload.description, upload.upload.try(:url) || '#', target: '_blank', title: t('views.general.tooltips.click_to_view')
-              %p.text-muted
-                -if upload.upload_content_type.split('/')[0] == 'image'
-                  :escaped
-                    <img src="#{upload.upload.try(:url)}" class="img-responsive">
-                -else
-                  :escaped
-                    <a href="#{upload.upload.try(:url)}">some name</a>
-              %hr/
+              =render partial: 'static_page_uploads/show', locals: {upload: upload}
+
           %p=link_to 'New Upload', '#', data: {toggle: 'modal', target: '#new-upload-modal'}, class: 'btn btn-success'
 
       .col-sm-12
@@ -122,11 +115,11 @@
           .form-group
             =f.label :head_content, t('views.static_pages.form.head_content'), class: 'control-label col-sm-4'
             .col-sm-8
-              =f.text_area :head_content, placeholder: t('views.static_pages.form.head_content_placeholder'), rows: 4, class: 'form-control', rows: 8
+              =f.text_area :head_content, placeholder: t('views.static_pages.form.head_content_placeholder'), class: 'form-control', rows: 8
           .form-group
             =f.label :body_content, t('views.static_pages.form.body_content'), class: 'control-label col-sm-4'
             .col-sm-8
-              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), rows: 4, class: 'form-control', rows: 8
+              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), class: 'form-control', rows: 8
 
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-success'

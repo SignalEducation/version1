@@ -536,14 +536,14 @@ en:
     course_module_elements:
       form:
         name: Name
-        name_placeholder: My video title
+        name_placeholder: Give a title that users will see
         name_url: Name URL
-        name_url_placeholder: my-video-title
+        name_url_placeholder: auto-populated-for-you
         description: Description
         description_placeholder: Description
-        estimated_time_in_seconds: Time in seconds
+        estimated_time_in_seconds: Estimated time (seconds)
         estimated_time_in_seconds_placeholder: 180
-        course_module_id: Course module id
+        course_module_id: Course module
         course_module_element_video_id: Course module element video id
         course_module_element_quiz_id: Course module element quiz id
         sorting_order: Sorting order
@@ -576,7 +576,7 @@ en:
       form:
         time_limit_seconds: Time Limit in seconds
         time_limit_seconds_placeholder: 100
-        number_of_questions: Number of Questions
+        number_of_questions: No. of Questions Asked
         number_of_questions_placeholder: 10
         question_selection_strategy: Question Selection Strategy
         question_selection_strategy_placeholder: 1
@@ -906,6 +906,10 @@ en:
 
       new:
         h1: New Static Page
+
+    static_page_uploads:
+      form:
+        upload: File
 
     subscription_plans:
       form:

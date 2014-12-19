@@ -16,7 +16,9 @@
 class StaticPageUpload < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :description, :static_page_id, :upload_file_name, :upload_content_type, :upload_updated_at, :upload_file_size
+  attr_accessible :description, :static_page_id, :upload,
+                  :upload_file_name, :upload_content_type,
+                  :upload_updated_at, :upload_file_size
 
   # Constants
 
@@ -43,7 +45,7 @@ class StaticPageUpload < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   protected
