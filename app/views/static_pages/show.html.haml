@@ -16,7 +16,9 @@
         %td.col-sm-8=@static_page.publish_from.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.static_pages.form.publish_to')
-        %td.col-sm-8=@static_page.publish_to.to_s(:standard)
+        %td.col-sm-8
+          -if @static_page.publish_to
+            =@static_page.publish_to.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.static_pages.form.allow_multiples')
         %td.col-sm-8=tick_or_cross(@static_page.allow_multiples)

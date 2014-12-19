@@ -22,7 +22,9 @@
           %tr{id: static_page.id}
             %td=link_to(static_page.name, static_page, title: t('views.general.view_tooltip'))
             %td=link_to(static_page.publish_from.to_s(:standard), static_page, title: t('views.general.view_tooltip'))
-            %td=link_to(static_page.publish_to.to_s(:standard), static_page, title: t('views.general.view_tooltip'))
+            %td
+              -if static_page.publish_to
+                =link_to(static_page.publish_to.to_s(:standard), static_page, title: t('views.general.view_tooltip'))
             %td=link_to(static_page.public_url, static_page, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(static_page.use_standard_page_template), static_page, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(static_page.default_page_for_this_url), static_page, title: t('views.general.view_tooltip'))

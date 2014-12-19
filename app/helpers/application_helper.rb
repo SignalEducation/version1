@@ -12,7 +12,7 @@ module ApplicationHelper
   end
 
   def sanitizer(some_text)
-    sanitize(some_text.gsub("\r",'<br />'), tags: %w(br hr table tbody thead tfoot tr th td b i u), attributes: %w(id class style) )
+    sanitize(some_text.gsub("\r",'<br />'), tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p), attributes: %w(id class style) )
   end
 
   def seconds_to_time(seconds)

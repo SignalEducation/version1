@@ -666,6 +666,10 @@ en:
       show:
         h1: Currency
 
+    dashboard:
+      index:
+        h1: Dashboard
+
     exam_levels:
       form:
         qualification_id: Qualification

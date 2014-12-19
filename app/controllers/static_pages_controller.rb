@@ -1,7 +1,7 @@
 class StaticPagesController < ApplicationController
 
-  before_action :logged_in_required
-  before_action do
+  before_action :logged_in_required, except: :deliver_page
+  before_action except: :deliver_page do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action :get_variables
@@ -42,10 +42,22 @@ class StaticPagesController < ApplicationController
   end
 
   def deliver_page
-    if params[:first_element] == '404-page'
-      render 'public/404.html', layout: nil
+    if params[:first_element].to_s == '' && current_user  # root_url
+      redirect_to dashboard_url
     else
-      render 'static_pages/templates/stand_alone_page', layout: nil
+      first_element = '/' + params[:first_element].to_s
+      @static_page = current_user ?
+          StaticPage.where(public_url: first_element).first :
+          StaticPage.where(public_url: first_element, logged_in_required: false).first
+      if @static_page
+        if @static_page.use_standard_page_template
+          render 'static_pages/deliver_page/with_layout'
+        else
+          render 'static_pages/deliver_page/without_layout', layout: nil
+        end
+      else
+        render 'public/404.html', layout: nil
+      end
     end
   end
 
@@ -63,7 +75,6 @@ class StaticPagesController < ApplicationController
   def get_variables
     if params[:id].to_i > 0
       @static_page = StaticPage.where(id: params[:id]).first
-      binding.pry
       @static_page_uploads = StaticPageUpload.orphans_or_for_page(@static_page.id)
     else
       @static_page_uploads = StaticPageUpload.orphans.all_in_order

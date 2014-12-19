@@ -46,6 +46,7 @@ Rails.application.routes.draw do
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     post 'currencies/reorder', to: 'currencies#reorder'
     resources :currencies
+    get 'dashboard', to: 'dashboard#index', as: :dashboard
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
     resources :exam_levels
     post 'exam_sections/reorder', to: 'exam_sections#reorder'

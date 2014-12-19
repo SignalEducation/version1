@@ -88,7 +88,7 @@ class StaticPage < ActiveRecord::Base
     if self.public_url[0] == '/'
       self.public_url = self.public_url[1, -1]
     end
-    self.public_url = self.public_url.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
+    self.public_url = self.public_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
     self.public_url = '/' + self.public_url
   end
 
