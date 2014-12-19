@@ -65,19 +65,20 @@ describe StaticPage do
 
   it { should validate_presence_of(:created_by) }
 
-  it { should validate_presence_of(:updated_by) }
+  it { should validate_presence_of(:updated_by).on(:update) }
 
-  it { should validate_presence_of(:menu_label) }
-
-  it { should validate_presence_of(:tooltip_text) }
-
+  describe '' do
+    before :each do
+      subject.stub(:add_to_navbar).and_return(true)
+    end
+    it { should validate_presence_of(:menu_label) }
+    it { should validate_presence_of(:tooltip_text) }
+  end
   it { should validate_presence_of(:language) }
 
   it { should validate_presence_of(:seo_title) }
 
   it { should validate_presence_of(:seo_description) }
-
-  it { should validate_presence_of(:approved_country_ids) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

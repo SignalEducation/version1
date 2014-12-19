@@ -50,16 +50,17 @@ class StaticPage < ActiveRecord::Base
   validates :name, presence: true
   validates :publish_from, presence: true
   validates :public_url, presence: true, uniqueness: true, if: 'allow_multiples == false'
-  validates :head_content, presence: true
+  validates :head_content, presence: true, unless: 'use_standard_page_template == true'
   validates :body_content, presence: true
   validates :created_by, presence: true
-  validates :updated_by, presence: true
-  validates :menu_label, presence: true
-  validates :tooltip_text, presence: true
+  validates :updated_by, presence: true, on: :update
+  validates :menu_label, presence: true,
+            if: 'add_to_navbar == true || add_to_footer == true'
+  validates :tooltip_text, presence: true,
+            if: 'add_to_navbar == true || add_to_footer == true'
   validates :language, presence: true
   validates :seo_title, presence: true
   validates :seo_description, presence: true
-  validates :approved_country_ids, presence: true
 
   # callbacks
   before_save :sanitize_public_url
