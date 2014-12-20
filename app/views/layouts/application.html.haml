@@ -28,7 +28,7 @@
   %body
     =render partial: 'layouts/navbar'
     .container
-      -if flash[:success] || flash[:error]
+      -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
     =render partial: 'layouts/footer'
