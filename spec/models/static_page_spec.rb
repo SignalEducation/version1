@@ -67,13 +67,25 @@ describe StaticPage do
 
   it { should validate_presence_of(:updated_by).on(:update) }
 
-  describe '' do
+  describe 'menu labels and tooltip are required when it appears in the navbar' do
     before :each do
       subject.stub(:add_to_navbar).and_return(true)
     end
     it { should validate_presence_of(:menu_label) }
     it { should validate_presence_of(:tooltip_text) }
   end
+
+  describe 'menu labels and tooltip are required when it appears in the navbar' do
+    before :each do
+      subject.stub(:add_to_navbar).and_return(true)
+    end
+    it { should validate_presence_of(:menu_label) }
+    it { should validate_presence_of(:tooltip_text) }
+  end
+
+  it { should_not validate_presence_of(:menu_label) }
+  it { should_not validate_presence_of(:tooltip_text) }
+
   it { should validate_presence_of(:language) }
 
   it { should validate_presence_of(:seo_title) }
@@ -85,6 +97,7 @@ describe StaticPage do
 
   # scopes
   it { expect(StaticPage).to respond_to(:all_in_order) }
+  it { expect(StaticPage).to respond_to(:all_active) }
 
   # class methods
 

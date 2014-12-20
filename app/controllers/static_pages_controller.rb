@@ -22,6 +22,7 @@ class StaticPagesController < ApplicationController
 
   def create
     @static_page = StaticPage.new(allowed_params)
+    @static_page.language ||= 'en'
     @static_page.created_by = current_user.id
     if @static_page.save
       flash[:success] = I18n.t('controllers.static_pages.create.flash.success')
@@ -47,8 +48,8 @@ class StaticPagesController < ApplicationController
     else
       first_element = '/' + params[:first_element].to_s
       @static_page = current_user ?
-          StaticPage.where(public_url: first_element).first :
-          StaticPage.where(public_url: first_element, logged_in_required: false).first
+          StaticPage.all_active.where(public_url: first_element).first :
+          StaticPage.all_active.where(public_url: first_element, logged_in_required: false).first
       if @static_page
         if @static_page.use_standard_page_template
           render 'static_pages/deliver_page/with_layout'
@@ -82,7 +83,7 @@ class StaticPagesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:static_page).permit(:name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required)
+    params.require(:static_page).permit(:name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required)
   end
 
 end

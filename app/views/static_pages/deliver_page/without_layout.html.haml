@@ -20,10 +20,11 @@
 
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
-    =raw(@static_page.head_content)
+    =head_sanitizer(@static_page.head_content)
     -if @static_page.mark_as_nofollow
       %meta{name: 'robots', content: 'nofollow'}
+    -if @static_page.mark_as_noindex
       %meta{name: 'robots', content: 'noindex'}
 
   %body
-    =sanitizer(@static_page.body_content)
+    =bodysanitizer(@static_page.body_content)
