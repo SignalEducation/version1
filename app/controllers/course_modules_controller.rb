@@ -102,6 +102,7 @@ class CourseModulesController < ApplicationController
     @exam_levels = ExamLevel.all_in_order
     @exam_sections = ExamSection.all_in_order
     @tutors = User.all_tutors.all_in_order
+    seo_title_maker(@course_module.try(:name))
   end
 
   def allowed_params

@@ -63,6 +63,7 @@ class ExamSectionsController < ApplicationController
       @exam_section = ExamSection.where(id: params[:id]).first
     end
     @exam_levels = ExamLevel.all_in_order
+    seo_title_maker(@exam_section.try(:name))
   end
 
   def allowed_params

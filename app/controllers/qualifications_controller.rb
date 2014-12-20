@@ -65,6 +65,7 @@ class QualificationsController < ApplicationController
       @qualification = Qualification.where(id: params[:id]).first
     end
     @institutions = Institution.all_in_order
+    seo_title_maker(@qualification.try(:name))
   end
 
   def allowed_params

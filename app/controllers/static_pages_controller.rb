@@ -47,9 +47,7 @@ class StaticPagesController < ApplicationController
       redirect_to dashboard_url
     else
       first_element = '/' + params[:first_element].to_s
-      @static_page = current_user ?
-          StaticPage.all_active.where(public_url: first_element).first :
-          StaticPage.all_active.where(public_url: first_element, logged_in_required: false).first
+      @static_page = StaticPage.all_active.with_logged_in_status(current_user).where(public_url: first_element).first
       if @static_page
         if @static_page.use_standard_page_template
           render 'static_pages/deliver_page/with_layout'
@@ -80,6 +78,7 @@ class StaticPagesController < ApplicationController
     else
       @static_page_uploads = StaticPageUpload.orphans.all_in_order
     end
+    seo_title_maker(@static_page.try(:name))
   end
 
   def allowed_params
