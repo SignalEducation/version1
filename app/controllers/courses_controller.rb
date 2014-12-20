@@ -1,6 +1,7 @@
 class CoursesController < ApplicationController
 
   def show
+    @mathjax_required = true
     @exam_section = @exam_level = @qualification = @institution = @subject_area = nil
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
     @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first || @course_module.course_module_elements.all_in_order.first
