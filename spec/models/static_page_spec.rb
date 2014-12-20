@@ -100,6 +100,8 @@ describe StaticPage do
   it { expect(StaticPage).to respond_to(:all_active) }
 
   # class methods
+  it { expect(StaticPage).to respond_to(:all_of_type) }
+  it { expect(StaticPage).to respond_to(:with_logged_in_status) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

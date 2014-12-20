@@ -46,6 +46,21 @@ body {
   text-transform: uppercase;
 }
 
+.navbar-footer {
+  margin-top: 100px;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.navbar-footer, .navbar-footer a{
+  background-color: #343338;
+  color: #aaa;
+  a:hover {
+    background-color: #663333 !important;
+    color: #aaaaaa !important;
+  }
+}
+
 #flash_message {
   padding-top: 4px;
 }

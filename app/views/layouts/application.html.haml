@@ -1,10 +1,16 @@
 !!! 5
-%html{lang: params[:locale] || 'en'}
+%html{lang: params[:locale] || @static_page.try(:language) || 'en'}
   %head
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
-    %title LearnSignal V3
+    %title
+      -if @static_page
+        =@static_page.seo_title
+      -elsif @seo_title
+        =@seo_title
+      -else
+        LearnSignal V3
     =stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
     -# Bootstrap DateTimePicker
     %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
@@ -24,6 +30,13 @@
     =csrf_meta_tags
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
+    -if @static_page
+      =head_sanitizer(@static_page.head_content)
+      -if @static_page.mark_as_nofollow
+        %meta{name: 'robots', content: 'nofollow'}
+      -if @static_page.mark_as_noindex
+        %meta{name: 'robots', content: 'noindex'}
+      %meta{name: 'description', content: @static_page.seo_description}
 
   %body
     =render partial: 'layouts/navbar'

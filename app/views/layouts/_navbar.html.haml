@@ -10,6 +10,7 @@
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
+        =render partial: 'layouts/custom_nav_links', locals: {link_type: 'navbar'}
         %li
           %a{href: 'http://blog.learnsignal.com/', target: '_blank'} Blog
         %li.active

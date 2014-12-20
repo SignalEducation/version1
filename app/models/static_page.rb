@@ -71,10 +71,25 @@ class StaticPage < ActiveRecord::Base
   scope :all_active, -> { where('publish_from < :now AND (publish_to IS NULL OR publish_to > :now)', {now: Proc.new{Time.now}.call} ) }
 
   # class methods
+  def self.all_of_type(the_type)
+    if the_type == 'navbar'
+      where(add_to_navbar: true)
+    elsif the_type == 'footer'
+      where(add_to_footer: true)
+    end
+  end
+
+  def self.with_logged_in_status(the_status)
+    if the_status
+      all
+    else
+      where(logged_in_required: false)
+    end
+  end
 
   # instance methods
   def destroyable?
-    false
+    self.publish_from < Proc.new{Time.now}.call && (self.publish_to == nil || self.publish_to > Proc.new{Time.now}.call)
   end
 
   protected
