@@ -30,7 +30,6 @@
 #  updated_at                 :datetime
 #
 
-# todo default_page_for_this_url
 # todo make_this_page_sticky
 # todo approved_country_ids
 
