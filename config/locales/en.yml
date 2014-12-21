@@ -210,6 +210,18 @@ en:
           success: Quiz Question has been deleted
           error: Quiz Question was not deleted
 
+    static_pages:
+      create:
+        flash:
+          success: Static Page has been created successfully
+      update:
+        flash:
+          success: Static Page details have been updated successfully
+      destroy:
+        flash:
+          success: Static Page has been deleted
+          error: Static Page was not deleted
+
 
     subject_areas:
       create:
@@ -385,6 +397,7 @@ en:
       new: New
       new_tooltip: click to add a new one
       no: No
+      none: None
       ok: ok
       or: or
       review: Review
@@ -524,14 +537,14 @@ en:
     course_module_elements:
       form:
         name: Name
-        name_placeholder: My video title
+        name_placeholder: Give a title that users will see
         name_url: Name URL
-        name_url_placeholder: my-video-title
+        name_url_placeholder: auto-populated-for-you
         description: Description
         description_placeholder: Description
-        estimated_time_in_seconds: Time in seconds
+        estimated_time_in_seconds: Estimated time (seconds)
         estimated_time_in_seconds_placeholder: 180
-        course_module_id: Course module id
+        course_module_id: Course module
         course_module_element_video_id: Course module element video id
         course_module_element_quiz_id: Course module element quiz id
         sorting_order: Sorting order
@@ -564,7 +577,7 @@ en:
       form:
         time_limit_seconds: Time Limit in seconds
         time_limit_seconds_placeholder: 100
-        number_of_questions: Number of Questions
+        number_of_questions: No. of Questions Asked
         number_of_questions_placeholder: 10
         question_selection_strategy: Question Selection Strategy
         question_selection_strategy_placeholder: 1
@@ -653,6 +666,10 @@ en:
 
       show:
         h1: Currency
+
+    dashboard:
+      index:
+        h1: Dashboard
 
     exam_levels:
       form:
@@ -841,6 +858,70 @@ en:
       show:
         h1: Quiz Question Preview
         choose_an_answer: Choose an Answer
+
+    static_pages:
+      form:
+        name: Name
+        name_placeholder: "Page Name (internal use only)"
+        publish_from: Publish from
+        publish_from_placeholder: Date
+        publish_to: Publish until
+        publish_to_placeholder: Date
+        allow_multiples: Allow multiple versions of this Page
+        public_url: Public URL
+        public_url_placeholder: /page-url
+        use_standard_page_template: Use our standard page template
+        head_content: "<head> content"
+        head_content_placeholder: "Code for the <head> tag"
+        body_content: "<body> content"
+        body_content_placeholder: "Code for the <body> tag"
+        created_by: Created by
+        created_by_placeholder: Created by
+        updated_by: Updated by
+        updated_by_placeholder: Updated by
+        add_to_navbar: Add Link to Navbar
+        add_to_footer: Add Link to Footer
+        menu_label: Navbar/Footer Label
+        menu_label_placeholder: Label
+        tooltip_text: Tooltip text for label
+        tooltip_text_placeholder: click to view the PAGENAME page
+        language: Language
+        language_placeholder: Language
+        mark_as_noindex: Mark as No-Index
+        mark_as_nofollow: Mark as No-Follow
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
+        approved_country_ids: Approved Countries
+        approved_country_ids_placeholder: Approved Country IDs
+        approved_country_ids_help: "Restrict delivery of this page to a selected list of countries.  Select multiple countries by control/command-clicking.  Click 'None' to de-select all countries, and allow the page to be universally available."
+        default_page_for_this_url: This is the default page for this URL
+        make_this_page_sticky: Make this page sticky
+        logged_in_required: Logged-in required
+        uploads: Uploads
+
+      index:
+        h1: Static Pages
+        publish_from_to: "Publish From / To"
+        ongoing: "On-going"
+        use_template: Use template
+        default: Default
+        sticky: Sticky
+        preview: Preview
+
+      show:
+        h1: Static Page
+
+      edit:
+        h1: Edit Static Page
+
+      new:
+        h1: New Static Page
+
+    static_page_uploads:
+      form:
+        upload: File
 
     subscription_plans:
       form:

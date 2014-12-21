@@ -37,7 +37,7 @@ describe CorporateCustomer do
   xit { should have_many(:corporate_customer_users) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:invoices) }
-  xit { should belong_to(:country) }
+  it { should belong_to(:country) }
   it { should belong_to(:owner) }
   it { should have_many(:students) }
 

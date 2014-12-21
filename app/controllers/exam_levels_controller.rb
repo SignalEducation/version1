@@ -64,6 +64,7 @@ class ExamLevelsController < ApplicationController
       @exam_level = ExamLevel.where(id: params[:id]).first
     end
     @qualifications = Qualification.all_in_order
+    seo_title_maker(@exam_level.try(:name))
   end
 
   def allowed_params

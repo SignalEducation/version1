@@ -1,0 +1,9 @@
+%p=link_to upload.description, upload.upload.try(:url) || '#', target: '_blank', title: t('views.general.tooltips.click_to_view')
+%p.text-muted
+  -if upload.try(:upload_content_type).to_s.split('/')[0] == 'image'
+    :escaped
+      <img src="#{upload.upload.try(:url)}" class="img-responsive">
+  -else
+    :escaped
+      <a href="#{upload.upload.try(:url)}">some name</a>
+%hr/

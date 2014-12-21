@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141214224530) do
+ActiveRecord::Schema.define(version: 20141218141646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -315,6 +315,45 @@ ActiveRecord::Schema.define(version: 20141214224530) do
     t.string   "file_name"
     t.integer  "course_module_element_video_id"
     t.boolean  "transcode_requested",            default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "static_page_uploads", force: true do |t|
+    t.string   "description"
+    t.integer  "static_page_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
+  end
+
+  create_table "static_pages", force: true do |t|
+    t.string   "name"
+    t.datetime "publish_from"
+    t.datetime "publish_to"
+    t.boolean  "allow_multiples",            default: false, null: false
+    t.string   "public_url"
+    t.boolean  "use_standard_page_template", default: false, null: false
+    t.text     "head_content"
+    t.text     "body_content"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.boolean  "add_to_navbar",              default: false, null: false
+    t.boolean  "add_to_footer",              default: false, null: false
+    t.string   "menu_label"
+    t.string   "tooltip_text"
+    t.string   "language"
+    t.boolean  "mark_as_noindex",            default: false, null: false
+    t.boolean  "mark_as_nofollow",           default: false, null: false
+    t.string   "seo_title"
+    t.string   "seo_description"
+    t.text     "approved_country_ids"
+    t.boolean  "default_page_for_this_url",  default: false, null: false
+    t.boolean  "make_this_page_sticky",      default: false, null: false
+    t.boolean  "logged_in_required",         default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

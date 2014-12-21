@@ -46,6 +46,21 @@ body {
   text-transform: uppercase;
 }
 
+.navbar-footer {
+  margin: 100px 0 0;
+  border-radius: 0;
+  border: 0px solid green;
+}
+
+.navbar-footer, .navbar-footer a{
+  background-color: #343338;
+  color: #aaa;
+  a:hover {
+    background-color: #A33 !important;
+    color: #ccc !important;
+  }
+}
+
 #flash_message {
   padding-top: 4px;
 }
@@ -53,4 +68,13 @@ body {
 .no-top-gap {
   margin-top: 0;
   padding-top: 0;
+}
+
+.code-input {
+  font-family: Consolas, Lucida Console, monospace;
+  background-color: #333;
+  color: #0e0;
+  "<", ">" {
+    color: white;
+  }
 }

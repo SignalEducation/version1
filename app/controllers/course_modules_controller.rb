@@ -57,7 +57,7 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.new(allowed_params)
     if @course_module.save
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
-      redirect_to course_modules_url
+      redirect_to course_module_special_link(@course_module)
     else
       set_up_side_nav
       render action: :new
@@ -102,6 +102,7 @@ class CourseModulesController < ApplicationController
     @exam_levels = ExamLevel.all_in_order
     @exam_sections = ExamSection.all_in_order
     @tutors = User.all_tutors.all_in_order
+    seo_title_maker(@course_module.try(:name))
   end
 
   def allowed_params
