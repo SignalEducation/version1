@@ -26,19 +26,13 @@
             .col-sm-8.col-sm-offset-4
               .checkbox
                 %label
-                  =f.check_box :allow_multiples
+                  =f.check_box :allow_multiples, onclick: "if ($(this).prop('checked') == true) {$('#static_page_default_page_for_this_url').removeAttr('disabled');} else { $('#static_page_default_page_for_this_url').attr('disabled', true).prop('checked',false);};".html_safe
                   =t('views.static_pages.form.allow_multiples')
           .form-group
             .col-sm-8.col-sm-offset-4
-              .checkbox
+              .checkbox{style: 'padding-left: 20px;'}
                 %label
-                  =f.check_box :logged_in_required
-                  =t('views.static_pages.form.logged_in_required')
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :default_page_for_this_url
+                  =f.check_box :default_page_for_this_url, disabled: (!f.object.allow_multiples?)
                   =t('views.static_pages.form.default_page_for_this_url')
           .form-group
             .col-sm-8.col-sm-offset-4
@@ -52,6 +46,12 @@
                 %label
                   =f.check_box :make_this_page_sticky
                   =t('views.static_pages.form.make_this_page_sticky')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :logged_in_required
+                  =t('views.static_pages.form.logged_in_required')
           .form-group
             =f.label :approved_country_ids, t('views.static_pages.form.approved_country_ids'), class: 'control-label col-sm-4'
             .col-sm-8
@@ -105,21 +105,21 @@
       .col-sm-12
         .well.well-sm
           .form-group
-            =f.label :seo_title, t('views.static_pages.form.seo_title'), class: 'control-label col-sm-4'
-            .col-sm-8
+            =f.label :seo_title, t('views.static_pages.form.seo_title'), class: 'control-label col-sm-2'
+            .col-sm-10
               =f.text_field :seo_title, placeholder: t('views.static_pages.form.seo_title_placeholder'), class: 'form-control'
           .form-group
-            =f.label :seo_description, t('views.static_pages.form.seo_description'), class: 'control-label col-sm-4'
-            .col-sm-8
+            =f.label :seo_description, t('views.static_pages.form.seo_description'), class: 'control-label col-sm-2'
+            .col-sm-10
               =f.text_area :seo_description, placeholder: t('views.static_pages.form.seo_description_placeholder'), class: 'form-control', maxlength: 255
           .form-group
-            =f.label :head_content, t('views.static_pages.form.head_content'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_area :head_content, placeholder: t('views.static_pages.form.head_content_placeholder'), class: 'form-control', rows: 8
+            =f.label :head_content, t('views.static_pages.form.head_content'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =f.text_area :head_content, placeholder: t('views.static_pages.form.head_content_placeholder'), class: 'form-control code-input', rows: 8
           .form-group
-            =f.label :body_content, t('views.static_pages.form.body_content'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), class: 'form-control', rows: 8
+            =f.label :body_content, t('views.static_pages.form.body_content'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), class: 'form-control code-input', rows: 8
 
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-success'

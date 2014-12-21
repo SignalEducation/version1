@@ -49,6 +49,7 @@ body {
 .navbar-footer {
   margin: 100px 0 0;
   border-radius: 0;
+  border: 0px solid green;
 }
 
 .navbar-footer, .navbar-footer a{
@@ -67,4 +68,13 @@ body {
 .no-top-gap {
   margin-top: 0;
   padding-top: 0;
+}
+
+.code-input {
+  font-family: Consolas, Lucida Console, monospace;
+  background-color: #333;
+  color: #0e0;
+  "<", ">" {
+    color: white;
+  }
 }
