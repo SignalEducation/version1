@@ -98,6 +98,7 @@ describe StaticPage do
   # scopes
   it { expect(StaticPage).to respond_to(:all_in_order) }
   it { expect(StaticPage).to respond_to(:all_active) }
+  it { expect(StaticPage).to respond_to(:all_for_language) }
 
   # class methods
   it { expect(StaticPage).to respond_to(:all_of_type) }

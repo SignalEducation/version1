@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def head_sanitizer(some_text)
-    sanitize(some_text.gsub("\r",'<br />'), tags: %w(meta script title), attributes: %w(name content type href src charset) )
+    sanitize(some_text.to_s.gsub("\r",'<br />'), tags: %w(meta script title), attributes: %w(name content type href src charset) )
   end
 
   def body_sanitizer(some_text)

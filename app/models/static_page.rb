@@ -30,6 +30,10 @@
 #  updated_at                 :datetime
 #
 
+# todo default_page_for_this_url
+# todo make_this_page_sticky
+# todo approved_country_ids
+
 class StaticPage < ActiveRecord::Base
 
   serialize :approved_country_ids
@@ -64,11 +68,13 @@ class StaticPage < ActiveRecord::Base
 
   # callbacks
   before_save :sanitize_public_url
+  after_save :update_default_for_related_pages
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:public_url) }
+  scope :all_in_order, -> { order(:public_url, default_page_for_this_url: :desc) }
   scope :all_active, -> { where('publish_from < :now AND (publish_to IS NULL OR publish_to > :now)', {now: Proc.new{Time.now}.call} ) }
+  scope :all_for_language, lambda { |lang| where(language: (lang || 'en')) }
 
   # class methods
   def self.all_of_type(the_type)
@@ -89,7 +95,7 @@ class StaticPage < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.publish_from < Proc.new{Time.now}.call && (self.publish_to == nil || self.publish_to > Proc.new{Time.now}.call)
+    !(self.publish_from < Proc.new{Time.now}.call && (self.publish_to == nil || self.publish_to > Proc.new{Time.now}.call))
   end
 
   protected
@@ -107,6 +113,13 @@ class StaticPage < ActiveRecord::Base
     end
     self.public_url = self.public_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
     self.public_url = '/' + self.public_url
+  end
+
+  def update_default_for_related_pages
+    if self.allow_multiples && self.default_page_for_this_url
+      others = StaticPage.where(public_url: self.public_url).where.not(id: self.id)
+      others.update_all(default_page_for_this_url: false)
+    end
   end
 
 end

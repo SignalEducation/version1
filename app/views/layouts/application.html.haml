@@ -1,6 +1,8 @@
 !!! 5
 %html{lang: params[:locale] || @static_page.try(:language) || 'en'}
   %head
+    -if @static_page
+      <!-- page ID #{@static_page.id} -->
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
@@ -10,7 +12,7 @@
       -elsif @seo_title
         =@seo_title
       -else
-        LearnSignal V3
+        LearnSignal
     =stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
     -# Bootstrap DateTimePicker
     %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}

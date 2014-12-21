@@ -33,8 +33,7 @@ class StaticPagesController < ApplicationController
   end
 
   def update
-    params[:static_page][:updated_by] = current_user.id
-    if @static_page.update_attributes(allowed_params)
+    if @static_page.update_attributes(allowed_params.merge({updated_by: current_user.id}))
       flash[:success] = I18n.t('controllers.static_pages.update.flash.success')
       redirect_to static_pages_url
     else
@@ -47,7 +46,7 @@ class StaticPagesController < ApplicationController
       redirect_to dashboard_url
     else
       first_element = '/' + params[:first_element].to_s
-      @static_page = StaticPage.all_active.with_logged_in_status(current_user).where(public_url: first_element).first
+      @static_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
       if @static_page
         if @static_page.use_standard_page_template
           render 'static_pages/deliver_page/with_layout'
