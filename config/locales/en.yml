@@ -901,6 +901,11 @@ en:
 
       index:
         h1: Static Pages
+        publish_from_to: "Publish From / To"
+        ongoing: "On-going"
+        use_template: Use template
+        default: Default
+        sticky: Sticky
 
       show:
         h1: Static Page
