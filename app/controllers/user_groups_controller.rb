@@ -54,6 +54,7 @@ class UserGroupsController < ApplicationController
     if params[:id].to_i > 0
       @user_group = UserGroup.where(id: params[:id]).first
     end
+    seo_title_maker(@user_group.try(:name))
   end
 
   def allowed_params

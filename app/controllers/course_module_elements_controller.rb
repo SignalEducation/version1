@@ -117,6 +117,7 @@ class CourseModuleElementsController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
     @letters = ('A'..'Z').to_a
+    seo_title_maker(@course_module_element.try(:name))
     @mathjax_required = true
   end
 

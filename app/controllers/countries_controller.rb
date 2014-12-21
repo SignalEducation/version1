@@ -64,6 +64,7 @@ class CountriesController < ApplicationController
       @country = Country.where(id: params[:id]).first
     end
     @currencies = Currency.all_in_order
+    seo_title_maker(@country.try(:name))
   end
 
   def allowed_params

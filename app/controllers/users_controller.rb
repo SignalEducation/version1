@@ -75,13 +75,13 @@ class UsersController < ApplicationController
   protected
 
   def get_variables
-    @user = current_user
-    if params[:id].to_i > 0 && current_user.admin?
-      @user = User.where(id: params[:id]).first
-    end
+    @user = params[:id].to_i > 0 && current_user.admin? ?
+                  @user = User.where(id: params[:id]).first :
+                  current_user
     @email_frequencies = User::EMAIL_FREQUENCIES
     @countries = Country.all_in_order
     @user_groups = UserGroup.all_in_order
+    seo_title_maker(@user.try(:full_name))
   end
 
   def allowed_params
