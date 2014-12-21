@@ -22,9 +22,7 @@
     .row
       .col-sm-12
         %p
-          =link_to sanitize('&larr; ' + t('views.course_modules.index.h1')), course_modules_url
-          |
-          =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip')
+          =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip'), class: 'btn btn-info btn-xs'
 
 .row
   .col-sm-12

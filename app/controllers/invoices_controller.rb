@@ -61,17 +61,16 @@ class InvoicesController < ApplicationController
 
   def get_variables
     if params[:id].to_i > 0
-      if current_user.admin?
-        @invoice = Invoice.where(id: params[:id]).first
-      else
-        @invoice = current_user.invoices.where(id: params[:id]).first
-      end
+      @invoice = current_user.admin? ?
+              Invoice.where(id: params[:id]).first :
+              current_user.invoices.where(id: params[:id]).first
     end
     # @users = User.all_in_order
     # @corporate_customers = CorporateCustomer.all_in_order
     # @subscriptions = Subscription.all_in_order
     @currencies = Currency.all_active.all_in_order
     # todo VAT processing disabled: @vat_rates = VatRate.all_in_order
+    seo_title_maker(@invoice.try(:id).to_s)
   end
 
   def allowed_params

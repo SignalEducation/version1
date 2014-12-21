@@ -1,5 +1,16 @@
-.footer.navbar-footer.navbar-bottom{style: 'background-color: #343338; color: #aaa;margin-top: 80px;'}
+-#%nav.navbar.navbar-default.navbar-fixed-bottom{role: 'navigation'}
+%nav.navbar.navbar-default.navbar-footer{role: 'navigation'}
+
   .container
-    .row
-      .col-sm-12
-        %h2 Footer
+    .navbar-header.col-sm-12
+      %ul.navbar-text.visible-xs.pull-left
+        &copy; LearnSignal
+      %ul.nav.navbar-nav.visible-xs.pull-right
+        =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
+
+      %ul.nav.navbar-text.hidden-xs.pull-left
+        &copy;
+        =Time.now.year
+        Learn Signal
+      %ul.nav.navbar-nav.hidden-xs.pull-right
+        =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}

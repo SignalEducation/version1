@@ -6,11 +6,12 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      %a.navbar-brand{href: '#'} Learn Signal
+      %a.navbar-brand{href: '/'} Learn Signal
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
       %ul.nav.navbar-nav.navbar-right
+        =render partial: 'layouts/custom_nav_links', locals: {link_type: 'navbar'}
         %li
           %a{href: 'http://blog.learnsignal.com/', target: '_blank'} Blog
         %li
@@ -37,6 +38,8 @@
                 %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
                 %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                 %li=link_to t('views.course_modules.index.h1'), course_modules_url
+                %li.divider
+                %li=link_to t('views.static_pages.index.h1'), static_pages_url
           %li
             = link_to user_notifications_url do
               -if current_user && current_user.user_notifications.unread.count > 0
@@ -58,6 +61,7 @@
                 %li=link_to t('views.currencies.index.h1'), currencies_url
                 %li=# todo link_to t('views.vat_codes.index.h1'), vat_codes_url
                 %li=link_to t('views.countries.index.h1'), countries_url
+                %li=link_to t('views.static_pages.index.h1'), static_pages_url
                 %li.divider
                 %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                 %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url

@@ -1,4 +1,4 @@
-$(document).on('ready', function() {
+$(document).on('ready page:load', function() {
 
   // add "update-my-url" as a class to the name field.
 

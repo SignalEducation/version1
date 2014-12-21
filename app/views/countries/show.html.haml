@@ -2,9 +2,7 @@
   .col-sm-12
     .page-header
       %h1
-        =t('views.countries.show.h1')
-        \#
-        =@country.id
+        =@country.name
 .row
   .col-sm-12
     %table.table.table-bordered
@@ -26,7 +24,10 @@
       %tr
         %td.col-sm-4=t('views.countries.form.currency_id')
         %td.col-sm-8=link_to @country.currency.name, @country.currency
+      %tr
+        %td.col-sm-4=t('views.invoices.form.number_of_users')
+        %td.col-sm-8=@country.users.size
     %p
-      =link_to t('views.countries.index.h1'), countries_url
+      =link_to sanitize('&larr; ' + t('views.countries.index.h1')), countries_url
       |
       =link_to t('views.general.edit'), edit_country_url(id: @country.id), title: t('views.general.edit_tooltip')

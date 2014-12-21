@@ -1,0 +1,130 @@
+.row
+  .col-sm-12
+    =form_for(@static_page, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :created_by, value: current_user
+      =f.hidden_field :updated_by, value: current_user
+      .col-sm-6
+        .well.well-sm
+          =render partial: '/layouts/error_messages', locals: {thing: @static_page, message: nil}
+          .form-group
+            =f.label :name, t('views.static_pages.form.name'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :name, placeholder: t('views.static_pages.form.name_placeholder'), class: 'form-control', autofocus: true
+          .form-group
+            =f.label :publish_from, t('views.static_pages.form.publish_from'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :publish_from, placeholder: t('views.static_pages.form.publish_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+          .form-group
+            =f.label :publish_to, t('views.static_pages.form.publish_to'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :publish_to, placeholder: t('views.static_pages.form.publish_to_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+          .form-group
+            =f.label :public_url, t('views.static_pages.form.public_url'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :public_url, placeholder: t('views.static_pages.form.public_url_placeholder'), class: 'form-control'
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :allow_multiples, onclick: "if ($(this).prop('checked') == true) {$('#static_page_default_page_for_this_url').removeAttr('disabled');} else { $('#static_page_default_page_for_this_url').attr('disabled', true).prop('checked',false);};".html_safe
+                  =t('views.static_pages.form.allow_multiples')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox{style: 'padding-left: 20px;'}
+                %label
+                  =f.check_box :default_page_for_this_url, disabled: (!f.object.allow_multiples?)
+                  =t('views.static_pages.form.default_page_for_this_url')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :use_standard_page_template
+                  =t('views.static_pages.form.use_standard_page_template')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :make_this_page_sticky
+                  =t('views.static_pages.form.make_this_page_sticky')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :logged_in_required
+                  =t('views.static_pages.form.logged_in_required')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :add_to_navbar
+                  =t('views.static_pages.form.add_to_navbar')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :add_to_footer
+                  =t('views.static_pages.form.add_to_footer')
+          .form-group
+            =f.label :menu_label, t('views.static_pages.form.menu_label'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :menu_label, placeholder: t('views.static_pages.form.menu_label_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :tooltip_text, t('views.static_pages.form.tooltip_text'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :tooltip_text, placeholder: t('views.static_pages.form.tooltip_text_placeholder'), class: 'form-control'
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :mark_as_noindex
+                  =t('views.static_pages.form.mark_as_noindex')
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :mark_as_nofollow
+                  =t('views.static_pages.form.mark_as_nofollow')
+          .form-group
+            =f.label :language, t('views.static_pages.form.language'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :language, placeholder: t('views.static_pages.form.language_placeholder'), class: 'form-control'
+          -#.form-group
+            =f.label :approved_country_ids, t('views.static_pages.form.approved_country_ids'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.collection_select :approved_country_ids, @countries, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', multiple: true, aria: {describedby: 'helpBlock'}}
+              %span#helpBlock.help-block=t('views.static_pages.form.approved_country_ids_help')
+
+      .col-sm-6
+        .well.well-sm
+          %h2=t('views.static_pages.form.uploads')
+          #uploads-panel
+            -@static_page_uploads.each do |upload|
+              =render partial: 'static_page_uploads/show', locals: {upload: upload}
+
+          %p=link_to 'New Upload', '#', data: {toggle: 'modal', target: '#new-upload-modal'}, class: 'btn btn-success'
+
+      .col-sm-12
+        .well.well-sm
+          .form-group
+            =f.label :seo_title, t('views.static_pages.form.seo_title'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =f.text_field :seo_title, placeholder: t('views.static_pages.form.seo_title_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :seo_description, t('views.static_pages.form.seo_description'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =f.text_area :seo_description, placeholder: t('views.static_pages.form.seo_description_placeholder'), class: 'form-control', maxlength: 255
+          .form-group
+            =f.label :head_content, t('views.static_pages.form.head_content'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =f.text_area :head_content, placeholder: t('views.static_pages.form.head_content_placeholder'), class: 'form-control code-input', rows: 8
+          .form-group
+            =f.label :body_content, t('views.static_pages.form.body_content'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), class: 'form-control code-input', rows: 8
+
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-success'
+        =t('views.general.or')
+        =link_to t('views.general.cancel'), static_pages_path
+
+=render partial: 'static_page_uploads/new_modal'
