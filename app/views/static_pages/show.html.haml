@@ -2,12 +2,13 @@
   .col-sm-12
     .page-header
       %h1
-        =t('views.static_pages.show.h1')
-        \#
-        =@static_page.id
+        =@static_page.name
 .row
   .col-sm-12
     %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.static_pages.form.public_url')
+        %td.col-sm-8=@static_page.public_url
       %tr
         %td.col-sm-4=t('views.static_pages.form.name')
         %td.col-sm-8=@static_page.name
@@ -19,12 +20,11 @@
         %td.col-sm-8
           -if @static_page.publish_to
             =@static_page.publish_to.to_s(:standard)
+          -else
+            =t('views.static_pages.index.ongoing')
       %tr
         %td.col-sm-4=t('views.static_pages.form.allow_multiples')
         %td.col-sm-8=tick_or_cross(@static_page.allow_multiples)
-      %tr
-        %td.col-sm-4=t('views.static_pages.form.public_url')
-        %td.col-sm-8=@static_page.public_url
       %tr
         %td.col-sm-4=t('views.static_pages.form.use_standard_page_template')
         %td.col-sm-8=tick_or_cross(@static_page.use_standard_page_template)
@@ -36,10 +36,10 @@
         %td.col-sm-8=@static_page.body_content
       %tr
         %td.col-sm-4=t('views.static_pages.form.created_by')
-        %td.col-sm-8=@static_page.created_by
+        %td.col-sm-8=@static_page.creator.try(:full_name)
       %tr
         %td.col-sm-4=t('views.static_pages.form.updated_by')
-        %td.col-sm-8=@static_page.updated_by
+        %td.col-sm-8=@static_page.updater.try(:full_name)
       %tr
         %td.col-sm-4=t('views.static_pages.form.add_to_navbar')
         %td.col-sm-8=tick_or_cross(@static_page.add_to_navbar)
@@ -83,3 +83,5 @@
       =link_to t('views.general.back'), static_pages_url
       |
       =link_to t('views.general.edit'), edit_static_page_url(id: @static_page.id), title: t('views.general.edit_tooltip')
+      |
+      =link_to t('views.static_pages.index.preview'), static_page_url(@static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'

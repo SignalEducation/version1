@@ -11,6 +11,13 @@ class StaticPagesController < ApplicationController
   end
 
   def show
+    if params[:preview] == 'yes'
+      if @static_page.use_standard_page_template
+        render 'static_pages/deliver_page/with_layout'
+      else
+        render 'static_pages/deliver_page/without_layout', layout: nil
+      end
+    end
   end
 
   def new

@@ -906,6 +906,7 @@ en:
         use_template: Use template
         default: Default
         sticky: Sticky
+        preview: Preview
 
       show:
         h1: Static Page

@@ -35,8 +35,8 @@
             %td=link_to(tick_or_cross(static_page.use_standard_page_template), static_page, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(static_page.logged_in_required), static_page, title: t('views.general.view_tooltip'))
             %td
-              -#=link_to t('views.general.view'), static_page
               =link_to t('views.general.edit'), edit_static_page_url(static_page), class: 'btn btn-info btn-xs'
+              =link_to t('views.static_pages.index.preview'), static_page_url(static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'
               -if static_page.destroyable?
                 =link_to t('views.general.delete'), static_page, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
 
