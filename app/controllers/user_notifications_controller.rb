@@ -66,6 +66,7 @@ class UserNotificationsController < ApplicationController
     #@forum_posts = ForumPost.all_in_order
     #@tutors = Tutor.all_in_order
     #@blog_posts = BlogPost.all_in_order
+    seo_title_maker(@user_notification.try(:subject_line))
   end
 
   def allowed_params

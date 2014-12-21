@@ -25,7 +25,7 @@ class CorporateCustomer < ActiveRecord::Base
   # Constants
 
   # relationships
-  # todo belongs_to :country
+  belongs_to :country
   has_many :course_module_element_user_logs
   # todo has_many :corporate_customer_prices
   # todo has_many :corporate_customer_users

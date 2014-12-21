@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
 
@@ -47,6 +46,7 @@ Rails.application.routes.draw do
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     post 'currencies/reorder', to: 'currencies#reorder'
     resources :currencies
+    get 'dashboard', to: 'dashboard#index', as: :dashboard
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
     resources :exam_levels
     post 'exam_sections/reorder', to: 'exam_sections#reorder'
@@ -59,14 +59,25 @@ Rails.application.routes.draw do
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]
+    resources :static_pages
+    resources :static_page_uploads, only: [:create]
+
     resources :subject_areas
     resources :subscription_plans
     resources :user_notifications
     resources :vat_codes
 
     # home page
-    root 'users#show' # temporary
+    root 'static_pages#deliver_page' # temporary
+
+    # Catch-all
+    get '404', to: 'static_pages#deliver_page', first_element: '404-page'
+    get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
+        as: :deliver_static_pages
   end
+
+  # Catch-all
+  get '(:first_element(/:second_element))', to: 'static_pages#deliver_page'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

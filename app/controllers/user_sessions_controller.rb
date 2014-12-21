@@ -2,6 +2,7 @@ class UserSessionsController < ApplicationController
 
   before_filter :logged_out_required, only: [:new, :create]
   before_filter :logged_in_required,  only: :destroy
+  before_filter :set_variables
 
   def new
     @user_session = UserSession.new
@@ -21,6 +22,12 @@ class UserSessionsController < ApplicationController
     current_user_session.destroy
     flash[:success] = I18n.t('controllers.user_sessions.destroy.flash.success')
     redirect_to root_url
+  end
+
+  protected
+
+  def set_variables
+    @seo_title = 'LearnSignal – Sign In'
   end
 
 end

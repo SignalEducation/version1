@@ -24,6 +24,7 @@ class Country < ActiveRecord::Base
   CONTINENTS = ['Europe', 'North America', 'Central America', 'South America', 'Asia', 'Africa','Australia', 'Antarctic']
 
   # relationships
+  has_many :corporate_customers
   belongs_to :currency
   has_many :subscription_payment_cards, foreign_key: :billing_country_id
   has_many :users
@@ -50,7 +51,7 @@ class Country < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.subscription_payment_cards.empty? && self.users.empty? && self.vat_codes.empty?
+    self.corporate_customers.empty? && self.subscription_payment_cards.empty? && self.users.empty? && self.vat_codes.empty?
   end
 
   protected

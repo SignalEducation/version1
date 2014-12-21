@@ -57,6 +57,7 @@ class SubscriptionPlansController < ApplicationController
     end
     @currencies = Currency.all_active.all_in_order
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
+    seo_title_maker(@subscription_plan.try(:id).to_s)
   end
 
   def allowed_params

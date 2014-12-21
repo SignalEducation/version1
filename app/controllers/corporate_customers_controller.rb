@@ -55,8 +55,9 @@ class CorporateCustomersController < ApplicationController
     if params[:id].to_i > 0
       @corporate_customer = CorporateCustomer.where(id: params[:id]).first
     end
-    # todo @countries = Country.all_in_order
+    @countries = Country.all_in_order
     @owners = User.all_in_order
+    seo_title_maker(@corporate_customer.try(:organisation_name))
   end
 
   def allowed_params

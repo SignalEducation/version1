@@ -66,6 +66,7 @@ class InstitutionsController < ApplicationController
       @institution = Institution.where(id: params[:id]).first
     end
     @subject_areas = SubjectArea.all_in_order
+    seo_title_maker(@institution.try(:name))
   end
 
   def allowed_params

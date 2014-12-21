@@ -36,7 +36,7 @@ describe CourseModuleElementResource do
   it { should belong_to(:course_module_element) }
 
   # validation
-  it { should validate_presence_of(:course_module_element_id) }
+  it { should validate_presence_of(:course_module_element_id).on(:update) }
   it { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:name) }
