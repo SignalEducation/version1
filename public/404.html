@@ -1,72 +1,77 @@
 <!DOCTYPE html>
 <html lang='en'>
-<head>
-  <meta charset='utf-8'>
-  <meta content='IE=edge' http-equiv='X-UA-Compatible'>
-  <meta content='width=device-width, initial-scale=1' name='viewport'>
-  <title>LearnSignal</title>
-  <link data-turbolinks-track="true" href="/assets/application.css?body=1" media="all" rel="stylesheet" />
-  <link href='//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css' media='screen' rel='stylesheet' type='text/css'>
-  <script data-turbolinks-track="true" src="/assets/jquery.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/jquery_ujs.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/jquery-sortable.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/turbolinks.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/affix.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/alert.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/button.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/carousel.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/collapse.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/dropdown.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/tab.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/transition.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/scrollspy.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/modal.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/tooltip.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap/popover.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/bootstrap-sprockets.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/related_select.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/table_sorting.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/update_url_fields.js?body=1"></script>
-  <script data-turbolinks-track="true" src="/assets/application.js?body=1"></script>
-  <script src='/assets/javascripts/moment.js' type='text/javascript'></script>
-  <script src='//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js' type='text/javascript'></script>
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-  <meta content="authenticity_token" name="csrf-param" />
-  <meta content="++HUIELuKpjOcjYFUf41rJuY6OGKzmckgKZuNR/SnZw=" name="csrf-token" />
-</head>
-<body>
-<div class='navbar navbar-inverse navbar-fixed-top' role='navigation'>
-  <div class='container'>
-    <div class='navbar-header'>
-      <button class='navbar-toggle collapsed' data-target='.navbar-collapse' data-toggle='collapse' type='button'>
-        <span class='sr-only'>Toggle navigation</span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-      </button>
-      <a class='navbar-brand' href='#'>Learn Signal</a>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'>
+    <title>LearnSignal</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+      body {
+        font-family: 'helvetica neue', 'helvetica', 'arial', sans-serif;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
+        font-weight: 100;
+        text-transform: uppercase;
+      }
+      .navbar-inverse {
+        font-family: BryantWebRegularAlternative, BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
+        text-transform: uppercase;
+        background-color: #d64147 !important;
+        color: #eeeeee;
+        border: 0 solid black;
+      }
+      .navbar-inverse a {
+        color: #eeeeee !important;
+        padding-top: 22px;
+        padding-bottom: 23px;
+      }
+      .navbar-inverse a:hover {
+        background-color: red !important;
+      }
+      .navbar, .navbar-inverse, .navbar-inverse a {
+        height: 65px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='navbar navbar-inverse navbar-fixed-top' role='navigation'>
+      <div class='container'>
+        <div class='navbar-header'>
+          <button class='navbar-toggle collapsed' data-target='.navbar-collapse' data-toggle='collapse' type='button'>
+            <span class='sr-only'>Toggle navigation</span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+          </button>
+          <a class='navbar-brand' href='/en/'>Learn Signal</a>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<div class='container'>
-  <div class='row'>
-    <div class='col-sm-8 col-sm-offset-2'>
-      <img src="/assets/images/404_V1.png" class="img-responsive">
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-8 col-sm-offset-2'>
+          <img src="/assets/images/404_V1.png" class="img-responsive">
+        </div>
+        <div class="col-sm-12 text-center">
+          <h1 style="color: #d74344;">Sorry, we couldn't find what you're looking for.</h1>
+          <p style="color: #d74344">We missed the mark!
+            but don't worry. We're working on fixing this link.</p>
+          <p><a href="/en/" class="btn btn-success">Visit our Home Page</a></p>
+        </div>
+      </div>
+      </div>
     </div>
-    <div class="col-sm-12 text-center">
-      <h1 style="color: #d74344;">Sorry we couldn't find what you're looking for.</h1>
-      <p style="color: #d74344">We missed the mark!
-        but don't worry. We're working on fixing this link.</p>
-      <p><a href="/en/" class="btn btn-success">Visit our Home Page</a></p>
-    </div>
-  </div>
-  </div>
-</div>
-</body>
+  </body>
 </html>
 
