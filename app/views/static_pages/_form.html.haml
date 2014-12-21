@@ -53,10 +53,6 @@
                   =f.check_box :logged_in_required
                   =t('views.static_pages.form.logged_in_required')
           .form-group
-            =f.label :approved_country_ids, t('views.static_pages.form.approved_country_ids'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_area :approved_country_ids, placeholder: t('views.static_pages.form.approved_country_ids_placeholder'), rows: 4, class: 'form-control'
-          .form-group
             .col-sm-8.col-sm-offset-4
               .checkbox
                 %label
@@ -92,6 +88,11 @@
             =f.label :language, t('views.static_pages.form.language'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.text_field :language, placeholder: t('views.static_pages.form.language_placeholder'), class: 'form-control'
+          -#.form-group
+            =f.label :approved_country_ids, t('views.static_pages.form.approved_country_ids'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.collection_select :approved_country_ids, @countries, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', multiple: true, aria: {describedby: 'helpBlock'}}
+              %span#helpBlock.help-block=t('views.static_pages.form.approved_country_ids_help')
 
       .col-sm-6
         .well.well-sm

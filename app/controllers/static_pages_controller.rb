@@ -85,10 +85,11 @@ class StaticPagesController < ApplicationController
       @static_page_uploads = StaticPageUpload.orphans.all_in_order
     end
     seo_title_maker(@static_page.try(:name))
+    @countries = Country.all_in_order
   end
 
   def allowed_params
-    params.require(:static_page).permit(:name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required)
+    params.require(:static_page).permit(:name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :approved_country_ids => [])
   end
 
 end

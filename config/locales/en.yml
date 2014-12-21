@@ -397,6 +397,7 @@ en:
       new: New
       new_tooltip: click to add a new one
       no: No
+      none: None
       ok: ok
       or: or
       review: Review
@@ -894,6 +895,7 @@ en:
         seo_description_placeholder: SEO Description
         approved_country_ids: Approved Countries
         approved_country_ids_placeholder: Approved Country IDs
+        approved_country_ids_help: "Restrict delivery of this page to a selected list of countries.  Select multiple countries by control/command-clicking.  Click 'None' to de-select all countries, and allow the page to be universally available."
         default_page_for_this_url: This is the default page for this URL
         make_this_page_sticky: Make this page sticky
         logged_in_required: Logged-in required

@@ -35,7 +35,7 @@
 
 class StaticPage < ActiveRecord::Base
 
-  serialize :approved_country_ids
+  serialize :approved_country_ids, Array
 
   # attr-accessible
   attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :static_page_uploads_attributes
@@ -67,6 +67,7 @@ class StaticPage < ActiveRecord::Base
 
   # callbacks
   before_save :sanitize_public_url
+  before_save :sanitize_country_ids
   after_save :update_default_for_related_pages
   before_destroy :check_dependencies
 
@@ -74,6 +75,7 @@ class StaticPage < ActiveRecord::Base
   scope :all_in_order, -> { order(:public_url, default_page_for_this_url: :desc) }
   scope :all_active, -> { where('publish_from < :now AND (publish_to IS NULL OR publish_to > :now)', {now: Proc.new{Time.now}.call} ) }
   scope :all_for_language, lambda { |lang| where(language: (lang || 'en')) }
+  scope :all_for_country, lambda { |country_id| where("approved_country_ids = '[]' OR approved_country_ids LIKE '%?%'", country_id) }
 
   # class methods
   def self.all_of_type(the_type)
@@ -103,6 +105,14 @@ class StaticPage < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def sanitize_country_ids
+    old_list = self.approved_country_ids.dup
+    self.approved_country_ids = []
+    old_list.each do |item|
+      self.approved_country_ids << item.to_i if item.to_i > 0
     end
   end
 

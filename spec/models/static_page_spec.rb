@@ -93,12 +93,16 @@ describe StaticPage do
   it { should validate_presence_of(:seo_description) }
 
   # callbacks
+  it { should callback(:sanitize_public_url).before(:save) }
+  it { should callback(:sanitize_country_ids).before(:save) }
+  it { should callback(:update_default_for_related_pages).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(StaticPage).to respond_to(:all_in_order) }
   it { expect(StaticPage).to respond_to(:all_active) }
   it { expect(StaticPage).to respond_to(:all_for_language) }
+  it { expect(StaticPage).to respond_to(:all_for_country) }
 
   # class methods
   it { expect(StaticPage).to respond_to(:all_of_type) }
