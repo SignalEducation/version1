@@ -4,7 +4,7 @@ class StaticPagesController < ApplicationController
   before_action except: :deliver_page do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: :deliver_page
 
   def index
     @static_pages = StaticPage.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -51,6 +51,8 @@ class StaticPagesController < ApplicationController
   def deliver_page
     if params[:first_element].to_s == '' && current_user  # root_url
       redirect_to dashboard_url
+    elsif params[:first_element].to_s == '500-page'
+      render 'public/500.html', layout: nil, status: 500
     else
       first_element = '/' + params[:first_element].to_s
       @static_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
@@ -61,7 +63,7 @@ class StaticPagesController < ApplicationController
           render 'static_pages/deliver_page/without_layout', layout: nil
         end
       else
-        render 'public/404.html', layout: nil
+        render 'static_pages/deliver_page/404_page.html.haml', status: 404
       end
     end
   end

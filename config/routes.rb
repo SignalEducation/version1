@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
+  get '404' => redirect('404-page')
+  get '500' => redirect('500-page')
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
+    get '404' => redirect('404-page')
+    get '500' => redirect('500-page')
 
     # users and authentication
     resources :users
