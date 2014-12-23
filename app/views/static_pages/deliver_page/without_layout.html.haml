@@ -1,12 +1,12 @@
 !!! 5
-%html{lang: params[:locale] || @static_page.language || 'en'}
+%html{lang: params[:locale] || @delivered_page.language || 'en'}
   %head
-    <!-- page ID #{@static_page.id} -->
+    <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
-    %title=@static_page.seo_title
-    %meta{name: 'description', content: @static_page.seo_description}
+    %title=@delivered_page.seo_title
+    %meta{name: 'description', content: @delivered_page.seo_description}
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application'
 
@@ -21,11 +21,11 @@
 
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
-    =head_sanitizer(@static_page.head_content)
-    -if @static_page.mark_as_nofollow
+    =head_sanitizer(@delivered_page.head_content)
+    -if @delivered_page.mark_as_nofollow
       %meta{name: 'robots', content: 'nofollow'}
-    -if @static_page.mark_as_noindex
+    -if @delivered_page.mark_as_noindex
       %meta{name: 'robots', content: 'noindex'}
 
   %body
-    =body_sanitizer(@static_page.body_content)
+    =body_sanitizer(@delivered_page.body_content)

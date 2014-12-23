@@ -1,8 +1,6 @@
 .row
   .col-sm-12
     =form_for(@static_page, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      =f.hidden_field :created_by, value: current_user
-      =f.hidden_field :updated_by, value: current_user
       .col-sm-6
         .well.well-sm
           =render partial: '/layouts/error_messages', locals: {thing: @static_page, message: nil}
@@ -97,9 +95,8 @@
       .col-sm-6
         .well.well-sm
           %h2=t('views.static_pages.form.uploads')
-          #uploads-panel
-            -@static_page_uploads.each do |upload|
-              =render partial: 'static_page_uploads/show', locals: {upload: upload}
+          #static_page_uploads
+            =render @static_page_uploads
 
           %p=link_to 'New Upload', '#', data: {toggle: 'modal', target: '#new-upload-modal'}, class: 'btn btn-success'
 
