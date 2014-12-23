@@ -12,7 +12,9 @@ class StaticPagesController < ApplicationController
 
   def show
     if params[:preview] == 'yes'
-      if @static_page.use_standard_page_template
+      @delivered_page = @static_page.dup
+      @static_page = nil
+      if @delivered_page.use_standard_page_template
         render 'static_pages/deliver_page/with_layout'
       else
         render 'static_pages/deliver_page/without_layout', layout: nil
@@ -21,17 +23,19 @@ class StaticPagesController < ApplicationController
   end
 
   def new
-    @static_page = StaticPage.new(language: 'en')
+    @static_page = StaticPage.new(language: 'en', use_standard_page_template: true)
   end
 
   def edit
   end
 
   def create
-    @static_page = StaticPage.new(allowed_params)
+    @static_page = StaticPage.new(narrow_params)
     @static_page.language ||= 'en'
     @static_page.created_by = current_user.id
     if @static_page.save
+      related_upload_ids = allowed_params[:static_page_uploads_attributes].map{|x| x[1][:id] }
+      StaticPageUpload.where(id: related_upload_ids).update_all(static_page_id: @static_page.id)
       flash[:success] = I18n.t('controllers.static_pages.create.flash.success')
       redirect_to static_pages_url
     else
@@ -49,15 +53,15 @@ class StaticPagesController < ApplicationController
   end
 
   def deliver_page
-    if params[:first_element].to_s == '' && current_user  # root_url
+    if params[:first_element].to_s == '' && current_user
       redirect_to dashboard_url
     elsif params[:first_element].to_s == '500-page'
       render 'public/500.html', layout: nil, status: 500
     else
       first_element = '/' + params[:first_element].to_s
-      @static_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
-      if @static_page
-        if @static_page.use_standard_page_template
+      @delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
+      if @delivered_page
+        if @delivered_page.use_standard_page_template
           render 'static_pages/deliver_page/with_layout'
         else
           render 'static_pages/deliver_page/without_layout', layout: nil
@@ -91,7 +95,56 @@ class StaticPagesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:static_page).permit(:name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :approved_country_ids => [])
+    params.require(:static_page).permit(
+            :name,
+            :publish_from, :publish_to,
+            :allow_multiples,
+            :public_url,
+            :use_standard_page_template,
+            :head_content,
+            :body_content,
+            :add_to_navbar,
+            :add_to_footer,
+            :menu_label,
+            :tooltip_text,
+            :language,
+            :mark_as_noindex, :mark_as_nofollow,
+            :seo_title, :seo_description,
+            :default_page_for_this_url,
+            :make_this_page_sticky,
+            :logged_in_required,
+            :created_by, :updated_by,
+            static_page_uploads_attributes: [
+                    :id,
+                    :description,
+                    :static_page_id,
+                    :upload
+            ],
+            :approved_country_ids => [])
+  end
+
+  def narrow_params
+    # no nested params for static_page_uploads
+    params.require(:static_page).permit(
+            :name,
+            :publish_from, :publish_to,
+            :allow_multiples,
+            :public_url,
+            :use_standard_page_template,
+            :head_content,
+            :body_content,
+            :add_to_navbar,
+            :add_to_footer,
+            :menu_label,
+            :tooltip_text,
+            :language,
+            :mark_as_noindex, :mark_as_nofollow,
+            :seo_title, :seo_description,
+            :default_page_for_this_url,
+            :make_this_page_sticky,
+            :logged_in_required,
+            :created_by, :updated_by,
+            :approved_country_ids => [])
   end
 
 end
