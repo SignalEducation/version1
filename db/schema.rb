@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141218141646) do
+ActiveRecord::Schema.define(version: 20141229151800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 20141218141646) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "default_number_of_possible_exam_answers", default: 4
+    t.boolean  "enable_exam_sections",                    default: true,  null: false
   end
 
   create_table "exam_sections", force: true do |t|

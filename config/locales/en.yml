@@ -683,10 +683,12 @@ en:
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
         default_number_of_possible_exam_answers_placeholder: 4
+        enable_exam_sections: "Enable exam sections?"
 
       index:
         h1: Exam Levels
         new: New Exam Level
+        exam_sections: "Exam sections?"
 
       show:
         h1: Exam Level

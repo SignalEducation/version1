@@ -13,12 +13,13 @@
 #  created_at                              :datetime
 #  updated_at                              :datetime
 #  default_number_of_possible_exam_answers :integer          default(4)
+#  enable_exam_sections                    :boolean          default(TRUE), not null
 #
 
 class ExamLevel < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers
+  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections
 
   # Constants
 
@@ -46,6 +47,7 @@ class ExamLevel < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:qualification_id) }
+  scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 
   # class methods
   def self.get_by_name_url(the_name_url)

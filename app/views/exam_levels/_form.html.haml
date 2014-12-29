@@ -32,6 +32,12 @@
               %label
                 =f.check_box :active
                 =t('views.exam_levels.form.active')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :enable_exam_sections
+                =t('views.exam_levels.form.enable_exam_sections')
 
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')

@@ -62,7 +62,7 @@ class ExamSectionsController < ApplicationController
     if params[:id].to_i > 0
       @exam_section = ExamSection.where(id: params[:id]).first
     end
-    @exam_levels = ExamLevel.all_in_order
+    @exam_levels = ExamLevel.all_with_exam_sections_enabled.all_in_order
     seo_title_maker(@exam_section.try(:name))
   end
 
