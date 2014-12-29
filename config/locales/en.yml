@@ -683,6 +683,7 @@ en:
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
         default_number_of_possible_exam_answers_placeholder: 4
+        default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
         enable_exam_sections: "Enable exam sections?"
 
       index:
