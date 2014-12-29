@@ -4,7 +4,7 @@
       %h1=t('views.institutions.index.h1')
       =render partial: 'shared/horizontal_hierarchy'
 
--#if @subject_areas.length > 1
+-if @subject_areas.length > 1
   =render partial: 'shared/filter_panel', locals: {controller_name: 'institutions', parameters: [{name: :subject_area_url, collection: @subject_areas, show_attr: :name, value_attr: 'name_url'}]}
 
 .row
@@ -24,9 +24,9 @@
           %th=t('views.institutions.form.active')
           %th
       %tbody
-        -tracker = nil
+        -#tracker = nil
         -@institutions.each do |institution|
-          -unless tracker == institution.subject_area_id
+          -#unless tracker == institution.subject_area_id
             -tracker = institution.subject_area_id
             %tr
               %td{colspan: 4}

@@ -3,6 +3,10 @@
     .page-header
       %h1=t('views.qualifications.index.h1')
       =render partial: 'shared/horizontal_hierarchy'
+
+-if @institutions.length > 1
+  =render partial: 'shared/filter_panel', locals: {controller_name: 'qualifications', parameters: [{name: :institution_url, collection: @institutions, show_attr: :name, value_attr: 'name_url'}]}
+
 .row
   .col-sm-12
     =will_paginate @qualifications, renderer: BootstrapPagination::Rails
@@ -14,10 +18,10 @@
           %th=t('views.qualifications.form.active')
           %th=t('views.qualifications.form.cpd_hours_required_per_year')
           %th
-      -tracker = nil
+      -#tracker = nil
       %tbody
         -@qualifications.each do |qualification|
-          -unless qualification.institution_id == tracker
+          -#unless qualification.institution_id == tracker
             -tracker = qualification.institution_id
             %tr
               %td{colspan: 5}

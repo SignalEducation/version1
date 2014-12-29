@@ -7,7 +7,8 @@ class ExamSectionsController < ApplicationController
   before_action :get_variables
 
   def index
-    @exam_sections = ExamSection.paginate(per_page: 50, page: params[:page]).all_in_order
+    @exam_level = ExamLevel.where(name_url: params[:exam_level_url].to_s).first || ExamLevel.all_in_order.first
+    @exam_sections = ExamSection.where(exam_level_id: @exam_level.id).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
