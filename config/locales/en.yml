@@ -50,9 +50,49 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    corporate_customers:
+      create:
+        flash:
+          success: Corporate Customer has been created successfully
+      update:
+        flash:
+          success: Corporate Customer details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Customer has been deleted
+          error: Corporate Customer was not deleted
+
+    countries:
+      create:
+        flash:
+          success: Country has been created successfully
+      update:
+        flash:
+          success: Country details have been updated successfully
+      destroy:
+        flash:
+          success: Country has been deleted
+          error: Country was not deleted
+
     courses:
       show:
         warning: "Sorry, we couldn't find the exact thing you were looking for"
+
+    course_modules:
+      index:
+        no_exam_level: Sorry, there are no Exam Levels for that Qualification
+      show:
+        cant_find: Sorry, that could not be found
+      create:
+        flash:
+          success: Course Module has been created successfully
+      update:
+        flash:
+          success: Course Module details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module has been deleted
+          error: Course Module was not deleted
 
     course_module_elements:
       create:
@@ -77,46 +117,6 @@ en:
         flash:
           success: Jumbo Quiz has been deleted
           error: Jumbo Quiz was not deleted
-
-    countries:
-      create:
-        flash:
-          success: Country has been created successfully
-      update:
-        flash:
-          success: Country details have been updated successfully
-      destroy:
-        flash:
-          success: Country has been deleted
-          error: Country was not deleted
-
-    corporate_customers:
-      create:
-        flash:
-          success: Corporate Customer has been created successfully
-      update:
-        flash:
-          success: Corporate Customer details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate Customer has been deleted
-          error: Corporate Customer was not deleted
-
-    course_modules:
-      index:
-        no_exam_level: Sorry, there are no Exam Levels for that Qualification
-      show:
-        cant_find: Sorry, that could not be found
-      create:
-        flash:
-          success: Course Module has been created successfully
-      update:
-        flash:
-          success: Course Module details have been updated successfully
-      destroy:
-        flash:
-          success: Course Module has been deleted
-          error: Course Module was not deleted
 
     currencies:
       create:
@@ -178,18 +178,6 @@ en:
           success: Invoice has been deleted
           error: Invoice was not deleted
 
-    products:
-      create:
-        flash:
-          success: Product has been created successfully
-      update:
-        flash:
-          success: Product details have been updated successfully
-      destroy:
-        flash:
-          success: Product has been deleted
-          error: Product was not deleted
-
     qualifications:
       create:
         flash:
@@ -225,7 +213,6 @@ en:
         flash:
           success: Static Page has been deleted
           error: Static Page was not deleted
-
 
     subject_areas:
       create:
@@ -341,15 +328,15 @@ en:
         paragraph_1: "Thank you so much for signing up to our service. To activate your account, please click the following link:"
         paragraph_2: "We can't wait for you to get started!"
 
-      your_password_has_changed:
-        subject_line: Your Learn Signal password has changed
-        paragraph_1: We wanted to let you know that someone (hopefully you) has just changed your Learn Signal account password.  If it was you, then you can ingnore this email.
-        paragraph_2: If you did not change your password, please notify us immediately so we can investigate things further.
-
       reset_your_password:
         subject_line: Reset your Learn Signal password
         paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
         paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
+
+      your_password_has_changed:
+        subject_line: Your Learn Signal password has changed
+        paragraph_1: We wanted to let you know that someone (hopefully you) has just changed your Learn Signal account password.  If it was you, then you can ingnore this email.
+        paragraph_2: If you did not change your password, please notify us immediately so we can investigate things further.
 
   models:
     general:
@@ -365,12 +352,12 @@ en:
     institution_users:
       can_t_be_blank_for_students: "Can't be blank for students"
 
-    subscription_plans:
-      must_be_in_the_future: Must be in the future
-
     quiz_content:
       can_t_assign_to_question_and_answer: Can't assign this to a question AND an answer
       must_assign_to_question_or_answer: Must assign this to a question OR an answer
+
+    subscription_plans:
+      must_be_in_the_future: Must be in the future
 
   views:
     general:
@@ -447,6 +434,31 @@ en:
       new:
         h1: New Category
 
+    corporate_customers:
+      form:
+        organisation_name: Organisation name
+        organisation_name_placeholder: 'Smyth & co. Accountants'
+        address: Address
+        address_placeholder: '123 Fake Street'
+        country_id: Country
+        payments_by_card: Payments by card
+        is_university: Is University
+        owner_id: Owner
+        stripe_customer_guid: Stripe Customer ID
+        can_restrict_content: Can restrict content
+
+      index:
+        h1: Corporate Customers
+
+      show:
+        h1: Corporate Customer
+
+      edit:
+        h1: Edit Corporate Customer
+
+      new:
+        h1: New Corporate Customer
+
     countries:
       form:
         name: Name
@@ -473,6 +485,7 @@ en:
       new:
         h1: New Country
 
+<<<<<<< HEAD
     corporate_customers:
       form:
         organisation_name: Organisation name
@@ -502,6 +515,8 @@ en:
       show:
         h1: Courses
 
+=======
+>>>>>>> master
     course_modules:
       form:
         course_module_elements: Course Module Elements
@@ -830,10 +845,6 @@ en:
       new:
         h1: New Qualification
 
-    shared:
-      filter_panel:
-        filter: 'filter:'
-
     quiz_answer:
       form:
         answer_content_placeholder: Fill in the Answer Here
@@ -876,6 +887,9 @@ en:
     shared:
       breadcrumbs:
         you_are_here: "You are here:"
+
+      filter_panel:
+        filter: 'filter:'
 
     static_pages:
       form:
@@ -939,7 +953,34 @@ en:
 
     static_page_uploads:
       form:
+        description: Description
+        description_placeholder: A quick description of your upload
         upload: File
+
+      modal:
+        h1: Upload A File
+
+    subject_areas:
+      form:
+        name: Name
+        name_placeholder: Human resources
+        name_url: Name URL
+        name_url_placeholder: "human-resources"
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+
+      edit:
+        h1: Edit Subject Area
+
+      index:
+        h1: Subject Areas
+
+      new:
+        h1: New Subject Area
+
+      show:
+        h1: Subject Area
 
     subscription_plans:
       form:
@@ -969,28 +1010,6 @@ en:
 
       show:
         h1: Subscription Plan
-
-    subject_areas:
-      form:
-        name: Name
-        name_placeholder: Human resources
-        name_url: Name URL
-        name_url_placeholder: "human-resources"
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: Active
-
-      edit:
-        h1: Edit Subject Area
-
-      index:
-        h1: Subject Areas
-
-      new:
-        h1: New Subject Area
-
-      show:
-        h1: Subject Area
 
     users:
       form:
@@ -1093,53 +1112,53 @@ en:
         paragraph_1: "Choose a new password for your account:"
 
     user_notifications:
-          form:
-            user_id: User
-            subject_line: Subject
-            subject_line_placeholder: Subject line
-            content: Content
-            content_placeholder: Content
-            email_required: Email required
-            email_sent_at: Email sent at
-            email_sent_at_placeholder: Date
-            unread: Unread
-            destroyed_at: Destroyed at
-            destroyed_at_placeholder: Destroyed at
-            message_type: Message type
-            message_type_placeholder: Blog, study plan, forum, marketing etc
-            forum_topic_id: Forum topic
-            forum_post_id: Forum post
-            tutor_id: Tutor
-            falling_behind: Falling behind
-            blog_post_id: Blog post
-            created_at: Sent at
+      form:
+        user_id: User
+        subject_line: Subject
+        subject_line_placeholder: Subject line
+        content: Content
+        content_placeholder: Content
+        email_required: Email required
+        email_sent_at: Email sent at
+        email_sent_at_placeholder: Date
+        unread: Unread
+        destroyed_at: Destroyed at
+        destroyed_at_placeholder: Destroyed at
+        message_type: Message type
+        message_type_placeholder: Blog, study plan, forum, marketing etc
+        forum_topic_id: Forum topic
+        forum_post_id: Forum post
+        tutor_id: Tutor
+        falling_behind: Falling behind
+        blog_post_id: Blog post
+        created_at: Sent at
 
-          index:
-            h1: Your Notifications
-            h2: You do not have any notifications
-            user_id: User
-            subject_line: Subject
-            content: Content
-            email_required: Email required
-            email_sent_at: Email sent
-            unread: Unread
-            destroyed_at: Destroyed at
-            message_type: Type
-            forum_topic_id: Forum topic
-            forum_post_id: Forum post
-            tutor_id: Tutor
-            falling_behind: Falling behind
-            blog_post_id: Blog post
+      index:
+        h1: Your Notifications
+        h2: You do not have any notifications
+        user_id: User
+        subject_line: Subject
+        content: Content
+        email_required: Email required
+        email_sent_at: Email sent
+        unread: Unread
+        destroyed_at: Destroyed at
+        message_type: Type
+        forum_topic_id: Forum topic
+        forum_post_id: Forum post
+        tutor_id: Tutor
+        falling_behind: Falling behind
+        blog_post_id: Blog post
 
-          show:
-            h1: Notification
-            from: From
+      show:
+        h1: Notification
+        from: From
 
-          edit:
-            h1: Edit Notification
+      edit:
+        h1: Edit Notification
 
-          new:
-            h1: New Notification
+      new:
+        h1: New Notification
 
     user_sessions:
       new:

@@ -45,7 +45,7 @@ class StaticPage < ActiveRecord::Base
   # relationships
   belongs_to :creator, class_name: 'User', foreign_key: :created_by
   belongs_to :updater, class_name: 'User', foreign_key: :updated_by
-  has_many :static_page_uploads
+  has_many :static_page_uploads, inverse_of: :static_page
 
   accepts_nested_attributes_for :static_page_uploads
 
@@ -102,7 +102,9 @@ class StaticPage < ActiveRecord::Base
   protected
 
   def check_dependencies
-    unless self.destroyable?
+    if self.destroyable?
+      self.static_page_uploads.destroy_all
+    else
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end

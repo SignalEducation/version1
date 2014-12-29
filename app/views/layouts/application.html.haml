@@ -1,23 +1,23 @@
 !!! 5
-%html{lang: params[:locale] || @static_page.try(:language) || 'en'}
+%html{lang: params[:locale] || @delivered_page.try(:language) || 'en'}
   %head
-    -if @static_page
-      <!-- page ID #{@static_page.id} -->
+    -if @delivered_page
+      <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
     %title
-      -if @static_page
-        =@static_page.seo_title
+      -if @delivered_page
+        =@delivered_page.seo_title
       -elsif @seo_title
         =@seo_title
       -else
         LearnSignal
-    =stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -# Bootstrap DateTimePicker
     %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
 
-    =javascript_include_tag 'application', 'data-turbolinks-track' => true
+    =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
     -# Bootstrap DateTimePicker
     %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
@@ -32,13 +32,13 @@
     =csrf_meta_tags
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
-    -if @static_page
-      =head_sanitizer(@static_page.head_content)
-      -if @static_page.mark_as_nofollow
+    -if @delivered_page
+      =head_sanitizer(@delivered_page.head_content)
+      -if @delivered_page.mark_as_nofollow
         %meta{name: 'robots', content: 'nofollow'}
-      -if @static_page.mark_as_noindex
+      -if @delivered_page.mark_as_noindex
         %meta{name: 'robots', content: 'noindex'}
-      %meta{name: 'description', content: @static_page.seo_description}
+      %meta{name: 'description', content: @delivered_page.seo_description}
 
   %body
     =render partial: 'layouts/navbar'
