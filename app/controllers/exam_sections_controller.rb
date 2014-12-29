@@ -25,7 +25,7 @@ class ExamSectionsController < ApplicationController
     @exam_section = ExamSection.new(allowed_params)
     if @exam_section.save
       flash[:success] = I18n.t('controllers.exam_sections.create.flash.success')
-      redirect_to exam_sections_url
+      redirect_to exam_sections_filtered_url(@exam_section.exam_level.name_url)
     else
       render action: :new
     end
@@ -34,7 +34,7 @@ class ExamSectionsController < ApplicationController
   def update
     if @exam_section.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.exam_sections.update.flash.success')
-      redirect_to exam_sections_url
+      redirect_to exam_sections_filtered_url(@exam_section.exam_level.name_url)
     else
       render action: :edit
     end

@@ -53,16 +53,21 @@ Rails.application.routes.draw do
     resources :currencies
     get 'dashboard', to: 'dashboard#index', as: :dashboard
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
+    get  'exam_levels/filter/:qualification_url', to: 'exam_levels#index', as: :exam_levels_filtered
     post 'exam_levels/filter', to: 'exam_levels#index', as: :exam_levels_filter
     resources :exam_levels
     post 'exam_sections/reorder', to: 'exam_sections#reorder'
+    get  'exam_sections/filter/:exam_level_url', to: 'exam_sections#index', as: :exam_sections_filtered
     post 'exam_sections/filter', to: 'exam_sections#index', as: :exam_sections_filter
     resources :exam_sections
     post 'institutions/filter', to: 'institutions#index', as: :institutions_filter
+    get  'institutions/filter/:subject_area_url', to: 'institutions#index', as: :institutions_filtered
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     resources :invoices
     post 'qualifications/reorder', to: 'qualifications#reorder'
+    get  'qualifications/filter/:institution_url', to: 'qualifications#index',
+         as: :qualifications_filtered
     post 'qualifications/filter', to: 'qualifications#index', as: :qualifications_filter
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'

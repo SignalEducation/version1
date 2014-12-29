@@ -9,8 +9,8 @@ describe InstitutionsController, type: :controller do
   let!(:institution_1) { FactoryGirl.create(:institution, subject_area_id: subject_area.id) }
   let!(:qualification) { FactoryGirl.create(:qualification,
                                      institution_id: institution_1.id) }
-  let!(:institution_2) { FactoryGirl.create(:institution) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:institution) }
+  let!(:institution_2) { FactoryGirl.create(:institution, subject_area_id: subject_area.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:institution, subject_area_id: subject_area.id) }
 
   context 'Not logged in: ' do
 
@@ -486,7 +486,7 @@ describe InstitutionsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('institutions', 1)
+        expect_index_success_with_model('institutions', 2)
       end
     end
 
@@ -526,7 +526,7 @@ describe InstitutionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, institution: valid_params
-        expect_create_success_with_model('institution', institutions_url)
+        expect_create_success_with_model('institution', institutions_filtered_url(subject_area.name_url))
       end
 
       it 'should report error for invalid params' do
@@ -538,13 +538,13 @@ describe InstitutionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for institution_1' do
         put :update, id: institution_1.id, institution: valid_params
-        expect_update_success_with_model('institution', institutions_url)
+        expect_update_success_with_model('institution', institutions_filtered_url(subject_area.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for institution_2' do
         put :update, id: institution_2.id, institution: valid_params
-        expect_update_success_with_model('institution', institutions_url)
+        expect_update_success_with_model('institution', institutions_filtered_url(subject_area.name_url))
         expect(assigns(:institution).id).to eq(institution_2.id)
       end
 

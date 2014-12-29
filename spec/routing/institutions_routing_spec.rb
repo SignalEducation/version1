@@ -11,6 +11,10 @@ RSpec.describe InstitutionsController, type: :routing do
       expect(post: '/institutions/filter').to route_to('institutions#index')
     end
 
+    it 'routes to #index' do
+      expect(get: '/institutions/filter/123').to route_to('institutions#index', subject_area_url: '123')
+    end
+
     it 'routes to #new' do
       expect(get: '/institutions/new').to route_to('institutions#new')
     end

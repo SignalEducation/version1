@@ -5,10 +5,11 @@ describe ExamLevelsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:exam_level_1) { FactoryGirl.create(:exam_level) }
+  let!(:qualification) { FactoryGirl.create(:qualification) }
+  let!(:exam_level_1) { FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
   let!(:exam_section) { FactoryGirl.create(:exam_section, exam_level_id: exam_level_1.id) }
-  let!(:exam_level_2) { FactoryGirl.create(:exam_level) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:exam_level) }
+  let!(:exam_level_2) { FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:exam_level, qualification_id: qualification.id) }
 
   context 'Not logged in: ' do
 
@@ -524,7 +525,7 @@ describe ExamLevelsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_level: valid_params
-        expect_create_success_with_model('exam_level', exam_levels_url)
+        expect_create_success_with_model('exam_level', exam_levels_filtered_url(qualification.name_url))
       end
 
       it 'should report error for invalid params' do
@@ -536,13 +537,13 @@ describe ExamLevelsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_level_1' do
         put :update, id: exam_level_1.id, exam_level: valid_params
-        expect_update_success_with_model('exam_level', exam_levels_url)
+        expect_update_success_with_model('exam_level', exam_levels_filtered_url(qualification.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for exam_level_2' do
         put :update, id: exam_level_2.id, exam_level: valid_params
-        expect_update_success_with_model('exam_level', exam_levels_url)
+        expect_update_success_with_model('exam_level', exam_levels_filtered_url(qualification.name_url))
         expect(assigns(:exam_level).id).to eq(exam_level_2.id)
       end
 

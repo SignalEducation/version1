@@ -11,6 +11,10 @@ RSpec.describe ExamLevelsController, type: :routing do
       expect(post: '/exam_levels/filter').to route_to('exam_levels#index')
     end
 
+    it 'routes to #index' do
+      expect(get: '/exam_levels/filter/123').to route_to('exam_levels#index', qualification_url: '123')
+    end
+
     it 'routes to #new' do
       expect(get: '/exam_levels/new').to route_to('exam_levels#new')
     end
