@@ -485,38 +485,10 @@ en:
       new:
         h1: New Country
 
-<<<<<<< HEAD
-    corporate_customers:
-      form:
-        organisation_name: Organisation name
-        organisation_name_placeholder: 'Smyth & co. Accountants'
-        address: Address
-        address_placeholder: '123 Fake Street'
-        country_id: Country
-        payments_by_card: Payments by card
-        is_university: Is University
-        owner_id: Owner
-        stripe_customer_guid: Stripe Customer ID
-        can_restrict_content: Can restrict content
-
-      index:
-        h1: Corporate Customers
-
-      show:
-        h1: Corporate Customer
-
-      edit:
-        h1: Edit Corporate Customer
-
-      new:
-        h1: New Corporate Customer
-
     courses:
       show:
         h1: Courses
 
-=======
->>>>>>> master
     course_modules:
       form:
         course_module_elements: Course Module Elements
