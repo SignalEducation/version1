@@ -11,8 +11,6 @@
         =t('views.general.time')
         =seconds_to_time(@course_module.estimated_time_in_seconds)
       .col-sm-4.text-center
-        -if @course_module.compulsory
-          .label.label-warning Compulsory
       .col-sm-4.text-right
         -if @course_module.active
           .label.label-success Active

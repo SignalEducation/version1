@@ -507,7 +507,6 @@ en:
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
-        compulsory: "Compulsory?"
         active: "Active?"
 
       edit:

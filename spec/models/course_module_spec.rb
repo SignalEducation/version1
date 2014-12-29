@@ -13,7 +13,6 @@
 #  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
-#  compulsory                :boolean          default(FALSE), not null
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime

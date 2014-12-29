@@ -13,7 +13,6 @@
 #  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
-#  compulsory                :boolean          default(FALSE), not null
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
@@ -25,7 +24,7 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :compulsory, :active
+                  :active
 
   # Constants
 

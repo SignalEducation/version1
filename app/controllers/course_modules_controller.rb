@@ -106,7 +106,7 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:institution_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :compulsory, :active)
+    params.require(:course_module).permit(:institution_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active)
   end
 
   def set_up_side_nav

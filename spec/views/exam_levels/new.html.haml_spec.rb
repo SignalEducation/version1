@@ -25,7 +25,6 @@ RSpec.describe 'exam_levels/new', type: :view do
       assert_select 'select#course_module_tutor_id[name=?]', 'course_module[tutor_id]'
       assert_select 'input#course_module_sorting_order[name=?]', 'course_module[sorting_order]'
       assert_select 'input#course_module_estimated_time_in_seconds[name=?]', 'course_module[estimated_time_in_seconds]'
-      assert_select 'input#course_module_compulsory[name=?]', 'course_module[compulsory]'
       assert_select 'input#course_module_active[name=?]', 'course_module[active]'
     end
   end
