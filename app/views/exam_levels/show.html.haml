@@ -2,9 +2,7 @@
   .col-sm-12
     .page-header
       %h1
-        =t('views.exam_levels.show.h1')
-        \#
-        =@exam_level.id
+        =@exam_level.name
       =render partial: 'shared/horizontal_hierarchy'
 
 .row
