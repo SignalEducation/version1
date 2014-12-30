@@ -568,6 +568,7 @@ en:
         video_preview: Video Preview
         next_step: Next Step
         previous_step: Previous Step
+        preview: Preview
 
     course_module_element_quizzes:
       form:
@@ -580,7 +581,7 @@ en:
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
         advanced_setup_link: Advanced Setup
-        preview_button: Preview
+        preview_button: Save and View
         video: Video
 
     course_module_element_resources:

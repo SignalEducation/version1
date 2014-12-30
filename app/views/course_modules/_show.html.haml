@@ -41,7 +41,7 @@
             %td
               =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info'
               -if cme.is_video || cme.course_module_element_quiz.enough_questions?
-                =link_to t('views.course_module_element_quizzes.form.preview_button'), cme, class: 'btn btn-xs btn-info'
+                =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-xs btn-info'
               -else
                 .label.label-warning=t('views.course_modules.show.add_more_questions')
     %p
