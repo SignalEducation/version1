@@ -74,6 +74,7 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_save :sanitize_name_url
   after_save :update_the_module_total_time
   before_destroy :check_dependencies
 
@@ -131,6 +132,10 @@ class CourseModuleElement < ActiveRecord::Base
             attributes['description'].blank? &&
             attributes['upload'].blank? &&
             attributes['the_url'].blank?
+  end
+
+  def sanitize_name_url
+    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

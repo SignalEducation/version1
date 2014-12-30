@@ -66,6 +66,7 @@ describe CourseModule do
 
   # callbacks
   it { should callback(:calculate_estimated_time).before(:save) }
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

@@ -80,6 +80,7 @@ describe CourseModuleElement do
   it { should validate_numericality_of(:related_video_id) }
 
   # callbacks
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:update_the_module_total_time).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 

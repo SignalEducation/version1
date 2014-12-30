@@ -57,6 +57,7 @@ describe ExamLevel do
 
   # callbacks
   it { should callback(:calculate_best_possible_score).before(:save) }
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
