@@ -51,6 +51,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   def add_an_empty_question
     self.quiz_questions.build
     self.quiz_questions.last.course_module_element_quiz_id = self.id
+    self.quiz_questions.last.quiz_solutions.build
     self.quiz_questions.last.quiz_contents.build(sorting_order: 1)
     (self.course_module_element.try(:course_module).try(:exam_level).try(:default_number_of_possible_exam_answers) || 4).times do |number|
       self.quiz_questions.last.quiz_answers.build
@@ -105,7 +106,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   def self.quiz_question_fields_blank?(the_attributes)
     (the_attributes['id'].to_i > 0 && the_attributes['quiz_contents_attributes'].blank?) ||
       ( the_attributes['course_module_element_quiz_id'].to_i > 0 &&
-        the_attributes['solution_to_the_question'].blank? &&
+        # the_attributes['solution_to_the_question'].blank? &&
         the_attributes['difficulty_level'].blank? &&
         the_attributes['quiz_contents_attributes']['0']['text_content'].blank? &&
         # Answer A

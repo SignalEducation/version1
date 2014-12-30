@@ -164,8 +164,18 @@ class CourseModuleElementsController < ApplicationController
                 :id,
                 :course_module_element_quiz_id,
                 :difficulty_level,
-                :solution_to_the_question,
                 :hints,
+                quiz_solutions_attributes: [
+                    :id,
+                    :quiz_question_id,
+                    :quiz_answer_id,
+                    :quiz_solution_id,
+                    :text_content,
+                    :contains_mathjax,
+                    :contains_image,
+                    :content_type,
+                    :sorting_order
+                ],
                 quiz_answers_attributes: [
                     :id,
                     :quiz_question_id,

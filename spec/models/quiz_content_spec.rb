@@ -15,6 +15,7 @@
 #  image_content_type :string(255)
 #  image_file_size    :integer
 #  image_updated_at   :datetime
+#  quiz_solution_id   :integer
 #
 
 require 'rails_helper'
@@ -37,6 +38,7 @@ describe QuizContent do
   # relationships
   it { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
+  it { should belong_to(:quiz_solution) }
 
   # validation
   # tests for custom-validator 'question_or_answer_only'
@@ -50,7 +52,7 @@ describe QuizContent do
       subject.valid?
     end
 
-    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.can_t_assign_to_question_and_answer')) }
+    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.can_t_assign_to_multiple_things')) }
   end
 
   context 'if neither value set...' do
@@ -63,7 +65,7 @@ describe QuizContent do
       subject.sorting_order = 2
       subject.valid?
     end
-    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.must_assign_to_question_or_answer')) }
+    it { expect(subject.errors[:base].try(:first)).to eq(I18n.t('models.quiz_content.must_assign_to_at_least_one_thing')) }
   end
 
   it { should_not validate_presence_of(:quiz_question_id) }
@@ -72,12 +74,16 @@ describe QuizContent do
   it { should_not validate_presence_of(:quiz_answer_id) }
   it { should validate_numericality_of(:quiz_answer_id) }
 
+  it { should_not validate_presence_of(:quiz_solution_id) }
+  it { should validate_numericality_of(:quiz_solution_id) }
+
   it { should validate_presence_of(:text_content) }
 
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
 
   # callbacks
+  it { should callback(:set_default_values).after(:initialize) }
   it { should callback(:process_content_type).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:check_data_consistency).before(:validation) }

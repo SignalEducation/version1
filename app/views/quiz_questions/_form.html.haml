@@ -28,16 +28,17 @@
                 .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
                   =link_to '#', class: 'btn btn-default', onclick: "addQuizContent($(this), 'question'); return false;" do
                     %span.glyphicon.glyphicon-plus
-                  =link_to '#', class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
+                  =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
                     %span.glyphicon.glyphicon-minus
                 .pull-right.text-right
                   -QuizContent::CONTENT_TYPES.each do |t|
                     =c.radio_button :content_type, t, class: 'content_type_radios'
                     =c.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
-        .form-group
-          =f.label :solution_to_the_question, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
-          .col-sm-10
-            =f.text_area :solution_to_the_question, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 6
+        =f.fields_for :quiz_solutions do |solution|
+          .form-group
+            =solution.label :text_content, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
+            .col-sm-10
+              =solution.text_area :text_content, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 6
 
   %h2=t('views.quiz_questions.form.answers')
   =f.fields_for :quiz_answers do |qa|

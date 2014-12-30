@@ -353,8 +353,8 @@ en:
       can_t_be_blank_for_students: "Can't be blank for students"
 
     quiz_content:
-      can_t_assign_to_question_and_answer: Can't assign this to a question AND an answer
-      must_assign_to_question_or_answer: Must assign this to a question OR an answer
+      can_t_assign_to_multiple_things: Can't assign this to a more than one parent
+      must_assign_to_at_least_one_thing: Must assign this to a question, a solution OR an answer
 
     subscription_plans:
       must_be_in_the_future: Must be in the future

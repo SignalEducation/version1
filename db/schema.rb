@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141229215207) do
+ActiveRecord::Schema.define(version: 20141230153427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -299,13 +299,13 @@ ActiveRecord::Schema.define(version: 20141229215207) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.integer  "quiz_solution_id"
   end
 
   create_table "quiz_questions", force: true do |t|
     t.integer  "course_module_element_quiz_id"
     t.integer  "course_module_element_id"
     t.string   "difficulty_level"
-    t.text     "solution_to_the_question"
     t.text     "hints"
     t.datetime "created_at"
     t.datetime "updated_at"

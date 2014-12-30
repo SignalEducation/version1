@@ -15,12 +15,13 @@
 #  image_content_type :string(255)
 #  image_file_size    :integer
 #  image_updated_at   :datetime
+#  quiz_solution_id   :integer
 #
 
 class QuizContent < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :quiz_question_id, :quiz_answer_id, :text_content, :sorting_order,
+  attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id, :text_content, :sorting_order,
                   :content_type, :image
 
   # Constants
@@ -29,13 +30,16 @@ class QuizContent < ActiveRecord::Base
   # relationships
   belongs_to :quiz_answer
   belongs_to :quiz_question
+  belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id
   has_attached_file :image, default_url: '/assets/images/missing.png'
 
   # validation
-  validate  :question_or_answer_only, on: :update
+  validate  :one_parent_only, on: :update
   validates :quiz_question_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_answer_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :quiz_solution_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :text_content, presence: true, unless: Proc.new{|qc| qc.content_type == 'image' }
   validates :sorting_order, presence: true,
@@ -43,6 +47,7 @@ class QuizContent < ActiveRecord::Base
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
+  after_initialize :set_default_values
   before_validation :check_data_consistency
   before_save :process_content_type
   before_destroy :check_dependencies
@@ -107,14 +112,19 @@ class QuizContent < ActiveRecord::Base
     true
   end
 
-  def question_or_answer_only
-    if self.quiz_question_id.to_i > 0 && self.quiz_answer_id.to_i > 0
-      errors.add(:base, I18n.t('models.quiz_content.can_t_assign_to_question_and_answer'))
-    elsif self.quiz_question_id.to_i == 0 && self.quiz_answer_id.to_i == 0
-      errors.add(:base, I18n.t('models.quiz_content.must_assign_to_question_or_answer'))
+  def one_parent_only
+    test_list = [self.quiz_question_id, self.quiz_answer_id, self.quiz_solution_id].compact # gets rid of "nil"s
+    if test_list.length > 1
+      errors.add(:base, I18n.t('models.quiz_content.can_t_assign_to_multiple_things'))
+    elsif test_list.length == 0
+      errors.add(:base, I18n.t('models.quiz_content.must_assign_to_at_least_one_thing'))
     else
       true
     end
+  end
+
+  def set_default_values
+    self.sorting_order ||= 1
   end
 
 end

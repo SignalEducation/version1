@@ -6,7 +6,6 @@
 #  course_module_element_quiz_id :integer
 #  course_module_element_id      :integer
 #  difficulty_level              :string(255)
-#  solution_to_the_question      :text
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
@@ -16,8 +15,9 @@ class QuizQuestion < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_quiz_id,
-                  :difficulty_level, :solution_to_the_question, :hints,
-                  :quiz_answers_attributes, :quiz_contents_attributes
+                  :difficulty_level, :hints,
+                  :quiz_answers_attributes, :quiz_contents_attributes,
+                  :quiz_solutions_attributes
 
   # Constants
 
@@ -27,9 +27,12 @@ class QuizQuestion < ActiveRecord::Base
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
+  has_many :quiz_solutions, -> { order(:sorting_order) }, dependent: :destroy,
+           class_name: 'QuizContent', foreign_key: :quiz_solution_id
 
   accepts_nested_attributes_for :quiz_answers, allow_destroy: true
   accepts_nested_attributes_for :quiz_contents, allow_destroy: true
+  accepts_nested_attributes_for :quiz_solutions, allow_destroy: true
 
   # validation
   validates :course_module_element_quiz_id, presence: true,
@@ -37,7 +40,6 @@ class QuizQuestion < ActiveRecord::Base
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
-  validates :solution_to_the_question, presence: true, on: :update
   validates :hints, allow_nil: true, length: {maximum: 65535}
   # todo validate :at_least_one_answer_is_correct
 
@@ -57,7 +59,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def complex_question?
     answer_ids = self.quiz_answer_ids
-    self.quiz_contents.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil).count > 4
+    self.quiz_contents.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil).count > 4
   end
 
   def destroyable?
