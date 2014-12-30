@@ -33,9 +33,9 @@
                   =content.hidden_field :content_type
                   =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 7
                   %br/
-                  =question.fields_for :quiz_solutions do |solution|
-                    =solution.hidden_field :sorting_order
-                    =solution.text_area :text_content, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 7
+                =question.fields_for :quiz_solutions do |solution|
+                  =solution.hidden_field :sorting_order
+                  =solution.text_area :text_content, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 7
             .form-group
               =question.label :difficulty_level, t('views.quiz_questions.form.difficulty_level'), class: 'col-sm-12 pull-left'
               .col-sm-12

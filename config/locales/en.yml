@@ -834,6 +834,10 @@ en:
           text: Text
           image: Image
           mathjax: MathJax
+        placeholder_for:
+          question: Ask the question
+          solution: Enter the solution
+          answer: Fill in the answer here
 
     quiz_questions:
       form:
