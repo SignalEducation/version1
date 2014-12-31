@@ -583,6 +583,9 @@ en:
         advanced_setup_link: Advanced Setup
         preview_button: Save and View
         video: Video
+        h3:
+          question_number: "Question #"
+          question_new: New Question
 
     course_module_element_resources:
       form:

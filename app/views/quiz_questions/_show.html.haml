@@ -13,3 +13,7 @@
                 =('A'..'Z').to_a[counter]
               %td
                 =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+  %small
+    %small.text-muted
+      QID:
+      =question.id

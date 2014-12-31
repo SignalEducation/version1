@@ -4,7 +4,7 @@
       .well.well-sm
         %h3
           Advanced Question
-          =question.object.id || "(#{t('views.general.new')})"
+          ="##{question.object.id}" || "(#{t('views.general.new')})"
         .row
           .col-sm-8
             -if question.object.quiz_contents.first.content_type == 'image'
@@ -23,11 +23,15 @@
 
     -else
       .well.well-sm{id: question.object.id.nil? ? 'the_new_question' : ''}
-        =question.hidden_field :course_module_element_quiz_id
+        .row
+          .col-sm-12
+            %h3
+              =question.object.id.nil? ? t('views.course_module_element_quizzes.form.h3.question_new') : t('views.course_module_element_quizzes.form.h3.question_number') + question.object.id.to_s
         .row
           .col-sm-4
             .form-group
               .col-sm-12
+                =question.hidden_field :course_module_element_quiz_id
                 =question.fields_for :quiz_contents do |content|
                   =content.hidden_field :sorting_order
                   =content.hidden_field :content_type
