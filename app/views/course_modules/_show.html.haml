@@ -37,6 +37,11 @@
           %tr{id: cme.id}
             %td=cme.name
             %td
+              -if cme.active
+                .label.label-success=t('views.general.active')
+              -else
+                .label.label-default=t('views.general.inactive')
+            %td
               -if cme.course_module_element_video
                 Video
               -elsif cme.course_module_element_quiz

@@ -141,6 +141,7 @@ class CourseModuleElementsController < ApplicationController
         :sorting_order,
         :forum_topic_id,
         :tutor_id,
+        :active,
         :related_quiz_id,
         :related_video_id,
         :is_video,

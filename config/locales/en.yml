@@ -383,6 +383,7 @@ en:
       example: Example
       go: Go
       home: Home
+      inactive: Inactive
       links: Links
       missing_data_error: Sorry, some data is missing
       new: New
@@ -552,6 +553,7 @@ en:
         new_quiz: New quiz
         questions: Questions
         save_and_add_another: Save and add another Question
+        active: Active
 
       edit:
         h1: Edit Course Module Element

@@ -17,13 +17,14 @@
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
+#  active                    :boolean          default(TRUE), not null
 #
 
 class CourseModuleElement < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :description,
-                  :estimated_time_in_seconds,
+                  :estimated_time_in_seconds, :active,
                   :course_module_id, :sorting_order,
                   :forum_topic_id, :tutor_id, :related_quiz_id,
                   :related_video_id, :is_video, :is_quiz,
@@ -80,6 +81,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_active, -> { where(active: true) }
   scope :all_videos, -> { where(is_video: true) }
   scope :all_quizzes, -> { where(is_quiz: true) }
 
@@ -95,7 +97,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def array_of_sibling_ids
-    self.course_module.course_module_elements.all_in_order.map(&:id)
+    self.course_module.course_module_elements.all_active.all_in_order.map(&:id)
   end
 
   def my_position_among_siblings

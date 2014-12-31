@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141231153822) do
+ActiveRecord::Schema.define(version: 20141231190959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20141231153822) do
     t.datetime "updated_at"
     t.boolean  "is_video",                  default: false, null: false
     t.boolean  "is_quiz",                   default: false, null: false
+    t.boolean  "active",                    default: true,  null: false
   end
 
   create_table "course_module_jumbo_quizzes", force: true do |t|
