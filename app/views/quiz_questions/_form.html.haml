@@ -6,17 +6,17 @@
     .col-sm-12
       %h2 Question
       .well.well-sm
-        =f.fields_for :quiz_contents do |c|
-          .form-group
-            =c.label :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
-            .col-sm-10.question_contents
+        .form-group
+          =label_tag :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
+          .col-sm-10.question_contents
+            =f.fields_for :quiz_contents do |c|
               .question_content_block
                 =render partial: 'quiz_contents/fields_for', locals: {qc: c, the_type: 'question'}
 
-        =f.fields_for :quiz_solutions do |solution|
-          .form-group
-            =solution.label :text_content, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
-            .col-sm-10.solution_contents
+        .form-group
+          =label_tag :quiz_question_quiz_solutions_attributes_0_text_content, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
+          .col-sm-10.solution_contents
+            =f.fields_for :quiz_solutions do |solution|
               .solution_content_block
                 =render partial: 'quiz_contents/fields_for', locals: {qc: solution, the_type: 'solution'}
 
@@ -40,6 +40,11 @@
 :javascript
 
   function addQuizContent(me, parent_type) {
+    if (parent_type == 'question') {
+      var parentName = 'content';
+    } else if (parent_type == 'solution') {
+      var parentName = 'solution';
+    }
     var theTime = (new Date).getTime();
     var theClone = me.parent().parent().clone();
     if (parent_type == 'question' || parent_type == 'solution') {
@@ -49,14 +54,14 @@
       var position = $('.answer_contents_' + answerNumber).children().index(me.parent().parent());
     }
     if (parent_type == 'question' || parent_type == 'solution') {
-      theClone.find('textarea').attr('id', 'quiz_question_quiz_' + parent_type + 's_attributes_' + theTime + '_text_content');
-      theClone.find('textarea').attr('name', 'quiz_question[quiz_' + parent_type + 's_attributes][' + theTime + '][text_content]');
-      theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_' + parent_type + 's_attributes_' + theTime + '_sorting_order');
-      theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_' + parent_type + 's_attributes][' + theTime + '][sorting_order]');
-      theClone.find('.destroy').attr('id', 'quiz_question_quiz_' + parent_type + 's_attributes_' + theTime + '__destroy');
-      theClone.find('.destroy').attr('name', 'quiz_question[quiz_' + parent_type + 's_attributes][' + theTime + '][_destroy]');
-      theClone.find('.the_id').attr('id', 'quiz_question_quiz_' + parent_type + 's_attributes_' + theTime + '_id');
-      theClone.find('.the_id').attr('name', 'quiz_question[quiz_' + parent_type + 's_attributes][' + theTime + '][id]');
+      theClone.find('textarea').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_text_content');
+      theClone.find('textarea').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][text_content]');
+      theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_sorting_order');
+      theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][sorting_order]');
+      theClone.find('.destroy').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '__destroy');
+      theClone.find('.destroy').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][_destroy]');
+      theClone.find('.the_id').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_id');
+      theClone.find('.the_id').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][id]');
     } else {
       theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
       theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][text_content]');

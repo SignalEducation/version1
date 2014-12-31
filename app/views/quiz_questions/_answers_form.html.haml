@@ -5,7 +5,8 @@
         .col-sm-1
           .label.label-primary
             =('A'..'Z').to_a[qa.options[:child_index]]
-        =label_tag :text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label col-sm-1'
+        .col-sm-1
+          =label_tag :quiz_question_quiz_answers_attributes_0_quiz_contents_attributes_0_text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label'
         .col-sm-10{class: "answer_contents_#{qa.options[:child_index]}"}
           =qa.fields_for :quiz_contents do |c|
             .answer_content_block
