@@ -37,6 +37,8 @@ describe CourseModule do
 
   # relationships
   it { should have_many(:course_module_elements) }
+  it { should have_many(:course_module_element_quizzes) }
+  it { should have_many(:course_module_element_videos) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_one(:course_module_jumbo_quiz) }
   it { should belong_to(:exam_level) }

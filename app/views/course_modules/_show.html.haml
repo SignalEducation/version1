@@ -6,6 +6,12 @@
     %p
       =t('views.course_modules.form.tutor_id') + ':'
       =@course_module.tutor.full_name
+    %p
+      =t('views.course_module_element_quizzes.form.best_possible_score_first_attempt') + ':'
+      =@course_module.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
+      %br/
+      =t('views.course_module_element_quizzes.form.best_possible_score_retry') + ':'
+      =@course_module.course_module_element_quizzes.sum(:best_possible_score_retry)
     .row
       .col-sm-4
         =t('views.general.time')
@@ -25,7 +31,7 @@
 .row
   .col-sm-12
     %h3=t('views.course_modules.form.course_module_elements')
-    %table.table.table-striped.sorted_table{'data-destination' => course_module_elements_url}
+    %table.table.table-striped.sorted_table{data: {destination: course_module_elements_url}}
       %tbody
         -@course_module.course_module_elements.each do |cme|
           %tr{id: cme.id}

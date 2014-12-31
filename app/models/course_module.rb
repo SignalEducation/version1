@@ -30,6 +30,8 @@ class CourseModule < ActiveRecord::Base
 
   # relationships
   has_many :course_module_elements
+  has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_one :course_module_jumbo_quiz
   belongs_to :exam_level
