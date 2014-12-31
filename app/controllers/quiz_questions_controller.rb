@@ -82,7 +82,8 @@ class QuizQuestionsController < ApplicationController
             :contains_mathjax,
             :contains_image,
             :content_type,
-            :sorting_order
+            :sorting_order,
+            :_destroy
         ],
         quiz_answers_attributes: [
             :id,
