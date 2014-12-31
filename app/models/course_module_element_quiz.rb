@@ -4,7 +4,6 @@
 #
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
-#  time_limit_seconds                :integer
 #  number_of_questions               :integer
 #  question_selection_strategy       :string(255)
 #  best_possible_score_first_attempt :integer
@@ -17,7 +16,7 @@
 class CourseModuleElementQuiz < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :time_limit_seconds,
+  attr_accessible :course_module_element_id,
                   :number_of_questions, :quiz_questions_attributes
 
   # Constants
@@ -32,7 +31,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :time_limit_seconds, presence: true
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 4, less_than_or_equal_to: 30,
              only_integer: true}, on: :update

@@ -572,8 +572,6 @@ en:
 
     course_module_element_quizzes:
       form:
-        time_limit_seconds: Time Limit in seconds
-        time_limit_seconds_placeholder: 100
         number_of_questions: No. of Questions Asked
         number_of_questions_placeholder: 10
         question_selection_strategy: Question Selection Strategy

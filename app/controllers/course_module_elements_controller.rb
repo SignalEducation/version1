@@ -156,7 +156,6 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_quiz_attributes: [
             :id,
             :course_module_element_id,
-            :time_limit_seconds,
             :number_of_questions,
             :best_possible_score_retry,
             :course_module_jumbo_quiz_id,

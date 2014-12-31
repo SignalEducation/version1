@@ -1,9 +1,5 @@
 =f.fields_for :course_module_element_quiz do |cme_quiz|
   .form-group
-    =cme_quiz.label :time_limit_seconds, t('views.course_module_element_quizzes.form.time_limit_seconds'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_quiz.text_field :time_limit_seconds, placeholder: t('views.course_module_element_quizzes.form.time_limit_seconds_placeholder'), class: 'form-control'
-  .form-group
     =cme_quiz.label :number_of_questions, t('views.course_module_element_quizzes.form.number_of_questions'), class: 'control-label col-sm-4'
     .col-sm-8
       =cme_quiz.select :number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], cme_quiz.object.number_of_questions || 20), {}, {class: 'form-control'}
