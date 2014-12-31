@@ -84,7 +84,6 @@ describe QuizContent do
 
   # callbacks
   it { should callback(:set_default_values).after(:initialize) }
-  it { should callback(:process_content_type).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:check_data_consistency).before(:validation) }
 

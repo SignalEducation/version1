@@ -49,9 +49,7 @@ class QuizContent < ActiveRecord::Base
   # callbacks
   after_initialize :set_default_values
   before_validation :check_data_consistency
-  before_save :process_content_type
   before_destroy :check_dependencies
-
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :quiz_question_id) }
@@ -65,6 +63,7 @@ class QuizContent < ActiveRecord::Base
   # Setter
   def content_type=(ct)
     @content_type = ct
+    process_content_type
   end
 
   # Getter
@@ -87,7 +86,7 @@ class QuizContent < ActiveRecord::Base
   protected
 
   def check_data_consistency
-    (self.content_type == 'image') ? self.text_content = nil : self.image = nil
+    self.content_type == 'image' ? self.text_content = nil : self.image = nil
     true
   end
 
@@ -125,6 +124,8 @@ class QuizContent < ActiveRecord::Base
 
   def set_default_values
     self.sorting_order ||= 1
+    self.contains_mathjax = false
+    self.contains_image = false
   end
 
 end
