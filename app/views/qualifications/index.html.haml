@@ -10,13 +10,14 @@
 .row
   .col-sm-12
     =will_paginate @qualifications, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: qualifications_url}}
       %thead
         %tr
           %th=t('views.qualifications.form.name')
           %th=t('views.exam_levels.index.h1')
           %th=t('views.qualifications.form.active')
           %th=t('views.qualifications.form.cpd_hours_required_per_year')
+          %th
           %th
       -#tracker = nil
       %tbody
@@ -39,6 +40,8 @@
               =link_to t('views.general.edit'), edit_qualification_url(qualification), class: 'btn btn-info btn-xs'
               -if qualification.destroyable?
                 =link_to t('views.general.delete'), qualification, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12

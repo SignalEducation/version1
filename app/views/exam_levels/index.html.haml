@@ -10,7 +10,7 @@
 .row
   .col-sm-12
     =will_paginate @exam_levels, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: exam_levels_url}}
       %thead
         %tr
           %th=t('views.exam_levels.form.name')
@@ -18,6 +18,7 @@
           %th=t('views.exam_levels.form.is_cpd')
           %th=t('views.exam_levels.form.active')
           %th=t('views.exam_levels.index.exam_sections')
+          %th
           %th
       %tbody
         -#tracker = nil
@@ -38,6 +39,8 @@
               =link_to t('views.general.edit'), edit_exam_level_url(exam_level), class: 'btn btn-info btn-xs'
               -if exam_level.destroyable?
                 =link_to t('views.general.delete'), exam_level, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12

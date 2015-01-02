@@ -10,7 +10,7 @@
 .row
   .col-sm-12
     =will_paginate @institutions, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: institutions_url}}
       %thead
         %tr
           %th
@@ -22,6 +22,7 @@
             %br/
             =t('views.institutions.form.help_desk_url')
           %th=t('views.institutions.form.active')
+          %th
           %th
       %tbody
         -#tracker = nil
@@ -45,6 +46,8 @@
               =link_to t('views.general.edit'), edit_institution_url(institution), class: 'btn btn-info btn-xs'
               -if institution.destroyable?
                 =link_to t('views.general.delete'), institution, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12
