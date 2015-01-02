@@ -23,16 +23,17 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit'
 
     # special routes
-    # todo get 'personal_sign_up_complete', to: 'library#index', as: :personal_sign_up_complete
+    # todo get 'personal_sign_up_complete', to: 'library#show', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
-    # todo get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
-    # todo get 'courses/:study_area_name_url/:institution_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+    get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
 
     # general resources
-    post 'countries/reorder', to: 'countries#reorder'
-    resources :countries
     resources :corporate_customers
+    resources :countries
+    post 'countries/reorder', to: 'countries#reorder'
+    resources :courses, only: [:index, :create]
     resources :course_modules
     post 'course_modules/reorder', to: 'course_modules#reorder'
     get 'course_modules/:qualification_url', to: 'course_modules#show',
@@ -52,14 +53,22 @@ Rails.application.routes.draw do
     resources :currencies
     get 'dashboard', to: 'dashboard#index', as: :dashboard
     post 'exam_levels/reorder', to: 'exam_levels#reorder'
+    get  'exam_levels/filter/:qualification_url', to: 'exam_levels#index', as: :exam_levels_filtered
+    post 'exam_levels/filter', to: 'exam_levels#index', as: :exam_levels_filter
     resources :exam_levels
     post 'exam_sections/reorder', to: 'exam_sections#reorder'
+    get  'exam_sections/filter/:exam_level_url', to: 'exam_sections#index', as: :exam_sections_filtered
+    post 'exam_sections/filter', to: 'exam_sections#index', as: :exam_sections_filter
     resources :exam_sections
     post 'institutions/filter', to: 'institutions#index', as: :institutions_filter
+    get  'institutions/filter/:subject_area_url', to: 'institutions#index', as: :institutions_filtered
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
     resources :invoices
     post 'qualifications/reorder', to: 'qualifications#reorder'
+    get  'qualifications/filter/:institution_url', to: 'qualifications#index',
+         as: :qualifications_filtered
+    post 'qualifications/filter', to: 'qualifications#index', as: :qualifications_filter
     resources :qualifications
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]

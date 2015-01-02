@@ -7,7 +7,8 @@ class ExamSectionsController < ApplicationController
   before_action :get_variables
 
   def index
-    @exam_sections = ExamSection.paginate(per_page: 50, page: params[:page]).all_in_order
+    @exam_level = ExamLevel.where(name_url: params[:exam_level_url].to_s).first || ExamLevel.all_in_order.first
+    @exam_sections = ExamSection.where(exam_level_id: @exam_level.id).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
@@ -24,7 +25,7 @@ class ExamSectionsController < ApplicationController
     @exam_section = ExamSection.new(allowed_params)
     if @exam_section.save
       flash[:success] = I18n.t('controllers.exam_sections.create.flash.success')
-      redirect_to exam_sections_url
+      redirect_to exam_sections_filtered_url(@exam_section.exam_level.name_url)
     else
       render action: :new
     end
@@ -33,7 +34,7 @@ class ExamSectionsController < ApplicationController
   def update
     if @exam_section.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.exam_sections.update.flash.success')
-      redirect_to exam_sections_url
+      redirect_to exam_sections_filtered_url(@exam_section.exam_level.name_url)
     else
       render action: :edit
     end
@@ -62,7 +63,7 @@ class ExamSectionsController < ApplicationController
     if params[:id].to_i > 0
       @exam_section = ExamSection.where(id: params[:id]).first
     end
-    @exam_levels = ExamLevel.all_in_order
+    @exam_levels = ExamLevel.all_with_exam_sections_enabled.all_in_order
     seo_title_maker(@exam_section.try(:name))
   end
 

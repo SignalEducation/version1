@@ -13,7 +13,6 @@
 #  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
-#  compulsory                :boolean          default(FALSE), not null
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
@@ -25,12 +24,14 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :compulsory, :active
+                  :active
 
   # Constants
 
   # relationships
   has_many :course_module_elements
+  has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_one :course_module_jumbo_quiz
   belongs_to :exam_level
@@ -54,6 +55,7 @@ class CourseModule < ActiveRecord::Base
 
   # callbacks
   before_save :calculate_estimated_time
+  before_save :sanitize_name_url
   before_destroy :check_dependencies
 
   # scopes
@@ -113,6 +115,10 @@ class CourseModule < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def sanitize_name_url
+    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

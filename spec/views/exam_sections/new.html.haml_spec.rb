@@ -16,7 +16,6 @@ RSpec.describe 'exam_sections/new', type: :view do
       assert_select 'select#exam_section_exam_level_id[name=?]', 'exam_section[exam_level_id]'
       assert_select 'input#exam_section_active[name=?]', 'exam_section[active]'
       assert_select 'input#exam_section_sorting_order[name=?]', 'exam_section[sorting_order]'
-      assert_select 'input#exam_section_best_possible_first_attempt_score[name=?]', 'exam_section[best_possible_first_attempt_score]'
     end
   end
 end

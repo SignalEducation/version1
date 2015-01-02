@@ -75,3 +75,10 @@ body {
   background-color: #333;
   color: #0e0;
 }
+
+.quiz-answer-clickable {
+  cursor: pointer;
+  &:hover {
+    background-color: #dddddd;
+  }
+}

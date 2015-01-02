@@ -5,7 +5,7 @@ $(document).on('ready page:load', function() {
   $('.update-my-url').on('change', function() {
     var the_id = '#' +$(this).attr('id') + '_url';
     if ($(the_id).val() == "") {
-      $(the_id).val($(this).val().replace(/ |\//g, '-').toLowerCase());
+      $(the_id).val($(this).val().replace(/ |\//g, '-').replace(/&/g, 'and').toLowerCase());
     } else {
       if ($(the_id).parent().hasClass('has-warning')) {} else {
         $(the_id).parent().addClass('has-warning');

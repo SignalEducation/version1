@@ -6,7 +6,6 @@
 #  course_module_element_quiz_id :integer
 #  course_module_element_id      :integer
 #  difficulty_level              :string(255)
-#  solution_to_the_question      :text
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
@@ -35,6 +34,7 @@ describe QuizQuestion do
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
   it { should have_many(:quiz_answers) }
+  it { should have_many(:quiz_solutions) }
 
   # validation
   it { should validate_presence_of(:course_module_element_quiz_id).on(:update) }
@@ -44,8 +44,6 @@ describe QuizQuestion do
   xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES).on(:update) }
-
-  it { should validate_presence_of(:solution_to_the_question).on(:update) }
 
   it { should allow_value(nil).for(:hints) }
   it { should ensure_length_of(:hints).is_at_most(65535) }
@@ -60,6 +58,7 @@ describe QuizQuestion do
   # class methods
 
   # instance methods
+  it { should respond_to(:complex_question?) }
   it { should respond_to(:destroyable?) }
 
 end

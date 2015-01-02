@@ -27,6 +27,7 @@ class SubjectArea < ActiveRecord::Base
   validates :sorting_order, presence: true, numericality: true
 
   # callbacks
+  before_save :sanitize_name_url
   before_destroy :check_dependencies
 
   # scopes
@@ -48,6 +49,10 @@ class SubjectArea < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def sanitize_name_url
+    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

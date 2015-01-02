@@ -13,12 +13,13 @@
 #  created_at                              :datetime
 #  updated_at                              :datetime
 #  default_number_of_possible_exam_answers :integer          default(4)
+#  enable_exam_sections                    :boolean          default(TRUE), not null
 #
 
 class ExamLevel < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers
+  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections
 
   # Constants
 
@@ -42,10 +43,12 @@ class ExamLevel < ActiveRecord::Base
 
   # callbacks
   before_save :calculate_best_possible_score
+  before_save :sanitize_name_url
   before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:qualification_id) }
+  scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
@@ -72,6 +75,10 @@ class ExamLevel < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def sanitize_name_url
+    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

@@ -13,7 +13,6 @@
 #  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
-#  compulsory                :boolean          default(FALSE), not null
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
@@ -38,6 +37,8 @@ describe CourseModule do
 
   # relationships
   it { should have_many(:course_module_elements) }
+  it { should have_many(:course_module_element_quizzes) }
+  it { should have_many(:course_module_element_videos) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_one(:course_module_jumbo_quiz) }
   it { should belong_to(:exam_level) }
@@ -67,6 +68,7 @@ describe CourseModule do
 
   # callbacks
   it { should callback(:calculate_estimated_time).before(:save) }
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

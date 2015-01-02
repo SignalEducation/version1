@@ -17,6 +17,7 @@
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
+#  active                    :boolean          default(TRUE), not null
 #
 
 FactoryGirl.define do

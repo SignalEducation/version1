@@ -16,7 +16,7 @@
         %li.active
           %a{href: '#'} Dashboard
         %li
-          %a{href: '#'} Library
+          =link_to t('views.library.show.h1'), library_url
       %ul.nav.navbar-nav.navbar-right
         -if current_user
           -if current_user.user_group.tutor

@@ -3,22 +3,27 @@
     .page-header
       %h1=t('views.exam_levels.index.h1')
       =render partial: 'shared/horizontal_hierarchy'
+
+-if @qualifications.length > 1
+  =render partial: 'shared/filter_panel', locals: {controller_name: 'exam_levels', parameters: [{name: :qualification_url, collection: @qualifications, show_attr: :name, value_attr: 'name_url'}]}
+
 .row
   .col-sm-12
     =will_paginate @exam_levels, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: exam_levels_url}}
       %thead
         %tr
           %th=t('views.exam_levels.form.name')
           %th=t('views.exam_levels.form.name_url')
           %th=t('views.exam_levels.form.is_cpd')
           %th=t('views.exam_levels.form.active')
-          %th=t('views.exam_levels.form.best_possible_first_attempt_score')
+          %th=t('views.exam_levels.index.exam_sections')
+          %th
           %th
       %tbody
-        -tracker = nil
+        -#tracker = nil
         -@exam_levels.each do |exam_level|
-          -unless tracker == exam_level.qualification_id
+          -#unless tracker == exam_level.qualification_id
             -tracker = exam_level.qualification_id
             %tr
               %td{colspan: 10}
@@ -29,11 +34,13 @@
             %td=link_to(exam_level.name_url, exam_level, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(exam_level.is_cpd), exam_level, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(exam_level.active), exam_level, title: t('views.general.view_tooltip'))
-            %td=link_to(exam_level.best_possible_first_attempt_score, exam_level, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(exam_level.enable_exam_sections), exam_level, title: t('views.general.view_tooltip'))
             %td
               =link_to t('views.general.edit'), edit_exam_level_url(exam_level), class: 'btn btn-info btn-xs'
               -if exam_level.destroyable?
                 =link_to t('views.general.delete'), exam_level, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12

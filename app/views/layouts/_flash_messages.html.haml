@@ -8,6 +8,9 @@
   -elsif flash[:alert]
     .alert.alert-warning
       =flash[:alert]
+  -elsif flash[:warning]
+    .alert.alert-warning
+      =flash[:warning]
   -elsif flash[:error]
     .alert.alert-danger
       =flash[:error]

@@ -27,7 +27,7 @@ class InstitutionsController < ApplicationController
     @institution = Institution.new(allowed_params)
     if @institution.save
       flash[:success] = I18n.t('controllers.institutions.create.flash.success')
-      redirect_to institutions_url
+      redirect_to institutions_filtered_url(@institution.subject_area.name_url)
     else
       render action: :new
     end
@@ -36,7 +36,7 @@ class InstitutionsController < ApplicationController
   def update
     if @institution.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.institutions.update.flash.success')
-      redirect_to institutions_url
+      redirect_to institutions_filtered_url(@institution.subject_area.name_url)
     else
       render action: :edit
     end

@@ -1,12 +1,8 @@
 =f.fields_for :course_module_element_quiz do |cme_quiz|
   .form-group
-    =cme_quiz.label :time_limit_seconds, t('views.course_module_element_quizzes.form.time_limit_seconds'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_quiz.text_field :time_limit_seconds, placeholder: t('views.course_module_element_quizzes.form.time_limit_seconds_placeholder'), class: 'form-control'
-  .form-group
     =cme_quiz.label :number_of_questions, t('views.course_module_element_quizzes.form.number_of_questions'), class: 'control-label col-sm-4'
     .col-sm-8
-      =cme_quiz.select :number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], 20), {}, {class: 'form-control'}
+      =cme_quiz.select :number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], cme_quiz.object.number_of_questions || 20), {}, {class: 'form-control'}
   -#.form-group
     =cme_quiz.label :question_selection_strategy, t('views.course_module_element_quizzes.form.question_selection_strategy'), class: 'control-label col-sm-4'
     .col-sm-8
@@ -23,3 +19,12 @@
     =f.label :related_video_id, t('views.course_module_elements.form.related_video_id'), class: 'control-label col-sm-4'
     .col-sm-8
       =f.collection_select :related_video_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+  .form-group
+    =label_tag :dummy, t('views.course_module_elements.form.questions'), {class: 'control-label col-sm-4'}
+    .col-sm-8.form-control-static
+      Easy:
+      =cme_quiz.object.quiz_questions.all_easy.count.to_s + ','
+      Medium:
+      =cme_quiz.object.quiz_questions.all_medium.count.to_s + ','
+      Difficult:
+      =cme_quiz.object.quiz_questions.all_difficult.count.to_s

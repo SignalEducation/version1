@@ -74,6 +74,10 @@ en:
           success: Country has been deleted
           error: Country was not deleted
 
+    courses:
+      show:
+        warning: "Sorry, we couldn't find the exact thing you were looking for"
+
     course_modules:
       index:
         no_exam_level: Sorry, there are no Exam Levels for that Qualification
@@ -349,8 +353,8 @@ en:
       can_t_be_blank_for_students: "Can't be blank for students"
 
     quiz_content:
-      can_t_assign_to_question_and_answer: Can't assign this to a question AND an answer
-      must_assign_to_question_or_answer: Must assign this to a question OR an answer
+      can_t_assign_to_multiple_things: Can't assign this to a more than one parent
+      must_assign_to_at_least_one_thing: Must assign this to a question, a solution OR an answer
 
     subscription_plans:
       must_be_in_the_future: Must be in the future
@@ -374,11 +378,13 @@ en:
       delete_tooltip: click to delete
       delete_confirmation: Are you sure?
       details: Details
+      drag_to_reorder: Drag to reorder
       edit: Edit
       edit_tooltip: click to edit
       example: Example
       go: Go
       home: Home
+      inactive: Inactive
       links: Links
       missing_data_error: Sorry, some data is missing
       new: New
@@ -481,6 +487,10 @@ en:
       new:
         h1: New Country
 
+    courses:
+      show:
+        h1: Courses
+
     course_modules:
       form:
         course_module_elements: Course Module Elements
@@ -499,7 +509,6 @@ en:
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
-        compulsory: "Compulsory?"
         active: "Active?"
 
       edit:
@@ -545,6 +554,7 @@ en:
         new_quiz: New quiz
         questions: Questions
         save_and_add_another: Save and add another Question
+        active: Active
 
       edit:
         h1: Edit Course Module Element
@@ -559,11 +569,12 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
+        next_step: Next Step
+        previous_step: Previous Step
+        preview: Preview
 
     course_module_element_quizzes:
       form:
-        time_limit_seconds: Time Limit in seconds
-        time_limit_seconds_placeholder: 100
         number_of_questions: No. of Questions Asked
         number_of_questions_placeholder: 10
         question_selection_strategy: Question Selection Strategy
@@ -571,8 +582,11 @@ en:
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
         advanced_setup_link: Advanced Setup
-        preview_button: Preview
+        preview_button: Save and View
         video: Video
+        h3:
+          question_number: "Question #"
+          question_new: New Question
 
     course_module_element_resources:
       form:
@@ -673,10 +687,13 @@ en:
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
         default_number_of_possible_exam_answers_placeholder: 4
+        default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
+        enable_exam_sections: "Enable exam sections?"
 
       index:
         h1: Exam Levels
         new: New Exam Level
+        exam_sections: "Exam sections?"
 
       show:
         h1: Exam Level
@@ -777,6 +794,10 @@ en:
         error: error
         preface: 'prevented this item from being saved:'
 
+    library:
+      show:
+        h1: Library
+
     qualifications:
       form:
         name: Name
@@ -817,6 +838,10 @@ en:
           text: Text
           image: Image
           mathjax: MathJax
+        placeholder_for:
+          question: Ask the question
+          solution: Enter the solution
+          answer: Fill in the answer here
 
     quiz_questions:
       form:
@@ -843,6 +868,9 @@ en:
         choose_an_answer: Choose an Answer
 
     shared:
+      breadcrumbs:
+        you_are_here: "You are here:"
+
       filter_panel:
         filter: 'filter:'
 
@@ -1067,53 +1095,53 @@ en:
         paragraph_1: "Choose a new password for your account:"
 
     user_notifications:
-          form:
-            user_id: User
-            subject_line: Subject
-            subject_line_placeholder: Subject line
-            content: Content
-            content_placeholder: Content
-            email_required: Email required
-            email_sent_at: Email sent at
-            email_sent_at_placeholder: Date
-            unread: Unread
-            destroyed_at: Destroyed at
-            destroyed_at_placeholder: Destroyed at
-            message_type: Message type
-            message_type_placeholder: Blog, study plan, forum, marketing etc
-            forum_topic_id: Forum topic
-            forum_post_id: Forum post
-            tutor_id: Tutor
-            falling_behind: Falling behind
-            blog_post_id: Blog post
-            created_at: Sent at
+      form:
+        user_id: User
+        subject_line: Subject
+        subject_line_placeholder: Subject line
+        content: Content
+        content_placeholder: Content
+        email_required: Email required
+        email_sent_at: Email sent at
+        email_sent_at_placeholder: Date
+        unread: Unread
+        destroyed_at: Destroyed at
+        destroyed_at_placeholder: Destroyed at
+        message_type: Message type
+        message_type_placeholder: Blog, study plan, forum, marketing etc
+        forum_topic_id: Forum topic
+        forum_post_id: Forum post
+        tutor_id: Tutor
+        falling_behind: Falling behind
+        blog_post_id: Blog post
+        created_at: Sent at
 
-          index:
-            h1: Your Notifications
-            h2: You do not have any notifications
-            user_id: User
-            subject_line: Subject
-            content: Content
-            email_required: Email required
-            email_sent_at: Email sent
-            unread: Unread
-            destroyed_at: Destroyed at
-            message_type: Type
-            forum_topic_id: Forum topic
-            forum_post_id: Forum post
-            tutor_id: Tutor
-            falling_behind: Falling behind
-            blog_post_id: Blog post
+      index:
+        h1: Your Notifications
+        h2: You do not have any notifications
+        user_id: User
+        subject_line: Subject
+        content: Content
+        email_required: Email required
+        email_sent_at: Email sent
+        unread: Unread
+        destroyed_at: Destroyed at
+        message_type: Type
+        forum_topic_id: Forum topic
+        forum_post_id: Forum post
+        tutor_id: Tutor
+        falling_behind: Falling behind
+        blog_post_id: Blog post
 
-          show:
-            h1: Notification
-            from: From
+      show:
+        h1: Notification
+        from: From
 
-          edit:
-            h1: Edit Notification
+      edit:
+        h1: Edit Notification
 
-          new:
-            h1: New Notification
+      new:
+        h1: New Notification
 
     user_sessions:
       new:

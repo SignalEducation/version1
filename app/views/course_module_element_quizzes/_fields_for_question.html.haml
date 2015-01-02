@@ -4,7 +4,7 @@
       .well.well-sm
         %h3
           Advanced Question
-          =question.object.id || "(#{t('views.general.new')})"
+          ="##{question.object.id}" || "(#{t('views.general.new')})"
         .row
           .col-sm-8
             -if question.object.quiz_contents.first.content_type == 'image'
@@ -12,7 +12,7 @@
             -else
               %p=truncate(question.object.quiz_contents.first.text_content, length: 80)
           .col-sm-4.text-right
-            =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-info'
+            =link_to t('views.course_module_elements.show.preview'), question.object, class: 'btn btn-info'
             -if question.object.id.to_i > 0
               =link_to t('views.general.edit'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
             -if question.object.destroyable?
@@ -22,18 +22,23 @@
                 =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-danger'
 
     -else
-      =question.hidden_field :course_module_element_quiz_id
       .well.well-sm{id: question.object.id.nil? ? 'the_new_question' : ''}
+        .row
+          .col-sm-12
+            %h3=question.object.id.nil? ? t('views.course_module_element_quizzes.form.h3.question_new') : t('views.course_module_element_quizzes.form.h3.question_number') + question.object.id.to_s
         .row
           .col-sm-4
             .form-group
               .col-sm-12
+                =question.hidden_field :course_module_element_quiz_id
                 =question.fields_for :quiz_contents do |content|
                   =content.hidden_field :sorting_order
                   =content.hidden_field :content_type
                   =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 7
                   %br/
-                  =question.text_area :solution_to_the_question, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 7
+                =question.fields_for :quiz_solutions do |solution|
+                  =solution.hidden_field :sorting_order
+                  =solution.text_area :text_content, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 7
             .form-group
               =question.label :difficulty_level, t('views.quiz_questions.form.difficulty_level'), class: 'col-sm-12 pull-left'
               .col-sm-12
@@ -65,19 +70,19 @@
             .row
               .col-sm-1
                 =label_tag :video, t('views.course_module_element_quizzes.form.video'), class: 'control-label'
-              .col-sm-6
+              .col-sm-5
                 =select_tag :video, options_for_select(@related_cmes.map {|x| [x.name, x.id]}, question.object.quiz_answers.first.try(:wrong_answer_video_id)), {class: 'form-control', include_blank: t('views.general.select'), onchange: "$(this).parent().parent().parent().find('.related_video').val($(this).val()); return false;"}
-              .col-sm-5.text-right
+              .col-sm-6.text-right
                 -if cme_quiz.object.id.nil?
                   -# new cme_quiz
                   =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-info'
                   =f.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-info'
                 -elsif question.object.id.nil?
-                  -# new link
+                  -# new question
                   =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-info'
                   =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
                 -else
-                  -# edit link
+                  -# edit question of existing quiz
                   =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-info'
                   =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
                 -if question.object.id.nil?

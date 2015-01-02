@@ -48,6 +48,7 @@ describe Qualification do
   it { should validate_presence_of(:cpd_hours_required_per_year) }
 
   # callbacks
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

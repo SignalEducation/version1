@@ -54,9 +54,13 @@ describe CourseModuleElementUserLog do
 
   it { should validate_presence_of(:time_taken_in_seconds) }
 
-  it { should validate_presence_of(:quiz_score_actual) }
-
-  it { should validate_presence_of(:quiz_score_potential) }
+  describe 'for quizzes...' do
+    before :each do
+      subject.stub(:is_quiz).and_return(true)
+    end
+    it { should validate_presence_of(:quiz_score_actual) }
+    it { should validate_presence_of(:quiz_score_potential) }
+  end
 
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
