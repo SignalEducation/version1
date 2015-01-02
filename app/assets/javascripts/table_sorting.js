@@ -21,14 +21,11 @@ $(document).on('ready page:load', function() {
         arrayOfIds.push(rows[counter].id);
       }
     }
-    console.log('table: ');
-    console.log($('.sorted_table'));
     $.ajax({
       type: 'POST',
       url: (theUrl || window.location.href) + '/reorder',
       data: {array_of_ids: arrayOfIds},
       success: function() {
-        console.log('Reordered OK ' + arrayOfIds);
         $('tr.dragged').removeClass('dragged').attr('style','');
       }
     });
