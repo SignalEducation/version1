@@ -2,7 +2,7 @@
   .col-sm-12
     %h2.no-top-gap=@course_module.name
     =render partial: 'shared/tutor_breadcrumbs', locals: {the_thing: @course_module}
-    %p=@course_module.description
+    .well.well-sm=sanitizer @course_module.description
     %p
       =t('views.course_modules.form.tutor_id') + ':'
       =@course_module.tutor.full_name
@@ -31,16 +31,16 @@
 .row
   .col-sm-12
     %h3=t('views.course_modules.form.course_module_elements')
-    %table.table.table-striped.sorted_table{data: {destination: course_module_elements_url}}
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: course_module_elements_url}}
       %tbody
         -@course_module.course_module_elements.each do |cme|
           %tr{id: cme.id}
             %td=cme.name
             %td
               -if cme.active
-                .label.label-success=t('views.general.active')
+                %span.label.label-success=t('views.general.active')
               -else
-                .label.label-default=t('views.general.inactive')
+                %span.label.label-default=t('views.general.inactive')
             %td
               -if cme.course_module_element_video
                 Video
@@ -55,6 +55,8 @@
                 =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-xs btn-info'
               -else
                 .label.label-warning=t('views.course_modules.show.add_more_questions')
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
     %p
       =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: @course_module.id), class: 'btn btn-success'
       =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: @course_module.id), class: 'btn btn-success'
