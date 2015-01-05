@@ -45,4 +45,4 @@
 
 .row
   .col-sm-12
-    =link_to t('views.general.new'), new_qualification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.general.new'), new_qualification_url(institution_id: @institution.try(:id)), class: 'btn btn-success', title: t('views.general.new_tooltip')
