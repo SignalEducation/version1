@@ -34,8 +34,10 @@ class StaticPagesController < ApplicationController
     @static_page.language ||= 'en'
     @static_page.created_by = current_user.id
     if @static_page.save
-      related_upload_ids = allowed_params[:static_page_uploads_attributes].map{|x| x[1][:id] }
-      StaticPageUpload.where(id: related_upload_ids).update_all(static_page_id: @static_page.id)
+      if allowed_params[:static_page_uploads_attributes]
+        related_upload_ids = allowed_params[:static_page_uploads_attributes].map{|x| x[1][:id] }
+        StaticPageUpload.where(id: related_upload_ids).update_all(static_page_id: @static_page.id)
+      end
       flash[:success] = I18n.t('controllers.static_pages.create.flash.success')
       redirect_to static_pages_url
     else
