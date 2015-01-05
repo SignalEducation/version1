@@ -16,11 +16,11 @@ module ApplicationHelper
   end
 
   def head_sanitizer(some_text)
-    sanitize(some_text.to_s.gsub("\r",'<br />'), tags: %w(meta script title), attributes: %w(name content type href src charset) )
+    sanitize(some_text, tags: %w(meta script title), attributes: %w(name content type href src charset) )
   end
 
   def body_sanitizer(some_text)
-    sanitize(some_text.gsub("\r",'<br />'), tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p div a img), attributes: %w(id class style href src) )
+    sanitize(some_text, tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p div a img), attributes: %w(id class style href src) )
   end
 
   def seconds_to_time(seconds)
