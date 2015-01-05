@@ -46,6 +46,10 @@ class ExamSection < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def children
+    self.course_modules.all
+  end
+
   def destroyable?
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
   end

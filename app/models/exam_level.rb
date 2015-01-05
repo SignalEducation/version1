@@ -56,6 +56,14 @@ class ExamLevel < ActiveRecord::Base
   end
 
   # instance methods
+  def children
+    if self.enable_exam_sections == true
+      self.exam_sections.all
+    else
+      self.course_modules.all
+    end
+  end
+
   def destroyable?
     !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty?
   end

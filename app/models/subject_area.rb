@@ -38,6 +38,10 @@ class SubjectArea < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def children
+    self.institutions.all
+  end
+
   def destroyable?
     !self.active && self.institutions.empty?
   end

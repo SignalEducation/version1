@@ -8,28 +8,6 @@
 
 .row
   .col-sm-12
-    -if @exam_section
 
-      -@exam_section.course_modules.each do |child|
-        %p=link_to child.name, course_special_link(child)
-
-    -elsif @exam_level
-
-      -@exam_level.exam_sections.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
-    -elsif @qualification
-
-      -@qualification.exam_levels.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
-    -elsif @institution
-
-      -@institution.qualifications.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
-    -elsif @subject_area
-
-      -@subject_area.institutions.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
+    -@hierarchy_item.children.each do |child|
+      %p=link_to child.name, course_special_link(child)

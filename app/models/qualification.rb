@@ -47,6 +47,10 @@ class Qualification < ActiveRecord::Base
   end
 
   # instance methods
+  def children
+    self.exam_levels.all
+  end
+
   def destroyable?
     !self.active && self.exam_levels.empty? && self.course_modules.empty?
   end
