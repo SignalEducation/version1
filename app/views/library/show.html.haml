@@ -21,5 +21,16 @@
 .row
   .col-sm-12
 
-    -@hierarchy_item.children.each do |child|
-      %p=link_to child.name, library_special_link(child)
+    .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
+      -@hierarchy_item.children.each do |children, counter|
+        .panel.panel-default
+          .panel-heading#headingOne{role: 'tab'}
+            %h4.panel-title
+              %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
+                =children.name
+
+          .panel-collapse.collapse{id: "collapse_#{counter}", class: (children.id == @hierarchy_item.id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+            .panel-body
+              -if @hierarchy_item.children.count > 0
+                -@hierarchy_item.children.each do |grand_children|
+                  %p=link_to grand_children.name, library_special_link(children)
