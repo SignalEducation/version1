@@ -16,6 +16,8 @@
 
 class Country < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :name, :iso_code, :country_tld, :sorting_order,
                   :in_the_eu, :currency_id, :continent
@@ -41,7 +43,7 @@ class Country < ActiveRecord::Base
   validates :continent, inclusion: {in: CONTINENTS}
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name, :iso_code, :continent) }
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -55,12 +57,5 @@ class Country < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

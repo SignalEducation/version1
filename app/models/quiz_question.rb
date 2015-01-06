@@ -13,6 +13,8 @@
 
 class QuizQuestion < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
@@ -45,7 +47,6 @@ class QuizQuestion < ActiveRecord::Base
 
   # callbacks
   before_save :set_course_module_element
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_quiz_id) }
@@ -76,13 +77,6 @@ class QuizQuestion < ActiveRecord::Base
     end
     if counter == 0
       errors.add(:base, 'At least one answer must be marked as correct')
-    end
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
     end
   end
 

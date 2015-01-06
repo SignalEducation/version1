@@ -17,6 +17,8 @@
 
 class CourseModuleElementResource < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_element_id, :name, :description, :web_url, :upload
 
@@ -37,6 +39,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   validate  :web_url_or_upload_required
 
   # callbacks
+  before_validation { squish_fields(:name, :description, :web_url) }
   before_destroy :check_dependencies
 
   # scopes
@@ -50,13 +53,6 @@ class CourseModuleElementResource < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def web_url_or_upload_required
     if self.web_url.blank? && self.upload.blank? && self.upload_file_name.blank?

@@ -22,6 +22,8 @@
 
 class CourseModuleElement < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :name, :name_url, :description,
                   :estimated_time_in_seconds, :active,
@@ -75,9 +77,9 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
   after_save :update_the_module_total_time
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -122,22 +124,11 @@ class CourseModuleElement < ActiveRecord::Base
 
   protected
 
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
   def self.nested_resource_is_blank?(attributes)
     attributes['name'].blank? &&
             attributes['description'].blank? &&
             attributes['upload'].blank? &&
             attributes['the_url'].blank?
-  end
-
-  def sanitize_name_url
-    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

@@ -20,6 +20,8 @@
 
 class CourseModule < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
@@ -54,9 +56,9 @@ class CourseModule < ActiveRecord::Base
   validates :sorting_order, presence: true
 
   # callbacks
+  before_validation { squish_fields(:name, :name_url, :description) }
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
@@ -108,17 +110,6 @@ class CourseModule < ActiveRecord::Base
 
   def calculate_estimated_time
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
-  def sanitize_name_url
-    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

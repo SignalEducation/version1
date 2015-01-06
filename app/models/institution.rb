@@ -18,6 +18,8 @@
 
 class Institution < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :name, :short_name, :name_url, :description,
                   :feedback_url, :help_desk_url, :subject_area_id,
@@ -31,7 +33,6 @@ class Institution < ActiveRecord::Base
   has_many :qualifications
   belongs_to :subject_area
 
-
   # validation
   validates :name, presence: true, uniqueness: true
   validates :short_name, presence: true, uniqueness: true
@@ -44,8 +45,8 @@ class Institution < ActiveRecord::Base
   validates :sorting_order, presence: true
 
   # callbacks
+  before_validation { squish_fields(:name, :short_name, :name_url, :description, :feedback_url, :help_desk_url) }
   before_save :sanitize_name_url
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -61,16 +62,5 @@ class Institution < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
-  def sanitize_name_url
-    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
-  end
 
 end

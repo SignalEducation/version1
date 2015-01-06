@@ -15,6 +15,8 @@
 
 class ExamSection < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
 
@@ -35,9 +37,9 @@ class ExamSection < ActiveRecord::Base
   validates :sorting_order, presence: true
 
   # callbacks
+  before_validation { squish_fields(:name, :name_url) }
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -54,17 +56,6 @@ class ExamSection < ActiveRecord::Base
 
   def calculate_best_possible_score
     self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
-  def sanitize_name_url
-    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

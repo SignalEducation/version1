@@ -44,6 +44,8 @@
 
 class User < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
@@ -125,8 +127,8 @@ class User < ActiveRecord::Base
   validates :locale, inclusion: {in: LOCALES}
 
   # callbacks
+  before_validation { squish_fields(:email, :first_name, :last_name, :address) }
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -227,13 +229,6 @@ class User < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def de_activate_user
     self.active = false

@@ -21,6 +21,8 @@
 
 class UserGroup < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :name, :description, :individual_student, :tutor, :content_manager,
                   :blogger, :corporate_customer, :site_admin, :forum_manager,
@@ -38,7 +40,7 @@ class UserGroup < ActiveRecord::Base
   validates :description, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name, :description) }
 
   # scopes
   scope :all_in_order, -> { order(:name) }
@@ -51,12 +53,5 @@ class UserGroup < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

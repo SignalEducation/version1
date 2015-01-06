@@ -11,6 +11,8 @@
 
 class ForumTopicUser < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :user_id, :forum_topic_id
 
@@ -27,7 +29,6 @@ class ForumTopicUser < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -40,12 +41,5 @@ class ForumTopicUser < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

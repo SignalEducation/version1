@@ -15,6 +15,8 @@
 
 class CourseModuleElementVideo < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript
 
@@ -35,9 +37,9 @@ class CourseModuleElementVideo < ActiveRecord::Base
   validates :transcript, presence: true
 
   # callbacks
+  before_validation { squish_fields(:tags) }
   before_update :set_estimated_study_time
   after_save :update_raw_video_file
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -59,13 +61,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def update_raw_video_file
     if self.raw_video_file

@@ -20,6 +20,8 @@
 
 class Invoice < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_transaction_id,
                   :subscription_id, :number_of_users, :currency_id,
@@ -53,7 +55,6 @@ class Invoice < ActiveRecord::Base
 
   # callbacks
   before_create :calculate_line_totals
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -72,13 +73,6 @@ class Invoice < ActiveRecord::Base
     # todo self.line_total_vat_amount = self.line_total_ex_vat * self.vat_rate.percentage_rate / 100.0
     self.line_total_vat_amount = 0.0 # VAT processing disabled
     self.line_total_inc_vat = self.line_total_ex_vat + self.line_total_vat_amount
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
   end
 
 end

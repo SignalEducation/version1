@@ -15,6 +15,8 @@
 
 class CourseModuleElementQuiz < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_element_id,
                   :number_of_questions, :quiz_questions_attributes
@@ -38,7 +40,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # callbacks
   before_save :set_jumbo_quiz_id
   before_update :set_high_score_fields
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -79,13 +80,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def set_high_score_fields
     max_score = ApplicationController::DIFFICULTY_LEVELS.last[:score]
