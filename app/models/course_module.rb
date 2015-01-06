@@ -71,6 +71,10 @@ class CourseModule < ActiveRecord::Base
     self.parent_thing.course_modules.all_in_order.map(&:id)
   end
 
+  def children
+    self.course_module_elements.all
+  end
+
   def destroyable?
     self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty?
   end
