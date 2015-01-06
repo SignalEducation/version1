@@ -20,9 +20,8 @@
 
 .row
   .col-sm-12
-
     .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
-      -@hierarchy_item.children.each do |children, counter|
+      -@hierarchy_item.children.each_with_index do |children, counter|
         .panel.panel-default
           .panel-heading#headingOne{role: 'tab'}
             %h4.panel-title
