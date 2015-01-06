@@ -51,4 +51,4 @@
 
 .row
   .col-sm-12
-    =link_to t('views.general.new'), new_institution_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.general.new'), new_institution_url(subject_area_id: @subject_area.try(:id)), class: 'btn btn-success', title: t('views.general.new_tooltip')

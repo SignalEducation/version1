@@ -18,6 +18,8 @@
 
 class ExamLevel < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections
 
@@ -42,11 +44,12 @@ class ExamLevel < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_validation { squish_fields(:name, :name_url) }
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
-  before_destroy :check_dependencies
 
   # scopes
+  scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:qualification_id) }
   scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 
@@ -76,17 +79,6 @@ class ExamLevel < ActiveRecord::Base
 
   def calculate_best_possible_score
     self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
-  def sanitize_name_url
-    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
 end

@@ -40,6 +40,7 @@ describe CorporateCustomer do
   it { should belong_to(:country) }
   it { should belong_to(:owner) }
   it { should have_many(:students) }
+  it { should have_many(:subscriptions) }
 
   # validation
   it { should validate_presence_of(:organisation_name) }

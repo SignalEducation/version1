@@ -180,21 +180,8 @@ class ApplicationController < ActionController::Base
   helper_method :course_module_special_link
 
   def library_special_link(the_thing) # customer-facing
-    if the_thing.class == CourseModule && !the_thing.id.nil?
-      if the_thing.exam_section_id
-        course_modules_for_qualification_exam_level_exam_section_and_name_url(
-            the_thing.exam_level.qualification.name_url,
-            the_thing.exam_level.name_url,
-            the_thing.exam_section.try(:name_url) || 'all',
-            the_thing.name_url)
-      else
-        course_modules_for_qualification_exam_level_exam_section_and_name_url(
-            the_thing.exam_level.qualification.name_url,
-            the_thing.exam_level.name_url,
-            'all',
-            the_thing.name_url)
-      end
-
+    if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
+      course_special_link(the_thing)
     elsif the_thing.class == ExamSection
       library_url(the_thing.exam_level.qualification.institution.subject_area.name_url,
                   the_thing.exam_level.qualification.institution.name_url,

@@ -21,6 +21,8 @@
 
 class CourseModuleElementUserLog < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_element_id, :user_id, :session_guid,
                   :element_completed, :time_taken_in_seconds,
@@ -54,7 +56,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true'
 
   # callbacks
-  before_destroy :check_dependencies
   before_create :set_latest_attempt
   after_create :mark_previous_attempts_as_latest_false
 
@@ -101,13 +102,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).
         for_course_module_element(self.course_module_element_id).latest_only
     others.update_all(latest_attempt: false)
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
   end
 
 end

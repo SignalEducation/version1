@@ -35,6 +35,8 @@
 
 class StaticPage < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   serialize :approved_country_ids, Array
 
   # attr-accessible
@@ -66,10 +68,10 @@ class StaticPage < ActiveRecord::Base
   validates :seo_description, presence: true
 
   # callbacks
+  before_validation { squish_fields(:name, :public_url, :menu_label, :tooltip_text, :seo_title, :seo_description) }
   before_save :sanitize_public_url
   before_save :sanitize_country_ids
   after_save :update_default_for_related_pages
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:public_url, default_page_for_this_url: :desc) }

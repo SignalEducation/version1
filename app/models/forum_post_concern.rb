@@ -13,6 +13,8 @@
 
 class ForumPostConcern < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :forum_post_id, :user_id, :reason, :live
 
@@ -30,7 +32,6 @@ class ForumPostConcern < ActiveRecord::Base
   validates :reason, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:forum_post_id) }
@@ -43,12 +44,5 @@ class ForumPostConcern < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

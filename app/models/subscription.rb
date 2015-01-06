@@ -18,16 +18,19 @@
 
 class Subscription < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :next_renewal_date, :complementary, :current_status
+                  :next_renewal_date, :complementary, :current_status,
+                  :stripe_customer_id, :original_stripe_customer_data
 
   # Constants
   STATUSES = %w(trial active suspended paused cancelled)
 
   # relationships
   belongs_to :user
-  # todo belongs_to :corporate_customer
+  belongs_to :corporate_customer
   has_many :invoices
   belongs_to :subscription_plan
   has_many :subscription_transactions
@@ -45,7 +48,6 @@ class Subscription < ActiveRecord::Base
   # callbacks
   before_create :create_on_stripe_platform
   before_update :update_on_stripe_platform
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -59,13 +61,6 @@ class Subscription < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def create_on_stripe_platform
     # todo stripe integration

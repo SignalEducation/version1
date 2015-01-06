@@ -20,9 +20,11 @@
 
 class QuizContent < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
-  attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id, :text_content, :sorting_order,
-                  :content_type, :image
+  attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
+                  :text_content, :sorting_order, :content_type, :image
 
   # Constants
   CONTENT_TYPES = %w(text image mathjax)
@@ -41,15 +43,16 @@ class QuizContent < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_solution_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :text_content, presence: true, unless: Proc.new{|qc| qc.content_type == 'image' }
+  validates :text_content, presence: true,
+            unless: Proc.new{|qc| qc.content_type == 'image' }
   validates :sorting_order, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
+  before_validation { squish_fields(:text_content) }
   after_initialize :set_default_values
   before_validation :check_data_consistency
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :quiz_question_id) }
@@ -88,13 +91,6 @@ class QuizContent < ActiveRecord::Base
   def check_data_consistency
     self.content_type == 'image' ? self.text_content = nil : self.image = nil
     true
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
   end
 
   def process_content_type
