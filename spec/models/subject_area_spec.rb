@@ -53,6 +53,7 @@ describe SubjectArea do
   # class methods
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
 
 end

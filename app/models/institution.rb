@@ -66,6 +66,10 @@ class Institution < ActiveRecord::Base
     !self.active && self.qualifications.empty? && self.institution_users.empty? && self.course_modules.empty?
   end
 
+  def full_name
+    self.subject_area.name + ' > ' + self.name
+  end
+
   protected
 
 end

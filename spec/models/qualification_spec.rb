@@ -52,6 +52,7 @@ describe Qualification do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(Qualification).to respond_to(:all_active) }
   it { expect(Qualification).to respond_to(:all_in_order) }
   it { expect(Qualification).to respond_to(:with_url) }
 
@@ -59,6 +60,7 @@ describe Qualification do
   it { expect(Qualification).to respond_to(:get_by_name_url) }
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
 
