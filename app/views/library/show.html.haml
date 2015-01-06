@@ -3,8 +3,20 @@
 .row
   .col-sm-12
     %h1
-      =@exam_section.try(:name) || @exam_level.try(:name) || @qualification.try(:name) || @institution.try(:name) || t('views.library.show.h1')
+      -if @hierarchy_item.class == SubjectArea
+        =t('views.library.show.h1')
+      -else
+        =@hierarchy_item.try(:name)
     %hr/
+-if @subject_areas.size > 1
+  .row
+    .col-sm-12
+      %p=t('views.subject_areas.index.h1')
+      %ul.nav.nav-pills
+        -@subject_areas.each do |subject_area|
+          %li{role: 'presentation', class: (@subject_area.id == subject_area.id ? 'active' : '')}
+            =link_to subject_area.name, library_special_link(subject_area)
+      %hr/
 
 .row
   .col-sm-12
