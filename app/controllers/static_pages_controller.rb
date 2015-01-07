@@ -191,14 +191,15 @@ class StaticPagesController < ApplicationController
             {name: 'Image & header',
              code: '
 <header style="background-image: url(http://learnsignal3-dev-dan.s3-eu-west-1.amazonaws.com/static_page_uploads/148/Coca-Cola-1179x1181.jpg?1420559789);">
-    <div class="container">
-        <div class="intro-text">
-            <div class="intro-lead-in">The Home of CFA</div>
-            <div class="intro-heading">Learn Signal</div>
-            <a href="/library" class="page-scroll btn btn-xl">Browse Courses</a>
-            <a href="/user_signups/new" class="page-scroll btn btn-xl">Start Free Trial</a>
-        </div>
+  <div class="container">
+    <div class="intro-text">
+      <div class="intro-heading hidden-xs">Pass your professional exams</div>
+      <div class="intro-heading visible-xs-12">Pass your exams</div>
+      <div class="intro-lead-in">The Home of CFA</div>
+      <a href="/library" class="page-scroll btn btn-xl">Browse Courses</a>
+      <a href="/user_signups/new" class="page-scroll btn btn-xl">Start Free Trial</a>
     </div>
+  </div>
 </header>
 '
             },
