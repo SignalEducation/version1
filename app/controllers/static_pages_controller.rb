@@ -179,6 +179,10 @@ class StaticPagesController < ApplicationController
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/sign_in">Sign in</a></li>
+        <li><a href="/student_sign_up">Sign up</a></li>
+      </ul>
     </div>
   </div>
 </nav>
