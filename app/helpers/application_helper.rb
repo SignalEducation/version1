@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def body_sanitizer(some_text)
-    sanitize(some_text, tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p div a img), attributes: %w(id class style href src) )
+    sanitize(some_text, tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p div a img button span ul ol li nav), attributes: %w(id class style href src data-toggle data-target data-ride data-slide-to role aria-hidden aria-expanded aria-controls) )
   end
 
   def seconds_to_time(seconds)

@@ -27,6 +27,6 @@
     -if @delivered_page.mark_as_noindex
       %meta{name: 'robots', content: 'noindex'}
 
-  %body
+  %body.no-top-margin
     =body_sanitizer(@delivered_page.body_content)
     =render partial: 'layouts/footer'
