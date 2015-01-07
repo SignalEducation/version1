@@ -49,7 +49,7 @@ class QuizAnswer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_attempts.empty? && self.quiz_contents.empty?
+    self.quiz_attempts.empty?
   end
 
   protected

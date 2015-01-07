@@ -219,7 +219,7 @@ class ApplicationController < ActionController::Base
               the_thing.exam_level.qualification.institution.name_url,
               the_thing.exam_level.qualification.name_url,
               the_thing.exam_level.name_url,
-              the_thing.exam_section.name_url || 'all',
+              the_thing.exam_section.try(:name_url) || 'all',
               the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
@@ -228,7 +228,7 @@ class ApplicationController < ActionController::Base
               the_thing.course_module.exam_level.qualification.institution.name_url,
               the_thing.course_module.exam_level.qualification.name_url,
               the_thing.course_module.exam_level.name_url,
-              the_thing.course_module.exam_section.name_url || 'all',
+              the_thing.course_module.exam_section.try(:name_url) || 'all',
               the_thing.course_module.name_url,
               the_thing.name_url
       )

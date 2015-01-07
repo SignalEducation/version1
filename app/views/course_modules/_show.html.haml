@@ -55,6 +55,8 @@
                 =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-xs btn-info'
               -else
                 .label.label-warning=t('views.course_modules.show.add_more_questions')
+              -if cme.destroyable? && !cme.active
+                =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
             %td
               %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
     %p

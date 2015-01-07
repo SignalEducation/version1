@@ -75,6 +75,10 @@ class ExamLevel < ActiveRecord::Base
     self.qualification.name + ' > ' + self.name
   end
 
+  def parent
+    self.qualification
+  end
+
   protected
 
   def calculate_best_possible_score

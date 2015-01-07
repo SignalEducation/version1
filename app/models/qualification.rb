@@ -62,6 +62,10 @@ class Qualification < ActiveRecord::Base
     self.institution.name + ' > ' + self.name
   end
 
+  def parent
+    self.institution
+  end
+
   protected
 
 end

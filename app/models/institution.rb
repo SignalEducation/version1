@@ -70,6 +70,10 @@ class Institution < ActiveRecord::Base
     self.subject_area.name + ' > ' + self.name
   end
 
+  def parent
+    self.subject_area
+  end
+
   protected
 
 end

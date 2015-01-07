@@ -8,18 +8,12 @@
       -else
         =@hierarchy_item.try(:name)
     %hr/
--if @subject_areas.size > 1
-  .row
-    .col-sm-12
-      %p=t('views.subject_areas.index.h1')
-      %ul.nav.nav-pills
-        -@subject_areas.each do |subject_area|
-          %li{role: 'presentation', class: (@subject_area.id == subject_area.id ? 'active' : '')}
-            =link_to subject_area.name, library_special_link(subject_area)
-      %hr/
+    =link_to course_special_link(@hierarchy_item.parent) do
+      &larr;
+      =t('views.general.back')
 
 .row
-  .col-sm-12
+  %div{class: (@subject_areas.length > 1 ? 'col-sm-9' : 'col-sm-12')}
     .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
       -@hierarchy_item.children.all_active.each_with_index do |child, counter|
         .panel.panel-default
@@ -50,3 +44,12 @@
                         -elsif grand_child.children.all_active.any?
                           =grand_child.children.all_active.count
                           =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
+
+  -if @subject_areas.size > 1
+    .col-sm-3
+      %h3.no-top-gap=t('views.subject_areas.index.h1')
+      .well.well-sm
+        %ul.nav.nav-pills.nav-stacked
+          -@subject_areas.each do |subject_area|
+            %li{role: 'presentation', class: (@subject_area.id == subject_area.id ? 'active' : '')}
+              =link_to subject_area.name, library_special_link(subject_area)

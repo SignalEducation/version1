@@ -61,6 +61,10 @@ class ExamSection < ActiveRecord::Base
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
+  def parent
+    self.exam_level
+  end
+
   protected
 
   def calculate_best_possible_score
