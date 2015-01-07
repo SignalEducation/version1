@@ -916,6 +916,7 @@ en:
         make_this_page_sticky: Make this page sticky
         logged_in_required: Logged-in required
         uploads: Uploads
+        code_samples: Code Samples
 
       index:
         h1: Static Pages
