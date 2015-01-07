@@ -194,7 +194,7 @@ class StaticPagesController < ApplicationController
   <div class="container">
     <div class="intro-text">
       <div class="intro-heading hidden-xs">Pass your professional exams</div>
-      <div class="intro-heading visible-xs-12">Pass your exams</div>
+      <div class="intro-heading visible-xs">Pass your exams</div>
       <div class="intro-lead-in">The Home of CFA</div>
       <a href="/library" class="page-scroll btn btn-xl">Browse Courses</a>
       <a href="/user_signups/new" class="page-scroll btn btn-xl">Start Free Trial</a>
@@ -251,6 +251,38 @@ class StaticPagesController < ApplicationController
     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     <span class="sr-only">Next</span>
   </a>
+</div>
+'
+            },
+            {name: 'Four boxes',
+             code: '
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <img src="http://learnsignal3-dev-dan.s3-eu-west-1.amazonaws.com/static_page_uploads/148/Coca-Cola-1179x1181.jpg?1420559789" alt="First slide" class="img-responsive">
+      <h3>Mary Had A Little Lamb</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      <a href="/mary" class="btn btn-default">Learn More...</a>
+    </div>
+    <div class="col-sm-3">
+      <img src="http://learnsignal3-dev-dan.s3-eu-west-1.amazonaws.com/static_page_uploads/148/Coca-Cola-1179x1181.jpg?1420559789" alt="First slide" class="img-responsive">
+      <h3>Baah Baah Black Sheep</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      <a href="/mary" class="btn btn-default">Learn More...</a>
+    </div>
+    <div class="col-sm-3">
+      <img src="http://learnsignal3-dev-dan.s3-eu-west-1.amazonaws.com/static_page_uploads/148/Coca-Cola-1179x1181.jpg?1420559789" alt="First slide" class="img-responsive">
+      <h3>Itsy Bitsy Spider</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      <a href="/mary" class="btn btn-default">Learn More...</a>
+    </div>
+    <div class="col-sm-3">
+      <img src="http://learnsignal3-dev-dan.s3-eu-west-1.amazonaws.com/static_page_uploads/148/Coca-Cola-1179x1181.jpg?1420559789" alt="First slide" class="img-responsive">
+      <h3>Peter Piper Had a Peck of Pickled Peppers</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      <a href="/mary" class="btn btn-default">Learn More...</a>
+    </div>
+  </div>
 </div>
 '}
     ]
