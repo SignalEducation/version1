@@ -45,7 +45,7 @@ class StaticPagesController < ApplicationController
         redirect_to static_pages_url
       end
     else
-      render action: :new
+      redirect_to edit_static_page_url(@static_page)
     end
   end
 
@@ -58,7 +58,7 @@ class StaticPagesController < ApplicationController
         redirect_to static_pages_url
       end
     else
-      render action: :edit
+      redirect_to edit_static_page_url(@static_page)
     end
   end
 
