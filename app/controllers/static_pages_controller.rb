@@ -162,7 +162,7 @@ class StaticPagesController < ApplicationController
     [
             {name: 'Transparent navbar',
              code: '
-<nav class="navbar navbar-transparent navbar-static-top">
+<nav class="navbar navbar-transparent navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -178,22 +178,24 @@ class StaticPagesController < ApplicationController
         <li class="active"><a href="#">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li class="dropdown-header">Nav header</li>
-            <li><a href="#">Separated link</a></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
       </ul>
     </div>
   </div>
 </nav>
+'
+            },
+            {name: 'Image & header',
+             code: '
+<header style="background-image: url(http://learnsignal3-dev-dan.s3-eu-west-1.amazonaws.com/static_page_uploads/148/Coca-Cola-1179x1181.jpg?1420559789);">
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in">The Home of CFA</div>
+            <div class="intro-heading">Learn Signal</div>
+            <a href="/library" class="page-scroll btn btn-xl">Browse Courses</a>
+            <a href="/user_signups/new" class="page-scroll btn btn-xl">Start Free Trial</a>
+        </div>
+    </div>
+</header>
 '
             },
             {name: 'Image carousel',

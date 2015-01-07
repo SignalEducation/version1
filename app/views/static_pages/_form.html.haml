@@ -122,6 +122,8 @@
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-success'
         =f.submit t('views.general.save_and_continue_editing'), class: 'btn btn-success'
+        -unless @static_page.id.nil?
+          =link_to t('views.static_pages.index.preview'), static_page_url(@static_page.id, preview: 'yes'), class: 'btn btn-info', target: '_blank'
         =t('views.general.or')
         =link_to t('views.general.cancel'), static_pages_path
 

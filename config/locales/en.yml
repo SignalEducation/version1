@@ -794,6 +794,9 @@ en:
       error_messages:
         error: error
         preface: 'prevented this item from being saved:'
+      navigation:
+        course_content: Course Content
+        content_management: Content Management
 
     library:
       show:
