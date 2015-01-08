@@ -40,7 +40,6 @@ describe UserActivityLog do
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:session_guid) }
-  it { should validate_numericality_of(:session_guid) }
 
   it { should validate_presence_of(:original_uri) }
 
@@ -62,5 +61,6 @@ describe UserActivityLog do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:display_class) }
 
 end

@@ -34,8 +34,7 @@ class UserActivityLog < ActiveRecord::Base
   # validation
   validates :user_id, allow_blank: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :session_guid, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :session_guid, presence: true
   validates :original_uri, presence: true
   validates :controller_name, presence: true
   validates :action_name, presence: true
@@ -54,6 +53,10 @@ class UserActivityLog < ActiveRecord::Base
   # instance methods
   def destroyable?
     !Rails.env.production?
+  end
+
+  def display_class
+    ['success','info','warning','danger'][self.alert_level]
   end
 
   protected
