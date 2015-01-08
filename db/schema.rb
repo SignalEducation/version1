@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141231190959) do
+ActiveRecord::Schema.define(version: 20150108113134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,8 +290,8 @@ ActiveRecord::Schema.define(version: 20141231190959) do
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax",   default: false, null: false
-    t.boolean  "contains_image",     default: false, null: false
+    t.boolean  "contains_mathjax",   null: false
+    t.boolean  "contains_image",     null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -429,16 +429,31 @@ ActiveRecord::Schema.define(version: 20141231190959) do
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complementary",         default: false, null: false
+    t.boolean  "complementary",                 default: false, null: false
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "stripe_customer_id"
+    t.text     "original_stripe_customer_data"
   end
 
   create_table "system_defaults", force: true do |t|
     t.integer  "individual_student_user_group_id"
     t.integer  "corporate_student_user_group_id"
     t.integer  "corporate_customer_user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_activity_logs", force: true do |t|
+    t.integer  "user_id"
+    t.string   "session_guid"
+    t.boolean  "signed_in",       default: false, null: false
+    t.string   "original_uri"
+    t.string   "controller_name"
+    t.string   "action_name"
+    t.text     "params"
+    t.integer  "alert_level",     default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

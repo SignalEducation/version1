@@ -92,6 +92,7 @@ class User < ActiveRecord::Base
   has_many :user_likes
   has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
   has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
+  has_many :user_activity_logs
   belongs_to :user_group
 
   # validation

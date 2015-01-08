@@ -259,6 +259,18 @@ en:
         success: Your account has been activated, and you have been logged in.
         error: Sorry, something went wrong. Please contact us for assistance.
 
+    user_activity_logs:
+      create:
+        flash:
+          success: User Activity Log has been created successfully
+      update:
+        flash:
+          success: User Activity Log details have been updated successfully
+      destroy:
+        flash:
+          success: User Activity Log has been deleted
+          error: User Activity Log was not deleted
+
     user_groups:
       create:
         flash:
