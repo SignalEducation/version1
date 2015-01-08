@@ -48,6 +48,10 @@ class SubjectArea < ActiveRecord::Base
     !self.active && self.institutions.empty?
   end
 
+  def parent
+    nil
+  end
+
   protected
 
 end

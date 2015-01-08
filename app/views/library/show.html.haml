@@ -8,9 +8,10 @@
       -else
         =@hierarchy_item.try(:name)
     %hr/
-    =link_to course_special_link(@hierarchy_item.parent) do
-      &larr;
-      =t('views.general.back')
+    -if @hierarchy_item.parent != nil
+      =link_to course_special_link(@hierarchy_item.parent) do
+        &larr;
+        =t('views.general.back')
 
 .row
   %div{class: (@subject_areas.length > 1 ? 'col-sm-9' : 'col-sm-12')}
