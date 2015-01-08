@@ -64,5 +64,6 @@ describe ExamSection do
   it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:parent) }
 
 end
