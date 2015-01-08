@@ -11,11 +11,11 @@
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'navbar'}
-        %li
+        %li{class: controller_name == 'blogs' ? 'active' : ''}
           %a{href: 'http://blog.learnsignal.com/', target: '_blank'} Blog
-        %li.active
-          %a{href: '#'} Dashboard
-        %li
+        %li{class: controller_name == 'dashboard' ? 'active' : ''}
+          =link_to t('views.dashboard.index.h1'), dashboard_url
+        %li{class: controller_name == 'library' ? 'active' : ''}
           =link_to t('views.library.show.h1'), library_url
       %ul.nav.navbar-nav.navbar-right
         -if current_user
