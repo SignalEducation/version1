@@ -12,6 +12,7 @@ class QuizQuestionsController < ApplicationController
 
   def new
     @quiz_question.quiz_contents.build
+    @quiz_question.quiz_solutions.build
     4.times do
       @quiz_question.quiz_answers.build
       @quiz_question.quiz_answers.last.quiz_contents.build
