@@ -795,6 +795,7 @@ en:
         error: error
         preface: 'prevented this item from being saved:'
       navigation:
+        learn_signal: Learn Signal
         course_content: Course Content
         content_management: Content Management
 
