@@ -81,12 +81,16 @@ Rails.application.routes.draw do
     resources :vat_codes
 
     # home page
-    root 'static_pages#deliver_page' # temporary
+    root 'static_pages#deliver_page'
 
     # Catch-all
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'
     get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
         as: :deliver_static_pages
+  end
+
+  namespace :api do
+    resources :user_activities, only: :create
   end
 
   # Catch-all
