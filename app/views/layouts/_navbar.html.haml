@@ -59,6 +59,7 @@
               -if current_user.admin?
                 %li.divider
                 %li=link_to t('views.users.index.h1'), users_url
+                %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url
                 %li=link_to t('views.user_groups.index.h1'), user_groups_url
                 %li=link_to t('views.currencies.index.h1'), currencies_url
                 %li=# todo link_to t('views.vat_codes.index.h1'), vat_codes_url
