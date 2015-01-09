@@ -43,10 +43,15 @@ class CourseModulesController < ApplicationController
           exam_level_id: exam_section.exam_level_id,
           qualification_id: exam_section.exam_level.qualification_id,
           institution_id: exam_section.exam_level.qualification.institution_id )
+    elsif params[:exam_level_url]
+      exam_level = ExamLevel.where(name_url: params[:exam_level_url]).first
+      @course_module = CourseModule.new(sorting_order: 1,
+          exam_level_id: exam_level.id,
+          qualification_id: exam_level.qualification_id,
+          institution_id: exam_level.qualification.institution_id )
     else
       @course_module = CourseModule.new(sorting_order: 1)
     end
-    @course_module.tutor_id = current_user.id
     set_up_side_nav
   end
 
