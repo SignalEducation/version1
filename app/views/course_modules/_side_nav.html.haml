@@ -15,14 +15,14 @@
         .panel-body
           -if exam_level.exam_sections.count > 0
             -exam_level.exam_sections.each do |exam_section|
-              %table.table.sorted_table{data: {destination: course_modules_url}}
+              %table.table.sorted_table{data: {destination: course_modules_url}, id: "exam-section-#{exam_section.id}"}
                 %thead
                   %tr
                     %td{colspan: 3}
                       =link_to exam_section.name, exam_section, title: t('views.exam_sections.show.h1')
                 %tbody
                   -exam_section.course_modules.each do |course_module|
-                    %tr{id: course_module.id}
+                    %tr{id: course_module.id, data: {parent: "exam-section-#{exam_section.id}"}}
                       %td
                         &rarr;
                       %td
@@ -32,11 +32,11 @@
               %p
                 =link_to t('views.general.new'), new_course_module_url(exam_section_url: exam_section.name_url), class: 'btn btn-success btn-xs'
           -else
-            %table.table.sorted_table
+            %table.table.sorted_table{data: {destination: course_modules_url}, id: "exam-level-#{exam_level.id}"}
               %thead
               -exam_level.course_modules.each do |course_module|
                 %tbody
-                  %tr{id: course_module.id}
+                  %tr{id: course_module.id, data: {parent: "exam-level-#{exam_level.id}"}}
                     %td
                       =link_to course_module.name, course_module_special_link(course_module)
                     %td
