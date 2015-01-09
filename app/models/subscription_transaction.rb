@@ -19,6 +19,8 @@
 
 class SubscriptionTransaction < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   serialize :original_data
 
   # attr-accessible
@@ -51,7 +53,6 @@ class SubscriptionTransaction < ActiveRecord::Base
   validates :original_data, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -80,12 +81,5 @@ class SubscriptionTransaction < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

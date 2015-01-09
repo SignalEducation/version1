@@ -1,15 +1,18 @@
 !!! 5
-%html{lang: params[:locale] || @static_page.language || 'en'}
+%html{lang: params[:locale] || @delivered_page.language || 'en'}
   %head
-    <!-- page ID #{@static_page.id} -->
+    <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
-    %title=@static_page.seo_title
-    %meta{name: 'description', content: @static_page.seo_description}
+    %title=@delivered_page.seo_title
+    %meta{name: 'description', content: @delivered_page.seo_description}
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application'
 
+    -# JS to enable special navbar behaviour
+    %script{src: 'http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'}
+    =javascript_include_tag '/assets/javascripts/cbpAnimatedHeader'
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -21,11 +24,13 @@
 
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
-    =head_sanitizer(@static_page.head_content)
-    -if @static_page.mark_as_nofollow
+    =head_sanitizer(@delivered_page.head_content)
+    -if @delivered_page.mark_as_nofollow
       %meta{name: 'robots', content: 'nofollow'}
-    -if @static_page.mark_as_noindex
+    -if @delivered_page.mark_as_noindex
       %meta{name: 'robots', content: 'noindex'}
 
-  %body
-    =body_sanitizer(@static_page.body_content)
+  %body.no-top-margin
+    =body_sanitizer(@delivered_page.body_content)
+    =render partial: 'layouts/footer'
+    =render partial: 'static_pages/deliver_page/scroller'

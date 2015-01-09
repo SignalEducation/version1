@@ -59,8 +59,6 @@ describe StaticPage do
   it { should validate_presence_of(:public_url) }
   it { should validate_uniqueness_of(:public_url) }
 
-  it { should validate_presence_of(:head_content) }
-
   it { should validate_presence_of(:body_content) }
 
   it { should validate_presence_of(:created_by) }

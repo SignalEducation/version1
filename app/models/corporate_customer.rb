@@ -17,6 +17,8 @@
 
 class CorporateCustomer < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
                   :is_university, :owner_id, :stripe_customer_guid,
@@ -32,6 +34,7 @@ class CorporateCustomer < ActiveRecord::Base
   has_many :invoices
   belongs_to :owner, class_name: 'User', foreign_key: :owner_id
   has_many :students, class_name: 'User', foreign_key: :corporate_customer_id
+  has_many :subscriptions
 
   # validation
   validates :organisation_name, presence: true
@@ -42,7 +45,7 @@ class CorporateCustomer < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:organisation_name, :address) }
 
   # scopes
   scope :all_in_order, -> { order(:organisation_name) }
@@ -51,16 +54,9 @@ class CorporateCustomer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.students.empty? && self.course_module_element_user_logs.empty? && self.invoices.empty? # todo && self.corporate_customer_prices.empty? && self.corporate_customer_users.empty?
+    self.students.empty? && self.course_module_element_user_logs.empty? && self.invoices.empty? && self.subscriptions.empty? # todo && self.corporate_customer_prices.empty? && self.corporate_customer_users.empty?
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

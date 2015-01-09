@@ -3,20 +3,25 @@
     .page-header
       %h1=t('views.exam_sections.index.h1')
       =render partial: 'shared/horizontal_hierarchy'
+
+-if @exam_levels.length > 1
+  =render partial: 'shared/filter_panel', locals: {controller_name: 'exam_sections', parameters: [{name: :exam_level_url, collection: @exam_levels, show_attr: :name, value_attr: 'name_url'}]}
+
 .row
   .col-sm-12
     =will_paginate @exam_sections, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: exam_sections_url}}
       %thead
         %tr
           %th=t('views.exam_sections.form.name')
           %th=t('views.exam_sections.form.name_url')
           %th=t('views.exam_sections.form.exam_level_id')
           %th
+          %th
       %tbody
-        -tracker = nil
+        -#tracker = nil
         -@exam_sections.each do |exam_section|
-          -unless tracker == exam_section.exam_level_id
+          -#unless tracker == exam_section.exam_level_id
             -tracker = exam_section.exam_level_id
             %tr
               %td{colspan: 4}
@@ -30,7 +35,9 @@
               =link_to t('views.general.edit'), edit_exam_section_url(exam_section), class: 'btn btn-info btn-xs'
               -if exam_section.destroyable?
                 =link_to t('views.general.delete'), exam_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12
-    =link_to t('views.general.new'), new_exam_section_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.general.new'), new_exam_section_url(exam_level_id: @exam_level.try(:id)), class: 'btn btn-success', title: t('views.general.new_tooltip')

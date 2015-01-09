@@ -4,7 +4,6 @@
 #
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
-#  time_limit_seconds                :integer
 #  number_of_questions               :integer
 #  question_selection_strategy       :string(255)
 #  best_possible_score_first_attempt :integer
@@ -16,10 +15,11 @@
 
 class CourseModuleElementQuiz < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
-  attr_accessible :course_module_element_id, :time_limit_seconds,
-                  :number_of_questions,
-                  :quiz_questions_attributes
+  attr_accessible :course_module_element_id,
+                  :number_of_questions, :quiz_questions_attributes
 
   # Constants
 
@@ -33,7 +33,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :time_limit_seconds, presence: true
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 4, less_than_or_equal_to: 30,
              only_integer: true}, on: :update
@@ -41,7 +40,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # callbacks
   before_save :set_jumbo_quiz_id
   before_update :set_high_score_fields
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -52,6 +50,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   def add_an_empty_question
     self.quiz_questions.build
     self.quiz_questions.last.course_module_element_quiz_id = self.id
+    self.quiz_questions.last.quiz_solutions.build
     self.quiz_questions.last.quiz_contents.build(sorting_order: 1)
     (self.course_module_element.try(:course_module).try(:exam_level).try(:default_number_of_possible_exam_answers) || 4).times do |number|
       self.quiz_questions.last.quiz_answers.build
@@ -65,7 +64,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def enough_questions?
     lowest_number_of_questions = [self.easy_ids.length, self.medium_ids.length, self.difficult_ids.length].min
-    lowest_number_of_questions > self.number_of_questions
+    lowest_number_of_questions >= self.number_of_questions
   end
 
   def easy_ids
@@ -82,13 +81,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   protected
 
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
   def set_high_score_fields
     max_score = ApplicationController::DIFFICULTY_LEVELS.last[:score]
     self.best_possible_score_retry = self.number_of_questions.to_i * max_score
@@ -104,12 +96,9 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   def self.quiz_question_fields_blank?(the_attributes)
-    puts '*' * 100
-    puts the_attributes.inspect
-    puts '*' * 100
     (the_attributes['id'].to_i > 0 && the_attributes['quiz_contents_attributes'].blank?) ||
       ( the_attributes['course_module_element_quiz_id'].to_i > 0 &&
-        the_attributes['solution_to_the_question'].blank? &&
+        # the_attributes['solution_to_the_question'].blank? &&
         the_attributes['difficulty_level'].blank? &&
         the_attributes['quiz_contents_attributes']['0']['text_content'].blank? &&
         # Answer A

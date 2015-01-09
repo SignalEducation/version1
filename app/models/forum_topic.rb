@@ -18,6 +18,8 @@
 
 class ForumTopic < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :forum_topic_id, :course_module_element_id, :heading,
                   :description, :active, :publish_from, :publish_until, :reviewed_by,
@@ -33,6 +35,7 @@ class ForumTopic < ActiveRecord::Base
   has_many :forum_posts
   has_many :forum_topic_users
   has_many :user_likes, as: :likeable
+  has_many :user_notifications
   has_many :children, class_name: 'ForumTopic', foreign_key: :forum_topic_id
 
   # validation
@@ -49,7 +52,7 @@ class ForumTopic < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:heading, :description) }
 
   # scopes
   scope :all_in_order, -> { order(:forum_topic_id) }
@@ -60,16 +63,9 @@ class ForumTopic < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.forum_posts.empty? && self.forum_topic_users.empty? && self.children.empty?
+    self.forum_posts.empty? && self.forum_topic_users.empty? && self.user_notifications.empty? && self.children.empty?
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

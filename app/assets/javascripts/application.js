@@ -10,10 +10,11 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+// //// Removed Turbolinks from just after jquery-sortable
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require jquery.remotipart
 //= require jquery-sortable
-//= require turbolinks
 //= require bootstrap-sprockets
 //= require_tree .

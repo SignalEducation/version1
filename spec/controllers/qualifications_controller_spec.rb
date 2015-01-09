@@ -5,11 +5,11 @@ describe QualificationsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-
-  let!(:qualification_1) { FactoryGirl.create(:qualification) }
+  let!(:institution) { FactoryGirl.create(:institution) }
+  let!(:qualification_1) { FactoryGirl.create(:qualification, institution_id: institution.id) }
   let!(:exam_level) { FactoryGirl.create(:exam_level, qualification_id: qualification_1.id) }
-  let!(:qualification_2) { FactoryGirl.create(:qualification) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:qualification) }
+  let!(:qualification_2) { FactoryGirl.create(:qualification, institution_id: institution.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:qualification, institution_id: institution.id) }
 
   context 'Not logged in: ' do
 
@@ -750,7 +750,7 @@ describe QualificationsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, qualification: valid_params
-        expect_create_success_with_model('qualification', qualification_url(Qualification.last.id))
+        expect_create_success_with_model('qualification', qualifications_filtered_url(institution.name_url))
       end
 
       it 'should report error for invalid params' do
@@ -762,13 +762,13 @@ describe QualificationsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for qualification_1' do
         put :update, id: qualification_1.id, qualification: valid_params
-        expect_update_success_with_model('qualification', qualification_url(qualification_1))
+        expect_update_success_with_model('qualification', qualifications_filtered_url(institution.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for qualification_2' do
         put :update, id: qualification_2.id, qualification: valid_params
-        expect_update_success_with_model('qualification', qualification_url(qualification_2))
+        expect_update_success_with_model('qualification', qualifications_filtered_url(institution.name_url))
         expect(assigns(:qualification).id).to eq(qualification_2.id)
       end
 

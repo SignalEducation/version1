@@ -4,30 +4,13 @@
       .form-group
         .col-sm-1
           .label.label-primary
-            =['A', 'B', 'C', 'D'][qa.options[:child_index]]
-        =label_tag :text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label col-sm-1'
+            =('A'..'Z').to_a[qa.options[:child_index]]
+        .col-sm-1
+          =label_tag :quiz_question_quiz_answers_attributes_0_quiz_contents_attributes_0_text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label'
         .col-sm-10{class: "answer_contents_#{qa.options[:child_index]}"}
           =qa.fields_for :quiz_contents do |c|
             .answer_content_block
-              =c.hidden_field :_destroy, value: false, class: 'destroy'
-              =c.hidden_field :id, class: 'the_id'
-              =c.hidden_field :sorting_order, value: (c.options[:child_index] * 100), class: 'sorting_order'
-              -if c.object.content_type == 'image'
-                .thumbnail
-                  =image_tag c.object.image.url
-                  =c.object.image_file_name
-                  =number_to_human_size(c.object.image_file_size)
-              =c.file_field :image, style: (c.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
-              =c.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control', rows: 6, style: (c.object.content_type == 'image' ? 'display: none;' : '')
-              .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
-                =link_to '#', class: 'btn btn-default', onclick: "addQuizContent($(this), 'answer'); return false;" do
-                  %span.glyphicon.glyphicon-plus
-                =link_to '#', class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
-                  %span.glyphicon.glyphicon-minus
-              .pull-right.text-right
-                -QuizContent::CONTENT_TYPES.each do |t|
-                  =c.radio_button :content_type, t, class: 'content_type_radios'
-                  =c.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+              =render partial: 'quiz_contents/fields_for', locals: {qc: c, the_type: 'answer'}
 
       .form-group
         =qa.label :degree_of_wrongness, t('views.quiz_questions.form.degree_of_wrongness'), class: 'control-label col-sm-2'

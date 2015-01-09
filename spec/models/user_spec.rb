@@ -81,6 +81,7 @@ describe User do
   it { should have_many(:user_likes) }
   it { should have_many(:created_static_pages) }
   it { should have_many(:updated_static_pages) }
+  it { should have_many(:user_activity_logs) }
   it { should belong_to(:user_group) }
 
   # validation

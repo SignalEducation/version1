@@ -4,44 +4,30 @@
   .row
     =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
     .col-sm-12
+      %h2 Question
       .well.well-sm
-        %h2 Question
+        .form-group
+          =label_tag :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
+          .col-sm-10.question_contents
+            =f.fields_for :quiz_contents do |c|
+              .question_content_block
+                =render partial: 'quiz_contents/fields_for', locals: {qc: c, the_type: 'question'}
+
+        .form-group
+          =label_tag :quiz_question_quiz_solutions_attributes_0_text_content, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
+          .col-sm-10.solution_contents
+            =f.fields_for :quiz_solutions do |solution|
+              .solution_content_block
+                =render partial: 'quiz_contents/fields_for', locals: {qc: solution, the_type: 'solution'}
+
         .form-group
           =f.label :difficulty_level, class: 'control-label col-sm-2'
           .col-sm-10
             =f.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control'}
-            %br/
-          =f.fields_for :quiz_contents do |c|
-            =c.label :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
-            .col-sm-10.question_contents
-              .question_content_block
-                =c.hidden_field :_destroy, value: false, class: 'destroy'
-                =c.hidden_field :id, class: 'the_id'
-                =c.hidden_field :sorting_order, value: (c.options[:child_index] * 100), class: 'sorting_order'
-                -if c.object.content_type == 'image'
-                  .thumbnail
-                    =image_tag c.object.image.url
-                    =c.object.image_file_name
-                    =number_to_human_size(c.object.image_file_size)
-                =c.file_field :image, style: (c.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
-                =c.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 6, style: (c.object.content_type == 'image' ? 'display: none;' : '')
-                .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
-                  =link_to '#', class: 'btn btn-default', onclick: "addQuizContent($(this), 'question'); return false;" do
-                    %span.glyphicon.glyphicon-plus
-                  =link_to '#', class: 'btn btn-default', onclick: "removeContent($(this)); return false;" do
-                    %span.glyphicon.glyphicon-minus
-                .pull-right.text-right
-                  -QuizContent::CONTENT_TYPES.each do |t|
-                    =c.radio_button :content_type, t, class: 'content_type_radios'
-                    =c.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
-        .form-group
-          =f.label :solution_to_the_question, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
-          .col-sm-10
-            =f.text_area :solution_to_the_question, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control', rows: 6
 
   %h2=t('views.quiz_questions.form.answers')
   =f.fields_for :quiz_answers do |qa|
-    =render partial: 'answers_form', locals: {qa: qa}
+    =render partial: 'quiz_questions/answers_form', locals: {qa: qa}
 
   %p
     =f.submit t('views.general.save'), class: 'btn btn-success'
@@ -54,23 +40,30 @@
 :javascript
 
   function addQuizContent(me, parent_type) {
+    if (parent_type == 'question') {
+      var parentName = 'content';
+    } else if (parent_type == 'solution') {
+      var parentName = 'solution';
+    }
     var theTime = (new Date).getTime();
     var theClone = me.parent().parent().clone();
-    if (parent_type == 'question') {
-      var position = $('.question_contents').children().index(me.parent().parent());
+    if (parent_type == 'question' || parent_type == 'solution') {
+      var position = $('.' + parent_type + '_contents').children().index(me.parent().parent());
     } else {
       var answerNumber = theClone.find('textarea').attr('id').split('_')[5];
       var position = $('.answer_contents_' + answerNumber).children().index(me.parent().parent());
     }
-    if (parent_type == 'question') {
-      theClone.find('textarea').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_text_content');
-      theClone.find('textarea').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][text_content]');
-      theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_sorting_order');
-      theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][sorting_order]');
-      theClone.find('.destroy').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '__destroy');
-      theClone.find('.destroy').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][_destroy]');
-      theClone.find('.the_id').attr('id', 'quiz_question_quiz_contents_attributes_' + theTime + '_id');
-      theClone.find('.the_id').attr('name', 'quiz_question[quiz_contents_attributes][' + theTime + '][id]');
+    if (parent_type == 'question' || parent_type == 'solution') {
+      theClone.find('textarea').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_text_content');
+      theClone.find('textarea').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][text_content]');
+      theClone.find('.sorting_order').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_sorting_order');
+      theClone.find('.sorting_order').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][sorting_order]');
+      theClone.find('.destroy').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '__destroy');
+      theClone.find('.destroy').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][_destroy]');
+      theClone.find('.the_id').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_id');
+      theClone.find('.the_id').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][id]');
+      theClone.find('.quiz_content_image').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_image');
+      theClone.find('.quiz_content_image').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][image]');
     } else {
       theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
       theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][text_content]');
@@ -90,7 +83,7 @@
       console.log(counter);
       var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
       var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
-      if (parent_type == 'question') {
+      if (parent_type == 'question' || parent_type == 'solution') {
         temp_array[5] = theTime;
         temp_array2[1] = theTime;
       } else {
@@ -108,9 +101,9 @@
     theClone.find('.content_type_radios').on('click', function() {
       monitorRadioButtons(this);
     })
-    if (parent_type == 'question') {
-      $('.question_contents .question_content_block:nth-child(' + (position + 1) + ')').after(theClone);
-      $('.question_content_block').each(function(counter) {
+    if (parent_type == 'question' || parent_type == 'solution') {
+      $('.' + parent_type + '_contents .' + parent_type + '_content_block:nth-child(' + (position + 1) + ')').after(theClone);
+      $('.' + parent_type + '_content_block').each(function(counter) {
        $(this).find('.sorting_order').val(counter * 100);
       })
     } else {

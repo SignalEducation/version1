@@ -11,6 +11,14 @@ RSpec.describe ExamSectionsController, type: :routing do
       expect(get: '/exam_sections/new').to route_to('exam_sections#new')
     end
 
+    it 'routes to #index' do
+      expect(post: '/exam_sections/filter').to route_to('exam_sections#index')
+    end
+
+    it 'routes to #index' do
+      expect(get: '/exam_sections/filter/123').to route_to('exam_sections#index', exam_level_url: '123')
+    end
+
     it 'routes to #show' do
       expect(get: '/exam_sections/1').to route_to('exam_sections#show', id: '1')
     end

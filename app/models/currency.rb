@@ -15,6 +15,8 @@
 
 class Currency < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :iso_code, :name, :leading_symbol, :trailing_symbol, :active, :sorting_order
 
@@ -35,7 +37,7 @@ class Currency < ActiveRecord::Base
   validates :sorting_order, presence: true, numericality: true
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name, :iso_code, :leading_symbol, :trailing_symbol) }
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :iso_code) }
@@ -53,12 +55,5 @@ class Currency < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

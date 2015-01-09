@@ -12,6 +12,8 @@
 
 class VatRate < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :vat_code_id, :percentage_rate, :effective_from
 
@@ -29,7 +31,6 @@ class VatRate < ActiveRecord::Base
   validates :effective_from, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:vat_code_id, :effective_from) }
@@ -44,12 +45,5 @@ class VatRate < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

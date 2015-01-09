@@ -15,8 +15,6 @@ RSpec.describe 'static_pages/index', type: :view do
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/#{@static_pages.first.public_url.to_s}/)
     expect(rendered).to match(/nice_boolean/)
-    expect(rendered).to match(/#{@static_pages.first.head_content.to_s}/)
-    expect(rendered).to match(/#{@static_pages.first.body_content.to_s}/)
     expect(rendered).to match(/#{@static_pages.first.created_by.to_s}/)
     expect(rendered).to match(/#{@static_pages.first.updated_by.to_s}/)
     expect(rendered).to match(/nice_boolean/)
@@ -28,7 +26,6 @@ RSpec.describe 'static_pages/index', type: :view do
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/#{@static_pages.first.seo_title.to_s}/)
     expect(rendered).to match(/#{@static_pages.first.seo_description.to_s}/)
-    expect(rendered).to match(/#{@static_pages.first.approved_country.names.to_s}/)
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/nice_boolean/)
   end

@@ -1,0 +1,9 @@
+.well.well-sm{data: {id: static_page_upload.id}}
+  %p=link_to static_page_upload.description, static_page_upload.upload.try(:url) || '#', target: '_blank', title: t('views.general.tooltips.click_to_view')
+  %p.text-muted
+    -if static_page_upload.try(:upload_content_type).to_s.split('/')[0] == 'image'
+      :escaped
+        <img src="#{static_page_upload.upload.try(:url)}" class="img-responsive">
+    -else
+      :escaped
+        <a href="#{static_page_upload.upload.try(:url)}">some name</a>

@@ -14,6 +14,8 @@
 
 class QuizAnswer < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
 
@@ -36,9 +38,9 @@ class QuizAnswer < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
+  before_validation { squish_fields(:wrong_answer_explanation_text) }
   before_save :set_the_field_correct
   before_update :set_wrong_answer_video_id
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:quiz_question_id) }
@@ -47,17 +49,10 @@ class QuizAnswer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_attempts.empty? && self.quiz_contents.empty?
+    self.quiz_attempts.empty?
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def set_the_field_correct
     self.correct = self.degree_of_wrongness == 'correct'

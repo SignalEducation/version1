@@ -60,6 +60,7 @@ describe Institution do
   it { should validate_presence_of(:sorting_order) }
 
   # callbacks
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -69,6 +70,9 @@ describe Institution do
   it { expect(Institution).to respond_to(:get_by_name_url) }
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:parent) }
 
 end

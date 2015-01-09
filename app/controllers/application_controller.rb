@@ -140,21 +140,34 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
-  def course_module_special_link(the_thing)
+  def course_module_special_link(the_thing) # tutor/admin-facing
     # used for tutor-facing links
 
     if the_thing.class == CourseModule && !the_thing.id.nil?
       if the_thing.exam_section_id
-        course_modules_for_qualification_exam_level_exam_section_and_name_url(the_thing.exam_level.qualification.name_url, the_thing.exam_level.name_url, the_thing.exam_section.try(:name_url) || 'all', the_thing.name_url)
+        course_modules_for_qualification_exam_level_exam_section_and_name_url(
+                the_thing.exam_level.qualification.name_url,
+                the_thing.exam_level.name_url,
+                the_thing.exam_section.try(:name_url) || 'all',
+                the_thing.name_url)
       else
-        course_modules_for_qualification_exam_level_exam_section_and_name_url(the_thing.exam_level.qualification.name_url, the_thing.exam_level.name_url, 'all', the_thing.name_url)
+        course_modules_for_qualification_exam_level_exam_section_and_name_url(
+                the_thing.exam_level.qualification.name_url,
+                the_thing.exam_level.name_url,
+                'all',
+                the_thing.name_url)
       end
 
     elsif the_thing.class == ExamSection
-      course_modules_for_qualification_exam_level_and_exam_section_url(the_thing.exam_level.qualification.name_url, the_thing.exam_level.name_url, the_thing.name_url)
+      course_modules_for_qualification_exam_level_and_exam_section_url(
+              the_thing.exam_level.qualification.name_url,
+              the_thing.exam_level.name_url,
+              the_thing.name_url)
 
     elsif the_thing.class == ExamLevel
-      course_modules_for_qualification_and_exam_level_url(the_thing.qualification.name_url, the_thing.name_url)
+      course_modules_for_qualification_and_exam_level_url(
+              the_thing.qualification.name_url,
+              the_thing.name_url)
 
     elsif the_thing.class == Qualification
       course_modules_for_qualification_url(the_thing.name_url)
@@ -164,6 +177,66 @@ class ApplicationController < ActionController::Base
     end
   end
   helper_method :course_module_special_link
+
+  def library_special_link(the_thing) # customer-facing
+    if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
+      course_special_link(the_thing)
+    elsif the_thing.class == ExamSection
+      library_url(the_thing.exam_level.qualification.institution.subject_area.name_url,
+                  the_thing.exam_level.qualification.institution.name_url,
+                  the_thing.exam_level.qualification.name_url,
+                  the_thing.exam_level.name_url,
+                  the_thing.name_url
+      )
+    elsif the_thing.class == ExamLevel
+      library_url(the_thing.qualification.institution.subject_area.name_url,
+                  the_thing.qualification.institution.name_url,
+                  the_thing.qualification.name_url,
+                  the_thing.name_url
+      )
+    elsif the_thing.class == Qualification
+      library_url(the_thing.institution.subject_area.name_url,
+                  the_thing.institution.name_url,
+                  the_thing.name_url
+      )
+    elsif the_thing.class == Institution
+      library_url(the_thing.subject_area.name_url,
+                  the_thing.name_url
+      )
+    elsif the_thing.class == SubjectArea
+      library_url(the_thing.name_url)
+    else
+      library_url
+    end
+  end
+  helper_method :library_special_link
+
+  def course_special_link(the_thing)
+    if the_thing.class == CourseModule
+      course_url(
+              the_thing.exam_level.qualification.institution.subject_area.name_url,
+              the_thing.exam_level.qualification.institution.name_url,
+              the_thing.exam_level.qualification.name_url,
+              the_thing.exam_level.name_url,
+              the_thing.exam_section.try(:name_url) || 'all',
+              the_thing.name_url
+      )
+    elsif the_thing.class == CourseModuleElement
+      course_url(
+              the_thing.course_module.exam_level.qualification.institution.subject_area.name_url,
+              the_thing.course_module.exam_level.qualification.institution.name_url,
+              the_thing.course_module.exam_level.qualification.name_url,
+              the_thing.course_module.exam_level.name_url,
+              the_thing.course_module.exam_section.try(:name_url) || 'all',
+              the_thing.course_module.name_url,
+              the_thing.name_url
+      )
+    else
+      # shouldn't be here - re-route to /library/bla-bla
+      library_special_link(the_thing)
+    end
+  end
+  helper_method :course_special_link
 
   def seo_title_maker(last_element)
     @seo_title = "LearnSignal – #{controller_name.humanize.titleize}" + (last_element ? ' - ' + last_element : ' - ' + action_name.gsub('index','list').gsub('create','new').titleize)

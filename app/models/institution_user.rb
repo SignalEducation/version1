@@ -16,6 +16,8 @@
 
 class InstitutionUser < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :institution_id, :user_id, :student_registration_number, :student, :qualified, :exam_number, :membership_number
 
@@ -33,7 +35,7 @@ class InstitutionUser < ActiveRecord::Base
   validate :require_student_id_if_student
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:student_registration_number, :exam_number, :membership_number) }
 
   # scopes
   scope :all_in_order, -> { order(:institution_id, :user_id) }
@@ -46,13 +48,6 @@ class InstitutionUser < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
   def require_student_id_if_student
     if self.student && self.student_registration_number.blank?

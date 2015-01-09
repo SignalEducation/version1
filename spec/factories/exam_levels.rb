@@ -13,6 +13,7 @@
 #  created_at                              :datetime
 #  updated_at                              :datetime
 #  default_number_of_possible_exam_answers :integer          default(4)
+#  enable_exam_sections                    :boolean          default(TRUE), not null
 #
 
 FactoryGirl.define do

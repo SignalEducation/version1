@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141218141646) do
+ActiveRecord::Schema.define(version: 20150108113134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,7 +43,6 @@ ActiveRecord::Schema.define(version: 20141218141646) do
 
   create_table "course_module_element_quizzes", force: true do |t|
     t.integer  "course_module_element_id"
-    t.integer  "time_limit_seconds"
     t.integer  "number_of_questions"
     t.string   "question_selection_strategy"
     t.integer  "best_possible_score_first_attempt"
@@ -109,6 +108,7 @@ ActiveRecord::Schema.define(version: 20141218141646) do
     t.datetime "updated_at"
     t.boolean  "is_video",                  default: false, null: false
     t.boolean  "is_quiz",                   default: false, null: false
+    t.boolean  "active",                    default: true,  null: false
   end
 
   create_table "course_module_jumbo_quizzes", force: true do |t|
@@ -132,7 +132,6 @@ ActiveRecord::Schema.define(version: 20141218141646) do
     t.integer  "tutor_id"
     t.integer  "sorting_order"
     t.integer  "estimated_time_in_seconds"
-    t.boolean  "compulsory",                default: false, null: false
     t.boolean  "active",                    default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -160,6 +159,7 @@ ActiveRecord::Schema.define(version: 20141218141646) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "default_number_of_possible_exam_answers", default: 4
+    t.boolean  "enable_exam_sections",                    default: true,  null: false
   end
 
   create_table "exam_sections", force: true do |t|
@@ -299,13 +299,13 @@ ActiveRecord::Schema.define(version: 20141218141646) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.integer  "quiz_solution_id"
   end
 
   create_table "quiz_questions", force: true do |t|
     t.integer  "course_module_element_quiz_id"
     t.integer  "course_module_element_id"
     t.string   "difficulty_level"
-    t.text     "solution_to_the_question"
     t.text     "hints"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -441,6 +441,19 @@ ActiveRecord::Schema.define(version: 20141218141646) do
     t.integer  "individual_student_user_group_id"
     t.integer  "corporate_student_user_group_id"
     t.integer  "corporate_customer_user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_activity_logs", force: true do |t|
+    t.integer  "user_id"
+    t.string   "session_guid"
+    t.boolean  "signed_in",       default: false, null: false
+    t.string   "original_uri"
+    t.string   "controller_name"
+    t.string   "action_name"
+    t.text     "params"
+    t.integer  "alert_level",     default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

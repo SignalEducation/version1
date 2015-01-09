@@ -20,6 +20,7 @@
           =f.label :default_number_of_possible_exam_answers, t('views.exam_levels.form.default_number_of_possible_exam_answers'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.select :default_number_of_possible_exam_answers, options_for_select((2..5).to_a, f.object.default_number_of_possible_exam_answers), {include_blank: t('views.general.select')}, {class: 'form-control'}
+            %p.help-block=t('views.exam_levels.form.default_number_of_possible_exam_answers_help_text')
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
@@ -32,6 +33,12 @@
               %label
                 =f.check_box :active
                 =t('views.exam_levels.form.active')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :enable_exam_sections
+                =t('views.exam_levels.form.enable_exam_sections')
 
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')

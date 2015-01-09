@@ -8,6 +8,19 @@ class CourseModuleElementsController < ApplicationController
 
   def show
     @course_module_element = CourseModuleElement.find(params[:id])
+    if @course_module_element.is_quiz
+      @course_module_element_user_log = CourseModuleElementUserLog.new(
+              course_module_id: @course_module_element.course_module_id,
+              course_module_element_id: @course_module_element.id,
+              user_id: current_user.try(:id)
+              # session_guid: cookies.permanent.encrypted[:session_guid],
+              # quiz_score_potential: @course_module_element.course_module_element_quiz.best_possible_score_first_attempt
+      )
+      @course_module_element.course_module_element_quiz.number_of_questions.times do
+        @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+      end
+    end
+    @demo_mode = true
   end
 
   def new
@@ -92,7 +105,7 @@ class CourseModuleElementsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.course_module_elements.destroy.flash.error')
     end
-    redirect_to course_module_elements_url
+    redirect_to course_module_special_link(@course_module_element.course_module)
   end
 
   protected
@@ -128,6 +141,7 @@ class CourseModuleElementsController < ApplicationController
         :sorting_order,
         :forum_topic_id,
         :tutor_id,
+        :active,
         :related_quiz_id,
         :related_video_id,
         :is_video,
@@ -143,7 +157,6 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_quiz_attributes: [
             :id,
             :course_module_element_id,
-            :time_limit_seconds,
             :number_of_questions,
             :best_possible_score_retry,
             :course_module_jumbo_quiz_id,
@@ -151,8 +164,18 @@ class CourseModuleElementsController < ApplicationController
                 :id,
                 :course_module_element_quiz_id,
                 :difficulty_level,
-                :solution_to_the_question,
                 :hints,
+                quiz_solutions_attributes: [
+                    :id,
+                    :quiz_question_id,
+                    :quiz_answer_id,
+                    :quiz_solution_id,
+                    :text_content,
+                    :contains_mathjax,
+                    :contains_image,
+                    :content_type,
+                    :sorting_order
+                ],
                 quiz_answers_attributes: [
                     :id,
                     :quiz_question_id,
