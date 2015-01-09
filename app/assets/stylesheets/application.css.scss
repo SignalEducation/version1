@@ -78,11 +78,11 @@ body {
 }
 
 .quiz-answer-clickable {
+  transition: all 0.25s;
   cursor: pointer;
   &:hover {
-    background-color: #dddddd;
+    background-color: #ddd;
   }
-  color: #fec503
 }
 
 // Added in to support special styling for static pages

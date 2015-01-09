@@ -15,10 +15,8 @@
         .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
           %span.sr-only 0% Complete
           0%
-  .row
-    .col-sm-12
-      -(easy_ids + medium_ids + difficult_ids).each do |the_id|
-        =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
+  -(easy_ids + medium_ids + difficult_ids).each do |the_id|
+    =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
 
   =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
     =f.text_field :user_id

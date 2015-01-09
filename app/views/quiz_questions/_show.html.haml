@@ -1,7 +1,10 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.difficulty_level}_#{question.id}"}
   .row
     .col-sm-12
-      =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
+      .well.well-sm
+        =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
+  .row
+    .col-sm-12
       %h3=t('views.quiz_questions.show.choose_an_answer')
   -question.quiz_answers.each_with_index do |qa, counter|
     .row
