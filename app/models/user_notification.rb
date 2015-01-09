@@ -22,6 +22,7 @@
 
 class UserNotification < ActiveRecord::Base
 
+  include LearnSignalModelExtras
   include Archivable
 
   # attr-accessible
@@ -34,8 +35,8 @@ class UserNotification < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  # todo belongs_to :forum_topic
-  # todo belongs_to :forum_post
+  belongs_to :forum_topic
+  belongs_to :forum_post
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   # todo belongs_to :blog_post
 
@@ -55,8 +56,8 @@ class UserNotification < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_validation { squish_fields(:subject_line, :content) }
   after_create :send_email_if_needed
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order('user_id, unread DESC, created_at DESC') }
@@ -83,12 +84,5 @@ class UserNotification < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

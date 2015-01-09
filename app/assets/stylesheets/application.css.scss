@@ -32,16 +32,17 @@ $link-color: #222;
 @import "bootstrap";
 
 // Further customisation
+
 body {
   margin-top: 65px;
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .intro-heading {
     font-weight: 100;
     text-transform: uppercase;
     font-family: BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   }
 }
 
-.navbar, .navbar-header {
+.navbar, .navbar-header, .intro-text {
   font-family: BryantWebRegularAlternative, BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   text-transform: uppercase;
 }
@@ -52,7 +53,7 @@ body {
   border: 0 solid green;
 }
 
-.navbar-footer, .navbar-footer a{
+.navbar-footer, .navbar-footer a {
   background-color: #343338;
   color: #aaa;
   a:hover {
@@ -74,4 +75,129 @@ body {
   font-family: Consolas, Lucida Console, monospace;
   background-color: #333;
   color: #0e0;
+}
+
+.quiz-answer-clickable {
+  cursor: pointer;
+  &:hover {
+    background-color: #dddddd;
+  }
+  color: #fec503
+}
+
+// Added in to support special styling for static pages
+
+nav.navbar.navbar-transparent {
+  transition: all 1s;
+  background-color: transparent;
+  text-shadow: 0 0 4px black;
+  border-bottom: 0 solid red;
+  a {
+    color: white;
+    &:hover {
+      background-color: rgba(255, 120, 40, 0.4);
+      color: white;
+    }
+  }
+  ul li.active a {
+    background-color: rgba(255, 120, 40, 0.4);
+    color: white;
+    &:hover {
+      background-color: rgba(255, 120, 40, 0.8);
+      color: white;
+    }
+  }
+}
+
+.navbar-shrink {
+  transition: all 1s;
+  min-height: 50px;
+  height: 50px;
+  line-height: 20px;
+  padding: 10px 0;
+  background-color: rgba(34,34,34,0.85) !important;
+  font-weight: 700;
+  ol, li {
+    //min-height: 20px;
+    line-height: 20px;
+    //padding: 5px 20px;
+  }
+  li a, a.navbar-brand {
+    padding: 5px 20px;
+    line-height: 20px;
+    height: 30px;
+    &:hover {
+      border-bottom: 3px solid green;
+      background-color: transparent !important;
+    }
+  }
+  ul li.active a {
+    background-color: transparent !important;
+    border-bottom: 3px solid red;
+  }
+}
+
+body.no-top-margin {
+  margin-top: 0 !important;
+}
+
+.carousel {
+  height: 500px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 500px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 500px;
+}
+
+header {
+  width: 100%;
+  height: 600px;
+  background: black no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  color: white;
+  text-shadow: 0 0 4px black;
+  padding-top: 100px;
+  text-align: center;
+  .intro-text {
+    text-transform: none;
+    background-color: transparent;
+    // background: rgba(0,0,0, 0.3);
+    padding: 100px 0 50px 0;
+    margin-bottom: 25px;
+    font-size: 22px;
+    line-height: 1.2em;
+  }
+  .intro-lead-in {
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 22px;
+  }
+  .intro-heading {
+    font-size: 60px;
+    font-weight: 500;
+    line-height: 65px;
+    margin: 20px 0;
+  }
+  .btn {
+    font-size: 125%;
+    padding: 10px 20px;
+  }
 }

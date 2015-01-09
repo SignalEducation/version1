@@ -15,6 +15,8 @@
 
 class StaticPageUpload < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :description, :static_page_id, :upload,
                   :upload_file_name, :upload_content_type,
@@ -34,7 +36,7 @@ class StaticPageUpload < ActiveRecord::Base
             content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document)
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:description) }
 
   # scopes
   scope :all_in_order, -> { order(:description) }
@@ -49,12 +51,5 @@ class StaticPageUpload < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

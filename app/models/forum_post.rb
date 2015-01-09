@@ -14,6 +14,8 @@
 
 class ForumPost < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :user_id, :content, :forum_topic_id, :blocked, :response_to_forum_post_id
 
@@ -26,6 +28,7 @@ class ForumPost < ActiveRecord::Base
   has_many :response_posts, class_name: 'ForumPost', foreign_key: :response_to_forum_post_id
   has_many :forum_post_concerns
   has_many :user_likes, as: :likeable
+  has_many :user_notifications
 
   # validation
   validates :user_id, presence: true,
@@ -37,16 +40,16 @@ class ForumPost < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:forum_topic_id) }
 
   # class methods
+  before_validation { squish_fields(:content) }
 
   # instance methods
   def destroyable?
-    self.response_posts.empty? && self.forum_post_concerns.empty? && self.user_likes.empty?
+    self.response_posts.empty? && self.forum_post_concerns.empty? && self.user_likes.empty? && self.user_notifications.empty?
   end
 
   def background_colour
@@ -62,12 +65,5 @@ class ForumPost < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

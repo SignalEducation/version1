@@ -7,7 +7,8 @@ class ExamLevelsController < ApplicationController
   before_action :get_variables
 
   def index
-    @exam_levels = ExamLevel.paginate(per_page: 50, page: params[:page]).all_in_order
+    @qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || Qualification.all_in_order.first
+    @exam_levels = ExamLevel.where(qualification_id: @qualification.id).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
@@ -25,7 +26,7 @@ class ExamLevelsController < ApplicationController
     @exam_level = ExamLevel.new(allowed_params)
     if @exam_level.save
       flash[:success] = I18n.t('controllers.exam_levels.create.flash.success')
-      redirect_to exam_levels_url
+      redirect_to exam_levels_filtered_url(@exam_level.qualification.name_url)
     else
       render action: :new
     end
@@ -34,7 +35,7 @@ class ExamLevelsController < ApplicationController
   def update
     if @exam_level.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.exam_levels.update.flash.success')
-      redirect_to exam_levels_url
+      redirect_to exam_levels_filtered_url(@exam_level.qualification.name_url)
     else
       render action: :edit
     end
@@ -68,7 +69,7 @@ class ExamLevelsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers)
+    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections)
   end
 
 end

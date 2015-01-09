@@ -5,10 +5,11 @@ describe ExamSectionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:exam_section_1) { FactoryGirl.create(:exam_section) }
+  let!(:exam_level) { FactoryGirl.create(:exam_level) }
+  let!(:exam_section_1) { FactoryGirl.create(:exam_section, exam_level_id: exam_level.id) }
   let!(:course_module) { FactoryGirl.create(:course_module, exam_section_id: exam_section_1.id) }
-  let!(:exam_section_2) { FactoryGirl.create(:exam_section) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:exam_section) }
+  let!(:exam_section_2) { FactoryGirl.create(:exam_section, exam_level_id: exam_level.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:exam_section, exam_level_id: exam_level.id) }
 
   context 'Not logged in: ' do
 
@@ -806,7 +807,7 @@ describe ExamSectionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_url)
+        expect_create_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
       end
 
       it 'should report error for invalid params' do
@@ -818,13 +819,13 @@ describe ExamSectionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_section_1' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_update_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for exam_section_2' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_url)
+        expect_update_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
         expect(assigns(:exam_section).id).to eq(exam_section_2.id)
       end
 

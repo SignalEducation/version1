@@ -19,6 +19,8 @@
 
 class SubscriptionPlan < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :available_to_students, :available_to_corporates,
                   :all_you_can_eat, :payment_frequency_in_months,
@@ -46,7 +48,6 @@ class SubscriptionPlan < ActiveRecord::Base
                            less_than: 32}
 
   # callbacks
-  before_destroy :check_dependencies
   before_create :create_on_stripe_platform
   before_update :update_on_stripe_platform
 
@@ -67,13 +68,6 @@ class SubscriptionPlan < ActiveRecord::Base
   def available_to_in_the_future
     unless self.available_to && self.available_to.to_date > Proc.new{Time.now.gmtime.to_date}.call
       errors.add(:available_to, I18n.t('models.subscription_plans.must_be_in_the_future'))
-    end
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
     end
   end
 

@@ -12,6 +12,8 @@
 
 class SystemDefault < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :individual_student_user_group_id, :corporate_student_user_group_id, :corporate_customer_user_group_id
 
@@ -31,7 +33,6 @@ class SystemDefault < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:individual_student_user_group_id) }
@@ -44,12 +45,5 @@ class SystemDefault < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

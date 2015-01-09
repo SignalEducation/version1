@@ -15,6 +15,8 @@
 
 class Qualification < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :institution_id, :name, :name_url, :sorting_order, :active, :cpd_hours_required_per_year
 
@@ -34,9 +36,11 @@ class Qualification < ActiveRecord::Base
   validates :cpd_hours_required_per_year, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name, :name_url) }
+  before_save :sanitize_name_url
 
   # scopes
+  scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:institution_id, :sorting_order) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
@@ -46,6 +50,10 @@ class Qualification < ActiveRecord::Base
   end
 
   # instance methods
+  def children
+    self.exam_levels.all
+  end
+
   def destroyable?
     !self.active && self.exam_levels.empty? && self.course_modules.empty?
   end
@@ -54,13 +62,10 @@ class Qualification < ActiveRecord::Base
     self.institution.name + ' > ' + self.name
   end
 
-  protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+  def parent
+    self.institution
   end
+
+  protected
 
 end

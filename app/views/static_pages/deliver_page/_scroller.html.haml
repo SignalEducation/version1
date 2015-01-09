@@ -1,0 +1,13 @@
+:javascript
+
+  $(document).on('ready', function() {
+    $('.page-scroll').on('click', function() {
+      scrollTo($(this).attr('href'));
+      return false;
+    })
+
+    function scrollTo(target) {
+      $(document.body).animate({'scrollTop': $(target).offset().top - 50}, 750);
+    }
+
+  })

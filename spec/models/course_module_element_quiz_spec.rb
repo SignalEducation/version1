@@ -4,7 +4,6 @@
 #
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
-#  time_limit_seconds                :integer
 #  number_of_questions               :integer
 #  question_selection_strategy       :string(255)
 #  best_possible_score_first_attempt :integer
@@ -41,8 +40,6 @@ describe CourseModuleElementQuiz do
   it { should validate_presence_of(:course_module_element_id).on(:update) }
   xit { should validate_numericality_of(:course_module_element_id) }
 
-  it { should validate_presence_of(:time_limit_seconds) }
-
   it { should validate_presence_of(:number_of_questions).on(:update) }
   xit { should validate_numericality_of(:number_of_questions) }
 
@@ -60,7 +57,12 @@ describe CourseModuleElementQuiz do
   # class methods
 
   # instance methods
-  it { should respond_to(:destroyable?) }
   it { should respond_to(:add_an_empty_question) }
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:difficult_ids) }
+  it { should respond_to(:easy_ids) }
+  it { should respond_to(:enough_questions?) }
+  it { should respond_to(:medium_ids) }
+
 
 end

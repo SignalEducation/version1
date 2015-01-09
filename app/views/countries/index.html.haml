@@ -5,7 +5,7 @@
 .row
   .col-sm-12
     =will_paginate @countries, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered.sorted_table
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: countries_url}}
       %thead
         %tr
           %th=t('views.countries.form.name')
@@ -14,6 +14,7 @@
           %th=t('views.countries.form.in_the_eu')
           %th=t('views.countries.form.continent')
           %th=t('views.countries.form.currency_id')
+          %th
           %th
       %tbody
         -@countries.each do |country|
@@ -28,6 +29,8 @@
               =link_to t('views.general.edit'), edit_country_url(country), class: 'btn btn-info btn-xs'
               -if country.destroyable?
                 =link_to t('views.general.delete'), country, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12

@@ -5,12 +5,13 @@
 .row
   .col-sm-12
     =will_paginate @<%= table_name %>, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table' end %>
+    %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table{data: {destination: #{table_name}_url}}' end %>
       %thead
         %tr
         <%- attributes.each do |attribute| -%>
           %th<%= attribute.type.to_s == 'decimal' ? '.text-right' : '' -%>=t('views.<%= table_name %>.form.<%= attribute.name %>')
         <%- end -%>
+          %th
           %th
       %tbody
         -@<%= table_name %>.each do |<%= singular_table_name %>|
@@ -29,6 +30,8 @@
               =link_to t('views.general.edit'), edit_<%= singular_table_name %>_url(<%= singular_table_name %>), class: 'btn btn-info btn-xs'
               -if <%= singular_table_name %>.destroyable?
                 =link_to t('views.general.delete'), <%= singular_table_name %>, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12

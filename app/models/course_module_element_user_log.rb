@@ -21,11 +21,15 @@
 
 class CourseModuleElementUserLog < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_element_id, :user_id, :session_guid,
-                  :element_completed, :time_taken_in_seconds, :quiz_score_actual,
-                  :quiz_score_potential, :is_video, :is_quiz, :course_module_id,
-                  :corporate_customer_id
+                  :element_completed, :time_taken_in_seconds,
+                  :quiz_score_actual, :quiz_score_potential,
+                  :is_video, :is_quiz, :course_module_id,
+                  :corporate_customer_id,
+                  :quiz_attempts_attributes
 
   # Constants
 
@@ -35,6 +39,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module
   belongs_to :corporate_customer
   has_many :quiz_attempts
+  accepts_nested_attributes_for :quiz_attempts
 
   # validation
   validates :course_module_element_id, presence: true,
@@ -43,17 +48,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true
   validates :time_taken_in_seconds, presence: true
-  validates :quiz_score_actual, presence: true
-  validates :quiz_score_potential, presence: true
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :corporate_customer_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_score_actual, presence: true, if: 'course_module_element.try(:course_module_element_quiz_id).to_i > 0'
-  validates :quiz_score_potential, presence: true, if: 'course_module_element.try(:course_module_element_quiz_id).to_i > 0'
+  validates :quiz_score_actual, presence: true, if: 'is_quiz == true'
+  validates :quiz_score_potential, presence: true, if: 'is_quiz == true'
 
   # callbacks
-  before_destroy :check_dependencies
   before_create :set_latest_attempt
   after_create :mark_previous_attempts_as_latest_false
 
@@ -100,13 +102,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).
         for_course_module_element(self.course_module_element_id).latest_only
     others.update_all(latest_attempt: false)
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
   end
 
 end

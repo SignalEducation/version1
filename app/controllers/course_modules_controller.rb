@@ -7,7 +7,7 @@ class CourseModulesController < ApplicationController
   before_action :get_variables, except: :show
 
   def index
-    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || Qualification.all_in_order.first
+    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.qualification
     exam_level = qualification.try(:exam_levels).try(:first)
     if exam_level
       redirect_to course_module_special_link(exam_level)
@@ -46,6 +46,7 @@ class CourseModulesController < ApplicationController
     else
       @course_module = CourseModule.new(sorting_order: 1)
     end
+    @course_module.tutor_id = current_user.id
     set_up_side_nav
   end
 
@@ -106,11 +107,10 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:institution_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :compulsory, :active)
+    params.require(:course_module).permit(:institution_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active)
   end
 
   def set_up_side_nav
-    @course_module.tutor_id = current_user.id
     @qualification = @course_module.exam_level.try(:qualification)
     @exam_level_id = @course_module.exam_level_id
   end

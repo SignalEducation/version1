@@ -13,6 +13,8 @@
 
 class VatCode < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :country_id, :name, :label, :wiki_url, :vat_rates_attributes
 
@@ -31,7 +33,7 @@ class VatCode < ActiveRecord::Base
   validates :label, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name, :label, :wiki_url) }
 
   # scopes
   scope :all_in_order, -> { order(:country_id, :name) }
@@ -44,12 +46,5 @@ class VatCode < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

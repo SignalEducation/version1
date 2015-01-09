@@ -42,6 +42,7 @@ describe SubjectArea do
   it { should validate_numericality_of(:sorting_order) }
 
   # callbacks
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -52,6 +53,8 @@ describe SubjectArea do
   # class methods
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:parent) }
 
 end

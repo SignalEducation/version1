@@ -13,7 +13,6 @@
 #  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
-#  compulsory                :boolean          default(FALSE), not null
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
@@ -21,16 +20,20 @@
 
 class CourseModule < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :compulsory, :active
+                  :active
 
   # Constants
 
   # relationships
   has_many :course_module_elements
+  has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_one :course_module_jumbo_quiz
   belongs_to :exam_level
@@ -53,8 +56,9 @@ class CourseModule < ActiveRecord::Base
   validates :sorting_order, presence: true
 
   # callbacks
+  before_validation { squish_fields(:name, :name_url, :description) }
   before_save :calculate_estimated_time
-  before_destroy :check_dependencies
+  before_save :sanitize_name_url
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
@@ -66,11 +70,19 @@ class CourseModule < ActiveRecord::Base
 
   # instance methods
   def array_of_sibling_ids
-    self.parent_thing.course_modules.all_in_order.map(&:id)
+    self.parent.course_modules.all_in_order.map(&:id)
+  end
+
+  def children
+    self.course_module_elements.all
   end
 
   def destroyable?
     self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty?
+  end
+
+  def full_name
+    self.parent.name + ' > ' + self.name
   end
 
   def my_position_among_siblings
@@ -85,7 +97,7 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
-  def parent_thing
+  def parent
     self.exam_section ? self.exam_section : self.exam_level
   end
 
@@ -106,13 +118,6 @@ class CourseModule < ActiveRecord::Base
 
   def calculate_estimated_time
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
-  end
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
   end
 
 end

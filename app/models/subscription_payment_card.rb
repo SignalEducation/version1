@@ -20,6 +20,8 @@
 
 class SubscriptionPaymentCard < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :user_id, :stripe_card_guid, :status,
                   :brand, :last_4, :expiry_month, :expiry_year,
@@ -48,7 +50,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -61,12 +62,5 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

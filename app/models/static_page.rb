@@ -35,6 +35,8 @@
 
 class StaticPage < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   serialize :approved_country_ids, Array
 
   # attr-accessible
@@ -45,7 +47,7 @@ class StaticPage < ActiveRecord::Base
   # relationships
   belongs_to :creator, class_name: 'User', foreign_key: :created_by
   belongs_to :updater, class_name: 'User', foreign_key: :updated_by
-  has_many :static_page_uploads
+  has_many :static_page_uploads, inverse_of: :static_page
 
   accepts_nested_attributes_for :static_page_uploads
 
@@ -53,7 +55,6 @@ class StaticPage < ActiveRecord::Base
   validates :name, presence: true
   validates :publish_from, presence: true
   validates :public_url, presence: true, uniqueness: true, if: 'allow_multiples == false'
-  validates :head_content, presence: true, unless: 'use_standard_page_template == true'
   validates :body_content, presence: true
   validates :created_by, presence: true
   validates :updated_by, presence: true, on: :update
@@ -66,10 +67,10 @@ class StaticPage < ActiveRecord::Base
   validates :seo_description, presence: true
 
   # callbacks
+  before_validation { squish_fields(:name, :public_url, :menu_label, :tooltip_text, :seo_title, :seo_description) }
   before_save :sanitize_public_url
   before_save :sanitize_country_ids
   after_save :update_default_for_related_pages
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:public_url, default_page_for_this_url: :desc) }
@@ -102,7 +103,9 @@ class StaticPage < ActiveRecord::Base
   protected
 
   def check_dependencies
-    unless self.destroyable?
+    if self.destroyable?
+      self.static_page_uploads.destroy_all
+    else
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end

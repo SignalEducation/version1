@@ -3,13 +3,16 @@
     .page-header
       %h1=t('views.quiz_questions.show.h1')
 
-=render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
+.row
+  .col-sm-8.col-sm-offset-2
+    =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
 
 .row
   .col-sm-8.col-sm-offset-2
     %h3=t('views.quiz_questions.form.solution_to_the_question')
     .well.well-sm
-      =@quiz_question.solution_to_the_question
+      .row
+        =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
 
 .row
   .col-sm-8.col-sm-offset-2

@@ -1,25 +1,24 @@
 .modal.fade#new-upload-modal{tabindex: -1, role: 'dialog', aria: {labelledby: 'uploadModalLabel', hidden: true} }
-  =#form_for(StaticPageUpload.new, html: {role: 'form', class: 'form-horizontal', multipart: true}, format: 'js', authenticity_token: true, remote: true) do |u|
-  =form_for(StaticPageUpload.new, remote: true, authenticity_token: true, format: 'js') do |u|
-
+  =form_for(StaticPageUpload.new, authenticity_token: true, format: 'html', remote: true, html: {role: 'form', multipart: true, data: {type: 'html'}, class: 'form-horizontal'}) do |u|
     =u.hidden_field :static_page_id, value: @static_page.id
     .modal-dialog
       .modal-content
+
         .modal-header
           %button{type: 'button', class: 'close', data: {dismiss: 'modal'}}
             %span{aria: {hidden: true}} &times
-            %span{class: 'sr-only'} Close
-          %h4.modal-title#uploadModalLabel Upload a file
-        .modal-body
+            %span{class: 'sr-only'}=t('views.general.close')
+          %h4.modal-title#uploadmodallabel=t('views.static_page_uploads.modal.h1')
 
+        .modal-body
           .form-group
             =u.label :upload, t('views.static_page_uploads.form.upload'), class: 'control-label col-sm-4'
             .col-sm-8
-              =u.file_field :upload, class: 'form-control'
+              =u.file_field :upload, class: 'form-control', required: true
           .form-group
-            =u.label :description, class: 'control-label col-sm-4'
+            =u.label :description, t('views.static_page_uploads.form.description'), class: 'control-label col-sm-4'
             .col-sm-8
-              =u.text_field :description, class: 'form-control'
+              =u.text_field :description, placeholder: t('views.static_page_uploads.form.description_placeholder'), class: 'form-control', required: true
 
         .modal-footer
           %button{type: 'button', class: 'btn btn-default', data: {dismiss: 'modal'}}
@@ -29,11 +28,15 @@
 :javascript
 
   $(document).on('ready', function() {
-    alert('hello there');
     $("#new_static_page_upload").on("ajax:success", function(e, data, status, xhr) {
-      $("#uploads-panel").append(xhr.responseText); alert('good'); return false;
+      $('#new-upload-modal').modal('hide');
+      $("#static_page_uploads").append(xhr.responseText);
+      $('#static_page_upload_description').val(null);
+      var masterForm = $('#new_static_page');
+      var theTime = (new Date).getTime();
+      var newId = $('#static_page_uploads > .well:last-child').attr('data-id');
+      masterForm.append("<input type='hidden' name='static_page[static_page_uploads_attributes][" + theTime + "][id]' value='" + newId + "' id='static_page_static_page_uploads_attributes_" + theTime + "_id' value='" + newId + "' />")
     }).on("ajax:error", function(e, xhr, status, error) {
-      $("#uploads-panel").append("<p>ERROR</p>"); alert('bad');
-    });
-    alert('ready');
+      $("#static_page_uploads").append("<p>ERROR: Please try again</p>");
+    })
   })

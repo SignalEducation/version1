@@ -1,0 +1,43 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.user_activity_logs.show.h1')
+        \#
+        =@user_activity_log.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr{class: @user_activity_log.display_class}
+        %td.col-sm-4=t('views.user_activity_logs.form.alert_level')
+        %td.col-sm-8=UserActivityLog::ALERT_LEVELS[@user_activity_log.alert_level].capitalize
+      %tr{class: @user_activity_log.display_class}
+        %td.col-sm-4=t('views.user_activity_logs.form.created_at')
+        %td.col-sm-8=@user_activity_log.created_at.to_s(:standard)
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.user_id')
+        %td.col-sm-8=@user_activity_log.user.try(:full_name)
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.session_guid')
+        %td.col-sm-8=@user_activity_log.session_guid
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.signed_in')
+        %td.col-sm-8=tick_or_cross(@user_activity_log.signed_in)
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.original_uri')
+        %td.col-sm-8=@user_activity_log.original_uri
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.controller_name')
+        %td.col-sm-8=@user_activity_log.controller_name
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.action_name')
+        %td.col-sm-8=@user_activity_log.action_name
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.params')
+        %td.col-sm-8=@user_activity_log.params
+    %p
+      =link_to user_activity_logs_url do
+        &larr;
+        =t('views.user_activity_logs.index.h1')
+      |
+      =link_to t('views.general.edit'), edit_user_activity_log_url(id: @user_activity_log.id), title: t('views.general.edit_tooltip')

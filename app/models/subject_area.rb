@@ -13,6 +13,8 @@
 
 class SubjectArea < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active
 
@@ -27,7 +29,8 @@ class SubjectArea < ActiveRecord::Base
   validates :sorting_order, presence: true, numericality: true
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name, :name_url) }
+  before_save :sanitize_name_url
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -37,17 +40,18 @@ class SubjectArea < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def children
+    self.institutions.all
+  end
+
   def destroyable?
     !self.active && self.institutions.empty?
   end
 
-  protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+  def parent
+    nil
   end
+
+  protected
 
 end

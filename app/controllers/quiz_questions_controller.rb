@@ -12,6 +12,7 @@ class QuizQuestionsController < ApplicationController
 
   def new
     @quiz_question.quiz_contents.build
+    @quiz_question.quiz_solutions.build
     4.times do
       @quiz_question.quiz_answers.build
       @quiz_question.quiz_answers.last.quiz_contents.build
@@ -72,8 +73,18 @@ class QuizQuestionsController < ApplicationController
     params.require(:quiz_question).permit(
         :course_module_element_quiz_id,
         :difficulty_level,
-        :solution_to_the_question,
         :hints,
+        quiz_solutions_attributes: [
+            :id,
+            :quiz_question_id,
+            :quiz_answer_id,
+            :quiz_solution_id,
+            :text_content,
+            :content_type,
+            :sorting_order,
+            :_destroy,
+            :image
+        ],
         quiz_answers_attributes: [
             :id,
             :quiz_question_id,
@@ -86,8 +97,6 @@ class QuizQuestionsController < ApplicationController
                 :quiz_question_id,
                 :quiz_answer_id,
                 :text_content,
-                :contains_mathjax,
-                :contains_image,
                 :sorting_order,
                 :_destroy,
                 :content_type,
@@ -99,8 +108,6 @@ class QuizQuestionsController < ApplicationController
             :quiz_question_id,
             :quiz_answer_id,
             :text_content,
-            :contains_mathjax,
-            :contains_image,
             :sorting_order,
             :_destroy,
             :content_type,

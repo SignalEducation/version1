@@ -36,6 +36,7 @@ describe ForumPost do
   it { should have_many(:response_posts) }
   it { should have_many(:forum_post_concerns) }
   it { should have_many(:user_likes) }
+  it { should have_many(:user_notifications) }
 
   # validation
   it { should validate_presence_of(:user_id) }

@@ -13,7 +13,6 @@
 #  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
-#  compulsory                :boolean          default(FALSE), not null
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
@@ -30,7 +29,6 @@ FactoryGirl.define do
     tutor_id                  1
     sequence(:sorting_order)  { |n| n * 100 }
     estimated_time_in_seconds 0
-    compulsory false
 
     factory :active_course_module do
       active true

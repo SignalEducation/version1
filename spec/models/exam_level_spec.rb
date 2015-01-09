@@ -13,6 +13,7 @@
 #  created_at                              :datetime
 #  updated_at                              :datetime
 #  default_number_of_possible_exam_answers :integer          default(4)
+#  enable_exam_sections                    :boolean          default(TRUE), not null
 #
 
 require 'rails_helper'
@@ -56,16 +57,21 @@ describe ExamLevel do
 
   # callbacks
   it { should callback(:calculate_best_possible_score).before(:save) }
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(ExamLevel).to respond_to(:all_active) }
   it { expect(ExamLevel).to respond_to(:all_in_order) }
+  it { expect(ExamLevel).to respond_to(:all_with_exam_sections_enabled) }
 
   # class methods
   it { expect(ExamLevel).to respond_to(:get_by_name_url) }
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:parent) }
 
 end

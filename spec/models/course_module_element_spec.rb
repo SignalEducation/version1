@@ -17,6 +17,7 @@
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
+#  active                    :boolean          default(TRUE), not null
 #
 
 require 'rails_helper'
@@ -80,11 +81,13 @@ describe CourseModuleElement do
   it { should validate_numericality_of(:related_video_id) }
 
   # callbacks
+  it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:update_the_module_total_time).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
+  it { expect(CourseModuleElement).to respond_to(:all_active) }
   it { expect(CourseModuleElement).to respond_to(:all_videos) }
   it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
 

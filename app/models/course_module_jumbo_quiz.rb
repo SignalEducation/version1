@@ -14,6 +14,8 @@
 
 class CourseModuleJumboQuiz < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :course_module_id, :name, :minimum_question_count_per_quiz,
                   :maximum_question_count_per_quiz, :total_number_of_questions
@@ -23,7 +25,6 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   # relationships
   belongs_to :course_module
   has_many :course_module_element_quizzes
-
 
   # validation
   validates :course_module_id, presence: true,
@@ -37,7 +38,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_destroy :check_dependencies
+  before_validation { squish_fields(:name) }
 
   # scopes
   scope :all_in_order, -> { order(:course_module_id) }
@@ -50,12 +51,5 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

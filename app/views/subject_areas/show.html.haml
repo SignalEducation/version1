@@ -2,9 +2,7 @@
   .col-sm-12
     .page-header
       %h1
-        =t('views.subject_areas.show.h1')
-        \#
-        =@subject_area.id
+        =@subject_area.name
       =render partial: 'shared/horizontal_hierarchy'
 .row
   .col-sm-6
@@ -17,7 +15,7 @@
           -@subject_area.institutions.each do |institution|
             =link_to institution.name, institution
             %br/
-          =link_to t('views.general.new'), new_institution_url(subject_area: @subject_area.id), class: 'btn btn-xs btn-success'
+          =link_to t('views.general.new'), new_institution_url(subject_area_id: @subject_area.id), class: 'btn btn-xs btn-success'
   .col-sm-6
     %h3
       =t('views.general.details')
