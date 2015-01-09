@@ -117,11 +117,30 @@
           .form-group
             =f.label :body_content, t('views.static_pages.form.body_content'), class: 'control-label col-sm-2'
             .col-sm-10
-              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), class: 'form-control code-input', rows: 8
+              =f.text_area :body_content, placeholder: t('views.static_pages.form.body_content_placeholder'), class: 'form-control code-input', rows: 20
 
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-success'
+        =f.submit t('views.general.save_and_continue_editing'), class: 'btn btn-success'
+        -unless @static_page.id.nil?
+          =link_to t('views.static_pages.index.preview'), static_page_url(@static_page.id, preview: 'yes'), class: 'btn btn-info', target: '_blank'
         =t('views.general.or')
         =link_to t('views.general.cancel'), static_pages_path
+
+.row
+  .col-sm-12
+    %h2=t('views.static_pages.form.code_samples')
+
+.row
+  .tabpanel
+    %ul.nav.nav-pills.nav-stacked.col-sm-2{role: 'tablist'}
+      -@samples.each_with_index do |sample, counter|
+        %li{role: 'presentation', class: (counter == 0 ? 'active' : '')}
+          %a{href: "#sample-#{counter}", aria: {controls: "sample-#{counter}"}, role: 'tab', data: {toggle: 'tab'}}=sample[:name]
+    .tab-content.col-sm-10
+      -@samples.each_with_index do |sample, counter|
+        .tab-pane{id: "sample-#{counter}", role: 'tabpanel', class: (counter == 0 ? 'active' : '')}
+          %pre
+            =sample[:code].gsub("\r",'<br/>')
 
 =render partial: 'static_page_uploads/new_modal'

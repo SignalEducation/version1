@@ -32,6 +32,7 @@
                 =t('views.general.admin')
                 %span.caret
               %ul.dropdown-menu{role: 'menu'}
+                %li.dropdown-header=t('views.layouts.navigation.course_content')
                 %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
                 %li=link_to t('views.institutions.index.h1'), institutions_url
                 %li=link_to t('views.qualifications.index.h1'), qualifications_url
@@ -39,6 +40,7 @@
                 %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                 %li=link_to t('views.course_modules.index.h1'), course_modules_url
                 %li.divider
+                %li.dropdown-header=t('views.layouts.navigation.content_management')
                 %li=link_to t('views.static_pages.index.h1'), static_pages_url
           %li
             = link_to user_notifications_url do
@@ -57,6 +59,7 @@
               -if current_user.admin?
                 %li.divider
                 %li=link_to t('views.users.index.h1'), users_url
+                %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url
                 %li=link_to t('views.user_groups.index.h1'), user_groups_url
                 %li=link_to t('views.currencies.index.h1'), currencies_url
                 %li=# todo link_to t('views.vat_codes.index.h1'), vat_codes_url

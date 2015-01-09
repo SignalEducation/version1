@@ -55,7 +55,6 @@ class StaticPage < ActiveRecord::Base
   validates :name, presence: true
   validates :publish_from, presence: true
   validates :public_url, presence: true, uniqueness: true, if: 'allow_multiples == false'
-  validates :head_content, presence: true, unless: 'use_standard_page_template == true'
   validates :body_content, presence: true
   validates :created_by, presence: true
   validates :updated_by, presence: true, on: :update
