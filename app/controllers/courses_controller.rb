@@ -29,7 +29,7 @@ class CoursesController < ApplicationController
       @qualification = @exam_level.qualification
       @institution = @qualification.institution
       @subject_area = @institution.subject_area
-      if @course_module_element.is_quiz
+      if @course_module_element.try(:is_quiz)
         @course_module_element_user_log = CourseModuleElementUserLog.new(
               course_module_id: @course_module_element.course_module_id,
               course_module_element_id: @course_module_element.id,

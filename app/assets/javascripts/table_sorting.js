@@ -8,12 +8,13 @@ $(document).on('ready page:load', function() {
     handle: 'span.glyphicon.glyphicon-sort',
     placeholder: '<tr class="placeholder"/>',
     onDrop: function (item, container, _super) {
-      sendDataToServer();
+      sendDataToServer(item);
     }
   });
 
-  function sendDataToServer() {
-    var rows = $(".sorted_table tbody > tr"),
+  function sendDataToServer(theItem) {
+      console.log(theItem)
+      var rows = $(".sorted_table tbody > tr"),
         arrayOfIds = [],
         theUrl = $('.sorted_table').attr('data-destination');
     for (var counter = 0; counter < rows.length; counter++) {
