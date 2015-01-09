@@ -636,6 +636,7 @@ en:
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
 
+
     course_module_jumbo_quiz:
       form:
         name: Name
