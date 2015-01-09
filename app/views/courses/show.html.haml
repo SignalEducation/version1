@@ -19,7 +19,11 @@
 
   -elsif @course_module
 
-    %p course module
-
-    -@course_module.course_module_elements.each do |element|
-      =link_to element.name, course_special_link(element)
+    .row
+      .col-sm-12
+        .page-header
+          %h1=@course_module.name
+    .row
+      .well
+        %h3 Coming soon
+        %p We don't have any content for this course module rightnow.
