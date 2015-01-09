@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def head_sanitizer(some_text)
-    sanitize(some_text, tags: %w(meta script title), attributes: %w(name content type href src charset) )
+    sanitize(some_text, tags: %w(meta script title style), attributes: %w(name content type href src charset media) )
   end
 
   def body_sanitizer(some_text)
