@@ -1076,7 +1076,7 @@ en:
         session_guid: Session GUID
         session_guid_placeholder: 'ABC123...'
         signed_in: Signed in
-        original_uri: Original uri
+        original_uri: Original URI
         original_uri_placeholder: '/en/library/finance/acca/'
         controller_name: Controller
         controller_name_placeholder: 'library'
@@ -1084,6 +1084,8 @@ en:
         action_name_placeholder: 'show'
         params: Params
         params_placeholder: "{controller: 'library', action: 'show', subject_area_url: 'finance'}"
+        ip_address: IP address
+        ip_address_placeholder: '192.168.1.123'
         alert_level: Alert level
         created_at: Created
         updated_at: Updated

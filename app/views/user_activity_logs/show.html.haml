@@ -16,10 +16,15 @@
         %td.col-sm-8=@user_activity_log.created_at.to_s(:standard)
       %tr
         %td.col-sm-4=t('views.user_activity_logs.form.user_id')
-        %td.col-sm-8=@user_activity_log.user.try(:full_name)
+        %td.col-sm-8
+          -if @user_activity_log.user
+            =link_to @user_activity_log.user.full_name, @user_activity_log.user
       %tr
         %td.col-sm-4=t('views.user_activity_logs.form.session_guid')
         %td.col-sm-8=@user_activity_log.session_guid
+      %tr
+        %td.col-sm-4=t('views.user_activity_logs.form.ip_address')
+        %td.col-sm-8=@user_activity_log.ip_address
       %tr
         %td.col-sm-4=t('views.user_activity_logs.form.signed_in')
         %td.col-sm-8=tick_or_cross(@user_activity_log.signed_in)

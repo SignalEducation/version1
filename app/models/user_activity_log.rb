@@ -2,17 +2,23 @@
 #
 # Table name: user_activity_logs
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  session_guid    :string(255)
-#  signed_in       :boolean          default(FALSE), not null
-#  original_uri    :string(255)
-#  controller_name :string(255)
-#  action_name     :string(255)
-#  params          :text
-#  alert_level     :integer          default(0)
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id               :integer          not null, primary key
+#  user_id          :integer
+#  session_guid     :string(255)
+#  signed_in        :boolean          default(FALSE), not null
+#  original_uri     :string(255)
+#  controller_name  :string(255)
+#  action_name      :string(255)
+#  params           :text
+#  alert_level      :integer          default(0)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  ip_address       :string(255)
+#  browser          :string(255)
+#  operating_system :string(255)
+#  phone            :boolean          default(FALSE), not null
+#  tablet           :boolean          default(FALSE), not null
+#  computer         :boolean          default(FALSE), not null
 #
 
 class UserActivityLog < ActiveRecord::Base
@@ -22,7 +28,8 @@ class UserActivityLog < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :session_guid, :signed_in, :original_uri, :controller_name,
-                  :action_name, :params, :alert_level
+                  :action_name, :params, :ip_address, :alert_level,
+                  :browser, :operating_system, :phone, :tablet, :computer, :http_user_agent
 
   # Constants
   ALERT_LEVELS = %w(normal warning danger severe)
@@ -38,6 +45,7 @@ class UserActivityLog < ActiveRecord::Base
   validates :original_uri, presence: true
   validates :controller_name, presence: true
   validates :action_name, presence: true
+  validates :ip_address, presence: true
   validates :alert_level, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0,
                            less_than_or_equal_to: 3}
@@ -46,7 +54,7 @@ class UserActivityLog < ActiveRecord::Base
   after_create :add_to_rails_logger
 
   # scopes
-  scope :all_in_order, -> { order(:user_id, created_at: :desc) }
+  scope :all_in_order, -> { order(created_at: :desc) }
 
   # class methods
 
@@ -57,6 +65,29 @@ class UserActivityLog < ActiveRecord::Base
 
   def display_class
     ['success','info','warning','danger'][self.alert_level]
+  end
+
+  def http_user_agent=(agent)
+    # todo: Dan's mac / Safari:
+    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/600.2.5 (KHTML, like Gecko) Version/8.0.2 Safari/600.2.5
+    # todo: Dan's mac / Opera:
+    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 OPR/26.0.1656.60
+    # todo: Dan's mac / Chrome:
+    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36
+    # todo: Dan's mac / Firefox:
+    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:33.0) Gecko/20100101 Firefox/33.0
+    # todo: Dan's iPhone / Safari
+    # Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4
+    # todo: Dan's iPad2 / Safari
+    # Mozilla/5.0 (iPad; CPU OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B410 Safari/600.1.4
+
+    # result =~ /Safari/
+
+    self.browser ||= agent
+    self.operating_system ||= agent
+    self.phone ||=
+    self.tablet ||=
+    self.computer ||= false
   end
 
   protected
