@@ -37,6 +37,7 @@ class Qualification < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
+  before_create :set_sorting_order
   before_save :sanitize_name_url
 
   # scopes

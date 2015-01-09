@@ -67,6 +67,7 @@ describe CourseModule do
   it { should validate_presence_of(:sorting_order) }
 
   # callbacks
+  it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }

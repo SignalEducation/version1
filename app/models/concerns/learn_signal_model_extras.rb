@@ -21,6 +21,12 @@ module LearnSignalModelExtras
     self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
   end
 
+  def set_sorting_order
+    # call like this:
+    # before_create :set_sorting_order
+    self.sorting_order = self.parent.try(:children).try(:maximum, :sorting_order).to_i + 1
+  end
+
   def squish_fields(*fields_as_symbols)
     # call like this:
     # before_validation { squish_fields(:name, :iso_code, :continent) }

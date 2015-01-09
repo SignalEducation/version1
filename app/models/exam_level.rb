@@ -45,12 +45,13 @@ class ExamLevel < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
+  before_create :set_sorting_order
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
 
   # scopes
   scope :all_active, -> { where(active: true) }
-  scope :all_in_order, -> { order(:qualification_id) }
+  scope :all_in_order, -> { order(:qualification_id, :sorting_order) }
   scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 
   # class methods
