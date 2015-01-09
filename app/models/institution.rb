@@ -49,6 +49,7 @@ class Institution < ActiveRecord::Base
   before_save :sanitize_name_url
 
   # scopes
+  scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
@@ -57,8 +58,20 @@ class Institution < ActiveRecord::Base
   end
 
   # instance methods
+  def children
+    self.qualifications.all
+  end
+
   def destroyable?
     !self.active && self.qualifications.empty? && self.institution_users.empty? && self.course_modules.empty?
+  end
+
+  def full_name
+    self.subject_area.name + ' > ' + self.name
+  end
+
+  def parent
+    self.subject_area
   end
 
   protected

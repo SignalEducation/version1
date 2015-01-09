@@ -1,8 +1,9 @@
 class LibraryController < ApplicationController
 
   def show
+    @subject_areas = SubjectArea.all_active.all_in_order
     @subject_area = @institution = @qualification = @exam_level = @exam_section = nil
-    @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url].to_s).first || SubjectArea.all_active.all_in_order.first
+    @subject_area = @subject_areas.where(name_url: params[:subject_area_name_url].to_s).first || @subject_areas.first
     if @subject_area
       @institution = @subject_area.institutions.where(name_url: params[:institution_name_url]).first
       if @institution
@@ -15,6 +16,7 @@ class LibraryController < ApplicationController
         end
       end
     end
+    @hierarchy_item = @exam_section || @exam_level || @qualification || @institution || @subject_area
   end
 
   protected

@@ -199,15 +199,8 @@ class ApplicationController < ActionController::Base
   helper_method :course_module_special_link
 
   def library_special_link(the_thing) # customer-facing
-    if the_thing.class == CourseModule
-      course_url(
-              the_thing.exam_level.qualification.institution.subject_area.name_url,
-              the_thing.exam_level.qualification.institution.name_url,
-              the_thing.exam_level.qualification.name_url,
-              the_thing.exam_level.name_url,
-              the_thing.exam_section.name_url || 'all',
-              the_thing.name_url
-      )
+    if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
+      course_special_link(the_thing)
     elsif the_thing.class == ExamSection
       library_url(the_thing.exam_level.qualification.institution.subject_area.name_url,
                   the_thing.exam_level.qualification.institution.name_url,
@@ -245,7 +238,7 @@ class ApplicationController < ActionController::Base
               the_thing.exam_level.qualification.institution.name_url,
               the_thing.exam_level.qualification.name_url,
               the_thing.exam_level.name_url,
-              the_thing.exam_section.name_url || 'all',
+              the_thing.exam_section.try(:name_url) || 'all',
               the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
@@ -254,7 +247,7 @@ class ApplicationController < ActionController::Base
               the_thing.course_module.exam_level.qualification.institution.name_url,
               the_thing.course_module.exam_level.qualification.name_url,
               the_thing.course_module.exam_level.name_url,
-              the_thing.course_module.exam_section.name_url || 'all',
+              the_thing.course_module.exam_section.try(:name_url) || 'all',
               the_thing.course_module.name_url,
               the_thing.name_url
       )

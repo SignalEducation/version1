@@ -54,12 +54,16 @@ describe ExamSection do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(ExamSection).to respond_to(:all_active) }
   it { expect(ExamSection).to respond_to(:all_in_order) }
   it { expect(ExamSection).to respond_to(:with_url) }
 
   # class methods
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:parent) }
 
 end

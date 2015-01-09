@@ -3,33 +3,54 @@
 .row
   .col-sm-12
     %h1
-      =@exam_section.try(:name) || @exam_level.try(:name) || @qualification.try(:name) || @institution.try(:name) || t('views.library.show.h1')
+      -if @hierarchy_item.class == SubjectArea
+        =t('views.library.show.h1')
+      -else
+        =@hierarchy_item.try(:name)
     %hr/
+    -if @hierarchy_item.parent != nil
+      =link_to course_special_link(@hierarchy_item.parent) do
+        &larr;
+        =t('views.general.back')
 
 .row
-  .col-sm-12
-    -if @exam_section
+  %div{class: (@subject_areas.length > 1 ? 'col-sm-9' : 'col-sm-12')}
+    .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
+      -@hierarchy_item.children.all_active.each_with_index do |child, counter|
+        .panel.panel-default
+          .panel-heading#headingOne{role: 'tab'}
+            %h4.panel-title
+              %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
+                =child.full_name
+              =link_to library_special_link(child) do
+                %span.glyphicon.glyphicon-expand
+            .text-muted
+              =child.children.size
+              items
+          .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+            .panel-body
+              %table.table.table-bordered
+                -if @hierarchy_item.children.all_active.count > 0
+                  -child.children.each do |grand_child|
+                    %tr
+                      %td=link_to grand_child.name, library_special_link(grand_child)
+                      %td.text-right
+                        -if grand_child.class == CourseModuleElement
+                          -if grand_child.is_video
+                            =t('views.course_module_element_quizzes.form.video')
+                            =seconds_to_time(grand_child.estimated_time_in_seconds)
+                          -else
+                            =grand_child.course_module_element_quiz.number_of_questions
+                            =t('views.course_module_elements.form.questions')
+                        -elsif grand_child.children.all_active.any?
+                          =grand_child.children.all_active.count
+                          =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
 
-      -@exam_section.course_modules.each do |child|
-        %p=link_to child.name, course_special_link(child)
-
-    -elsif @exam_level
-
-      -@exam_level.exam_sections.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
-    -elsif @qualification
-
-      -@qualification.exam_levels.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
-    -elsif @institution
-
-      -@institution.qualifications.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
-    -elsif @subject_area
-
-      -@subject_area.institutions.each do |child|
-        %p=link_to child.name, library_special_link(child)
-
+  -if @subject_areas.size > 1
+    .col-sm-3
+      %h3.no-top-gap=t('views.subject_areas.index.h1')
+      .well.well-sm
+        %ul.nav.nav-pills.nav-stacked
+          -@subject_areas.each do |subject_area|
+            %li{role: 'presentation', class: (@subject_area.id == subject_area.id ? 'active' : '')}
+              =link_to subject_area.name, library_special_link(subject_area)

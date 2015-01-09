@@ -1,5 +1,5 @@
 .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
-  -@course_module.parent_thing.course_modules.each_with_index do |course_module, counter|
+  -@course_module.parent.course_modules.each_with_index do |course_module, counter|
     .panel.panel-default
       .panel-heading#headingOne{role: 'tab' }
         %h4.panel-title

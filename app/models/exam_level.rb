@@ -49,6 +49,7 @@ class ExamLevel < ActiveRecord::Base
   before_save :sanitize_name_url
 
   # scopes
+  scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:qualification_id) }
   scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 
@@ -58,12 +59,24 @@ class ExamLevel < ActiveRecord::Base
   end
 
   # instance methods
+  def children
+    if self.enable_exam_sections == true
+      self.exam_sections.all
+    else
+      self.course_modules.all
+    end
+  end
+
   def destroyable?
     !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty?
   end
 
   def full_name
     self.qualification.name + ' > ' + self.name
+  end
+
+  def parent
+    self.qualification
   end
 
   protected

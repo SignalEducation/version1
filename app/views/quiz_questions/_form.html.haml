@@ -62,6 +62,8 @@
       theClone.find('.destroy').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][_destroy]');
       theClone.find('.the_id').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_id');
       theClone.find('.the_id').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][id]');
+      theClone.find('.quiz_content_image').attr('id', 'quiz_question_quiz_' + parentName + 's_attributes_' + theTime + '_image');
+      theClone.find('.quiz_content_image').attr('name', 'quiz_question[quiz_' + parentName + 's_attributes][' + theTime + '][image]');
     } else {
       theClone.find('textarea').attr('id', 'quiz_question_quiz_answers_attributes_' + answerNumber + '_quiz_contents_attributes_' + theTime + '_text_content');
       theClone.find('textarea').attr('name', 'quiz_question[quiz_answers_attributes][' + answerNumber + '][quiz_contents_attributes][' + theTime + '][text_content]');

@@ -40,6 +40,7 @@ class Qualification < ActiveRecord::Base
   before_save :sanitize_name_url
 
   # scopes
+  scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:institution_id, :sorting_order) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
@@ -49,12 +50,20 @@ class Qualification < ActiveRecord::Base
   end
 
   # instance methods
+  def children
+    self.exam_levels.all
+  end
+
   def destroyable?
     !self.active && self.exam_levels.empty? && self.course_modules.empty?
   end
 
   def full_name
     self.institution.name + ' > ' + self.name
+  end
+
+  def parent
+    self.institution
   end
 
   protected

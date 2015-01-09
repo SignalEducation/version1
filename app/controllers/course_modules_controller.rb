@@ -46,6 +46,7 @@ class CourseModulesController < ApplicationController
     else
       @course_module = CourseModule.new(sorting_order: 1)
     end
+    @course_module.tutor_id = current_user.id
     set_up_side_nav
   end
 
@@ -110,7 +111,6 @@ class CourseModulesController < ApplicationController
   end
 
   def set_up_side_nav
-    @course_module.tutor_id = current_user.id
     @qualification = @course_module.exam_level.try(:qualification)
     @exam_level_id = @course_module.exam_level_id
   end

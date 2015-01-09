@@ -13,7 +13,7 @@
         %td.col-sm-4=t('views.course_modules.index.h1')
         %td.col-sm-8
           -@exam_section.course_modules.all_in_order.each do |course_module|
-            =link_to course_module.name, course_module
+            =link_to course_module.name, course_module_special_link(course_module)
             %br/
           =link_to t('views.general.new'), new_course_module_url(exam_section_url: @exam_section.name_url), class: 'btn btn-success btn-xs'
   .col-sm-6

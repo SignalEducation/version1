@@ -105,7 +105,7 @@ class CourseModuleElementsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.course_module_elements.destroy.flash.error')
     end
-    redirect_to course_module_elements_url
+    redirect_to course_module_special_link(@course_module_element.course_module)
   end
 
   protected
