@@ -53,12 +53,12 @@ class StaticPagesController < ApplicationController
     if @static_page.update_attributes(allowed_params.merge({updated_by: current_user.id}))
       flash[:success] = I18n.t('controllers.static_pages.update.flash.success')
       if params[:commit] == I18n.t('views.general.save_and_continue_editing')
-        render action: :edit
+        redirect_to edit_static_page_url(@static_page, anchor: 'code')
       else
         redirect_to static_pages_url
       end
     else
-      redirect_to edit_static_page_url(@static_page)
+      render action: :edit
     end
   end
 
@@ -284,6 +284,18 @@ class StaticPagesController < ApplicationController
     </div>
   </div>
 </div>
+'},
+            {name: 'Sample CSS tag',
+             code: '
+<style type="text/css" media="all">
+  body {
+    background-color: black;
+    color: blue;
+  }
+  .nav {
+    border: 1px solid green;
+  }
+</style>
 '}
     ]
   end
