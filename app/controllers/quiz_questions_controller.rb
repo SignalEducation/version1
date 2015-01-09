@@ -82,7 +82,8 @@ class QuizQuestionsController < ApplicationController
             :text_content,
             :content_type,
             :sorting_order,
-            :_destroy
+            :_destroy,
+            :image
         ],
         quiz_answers_attributes: [
             :id,
