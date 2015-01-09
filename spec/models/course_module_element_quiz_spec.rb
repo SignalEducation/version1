@@ -57,7 +57,12 @@ describe CourseModuleElementQuiz do
   # class methods
 
   # instance methods
-  it { should respond_to(:destroyable?) }
   it { should respond_to(:add_an_empty_question) }
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:difficult_ids) }
+  it { should respond_to(:easy_ids) }
+  it { should respond_to(:enough_questions?) }
+  it { should respond_to(:medium_ids) }
+
 
 end

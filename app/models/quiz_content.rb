@@ -66,14 +66,26 @@ class QuizContent < ActiveRecord::Base
   # Setter
   def content_type=(ct)
     @content_type = ct
-    process_content_type
+    if CONTENT_TYPES.include?(ct)
+      if ct == 'image'
+        self.contains_image = true
+        self.contains_mathjax = false
+      elsif ct == 'mathjax'
+        self.contains_image = false
+        self.contains_mathjax = true
+      else
+        self.contains_image = false
+        self.contains_mathjax = false
+      end
+      true
+    else
+      false
+    end
   end
 
   # Getter
   def content_type
-    if CONTENT_TYPES.include?(@content_type)
-      @content_type
-    elsif self.contains_image
+    if self.contains_image
       'image'
     elsif self.contains_mathjax
       'mathjax'
@@ -89,21 +101,7 @@ class QuizContent < ActiveRecord::Base
   protected
 
   def check_data_consistency
-    self.content_type == 'image' ? self.text_content = nil : self.image = nil
-    true
-  end
-
-  def process_content_type
-    if self.content_type == 'image'
-      self.contains_image = true
-      self.contains_mathjax = false
-    elsif self.content_type == 'mathjax'
-      self.contains_image = false
-      self.contains_mathjax = true
-    else
-      self.contains_image = false
-      self.contains_mathjax = false
-    end
+    #self.content_type == 'image' ? self.text_content = nil : self.image = nil
     true
   end
 
@@ -120,8 +118,8 @@ class QuizContent < ActiveRecord::Base
 
   def set_default_values
     self.sorting_order ||= 1
-    self.contains_mathjax = false
-    self.contains_image = false
+    self.contains_mathjax ||= false
+    self.contains_image ||= false
   end
 
 end

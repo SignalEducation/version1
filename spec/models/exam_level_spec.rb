@@ -61,6 +61,7 @@ describe ExamLevel do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(ExamLevel).to respond_to(:all_active) }
   it { expect(ExamLevel).to respond_to(:all_in_order) }
   it { expect(ExamLevel).to respond_to(:all_with_exam_sections_enabled) }
 
@@ -68,7 +69,9 @@ describe ExamLevel do
   it { expect(ExamLevel).to respond_to(:get_by_name_url) }
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:parent) }
 
 end

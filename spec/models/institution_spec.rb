@@ -70,6 +70,9 @@ describe Institution do
   it { expect(Institution).to respond_to(:get_by_name_url) }
 
   # instance methods
+  it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:parent) }
 
 end

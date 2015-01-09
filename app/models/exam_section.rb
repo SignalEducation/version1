@@ -42,14 +42,27 @@ class ExamSection < ActiveRecord::Base
   before_save :sanitize_name_url
 
   # scopes
+  scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
 
   # instance methods
+  def children
+    self.course_modules.all
+  end
+
+  def full_name
+    self.exam_level.name + ' > ' + self.name
+  end
+
   def destroyable?
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
+  end
+
+  def parent
+    self.exam_level
   end
 
   protected
