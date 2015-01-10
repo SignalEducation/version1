@@ -2,17 +2,23 @@
 #
 # Table name: user_activity_logs
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  session_guid    :string(255)
-#  signed_in       :boolean          default(FALSE), not null
-#  original_uri    :string(255)
-#  controller_name :string(255)
-#  action_name     :string(255)
-#  params          :text
-#  alert_level     :integer          default(0)
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id               :integer          not null, primary key
+#  user_id          :integer
+#  session_guid     :string(255)
+#  signed_in        :boolean          default(FALSE), not null
+#  original_uri     :string(255)
+#  controller_name  :string(255)
+#  action_name      :string(255)
+#  params           :text
+#  alert_level      :integer          default(0)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  ip_address       :string(255)
+#  browser          :string(255)
+#  operating_system :string(255)
+#  phone            :boolean          default(FALSE), not null
+#  tablet           :boolean          default(FALSE), not null
+#  computer         :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
@@ -46,6 +52,8 @@ describe UserActivityLog do
   it { should validate_presence_of(:controller_name) }
 
   it { should validate_presence_of(:action_name) }
+
+  it { should validate_presence_of(:ip_address) }
 
   it { should validate_presence_of(:alert_level) }
   it { should validate_numericality_of(:alert_level) }

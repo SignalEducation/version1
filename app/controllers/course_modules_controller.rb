@@ -30,7 +30,7 @@ class CourseModulesController < ApplicationController
         redirect_to course_modules_url
       end
     else
-      flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
+      flash[:error] =   I18n.t('controllers.course_modules.show.cant_find')
       redirect_to course_modules_url
     end
   end

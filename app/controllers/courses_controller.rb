@@ -76,4 +76,9 @@ class CoursesController < ApplicationController
             ]
     )
   end
+
+  def create_user_log
+
+  end
+
 end

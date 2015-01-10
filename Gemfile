@@ -33,6 +33,7 @@ gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
 group :development do
   gem 'annotate' # adds the list of fields in each table to the models and test files
   gem 'better_errors' # gives more useful error report in the browser
+  gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
   gem 'pry' # halts code so you can experiment with it: see RailsCast 280
 end

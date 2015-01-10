@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :set_locale
   before_action :set_session_guid
+  before_action :log_user_activity
 
   helper_method :current_user_session, :current_user
 
@@ -112,20 +113,38 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options(options={})
-    logger.debug "default_url_options is passed options: #{options.inspect}\n"
+    Rails.logger.debug "DEBUG: ApplicationController#default_url_options: Received options: #{options.inspect}\n"
     { locale: I18n.locale }
   end
 
 
-  #### Session GUIDs
+  #### Session GUIDs and user logging
+
+  def current_session_guid
+    cookies.permanent.encrypted[:session_guid]
+  end
 
   def set_session_guid
     cookies.permanent.encrypted[:session_guid] ||= ApplicationController.generate_random_code(64)
     @mathjax_required = false # default
   end
 
-  def current_session_guid
-    cookies.permanent.encrypted[:session_guid]
+  def log_user_activity
+    UserActivityLog.create(
+            user_id: current_user.try(:id),
+            session_guid: current_session_guid,
+            signed_in: !current_user.try(:id).nil?,
+            original_uri: request.filtered_path,
+            controller_name: controller_name,
+            action_name: action_name,
+            params: request.filtered_parameters,
+            ip_address: request.remote_ip,
+            alert_level: 0,
+            http_user_agent: request.env['HTTP_USER_AGENT']
+    )
+    Rails.logger.debug '*'* 100
+    Rails.logger.debug request.env['HTTP_USER_AGENT']
+    Rails.logger.debug '*'* 100
   end
 
 
