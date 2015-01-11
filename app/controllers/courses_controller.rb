@@ -7,23 +7,16 @@ class CoursesController < ApplicationController
     @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
     @course_module_element ||= @course_module.course_module_elements.all_in_order.first unless @course_module_jumbo_quiz
+
     if @course_module_element.nil? && @course_module.nil?
       # The URL is out of date or wrong.
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
             ExamSection.where(name_url: params[:exam_section_name_url]).first
-      unless @exam_section
-        @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first
-        unless @exam_level
-          @qualification = Qualification.where(name_url: params[:qualification_name_url]).first
-          unless @qualification
-            @institution = Institution.where(name_url: params[:institution_name_url]).first
-            unless @institution
-              @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url]).first
-            end
-          end
-        end
-      end
+      @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first unless @exam_section
+      @qualification = Qualification.where(name_url: params[:qualification_name_url]).first unless @exam_level
+      @institution = Institution.where(name_url: params[:institution_name_url]).first unless @qualification
+      @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url]).first unless @institution
       flash[:warning] = t('controllers.courses.show.warning')
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
@@ -34,24 +27,9 @@ class CoursesController < ApplicationController
       @institution = @qualification.institution
       @subject_area = @institution.subject_area
       if @course_module_element.try(:is_quiz)
-        @course_module_element_user_log = CourseModuleElementUserLog.new(
-              course_module_id: @course_module_element.course_module_id,
-              course_module_element_id: @course_module_element.id,
-              user_id: current_user.try(:id)
-        )
-        @course_module_element.course_module_element_quiz.number_of_questions.times do
-          @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
-        end
+        set_up_quiz
       elsif @course_module_jumbo_quiz
-        @course_module_element_user_log = CourseModuleElementUserLog.new(
-                course_module_id: @course_module.id,
-                course_module_element_id: nil,
-                course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
-                user_id: current_user.try(:id)
-        )
-        @course_module_jumbo_quiz.total_number_of_questions.times do
-          @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
-        end
+        set_up_jumbo_quiz
       end
     end
   end
@@ -77,6 +55,7 @@ class CoursesController < ApplicationController
     params.require(:course_module_element_user_log).permit(
             :course_module_id,
             :course_module_element_id,
+            :course_module_jumbo_quiz_id,
             :user_id,
             #:session_guid,
             #:element_completed,
@@ -96,8 +75,50 @@ class CoursesController < ApplicationController
     )
   end
 
-  def create_user_log
+  def set_up_quiz
+    @course_module_element_user_log = CourseModuleElementUserLog.new(
+            course_module_id: @course_module_element.course_module_id,
+            course_module_element_id: @course_module_element.id,
+            user_id: current_user.try(:id)
+    )
+    @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
 
+    @number_of_questions.times do
+      @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+    end
+
+    all_easy_ids = @course_module_element.course_module_element_quiz.easy_ids
+    all_medium_ids = @course_module_element.course_module_element_quiz.medium_ids
+    all_difficult_ids = @course_module_element.course_module_element_quiz.difficult_ids
+    @easy_ids = all_easy_ids.sample(@number_of_questions)
+    @medium_ids = all_medium_ids.sample(@number_of_questions)
+    @difficult_ids = all_difficult_ids.sample(@number_of_questions)
+    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+    @enough_questions = @course_module_element.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
+  end
+
+  def set_up_jumbo_quiz
+    @course_module_element_user_log = CourseModuleElementUserLog.new(
+            course_module_id: @course_module.id,
+            course_module_element_id: nil,
+            course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
+            user_id: current_user.try(:id)
+    )
+    @number_of_questions = @course_module_jumbo_quiz.total_number_of_questions
+
+    @number_of_questions.times do
+      @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+    end
+
+    all_questions = QuizQuestion.where(course_module_element_id: @course_module.course_module_element_ids)
+    all_easy_ids = all_questions.all_easy.map(&:id)
+    all_medium_ids = all_questions.all_medium.map(&:id)
+    all_difficult_ids = all_questions.all_difficult.map(&:id)
+    @easy_ids = all_easy_ids.sample(@number_of_questions)
+    @medium_ids = all_medium_ids.sample(@number_of_questions)
+    @difficult_ids = all_difficult_ids.sample(@number_of_questions)
+    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+    @enough_questions = @quiz_questions.size >= @course_module_jumbo_quiz.total_number_of_questions || current_user.try(:admin?)
   end
 
 end

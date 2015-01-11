@@ -17,11 +17,11 @@
         =render partial: 'courses/show_video', locals: {cme: @course_module_element}
         =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
       -elsif @course_module_element.is_quiz
-        =render partial: 'courses/show_quiz', locals: {cme: @course_module_element}
+        =render partial: 'courses/show_quiz'
       -else
         %p course module element - type unknown
     -elsif @course_module_jumbo_quiz
-      =render partial: 'courses/show_jumbo_quiz'
+      =render partial: 'courses/show_quiz'
     -elsif @course_module
       .well
         %h3 Coming soon
