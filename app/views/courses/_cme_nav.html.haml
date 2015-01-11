@@ -1,0 +1,9 @@
+%hr/
+.row
+  .col-sm-4
+    =link_to t('views.course_module_elements.show.previous_step'), course_special_link(cme.previous_element), class: 'btn btn-info btn-sm'
+  .col-sm-4.text-center
+    -if current_user.try(:admin?)
+      =link_to t('views.general.edit'), course_module_special_link(cme), target: '_blank', class: 'btn btn-warning'
+  .col-sm-4.text-right
+    =link_to t('views.course_module_elements.show.next_step'), course_special_link(cme.next_element), class: 'btn btn-info btn-sm'

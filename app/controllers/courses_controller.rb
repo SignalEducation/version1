@@ -2,10 +2,13 @@ class CoursesController < ApplicationController
 
   def show
     @mathjax_required = true
-    @exam_section = @exam_level = @qualification = @institution = @subject_area = nil
+    @exam_section = @exam_level = @qualification = @institution = @subject_area = @course_module_jumbo_quiz = nil
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
-    @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first || @course_module.course_module_elements.all_in_order.first
+    @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
+    @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
+    @course_module_element ||= @course_module.course_module_elements.all_in_order.first unless @course_module_jumbo_quiz
     if @course_module_element.nil? && @course_module.nil?
+      # The URL is out of date or wrong.
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
             ExamSection.where(name_url: params[:exam_section_name_url]).first
@@ -24,6 +27,7 @@ class CoursesController < ApplicationController
       flash[:warning] = t('controllers.courses.show.warning')
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
+      # The URL worked out Okay
       @exam_section = @course_module.exam_section
       @exam_level = @course_module.exam_level
       @qualification = @exam_level.qualification
@@ -38,6 +42,16 @@ class CoursesController < ApplicationController
         @course_module_element.course_module_element_quiz.number_of_questions.times do
           @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
         end
+      elsif @course_module_jumbo_quiz
+        @course_module_element_user_log = CourseModuleElementUserLog.new(
+                course_module_id: @course_module.id,
+                course_module_element_id: nil,
+                course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
+                user_id: current_user.try(:id)
+        )
+        @course_module_jumbo_quiz.total_number_of_questions.times do
+          @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+        end
       end
     end
   end
@@ -49,6 +63,11 @@ class CoursesController < ApplicationController
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
+    else
+      @course_module_element = @course_module_element_user_log.course_module_element
+      @course_module = @course_module_element.course_module
+      @results = 'abc'
+      render :show
     end
   end
 

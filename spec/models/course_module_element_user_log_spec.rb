@@ -2,21 +2,22 @@
 #
 # Table name: course_module_element_user_logs
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  user_id                  :integer
-#  session_guid             :string(255)
-#  element_completed        :boolean          default(FALSE), not null
-#  time_taken_in_seconds    :integer
-#  quiz_score_actual        :integer
-#  quiz_score_potential     :integer
-#  is_video                 :boolean          default(FALSE), not null
-#  is_quiz                  :boolean          default(FALSE), not null
-#  course_module_id         :integer
-#  latest_attempt           :boolean          default(TRUE), not null
-#  corporate_customer_id    :integer
-#  created_at               :datetime
-#  updated_at               :datetime
+#  id                          :integer          not null, primary key
+#  course_module_element_id    :integer
+#  user_id                     :integer
+#  session_guid                :string(255)
+#  element_completed           :boolean          default(FALSE), not null
+#  time_taken_in_seconds       :integer
+#  quiz_score_actual           :integer
+#  quiz_score_potential        :integer
+#  is_video                    :boolean          default(FALSE), not null
+#  is_quiz                     :boolean          default(FALSE), not null
+#  course_module_id            :integer
+#  latest_attempt              :boolean          default(TRUE), not null
+#  corporate_customer_id       :integer
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  course_module_jumbo_quiz_id :integer
 #
 
 require 'rails_helper'
@@ -37,15 +38,19 @@ describe CourseModuleElementUserLog do
   #it { expect()CourseModuleElementUserLog.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:course_module_element) }
-  it { should belong_to(:user) }
-  it { should belong_to(:course_module) }
   it { should belong_to(:corporate_customer) }
+  it { should belong_to(:course_module) }
+  it { should belong_to(:course_module_element) }
+  it { should belong_to(:course_module_jumbo_quiz) }
   it { should have_many(:quiz_attempts) }
+  it { should belong_to(:user) }
 
   # validation
-  it { should validate_presence_of(:course_module_element_id) }
+  it { should_not validate_presence_of(:course_module_element_id) }
   it { should validate_numericality_of(:course_module_element_id) }
+
+  it { should_not validate_presence_of(:course_module_jumbo_quiz_id) }
+  it { should validate_numericality_of(:course_module_jumbo_quiz_id) }
 
   it { should_not validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }

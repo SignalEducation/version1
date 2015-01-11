@@ -5,7 +5,7 @@
 -medium_ids = all_medium_ids.sample(cme.course_module_element_quiz.number_of_questions)
 -difficult_ids = all_difficult_ids.sample(cme.course_module_element_quiz.number_of_questions)
 
--if cme.course_module_element_quiz.enough_questions? || current_user.admin?
+-if cme.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
   .row
     .col-sm-12
       %h2.no-top-gap=cme.name

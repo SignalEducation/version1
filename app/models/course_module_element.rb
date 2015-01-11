@@ -106,19 +106,27 @@ class CourseModuleElement < ActiveRecord::Base
     self.array_of_sibling_ids.index(self.id)
   end
 
+  def previous_element
+    CourseModuleElement.find_by_id(self.previous_element_id) || nil
+  end
+
   def previous_element_id
     if self.my_position_among_siblings > 0
       self.array_of_sibling_ids[self.my_position_among_siblings - 1]
     else
-      nil
+      self.course_module.previous_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:last).try(:id)
     end
+  end
+
+  def next_element
+    CourseModuleElement.find_by_id(self.next_element_id) || nil
   end
 
   def next_element_id
     if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
       self.array_of_sibling_ids[self.my_position_among_siblings + 1]
     else
-      nil
+      self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
     end
   end
 

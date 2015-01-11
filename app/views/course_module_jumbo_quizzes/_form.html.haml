@@ -11,7 +11,11 @@
         .form-group
           =jumbo_quiz.label :name, t('views.course_module_jumbo_quiz.form.name'), class: 'control-label col-sm-4'
           .col-sm-8
-            =jumbo_quiz.text_field :name, placeholder: t('views.course_module_jumbo_quiz.form.name_placeholder'), class: 'form-control'
+            =jumbo_quiz.text_field :name, placeholder: t('views.course_module_jumbo_quiz.form.name_placeholder'), class: 'form-control update-my-url'
+        .form-group
+          =jumbo_quiz.label :name_url, t('views.course_module_jumbo_quiz.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =jumbo_quiz.text_field :name_url, placeholder: t('views.course_module_jumbo_quiz.form.name_placeholder'), class: 'form-control'
         .form-group
           =jumbo_quiz.label :minimum_question_count_per_quiz, t('views.course_module_jumbo_quiz.form.minimum_question_count_per_quiz'), class: 'control-label col-sm-4'
           .col-sm-8

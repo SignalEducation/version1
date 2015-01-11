@@ -636,11 +636,12 @@ en:
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
 
-
     course_module_jumbo_quiz:
       form:
         name: Name
         name_placeholder: Intro to Economics Jumbo Quiz
+        name_url: Name URL
+        name_url_placeholder: intro-to-economics-jumbo-quiz
         minimum_question_count_per_quiz: Min Questions from each Quiz
         maximum_question_count_per_quiz: Max Questions from each Quiz
         total_number_of_questions: Total Number of Questions
@@ -815,6 +816,10 @@ en:
     library:
       show:
         h1: Library
+        video: Video
+        quiz: Quiz
+        jumbo_quiz: Jumbo quiz
+        questions: Questions
 
     qualifications:
       form:

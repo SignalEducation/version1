@@ -6,7 +6,7 @@
 #  user_id          :integer
 #  session_guid     :string(255)
 #  signed_in        :boolean          default(FALSE), not null
-#  original_uri     :string(255)
+#  original_uri     :text
 #  controller_name  :string(255)
 #  action_name      :string(255)
 #  params           :text

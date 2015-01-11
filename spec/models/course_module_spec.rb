@@ -86,8 +86,10 @@ describe CourseModule do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
   it { should respond_to(:my_position_among_siblings) }
+  it { should respond_to(:next_module) }
   it { should respond_to(:next_module_id) }
   it { should respond_to(:parent) }
+  it { should respond_to(:previous_module) }
   it { should respond_to(:previous_module_id) }
   it { should respond_to(:recalculate_estimated_time) }
 

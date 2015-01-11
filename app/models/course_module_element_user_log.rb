@@ -2,21 +2,22 @@
 #
 # Table name: course_module_element_user_logs
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  user_id                  :integer
-#  session_guid             :string(255)
-#  element_completed        :boolean          default(FALSE), not null
-#  time_taken_in_seconds    :integer
-#  quiz_score_actual        :integer
-#  quiz_score_potential     :integer
-#  is_video                 :boolean          default(FALSE), not null
-#  is_quiz                  :boolean          default(FALSE), not null
-#  course_module_id         :integer
-#  latest_attempt           :boolean          default(TRUE), not null
-#  corporate_customer_id    :integer
-#  created_at               :datetime
-#  updated_at               :datetime
+#  id                          :integer          not null, primary key
+#  course_module_element_id    :integer
+#  user_id                     :integer
+#  session_guid                :string(255)
+#  element_completed           :boolean          default(FALSE), not null
+#  time_taken_in_seconds       :integer
+#  quiz_score_actual           :integer
+#  quiz_score_potential        :integer
+#  is_video                    :boolean          default(FALSE), not null
+#  is_quiz                     :boolean          default(FALSE), not null
+#  course_module_id            :integer
+#  latest_attempt              :boolean          default(TRUE), not null
+#  corporate_customer_id       :integer
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  course_module_jumbo_quiz_id :integer
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -28,21 +29,24 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :element_completed, :time_taken_in_seconds,
                   :quiz_score_actual, :quiz_score_potential,
                   :is_video, :is_quiz, :course_module_id,
-                  :corporate_customer_id,
+                  :corporate_customer_id, :course_module_jumbo_quiz_id,
                   :quiz_attempts_attributes
 
   # Constants
 
   # relationships
-  belongs_to :course_module_element
-  belongs_to :user
-  belongs_to :course_module
   belongs_to :corporate_customer
-  has_many :quiz_attempts
+  belongs_to :course_module
+  belongs_to :course_module_element
+  belongs_to :course_module_jumbo_quiz
+  has_many   :quiz_attempts
+  belongs_to :user
   accepts_nested_attributes_for :quiz_attempts
 
   # validation
-  validates :course_module_element_id, presence: true,
+  validates :course_module_element_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_jumbo_quiz_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}

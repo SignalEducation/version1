@@ -90,6 +90,10 @@ class CourseModule < ActiveRecord::Base
     self.array_of_sibling_ids.index(self.id)
   end
 
+  def next_module
+    CourseModule.find_by_id(self.next_module_id) || nil
+  end
+
   def next_module_id
     if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
       self.array_of_sibling_ids[self.my_position_among_siblings + 1]
@@ -100,6 +104,10 @@ class CourseModule < ActiveRecord::Base
 
   def parent
     self.exam_section ? self.exam_section : self.exam_level
+  end
+
+  def previous_module
+    CourseModule.find_by_id(self.previous_module_id) || nil
   end
 
   def previous_module_id
