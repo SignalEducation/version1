@@ -18,6 +18,7 @@
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
+#  is_jumbo_quiz               :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do

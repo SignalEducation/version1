@@ -24,7 +24,6 @@ en:
 
   controllers:
     application:
-      you_are_not_permitted_to_do_that: 'You are not permitted to do that'
       datetime_formats:
         simple: "%-e %b %Y"
         standard: "%-e %b %Y %H:%M %Z"
@@ -33,10 +32,16 @@ en:
         standard: "%-e %b %Y"
       datepicker_datetime_format: "YYYY-MM-DD HH:MM"
       datepicker_date_format: "YYYY-MM-DD"
+      difficulty_levels:
+        name:
+          easy: Easy
+          medium: Medium
+          difficult: Difficult
       logged_in_required:
         flash_error: 'You must be signed in to access that page - please sign in'
       logged_out_required:
         flash_error: 'You must be logged out to do that'
+      you_are_not_permitted_to_do_that: 'You are not permitted to do that'
 
     duplicate_me_for_controller:
       create:
@@ -77,6 +82,9 @@ en:
     courses:
       show:
         warning: "Sorry, we couldn't find the exact thing you were looking for"
+      create:
+        flash:
+          error: "Sorry, your quiz attempt could not be saved."
 
     course_modules:
       index:
@@ -503,6 +511,19 @@ en:
     courses:
       show:
         h1: Courses
+
+      show_results:
+        h1: 'Results:'
+        attempts_table:
+          question: 'Question'
+          result: Result
+          score: Score
+          level: Level
+          video: Video
+          total: Total
+        scoring_system: Scoring system
+        previous_attempts: Previous Attempts
+        no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
 
     course_modules:
       form:

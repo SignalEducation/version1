@@ -18,6 +18,7 @@
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
+#  is_jumbo_quiz               :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
@@ -63,20 +64,20 @@ describe CourseModuleElementUserLog do
     before :each do
       subject.stub(:is_quiz).and_return(true)
     end
-    it { should validate_presence_of(:quiz_score_actual) }
-    it { should validate_presence_of(:quiz_score_potential) }
+    it { should validate_presence_of(:quiz_score_actual).on(:update) }
+    it { should validate_presence_of(:quiz_score_potential).on(:update) }
   end
 
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
 
-  it { should validate_presence_of(:corporate_customer_id) }
+  it { should_not validate_presence_of(:corporate_customer_id) }
   it { should validate_numericality_of(:corporate_customer_id) }
 
   # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:mark_previous_attempts_as_latest_false).after(:create) }
   it { should callback(:set_latest_attempt).before(:create) }
+  it { should callback(:calculate_score).after(:create) }
+  it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(CourseModuleElementUserLog).to respond_to(:all_in_order) }
@@ -84,15 +85,18 @@ describe CourseModuleElementUserLog do
   it { expect(CourseModuleElementUserLog).to respond_to(:for_unknown_users) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module_element) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:for_jumbo_quiz) }
   it { expect(CourseModuleElementUserLog).to respond_to(:latest_only) }
   it { expect(CourseModuleElementUserLog).to respond_to(:quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:videos) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:jumbo_quizzes) }
 
   # class methods
-  it { should respond_to(:for_user_or_session) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:assign_user_to_session_guid) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:mark_previous_attempts_as_latest_false) }
+  it { should respond_to(:recent_attempts) }
 
 end

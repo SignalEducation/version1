@@ -10,6 +10,7 @@
 #  course_module_element_user_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  score                             :integer          default(0)
 #
 
 require 'rails_helper'
@@ -17,7 +18,7 @@ require 'rails_helper'
 describe QuizAttempt do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at score)
   QuizAttempt.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -45,10 +46,11 @@ describe QuizAttempt do
   it { should validate_presence_of(:quiz_answer_id) }
   it { should validate_numericality_of(:quiz_answer_id) }
 
-  it { should validate_presence_of(:course_module_element_user_log_id) }
+  it { should validate_presence_of(:course_module_element_user_log_id).on(:update) }
   it { should validate_numericality_of(:course_module_element_user_log_id) }
 
   # callbacks
+  it { should callback(:calculate_score).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

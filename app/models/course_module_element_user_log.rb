@@ -18,6 +18,7 @@
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
+#  is_jumbo_quiz               :boolean          default(FALSE), not null
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -28,7 +29,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   attr_accessible :course_module_element_id, :user_id, :session_guid,
                   :element_completed, :time_taken_in_seconds,
                   :quiz_score_actual, :quiz_score_potential,
-                  :is_video, :is_quiz, :course_module_id,
+                  :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
                   :corporate_customer_id, :course_module_jumbo_quiz_id,
                   :quiz_attempts_attributes
 
@@ -39,7 +40,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module
   belongs_to :course_module_element
   belongs_to :course_module_jumbo_quiz
-  has_many   :quiz_attempts
+  has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   belongs_to :user
   accepts_nested_attributes_for :quiz_attempts
 
@@ -54,14 +55,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   validates :time_taken_in_seconds, presence: true
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, presence: true,
+  validates :corporate_customer_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_score_actual, presence: true, if: 'is_quiz == true'
-  validates :quiz_score_potential, presence: true, if: 'is_quiz == true'
+  validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
+  validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
   # callbacks
   before_create :set_latest_attempt
-  after_create :mark_previous_attempts_as_latest_false
+  before_create :set_booleans
+  after_create :calculate_score
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -70,11 +72,20 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
+  scope :for_jumbo_quiz, lambda { |element_id| where(course_module_jumbo_quiz_id: element_id) }
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
+  scope :jumbo_quizzes, -> { where(is_jumbo_quiz: true) }
 
-  def for_user_or_session(the_user_id, the_session_guid)
+  # class methods
+  def self.assign_user_to_session_guid(the_user_id, the_session_guid)
+    # activate this with the following:
+    # CourseModuleElementUserLog.assign_user_to_session_guid( 123, 'abcde123')
+    CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users.update_attributes(user_id: the_user_id)
+  end
+
+  def self.for_user_or_session(the_user_id, the_session_guid)
     if the_user_id
       where(user_id: the_user_id)
     else
@@ -82,30 +93,44 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     end
   end
 
-  # class methods
-
   # instance methods
   def destroyable?
     self.quiz_attempts.empty?
   end
 
-  def mark_previous_attempts_as_latest_false
-    previous = CourseModuleElementUserLog.where(user_id: self.user_id, course_module_element_id: self.course_module_element_id, latest_attempt: true).where('id < ?', self.id)
-    previous.update_attributes(latest_attempt: false)
-  end
-
-  def self.asssign_user_to_session_guid(the_user_id, the_session_guid)
-    # activate this with the following:  CourseModuleElementUserLog.assign_user_to_session_guid( 123, 'abcde123')
-    CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users.update_attributes(user_id: the_user_id)
+  def recent_attempts
+    if self.user_id
+      CourseModuleElementUserLog.where(user_id: self.user_id, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    else
+      CourseModuleElementUserLog.where(session_guid: self.session_guid, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    end
   end
 
   protected
 
+  def calculate_score
+    self.quiz_score_actual = self.quiz_attempts.sum(:score)
+    self.quiz_score_potential = self.quiz_attempts.count * ApplicationController::DIFFICULTY_LEVELS[-1][:score]
+    self.save(callbacks: false, validate: false)
+  end
+
+  def set_booleans
+    if self.course_module_jumbo_quiz
+      self.is_jumbo_quiz = true
+    elsif self.course_module_element.course_module_element_quiz
+      self.is_quiz = true
+    else
+      self.is_video = true
+    end
+    true
+  end
+
   def set_latest_attempt
     self.latest_attempt = true
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).
-        for_course_module_element(self.course_module_element_id).latest_only
+        where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
+    true
   end
 
 end

@@ -35,16 +35,20 @@ class CoursesController < ApplicationController
   end
 
   def create # course_module_element_user_log and children
+    @mathjax_required = true
     @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
-    if @course_module_element_user_log.save
-
+    @course_module_element_user_log.session_guid = current_session_guid
+    @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i
+    unless @course_module_element_user_log.save
+      Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
+      flash[:error] = I18n.t('controllers.courses.create.flash.error')
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
     else
       @course_module_element = @course_module_element_user_log.course_module_element
-      @course_module = @course_module_element.course_module
-      @results = 'abc'
+      @course_module = @course_module_element_user_log.course_module
+      @results = true
       render :show
     end
   end
@@ -64,9 +68,10 @@ class CoursesController < ApplicationController
             #:quiz_score_potential,
             #:is_video,
             #:is_quiz,
+            #:is_jumbo_quiz,
             #:latest_attempt,
             :corporate_customer_id,
-            quiz_attempts_params: [
+            quiz_attempts_attributes: [
                     :id,
                     :user_id,
                     :quiz_question_id,
@@ -79,6 +84,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log = CourseModuleElementUserLog.new(
             course_module_id: @course_module_element.course_module_id,
             course_module_element_id: @course_module_element.id,
+            is_quiz: true,
             user_id: current_user.try(:id)
     )
     @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
@@ -102,6 +108,7 @@ class CoursesController < ApplicationController
             course_module_id: @course_module.id,
             course_module_element_id: nil,
             course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
+            is_jumbo_quiz: true,
             user_id: current_user.try(:id)
     )
     @number_of_questions = @course_module_jumbo_quiz.total_number_of_questions

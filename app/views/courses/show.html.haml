@@ -9,11 +9,12 @@
   .col-sm-3
     =render partial: 'courses/side_nav'
   .col-sm-9
-    -if @course_module_element
-      -if defined?(@results)
-        =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+    -if defined?(@results)
+      =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+      -if @course_module_element
         =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
-      -elsif @course_module_element.is_video
+    -elsif @course_module_element
+      -if @course_module_element.is_video
         =render partial: 'courses/show_video', locals: {cme: @course_module_element}
         =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
       -elsif @course_module_element.is_quiz
