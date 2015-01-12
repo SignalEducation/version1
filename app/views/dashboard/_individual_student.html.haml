@@ -11,8 +11,21 @@
   -@student_exam_tracks[0..-1].each do |set|
     .row
       .col-sm-12
-        .well.well-sm
-          %p=set.inspect
+        .well.wel-sm
+          .row
+            .col-sm-10
+              .h3.no-top-gap=set.latest_course_module_element.name
+            .col-sm-2
+              =link_to t('views.course_module_elements.show.next_step'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
+          %br/
+          .row
+            .col-sm-10
+              .progress
+                .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
+                  %span.sr-only 0% Complete
+                  0%
+
+
 
 -else
   .row
