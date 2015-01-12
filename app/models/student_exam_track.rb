@@ -10,6 +10,9 @@
 #  exam_schedule_id                :integer
 #  created_at                      :datetime
 #  updated_at                      :datetime
+#  session_guid                    :string(255)
+#  course_module_id                :integer
+#  jumbo_quiz_taken                :boolean          default(FALSE)
 #
 
 class StudentExamTrack < ActiveRecord::Base
@@ -18,7 +21,8 @@ class StudentExamTrack < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :exam_level_id, :exam_section_id,
-                  :latest_course_module_element_id, :exam_schedule_id
+                  :latest_course_module_element_id, :exam_schedule_id,
+                  :session_guid, :course_module_id, :jumbo_quiz_taken
 
   # Constants
 
@@ -40,6 +44,9 @@ class StudentExamTrack < ActiveRecord::Base
   validates :latest_course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_schedule_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :session_guid, presence: true
+  validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
