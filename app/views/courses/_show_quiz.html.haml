@@ -36,9 +36,10 @@
       answers = [],
       numberOfQuestions = #{@number_of_questions},
       currentQuestion = 1,
-      nextQuestionLevel = 'easy',
-      nextQuestionArray = easyList,
+      nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
+      nextQuestionArray = #{@first_attempt ? 'easy' : 'difficult'}List,
       progressBar = $('.progress-bar'),
+      previousAnswerCorrect = true,
       startTime = #{Time.now.to_i};
 
   function updateProgressBar() {
@@ -57,14 +58,28 @@
   }
 
   function logAnswer(questionId, answerId, difficultyLevel, isCorrect) {
-    // tomorrow's stuff.
     answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
+    // log the answer in the form
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
     if (currentQuestion < numberOfQuestions) {
+      if (isCorrect == true && difficultyLevel == 'easy') {
+        nextQuestionLevel = 'medium';
+        nextQuestionArray = mediumList;
+      } else if (isCorrect == true && difficultyLevel == 'medium') {
+        nextQuestionLevel = 'difficult';
+        nextQuestionArray = difficultList;
+      } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
+        nextQuestionLevel = 'medium';
+        nextQuestionArray = mediumList;
+      } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
+        nextQuestionLevel = 'easy';
+        nextQuestionArray = easyList;
+      }
       currentQuestion++;
       updateProgressBar();
       askQuestion(currentQuestion);
+      previousAnswerCorrect = isCorrect;
     } else {
       $('#new_course_module_element_user_log').submit();
     }

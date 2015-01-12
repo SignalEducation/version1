@@ -37,7 +37,7 @@ describe QuizAttempt do
   it { should belong_to(:user) }
 
   # validation
-  it { should validate_presence_of(:user_id) }
+  it { should_not validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:quiz_question_id) }

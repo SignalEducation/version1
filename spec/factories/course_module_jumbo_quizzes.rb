@@ -2,15 +2,17 @@
 #
 # Table name: course_module_jumbo_quizzes
 #
-#  id                              :integer          not null, primary key
-#  course_module_id                :integer
-#  name                            :string(255)
-#  minimum_question_count_per_quiz :integer
-#  maximum_question_count_per_quiz :integer
-#  total_number_of_questions       :integer
-#  created_at                      :datetime
-#  updated_at                      :datetime
-#  name_url                        :string(255)
+#  id                                :integer          not null, primary key
+#  course_module_id                  :integer
+#  name                              :string(255)
+#  minimum_question_count_per_quiz   :integer
+#  maximum_question_count_per_quiz   :integer
+#  total_number_of_questions         :integer
+#  created_at                        :datetime
+#  updated_at                        :datetime
+#  name_url                          :string(255)
+#  best_possible_score_first_attempt :integer          default(0)
+#  best_possible_score_retry         :integer          default(0)
 #
 
 FactoryGirl.define do

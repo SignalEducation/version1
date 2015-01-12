@@ -39,7 +39,7 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :latest_course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_schedule_id, presence: true,
+  validates :exam_schedule_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks

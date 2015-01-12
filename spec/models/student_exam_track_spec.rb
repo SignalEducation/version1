@@ -49,7 +49,7 @@ describe StudentExamTrack do
   it { should validate_presence_of(:latest_course_module_element_id) }
   it { should validate_numericality_of(:latest_course_module_element_id) }
 
-  it { should validate_presence_of(:exam_schedule_id) }
+  it { should_not validate_presence_of(:exam_schedule_id) }
   it { should validate_numericality_of(:exam_schedule_id) }
 
   # callbacks

@@ -2,15 +2,17 @@
 #
 # Table name: course_module_jumbo_quizzes
 #
-#  id                              :integer          not null, primary key
-#  course_module_id                :integer
-#  name                            :string(255)
-#  minimum_question_count_per_quiz :integer
-#  maximum_question_count_per_quiz :integer
-#  total_number_of_questions       :integer
-#  created_at                      :datetime
-#  updated_at                      :datetime
-#  name_url                        :string(255)
+#  id                                :integer          not null, primary key
+#  course_module_id                  :integer
+#  name                              :string(255)
+#  minimum_question_count_per_quiz   :integer
+#  maximum_question_count_per_quiz   :integer
+#  total_number_of_questions         :integer
+#  created_at                        :datetime
+#  updated_at                        :datetime
+#  name_url                          :string(255)
+#  best_possible_score_first_attempt :integer          default(0)
+#  best_possible_score_retry         :integer          default(0)
 #
 
 require 'rails_helper'
@@ -18,7 +20,7 @@ require 'rails_helper'
 describe CourseModuleJumboQuiz do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at best_possible_score_first_attempt best_possible_score_retry)
   CourseModuleJumboQuiz.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -53,6 +55,7 @@ describe CourseModuleJumboQuiz do
 
   # callbacks
   it { should callback(:sanitize_name_url).before(:save) }
+  it { should callback(:calculate_best_possible_scores).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

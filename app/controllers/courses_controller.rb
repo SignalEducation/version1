@@ -82,6 +82,7 @@ class CoursesController < ApplicationController
 
   def set_up_quiz
     @course_module_element_user_log = CourseModuleElementUserLog.new(
+            session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
@@ -99,12 +100,14 @@ class CoursesController < ApplicationController
     @easy_ids = all_easy_ids.sample(@number_of_questions)
     @medium_ids = all_medium_ids.sample(@number_of_questions)
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
-    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids).includes(:quiz_contents)
     @enough_questions = @course_module_element.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
+    @first_attempt = @course_module_element_user_log.recent_attempts == 0
   end
 
   def set_up_jumbo_quiz
     @course_module_element_user_log = CourseModuleElementUserLog.new(
+            session_guid: current_session_guid,
             course_module_id: @course_module.id,
             course_module_element_id: nil,
             course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
@@ -126,6 +129,8 @@ class CoursesController < ApplicationController
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
     @enough_questions = @quiz_questions.size >= @course_module_jumbo_quiz.total_number_of_questions || current_user.try(:admin?)
+    Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
+    @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
   end
 
 end
