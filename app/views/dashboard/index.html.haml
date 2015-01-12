@@ -9,5 +9,11 @@
 -if @dashboard_type.include?('individual_student')
   =render partial: 'dashboard/individual_student'
 
--#if @dashboard_type.include?('tutor')
+-if @dashboard_type.include?('tutor')
   =render partial: 'dashboard/tutor'
+
+-if @dashboard_type.include?('admin')
+  =render partial: 'dashboard/admin'
+
+-if @dashboard_type.include?('content_manager')
+  =render partial: 'dashboard/content_manager'

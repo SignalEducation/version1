@@ -123,6 +123,7 @@ class ApplicationController < ActionController::Base
   def current_session_guid
     cookies.permanent.encrypted[:session_guid]
   end
+  helper_method :current_session_guid
 
   def set_session_guid
     cookies.permanent.encrypted[:session_guid] ||= ApplicationController.generate_random_code(64)

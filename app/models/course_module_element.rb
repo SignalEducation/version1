@@ -106,6 +106,10 @@ class CourseModuleElement < ActiveRecord::Base
     self.array_of_sibling_ids.index(self.id)
   end
 
+  def parent
+    self.course_module
+  end
+
   def previous_element_id
     if self.my_position_among_siblings > 0
       self.array_of_sibling_ids[self.my_position_among_siblings - 1]

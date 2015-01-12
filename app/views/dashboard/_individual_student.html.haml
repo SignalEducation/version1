@@ -1,4 +1,22 @@
-.row
-  .col-sm-12
-    %p=@students_active_cms
+-if @student_exam_tracks.count > 0
+  -first_set = @student_exam_tracks.first
+  .row
+    .col-sm-6.col-sm-offset-3
+      .well.well-sm
+        .text-center
+          =render partial: 'shared/breadcrumbs', locals: {the_thing: first_set.latest_course_module_element, use_breadcrumb: false}
+          .h1{style: 'margin: 60px 50px;'}=first_set.latest_course_module_element.name
+          =link_to t('views.course_module_elements.show.next_step'), course_special_link(first_set.latest_course_module_element), class: 'btn btn-success btn-lg'
 
+  -@student_exam_tracks[0..-1].each do |set|
+    .row
+      .col-sm-12
+        .well.well-sm
+          %p=set.inspect
+
+-else
+  .row
+    .col-sm-12
+      .well
+        This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started choose a course form our library.
+      =link_to t('views.library.show.h1'), library_url, class: 'btn btn-success btn-lg'

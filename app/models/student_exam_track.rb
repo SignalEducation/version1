@@ -35,7 +35,7 @@ class StudentExamTrack < ActiveRecord::Base
   # todo belongs_to :exam_schedule
 
   # validation
-  validates :user_id, presence: true,
+  validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -43,7 +43,7 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :latest_course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_schedule_id, presence: true,
+  validates :exam_schedule_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true
   validates :course_module_id, presence: true,
@@ -55,6 +55,14 @@ class StudentExamTrack < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id) }
 
   # class methods
+
+  def self.get_user_stuff(the_user_id, the_session_guid)
+    if the_user_id
+      StudentExamTrack.where(user_id: the_user_id)
+    else
+      StudentExamTrack.where(session_guid: the_session_guid)
+    end
+  end
 
   # instance methods
   def destroyable?
