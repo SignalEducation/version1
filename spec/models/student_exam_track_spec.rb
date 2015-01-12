@@ -10,6 +10,9 @@
 #  exam_schedule_id                :integer
 #  created_at                      :datetime
 #  updated_at                      :datetime
+#  session_guid                    :string(255)
+#  course_module_id                :integer
+#  jumbo_quiz_taken                :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -51,6 +54,11 @@ describe StudentExamTrack do
 
   it { should validate_presence_of(:exam_schedule_id) }
   it { should validate_numericality_of(:exam_schedule_id) }
+
+  it { should validate_presence_of(:session_guid) }
+
+  it { should validate_presence_of(:course_module_id) }
+  it { should validate_numericality_of(:course_module_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
