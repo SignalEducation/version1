@@ -10,12 +10,13 @@
     .row
       .col-sm-12
         .well.well-sm.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}); return false;"}
-          %table
-            %tr
-              %td.col-xs-2
-                =('A'..'Z').to_a[counter]
-              %td
-                =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+          %table.table
+            %tbody
+              %tr
+                %td.col-xs-1{style: 'border: 1px solid transparent;'}
+                  .h1.no-top-gap=('A'..'Z').to_a[counter]
+                %td.col-xs-11{style: 'border: 1px solid transparent;'}
+                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
   %small
     %small.text-muted
       QID:

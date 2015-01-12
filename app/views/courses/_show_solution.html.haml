@@ -1,0 +1,47 @@
+.tab-pane.fade{id: "attempt-#{counter + 1}", role: 'tabpanel'}
+  .row
+    .col-sm-12
+      %h3
+        =t('views.courses.show_results.attempts_table.question')
+        =counter + 1
+  .row
+    .col-sm-12
+      .well.well-sm
+        =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
+  .row
+    .col-sm-12
+      %h3=t('views.courses.show_results.answers')
+  -correct_answer = 0
+  -attempt.quiz_question.quiz_answers.each_with_index do |qa, counter2|
+    .row
+      .col-sm-12
+        .well.well-sm
+          %table.table
+            %tbody
+              %tr
+                %td.col-xs-1{style: 'border: 1px solid transparent;'}
+                  .h1.no-top-gap=('A'..'Z').to_a[counter2]
+                  -correct_answer = counter2 if qa.correct
+                %td.col-xs-11{style: 'border: 1px solid transparent;'}
+                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+  .row
+    .col-sm-6
+      .well.text-center
+        %h3=t('views.courses.show_results.correct_answer') + (('A'..'Z').to_a[correct_answer].to_s)
+    .col-sm-6
+      .well.text-center
+        %h3=t('views.courses.show_results.your_answer') + (('A'..'Z').to_a[correct_answer].to_s)
+  -if attempt.quiz_question.quiz_solutions.count > 0
+    .row
+      .col-sm-12
+        %h3=t('views.courses.show_results.solution')
+    .row
+      .col-sm-12
+        .well.well-sm
+          =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+  .row
+    .col-sm-12
+      .well.well-sm
+        %h4
+          =t('views.courses.show_results.check_out')
+        %p=link_to attempt.quiz_question.course_module_element.related_video.name, course_special_link(attempt.quiz_question.course_module_element.related_video)

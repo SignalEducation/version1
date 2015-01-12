@@ -3,38 +3,58 @@
     %h1.no-top-gap
       =t('views.courses.show_results.h1')
       =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name)
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %thead
-        %tr
-          %th.col-sm-6{colspan:2}=t('views.courses.show_results.attempts_table.question')
-          %th.col-sm-1=t('views.courses.show_results.attempts_table.level')
-          %th.col-sm-1=t('views.courses.show_results.attempts_table.result')
-          %th.col-sm-1.text-center=t('views.courses.show_results.attempts_table.score')
-          %th
-          -if @course_module_element_user_log.course_module_jumbo_quiz
-            %th=t('views.courses.show_results.attempts_table.video')
-      %tfoot
-        %tr
-          %td.col-sm-8{colspan: 4}=t('views.courses.show_results.attempts_table.total')
-          %td.text-center
-            =@course_module_element_user_log.quiz_score_actual
-            \/
-            =@course_module_element_user_log.quiz_score_potential
-      %tbody
-        -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-          %tr{class: attempt.correct ? 'success' : 'danger'}
-            %td=counter + 1
-            %td=truncate(attempt.quiz_question.quiz_contents.first.text_content, length: 120)
-            %td=t("controllers.application.difficulty_levels.name.#{attempt.quiz_question.difficulty_level}")
-            %td=tick_or_cross attempt.correct
-            %td.text-center=attempt.score
-            %td
-            -if @course_module_element_user_log.course_module_jumbo_quiz
-              %td
-                -unless attempt.correct
-                  =link_to attempt.quiz_question.course_module_element.related_video.name, course_special_link(attempt.quiz_question.course_module_element.related_video), target: '_blank'
+
+%div{role: 'tabpanel'}
+
+  %ul.nav.nav-pills{role: 'tablist'}
+    %li.active{role: 'presentation'}
+      %a{href: '#summary', aria: {controls: 'summary'}, role: 'tab', data: {toggle: 'tab'}}=t('views.courses.show_results.summary')
+      -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+        -if attempt.score == 0
+          %li{role: 'presentation'}
+            %a{href: "#attempt-#{counter + 1}", aria: {controls: "attempt-#{counter + 1}"}, role: 'tab', data: {toggle: 'tab'}}=t('views.courses.show_results.q') + ((counter + 1).to_s)
+
+
+  .tab-content
+    .tab-pane.fade.in.active#summary{role: 'tabpanel'}
+
+      .row
+        .col-sm-12
+          %table.table.table-bordered
+            %thead
+              %tr
+                %th.col-sm-6{colspan:2}=t('views.courses.show_results.attempts_table.question')
+                %th.col-sm-1=t('views.courses.show_results.attempts_table.level')
+                %th.col-sm-1=t('views.courses.show_results.attempts_table.result')
+                %th.col-sm-1.text-center=t('views.courses.show_results.attempts_table.score')
+                %th
+                -if @course_module_element_user_log.course_module_jumbo_quiz
+                  %th=t('views.courses.show_results.attempts_table.video')
+            %tfoot
+              %tr
+                %td.col-sm-8{colspan: 4}=t('views.courses.show_results.attempts_table.total')
+                %td.text-center
+                  =@course_module_element_user_log.quiz_score_actual
+                  \/
+                  =@course_module_element_user_log.quiz_score_potential
+            %tbody
+              -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+                %tr{class: attempt.correct ? 'success' : 'danger'}
+                  %td=counter + 1
+                  %td=truncate(attempt.quiz_question.quiz_contents.first.text_content, length: 120)
+                  %td=t("controllers.application.difficulty_levels.name.#{attempt.quiz_question.difficulty_level}")
+                  %td=tick_or_cross attempt.correct
+                  %td.text-center=attempt.score
+                  %td
+                  -if @course_module_element_user_log.course_module_jumbo_quiz
+                    %td
+                      -unless attempt.correct
+                        =link_to attempt.quiz_question.course_module_element.related_video.name, course_special_link(attempt.quiz_question.course_module_element.related_video), target: '_blank'
+
+    -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+      -if attempt.score == 0
+        =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
+
 
 .row
   .col-sm-6
@@ -48,7 +68,7 @@
   .col-sm-6
     %h3=t('views.courses.show_results.previous_attempts')
     -if @course_module_element_user_log.recent_attempts.size > 0
-      %table.table
+      %table.table.table-condensed
         %tbody
           -@course_module_element_user_log.recent_attempts.each do |ra|
             %tr

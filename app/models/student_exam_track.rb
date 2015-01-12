@@ -35,13 +35,13 @@ class StudentExamTrack < ActiveRecord::Base
   # todo belongs_to :exam_schedule
 
   # validation
-  validates :user_id, presence: true,
+  validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_section_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :latest_course_module_element_id, presence: true,
+  validates :latest_course_module_element_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_schedule_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}

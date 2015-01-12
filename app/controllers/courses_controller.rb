@@ -21,6 +21,7 @@ class CoursesController < ApplicationController
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
       # The URL worked out Okay
+      # todo: the next 5 lines could possibly be deleted
       @exam_section = @course_module.exam_section
       @exam_level = @course_module.exam_level
       @qualification = @exam_level.qualification
@@ -30,6 +31,8 @@ class CoursesController < ApplicationController
         set_up_quiz
       elsif @course_module_jumbo_quiz
         set_up_jumbo_quiz
+      elsif @course_module_element.try(:is_video)
+        create_a_cme_user_log
       end
     end
   end
@@ -80,6 +83,25 @@ class CoursesController < ApplicationController
     )
   end
 
+  def create_a_cme_user_log
+    CourseModuleElementUserLog.create!(
+            course_module_element_id: @course_module_element.id,
+            user_id: current_user.try(:id),
+            session_guid: current_session_guid,
+            element_completed: false,
+            time_taken_in_seconds: 0,
+            quiz_score_actual: nil,
+            quiz_score_potential: nil,
+            is_video: true,
+            is_quiz: false,
+            course_module_id: @course_module_element.course_module_id,
+            latest_attempt: true,
+            corporate_customer_id: nil,
+            course_module_jumbo_quiz_id: nil,
+            is_jumbo_quiz: false
+    )
+  end
+
   def set_up_quiz
     @course_module_element_user_log = CourseModuleElementUserLog.new(
             session_guid: current_session_guid,
@@ -100,7 +122,7 @@ class CoursesController < ApplicationController
     @easy_ids = all_easy_ids.sample(@number_of_questions)
     @medium_ids = all_medium_ids.sample(@number_of_questions)
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
-    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids).includes(:quiz_contents)
+    @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@easy_ids + @medium_ids + @difficult_ids)
     @enough_questions = @course_module_element.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
     @first_attempt = @course_module_element_user_log.recent_attempts == 0
   end

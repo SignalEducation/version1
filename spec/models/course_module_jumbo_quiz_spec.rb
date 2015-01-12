@@ -35,6 +35,7 @@ describe CourseModuleJumboQuiz do
   # relationships
   it { should belong_to(:course_module) }
   it { should have_many(:course_module_element_quizzes) }
+  it { should have_many(:course_module_element_user_logs) }
 
   # validation
   it { should validate_presence_of(:course_module_id) }
@@ -64,6 +65,7 @@ describe CourseModuleJumboQuiz do
   # class methods
 
   # instance methods
+  it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:name_url) }
 

@@ -124,11 +124,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_or_update_student_exam_track
-    if self.is_jumbo_quiz
-
-    else
-
-    end
+    set = StudentExamTrack.where(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id).first_or_initialize
+    set.exam_level_id ||= self.course_module.exam_level_id
+    set.exam_section_id ||= self.course_module.exam_section_id
+    set.latest_course_module_element_id = self.course_module_element_id
+    set.jumbo_quiz_taken = true if self.is_jumbo_quiz
+    set.save!
   end
 
   def set_booleans

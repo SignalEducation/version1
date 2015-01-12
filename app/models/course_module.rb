@@ -40,6 +40,7 @@ class CourseModule < ActiveRecord::Base
   belongs_to :exam_section
   belongs_to :institution
   belongs_to :qualification
+  has_many :student_exam_tracks
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
@@ -78,8 +79,14 @@ class CourseModule < ActiveRecord::Base
     self.course_module_elements.all
   end
 
+  def completed_by_user_or_guid(user_id, session_guid)
+    user_id ?
+            self.student_exam_tracks.where(user_id: user_id).count > 0 :
+            self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).count > 0
+  end
+
   def destroyable?
-    self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty?
+    self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty? && self.student_exam_tracks.empty?
   end
 
   def full_name

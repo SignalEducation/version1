@@ -511,9 +511,17 @@ en:
     courses:
       show:
         h1: Courses
+        done: Done
 
       show_results:
         h1: 'Results:'
+        summary: Summary
+        q: Q
+        answers: Possible Answers
+        correct_answer: "Correct Answer: "
+        your_answer: "Your Answer: "
+        solution: "Solution"
+        check_out: "Review the video: "
         attempts_table:
           question: 'Question'
           result: Result

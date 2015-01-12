@@ -29,6 +29,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   # relationships
   belongs_to :course_module
   has_many :course_module_element_quizzes
+  has_many :course_module_element_user_logs
 
   # validation
   validates :course_module_id, presence: true,
@@ -53,6 +54,11 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def completed_by_user_or_guid(user_id, session_guid)
+    user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id).count > 0 :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid).count > 0
+  end
 
   def destroyable?
     true
