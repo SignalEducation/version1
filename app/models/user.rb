@@ -229,6 +229,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:tutor)
   end
 
+  def individual_student?
+    self.user_group.try(:individual_student)
+  end
+
   protected
 
   def de_activate_user
