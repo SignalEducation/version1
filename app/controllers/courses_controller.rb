@@ -2,7 +2,6 @@ class CoursesController < ApplicationController
 
   def show
     @mathjax_required = true
-    @exam_section = @exam_level = @qualification = @institution = @subject_area = @course_module_jumbo_quiz = nil
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
     @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
@@ -13,20 +12,15 @@ class CoursesController < ApplicationController
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
             ExamSection.where(name_url: params[:exam_section_name_url]).first
-      @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first unless @exam_section
-      @qualification = Qualification.where(name_url: params[:qualification_name_url]).first unless @exam_level
-      @institution = Institution.where(name_url: params[:institution_name_url]).first unless @qualification
-      @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url]).first unless @institution
+      @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first
+      @qualification = Qualification.where(name_url: params[:qualification_name_url]).first
+      @institution = Institution.where(name_url: params[:institution_name_url]).first
+      @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url]).first
       flash[:warning] = t('controllers.courses.show.warning')
+      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
       # The URL worked out Okay
-      # todo: the next 5 lines could possibly be deleted
-      @exam_section = @course_module.exam_section
-      @exam_level = @course_module.exam_level
-      @qualification = @exam_level.qualification
-      @institution = @qualification.institution
-      @subject_area = @institution.subject_area
       if @course_module_element.try(:is_quiz)
         set_up_quiz
       elsif @course_module_jumbo_quiz
@@ -95,7 +89,6 @@ class CoursesController < ApplicationController
             is_video: true,
             is_quiz: false,
             course_module_id: @course_module_element.course_module_id,
-            latest_attempt: true,
             corporate_customer_id: nil,
             course_module_jumbo_quiz_id: nil,
             is_jumbo_quiz: false
