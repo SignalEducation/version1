@@ -64,8 +64,12 @@ describe UserActivityLog do
 
   # scopes
   it { expect(UserActivityLog).to respond_to(:all_in_order) }
+  it { expect(UserActivityLog).to respond_to(:for_session_guid) }
+  it { expect(UserActivityLog).to respond_to(:for_unknown_users) }
 
   # class methods
+  it { expect(UserActivityLog).to respond_to(:assign_user_to_session_guid) }
+  it { expect(UserActivityLog).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

@@ -68,8 +68,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
-  scope :for_session_guid, lambda { |the_session_id| where(session_guid:
-                                                               the_session_id) }
+  scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
@@ -82,8 +81,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
     # activate this with the following:
-    # CourseModuleElementUserLog.assign_user_to_session_guid( 123, 'abcde123')
-    CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users.update_attributes(user_id: the_user_id)
+    # CourseModuleElementUserLog.assign_user_to_session_guid(123, 'abcde123')
+    CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users.update_all(user_id: the_user_id)
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)
