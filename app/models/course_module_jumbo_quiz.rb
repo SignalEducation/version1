@@ -68,6 +68,10 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
     name_url_sanitizer(self.name)
   end
 
+  def parent
+    self.course_module
+  end
+
   protected
 
   def calculate_best_possible_scores

@@ -68,5 +68,6 @@ describe CourseModuleJumboQuiz do
   it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:name_url) }
+  it { should respond_to(:parent) }
 
 end
