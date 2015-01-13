@@ -30,6 +30,7 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :user
   belongs_to :exam_level
   belongs_to :exam_section
+  belongs_to :course_module
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
   # todo belongs_to :exam_schedule
@@ -72,6 +73,26 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   # instance methods
+  def cme_user_logs
+    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id)
+  end
+
+  def latest_cme_user_logs
+    self.cme_user_logs.latest_only
+  end
+
+  def percentage_complete
+    (self.elements_complete.to_f / self.elements_total * 100).round(1)
+  end
+
+  def elements_total
+    self.course_module.children.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
+  end
+
+  def elements_complete
+    self.latest_cme_user_logs.count
+  end
+
   def destroyable?
     true
   end

@@ -36,6 +36,7 @@ describe StudentExamTrack do
   it { should belong_to(:user) }
   it { should belong_to(:exam_level) }
   it { should belong_to(:exam_section) }
+  it { should belong_to(:course_module) }
   it { should belong_to(:latest_course_module_element) }
   xit { should belong_to(:exam_schedule) }
 

@@ -211,3 +211,11 @@ header {
 .label {
   margin-right: 4px;
 }
+
+.well-black {
+  background-color: #ccc;
+  border-radius: 20px;
+  .progress {
+    margin-bottom: 0;
+  }
+}
