@@ -585,6 +585,7 @@ en:
         next_step: Next Step
         previous_step: Previous Step
         preview: Preview
+        continue: Continue
 
     course_module_element_quizzes:
       form:

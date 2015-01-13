@@ -50,7 +50,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   validates :time_taken_in_seconds, presence: true
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, presence: true,
+  validates :corporate_customer_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true'
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true'
@@ -74,7 +74,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     if the_user_id
       where(user_id: the_user_id)
     else
-      where(session_guid: the_session_guid)
+      where(session_guid: the_session_guid, user_id: nil)
     end
   end
 

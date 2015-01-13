@@ -5,8 +5,8 @@
       .well.well-sm
         .text-center
           =render partial: 'shared/breadcrumbs', locals: {the_thing: first_set.latest_course_module_element, use_breadcrumb: false}
-          .h1{style: 'margin: 60px 50px;'}=first_set.latest_course_module_element.name
-          =link_to t('views.course_module_elements.show.next_step'), course_special_link(first_set.latest_course_module_element), class: 'btn btn-success btn-lg'
+          .h1{style: 'margin: 60px 20px;'}=first_set.latest_course_module_element.course_module.name
+          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element), class: 'btn btn-success btn-lg'
 
   -@student_exam_tracks[0..-1].each do |set|
     .row
@@ -14,18 +14,17 @@
         .well.wel-sm
           .row
             .col-sm-10
-              .h3.no-top-gap=set.latest_course_module_element.name
+              .h3.no-top-gap=set.latest_course_module_element.course_module.name
             .col-sm-2
-              =link_to t('views.course_module_elements.show.next_step'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
+              =link_to t('views.course_module_elements.show.continue'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
           %br/
           .row
             .col-sm-10
               .progress
-                .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
+                .progress-bar.progress-bar{role: 'progressbar', aria: {valuenow: set.exam_section.course_modules.count, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
                   %span.sr-only 0% Complete
-                  0%
-
-
+                  =@total_cmes
+                  =@cm_with_jumboquiz
 
 -else
   .row
