@@ -25,7 +25,7 @@
               =link_to library_special_link(child) do
                 %span.glyphicon.glyphicon-expand
             .text-muted
-              =child.children.size
+              =child.children.all_active.size
               items
           .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
             .panel-body
