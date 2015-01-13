@@ -35,6 +35,7 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
     @course_module_element_user_log.session_guid = current_session_guid
+    @course_module_element_user_log.element_completed = true
     @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i
     unless @course_module_element_user_log.save
       Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."

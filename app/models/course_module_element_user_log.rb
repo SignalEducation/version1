@@ -100,11 +100,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def recent_attempts
-    if self.user_id
-      CourseModuleElementUserLog.where(user_id: self.user_id, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
-    else
-      CourseModuleElementUserLog.where(session_guid: self.session_guid, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
-    end
+    self.user_id ?
+            CourseModuleElementUserLog.where(user_id: self.user_id, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5) :
+            CourseModuleElementUserLog.where(session_guid: self.session_guid, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
   protected
@@ -145,8 +143,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def set_latest_attempt
     self.latest_attempt = true
-    others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).
-        where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
+    others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
     true
   end
