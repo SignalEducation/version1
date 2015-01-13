@@ -48,6 +48,7 @@ describe CourseModuleElement do
   it { should have_many(:quiz_questions) }
   it { should belong_to(:related_quiz) }
   it { should belong_to(:related_video) }
+  it { should have_many(:student_exam_tracks) }
   it { should belong_to(:tutor) }
 
   # validation
@@ -95,9 +96,13 @@ describe CourseModuleElement do
 
   # instance methods
   it { should respond_to(:array_of_sibling_ids) }
+  it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:my_position_among_siblings) }
+  it { should respond_to(:next_element) }
   it { should respond_to(:next_element_id) }
+  it { should respond_to(:parent) }
+  it { should respond_to(:previous_element) }
   it { should respond_to(:previous_element_id) }
   it { should respond_to(:update_the_module_total_time) }
 

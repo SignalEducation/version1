@@ -11,6 +11,7 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
+      assign_anonymous_logs_to_user
       flash[:success] = I18n.t('controllers.user_sessions.create.flash.success')
       redirect_back_or_default root_url
     else
@@ -25,6 +26,13 @@ class UserSessionsController < ApplicationController
   end
 
   protected
+
+  def assign_anonymous_logs_to_user
+    model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack]
+    model_list.each do |the_model|
+      the_model.assign_user_to_session_guid(@user_session.user.id, current_session_guid)
+    end
+  end
 
   def set_variables
     @seo_title = 'LearnSignal – Sign In'

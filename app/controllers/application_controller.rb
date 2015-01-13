@@ -123,6 +123,7 @@ class ApplicationController < ActionController::Base
   def current_session_guid
     cookies.permanent.encrypted[:session_guid]
   end
+  helper_method :current_session_guid
 
   def set_session_guid
     cookies.permanent.encrypted[:session_guid] ||= ApplicationController.generate_random_code(64)
@@ -241,7 +242,7 @@ class ApplicationController < ActionController::Base
               the_thing.exam_section.try(:name_url) || 'all',
               the_thing.name_url
       )
-    elsif the_thing.class == CourseModuleElement
+    elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
               the_thing.course_module.exam_level.qualification.institution.subject_area.name_url,
               the_thing.course_module.exam_level.qualification.institution.name_url,

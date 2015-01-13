@@ -31,10 +31,10 @@
 .row
   .col-sm-12
     %h3=t('views.course_modules.form.course_module_elements')
-    %table.table.table-striped.sorted_table{data: {destination: course_module_elements_url}}
+    %table.table.table-striped.sorted_table{data: {destination: course_module_elements_url}, id: "cm-#{@course_module.id}"}
       %tbody
-        -@course_module.course_module_elements.each do |cme|
-          %tr{id: cme.id}
+        -@course_module.course_module_elements.all_in_order.each do |cme|
+          %tr{id: cme.id, data: {parent: "cm-#{@course_module.id}"}}
             %td=cme.name
             %td
               -if cme.active

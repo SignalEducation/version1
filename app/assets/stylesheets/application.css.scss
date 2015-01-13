@@ -12,7 +12,6 @@ $navbar-inverse-border: #fff;
 $navbar-height: 65px;
 $link-color: #222;
 
-
 @font-face {
   font-family: 'BryantWebRegular';
   src: font-url('BryantWebRegular.eot')  format('eot'),
@@ -202,5 +201,21 @@ header {
   .btn {
     font-size: 125%;
     padding: 10px 20px;
+  }
+}
+
+.table > thead > tr > th {
+  border-top: 0 solid red !important;
+}
+
+.label {
+  margin-right: 4px;
+}
+
+.well-black {
+  background-color: #ccc;
+  border-radius: 20px;
+  .progress {
+    margin-bottom: 0;
   }
 }

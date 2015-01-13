@@ -18,7 +18,6 @@ $(document).on('ready page:load', function() {
 
   function sendDataToServer(theItem) {
     var parentTable = $('#' + theItem.attr('data-parent')).first();
-    console.log(parentTable);
     if (parentTable.length == 0) {
       console.log('parent table was null');
       parentTable = $('.sorted_table').first();
@@ -37,9 +36,9 @@ $(document).on('ready page:load', function() {
       data: {array_of_ids: arrayOfIds},
       success: function() {
         $('tr.dragged').removeClass('dragged').attr('style','');
-        $("body").removeClass("dragging");
       }
     });
+    $("body").removeClass("dragging");
   }
 
 });

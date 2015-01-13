@@ -36,11 +36,12 @@ describe StudentExamTrack do
   it { should belong_to(:user) }
   it { should belong_to(:exam_level) }
   it { should belong_to(:exam_section) }
+  it { should belong_to(:course_module) }
   it { should belong_to(:latest_course_module_element) }
   xit { should belong_to(:exam_schedule) }
 
   # validation
-  it { should validate_presence_of(:user_id) }
+  it { should_not validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:exam_level_id) }
@@ -49,10 +50,10 @@ describe StudentExamTrack do
   it { should validate_presence_of(:exam_section_id) }
   it { should validate_numericality_of(:exam_section_id) }
 
-  it { should validate_presence_of(:latest_course_module_element_id) }
+  it { should_not validate_presence_of(:latest_course_module_element_id) }
   it { should validate_numericality_of(:latest_course_module_element_id) }
 
-  it { should validate_presence_of(:exam_schedule_id) }
+  it { should_not validate_presence_of(:exam_schedule_id) }
   it { should validate_numericality_of(:exam_schedule_id) }
 
   it { should validate_presence_of(:session_guid) }
@@ -65,8 +66,12 @@ describe StudentExamTrack do
 
   # scopes
   it { expect(StudentExamTrack).to respond_to(:all_in_order) }
+  it { expect(StudentExamTrack).to respond_to(:for_session_guid) }
+  it { expect(StudentExamTrack).to respond_to(:for_unknown_users) }
 
   # class methods
+  it { expect(StudentExamTrack).to respond_to(:assign_user_to_session_guid) }
+  it { expect(StudentExamTrack).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

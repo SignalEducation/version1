@@ -1,0 +1,31 @@
+-if @student_exam_tracks.count > 0
+  -first_set = @student_exam_tracks.first
+  .row
+    .col-sm-6.col-sm-offset-3
+      .well.well-sm
+        .text-center
+          =render partial: 'shared/breadcrumbs', locals: {the_thing: first_set.latest_course_module_element || first_set.course_module.course_module_jumbo_quiz, use_breadcrumb: false}
+          .h1{style: 'margin: 60px 20px;'}=first_set.course_module.name
+          .well.well-black
+            =render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.elements_complete, value_max: first_set.elements_total}
+          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element), class: 'btn btn-success btn-lg'
+
+  -@student_exam_tracks[1..-1].each do |set|
+    .row
+      .col-sm-12
+        .well.wel-sm
+          .row
+            .col-sm-10
+              .h3.no-top-gap=set.latest_course_module_element.course_module.name
+            .col-sm-2
+              =link_to t('views.course_module_elements.show.continue'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
+          %br/
+          .row
+            .col-sm-10
+              =render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.elements_complete, value_max: set.elements_total}
+-else
+  .row
+    .col-sm-12
+      .well
+        This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started choose a course form our library.
+      =link_to t('views.library.show.h1'), library_url, class: 'btn btn-success btn-lg'

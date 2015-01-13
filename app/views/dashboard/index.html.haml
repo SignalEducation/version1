@@ -2,3 +2,18 @@
   .col-sm-12
     .page-header
       %h1=t('views.dashboard.index.h1')
+
+-if @dashboard_type.length > 1
+  -# insert a tabbed-navigation for each dashboard
+
+-if @dashboard_type.include?('individual_student')
+  =render partial: 'dashboard/individual_student'
+
+-if @dashboard_type.include?('tutor')
+  =render partial: 'dashboard/tutor'
+
+-if @dashboard_type.include?('admin')
+  =render partial: 'dashboard/admin'
+
+-if @dashboard_type.include?('content_manager')
+  =render partial: 'dashboard/content_manager'

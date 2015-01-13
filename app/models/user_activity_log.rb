@@ -6,7 +6,7 @@
 #  user_id          :integer
 #  session_guid     :string(255)
 #  signed_in        :boolean          default(FALSE), not null
-#  original_uri     :string(255)
+#  original_uri     :text
 #  controller_name  :string(255)
 #  action_name      :string(255)
 #  params           :text
@@ -55,8 +55,23 @@ class UserActivityLog < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
+  scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
+  scope :for_unknown_users, -> { where(user_id: nil) }
 
   # class methods
+  def self.assign_user_to_session_guid(the_user_id, the_session_guid)
+    # activate this with the following:
+    # UserActivityLog.assign_user_to_session_guid(123, 'abcde123')
+    UserActivityLog.for_session_guid(the_session_guid).for_unknown_users.update_all(user_id: the_user_id)
+  end
+
+  def self.for_user_or_session(the_user_id, the_session_guid)
+    if the_user_id
+      where(user_id: the_user_id)
+    else
+      where(session_guid: the_session_guid, user_id: nil)
+    end
+  end
 
   # instance methods
   def destroyable?
