@@ -24,6 +24,15 @@ module ApplicationHelper
     # sanitize(some_text, tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p div a img button span ul ol li nav header), attributes: %w(id class style href src url data-toggle data-target data-ride data-slide-to role aria-hidden aria-expanded aria-controls), css: %w(url) )
   end
 
+  def breadcrumb_builder(the_thing)
+    # This builds an array of objects starting at subject_area and ending at whatever the_thing is.
+    if the_thing.parent
+      return breadcrumb_builder(the_thing.parent) + [the_thing]
+    else
+      return [the_thing]
+    end
+  end
+
   def seconds_to_time(seconds)
     Time.at(seconds).utc.strftime('%M:%S')
   end

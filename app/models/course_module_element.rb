@@ -112,6 +112,10 @@ class CourseModuleElement < ActiveRecord::Base
     CourseModuleElement.find_by_id(self.next_element_id) || nil
   end
 
+  def parent
+    self.course_module
+  end
+
   def next_element_id
     if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
       self.array_of_sibling_ids[self.my_position_among_siblings + 1]

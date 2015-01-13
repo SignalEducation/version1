@@ -56,6 +56,14 @@ class StudentExamTrack < ActiveRecord::Base
 
   # class methods
 
+  def self.get_user_stuff(the_user_id, the_session_guid)
+    if the_user_id
+      StudentExamTrack.where(user_id: the_user_id)
+    else
+      StudentExamTrack.where(session_guid: the_session_guid)
+    end
+  end
+
   # instance methods
   def destroyable?
     true
