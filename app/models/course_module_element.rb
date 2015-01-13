@@ -90,40 +90,54 @@ class CourseModuleElement < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty?
-  end
-
-  def update_the_module_total_time
-    self.course_module.try(:recalculate_estimated_time)
-  end
-
   def array_of_sibling_ids
     self.course_module.course_module_elements.all_active.all_in_order.map(&:id)
+  end
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id).count > 0 :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid).count > 0
+  end
+
+  def destroyable?
+    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty?
   end
 
   def my_position_among_siblings
     self.array_of_sibling_ids.index(self.id)
   end
 
-  def parent
-    self.course_module
+  def next_element
+    CourseModuleElement.find_by_id(self.next_element_id) || nil
   end
 
-  def previous_element_id
-    if self.my_position_among_siblings > 0
-      self.array_of_sibling_ids[self.my_position_among_siblings - 1]
-    else
-      nil
-    end
+  def parent
+    self.course_module
   end
 
   def next_element_id
     if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
       self.array_of_sibling_ids[self.my_position_among_siblings + 1]
     else
-      nil
+      self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
     end
+  end
+
+  def previous_element
+    CourseModuleElement.find_by_id(self.previous_element_id) || nil
+  end
+
+  def previous_element_id
+    if self.my_position_among_siblings > 0
+      self.array_of_sibling_ids[self.my_position_among_siblings - 1]
+    else
+      self.course_module.previous_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:last).try(:id)
+    end
+  end
+
+  def update_the_module_total_time
+    self.course_module.try(:recalculate_estimated_time)
   end
 
   protected

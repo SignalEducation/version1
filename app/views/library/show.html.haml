@@ -14,9 +14,9 @@
         =t('views.general.back')
 
 .row
-  %div{class: (@subject_areas.length > 1 ? 'col-sm-9' : 'col-sm-12')}
+  %div{class: (@subject_areas.length > 1 ? 'col-sm-6' : 'col-sm-9')}
     .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
-      -@hierarchy_item.children.all_active.each_with_index do |child, counter|
+      -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child, counter|
         .panel.panel-default
           .panel-heading#headingOne{role: 'tab'}
             %h4.panel-title
@@ -31,26 +31,36 @@
             .panel-body
               %table.table.table-bordered
                 -if @hierarchy_item.children.all_active.count > 0
-                  -child.children.each do |grand_child|
+                  -child.children.all_active.all_in_order.each do |grand_child|
                     %tr
                       %td=link_to grand_child.name, library_special_link(grand_child)
                       %td.text-right
                         -if grand_child.class == CourseModuleElement
                           -if grand_child.is_video
-                            =t('views.course_module_element_quizzes.form.video')
+                            =t('views.library.show.video')
                             =seconds_to_time(grand_child.estimated_time_in_seconds)
                           -else
                             =grand_child.course_module_element_quiz.number_of_questions
-                            =t('views.course_module_elements.form.questions')
+                            =t('views.library.show.questions')
                         -elsif grand_child.children.all_active.any?
                           =grand_child.children.all_active.count
                           =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
+                  -if child.class == CourseModule && child.course_module_jumbo_quiz
+                    %tr
+                      %td=link_to child.course_module_jumbo_quiz.name, course_special_link(child.course_module_jumbo_quiz)
+                      %td.text-right=t('views.library.show.jumbo_quiz')
+
+  .col-sm-3
+    .well.well-sm.text-center
+      %h3 Lorem ipsum
+      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Incididunt ut labore et dolore magna aliqua.
+      %p Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
   -if @subject_areas.size > 1
     .col-sm-3
       %h3.no-top-gap=t('views.subject_areas.index.h1')
       .well.well-sm
         %ul.nav.nav-pills.nav-stacked
-          -@subject_areas.each do |subject_area|
+          -@subject_areas.all_active.all_in_order.each do |subject_area|
             %li{role: 'presentation', class: (@subject_area.id == subject_area.id ? 'active' : '')}
               =link_to subject_area.name, library_special_link(subject_area)

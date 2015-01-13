@@ -18,7 +18,11 @@ module LearnSignalModelExtras
   def sanitize_name_url
     # call like this:
     # before_save :sanitize_name_url
-    self.name_url = self.name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-')
+    self.name_url = name_url_sanitizer(self.name_url)
+  end
+
+  def name_url_sanitizer(the_name_url)
+    the_name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-').downcase
   end
 
   def set_sorting_order

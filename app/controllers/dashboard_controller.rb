@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
     # @dashboard_type could == ['blogger','tutor','admin']
     if @dashboard_type.include?('individual_student')
       # create the stuff an individual student should see
-      @student_exam_tracks = StudentExamTrack.get_user_stuff(current_user.try(:id), current_session_guid).order(updated_at: :desc)
+      @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
 
       @total_cmes = @student_exam_tracks.first.latest_course_module_element.course_module.course_module_elements.inspect
       #@completed_cmes = @student_exam_tracks.first.latest_course_module_element.course_module.course_module_elements.course_module_element_user_logs.where(element_completed: true)

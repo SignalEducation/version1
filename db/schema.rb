@@ -69,17 +69,19 @@ ActiveRecord::Schema.define(version: 20150112123417) do
     t.integer  "course_module_element_id"
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "element_completed",        default: false, null: false
+    t.boolean  "element_completed",           default: false, null: false
     t.integer  "time_taken_in_seconds"
     t.integer  "quiz_score_actual"
     t.integer  "quiz_score_potential"
-    t.boolean  "is_video",                 default: false, null: false
-    t.boolean  "is_quiz",                  default: false, null: false
+    t.boolean  "is_video",                    default: false, null: false
+    t.boolean  "is_quiz",                     default: false, null: false
     t.integer  "course_module_id"
-    t.boolean  "latest_attempt",           default: true,  null: false
+    t.boolean  "latest_attempt",              default: true,  null: false
     t.integer  "corporate_customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "course_module_jumbo_quiz_id"
+    t.boolean  "is_jumbo_quiz",               default: false, null: false
   end
 
   create_table "course_module_element_videos", force: true do |t|
@@ -119,6 +121,9 @@ ActiveRecord::Schema.define(version: 20150112123417) do
     t.integer  "total_number_of_questions"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name_url"
+    t.integer  "best_possible_score_first_attempt", default: 0
+    t.integer  "best_possible_score_retry",         default: 0
   end
 
   create_table "course_modules", force: true do |t|
@@ -284,14 +289,15 @@ ActiveRecord::Schema.define(version: 20150112123417) do
     t.integer  "course_module_element_user_log_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "score",                             default: 0
   end
 
   create_table "quiz_contents", force: true do |t|
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax",   default: false, null: false
-    t.boolean  "contains_image",     default: false, null: false
+    t.boolean  "contains_mathjax",   null: false
+    t.boolean  "contains_image",     null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -432,10 +438,12 @@ ActiveRecord::Schema.define(version: 20150112123417) do
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complementary",         default: false, null: false
+    t.boolean  "complementary",                 default: false, null: false
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "stripe_customer_id"
+    t.text     "original_stripe_customer_data"
   end
 
   create_table "system_defaults", force: true do |t|
@@ -450,7 +458,7 @@ ActiveRecord::Schema.define(version: 20150112123417) do
     t.integer  "user_id"
     t.string   "session_guid"
     t.boolean  "signed_in",        default: false, null: false
-    t.string   "original_uri"
+    t.text     "original_uri"
     t.string   "controller_name"
     t.string   "action_name"
     t.text     "params"

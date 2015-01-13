@@ -1,4 +1,4 @@
-=render partial: 'shared/breadcrumbs', locals: {the_thing: @course_module_element || @course_module, use_breadcrumb: true}
+=render partial: 'shared/breadcrumbs', locals: {the_thing: @course_module_jumbo_quiz || @course_module_element || @course_module, use_breadcrumb: true}
 
 .row
   .col-sm-12
@@ -8,22 +8,22 @@
 .row
   .col-sm-3
     =render partial: 'courses/side_nav'
-  -if @course_module_element
-    .col-sm-9
+  .col-sm-9
+    -if defined?(@results)
+      =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+      -if @course_module_element
+        =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
+    -elsif @course_module_element
       -if @course_module_element.is_video
         =render partial: 'courses/show_video', locals: {cme: @course_module_element}
+        =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
       -elsif @course_module_element.is_quiz
-        =render partial: 'courses/show_quiz', locals: {cme: @course_module_element}
+        =render partial: 'courses/show_quiz'
       -else
         %p course module element - type unknown
-
-  -elsif @course_module
-
-    .row
-      .col-sm-12
-        .page-header
-          %h1=@course_module.name
-    .row
+    -elsif @course_module_jumbo_quiz
+      =render partial: 'courses/show_quiz'
+    -elsif @course_module
       .well
         %h3 Coming soon
-        %p We don't have any content for this course module rightnow.
+        %p We don't have any content for this course module right now.
