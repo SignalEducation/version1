@@ -69,7 +69,7 @@ class UserActivityLog < ActiveRecord::Base
     if the_user_id
       where(user_id: the_user_id)
     else
-      where(session_guid: the_session_guid)
+      where(session_guid: the_session_guid, user_id: nil)
     end
   end
 

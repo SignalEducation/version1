@@ -27,9 +27,6 @@
                 %th.col-sm-1=t('views.courses.show_results.attempts_table.level')
                 %th.col-sm-1=t('views.courses.show_results.attempts_table.result')
                 %th.col-sm-1.text-center=t('views.courses.show_results.attempts_table.score')
-                %th
-                -if @course_module_element_user_log.course_module_jumbo_quiz
-                  %th=t('views.courses.show_results.attempts_table.video')
             %tfoot
               %tr
                 %td.col-sm-8{colspan: 4}=t('views.courses.show_results.attempts_table.total')
@@ -45,11 +42,6 @@
                   %td=t("controllers.application.difficulty_levels.name.#{attempt.quiz_question.difficulty_level}")
                   %td=tick_or_cross attempt.correct
                   %td.text-center=attempt.score
-                  %td
-                  -if @course_module_element_user_log.course_module_jumbo_quiz
-                    %td
-                      -unless attempt.correct
-                        =link_to attempt.quiz_question.course_module_element.related_video.name, course_special_link(attempt.quiz_question.course_module_element.related_video), target: '_blank'
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
       -if attempt.score == 0

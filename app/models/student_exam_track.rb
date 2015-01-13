@@ -67,7 +67,7 @@ class StudentExamTrack < ActiveRecord::Base
     if the_user_id
       StudentExamTrack.where(user_id: the_user_id)
     else
-      StudentExamTrack.where(session_guid: the_session_guid)
+      StudentExamTrack.where(session_guid: the_session_guid, user_id: nil)
     end
   end
 

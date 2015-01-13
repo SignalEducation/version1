@@ -82,14 +82,18 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
     # activate this with the following:
     # CourseModuleElementUserLog.assign_user_to_session_guid(123, 'abcde123')
-    CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users.update_all(user_id: the_user_id)
+    x = CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users
+    x.update_all(user_id: the_user_id)
+    Rails.logger.debug "DEBUG: the_session_guid: #{the_session_guid}"
+    Rails.logger.debug "DEBUG: x: #{x.inspect}"
+    QuizAttempt.where(course_module_element_user_log_id: x.map(&:id), user_id: nil).update_all(user_id: the_user_id)
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)
     if the_user_id
       where(user_id: the_user_id)
     else
-      where(session_guid: the_session_guid)
+      where(session_guid: the_session_guid, user_id: nil)
     end
   end
 
@@ -99,9 +103,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def recent_attempts
-    self.user_id ?
-            CourseModuleElementUserLog.where(user_id: self.user_id, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5) :
-            CourseModuleElementUserLog.where(session_guid: self.session_guid, course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
   protected

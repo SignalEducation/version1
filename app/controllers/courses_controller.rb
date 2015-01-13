@@ -118,7 +118,7 @@ class CoursesController < ApplicationController
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
     @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@easy_ids + @medium_ids + @difficult_ids)
     @enough_questions = @course_module_element.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
-    @first_attempt = @course_module_element_user_log.recent_attempts == 0
+    @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
   end
 
   def set_up_jumbo_quiz
