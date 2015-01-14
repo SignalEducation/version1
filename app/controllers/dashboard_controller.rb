@@ -12,17 +12,18 @@ class DashboardController < ApplicationController
 
     # @dashboard_type could == ['blogger','tutor','admin']
     if @dashboard_type.include?('individual_student')
-      # create the stuff an individual student should see
       @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
-
-
     end
+
     if @dashboard_type.include?('tutor')
       # create the stuff a tutor would see
+      @course_modules = CourseModule.where(tutor_id: current_user.id)
     end
+
     if @dashboard_type.include?('admin')
       # create the stuff an admin would see
     end
+
   end
 
 end

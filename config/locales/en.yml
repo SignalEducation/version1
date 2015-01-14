@@ -717,6 +717,12 @@ en:
       index:
         h1: Dashboard
 
+      tutor:
+        total_course_module_elements: Total Course Modules Elements
+        course_module_element_videos: Number of Videos
+        course_module_element_quizzes: Number of Quizzes
+
+
     exam_levels:
       form:
         qualification_id: Qualification

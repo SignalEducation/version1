@@ -3,8 +3,16 @@
     .page-header
       %h1=t('views.dashboard.index.h1')
 
--if @dashboard_type.length > 1
-  -# insert a tabbed-navigation for each dashboard
+    -#if @dashboard_type.length > 1
+      .col-sm-12
+        %ul.nav.nav-pills.nav-stacked
+          -@dashboard_type.each do |dashboard_type|
+            %li{role: 'presentation', class: (@dashboard_type == dashboard_type ? 'active' : '')}
+              =link_to dashboard_type, partial: "dashboard/#{dashboard_type}"
+    -#else
+      abc
+      =render partial: 'dashboard/individual_student'
+
 
 -if @dashboard_type.include?('individual_student')
   =render partial: 'dashboard/individual_student'

@@ -1,0 +1,23 @@
+%h1=t('views.user_groups.form.tutor')
+
+.row
+  .col-sm-9
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.course_modules.index.h1')
+          %th=t('views.course_module_elements.form.active')
+          %th=t('views.dashboard.tutor.course_module_element_quizzes')
+          %th=t('views.dashboard.tutor.course_module_element_videos')
+          %th=t('views.dashboard.tutor.total_course_module_elements')
+          %th=t('views.library.show.jumbo_quiz')
+      %tbody
+        -@course_modules.each do |course_modules|
+          %tr{id: course_modules.id}
+            %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
+            %td=tick_or_cross(course_modules.active?)
+            %td=course_modules.course_module_element_quizzes.count
+            %td=course_modules.course_module_element_videos.count
+            %td=course_modules.course_module_elements.count
+            %td=tick_or_cross(course_modules.course_module_jumbo_quiz)
+
