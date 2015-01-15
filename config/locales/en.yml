@@ -722,6 +722,18 @@ en:
         course_module_element_videos: Number of Videos
         course_module_element_quizzes: Number of Quizzes
 
+      admin:
+        user_data: User Data
+        total_number_of_items: Total
+        new_items_in_last_7_days: New in last 7 Days
+        users: Users
+        user_groups: User Groups
+        course_content_data: Courses Data
+        subject_areas: Subject Areas
+        institutions: Institutions
+        qualifications: Qualifications
+        exam_levels: Exam Levels
+
 
     exam_levels:
       form:

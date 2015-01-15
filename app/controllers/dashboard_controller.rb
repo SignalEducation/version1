@@ -22,6 +22,13 @@ class DashboardController < ApplicationController
 
     if @dashboard_type.include?('admin')
       # create the stuff an admin would see
+      @all_users = User.all
+      #@new_users = @all_users.where(created_at > (Date.today - 7))
+      @all_user_groups = UserGroup.all
+      @all_subject_areas = SubjectArea.all
+      @all_institutions = Institution.all
+      @all_qualifications = Qualification.all
+      @all_exam_levels = ExamLevel.all
     end
 
   end

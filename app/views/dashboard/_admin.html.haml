@@ -1,1 +1,43 @@
 %h1=t('views.general.admin')
+
+.row
+  .col-sm-12
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.dashboard.admin.user_data')
+          %th=t('views.dashboard.admin.total_number_of_items')
+          %th=t('views.dashboard.admin.new_items_in_last_7_days')
+      %tbody
+        %tr
+          %td=t('views.dashboard.admin.users')
+          %td=@all_users.count
+          %td=#@new_users.count
+        %tr
+          %td=t('views.dashboard.admin.user_groups')
+          %td=@all_user_groups.count
+          %td=#@new_users.count
+
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.dashboard.admin.course_content_data')
+          %th=t('views.dashboard.admin.total_number_of_items')
+          %th=t('views.dashboard.admin.new_items_in_last_7_days')
+      %tbody
+        %tr
+          %td=t('views.dashboard.admin.subject_areas')
+          %td=@all_subject_areas.count
+          %td=#@new_users.count
+        %tr
+          %td=t('views.dashboard.admin.institutions')
+          %td=@all_institutions.count
+          %td=#@new_users.count
+        %tr
+          %td=t('views.dashboard.admin.qualifications')
+          %td=@all_qualifications.count
+          %td=#@new_users.count
+        %tr
+          %td=t('views.dashboard.admin.exam_levels')
+          %td=@all_exam_levels.count
+          %td=#@new_users.count
