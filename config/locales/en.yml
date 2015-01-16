@@ -726,6 +726,7 @@ en:
         user_data: User Data
         total_number_of_items: Total
         new_items_in_last_7_days: New in last 7 Days
+        active: Active
         users: Users
         user_groups: User Groups
         course_content_data: Courses Data

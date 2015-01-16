@@ -16,19 +16,27 @@ class DashboardController < ApplicationController
     end
 
     if @dashboard_type.include?('tutor')
-      # create the stuff a tutor would see
       @course_modules = CourseModule.where(tutor_id: current_user.id)
     end
 
     if @dashboard_type.include?('admin')
-      # create the stuff an admin would see
       @all_users = User.all
-      #@new_users = @all_users.where(created_at > (Date.today - 7))
+      @active_users = @all_users.where(active: true)
+      @new_users = @all_users.where('created_at > ?', Time.now - 7.days)
       @all_user_groups = UserGroup.all
+      @new_user_groups = @all_user_groups.where('created_at > ?', Time.now - 7.days)
       @all_subject_areas = SubjectArea.all
+      @active_subject_areas = @all_subject_areas.where(active: true)
+      @new_subject_areas = @all_subject_areas.where('created_at > ?', Time.now - 7.days)
       @all_institutions = Institution.all
+      @active_institutions = @all_institutions.where(active: true)
+      @new_institutions = @all_institutions.where('created_at > ?', Time.now - 7.days)
       @all_qualifications = Qualification.all
+      @active_qualifications = @all_qualifications.where(active: true)
+      @new_qualifications = @all_qualifications.where('created_at > ?', Time.now - 7.days)
       @all_exam_levels = ExamLevel.all
+      @active_exam_levels = @all_exam_levels.where(active: true)
+      @new_exam_levels = @all_exam_levels.where('created_at > ?', Time.now - 7.days)
     end
 
   end
