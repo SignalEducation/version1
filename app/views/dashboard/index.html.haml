@@ -12,7 +12,7 @@
             %h4.panel-title
               %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
                 =dashboard_type.humanize
-          .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+          .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 1 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
             .panel-body
               =render partial: "#{dashboard_type}"
 
