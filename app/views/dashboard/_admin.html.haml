@@ -11,12 +11,12 @@
           %th=t('views.dashboard.admin.new_items_in_last_7_days')
       %tbody
         %tr
-          %td=t('views.dashboard.admin.users')
+          %td=link_to t('views.dashboard.admin.users'), users_url
           %td=@all_users.count
           %td=@active_users.count
           %td=@new_users.count
         %tr
-          %td=t('views.dashboard.admin.user_groups')
+          %td=link_to t('views.dashboard.admin.user_groups'), user_groups_url
           %td=@all_user_groups.count
           %td
           %td=@new_user_groups.count
@@ -30,22 +30,22 @@
           %th=t('views.dashboard.admin.new_items_in_last_7_days')
       %tbody
         %tr
-          %td=t('views.dashboard.admin.subject_areas')
+          %td=link_to t('views.dashboard.admin.subject_areas'), subject_areas_url
           %td=@all_subject_areas.count
           %td=@active_subject_areas.count
           %td=@new_subject_areas.count
         %tr
-          %td=t('views.dashboard.admin.institutions')
+          %td=link_to t('views.dashboard.admin.institutions'), institutions_url
           %td=@all_institutions.count
           %td=@active_institutions.count
           %td=@new_institutions.count
         %tr
-          %td=t('views.dashboard.admin.qualifications')
+          %td=link_to t('views.dashboard.admin.qualifications'), qualifications_url
           %td=@all_qualifications.count
           %td=@active_qualifications.count
           %td=@new_qualifications.count
         %tr
-          %td=t('views.dashboard.admin.exam_levels')
+          %td=link_to t('views.dashboard.admin.exam_levels'), exam_levels_url
           %td=@all_exam_levels.count
           %td=@active_exam_levels.count
           %td=@new_exam_levels.count
