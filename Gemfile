@@ -59,9 +59,11 @@ group :staging do
 end
 
 group :staging, :production do
+  gem 'execjs'
   gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
   gem 'rails_serve_static_assets' # needed for Heroku
   gem 'rails_12factor' # needed for Heroku
+  gem 'therubyracer', platforms: :ruby
 end
 
 group :production do
