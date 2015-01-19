@@ -4,25 +4,29 @@
     .col-sm-6.col-sm-offset-3
       .well.well-sm
         .text-center
-          =render partial: 'shared/breadcrumbs', locals: {the_thing: first_set.latest_course_module_element, use_breadcrumb: false}
-          .h1{style: 'margin: 60px 20px;'}=first_set.latest_course_module_element.course_module.name
-          .well.well-black
-            =render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.elements_complete, value_max: first_set.elements_total}
+          .h1{style: 'margin: 60px 20px;'}=link_to first_set.latest_course_module_element.course_module.name, '#'
+          .row
+            .col-sm-10.col-sm-offset-1
+              =render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.elements_complete, value_max: first_set.elements_total}
           =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element), class: 'btn btn-success btn-lg'
+          .row
+            .col-sm-12
+              %br/
+              =link_to 'View Course', '#'
+        %br/
 
   -@student_exam_tracks[1..-1].each do |set|
     .row
       .col-sm-12
-        .well.wel-sm
-          .row
-            .col-sm-10
-              .h3.no-top-gap=set.latest_course_module_element.course_module.name
-            .col-sm-2
-              =link_to t('views.course_module_elements.show.continue'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
-          %br/
-          .row
-            .col-sm-10
+        .panel.panel-default
+          .panel-body
+            .col-sm-4
+              .h3.no-top-gap=link_to set.latest_course_module_element.course_module.name, '#'
+            .col-sm-4
               =render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.elements_complete, value_max: set.elements_total}
+            .col-sm-4
+              =link_to t('views.course_module_elements.show.continue'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
+
 -else
   .row
     .col-sm-12
