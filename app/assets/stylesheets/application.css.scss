@@ -15,16 +15,28 @@ $link-color: #222;
 // Fonts
 @font-face {
   font-family: 'BryantWebRegular';
-  src: font-url('BryantWebRegular.eot')  format('eot'),
-       font-url('BryantWebRegular.woff') format('woff'),
-       font-url('BryantWebRegular.ttf')  format('truetype');
+  src: url(font-path('BryantWebRegular.eot'))  format('eot'),
+       url(font-path('BryantWebRegular.woff')) format('woff'),
+       url(font-path('BryantWebRegular.ttf'))  format('truetype');
 }
 @font-face {
   font-family: 'BryantWebRegularAlternative';
-  src: font-url('BryantWebRegularAlt.eot')  format('eot'),
-       font-url('BryantWebRegularAlt.woff') format('woff'),
-       font-url('BryantWebRegularAlt.ttf')  format('truetype');
+  src: url(font-path('BryantWebRegularAlt.eot'))  format('eot'),
+       url(font-path('BryantWebRegularAlt.woff')) format('woff'),
+       url(font-path('BryantWebRegularAlt.ttf'))  format('truetype');
 }
+//@font-face {
+//  font-family: 'BryantWebRegular';
+//  src: font-url('BryantWebRegular.eot')  format('eot'),
+//       font-url('BryantWebRegular.woff') format('woff'),
+//       font-url('BryantWebRegular.ttf')  format('truetype');
+//}
+//@font-face {
+//  font-family: 'BryantWebRegularAlternative';
+//  src: font-url('BryantWebRegularAlt.eot')  format('eot'),
+//       font-url('BryantWebRegularAlt.woff') format('woff'),
+//       font-url('BryantWebRegularAlt.ttf')  format('truetype');
+//}
 
 // Load Bootstrap 3
 @import "bootstrap-sprockets";
