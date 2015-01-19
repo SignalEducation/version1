@@ -1,5 +1,5 @@
-// Bootstrap customisation
-// see https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
+// Bootstrap customisation - see
+// https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
 
 $input-color-placeholder: #ccc;
 
@@ -12,6 +12,7 @@ $navbar-inverse-border: #fff;
 $navbar-height: 65px;
 $link-color: #222;
 
+// Fonts
 @font-face {
   font-family: 'BryantWebRegular';
   src: font-url('BryantWebRegular.eot')  format('eot'),

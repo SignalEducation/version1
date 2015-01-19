@@ -6,3 +6,7 @@ Rails.application.config.assets.version = '1.0'
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
+
+# Added at the suggestion of
+# http://stackoverflow.com/questions/18294150/how-to-use-fonts-in-rails-4
+Rails.application.config.assets.precompile += %w( .svg .eot .woff .ttf)
