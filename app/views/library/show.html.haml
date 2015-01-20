@@ -28,34 +28,33 @@
               =child.children.size
               items
           .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
-            .panel-body
+            .list-group
               -if @hierarchy_item.children.all_active.count > 0
                 -child.children.all_active.all_in_order.each do |grand_child|
-                  .panel.panel-default
-                    .panel-body
-                      .row
-                        .col-sm-8
-                          =link_to grand_child.name, library_special_link(grand_child)
-                        .col-sm-4
-                          .text-right
-                            -if grand_child.class == CourseModuleElement
-                              -if grand_child.is_video
-                                =t('views.library.show.video')
-                                =seconds_to_time(grand_child.estimated_time_in_seconds)
-                              -else
-                                =grand_child.course_module_element_quiz.number_of_questions
-                                =t('views.library.show.questions')
-                            -elsif grand_child.children.all_active.any?
-                              =grand_child.children.all_active.count
-                              =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
-                -if child.class == CourseModule && child.course_module_jumbo_quiz
-                  .panel.panel-default
-                    .panel-body
-                      .row
-                        .col-sm-8
-                          =link_to child.course_module_jumbo_quiz.name, course_special_link(child.course_module_jumbo_quiz)
-                        .col-sm-4
-                          .text-right=t('views.library.show.jumbo_quiz')
+                  .list-group-item
+                    .row
+                      .col-sm-8
+                        =link_to grand_child.name, library_special_link(grand_child)
+                      .col-sm-4
+                        .text-right
+                          -if grand_child.class == CourseModuleElement
+                            -if grand_child.is_video
+                              =t('views.library.show.video')
+                              =seconds_to_time(grand_child.estimated_time_in_seconds)
+                            -else
+                              =grand_child.course_module_element_quiz.number_of_questions
+                              =t('views.library.show.questions')
+                          -elsif grand_child.children.all_active.any?
+                            =grand_child.children.all_active.count
+                            =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
+              -if child.class == CourseModule && child.course_module_jumbo_quiz
+                .list-group
+                  .list-group-item
+                    .row
+                      .col-sm-8
+                        =link_to child.course_module_jumbo_quiz.name, course_special_link(child.course_module_jumbo_quiz)
+                      .col-sm-4
+                        .text-right=t('views.library.show.jumbo_quiz')
 
   .col-sm-3
     .well.well-sm.text-center
