@@ -131,7 +131,7 @@ class ApplicationController < ActionController::Base
   end
 
   def log_user_activity
-    UserLoggerWorker.perform_async(   nil, #ApplicationController.generate_random_code(24),
+    UserLoggerWorker.perform_async(   ApplicationController.generate_random_code(24),
             current_user.try(:id),    current_session_guid,
             request.filtered_path,    controller_name,
             action_name,              request.filtered_parameters,

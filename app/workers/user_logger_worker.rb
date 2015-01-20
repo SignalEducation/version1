@@ -1,7 +1,7 @@
 class UserLoggerWorker
   include Sidekiq::Worker
 
-  sidekiq_options retry: 10
+  sidekiq_options retry: 10, queue: 'low'
 
   sidekiq_retries_exhausted do |msg|
     Rails.logger.warn "WARNING: Sidekiq retries exhausted. Message:#{msg['class']} with #{msg['args']}: #{msg['error_message']}."
