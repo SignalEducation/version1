@@ -19,6 +19,7 @@
 #  phone            :boolean          default(FALSE), not null
 #  tablet           :boolean          default(FALSE), not null
 #  computer         :boolean          default(FALSE), not null
+#  guid             :string(255)
 #
 
 FactoryGirl.define do
@@ -31,6 +32,7 @@ FactoryGirl.define do
     action_name 'MyString'
     params { {name: 'abc', some_val: 123} }
     alert_level 0
+    sequence(:guid) { |n| "ABC-#{n}" }
   end
 
 end

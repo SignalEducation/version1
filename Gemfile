@@ -23,8 +23,10 @@ gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
-gem 'sidekiq' # background processor for tasks that can be run 'later' or take too long
-              # Requires Redis NoSQL datastore
+gem 'sidekiq', require: %w(sidekiq sidekiq/web)
+        # background processor for tasks that can be run 'later' or take too long
+        # Requires Redis NoSQL datastore
+gem 'sinatra' # needed for sidekiq's web UI
 gem 'stripe' # support for Stripe.com payment processing
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production

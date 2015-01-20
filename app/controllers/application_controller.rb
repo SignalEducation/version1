@@ -131,17 +131,11 @@ class ApplicationController < ActionController::Base
   end
 
   def log_user_activity
-    UserActivityLog.create(
-            user_id: current_user.try(:id),
-            session_guid: current_session_guid,
-            signed_in: !current_user.try(:id).nil?,
-            original_uri: request.filtered_path,
-            controller_name: controller_name,
-            action_name: action_name,
-            params: request.filtered_parameters,
-            ip_address: request.remote_ip,
-            alert_level: 0,
-            http_user_agent: request.env['HTTP_USER_AGENT']
+    UserLoggerWorker.perform_async(   nil, #ApplicationController.generate_random_code(24),
+            current_user.try(:id),    current_session_guid,
+            request.filtered_path,    controller_name,
+            action_name,              request.filtered_parameters,
+            request.remote_ip,        request.env['HTTP_USER_AGENT']
     )
     Rails.logger.debug '*'* 100
     Rails.logger.debug request.env['HTTP_USER_AGENT']

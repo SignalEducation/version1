@@ -69,6 +69,8 @@
                 %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                 %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
                 %li.divider
+                %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
+                %li.divider
               %li=link_to t('views.general.sign_out'), sign_out_url
           %li
             =link_to '#', onclick: "$('#search_form').removeClass('hidden'); $(this).hide(); return false;" do

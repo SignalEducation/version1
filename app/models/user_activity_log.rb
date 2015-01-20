@@ -19,6 +19,7 @@
 #  phone            :boolean          default(FALSE), not null
 #  tablet           :boolean          default(FALSE), not null
 #  computer         :boolean          default(FALSE), not null
+#  guid             :string(255)
 #
 
 class UserActivityLog < ActiveRecord::Base
@@ -29,7 +30,8 @@ class UserActivityLog < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :session_guid, :signed_in, :original_uri, :controller_name,
                   :action_name, :params, :ip_address, :alert_level,
-                  :browser, :operating_system, :phone, :tablet, :computer, :http_user_agent
+                  :browser, :operating_system, :phone, :tablet, :computer, :http_user_agent,
+                  :guid
 
   # Constants
   ALERT_LEVELS = %w(normal warning danger severe)
@@ -49,6 +51,7 @@ class UserActivityLog < ActiveRecord::Base
   validates :alert_level, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0,
                            less_than_or_equal_to: 3}
+  validates :guid, presence: true, uniqueness: true
 
   # callbacks
   after_create :add_to_rails_logger
