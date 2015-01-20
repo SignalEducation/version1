@@ -1,5 +1,13 @@
 class CoursesController < ApplicationController
 
+
+  def index
+    @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid)
+    @course_module_parent = StudentExamTrack.last.course_module.parent
+    @course_module = @course_module_parent.children
+  end
+
+
   def show
     @mathjax_required = true
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first

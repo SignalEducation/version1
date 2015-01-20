@@ -221,10 +221,15 @@ header {
 }
 
 .list-group {
-  border-radius: 0;
   margin-bottom: 0;
+  border-radius: 0;
 }
 
 .list-group-item {
   border-radius: 0;
+}
+
+.glyphicon-ok-circle {
+  font-size: 25px;
+  color: green;
 }
