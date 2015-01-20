@@ -26,7 +26,7 @@ Example: A task that is often sent to background processing is the sending of a 
 
 We could have also called
 
-  NewUserMailWorker.perform_in(3.hours, @user.id)
+    NewUserMailWorker.perform_in(3.hours, @user.id)
 
 and the task would be forced to wait 3 hours before being executed by Sidekiq.
 
@@ -36,17 +36,17 @@ Day-to-Day
 
 Before you do Rails S, you need to do the following:
 
-### start Redis as a background job.
-$ redis-server /usr/local/etc/redis.conf
-CTRL+Z
-$ bg
+    ### start Redis as a background job.
+    $ redis-server /usr/local/etc/redis.conf
+    CTRL+Z
+    $ bg
 
-### then, start sidekiq as a background job.
-$ bundle exec sidekiq
-CTRL+Z
-$ bg
+    ### then, start sidekiq as a background job.
+    $ bundle exec sidekiq
+    CTRL+Z
+    $ bg
 
-### Finally, ready to run the rails server
-$ rails s
+    ### Finally, ready to run the rails server
+    $ rails s
 
 See sidekiq.io for more.
