@@ -233,3 +233,15 @@ header {
   font-size: 25px;
   color: green;
 }
+
+.panel-body .col-sm-4 {
+  vertical-align: middle;
+  .h3 {
+    text-transform: capitalize !important;
+    margin: 5px 0;
+  }
+  .progress {
+    margin: 7px 0;
+  }
+
+}

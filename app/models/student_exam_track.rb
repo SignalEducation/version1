@@ -13,6 +13,7 @@
 #  session_guid                    :string(255)
 #  course_module_id                :integer
 #  jumbo_quiz_taken                :boolean          default(FALSE)
+#  percentage_complete             :integer          default(0)
 #
 
 class StudentExamTrack < ActiveRecord::Base
@@ -22,7 +23,7 @@ class StudentExamTrack < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :exam_level_id, :exam_section_id,
                   :latest_course_module_element_id, :exam_schedule_id,
-                  :session_guid, :course_module_id, :jumbo_quiz_taken
+                  :session_guid, :course_module_id, :jumbo_quiz_taken,                                   :percentage_complete
 
   # Constants
 
@@ -81,10 +82,6 @@ class StudentExamTrack < ActiveRecord::Base
     self.cme_user_logs.latest_only
   end
 
-  def percentage_complete
-    (self.elements_complete.to_f / self.elements_total * 100).round(1)
-  end
-
   def elements_total
     self.course_module.children.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
   end
@@ -95,6 +92,11 @@ class StudentExamTrack < ActiveRecord::Base
 
   def destroyable?
     true
+  end
+
+  def recalculate_completeness
+    self.percentage_complete = (self.cme_user_logs.latest_only.count.to_f / self.course_module.children_available_count) * 100 #todo Need to insert all_complete
+    self.save(callbacks: false)
   end
 
   protected

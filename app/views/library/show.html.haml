@@ -34,6 +34,7 @@
                   .list-group-item
                     .row
                       .col-sm-8
+                        =completion_circle(grand_child.course_module_element_user_logs.where(element_completed: true))
                         =link_to grand_child.name, library_special_link(grand_child)
                       .col-sm-4
                         .text-right

@@ -2,8 +2,28 @@ module ApplicationHelper
 
   def tick_or_cross(the_thing)
     the_thing ?
-            "<span class='glyphicon glyphicon-ok'></span>".html_safe :
-            "<span class='glyphicon glyphicon-remove'></span>".html_safe
+            "<span style='color: green;' class='glyphicon glyphicon-ok'></span>".html_safe :
+            "<span style='color: red;' class='glyphicon glyphicon-remove'></span>".html_safe
+  end
+
+  def completion_circle(percentage)
+    if percentage == 100
+      "<span style='color: green;' class='glyphicon glyphicon-ok-sign'></span>".html_safe
+    elsif percentage == 0
+      "<span style='color: green; font-size: 107%;'>&#9711;</span>".html_safe
+    else
+      "<span style='color: green; font-size: 122%;'>&#9680;</span>".html_safe
+    end
+  end
+
+  def completion_label(percentage)
+    if percentage == 100
+      "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
+    elsif percentage == 0
+      "<span style='background-color: green;' class='label label-default'>Start</span>".html_safe
+    else
+      "<span style='background-color: #1975FF;' class='label label-default'>#{percentage}%</span>".html_safe
+    end
   end
 
   def number_in_local_currency(amount, currency_id)

@@ -79,6 +79,10 @@ class CourseModule < ActiveRecord::Base
     self.course_module_elements.all
   end
 
+  def children_available_count
+    self.children.all_active.count + (self.course_module_jumbo_quiz ? 1 : 0)
+  end
+
   def completed_by_user_or_guid(user_id, session_guid)
     user_id ?
             self.student_exam_tracks.where(user_id: user_id).count > 0 :

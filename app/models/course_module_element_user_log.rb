@@ -65,9 +65,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_booleans
   after_create :calculate_score
   after_create :create_or_update_student_exam_track
+  after_save :update_student_exam_track
+  after_destroy :update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_completed, -> { where(element_completed: true) }
   scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
@@ -106,6 +109,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
+  def student_exam_track
+    self.student_exam_tracks.first
+  end
+
   protected
 
   def calculate_score
@@ -123,7 +130,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_or_update_student_exam_track
-    set = StudentExamTrack.where(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id).first_or_initialize
+    set = student_exam_tracks.first_or_initialize
     set.exam_level_id ||= self.course_module.exam_level_id
     set.exam_section_id ||= self.course_module.exam_section_id
     set.latest_course_module_element_id = self.course_module_element_id
@@ -147,6 +154,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
     true
+  end
+
+  def student_exam_tracks
+    StudentExamTrack.where(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
+  end
+
+  def update_student_exam_track
+    self.student_exam_track.recalculate_completeness
   end
 
 end
