@@ -13,6 +13,7 @@
 #  session_guid                    :string(255)
 #  course_module_id                :integer
 #  jumbo_quiz_taken                :boolean          default(FALSE)
+#  percentage_complete             :integer          default(0)
 #
 
 require 'rails_helper'
