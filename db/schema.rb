@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150121131329) do
+ActiveRecord::Schema.define(version: 20150122103412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -376,6 +376,7 @@ ActiveRecord::Schema.define(version: 20150121131329) do
     t.integer  "course_module_id"
     t.boolean  "jumbo_quiz_taken",                default: false
     t.integer  "percentage_complete",             default: 0
+    t.integer  "count_of_cmes_completed",         default: 0
   end
 
   create_table "subject_areas", force: true do |t|
