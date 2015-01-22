@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     resources :corporate_customers
     resources :countries
     post 'countries/reorder', to: 'countries#reorder'
-    resources :courses, only: [:index, :create]
+    resources :courses, only: [:show, :create]
     resources :course_modules
     post 'course_modules/reorder', to: 'course_modules#reorder'
     get 'course_modules/:qualification_url', to: 'course_modules#show',
