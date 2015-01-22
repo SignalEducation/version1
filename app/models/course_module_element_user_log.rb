@@ -116,17 +116,19 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   protected
 
   def calculate_score
-    self.quiz_score_actual = self.quiz_attempts.sum(:score)
-    if self.is_quiz
-      self.quiz_score_potential = self.recent_attempts.count == 0 ?
-          self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
-          self.course_module_element.course_module_element_quiz.best_possible_score_retry
-    elsif self.is_jumbo_quiz
-      self.quiz_score_potential = self.recent_attempts.count == 0 ?
-          self.course_module_jumbo_quiz.best_possible_score_first_attempt :
-          self.course_module_jumbo_quiz.best_possible_score_retry
+    if self.is_quiz || self.is_jumbo_quiz
+      self.quiz_score_actual = self.quiz_attempts.sum(:score)
+      if self.is_quiz
+        self.quiz_score_potential = self.recent_attempts.count == 0 ?
+            self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
+            self.course_module_element.course_module_element_quiz.best_possible_score_retry
+      elsif self.is_jumbo_quiz
+        self.quiz_score_potential = self.recent_attempts.count == 0 ?
+            self.course_module_jumbo_quiz.best_possible_score_first_attempt :
+            self.course_module_jumbo_quiz.best_possible_score_retry
+      end
+      self.save(callbacks: false, validate: false)
     end
-    self.save(callbacks: false, validate: false)
   end
 
   def create_or_update_student_exam_track

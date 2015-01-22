@@ -14,6 +14,7 @@
 #  course_module_id                :integer
 #  jumbo_quiz_taken                :boolean          default(FALSE)
 #  percentage_complete             :integer          default(0)
+#  count_of_cmes_completed         :integer          default(0)
 #
 
 class StudentExamTrack < ActiveRecord::Base
@@ -23,7 +24,7 @@ class StudentExamTrack < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :exam_level_id, :exam_section_id,
                   :latest_course_module_element_id, :exam_schedule_id,
-                  :session_guid, :course_module_id, :jumbo_quiz_taken,                                   :percentage_complete
+                  :session_guid, :course_module_id, :jumbo_quiz_taken,                                   :percentage_complete, :count_of_cmes_completed
 
   # Constants
 
@@ -41,7 +42,7 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_section_id, presence: true,
+  validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :latest_course_module_element_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -67,9 +68,9 @@ class StudentExamTrack < ActiveRecord::Base
 
   def self.for_user_or_session(the_user_id, the_session_guid)
     if the_user_id
-      StudentExamTrack.where(user_id: the_user_id)
+      where(user_id: the_user_id)
     else
-      StudentExamTrack.where(session_guid: the_session_guid, user_id: nil)
+      where(session_guid: the_session_guid, user_id: nil)
     end
   end
 
@@ -95,7 +96,8 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    self.percentage_complete = (self.cme_user_logs.latest_only.count.to_f / self.course_module.children_available_count) * 100 #todo Need to insert all_complete
+    self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.count
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.course_module.children_available_count) * 100
     self.save(callbacks: false)
   end
 

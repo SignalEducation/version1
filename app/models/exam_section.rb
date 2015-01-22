@@ -66,6 +66,18 @@ class ExamSection < ActiveRecord::Base
     self.exam_level
   end
 
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    if self.course_module_elements.all_active.count > 0
+      (self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed).to_f / self.course_module_elements.all_active.count * 100).to_i
+    else
+      0
+    end
+  end
+
   protected
 
   def calculate_best_possible_score

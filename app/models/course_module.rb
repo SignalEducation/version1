@@ -84,9 +84,14 @@ class CourseModule < ActiveRecord::Base
   end
 
   def completed_by_user_or_guid(user_id, session_guid)
-    user_id ?
-            self.student_exam_tracks.where(user_id: user_id).count > 0 :
-            self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).count > 0
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    set = user_id ?
+        self.student_exam_tracks.where(user_id: user_id).first:
+        self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
+    set.try(:percentage_complete) || 0
   end
 
   def destroyable?

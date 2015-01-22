@@ -1,13 +1,5 @@
 class CoursesController < ApplicationController
 
-
-  def index
-    @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid)
-    @course_module_parent = StudentExamTrack.last.course_module.parent
-    @course_module = @course_module_parent.children
-  end
-
-
   def show
     @mathjax_required = true
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
@@ -91,7 +83,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
             session_guid: current_session_guid,
-            element_completed: false,
+            element_completed: true, # Todo: Change to false when user tracking JS is in place
             time_taken_in_seconds: 0,
             quiz_score_actual: nil,
             quiz_score_potential: nil,

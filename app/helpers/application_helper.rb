@@ -6,21 +6,41 @@ module ApplicationHelper
             "<span style='color: red;' class='glyphicon glyphicon-remove'></span>".html_safe
   end
 
-  def completion_circle(percentage)
+  def completion_circle(hierarchy_thing)
+    if hierarchy_thing.class == CourseModuleElement
+      percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
+    elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
+      percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
+    else
+      percentage = nil
+    end
+
     if percentage == 100
       "<span style='color: green;' class='glyphicon glyphicon-ok-sign'></span>".html_safe
     elsif percentage == 0
       "<span style='color: green; font-size: 107%;'>&#9711;</span>".html_safe
+    elsif percentage.nil?
+      #Do Nothing
     else
-      "<span style='color: green; font-size: 122%;'>&#9680;</span>".html_safe
+      "<span style='color: green; font-size: 122%;' title='#{percentage}%'>&#9680;</span>".html_safe
     end
   end
 
-  def completion_label(percentage)
+  def completion_label(hierarchy_thing)
+    if hierarchy_thing.class == CourseModuleElement
+      percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
+    elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
+      percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
+    else
+      percentage = nil
+    end
+
     if percentage == 100
       "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
     elsif percentage == 0
       "<span style='background-color: green;' class='label label-default'>Start</span>".html_safe
+    elsif percentage.nil?
+      #Do Nothing
     else
       "<span style='background-color: #1975FF;' class='label label-default'>#{percentage}%</span>".html_safe
     end

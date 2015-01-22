@@ -24,6 +24,8 @@
                 =child.name
               =link_to library_special_link(child) do
                 %span.glyphicon.glyphicon-expand
+              .pull-right
+                =completion_label(child)
             .text-muted
               =child.children.size
               items
@@ -34,7 +36,7 @@
                   .list-group-item
                     .row
                       .col-sm-8
-                        =completion_circle(grand_child.course_module_element_user_logs.where(element_completed: true))
+                        =completion_circle(grand_child)
                         =link_to grand_child.name, library_special_link(grand_child)
                       .col-sm-4
                         .text-right
