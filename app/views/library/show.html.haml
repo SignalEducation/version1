@@ -55,6 +55,7 @@
                   .list-group-item
                     .row
                       .col-sm-8
+                        =completion_circle(child)
                         =link_to child.course_module_jumbo_quiz.name, course_special_link(child.course_module_jumbo_quiz)
                       .col-sm-4
                         .text-right=t('views.library.show.jumbo_quiz')

@@ -38,7 +38,7 @@ module ApplicationHelper
     if percentage == 100
       "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
     elsif percentage == 0
-      "<span style='background-color: green;' class='label label-default'>Start</span>".html_safe
+      "<a href='#'><span style='background-color: green;' class='label label-default'>Start</span></a>".html_safe
     elsif percentage.nil?
       #Do Nothing
     else
