@@ -50,8 +50,12 @@ class ExamSection < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
   def children
-    self.course_modules.all
+    self.course_modules
   end
 
   def full_name
@@ -60,6 +64,10 @@ class ExamSection < ActiveRecord::Base
 
   def destroyable?
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
+  end
+
+  def first_active_cme
+    self.active_children.first.try(:first_active_cme)
   end
 
   def parent

@@ -75,6 +75,10 @@ class CourseModule < ActiveRecord::Base
     self.parent.course_modules.all_in_order.map(&:id)
   end
 
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
   def children
     self.course_module_elements.all
   end
@@ -85,6 +89,10 @@ class CourseModule < ActiveRecord::Base
 
   def completed_by_user_or_guid(user_id, session_guid)
     self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def first_active_cme
+    self.active_children.first
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)

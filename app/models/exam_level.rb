@@ -60,6 +60,10 @@ class ExamLevel < ActiveRecord::Base
   end
 
   # instance methods
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
   def children
     if self.enable_exam_sections == true
       self.exam_sections.all
@@ -70,6 +74,10 @@ class ExamLevel < ActiveRecord::Base
 
   def destroyable?
     !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty?
+  end
+
+  def first_active_cme
+    self.active_children.first.try(:first_active_cme)
   end
 
   def full_name
