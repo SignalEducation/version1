@@ -4,6 +4,7 @@ ruby '2.1.5'
 gem 'rails', '4.1.8'
 
 # Core gems - common to all environments
+gem 'airbrake'
 gem 'authlogic'
 gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails' # required by bootstrap-sass
@@ -63,7 +64,6 @@ group :staging do
 end
 
 group :staging, :production do
-  gem 'airbrake'
   gem 'execjs'
   gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
   gem 'rails_serve_static_assets' # needed for Heroku
