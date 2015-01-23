@@ -42,7 +42,7 @@ module ApplicationHelper
     elsif percentage.nil?
       #Do Nothing
     else
-      "<span style='background-color: #1975FF;' class='label label-default'>#{percentage}%</span>".html_safe
+      "<span style='background-color: #428BCA;' class='label label-default'>#{percentage}%</span>".html_safe
     end
   end
 
