@@ -63,6 +63,7 @@ group :staging do
 end
 
 group :staging, :production do
+  gem 'airbrake'
   gem 'execjs'
   gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
   gem 'rails_serve_static_assets' # needed for Heroku

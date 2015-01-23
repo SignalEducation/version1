@@ -27,6 +27,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    airbrake (4.1.0)
+      builder
+      multi_json
     annotate (2.6.5)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
@@ -282,6 +285,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake
   annotate
   authlogic
   autoprefixer-rails
