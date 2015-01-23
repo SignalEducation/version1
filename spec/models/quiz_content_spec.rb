@@ -23,7 +23,7 @@ require 'rails_helper'
 describe QuizContent do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at contains_mathjax contains_image image_updated_at image_file_size image_file_name image_content_type)
+  black_list = %w(id created_at updated_at contains_mathjax contains_image)
   QuizContent.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
