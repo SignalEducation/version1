@@ -1,6 +1,7 @@
 namespace :db do
 
   # rake db:reset_test
+  # rake db:reset_development
   # rake db:quick_migrate
   # rake db:quick_rollback
   # rake db:quick_reload
@@ -9,7 +10,15 @@ namespace :db do
   task :reset_test do
     # USAGE: rake db:reset_test
     puts 'Reinitializing the test database...'
-    system('RAILS_ENV=test rake db:drop db:create db:migrate')
+    system('RAILS_ENV=test rake db:drop && rake db:create && rake db:migrate')
+    puts 'DONE'
+  end
+
+  desc 'Reset the development environment database'
+  task :reset_development do
+    # USAGE: rake db:reset_development
+    puts 'Reinitializing the development database...'
+    system('RAILS_ENV=development rake db:drop && rake db:create && rake db:migrate && rake db:seed && annotate')
     puts 'DONE'
   end
 
