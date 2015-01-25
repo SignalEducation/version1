@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     @user = User.new(allowed_params)
     @user.locale = 'en'
     if @user.save
-      OperationalMailer.activate_account(@user).deliver
+      Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@user.id)
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -61,7 +61,7 @@ class UsersController < ApplicationController
     @user = current_user
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-      OperationalMailer.your_password_has_changed(@user).deliver
+      Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
     end

@@ -5,21 +5,21 @@ class OperationalMailer < ActionMailer::Base
 
   before_action :set_the_url
 
-  def activate_account(user)
+  def activate_account(user) # backgrounded
     @user = user
     mail(to: @user.email,
         subject: I18n.t('mailers.operational.activate_account.subject_line')
     )
   end
 
-  def your_password_has_changed(user)
+  def your_password_has_changed(user) # backgrounded
     @user = user
     mail(to: @user.email,
         subject: I18n.t('mailers.operational.your_password_has_changed.subject_line')
     )
   end
 
-  def reset_your_password(user)
+  def reset_your_password(user) # backgrounded
     @user = user
     mail(to: @user.email,
          subject: I18n.t('mailers.operational.reset_your_password.subject_line')
