@@ -126,7 +126,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_session_guid
 
   def set_session_guid
-    cookies.permanent.encrypted[:session_guid] ||= ApplicationController.generate_random_code(64)
+    cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
     @mathjax_required = false # default
   end
 
