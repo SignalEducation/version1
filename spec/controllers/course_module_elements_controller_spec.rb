@@ -470,14 +470,12 @@ describe CourseModuleElementsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: course_module_element_1.id
-        #expect_delete_success_with_model('course_module_element', course_module_elements_url)
-        # todo replace the line above with the line below when course_module_elements have children
-        expect_delete_error_with_model('course_module_element', course_module_elements_url)
+        expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1.course_module))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: course_module_element_3.id
-        expect_delete_success_with_model('course_module_element', course_module_elements_url)
+        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_3.course_module))
       end
     end
 

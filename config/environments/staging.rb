@@ -79,11 +79,11 @@ Rails.application.configure do
   # email delivery
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-          address:              'smtp.sendgrid.com',
+          address:              'smtp.gmail.com',
           port:                 587,
-          domain:               'learnsignal.com',
-          user_name:            ENV['learnsignal_v3_server_sendgrid_username'],
-          password:             ENV['learnsignal_v3_server_sendgrid_password'],
+          domain:              'learnsignal.com',
+          user_name:            ENV['learnsignal_v3_server_email_address'],
+          password:             ENV['learnsignal_v3_server_email_password'],
           authentication:       'plain',
           enable_starttls_auto: true
   }
