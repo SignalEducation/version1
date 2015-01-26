@@ -2,7 +2,7 @@ class ExamLevelsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(['admin', 'tutor'])
   end
   before_action :get_variables
 
