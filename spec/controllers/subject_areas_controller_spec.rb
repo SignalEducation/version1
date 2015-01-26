@@ -137,22 +137,22 @@ describe SubjectAreasController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond ERROR as not allowed' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('subject_areas', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR as not allowed' do
+      it 'should see subject_area_1' do
         get :show, id: subject_area_1.id
-        expect_bounce_as_not_allowed
+        expect_show_success_with_model('subject_area', subject_area_1.id)
       end
 
       # optional - some other object
-      it 'should respond ERROR as not allowed' do
+      it 'should see subject_area_2' do
         get :show, id: subject_area_2.id
-        expect_bounce_as_not_allowed
+        expect_show_success_with_model('subject_area', subject_area_2.id)
       end
     end
 
