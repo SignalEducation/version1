@@ -101,8 +101,8 @@ class UserActivityLog < ActiveRecord::Base
 
     # result =~ /Safari/
 
-    self.browser ||= truncate(agent, length: 255)
-    self.operating_system ||= truncate(agent, length: 255)
+    self.browser ||= agent[0..254]
+    self.operating_system ||= agent[0..254]
     self.phone ||=
     self.tablet ||=
     self.computer ||= false
