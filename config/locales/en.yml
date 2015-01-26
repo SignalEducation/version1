@@ -735,6 +735,12 @@ en:
         qualifications: Qualifications
         exam_levels: Exam Levels
 
+      content_manager:
+        edited_in_last_3_days: Edited in the last 3 days
+        expired_in_last_3_days: Expired in the last 3 days
+        expires_in_next_3_days: Expires in the next 3 days
+        published_in_last_3_days: Published in the last 3 days
+        publishes_in_next_3_days: Publishes in the next 3 days
 
     exam_levels:
       form:

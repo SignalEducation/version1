@@ -1,4 +1,4 @@
--if @student_exam_tracks.count > 0
+-if @student_exam_tracks.try(:count).to_i > 0
   -first_set = @student_exam_tracks.first
   .row
     .col-sm-6.col-sm-offset-3
@@ -12,13 +12,6 @@
           .row
             .col-sm-12
               %br/
-              =#link_to 'View Overview of Course', courses_path
-              =completion_circle(100)
-              =completion_circle(0)
-              =completion_circle(49)
-              =completion_label(100)
-              =completion_label(0)
-              =completion_label(56)
               =link_to 'View Overview of Course', library_special_link(first_set.latest_course_module_element.parent)
         %br/
 
