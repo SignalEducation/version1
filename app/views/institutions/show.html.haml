@@ -14,8 +14,9 @@
         %td.col-sm-8
           -@institution.qualifications.each do |qualification|
             =link_to qualification.name, qualification
-            %br/
-          =link_to t('views.general.new'), new_qualification_url(institution_id: @institution.id), class: 'btn btn-xs btn-success'
+            -if current_user.admin?
+              %br/
+              =link_to t('views.general.new'), new_qualification_url(institution_id: @institution.id), class: 'btn btn-xs btn-success'
   .col-sm-6
     %table.table.table-bordered
       %h3
@@ -49,5 +50,6 @@
         %td.col-sm-8=tick_or_cross(@institution.active)
   %p
     =link_to sanitize('&larr; ' + t('views.institutions.index.h1')), institutions_url
-    |
-    =link_to t('views.general.edit'), edit_institution_url(id: @institution.id), title: t('views.general.edit_tooltip')
+    -if current_user.admin?
+      |
+      =link_to t('views.general.edit'), edit_institution_url(id: @institution.id), title: t('views.general.edit_tooltip')
