@@ -39,9 +39,6 @@
                 %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
                 %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                 %li=link_to t('views.course_modules.index.h1'), course_modules_url
-                %li.divider
-                %li.dropdown-header=t('views.layouts.navigation.content_management')
-                %li=link_to t('views.static_pages.index.h1'), static_pages_url
           %li
             = link_to user_notifications_url do
               -if current_user && current_user.user_notifications.unread.count > 0
@@ -68,7 +65,11 @@
                 %li.divider
                 %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                 %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
+              -if current_user.content_manager?
                 %li.divider
+                %li.dropdown-header=t('views.layouts.navigation.content_management')
+                %li=link_to t('views.static_pages.index.h1'), static_pages_url
+              %li.divider
               %li=link_to t('views.general.sign_out'), sign_out_url
           %li
             =link_to '#', onclick: "$('#search_form').removeClass('hidden'); $(this).hide(); return false;" do
