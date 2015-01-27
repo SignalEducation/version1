@@ -2,11 +2,11 @@
   .form-group
     =cme_quiz.label :number_of_questions, t('views.course_module_element_quizzes.form.number_of_questions'), class: 'control-label col-sm-4'
     .col-sm-8
-      =cme_quiz.select :number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], cme_quiz.object.number_of_questions || 20), {}, {class: 'form-control'}
-  -#.form-group
+      =cme_quiz.select :number_of_questions, options_for_select([3, 5, 10, 15, 20, 25, 30], cme_quiz.object.number_of_questions || 20), {}, {class: 'form-control'}
+  .form-group
     =cme_quiz.label :question_selection_strategy, t('views.course_module_element_quizzes.form.question_selection_strategy'), class: 'control-label col-sm-4'
     .col-sm-8
-      =cme_quiz.select :question_selection_strategy, placeholder: t('views.course_module_element_quizzes.form.question_selection_strategy_placeholder'), class: 'form-control'
+      =cme_quiz.select :question_selection_strategy, options_for_select(CourseModuleElementQuiz::STRATEGIES, cme_quiz.object.question_selection_strategy), {}, {class: 'form-control'}
   .form-group
     =cme_quiz.label :best_possible_score_first_attempt, t('views.course_module_element_quizzes.form.best_possible_score_first_attempt'), class: 'control-label col-sm-4'
     .col-sm-8

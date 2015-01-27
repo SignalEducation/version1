@@ -60,7 +60,7 @@ class CourseModuleElement < ActiveRecord::Base
   # validation
   validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true
-  validates :description, presence: true
+  # validates :description, presence: true
   validates :estimated_time_in_seconds, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,

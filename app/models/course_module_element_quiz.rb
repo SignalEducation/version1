@@ -17,9 +17,13 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
+  # Constants
+  STRATEGIES = %w(random progressive)
+
   # attr-accessible
   attr_accessible :course_module_element_id,
-                  :number_of_questions, :quiz_questions_attributes
+                  :number_of_questions, :quiz_questions_attributes,
+                  :question_selection_strategy
 
   # Constants
 
@@ -36,6 +40,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 4, less_than_or_equal_to: 30,
              only_integer: true}, on: :update
+  validates :question_selection_strategy, inclusion: {in: STRATEGIES}
 
   # callbacks
   before_save :set_jumbo_quiz_id
