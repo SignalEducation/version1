@@ -66,5 +66,4 @@ describe CourseModuleElementQuiz do
   it { should respond_to(:enough_questions?) }
   it { should respond_to(:medium_ids) }
 
-
 end
