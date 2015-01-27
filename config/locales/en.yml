@@ -718,6 +718,10 @@ en:
       index:
         h1: Dashboard
 
+      individual_student:
+        in-progress: In-progess
+        completed: Completed
+
       tutor:
         total_course_module_elements: Total Course Modules Elements
         course_module_element_videos: Number of Videos
