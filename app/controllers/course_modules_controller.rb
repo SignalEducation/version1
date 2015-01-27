@@ -24,6 +24,8 @@ class CourseModulesController < ApplicationController
         @exam_level_id = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first.try(:id) || @qualification.exam_levels.first.try(:id)
         if params[:course_module_url]
           @course_module = CourseModule.with_url(params[:course_module_url]).first
+        else
+          @course_module = CourseModule.where(exam_level_id: @exam_level_id).all_in_order.first
         end
       else
         flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
