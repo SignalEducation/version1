@@ -1,5 +1,5 @@
--if @student_exam_tracks.try(:count).to_i > 0
-  -first_set = @student_exam_tracks.first
+-if @incomplete_student_exam_tracks.try(:count).to_i > 0
+  -first_set = @incomplete_student_exam_tracks.first
   .row
     .col-sm-6.col-sm-offset-3
       .well.well-sm
@@ -15,7 +15,7 @@
               =link_to 'View Overview of Course', library_special_link(first_set.latest_course_module_element.parent)
         %br/
 
-  -@student_exam_tracks[1..-1].each do |set|
+  -@incomplete_student_exam_tracks[1..-1].each do |set|
     .row
       .col-sm-12
         .panel.panel-default
