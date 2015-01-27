@@ -8,7 +8,9 @@ class ExamLevelsController < ApplicationController
 
   def index
     @qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || Qualification.all_in_order.first
-    @exam_levels = ExamLevel.where(qualification_id: @qualification.try(:id)).paginate(per_page: 50, page: params[:page]).all_in_order
+    @exam_levels = @qualification ?
+            ExamLevel.where(qualification_id: @qualification.try(:id)).paginate(per_page: 50, page: params[:page]).all_in_order :
+            ExamLevel.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show

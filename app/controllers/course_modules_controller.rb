@@ -7,7 +7,7 @@ class CourseModulesController < ApplicationController
   before_action :get_variables, except: :show
 
   def index
-    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.qualification
+    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.try(:qualification)
     exam_level = qualification.try(:exam_levels).try(:first)
     if exam_level
       redirect_to course_module_special_link(exam_level)
