@@ -8,7 +8,7 @@ class QualificationsController < ApplicationController
 
   def index
     @institution = Institution.where(name_url: params[:institution_url].to_s).first || Institution.all_in_order.first
-    @qualifications = Qualification.where(institution_id: @institution.id).paginate(per_page: 50, page: params[:page]).all_in_order
+    @qualifications = Qualification.where(institution_id: @institution.try(:id)).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
