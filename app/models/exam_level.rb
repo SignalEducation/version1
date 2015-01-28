@@ -31,6 +31,7 @@ class ExamLevel < ActiveRecord::Base
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_module_jumbo_quizzes, through: :course_modules
   has_many :student_exam_tracks
   has_many :user_exam_level
 
@@ -94,7 +95,7 @@ class ExamLevel < ActiveRecord::Base
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
     if self.course_module_elements.all_active.count > 0
-      (self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed).to_f / self.course_module_elements.all_active.count * 100).to_i
+      (self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed).to_f / (self.course_module_elements.all_active.count + self.course_module_jumbo_quizzes.count) * 100).to_i
     else
       0
     end

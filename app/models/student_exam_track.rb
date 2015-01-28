@@ -97,7 +97,7 @@ class StudentExamTrack < ActiveRecord::Base
 
   def recalculate_completeness
     self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.count
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.course_module.children_available_count) * 100
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.course_module.children_available_count ) * 100
     self.save(callbacks: false)
   end
 
