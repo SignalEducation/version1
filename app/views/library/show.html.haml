@@ -46,9 +46,8 @@
                             -else
                               =grand_child.course_module_element_quiz.number_of_questions
                               =t('views.library.show.questions')
-                          -elsif grand_child.children.all_active.any?
-                            =grand_child.children.all_active.count
-                            =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
+                          -elsif grand_child.children.all_active.any? || grand_child.try(:course_module_jumbo_quiz)
+                            =pluralize(grand_child.children.all_active.count + (grand_child.try(:course_module_jumbo_quiz) ? 1 : 0), t("views.library.show.#{grand_child.children.first.class.name.underscore.gsub('nil_class','course_module_element')}"))
                 -if child.class == CourseModule && child.course_module_jumbo_quiz
                   .list-group-item
                     .row

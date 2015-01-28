@@ -603,7 +603,7 @@ en:
         h1: Edit Course Module Element
 
       index:
-        h1: Course Modules Elements
+        h1: Course Module Elements
 
       new:
         h1: New Course Module Element
@@ -884,6 +884,12 @@ en:
         questions: Questions
         quiz: Quiz
         video: Video
+        institution: Institution
+        qualification: Qualification
+        exam_level: Exam Level
+        exam_section: Exam Section
+        course_module: Course Module
+        course_module_element: Step
 
     qualifications:
       form:
