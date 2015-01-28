@@ -32,6 +32,7 @@ FactoryGirl.define do
     action_name 'MyString'
     params { {name: 'abc', some_val: 123} }
     alert_level 0
+    sequence(:guid) { |n| "ABC-#{n}" }
   end
 
 end

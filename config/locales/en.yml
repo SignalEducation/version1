@@ -876,10 +876,12 @@ en:
     library:
       show:
         h1: Library
-        video: Video
-        quiz: Quiz
+        item: item
+        items: items
         jumbo_quiz: Jumbo quiz
         questions: Questions
+        quiz: Quiz
+        video: Video
 
     qualifications:
       form:

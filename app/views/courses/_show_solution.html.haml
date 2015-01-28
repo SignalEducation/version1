@@ -40,9 +40,10 @@
       .col-sm-12
         .well.well-sm
           =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
-  .row
-    .col-sm-12
-      .well.well-sm
-        %h4
-          =t('views.courses.show_results.check_out')
-        %p=link_to attempt.quiz_question.course_module_element.related_video.name, course_special_link(attempt.quiz_question.course_module_element.related_video)
+  -if attempt.quiz_question.course_module_element.related_video
+    .row
+      .col-sm-12
+        .well.well-sm
+          %h4
+            =t('views.courses.show_results.check_out')
+          %p=link_to attempt.quiz_question.course_module_element.related_video.name, course_special_link(attempt.quiz_question.course_module_element.related_video)

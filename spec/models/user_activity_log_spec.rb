@@ -59,6 +59,9 @@ describe UserActivityLog do
   it { should validate_presence_of(:alert_level) }
   it { should validate_numericality_of(:alert_level) }
 
+  it { should validate_presence_of(:guid) }
+  it { should validate_uniqueness_of(:guid) }
+
   # callbacks
   it { should callback(:add_to_rails_logger).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }

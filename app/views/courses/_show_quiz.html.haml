@@ -33,11 +33,13 @@
   var easyList = #{@easy_ids},
       mediumList = #{@medium_ids},
       difficultList = #{@difficult_ids},
+      allQuestionsList = #{@all_ids},
+      selectionStrategy = '#{@strategy}',
       answers = [],
       numberOfQuestions = #{@number_of_questions},
       currentQuestion = 1,
       nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
-      nextQuestionArray = #{@first_attempt ? 'easy' : 'difficult'}List,
+      nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
       progressBar = $('.progress-bar'),
       previousAnswerCorrect = true,
       startTime = #{Time.now.to_i};
@@ -54,7 +56,7 @@
   function askQuestion(questionNumber) {
     updateProgressBar();
     $('.question').hide();
-    $('#question_' + nextQuestionLevel + '_' + nextQuestionArray[questionNumber - 1]).fadeIn();
+    $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
   }
 
   function logAnswer(questionId, answerId, difficultyLevel, isCorrect) {
@@ -63,18 +65,22 @@
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
     if (currentQuestion < numberOfQuestions) {
-      if (isCorrect == true && difficultyLevel == 'easy') {
-        nextQuestionLevel = 'medium';
-        nextQuestionArray = mediumList;
-      } else if (isCorrect == true && difficultyLevel == 'medium') {
-        nextQuestionLevel = 'difficult';
-        nextQuestionArray = difficultList;
-      } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
-        nextQuestionLevel = 'medium';
-        nextQuestionArray = mediumList;
-      } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
-        nextQuestionLevel = 'easy';
-        nextQuestionArray = easyList;
+      if (selectionStrategy == 'progressive') {
+        if (isCorrect == true && difficultyLevel == 'easy') {
+          nextQuestionLevel = 'medium';
+          nextQuestionArray = mediumList;
+        } else if (isCorrect == true && difficultyLevel == 'medium') {
+          nextQuestionLevel = 'difficult';
+          nextQuestionArray = difficultList;
+        } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
+          nextQuestionLevel = 'medium';
+          nextQuestionArray = mediumList;
+        } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
+          nextQuestionLevel = 'easy';
+          nextQuestionArray = easyList;
+        }
+      } else if (selectionStrategy == 'random') {
+        nextQuestionArray = allQuestionsList
       }
       currentQuestion++;
       updateProgressBar();

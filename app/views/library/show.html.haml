@@ -27,8 +27,7 @@
               .pull-right
                 =completion_label(child)
             .text-muted
-              =child.children.size
-              items
+              =pluralize((child.children.all_active.size + (child.try(:course_module_jumbo_quiz) ? 1 : 0)), t('views.library.show.item'))
           .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
             .list-group
               -if @hierarchy_item.children.all_active.count > 0
@@ -50,12 +49,11 @@
                           -elsif grand_child.children.all_active.any?
                             =grand_child.children.all_active.count
                             =t("views.#{grand_child.children.first.class.name.underscore.pluralize}.index.h1")
-              -if child.class == CourseModule && child.course_module_jumbo_quiz
-                .list-group
+                -if child.class == CourseModule && child.course_module_jumbo_quiz
                   .list-group-item
                     .row
                       .col-sm-8
-                        =completion_circle(child)
+                        =completion_circle(child.course_module_jumbo_quiz)
                         =link_to child.course_module_jumbo_quiz.name, course_special_link(child.course_module_jumbo_quiz)
                       .col-sm-4
                         .text-right=t('views.library.show.jumbo_quiz')

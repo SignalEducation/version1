@@ -85,11 +85,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
     # activate this with the following:
     # CourseModuleElementUserLog.assign_user_to_session_guid(123, 'abcde123')
-    x = CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users
-    x.update_all(user_id: the_user_id)
-    Rails.logger.debug "DEBUG: the_session_guid: #{the_session_guid}"
-    Rails.logger.debug "DEBUG: x: #{x.inspect}"
-    QuizAttempt.where(course_module_element_user_log_id: x.map(&:id), user_id: nil).update_all(user_id: the_user_id)
+    cmeuls = CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users
+    cmeuls.each do |cmeul|
+     cmeul.update_column(:user_id, the_user_id)
+     cmeul.quiz_attempts.where(course_module_element_user_log_id: cmeul.id, user_id: nil).update_all(user_id: the_user_id)
+    end
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)

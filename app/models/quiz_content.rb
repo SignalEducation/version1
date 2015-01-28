@@ -24,7 +24,9 @@ class QuizContent < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
-                  :text_content, :sorting_order, :content_type, :image
+                  :text_content, :sorting_order, :content_type, :image,
+                  :image_file_name, :image_content_type,
+                  :image_file_size, :image_updated_at
 
   # Constants
   CONTENT_TYPES = %w(text image mathjax)

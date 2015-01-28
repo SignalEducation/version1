@@ -7,7 +7,7 @@ module ApplicationHelper
   end
 
   def completion_circle(hierarchy_thing)
-    if hierarchy_thing.class == CourseModuleElement
+    if hierarchy_thing.class == CourseModuleElement || hierarchy_thing.class == CourseModuleJumboQuiz
       percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
     elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
       percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
@@ -58,7 +58,7 @@ module ApplicationHelper
   end
 
   def head_sanitizer(some_text)
-    sanitize(some_text, tags: %w(meta script title style), attributes: %w(name content type href src charset media) )
+    sanitize(some_text, tags: %w(meta script title style link), attributes: %w(name content type href src charset media rel) )
   end
 
   def body_sanitizer(some_text)
