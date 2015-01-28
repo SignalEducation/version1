@@ -97,7 +97,7 @@ class CourseModule < ActiveRecord::Base
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
     set = user_id ?
-        self.student_exam_tracks.where(user_id: user_id).first:
+        self.student_exam_tracks.where(user_id: user_id).first :
         self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
     set.try(:percentage_complete) || 0
   end

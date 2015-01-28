@@ -84,11 +84,11 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def elements_total
-    self.course_module.children.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
+    self.course_module.active_children.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
   end
 
   def elements_complete
-    self.latest_cme_user_logs.count
+    self.latest_cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
   end
 
   def destroyable?
@@ -96,7 +96,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.count
+    self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.with_elements_active.count
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.course_module.children_available_count ) * 100
     self.save(callbacks: false)
   end

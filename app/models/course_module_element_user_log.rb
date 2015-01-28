@@ -65,7 +65,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_booleans
   after_create :calculate_score
   after_create :create_or_update_student_exam_track
-  after_save :update_student_exam_track
+  after_update :update_student_exam_track
   after_destroy :update_student_exam_track
 
   # scopes
@@ -80,6 +80,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
   scope :jumbo_quizzes, -> { where(is_jumbo_quiz: true) }
+  scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
@@ -93,11 +94,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)
-    if the_user_id
-      where(user_id: the_user_id)
-    else
-      where(session_guid: the_session_guid, user_id: nil)
-    end
+    the_user_id ? where(user_id: the_user_id) : where(session_guid: the_session_guid, user_id: nil)
   end
 
   # instance methods
@@ -110,7 +107,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def student_exam_track
-    self.student_exam_tracks.first
+    StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id).first
   end
 
   protected
@@ -132,12 +129,13 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_or_update_student_exam_track
-    set = student_exam_tracks.first_or_initialize
+    set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
     set.exam_level_id ||= self.course_module.exam_level_id
     set.exam_section_id ||= self.course_module.exam_section_id
     set.latest_course_module_element_id = self.course_module_element_id
     set.jumbo_quiz_taken = true if self.is_jumbo_quiz
     set.save!
+    set.recalculate_completeness
   end
 
   def set_booleans
@@ -158,12 +156,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     true
   end
 
-  def student_exam_tracks
-    StudentExamTrack.where(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-  end
-
   def update_student_exam_track
-    self.student_exam_track.recalculate_completeness
+    self.student_exam_track.try(:recalculate_completeness)
   end
 
 end

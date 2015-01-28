@@ -69,9 +69,9 @@ module ApplicationHelper
   def breadcrumb_builder(the_thing)
     # This builds an array of objects starting at subject_area and ending at whatever the_thing is.
     if the_thing.parent
-      return breadcrumb_builder(the_thing.parent) + [the_thing]
+      breadcrumb_builder(the_thing.parent) + [the_thing]
     else
-      return [the_thing]
+      [the_thing]
     end
   end
 

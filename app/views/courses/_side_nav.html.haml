@@ -8,7 +8,7 @@
 
       .panel-collapse.collapse{id: "collapse_#{counter}", class: (course_module.id == @course_module.id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
         .panel-body
-          -course_module.course_module_elements.all_in_order.each do |course_module_element|
+          -course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
             -if course_module_element.id == @course_module_element.try(:id)
               %p
                 -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
@@ -29,5 +29,3 @@
                 -if course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
                   %span.glyphicon.glyphicon-ok-sign
                 =link_to course_module.course_module_jumbo_quiz.name, course_special_link(course_module.course_module_jumbo_quiz)
-
-

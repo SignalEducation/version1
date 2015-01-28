@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
     @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
-    @course_module_element ||= @course_module.course_module_elements.all_in_order.first unless @course_module_jumbo_quiz
+    @course_module_element ||= @course_module.course_module_elements.all_in_order.all_active.first unless @course_module_jumbo_quiz
 
     if @course_module_element.nil? && @course_module.nil?
       # The URL is out of date or wrong.
@@ -37,16 +37,17 @@ class CoursesController < ApplicationController
     @course_module_element_user_log.session_guid = current_session_guid
     @course_module_element_user_log.element_completed = true
     @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i
+    @course_module_element = @course_module_element_user_log.course_module_element
+    @course_module = @course_module_element_user_log.course_module
+    @results = true
     unless @course_module_element_user_log.save
+      # it did not save
       Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
       flash[:error] = I18n.t('controllers.courses.create.flash.error')
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
     else
-      @course_module_element = @course_module_element_user_log.course_module_element
-      @course_module = @course_module_element_user_log.course_module
-      @results = true
       render :show
     end
   end
@@ -102,6 +103,7 @@ class CoursesController < ApplicationController
             course_module_id: @course_module_element.course_module_id,
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
+            is_video: false,
             user_id: current_user.try(:id)
     )
     @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions

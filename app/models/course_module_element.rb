@@ -137,7 +137,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_student_exam_tracks
-    StudentExamTracksWorker.perform_async(self.id)
+    StudentExamTracksWorker.perform_async(self.course_module_id)
     true
   end
 
