@@ -471,6 +471,7 @@ ActiveRecord::Schema.define(version: 20150122103412) do
     t.boolean  "phone",            default: false, null: false
     t.boolean  "tablet",           default: false, null: false
     t.boolean  "computer",         default: false, null: false
+    t.string   "guid"
   end
 
   create_table "user_exam_levels", force: true do |t|

@@ -19,6 +19,7 @@
 #  phone            :boolean          default(FALSE), not null
 #  tablet           :boolean          default(FALSE), not null
 #  computer         :boolean          default(FALSE), not null
+#  guid             :string(255)
 #
 
 FactoryGirl.define do
