@@ -233,6 +233,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:individual_student)
   end
 
+  def content_manager?
+    self.user_group.try(:content_manager)
+  end
+
   protected
 
   def de_activate_user

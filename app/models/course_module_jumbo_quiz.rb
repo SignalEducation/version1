@@ -47,6 +47,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   before_validation { squish_fields(:name) }
   before_save :sanitize_name_url
   before_save :calculate_best_possible_scores
+  after_create :update_student_exam_tracks
 
   # scopes
   scope :all_in_order, -> { order(:course_module_id) }
@@ -61,7 +62,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   end
 
   def destroyable?
-    true
+    !Rails.env.production?
   end
 
   def name_url
@@ -83,6 +84,11 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
     ApplicationController::DIFFICULTY_LEVELS.length.times do |counter|
       self.best_possible_score_first_attempt += ApplicationController::DIFFICULTY_LEVELS[counter][:score]
     end
+  end
+
+  def update_student_exam_tracks
+    StudentExamTracksWorker.perform_async(self.course_module_id)
+    true
   end
 
 end

@@ -100,5 +100,8 @@ describe CourseModuleElementUserLog do
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:recent_attempts) }
+  it { should respond_to(:recent_attempts) }
+  it { should respond_to(:student_exam_track) }
+
 
 end

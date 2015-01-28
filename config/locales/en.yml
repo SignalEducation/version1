@@ -424,6 +424,7 @@ en:
       these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
+      tools: Tools
       view: View
       view_tooltip: click to view
       yes: Yes
@@ -512,6 +513,7 @@ en:
       show:
         h1: Courses
         done: Done
+        coming_soon: "We don't have any content for this course module right now."
 
       show_results:
         h1: 'Results:'
@@ -602,7 +604,7 @@ en:
         h1: Edit Course Module Element
 
       index:
-        h1: Course Modules Elements
+        h1: Course Module Elements
 
       new:
         h1: New Course Module Element
@@ -716,6 +718,38 @@ en:
     dashboard:
       index:
         h1: Dashboard
+
+      individual_student:
+        in-progress: In-progess
+        completed: Completed
+        none_in_progress: "Remember, you can study multiple modules at the same time."
+        none_completed: "This panel will show you the modules that you have completed. Keep going!"
+        no_content_right_now: "This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started, choose a course form our library."
+
+      tutor:
+        total_course_module_elements: Total Course Modules Elements
+        course_module_element_videos: Number of Videos
+        course_module_element_quizzes: Number of Quizzes
+
+      admin:
+        user_data: User Data
+        total_number_of_items: Total
+        new_items_in_last_7_days: New in last 7 Days
+        active: Active
+        users: Users
+        user_groups: User Groups
+        course_content_data: Courses Data
+        subject_areas: Subject Areas
+        institutions: Institutions
+        qualifications: Qualifications
+        exam_levels: Exam Levels
+
+      content_manager:
+        edited_in_last_3_days: Edited in the last 3 days
+        expired_in_last_3_days: Expired in the last 3 days
+        expires_in_next_3_days: Expires in the next 3 days
+        published_in_last_3_days: Published in the last 3 days
+        publishes_in_next_3_days: Publishes in the next 3 days
 
     exam_levels:
       form:
@@ -846,10 +880,18 @@ en:
     library:
       show:
         h1: Library
-        video: Video
-        quiz: Quiz
+        item: item
+        items: items
         jumbo_quiz: Jumbo quiz
         questions: Questions
+        quiz: Quiz
+        video: Video
+        institution: Institution
+        qualification: Qualification
+        exam_level: Exam Level
+        exam_section: Exam Section
+        course_module: Course Module
+        course_module_element: Step
 
     qualifications:
       form:
