@@ -56,6 +56,7 @@ describe ExamLevel do
   it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
   # callbacks
+  it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_best_possible_score).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }

@@ -1,5 +1,5 @@
-// Bootstrap customisation
-// see https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
+// Bootstrap customisation - see
+// https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
 
 $input-color-placeholder: #ccc;
 
@@ -8,23 +8,22 @@ $navbar-inverse-link-active-bg: #ee9a3b;
 $navbar-inverse-color: #eee;
 $navbar-inverse-link-color: #eee; /*#89A;*/
 $navbar-inverse-link-hover-bg: red;
-//$navbar-inverse-brand-hover-bg: blue;
 $navbar-inverse-border: #fff;
 $navbar-height: 65px;
 $link-color: #222;
 
-
+// Fonts
 @font-face {
   font-family: 'BryantWebRegular';
-  src: font-url('BryantWebRegular.eot')  format('eot'),
-       font-url('BryantWebRegular.woff') format('woff'),
-       font-url('BryantWebRegular.ttf')  format('truetype');
+  src: url(font-path('BryantWebRegular.eot'))  format('eot'),
+       url(font-path('BryantWebRegular.woff')) format('woff'),
+       url(font-path('BryantWebRegular.ttf'))  format('truetype');
 }
 @font-face {
   font-family: 'BryantWebRegularAlternative';
-  src: font-url('BryantWebRegularAlt.eot')  format('eot'),
-       font-url('BryantWebRegularAlt.woff') format('woff'),
-       font-url('BryantWebRegularAlt.ttf')  format('truetype');
+  src: url(font-path('BryantWebRegularAlt.eot'))  format('eot'),
+       url(font-path('BryantWebRegularAlt.woff')) format('woff'),
+       url(font-path('BryantWebRegularAlt.ttf'))  format('truetype');
 }
 
 // Load Bootstrap 3
@@ -40,6 +39,10 @@ body {
     text-transform: uppercase;
     font-family: BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   }
+}
+
+tr {
+  vertical-align: top;
 }
 
 .navbar, .navbar-header, .intro-text {
@@ -78,11 +81,11 @@ body {
 }
 
 .quiz-answer-clickable {
+  transition: all 0.25s;
   cursor: pointer;
   &:hover {
-    background-color: #dddddd;
+    background-color: #ddd;
   }
-  color: #fec503
 }
 
 // Added in to support special styling for static pages
@@ -155,6 +158,7 @@ body.no-top-margin {
   height: 500px;
   background-color: #777;
 }
+
 .carousel-inner > .item > img {
   position: absolute;
   top: 0;
@@ -200,4 +204,45 @@ header {
     font-size: 125%;
     padding: 10px 20px;
   }
+}
+
+.table > thead > tr > th {
+  border-top: 0 solid red !important;
+}
+
+.label {
+  margin-right: 4px;
+}
+
+.well-black {
+  background-color: #ccc;
+  border-radius: 20px;
+  .progress {
+    margin-bottom: 0;
+  }
+}
+
+.list-group {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.list-group-item {
+  border-radius: 0;
+}
+
+.glyphicon-ok-sign {
+  color: green;
+}
+
+.panel-body .col-sm-4 {
+  vertical-align: middle;
+  .h3 {
+    text-transform: capitalize !important;
+    margin: 5px 0;
+  }
+  .progress {
+    margin: 7px 0;
+  }
+
 }

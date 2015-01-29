@@ -30,6 +30,7 @@ class SubjectArea < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
+  before_create :set_sorting_order
   before_save :sanitize_name_url
 
   # scopes
@@ -53,5 +54,9 @@ class SubjectArea < ActiveRecord::Base
   end
 
   protected
+
+  def set_sorting_order
+    self.sorting_order = SubjectArea.all.maximum(:sorting_order).to_i + 1
+  end
 
 end

@@ -30,7 +30,7 @@ class UserPasswordResetsController < ApplicationController
     if @user
       UserSession.create!(@user)
       flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
-      OperationalMailer.your_password_has_changed(@user).deliver
+      Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
     else
       flash[:error] = I18n.t('controllers.user_password_resets.update.flash.error')
     end

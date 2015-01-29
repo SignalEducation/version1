@@ -46,6 +46,7 @@ class Institution < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :short_name, :name_url, :description, :feedback_url, :help_desk_url) }
+  before_create :set_sorting_order
   before_save :sanitize_name_url
 
   # scopes

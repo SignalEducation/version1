@@ -1,29 +1,22 @@
--all_easy_ids = cme.course_module_element_quiz.easy_ids
--all_medium_ids = cme.course_module_element_quiz.medium_ids
--all_difficult_ids = cme.course_module_element_quiz.difficult_ids
--easy_ids = all_easy_ids.sample(cme.course_module_element_quiz.number_of_questions)
--medium_ids = all_medium_ids.sample(cme.course_module_element_quiz.number_of_questions)
--difficult_ids = all_difficult_ids.sample(cme.course_module_element_quiz.number_of_questions)
-
--if cme.course_module_element_quiz.enough_questions? || current_user.admin?
+-if @enough_questions
   .row
     .col-sm-12
-      %h2.no-top-gap=cme.name
+      %h2.no-top-gap=@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name)
   .row
     .col-sm-12
       .progress
         .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
           %span.sr-only 0% Complete
           0%
-  .row
-    .col-sm-12
-      -(easy_ids + medium_ids + difficult_ids).each do |the_id|
-        =render partial: 'quiz_questions/show', locals: {question: cme.course_module_element_quiz.quiz_questions.find(the_id), hide_me: true}
+  -@quiz_questions.each do |question|
+    =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
   =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
     =f.text_field :user_id
     =f.text_field :course_module_id
     =f.text_field :course_module_element_id
+    =f.text_field :course_module_jumbo_quiz_id
+    =f.text_field :time_taken_in_seconds, value: (Time.now.to_i * -1)
     =f.fields_for :quiz_attempts do |attempt|
       =attempt.text_field :user_id
       =attempt.text_field :quiz_question_id
@@ -37,15 +30,18 @@
 
 :javascript
 
-  var easyList = #{easy_ids},
-      mediumList = #{medium_ids},
-      difficultList = #{difficult_ids},
+  var easyList = #{@easy_ids},
+      mediumList = #{@medium_ids},
+      difficultList = #{@difficult_ids},
+      allQuestionsList = #{@all_ids},
+      selectionStrategy = '#{@strategy}',
       answers = [],
-      numberOfQuestions = #{cme.course_module_element_quiz.number_of_questions},
+      numberOfQuestions = #{@number_of_questions},
       currentQuestion = 1,
-      nextQuestionLevel = 'easy',
-      nextQuestionArray = easyList,
+      nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
+      nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
       progressBar = $('.progress-bar'),
+      previousAnswerCorrect = true,
       startTime = #{Time.now.to_i};
 
   function updateProgressBar() {
@@ -60,18 +56,36 @@
   function askQuestion(questionNumber) {
     updateProgressBar();
     $('.question').hide();
-    $('#question_' + nextQuestionLevel + '_' + nextQuestionArray[questionNumber - 1]).fadeIn();
+    $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
   }
 
   function logAnswer(questionId, answerId, difficultyLevel, isCorrect) {
-    // tomorrow's stuff.
     answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
+    // log the answer in the form
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
     if (currentQuestion < numberOfQuestions) {
+      if (selectionStrategy == 'progressive') {
+        if (isCorrect == true && difficultyLevel == 'easy') {
+          nextQuestionLevel = 'medium';
+          nextQuestionArray = mediumList;
+        } else if (isCorrect == true && difficultyLevel == 'medium') {
+          nextQuestionLevel = 'difficult';
+          nextQuestionArray = difficultList;
+        } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
+          nextQuestionLevel = 'medium';
+          nextQuestionArray = mediumList;
+        } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
+          nextQuestionLevel = 'easy';
+          nextQuestionArray = easyList;
+        }
+      } else if (selectionStrategy == 'random') {
+        nextQuestionArray = allQuestionsList
+      }
       currentQuestion++;
       updateProgressBar();
       askQuestion(currentQuestion);
+      previousAnswerCorrect = isCorrect;
     } else {
       $('#new_course_module_element_user_log').submit();
     }

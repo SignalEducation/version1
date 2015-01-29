@@ -10,6 +10,7 @@
 #  course_module_element_user_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  score                             :integer          default(0)
 #
 
 class QuizAttempt < ActiveRecord::Base
@@ -23,22 +24,26 @@ class QuizAttempt < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :course_module_element_user_log
+  belongs_to :course_module_element_user_log, inverse_of: :quiz_attempts
   belongs_to :quiz_question
   belongs_to :quiz_answer
   belongs_to :user
 
   # validation
-  validates :user_id, presence: true,
+  validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_question_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_answer_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_user_log_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            on: :update
+  validates :course_module_element_user_log_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0},
+            on: :create
 
   # callbacks
+  before_create :calculate_score
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -51,5 +56,11 @@ class QuizAttempt < ActiveRecord::Base
   end
 
   protected
+
+  def calculate_score
+    self.correct = self.quiz_answer.correct
+    self.score = self.correct ?
+            ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
+  end
 
 end

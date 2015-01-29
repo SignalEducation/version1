@@ -60,7 +60,7 @@ class UserActivityLogsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user_activity_log).permit(:user_id, :session_guid, :signed_in, :original_uri, :controller_name, :action_name, :params, :alert_level)
+    params.require(:user_activity_log).permit(:user_id, :session_guid, :signed_in, :original_uri, :controller_name, :action_name, :params, :ip_address, :alert_level, :browser, :operating_system, :phone, :tablet, :computer, :http_user_agent)
   end
 
 end

@@ -18,7 +18,7 @@ require 'rails_helper'
 describe CourseModuleElementQuiz do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at question_selection_strategy
+  black_list = %w(id created_at updated_at
                  best_possible_score_first_attempt best_possible_score_retry course_module_jumbo_quiz_id)
   CourseModuleElementQuiz.column_names.each do |column_name|
     if black_list.include?(column_name)
@@ -29,7 +29,7 @@ describe CourseModuleElementQuiz do
   end
 
   # Constants
-  #it { expect()CourseModuleElementQuiz.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(CourseModuleElementQuiz.const_defined?(:STRATEGIES)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }
@@ -45,6 +45,8 @@ describe CourseModuleElementQuiz do
 
   xit { should validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
   xit { should validate_numericality_of(:course_module_jumbo_quiz_id) }
+
+  it { should validate_inclusion_of(:question_selection_strategy).in_array(CourseModuleElementQuiz::STRATEGIES) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -63,6 +65,5 @@ describe CourseModuleElementQuiz do
   it { should respond_to(:easy_ids) }
   it { should respond_to(:enough_questions?) }
   it { should respond_to(:medium_ids) }
-
 
 end

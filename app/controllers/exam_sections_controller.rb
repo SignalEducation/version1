@@ -2,13 +2,15 @@ class ExamSectionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(['admin', 'tutor'])
   end
   before_action :get_variables
 
   def index
     @exam_level = ExamLevel.where(name_url: params[:exam_level_url].to_s).first || ExamLevel.all_in_order.first
-    @exam_sections = ExamSection.where(exam_level_id: @exam_level.id).paginate(per_page: 50, page: params[:page]).all_in_order
+    @exam_sections = @exam_level ?
+          ExamSection.where(exam_level_id: @exam_level.id).paginate(per_page: 50, page: params[:page]).all_in_order :
+          ExamSection.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show

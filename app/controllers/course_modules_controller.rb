@@ -7,7 +7,7 @@ class CourseModulesController < ApplicationController
   before_action :get_variables, except: :show
 
   def index
-    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.qualification
+    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.try(:qualification)
     exam_level = qualification.try(:exam_levels).try(:first)
     if exam_level
       redirect_to course_module_special_link(exam_level)
@@ -24,13 +24,15 @@ class CourseModulesController < ApplicationController
         @exam_level_id = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first.try(:id) || @qualification.exam_levels.first.try(:id)
         if params[:course_module_url]
           @course_module = CourseModule.with_url(params[:course_module_url]).first
+        else
+          @course_module = CourseModule.where(exam_level_id: @exam_level_id).all_in_order.first
         end
       else
         flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
         redirect_to course_modules_url
       end
     else
-      flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
+      flash[:error] =   I18n.t('controllers.course_modules.show.cant_find')
       redirect_to course_modules_url
     end
   end
@@ -43,10 +45,15 @@ class CourseModulesController < ApplicationController
           exam_level_id: exam_section.exam_level_id,
           qualification_id: exam_section.exam_level.qualification_id,
           institution_id: exam_section.exam_level.qualification.institution_id )
+    elsif params[:exam_level_url]
+      exam_level = ExamLevel.where(name_url: params[:exam_level_url]).first
+      @course_module = CourseModule.new(sorting_order: 1,
+          exam_level_id: exam_level.id,
+          qualification_id: exam_level.qualification_id,
+          institution_id: exam_level.qualification.institution_id )
     else
       @course_module = CourseModule.new(sorting_order: 1)
     end
-    @course_module.tutor_id = current_user.id
     set_up_side_nav
   end
 
@@ -78,7 +85,7 @@ class CourseModulesController < ApplicationController
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|
-      CourseModule.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+      CourseModule.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
     end
     render json: {}, status: 200
   end
@@ -107,7 +114,7 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:institution_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active)
+    params.require(:course_module).permit(:institution_id, :qualification_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active)
   end
 
   def set_up_side_nav

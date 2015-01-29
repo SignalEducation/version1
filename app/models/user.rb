@@ -155,7 +155,7 @@ class User < ActiveRecord::Base
       user = User.where(email: the_email_address.to_s).first
       if user
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,        password_reset_token: ApplicationController::generate_random_code(20), active: false)
-        OperationalMailer.reset_your_password(user).deliver
+        Mailers::OperationalMailers::ResetYourPasswordWorker.perform_async(user.id)
       end
     end
   end
@@ -227,6 +227,14 @@ class User < ActiveRecord::Base
 
   def tutor?
     self.user_group.try(:tutor)
+  end
+
+  def individual_student?
+    self.user_group.try(:individual_student)
+  end
+
+  def content_manager?
+    self.user_group.try(:content_manager)
   end
 
   protected

@@ -15,7 +15,7 @@
         .form-group
           =f.label :password, t('views.user_sessions.form.password'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control'
+            =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off'
         .form-group
           .col-sm-8.col-sm-offset-4
             =f.submit t('views.general.save'), class: 'btn btn-success'

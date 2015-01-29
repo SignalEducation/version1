@@ -49,6 +49,7 @@ describe ExamSection do
   it { should validate_presence_of(:sorting_order) }
 
   # callbacks
+  it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_best_possible_score).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }

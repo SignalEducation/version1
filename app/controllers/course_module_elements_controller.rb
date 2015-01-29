@@ -13,8 +13,8 @@ class CourseModuleElementsController < ApplicationController
               course_module_id: @course_module_element.course_module_id,
               course_module_element_id: @course_module_element.id,
               user_id: current_user.try(:id)
-              # session_guid: cookies.permanent.encrypted[:session_guid],
-              # quiz_score_potential: @course_module_element.course_module_element_quiz.best_possible_score_first_attempt
+              # session_guid: current_session_guid
+              # -- not needed as this is not being persisted (yet!)
       )
       @course_module_element.course_module_element_quiz.number_of_questions.times do
         @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
@@ -160,6 +160,7 @@ class CourseModuleElementsController < ApplicationController
             :number_of_questions,
             :best_possible_score_retry,
             :course_module_jumbo_quiz_id,
+            :question_selection_strategy,
             quiz_questions_attributes: [
                 :id,
                 :course_module_element_quiz_id,

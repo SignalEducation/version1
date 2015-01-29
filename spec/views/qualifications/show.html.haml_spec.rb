@@ -7,7 +7,7 @@ RSpec.describe 'qualifications/show', type: :view do
     @qualification = FactoryGirl.create(:qualification, institution_id: @institution.id)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/#{@qualification.institution.name}/)
     expect(rendered).to match(/#{@qualification.name}/)

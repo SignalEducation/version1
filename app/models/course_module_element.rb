@@ -60,7 +60,7 @@ class CourseModuleElement < ActiveRecord::Base
   # validation
   validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true
-  validates :description, presence: true
+  # validates :description, presence: true
   validates :estimated_time_in_seconds, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,
@@ -80,6 +80,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
   after_save :update_the_module_total_time
+  after_save :update_student_exam_tracks
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
@@ -90,36 +91,58 @@ class CourseModuleElement < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty?
-  end
-
-  def update_the_module_total_time
-    self.course_module.try(:recalculate_estimated_time)
-  end
-
   def array_of_sibling_ids
     self.course_module.course_module_elements.all_active.all_in_order.map(&:id)
+  end
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    cmeul = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id).latest_only.first :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid).latest_only.first
+    cmeul.try(:element_completed)
+  end
+
+  def destroyable?
+    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty?
   end
 
   def my_position_among_siblings
     self.array_of_sibling_ids.index(self.id)
   end
 
-  def previous_element_id
-    if self.my_position_among_siblings > 0
-      self.array_of_sibling_ids[self.my_position_among_siblings - 1]
+  def parent
+    self.course_module
+  end
+
+  def next_element
+    if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+      CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
+    elsif self.course_module.course_module_jumbo_quiz
+      self.course_module.course_module_jumbo_quiz
     else
-      nil
+      next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
+      CourseModuleElement.find(next_id) if next_id
     end
   end
 
-  def next_element_id
-    if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
-      self.array_of_sibling_ids[self.my_position_among_siblings + 1]
+  def previous_element
+    if self.my_position_among_siblings > 0
+      CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings - 1])
+    elsif self.course_module.previous_module.try(:course_module_jumbo_quiz)
+      self.course_module.previous_module.course_module_jumbo_quiz
     else
-      nil
+      prev_id = self.course_module.previous_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:last).try(:id)
+      CourseModuleElement.find(prev_id) if prev_id
     end
+  end
+
+  def update_student_exam_tracks
+    StudentExamTracksWorker.perform_async(self.course_module_id)
+    true
+  end
+
+  def update_the_module_total_time
+    self.course_module.try(:recalculate_estimated_time)
   end
 
   protected

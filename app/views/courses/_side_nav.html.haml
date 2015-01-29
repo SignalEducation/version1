@@ -1,5 +1,5 @@
 .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
-  -@course_module.parent.course_modules.each_with_index do |course_module, counter|
+  -@course_module.parent.course_modules.all_in_order.each_with_index do |course_module, counter|
     .panel.panel-default
       .panel-heading#headingOne{role: 'tab' }
         %h4.panel-title
@@ -8,9 +8,24 @@
 
       .panel-collapse.collapse{id: "collapse_#{counter}", class: (course_module.id == @course_module.id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
         .panel-body
-          -course_module.course_module_elements.all_in_order.each do |course_module_element|
-            -if course_module_element.id == @course_module_element.id
-              %p.text-success=course_module_element.name
+          -course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
+            -if course_module_element.id == @course_module_element.try(:id)
+              %p
+                -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                  %span.glyphicon.glyphicon-ok-sign
+                %span.text-success=course_module_element.name
             -else
-              %p=link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
-
+              %p
+                -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                  %span.glyphicon.glyphicon-ok-sign
+                =link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
+          -if course_module.course_module_jumbo_quiz
+            -if course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
+              -if course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                %span.glyphicon.glyphicon-ok-sign
+              =link_to course_module.course_module_jumbo_quiz.name, course_special_link(course_module.course_module_jumbo_quiz), class: 'text-success'
+            -else
+              %p
+                -if course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                  %span.glyphicon.glyphicon-ok-sign
+                =link_to course_module.course_module_jumbo_quiz.name, course_special_link(course_module.course_module_jumbo_quiz)

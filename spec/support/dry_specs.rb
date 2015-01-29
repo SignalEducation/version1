@@ -76,8 +76,8 @@ def expect_create_error_with_model(model_name)
 end
 
 def expect_update_success_with_model(model_name, destination)
-  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.update.flash.success"))
   expect(flash[:error]).to be_nil
+  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.update.flash.success"))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
   expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
@@ -112,8 +112,8 @@ def expect_delete_error_with_model(model_name, destination)
 end
 
 def expect_change_password_success_with_model(destination)
-  expect(flash[:success]).to eq(I18n.t('controllers.users.change_password.flash.success'))
   expect(flash[:error]).to be_nil
+  expect(flash[:success]).to eq(I18n.t('controllers.users.change_password.flash.success'))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
   expect(assigns(:user).class.name).to eq('User')

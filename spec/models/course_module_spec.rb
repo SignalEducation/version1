@@ -45,6 +45,7 @@ describe CourseModule do
   it { should belong_to(:exam_section) }
   it { should belong_to(:institution) }
   it { should belong_to(:qualification) }
+  it { should have_many(:student_exam_tracks) }
   it { should belong_to(:tutor) }
 
   # validation
@@ -67,6 +68,7 @@ describe CourseModule do
   it { should validate_presence_of(:sorting_order) }
 
   # callbacks
+  it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
@@ -82,11 +84,14 @@ describe CourseModule do
   # instance methods
   it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:children) }
+  it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
   it { should respond_to(:my_position_among_siblings) }
+  it { should respond_to(:next_module) }
   it { should respond_to(:next_module_id) }
   it { should respond_to(:parent) }
+  it { should respond_to(:previous_module) }
   it { should respond_to(:previous_module_id) }
   it { should respond_to(:recalculate_estimated_time) }
 
