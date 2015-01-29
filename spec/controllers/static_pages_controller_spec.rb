@@ -6,7 +6,7 @@ describe StaticPagesController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for static_page_1
-  let!(:static_page_1) { FactoryGirl.create(:static_page) }
+  let!(:static_page_1) { FactoryGirl.create(:static_page, publish_from: Time.now, publish_to: nil) }
   let!(:static_page_2) { FactoryGirl.create(:static_page) }
   let!(:valid_params) { FactoryGirl.attributes_for(:static_page) }
 

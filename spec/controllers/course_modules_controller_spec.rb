@@ -10,7 +10,7 @@ describe CourseModulesController, type: :controller do
   let!(:course_module_1) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
   let!(:course_module_2) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:course_module) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
 
   context 'Not logged in: ' do
 
@@ -184,7 +184,7 @@ describe CourseModulesController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module: valid_params
-        expect_create_success_with_model('course_module', course_modules_url)
+        expect_create_success_with_model('course_module', subject.course_module_special_link(assigns(:course_module)))
       end
 
       it 'should report error for invalid params' do
@@ -538,9 +538,9 @@ describe CourseModulesController, type: :controller do
 
     describe "GET 'index'" do
       it 'should respond OK' do
-        get :index
+        get :index, id: nil, course_module_url: course_module_1.name_url
         expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to render_template(:index)
+        expect(response).to redirect_to(subject.course_module_special_link(:exam_level))
         expect(flash[:error]).to eq(nil)
       end
     end
@@ -583,7 +583,7 @@ describe CourseModulesController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module: valid_params
-        expect_create_success_with_model('course_module', course_modules_url)
+        expect_create_success_with_model('course_module', subject.course_module_special_link(assigns(:course_module)))
       end
 
       it 'should report error for invalid params' do
