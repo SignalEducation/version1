@@ -139,9 +139,9 @@ describe CourseModulesController, type: :controller do
 
     describe "GET 'index'" do
       it 'should respond OK' do
-        get :index
+        get :index, id: nil, course_module_url: course_module_1.name_url
         expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to render_template(:index)
+        expect(response).to redirect_to(subject.course_module_special_link(exam_level))
         expect(flash[:error]).to eq(nil)
       end
     end
@@ -540,7 +540,7 @@ describe CourseModulesController, type: :controller do
       it 'should respond OK' do
         get :index, id: nil, course_module_url: course_module_1.name_url
         expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to redirect_to(subject.course_module_special_link(:exam_level))
+        expect(response).to redirect_to(subject.course_module_special_link(exam_level))
         expect(flash[:error]).to eq(nil)
       end
     end
