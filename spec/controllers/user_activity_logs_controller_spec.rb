@@ -519,7 +519,9 @@ describe UserActivityLogsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, user_activity_log: valid_params
-        expect_create_success_with_model('user_activity_log', user_activity_logs_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new)
       end
 
       it 'should report error for invalid params' do
