@@ -128,10 +128,10 @@ class CourseModuleElementQuiz < ActiveRecord::Base
         the_attributes['quiz_answers_attributes']['2']['wrong_answer_explanation_text'].blank? &&
         the_attributes['quiz_answers_attributes']['2']['wrong_answer_explanation_text'].blank? &&
         # Answer D
-        the_attributes['quiz_answers_attributes']['3']['quiz_contents_attributes']['0']['text_content'].blank? &&
-        the_attributes['quiz_answers_attributes']['3']['degree_of_wrongness'].blank? &&
-        the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank? &&
-        the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank?
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'quiz_contents_attributes')['0']['text_content'].blank? &&
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'degree_of_wrongness').blank? &&
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'wrong_answer_explanation_text').blank? &&
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'wrong_answer_explanation_text').blank?
       )
   end
 
