@@ -40,6 +40,7 @@
 #  created_at                               :datetime
 #  updated_at                               :datetime
 #  locale                                   :string(255)
+#  guid                                     :string(255)
 #
 
 require 'rails_helper'
@@ -47,7 +48,7 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid)
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -124,6 +125,7 @@ describe User do
 
   # callbacks
   it { should callback(:de_activate_user).before(:validation).on(:create) }
+  it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

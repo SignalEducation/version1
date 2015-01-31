@@ -40,6 +40,7 @@
 #  created_at                               :datetime
 #  updated_at                               :datetime
 #  locale                                   :string(255)
+#  guid                                     :string(255)
 #
 
 FactoryGirl.define do

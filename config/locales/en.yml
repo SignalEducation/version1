@@ -1132,6 +1132,7 @@ en:
         forum_notification_email_frequency: Forum notification email frequency
         created_at: Created at
         updated_at: Updated at
+        guid: GUID
 
       edit:
         h1: Edit Account

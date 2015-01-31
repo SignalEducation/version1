@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150122103412) do
+ActiveRecord::Schema.define(version: 20150131110537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -563,6 +563,7 @@ ActiveRecord::Schema.define(version: 20150122103412) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "locale"
+    t.string   "guid"
   end
 
   create_table "vat_codes", force: true do |t|

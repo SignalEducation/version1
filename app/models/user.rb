@@ -40,6 +40,7 @@
 #  created_at                               :datetime
 #  updated_at                               :datetime
 #  locale                                   :string(255)
+#  guid                                     :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -129,6 +130,7 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name, :address) }
+  before_create :add_guid
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
 
   # scopes
@@ -238,6 +240,10 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def add_guid
+    self.guid = ApplicationController.generate_random_code(10)
+  end
 
   def de_activate_user
     self.active = false
