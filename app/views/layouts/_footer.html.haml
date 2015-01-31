@@ -1,7 +1,8 @@
-.container
-  .row
-    .col-sm-2.col-sm-offset-5.text-center{style: 'margin-top: 40px;'}
-      %iframe{src: 'https://www.tinfoilsecurity.com/free_badge_iframe?type=grey&size=2', sandbox: 'allow-popups', scrolling: 'no', frameborder: 0, allowTransparency: true, style: 'border:none; overflow:hidden; width:115px; height:35px; margin: 0 auto;'}
+-if Rails.env.production? || Rails.env.staging?
+  .container
+    .row
+      .col-sm-2.col-sm-offset-5.text-center{style: 'margin-top: 40px;'}
+        %iframe{src: 'https://www.tinfoilsecurity.com/free_badge_iframe?type=grey&size=2', sandbox: 'allow-popups', scrolling: 'no', frameborder: 0, allowTransparency: true, style: 'border:none; overflow:hidden; width:115px; height:35px; margin: 0 auto;'}
 
 -#%nav.navbar.navbar-default.navbar-fixed-bottom{role: 'navigation'}
 %nav.navbar.navbar-default.navbar-footer{role: 'navigation'}
@@ -9,13 +10,15 @@
   .container
     .navbar-header.col-sm-12
       %ul.navbar-text.visible-xs.pull-left
-        &copy; LearnSignal
+        %li &copy; LearnSignal
       %ul.nav.navbar-nav.visible-xs.pull-right
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
 
       %ul.nav.navbar-text.hidden-xs.pull-left
-        &copy;
-        =Time.now.year
-        Learn Signal
+        %li
+          &copy;
+          2014 -
+          =Time.now.year
+          Learn Signal
       %ul.nav.navbar-nav.hidden-xs.pull-right
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
