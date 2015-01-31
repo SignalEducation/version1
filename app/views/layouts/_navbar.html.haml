@@ -6,7 +6,10 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      =link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
+      -if Rails.env.production?
+        =link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
+      -else
+        =link_to Rails.env, root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand'), style: 'background-color: blue;'
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
@@ -19,27 +22,30 @@
           =link_to t('views.library.show.h1'), library_url
       %ul.nav.navbar-nav.navbar-right
         -if current_user
-          -if current_user.user_group.tutor
+          -if current_user.admin? || current_user.tutor?
             %li.dropdown
               %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
-                =t('views.general.admin')
-                %span.caret
-              %ul.dropdown-menu{role: 'menu'}
-                %li=link_to t('views.course_modules.index.h1'), course_modules_url
-          -if current_user.admin?
-            %li.dropdown
-              %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
-                =t('views.general.admin')
+                =t('views.general.tools')
                 %span.caret
               %ul.dropdown-menu{role: 'menu'}
                 %li.dropdown-header=t('views.layouts.navigation.course_content')
-                %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
-                %li=link_to t('views.institutions.index.h1'), institutions_url
-                %li=link_to t('views.qualifications.index.h1'), qualifications_url
+                -if current_user.admin?
+                  %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
+                  %li=link_to t('views.institutions.index.h1'), institutions_url
+                  %li=link_to t('views.qualifications.index.h1'), qualifications_url
                 %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
                 %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                 %li=link_to t('views.course_modules.index.h1'), course_modules_url
-                %li.divider
+                -if current_user.content_manager?
+                  %li.divider
+                    %li.dropdown-header=t('views.layouts.navigation.content_management')
+                    %li=link_to t('views.static_pages.index.h1'), static_pages_url
+          -if current_user.content_manager? && !current_user.admin?
+            %li.dropdown
+              %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
+                =t('views.general.tools')
+                %span.caret
+              %ul.dropdown-menu{role: 'menu'}
                 %li.dropdown-header=t('views.layouts.navigation.content_management')
                 %li=link_to t('views.static_pages.index.h1'), static_pages_url
           %li
@@ -64,7 +70,6 @@
                 %li=link_to t('views.currencies.index.h1'), currencies_url
                 %li=# todo link_to t('views.vat_codes.index.h1'), vat_codes_url
                 %li=link_to t('views.countries.index.h1'), countries_url
-                %li=link_to t('views.static_pages.index.h1'), static_pages_url
                 %li.divider
                 %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                 %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
@@ -79,7 +84,6 @@
             =form_tag '/', role: 'form', class: 'navbar-form navbar-right' do
               .form-group{style: 'padding-top: 3px;'}
                 =text_field_tag :search_terms, nil, placeholder: 'Search...'
-
 
         -else
           %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;"

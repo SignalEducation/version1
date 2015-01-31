@@ -4,16 +4,17 @@
       %h1=t('views.dashboard.index.h1')
 
 -if @dashboard_type.length > 1
-  -# insert a tabbed-navigation for each dashboard
+  .row
+    .panel-group#accordion{role: 'tablist', aria: {multiselectable: true}}
+      -@dashboard_type.each_with_index do |dashboard_type, counter|
+        .panel.panel-default
+          .panel-heading#headingOne{role: 'tab'}
+            %h4.panel-title
+              %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
+                =dashboard_type.humanize
+          .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 1 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+            .panel-body
+              =render partial: "#{dashboard_type}"
 
--if @dashboard_type.include?('individual_student')
+-else
   =render partial: 'dashboard/individual_student'
-
--if @dashboard_type.include?('tutor')
-  =render partial: 'dashboard/tutor'
-
--if @dashboard_type.include?('admin')
-  =render partial: 'dashboard/admin'
-
--if @dashboard_type.include?('content_manager')
-  =render partial: 'dashboard/content_manager'

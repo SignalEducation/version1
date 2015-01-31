@@ -130,60 +130,98 @@ describe ExamLevelsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('exam_levels', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
+      it 'should see exam_level_1' do
+        get :show, id: exam_level_1.id
+        expect_show_success_with_model('exam_level', exam_level_1.id)
+      end
+
+      # optional - some other object
+      it 'should see exam_level_2' do
+        get :show, id: exam_level_2.id
+        expect_show_success_with_model('exam_level', exam_level_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_new_success_with_model('exam_level')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK with exam_level_1' do
+        get :edit, id: exam_level_1.id
+        expect_edit_success_with_model('exam_level', exam_level_1.id)
+      end
+
+      # optional
+      it 'should respond OK with exam_level_2' do
+        get :edit, id: exam_level_2.id
+        expect_edit_success_with_model('exam_level', exam_level_2.id)
       end
     end
 
     describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
+      it 'should report OK for valid params' do
         post :create, exam_level: valid_params
-        expect_bounce_as_not_allowed
+        expect_create_success_with_model('exam_level', exam_levels_filtered_url(qualification.name_url))
       end
 
-      it 'should respond ERROR not permitted' do
+      it 'should report error for invalid params' do
         post :create, exam_level: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
+        expect_create_error_with_model('exam_level')
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, exam_level: valid_params
-        expect_bounce_as_not_allowed
+      it 'should respond OK to valid params for exam_level_1' do
+        put :update, id: exam_level_1.id, exam_level: valid_params
+        expect_update_success_with_model('exam_level', exam_levels_filtered_url(qualification.name_url))
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_level_2' do
+        put :update, id: exam_level_2.id, exam_level: valid_params
+        expect_update_success_with_model('exam_level', exam_levels_filtered_url(qualification.name_url))
+        expect(assigns(:exam_level).id).to eq(exam_level_2.id)
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_level_1.id, exam_level: {valid_params.keys.first => ''}
+        expect_update_error_with_model('exam_level')
+        expect(assigns(:exam_level).id).to eq(exam_level_1.id)
+      end
+    end
+
+    describe "POST 'reorder'" do
+      it 'should be OK with valid array' do
+        post :reorder, array_of_ids: [exam_level_2.id, exam_level_1.id]
+        expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: exam_level_1.id
+        expect_delete_error_with_model('exam_level', exam_levels_url)
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_level_2.id
+        expect_delete_success_with_model('exam_level', exam_levels_url)
       end
     end
 
   end
+
 
   context 'Logged in as a corporate_student_user: ' do
 

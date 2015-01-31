@@ -25,5 +25,5 @@
       =render partial: 'courses/show_quiz'
     -elsif @course_module
       .well
-        %h3 Coming soon
-        %p We don't have any content for this course module right now.
+        %h3=t('views.general.coming_soon')
+        %p=t('views.courses.show.coming_soon')

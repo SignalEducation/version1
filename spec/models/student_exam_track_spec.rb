@@ -13,6 +13,8 @@
 #  session_guid                    :string(255)
 #  course_module_id                :integer
 #  jumbo_quiz_taken                :boolean          default(FALSE)
+#  percentage_complete             :integer          default(0)
+#  count_of_cmes_completed         :integer          default(0)
 #
 
 require 'rails_helper'
@@ -47,7 +49,7 @@ describe StudentExamTrack do
   it { should validate_presence_of(:exam_level_id) }
   it { should validate_numericality_of(:exam_level_id) }
 
-  it { should validate_presence_of(:exam_section_id) }
+  it { should_not validate_presence_of(:exam_section_id) }
   it { should validate_numericality_of(:exam_section_id) }
 
   it { should_not validate_presence_of(:latest_course_module_element_id) }
