@@ -132,7 +132,11 @@ describe User do
   it { expect(User).to respond_to(:all_in_order) }
 
   # class methods
-  it { expect(User).to respond_to(:find_and_activate) }
+  it { expect(User).to respond_to(:all_admins) }
+  it { expect(User).to respond_to(:all_tutors) }
+  it { expect(User).to respond_to(:get_and_activate) }
+  it { expect(User).to respond_to(:start_password_reset_process) }
+  it { expect(User).to respond_to(:finish_password_reset_process) }
 
   # instance methods
   it { should respond_to(:admin?) }
@@ -141,5 +145,7 @@ describe User do
   it { should respond_to(:full_name) }
   it { should respond_to(:frequent_forum_user?) }
   it { should respond_to(:tutor?) }
+  it { should respond_to(:individual_student?) }
+  it { should respond_to(:content_manager?) }
 
 end

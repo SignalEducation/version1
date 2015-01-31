@@ -137,11 +137,15 @@ class User < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
 
   # class methods
-  def self.all_tutors
-     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
+  def self.all_admins
+    includes(:user_group).references(:user_groups).where('user_groups.site_admin = ?', true)
   end
 
-  def self.find_and_activate(activation_code)
+  def self.all_tutors
+    includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
+  end
+
+  def self.get_and_activate(activation_code)
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
     if user
       user.account_activated_at = Proc.new{Time.now}.call
