@@ -33,6 +33,7 @@ FactoryGirl.define do
     params { {name: 'abc', some_val: 123} }
     alert_level 0
     sequence(:guid) { |n| "ABC-#{n}" }
+    ip_address 'MyString'
   end
 
 end

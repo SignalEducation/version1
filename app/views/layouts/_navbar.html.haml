@@ -6,7 +6,10 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      =link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
+      -if Rails.env.production?
+        =link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
+      -else
+        =link_to Rails.env, root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand'), style: 'background-color: blue;'
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
