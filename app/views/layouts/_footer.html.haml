@@ -10,13 +10,15 @@
   .container
     .navbar-header.col-sm-12
       %ul.navbar-text.visible-xs.pull-left
-        &copy; LearnSignal
+        %li &copy; LearnSignal
       %ul.nav.navbar-nav.visible-xs.pull-right
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
 
       %ul.nav.navbar-text.hidden-xs.pull-left
-        &copy;
-        =Time.now.year
-        Learn Signal
+        %li
+          &copy;
+          2014 -
+          =Time.now.year
+          Learn Signal
       %ul.nav.navbar-nav.hidden-xs.pull-right
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
