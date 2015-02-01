@@ -50,6 +50,8 @@ describe RawVideoFile do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:status) }
   it { should respond_to(:url) }
 
 end

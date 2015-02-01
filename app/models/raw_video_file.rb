@@ -26,6 +26,7 @@ class RawVideoFile < ActiveRecord::Base
   BASE_URL = 'https://s3-eu-west-1.amazonaws.com/'
   INBOX_BUCKET = 'learnsignal3-video-inbox'
   OUTBOX_BUCKET = 'learnsignal3-video-outbox'
+  TRANSCODE_RESULTS = %w(done error in-progress)
 
   # relationships
   has_many :course_module_element_videos
@@ -64,6 +65,22 @@ class RawVideoFile < ActiveRecord::Base
   # instance methods
   def destroyable?
     !Rails.env.production? && self.course_module_element_videos.empty?
+  end
+
+  def full_name
+    self.file_name + " (#{self.status})"
+  end
+
+  def status
+    if self.transcode_result.blank?
+      if self.transcode_request_guid.blank?
+        'No transcode request'
+      else
+        'Transcode requested'
+      end
+    else
+      self.transcode_result.capitalize
+    end
   end
 
   def url
