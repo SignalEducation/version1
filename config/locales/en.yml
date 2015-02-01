@@ -348,6 +348,10 @@ en:
         paragraph_1: "Thank you so much for signing up to our service. To activate your account, please click the following link:"
         paragraph_2: "We can't wait for you to get started!"
 
+      send_user_notification:
+        subject_line: You have received a notification
+        paragraph_1: "You have received a notification from our system that we think you should take a look at. "
+
       reset_your_password:
         subject_line: Reset your Learn Signal password
         paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
