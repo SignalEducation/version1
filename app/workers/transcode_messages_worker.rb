@@ -4,7 +4,7 @@ class TranscodeMessagesWorker
   sidekiq_options retry: 1, queue: 'medium'
 
   def perform
-    RawVideoFile.look_for_sqs_updates
+    RawVideoFile.check_for_sqs_updates
   end
 
 end

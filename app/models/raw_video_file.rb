@@ -26,7 +26,7 @@ class RawVideoFile < ActiveRecord::Base
                   :guid_prefix, :duration_in_seconds
 
   # Constants
-  FAKE_PRODUCTION_MODE = true
+  FAKE_PRODUCTION_MODE = false
 
   BASE_URL = 'https://s3-eu-west-1.amazonaws.com/'
   INBOX_BUCKET = 'learnsignal3-video-inbox'
@@ -50,6 +50,7 @@ class RawVideoFile < ActiveRecord::Base
   # class methods
   def self.get_new_videos
     if Rails.env.production? || FAKE_PRODUCTION_MODE
+      new_row_limiter = 5
       current_videos = RawVideoFile.all.map {|x| {file_name: x.file_name, raw_file_modified_at: x.raw_file_modified_at, aws_etag: x.aws_etag} }
       array_of_video_names_in_inbox.each do |remote_file|
         local_file = current_videos.find {|x| x[:aws_etag] == remote_file[:aws_etag] }
@@ -61,9 +62,14 @@ class RawVideoFile < ActiveRecord::Base
         elsif remote_file[:aws_etag] == local_file.try(:[], :aws_etag)
           send_notifications(:file_renamed, {remote_file: remote_file, local_file: local_file})
         else
-          x = RawVideoFile.new(remote_file)
-          unless x.save
-            Rails.logger.error "ERROR: RawVideoFile.self.get_new_videos failed to create a new record using remote_file: #{remote_file}. Errors: #{x.errors}."
+          if new_row_limiter > 0
+            x = RawVideoFile.new(remote_file)
+            unless x.save
+              Rails.logger.error "ERROR: RawVideoFile#self.get_new_videos failed to create a new record using remote_file: #{remote_file}. Errors: #{x.errors}."
+            end
+            new_row_limiter -= 1
+          else
+            Rails.logger.warning 'WARNING: RawVideoFile#self.get_new_videos throttled - video not logged'
           end
         end
       end
@@ -88,41 +94,58 @@ class RawVideoFile < ActiveRecord::Base
     true
   end
 
-  def self.look_for_sqs_updates
-    wip = RawVideoFile.where(transcode_result: 'in-progress')
-    if wip.count >= 0
-      # open a connection to AWS
-      sqs_connection = AWS::SQS::Client.new(
-              access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
-              secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY'],
-              region: 'eu-west-1')
+  def self.check_for_sqs_updates
+    if Rails.env.production? || FAKE_PRODUCTION_MODE
+      Rails.logger.debug 'DEBUG: RawVideoFile#check_for_sqs_updates: Starting...'
+      wip = RawVideoFile.where(transcode_result: 'in-progress')
+      if wip.count >= 0
+        # open a connection to AWS
+        sqs_connection = AWS::SQS::Client.new(
+                access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+                secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY'],
+                region: 'eu-west-1')
 
-      sqs_queue_url = 'https://sqs.eu-west-1.amazonaws.com/318638511927/ets-videos-queue'
-      output_queue_url = 'https://sqs.eu-west-1.amazonaws.com/318638511927/s3-output-videos-queue'
-      sqs_messages = sqs_connection.receive_message(
-              queue_url: sqs_queue_url,
-              max_number_of_messages: 1, #@max_messages,
-              wait_time_seconds: 5).data[:messages]
-      sqs_messages.each do |sqs_message|
-        body_json = JSON.parse(sqs_message[:body])
-        message = {
-                id: body_json['MessageId'], # 5ead6f39-2745-5092-ae87-2271953d3390
-                job_id: body_json['Message']['jobId'], # 1422831671102-vm2p6l
-                state: body_json['Message']['state'], # PROCESSING | COMPLETED | ERROR
-                duration: body_json['Message']['outputs'][0]['duration'] # 195 (3m15s)
-        }
-        Rails.logger.debug "DEBUG: body_json: #{ body_json }."
-        Rails.logger.debug "DEBUG: message: #{ message }."
-
+        sqs_queue_url = 'https://sqs.eu-west-1.amazonaws.com/318638511927/ets-videos-queue'
+        output_queue_url = 'https://sqs.eu-west-1.amazonaws.com/318638511927/s3-output-videos-queue'
+        sqs_messages = sqs_connection.receive_message(
+                queue_url: sqs_queue_url,
+                max_number_of_messages: 10, #@max_messages per batch,
+                wait_time_seconds: 5).data[:messages]
+        messages = []
+        Rails.logger.debug "...Received #{sqs_messages.count} messages."
+        sqs_messages.each do |sqs_message|
+          body_json = JSON.parse(sqs_message[:body], {symbolize_names: true})
+          message_json = JSON.parse(body_json[:Message], {symbolize_names: true})
+          this_one = {
+                  id: body_json[:MessageId], # 5ead6f39-2745-5092-ae87-2271953d3390
+                  job_id: message_json[:jobId], # 1422831671102-vm2p6l
+                  state: message_json[:state], # PROCESSING | COMPLETED | ERROR | WARNING
+                  duration: message_json[:outputs][0][:duration], # 195 (3m15s)
+                  receipt_handle: sqs_message[:receipt_handle]
+          }
+          Rails.logger.debug "... this_one: #{this_one}"
+          messages << this_one
+        end
+        Rails.logger.debug "DEBUG: RawVideoFile#check_for_sqs_updates: messages: #{ messages }."
+# 26e3 1982
+        if messages.count > 0
+          wip.each do |job|
+            message = messages.find { |x| x[:job_id] == job.transcode_request_guid }
+            if message && message[:state] == 'COMPLETED'
+              job.update_attributes(transcode_result: 'done', transcode_completed_at: Proc.new{Time.now}.call, duration_in_seconds: message[:duration])
+            elsif message && message[:state] == 'ERROR'
+              job.update_attributes(transcode_result: 'error', transcode_completed_at: nil, duration_in_seconds: 0)
+            end
+          end
+          ##### Remove the messages from the queue
+          messages.each do |message|
+            sqs_connection.delete_message(queue_url: sqs_queue_url, receipt_handle: message[:receipt_handle])
+          end
+        end
       end
-
-      # wip.each do |job|
-        # sns = sns_queue.where(jobid: == job.transcode_request_guid)
-        # if sns.state == 'COMPLETED'
-        #  job.update_attributes(transcode_result: 'done', transcode_completed_at: Proc.new{Time.now}.call, duration_in_seconds: sns.outputs.first.duration)
-        #  sns.mark_as_read
-        # end
-      # end
+      true
+    else
+      true
     end
   end
 

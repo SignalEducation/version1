@@ -52,6 +52,7 @@ describe RawVideoFile do
 
   # class methods
   xit { expect(RawVideoFile).to respond_to(:get_new_videos) }
+  xit { expect(RawVideoFile).to respond_to(:check_for_sqs_updates) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
