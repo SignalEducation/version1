@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
         0
   end
 
-  if Rails.env.staging? || Rails.env.production?
+  if Rails.env.staging?
     http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
   end
 
