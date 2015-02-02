@@ -12,6 +12,7 @@
 #  transcode_completed_at :datetime
 #  raw_file_modified_at   :datetime
 #  aws_etag               :string(255)
+#  duration_in_seconds    :integer          default(0)
 #
 
 FactoryGirl.define do

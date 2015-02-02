@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150131153725) do
+ActiveRecord::Schema.define(version: 20150201221625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -327,6 +327,7 @@ ActiveRecord::Schema.define(version: 20150131153725) do
     t.datetime "transcode_completed_at"
     t.datetime "raw_file_modified_at"
     t.string   "aws_etag"
+    t.integer  "duration_in_seconds",    default: 0
   end
 
   create_table "static_page_uploads", force: true do |t|

@@ -12,6 +12,7 @@
 #  transcode_completed_at :datetime
 #  raw_file_modified_at   :datetime
 #  aws_etag               :string(255)
+#  duration_in_seconds    :integer          default(0)
 #
 
 class RawVideoFile < ActiveRecord::Base
@@ -85,21 +86,36 @@ class RawVideoFile < ActiveRecord::Base
 
   def url
     short_file_name = self.file_name.split('.')[0..-2].join('.') # kills the file extension .mov etc.
-    self.transcode_completed_at ?
-            BASE_URL + OUTBOX_BUCKET + '/' + short_file_name + '/hls/master.m3u8' :
-            'https://s3-eu-west-1.amazonaws.com/signaleducation-output-videos/cfa1_2014_13.2/hls/master.m3u8'
-             # todo: hard-code a static video
+    if self.transcode_result == 'done'
+      ##### AWS::S3 version
+      # s3 = AWS::S3.new(
+      #         access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+      #         secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
+      # )
+      # object = s3.buckets[OUTBOX_BUCKET].objects[short_file_name + '/hls/master.m3u8']
+      # x = object.url_for(:get, { expires: 20.minutes.from_now, secure: true }).to_s
+      #
+      # x.gsub('learnsignal3-video-outbox.s3.amazonaws.com', 'dvetmi3t70548.cloudfront.net').split('?')[0]
+
+      ##### Aws::S3 version (not working)
+      #s3 = Aws::S3::Client.new(credentials: RawVideoFile::get_aws_credentials, region: 'eu-west-1')
+      #file = s3.get_object(bucket: OUTBOX_BUCKET, key: short_file_name + '/hls/master.m3u8').public_url
+      #file = s3.bucket(OUTBOX_BUCKET).object(short_file_name + '/hls/master.m3u8').public_url
+      #BASE_URL + OUTBOX_BUCKET + '/' + short_file_name + '/hls/master.m3u8'
+
+      ##### URL using CloudFront.net URL
+      'https://dvetmi3t70548.cloudfront.net/' + short_file_name + '/hls/master.m3u8'
+    else
+      'https://s3-eu-west-1.amazonaws.com/signaleducation-output-videos/cfa1_2014_13.2/hls/master.m3u8'
+      # todo: hard-code a static video
+    end
   end
 
   protected
 
   def self.array_of_video_names_in_inbox
     # returns {file_name: 'file1.txt', modified_at: RubyTime, etag: 'abc123'}
-    credentials = Aws::Credentials.new(
-            ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
-            ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
-    )
-    s3 = Aws::S3::Client.new(credentials: credentials, region: 'eu-west-1')
+    s3 = Aws::S3::Client.new(credentials: get_aws_credentials, region: 'eu-west-1')
     resp = s3.list_objects(bucket: INBOX_BUCKET)
     answer = resp.contents.map { |x| {file_name: x.key, raw_file_modified_at: x.last_modified, aws_etag: x.etag} }
     answer
@@ -130,6 +146,27 @@ class RawVideoFile < ActiveRecord::Base
     else
       Rails.logger.error "ERROR: RawVideoFile.self.send_notifications unknown msg_type encountered. MsgType: #{msg_type}; Payload: #{payload}"
     end
+  end
+
+  def self.get_aws_credentials
+    Aws::Credentials.new(
+            ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+            ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
+    )
+  end
+
+  def production_requests_transcode
+    if Rails.env.production?
+      credentials = RawVideoFile.get_aws_credentials
+      Rails.logger.debug "DEBUG: credentials: #{credentials.inspect}"
+      request = Transcoder.new(credentials, self.file_name, self.id)
+      Rails.logger.debug "DEBUG: request: #{request.inspect}"
+      self.update_attributes(
+              transcode_request_guid: request.create['job']['id'],
+              transcode_requested_at: Proc.new{ Time.now }.call,
+              transcode_result: 'in-progress')
+    end
+    true # ensures a happy answer, as this is a callback.
   end
 
 end
