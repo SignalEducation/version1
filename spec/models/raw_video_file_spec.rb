@@ -13,6 +13,7 @@
 #  raw_file_modified_at   :datetime
 #  aws_etag               :string(255)
 #  duration_in_seconds    :integer          default(0)
+#  guid_prefix            :string(255)
 #
 
 require 'rails_helper'
