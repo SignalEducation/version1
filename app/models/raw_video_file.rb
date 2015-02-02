@@ -26,6 +26,8 @@ class RawVideoFile < ActiveRecord::Base
                   :guid_prefix, :duration_in_seconds
 
   # Constants
+  FAKE_PRODUCTION_MODE = true
+
   BASE_URL = 'https://s3-eu-west-1.amazonaws.com/'
   INBOX_BUCKET = 'learnsignal3-video-inbox'
   OUTBOX_BUCKET = 'learnsignal3-video-outbox'
@@ -47,24 +49,81 @@ class RawVideoFile < ActiveRecord::Base
 
   # class methods
   def self.get_new_videos
-    current_videos = RawVideoFile.all.map {|x| {file_name: x.file_name, raw_file_modified_at: x.raw_file_modified_at, aws_etag: x.aws_etag} }
-    array_of_video_names_in_inbox.each do |remote_file|
-      local_file = current_videos.find {|x| x[:aws_etag] == remote_file[:aws_etag] }
+    if Rails.env.production? || FAKE_PRODUCTION_MODE
+      current_videos = RawVideoFile.all.map {|x| {file_name: x.file_name, raw_file_modified_at: x.raw_file_modified_at, aws_etag: x.aws_etag} }
+      array_of_video_names_in_inbox.each do |remote_file|
+        local_file = current_videos.find {|x| x[:aws_etag] == remote_file[:aws_etag] }
 
-      if remote_file[:file_name] == local_file.try(:[], :file_name)
-        if remote_file[:raw_file_modified_at] > local_file[:raw_file_modified_at]
-          send_notifications(:file_updated, {remote_file: remote_file, local_file: local_file})
+        if remote_file[:file_name] == local_file.try(:[], :file_name)
+          if remote_file[:raw_file_modified_at] > local_file[:raw_file_modified_at]
+            send_notifications(:file_updated, {remote_file: remote_file, local_file: local_file})
+          end
+        elsif remote_file[:aws_etag] == local_file.try(:[], :aws_etag)
+          send_notifications(:file_renamed, {remote_file: remote_file, local_file: local_file})
+        else
+          x = RawVideoFile.new(remote_file)
+          unless x.save
+            Rails.logger.error "ERROR: RawVideoFile.self.get_new_videos failed to create a new record using remote_file: #{remote_file}. Errors: #{x.errors}."
+          end
         end
-      elsif remote_file[:aws_etag] == local_file.try(:[], :aws_etag)
-        send_notifications(:file_renamed, {remote_file: remote_file, local_file: local_file})
-      else
-        x = RawVideoFile.new(remote_file)
-        unless x.save
-          Rails.logger.error "ERROR: RawVideoFile.self.get_new_videos failed to create a new record using remote_file: #{remote_file}. Errors: #{x.errors}."
+      end
+    else
+      # all other environments - dev, test and staging
+      current_videos = RawVideoFile.all.map {|x| {guid_prefix: x.guid_prefix} }
+      array_of_folders_in_outbox.each do |remote_file|
+        local_file = current_videos.find {|x| x[:guid_prefix] == remote_file[:guid_prefix] }
+
+        if remote_file[:guid_prefix] == local_file.try(:[], :guid_prefix)
+          if remote_file[:raw_file_modified_at].class == Time && local_file[:raw_file_modified_at].class == Time && remote_file[:raw_file_modified_at] > local_file[:raw_file_modified_at]
+            send_notifications(:file_updated, {remote_file: remote_file, local_file: local_file})
+          end
+        else
+          x = RawVideoFile.new(remote_file)
+          unless x.save
+            Rails.logger.error "ERROR: RawVideoFile.self.get_new_videos failed to create a new record using remote_file: #{remote_file}. Errors: #{x.errors}."
+          end
         end
       end
     end
     true
+  end
+
+  def self.look_for_sqs_updates
+    wip = RawVideoFile.where(transcode_result: 'in-progress')
+    if wip.count >= 0
+      # open a connection to AWS
+      sqs_connection = AWS::SQS::Client.new(
+              access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+              secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY'],
+              region: 'eu-west-1')
+
+      sqs_queue_url = 'https://sqs.eu-west-1.amazonaws.com/318638511927/ets-videos-queue'
+      output_queue_url = 'https://sqs.eu-west-1.amazonaws.com/318638511927/s3-output-videos-queue'
+      sqs_messages = sqs_connection.receive_message(
+              queue_url: sqs_queue_url,
+              max_number_of_messages: 1, #@max_messages,
+              wait_time_seconds: 5).data[:messages]
+      sqs_messages.each do |sqs_message|
+        body_json = JSON.parse(sqs_message[:body])
+        message = {
+                id: body_json['MessageId'], # 5ead6f39-2745-5092-ae87-2271953d3390
+                job_id: body_json['Message']['jobId'], # 1422831671102-vm2p6l
+                state: body_json['Message']['state'], # PROCESSING | COMPLETED | ERROR
+                duration: body_json['Message']['outputs'][0]['duration'] # 195 (3m15s)
+        }
+        Rails.logger.debug "DEBUG: body_json: #{ body_json }."
+        Rails.logger.debug "DEBUG: message: #{ message }."
+
+      end
+
+      # wip.each do |job|
+        # sns = sns_queue.where(jobid: == job.transcode_request_guid)
+        # if sns.state == 'COMPLETED'
+        #  job.update_attributes(transcode_result: 'done', transcode_completed_at: Proc.new{Time.now}.call, duration_in_seconds: sns.outputs.first.duration)
+        #  sns.mark_as_read
+        # end
+      # end
+    end
   end
 
   # instance methods
@@ -118,6 +177,26 @@ class RawVideoFile < ActiveRecord::Base
 
   protected
 
+  def self.array_of_folders_in_outbox
+    s3 = Aws::S3::Client.new(credentials: get_aws_credentials, region: 'eu-west-1')
+    resp = s3.list_objects(bucket: OUTBOX_BUCKET)
+    answer = []
+    resp.contents.each do |file|
+      if file.key.split('/').last == 'master.m3u8'
+        answer << {
+                file_name: (file.key[9..-17] + '.tla'),
+                transcode_result: 'done',
+                transcode_completed_at: file.last_modified,
+                raw_file_modified_at: file.last_modified,
+                aws_etag: file.etag,
+                duration_in_seconds: 0,
+                guid_prefix: file.key[0..7]
+        }
+      end
+    end
+    answer
+  end
+
   def self.array_of_video_names_in_inbox
     # returns {file_name: 'file1.txt', modified_at: RubyTime, etag: 'abc123'}
     s3 = Aws::S3::Client.new(credentials: get_aws_credentials, region: 'eu-west-1')
@@ -134,7 +213,7 @@ class RawVideoFile < ActiveRecord::Base
   end
 
   def production_requests_transcode
-    if Rails.env.production?
+    if Rails.env.production? || FAKE_PRODUCTION_MODE
       credentials = RawVideoFile.get_aws_credentials
       request = Transcoder.new(credentials, self.file_name, self.guid_prefix)
       self.update_attributes(
@@ -146,7 +225,7 @@ class RawVideoFile < ActiveRecord::Base
   end
 
   def production_set_guid_prefix
-    self.guid_prefix ||= ApplicationController.generate_random_code(8) if Rails.env.production?
+    self.guid_prefix ||= ApplicationController.generate_random_code(8) if Rails.env.production? || FAKE_PRODUCTION_MODE
   end
 
   def self.send_notifications(msg_type, payload)

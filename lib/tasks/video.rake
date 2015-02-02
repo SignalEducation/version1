@@ -7,4 +7,10 @@ namespace :video do
     RawVideoFileWorker.perform_async
   end
 
+  desc 'Check for updates on transcode jobs in progress'
+  task(check_transcodes_in_progress: :environment) do
+    # USAGE: rake video:check_transcodes_in_progress
+    TranscodeMessagesWorker.perform_async
+  end
+
 end

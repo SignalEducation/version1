@@ -12,23 +12,22 @@ class Transcoder
   end
 
   def create
-    output_base_folder_name = @guid_prefix + '-' + @inbox_file_name.split('.')[0..-2].join('.') + '/'
-    pipeline_id = '1412960763862-osqzsg'
-    output_key = Digest::SHA256.hexdigest(@inbox_file_name.encode('UTF-8'))
-    output_formats = build_output_formats(output_key)
-    playlist = build_playlist(output_formats)
+    if Rails.env.production? || RawVideoFile::FAKE_PRODUCTION_MODE
+      output_base_folder_name = @guid_prefix + '-' + @inbox_file_name.split('.')[0..-2].join('.') + '/'
+      pipeline_id = '1412960763862-osqzsg'
+      output_key = Digest::SHA256.hexdigest(@inbox_file_name.encode('UTF-8'))
+      output_formats = build_output_formats(output_key)
+      playlist = build_playlist(output_formats)
 
-    job = @aws_client.create_job(
-            pipeline_id: pipeline_id,
-            input: { key: @inbox_file_name },
-            output_key_prefix: output_base_folder_name + 'hls/',
-            outputs: output_formats,
-            playlists: [ playlist ]
-    )
-
-    ###############################
-    Rails.logger.debug "DEBUG: job: #{job.inspect}"
-    return job
+      job = @aws_client.create_job(
+              pipeline_id: pipeline_id,
+              input: { key: @inbox_file_name },
+              output_key_prefix: output_base_folder_name + 'hls/',
+              outputs: output_formats,
+              playlists: [ playlist ]
+      )
+      return job
+    end
   end
 
   protected
