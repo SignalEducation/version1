@@ -4,35 +4,29 @@ class Transcoder
 
   attr_accessor :credentials, :inbox_file_name, :raw_video_file_id
 
-  def initialize(credentials, inbox_file_name, raw_video_file_id)
+  def initialize(credentials, inbox_file_name, guid_prefix)
     @inbox_file_name = inbox_file_name
-    @raw_video_file_id = raw_video_file_id
+    @guid_prefix = guid_prefix
     @aws_client = Aws::ElasticTranscoder::Client.new(credentials: credentials, region: 'eu-west-1')
     return @aws_client
   end
 
   def create
-    output_base_folder_name = @inbox_file_name.split('.')[0..-2].join('.') + '/'
-    source_file_name = RawVideoFile::BASE_URL + RawVideoFile::INBOX_BUCKET + '/' + @inbox_file_name
-    destination_folder = RawVideoFile::BASE_URL + RawVideoFile::OUTBOX_BUCKET + '/' + output_base_folder_name
+    output_base_folder_name = @guid_prefix + '-' + @inbox_file_name.split('.')[0..-2].join('.') + '/'
     pipeline_id = '1412960763862-osqzsg'
-    @input = { key: @inbox_file_name }
-    @output_key = Digest::SHA256.hexdigest(@inbox_file_name.encode('UTF-8'))
-    output_formats = build_output_formats(@output_key)
+    output_key = Digest::SHA256.hexdigest(@inbox_file_name.encode('UTF-8'))
+    output_formats = build_output_formats(output_key)
     playlist = build_playlist(output_formats)
-    @output_key_prefix = output_base_folder_name
 
     job = @aws_client.create_job(
             pipeline_id: pipeline_id,
-            input: @input,
-            output_key_prefix: @output_key_prefix + 'hls/',
+            input: { key: @inbox_file_name },
+            output_key_prefix: output_base_folder_name + 'hls/',
             outputs: output_formats,
             playlists: [ playlist ]
     )
 
     ###############################
-    Rails.logger.debug "DEBUG: source_file_name: #{source_file_name}"
-    Rails.logger.debug "DEBUG: source_file_name: #{destination_folder}"
     Rails.logger.debug "DEBUG: job: #{job.inspect}"
     return job
   end

@@ -42,10 +42,13 @@ describe RawVideoFile do
   it { should validate_presence_of(:file_name) }
 
   # callbacks
+  it { should callback(:production_set_guid_prefix).before(:create) }
+  it { should callback(:production_requests_transcode).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(RawVideoFile).to respond_to(:all_in_order) }
+  it { expect(RawVideoFile).to respond_to(:not_yet_assigned) }
 
   # class methods
   xit { expect(RawVideoFile).to respond_to(:get_new_videos) }
