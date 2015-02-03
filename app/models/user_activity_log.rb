@@ -101,8 +101,12 @@ class UserActivityLog < ActiveRecord::Base
 
     # result =~ /Safari/
 
-    self.browser ||= agent[0..254]
-    self.operating_system ||= agent[0..254]
+    if agent
+      self.browser ||= agent[0..254]
+      self.operating_system ||= agent[0..254]
+    else
+      self.alert_level += 1
+    end
     self.phone ||=
     self.tablet ||=
     self.computer ||= false
