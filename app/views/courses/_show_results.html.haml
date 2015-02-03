@@ -38,13 +38,13 @@
               -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
                 %tr{class: attempt.correct ? 'success' : 'danger'}
                   %td=counter + 1
-                  %td=truncate(attempt.quiz_question.quiz_contents.first.text_content, length: 120)
-                  %td=t("controllers.application.difficulty_levels.name.#{attempt.quiz_question.difficulty_level}")
-                  %td=tick_or_cross attempt.correct
+                  %td=truncate(attempt.try(:quiz_question).try(:quiz_contents).try(:first).try(:text_content).to_s, length: 120)
+                  %td=t("controllers.application.difficulty_levels.name.#{attempt.try(:quiz_question).try(:difficulty_level)}")
+                  %td=tick_or_cross attempt.try(:correct)
                   -#%td.text-center=attempt.score
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      -if attempt.score == 0
+      -if attempt.try(:score) == 0
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 
