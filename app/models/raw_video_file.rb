@@ -74,8 +74,10 @@ class RawVideoFile < ActiveRecord::Base
         end
       end
     else
+      Rails.logger.debug 'RawVideoFile#get_new_videos - non-production mode started'
       # all other environments - dev, test and staging
       current_videos = RawVideoFile.all.map {|x| {guid_prefix: x.guid_prefix} }
+      Rails.logger.debug "... #{current_videos.count} RawVideoFiles loaded"
       array_of_folders_in_outbox.each do |remote_file|
         local_file = current_videos.find {|x| x[:guid_prefix] == remote_file[:guid_prefix] }
 
@@ -85,7 +87,9 @@ class RawVideoFile < ActiveRecord::Base
           end
         else
           x = RawVideoFile.new(remote_file)
-          unless x.save
+          if x.save
+            Rails.logger.debug "DEBUG: RawVideoFile.self.get_new_videos Created a new record using remote_file: #{remote_file}. Record: #{x}."
+          else
             Rails.logger.error "ERROR: RawVideoFile.self.get_new_videos failed to create a new record using remote_file: #{remote_file}. Errors: #{x.errors}."
           end
         end
@@ -206,22 +210,35 @@ class RawVideoFile < ActiveRecord::Base
   protected
 
   def self.array_of_folders_in_outbox
+    Rails.logger.debug 'RawVideoFile#array_of_folders_in_outbox started'
     s3 = Aws::S3::Client.new(credentials: get_aws_credentials, region: 'eu-west-1')
     resp = s3.list_objects(bucket: OUTBOX_BUCKET)
     answer = []
-    resp.contents.each do |file|
-      if file.key.split('/').last == 'master.m3u8'
-        answer << {
-                file_name: (file.key[9..-17] + '.tla'),
-                transcode_result: 'done',
-                transcode_completed_at: file.last_modified,
-                raw_file_modified_at: file.last_modified,
-                aws_etag: file.etag,
-                duration_in_seconds: 0,
-                guid_prefix: file.key[0..7]
-        }
+
+    begin
+      Rails.logger.debug "...#{resp.contents.count} items found"
+      resp.contents.each do |file|
+        Rails.logger.debug "... - #{file.key}"
+        if file.key.split('/').last == 'master.m3u8'
+          answer << {
+                  file_name: (file.key[9..-17] + '.tla'),
+                  transcode_result: 'done',
+                  transcode_completed_at: file.last_modified,
+                  raw_file_modified_at: file.last_modified,
+                  aws_etag: file.etag,
+                  duration_in_seconds: 0,
+                  guid_prefix: file.key[0..7]
+          }
+        end
       end
-    end
+      if resp.next_page?
+        resp = resp.next_page
+      else
+        resp = nil
+      end
+    end until resp.nil?
+
+    Rails.logger.debug "RawVideoFile#array_of_folders_in_outbox returned #{answer.count} items"
     answer
   end
 
