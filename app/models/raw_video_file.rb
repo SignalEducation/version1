@@ -69,7 +69,7 @@ class RawVideoFile < ActiveRecord::Base
             end
             new_row_limiter -= 1
           else
-            Rails.logger.warning 'WARNING: RawVideoFile#self.get_new_videos throttled - video not logged'
+            Rails.logger.warn 'WARNING: RawVideoFile#self.get_new_videos throttled - video not logged'
           end
         end
       end
