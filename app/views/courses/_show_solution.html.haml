@@ -34,7 +34,7 @@
     .col-sm-6
       .well.text-center
         %h3=t('views.courses.show_results.your_answer') + (('A'..'Z').to_a[your_answer].to_s)
-  -if attempt.quiz_question.quiz_solutions.count > 0
+  -if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
     .row
       .col-sm-12
         %h3=t('views.courses.show_results.solution')
