@@ -214,12 +214,13 @@ class RawVideoFile < ActiveRecord::Base
     s3 = Aws::S3::Client.new(credentials: get_aws_credentials, region: 'eu-west-1')
     resp = s3.list_objects(bucket: OUTBOX_BUCKET)
     answer = []
+    continue = true
 
     begin
       Rails.logger.debug "...#{resp.contents.count} items found"
       resp.contents.each do |file|
-        Rails.logger.debug "... - #{file.key}"
         if file.key.split('/').last == 'master.m3u8'
+          Rails.logger.debug "... - #{file.key}"
           answer << {
                   file_name: (file.key[9..-17] + '.tla'),
                   transcode_result: 'done',
@@ -231,12 +232,12 @@ class RawVideoFile < ActiveRecord::Base
           }
         end
       end
-      if resp.next_page?
-        resp = resp.next_page
+      if resp.next_page? # Hey AWS, is there another page of stuff
+        resp = resp.next_page # give it to me so I can loop again!
       else
-        resp = nil
+        continue = nil
       end
-    end until resp.nil?
+    end until continue.nil?
 
     Rails.logger.debug "RawVideoFile#array_of_folders_in_outbox returned #{answer.count} items"
     answer
