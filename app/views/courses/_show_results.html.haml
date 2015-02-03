@@ -44,7 +44,7 @@
                   -#%td.text-center=attempt.score
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      -if attempt.try(:score) == 0
+      -if attempt && attempt.try(:score) == 0
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 
