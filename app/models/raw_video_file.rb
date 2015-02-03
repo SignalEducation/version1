@@ -111,7 +111,7 @@ class RawVideoFile < ActiveRecord::Base
                 queue_url: sqs_queue_url,
                 max_number_of_messages: 10, #@max_messages per batch,
                 wait_time_seconds: 5).data[:messages]
-        messages = []
+        all_messages = []
         Rails.logger.debug "...Received #{sqs_messages.count} messages."
         sqs_messages.each do |sqs_message|
           body_json = JSON.parse(sqs_message[:body], {symbolize_names: true})
@@ -124,21 +124,26 @@ class RawVideoFile < ActiveRecord::Base
                   receipt_handle: sqs_message[:receipt_handle]
           }
           Rails.logger.debug "... this_one: #{this_one}"
-          messages << this_one
+          all_messages << this_one
         end
-        Rails.logger.debug "DEBUG: RawVideoFile#check_for_sqs_updates: messages: #{ messages }."
+        Rails.logger.debug "DEBUG: RawVideoFile#check_for_sqs_updates: messages: #{ all_messages }."
 # 26e3 1982
-        if messages.count > 0
+        if all_messages.count > 0
           wip.each do |job|
-            message = messages.find { |x| x[:job_id] == job.transcode_request_guid }
-            if message && message[:state] == 'COMPLETED'
-              job.update_attributes(transcode_result: 'done', transcode_completed_at: Proc.new{Time.now}.call, duration_in_seconds: message[:duration])
-            elsif message && message[:state] == 'ERROR'
-              job.update_attributes(transcode_result: 'error', transcode_completed_at: nil, duration_in_seconds: 0)
-            end
-          end
+            selected_messages = messages.select { |x| x[:job_id] == job.transcode_request_guid }
+            if selected_messages.count > 0
+              selected_messages.each do |message|
+                if message && message[:state] == 'COMPLETED'
+                  job.update_attributes(transcode_result: 'done', transcode_completed_at: Proc.new{Time.now}.call, duration_in_seconds: message[:duration])
+                elsif message && message[:state] == 'ERROR' && job.transcode_result != 'done'
+                  job.update_attributes(transcode_result: 'error', transcode_completed_at: nil, duration_in_seconds: 0)
+                end # if message
+              end # selected_messages.each
+            end # if selected_messages.count > 0
+          end # wip.each do
+
           ##### Remove the messages from the queue
-          messages.each do |message|
+          all_messages.each do |message|
             sqs_connection.delete_message(queue_url: sqs_queue_url, receipt_handle: message[:receipt_handle])
           end
         end
