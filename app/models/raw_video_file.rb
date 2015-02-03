@@ -247,7 +247,16 @@ class RawVideoFile < ActiveRecord::Base
     # returns {file_name: 'file1.txt', modified_at: RubyTime, etag: 'abc123'}
     s3 = Aws::S3::Client.new(credentials: get_aws_credentials, region: 'eu-west-1')
     resp = s3.list_objects(bucket: INBOX_BUCKET)
-    answer = resp.contents.map { |x| {file_name: x.key, raw_file_modified_at: x.last_modified, aws_etag: x.etag} }
+    answer = []
+    continue = true
+    begin
+      answer += resp.contents.map { |x| {file_name: x.key, raw_file_modified_at: x.last_modified, aws_etag: x.etag} }
+      if resp.next_page? # Hey AWS, have you got more for me in another page of data?
+        resp = resp.next_page # give it to me
+      else
+        continue = nil
+      end
+    end until continue.nil?
     answer
   end
 
