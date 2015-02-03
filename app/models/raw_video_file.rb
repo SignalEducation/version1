@@ -130,7 +130,7 @@ class RawVideoFile < ActiveRecord::Base
 # 26e3 1982
         if all_messages.count > 0
           wip.each do |job|
-            selected_messages = messages.select { |x| x[:job_id] == job.transcode_request_guid }
+            selected_messages = all_messages.select { |x| x[:job_id] == job.transcode_request_guid }
             if selected_messages.count > 0
               selected_messages.each do |message|
                 if message && message[:state] == 'COMPLETED'
