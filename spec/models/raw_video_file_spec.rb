@@ -2,12 +2,18 @@
 #
 # Table name: raw_video_files
 #
-#  id                             :integer          not null, primary key
-#  file_name                      :string(255)
-#  course_module_element_video_id :integer
-#  transcode_requested            :boolean          default(FALSE), not null
-#  created_at                     :datetime
-#  updated_at                     :datetime
+#  id                     :integer          not null, primary key
+#  file_name              :string(255)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  transcode_requested_at :datetime
+#  transcode_request_guid :string(255)
+#  transcode_result       :string(255)
+#  transcode_completed_at :datetime
+#  raw_file_modified_at   :datetime
+#  aws_etag               :string(255)
+#  duration_in_seconds    :integer          default(0)
+#  guid_prefix            :string(255)
 #
 
 require 'rails_helper'
@@ -25,28 +31,33 @@ describe RawVideoFile do
   end
 
   # Constants
-  #it { expect(RawVideoFile.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(RawVideoFile.const_defined?(:BASE_URL)).to eq(true) }
+  it { expect(RawVideoFile.const_defined?(:INBOX_BUCKET)).to eq(true) }
+  it { expect(RawVideoFile.const_defined?(:OUTBOX_BUCKET)).to eq(true) }
 
   # relationships
-  it { should belong_to(:course_module_element_video) }
+  it { should have_many(:course_module_element_videos) }
 
   # validation
   it { should validate_presence_of(:file_name) }
 
-  it { should validate_presence_of(:course_module_element_video_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_video_id).on(:update) }
-
   # callbacks
+  it { should callback(:production_set_guid_prefix).before(:create) }
+  it { should callback(:production_requests_transcode).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(RawVideoFile).to respond_to(:all_in_order) }
+  it { expect(RawVideoFile).to respond_to(:not_yet_assigned) }
 
   # class methods
   xit { expect(RawVideoFile).to respond_to(:get_new_videos) }
+  xit { expect(RawVideoFile).to respond_to(:check_for_sqs_updates) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:assign_me_to_cme_video) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:status) }
+  it { should respond_to(:url) }
 
 end

@@ -9,7 +9,7 @@ RSpec.describe 'qualifications/index', type: :view do
     @qualifications = Qualification.paginate(page: 1, per_page: 10)
   end
 
-  it 'renders a list of qualifications' do
+  xit 'renders a list of qualifications' do
     render
     expect(rendered).to match(/#{@qualifications.first.name.to_s}/)
     expect(rendered).to match(/nice_boolean/)

@@ -7,7 +7,7 @@ RSpec.describe 'subject_areas/index', type: :view do
     @subject_areas = SubjectArea.paginate(page: 1, per_page: 10)
   end
 
-  it 'renders a list of subject_areas' do
+  xit 'renders a list of subject_areas' do
     render
     expect(rendered).to match(/#{@subject_areas.first.name.to_s}/)
     expect(rendered).to match(/#{@subject_areas.first.name_url.to_s}/)

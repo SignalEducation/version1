@@ -2,8 +2,50 @@ module ApplicationHelper
 
   def tick_or_cross(the_thing)
     the_thing ?
-            "<span class='glyphicon glyphicon-ok'></span>".html_safe :
-            "<span class='glyphicon glyphicon-remove'></span>".html_safe
+            "<span style='color: green;' class='glyphicon glyphicon-ok'></span>".html_safe :
+            "<span style='color: red;' class='glyphicon glyphicon-remove'></span>".html_safe
+  end
+
+  def completion_circle(hierarchy_thing)
+    if hierarchy_thing.class == CourseModuleElement || hierarchy_thing.class == CourseModuleJumboQuiz
+      percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
+    elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
+      percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
+    else
+      percentage = nil
+    end
+
+    if percentage == 100
+      "<span style='color: green;' class='glyphicon glyphicon-ok-sign'></span>".html_safe
+    elsif percentage == 0
+      "<span style='color: green; font-size: 107%;'>&#9711;</span>".html_safe
+    elsif percentage.nil?
+      #Do Nothing
+    else
+      "<span style='color: green; font-size: 122%;' title='#{percentage}%'>&#9680;</span>".html_safe
+    end
+  end
+
+  def completion_label(hierarchy_thing)
+    if hierarchy_thing.class == CourseModuleElement
+      percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
+    elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
+      percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
+    else
+      percentage = nil
+    end
+
+    if percentage == 100
+      "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
+    elsif percentage == 0
+      if hierarchy_thing.first_active_cme
+        "<a href='#{course_special_link(hierarchy_thing.first_active_cme)}'><span style='background-color: green;' class='label label-default'>Start</span></a>".html_safe
+      end
+    elsif percentage.nil?
+      #Do Nothing
+    else
+      "<span style='background-color: #428BCA;' class='label label-default'>#{percentage}%</span>".html_safe
+    end
   end
 
   def number_in_local_currency(amount, currency_id)
@@ -27,9 +69,9 @@ module ApplicationHelper
   def breadcrumb_builder(the_thing)
     # This builds an array of objects starting at subject_area and ending at whatever the_thing is.
     if the_thing.parent
-      return breadcrumb_builder(the_thing.parent) + [the_thing]
+      breadcrumb_builder(the_thing.parent) + [the_thing]
     else
-      return [the_thing]
+      [the_thing]
     end
   end
 

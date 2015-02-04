@@ -16,7 +16,7 @@
 FactoryGirl.define do
   factory :static_page_upload do
     description "MyString"
-static_page_id 1
+    static_page_id 1
   end
 
 end

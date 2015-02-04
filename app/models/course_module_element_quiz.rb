@@ -118,20 +118,25 @@ class CourseModuleElementQuiz < ActiveRecord::Base
         the_attributes['quiz_answers_attributes']['0']['wrong_answer_explanation_text'].blank? &&
         the_attributes['quiz_answers_attributes']['0']['wrong_answer_explanation_text'].blank? &&
         # Answer B
-        the_attributes['quiz_answers_attributes']['1']['quiz_contents_attributes']['0']['text_content'].blank? &&
-        the_attributes['quiz_answers_attributes']['1']['degree_of_wrongness'].blank? &&
-        the_attributes['quiz_answers_attributes']['1']['wrong_answer_explanation_text'].blank? &&
-        the_attributes['quiz_answers_attributes']['1']['wrong_answer_explanation_text'].blank? &&
+        the_attributes['quiz_answers_attributes']['1'].try(:[],'quiz_contents_attributes').try(:[],'0').try(:[],'text_content').blank? &&
+        the_attributes['quiz_answers_attributes']['1'].try(:[],'degree_of_wrongness').blank? &&
+        the_attributes['quiz_answers_attributes']['1'].try(:[],'wrong_answer_explanation_text').blank? &&
+        the_attributes['quiz_answers_attributes']['1'].try(:[],'wrong_answer_explanation_text').blank? &&
         # Answer C
-        the_attributes['quiz_answers_attributes']['2']['quiz_contents_attributes']['0']['text_content'].blank? &&
-        the_attributes['quiz_answers_attributes']['2']['degree_of_wrongness'].blank? &&
-        the_attributes['quiz_answers_attributes']['2']['wrong_answer_explanation_text'].blank? &&
-        the_attributes['quiz_answers_attributes']['2']['wrong_answer_explanation_text'].blank? &&
+        the_attributes['quiz_answers_attributes']['2'].try(:[],'quiz_contents_attributes').try(:[],'0').try(:[],'text_content').blank? &&
+        the_attributes['quiz_answers_attributes']['2'].try(:[],'degree_of_wrongness').blank? &&
+        the_attributes['quiz_answers_attributes']['2'].try(:[],'wrong_answer_explanation_text').blank? &&
+        the_attributes['quiz_answers_attributes']['2'].try(:[],'wrong_answer_explanation_text').blank? &&
         # Answer D
-        the_attributes['quiz_answers_attributes']['3']['quiz_contents_attributes']['0']['text_content'].blank? &&
-        the_attributes['quiz_answers_attributes']['3']['degree_of_wrongness'].blank? &&
-        the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank? &&
-        the_attributes['quiz_answers_attributes']['3']['wrong_answer_explanation_text'].blank?
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'quiz_contents_attributes').try(:[],'0').try(:[],'text_content').blank? &&
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'degree_of_wrongness').blank? &&
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'wrong_answer_explanation_text').blank? &&
+        the_attributes['quiz_answers_attributes']['3'].try(:[],'wrong_answer_explanation_text').blank? &&
+        # Answer E
+        the_attributes['quiz_answers_attributes']['4'].try(:[],'quiz_contents_attributes').try(:[],'0').try(:[],'text_content').blank? &&
+        the_attributes['quiz_answers_attributes']['4'].try(:[],'degree_of_wrongness').blank? &&
+        the_attributes['quiz_answers_attributes']['4'].try(:[],'wrong_answer_explanation_text').blank? &&
+        the_attributes['quiz_answers_attributes']['4'].try(:[],'wrong_answer_explanation_text').blank?
       )
   end
 

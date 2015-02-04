@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150122103412) do
+ActiveRecord::Schema.define(version: 20150202095159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -319,10 +319,16 @@ ActiveRecord::Schema.define(version: 20150122103412) do
 
   create_table "raw_video_files", force: true do |t|
     t.string   "file_name"
-    t.integer  "course_module_element_video_id"
-    t.boolean  "transcode_requested",            default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "transcode_requested_at"
+    t.string   "transcode_request_guid"
+    t.string   "transcode_result"
+    t.datetime "transcode_completed_at"
+    t.datetime "raw_file_modified_at"
+    t.string   "aws_etag"
+    t.integer  "duration_in_seconds",    default: 0
+    t.string   "guid_prefix"
   end
 
   create_table "static_page_uploads", force: true do |t|
@@ -563,6 +569,7 @@ ActiveRecord::Schema.define(version: 20150122103412) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "locale"
+    t.string   "guid"
   end
 
   create_table "vat_codes", force: true do |t|

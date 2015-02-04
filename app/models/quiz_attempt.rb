@@ -58,7 +58,7 @@ class QuizAttempt < ActiveRecord::Base
   protected
 
   def calculate_score
-    self.correct = self.quiz_answer.correct
+    self.correct = self.quiz_answer.try(:correct) || false
     self.score = self.correct ?
             ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
   end

@@ -26,29 +26,29 @@
                 %th.col-sm-6{colspan:2}=t('views.courses.show_results.attempts_table.question')
                 %th.col-sm-1=t('views.courses.show_results.attempts_table.level')
                 %th.col-sm-1=t('views.courses.show_results.attempts_table.result')
-                %th.col-sm-1.text-center=t('views.courses.show_results.attempts_table.score')
-            %tfoot
-              %tr
-                %td.col-sm-8{colspan: 4}=t('views.courses.show_results.attempts_table.total')
-                %td.text-center
-                  =@course_module_element_user_log.quiz_score_actual
-                  \/
-                  =@course_module_element_user_log.quiz_score_potential
+                -#%th.col-sm-1.text-center=t('views.courses.show_results.attempts_table.score')
+            -#%tfoot
+            -#  %tr
+            -#    %td.col-sm-8{colspan: 4}=t('views.courses.show_results.attempts_table.total')
+            -#    %td.text-center
+            -#      =@course_module_element_user_log.quiz_score_actual
+            -#      \/
+            -#      =@course_module_element_user_log.quiz_score_potential
             %tbody
               -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
                 %tr{class: attempt.correct ? 'success' : 'danger'}
                   %td=counter + 1
-                  %td=truncate(attempt.quiz_question.quiz_contents.first.text_content, length: 120)
-                  %td=t("controllers.application.difficulty_levels.name.#{attempt.quiz_question.difficulty_level}")
-                  %td=tick_or_cross attempt.correct
-                  %td.text-center=attempt.score
+                  %td=truncate(attempt.try(:quiz_question).try(:quiz_contents).try(:first).try(:text_content).to_s, length: 120)
+                  %td=t("controllers.application.difficulty_levels.name.#{attempt.try(:quiz_question).try(:difficulty_level)}")
+                  %td=tick_or_cross attempt.try(:correct)
+                  -#%td.text-center=attempt.score
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      -if attempt.score == 0
+      -if attempt && attempt.try(:score) == 0
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 
-.row
+-#.row
   .col-sm-6
     %h3=t('views.courses.show_results.scoring_system')
     .row

@@ -29,6 +29,9 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    -if @mathjax_required
+      %script{type: 'text/javascript', src: 'https://jwpsrv.com/library/w07RSqLlEeOssyIACi0I_Q.js'}
+
     =csrf_meta_tags
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'

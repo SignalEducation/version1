@@ -6,7 +6,7 @@ RSpec.describe 'subject_areas/show', type: :view do
     @subject_area = FactoryGirl.create(:subject_area)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/#{@subject_area.name}/)
     expect(rendered).to match(/#{@subject_area.name_url}/)

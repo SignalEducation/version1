@@ -21,7 +21,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript
 
   # Constants
-  BASE_URL = "https://learnsignal_video_assets.eu-west-1.amazonaws.com/#{Rails.env}/"
 
   # relationships
   belongs_to :course_module_element
@@ -39,7 +38,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:tags) }
   before_update :set_estimated_study_time
-  after_save :update_raw_video_file
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -56,15 +54,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
         ApplicationController.find_multiplier_for_difficulty_level(self.difficulty_level)
   end
 
-  def url(format)
-    BASE_URL + "#{self.id}/#{format}.mp4"
-  end
-
   protected
 
-  def update_raw_video_file
-    if self.raw_video_file
-      self.raw_video_file.assign_me_to_cme_video(self.id)
-    end
-  end
 end

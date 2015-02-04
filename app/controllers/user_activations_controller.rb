@@ -4,7 +4,7 @@ class UserActivationsController < ApplicationController
 
   def update # responds to 'get'
     # find the user whose activation code matches params[:activation_code]
-    @user = User.find_and_activate(params[:activation_code])
+    @user = User.get_and_activate(params[:activation_code])
     # if found, log the user in
     if @user
       UserSession.create(@user)

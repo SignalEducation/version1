@@ -3,7 +3,8 @@
     %h2.no-top-gap=cme.name
 .row
   .col-sm-12
-    .well.text-center Video player goes here
+    .well.text-center#video-window
+      .h2=t('views.general.coming_soon')
 .row
   .col-sm-12
 .row
@@ -43,3 +44,17 @@
               =link_to '(' + r.upload_file_name + ')', r.upload.url, target: '_blank'
               %br/
               .text-muted=r.description
+
+:javascript
+
+  jwplayer("video-window").setup({
+    //file: "https://signaleducation-output-videos.s3.amazonaws.com/cfa1_2014_13_1_.m3u8",
+    //file: "https://s3-eu-west-1.amazonaws.com/signaleducation-output-videos/2014_Product_Final/ALT/cfa1_2014_13.1/hls/master.m3u8",
+    //provider:'http',
+    //'http.startparam': 'starttime',
+    //flashplayer: "javascripts/player.swf",
+    //file: "https://dvetmi3t70548.cloudfront.net/cfa1_2014_13.2/hls/master.m3u8",
+    file: '#{cme.course_module_element_video.raw_video_file.url}',
+    image: "https://dvetmi3t70548.cloudfront.net/video-still-image.jpg",
+    width: "100%", aspectratio: "16:9", volume: 80
+  });

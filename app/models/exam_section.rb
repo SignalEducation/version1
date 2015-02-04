@@ -50,8 +50,12 @@ class ExamSection < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
   def children
-    self.course_modules.all
+    self.course_modules
   end
 
   def full_name
@@ -62,8 +66,24 @@ class ExamSection < ActiveRecord::Base
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
+  def first_active_cme
+    self.active_children.first.try(:first_active_cme)
+  end
+
   def parent
     self.exam_level
+  end
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    if self.course_module_elements.all_active.count > 0
+      (self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed).to_f / self.course_module_elements.all_active.count * 100).to_i
+    else
+      0
+    end
   end
 
   protected

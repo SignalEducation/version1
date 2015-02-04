@@ -65,9 +65,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_booleans
   after_create :calculate_score
   after_create :create_or_update_student_exam_track
+  after_update :update_student_exam_track
+  after_destroy :update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_completed, -> { where(element_completed: true) }
   scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
@@ -77,6 +80,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
   scope :jumbo_quizzes, -> { where(is_jumbo_quiz: true) }
+  scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
@@ -90,11 +94,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)
-    if the_user_id
-      where(user_id: the_user_id)
-    else
-      where(session_guid: the_session_guid, user_id: nil)
-    end
+    the_user_id ? where(user_id: the_user_id) : where(session_guid: the_session_guid, user_id: nil)
   end
 
   # instance methods
@@ -106,29 +106,36 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
+  def student_exam_track
+    StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id).first
+  end
+
   protected
 
   def calculate_score
-    self.quiz_score_actual = self.quiz_attempts.sum(:score)
-    if self.is_quiz
-      self.quiz_score_potential = self.recent_attempts.count == 0 ?
-          self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
-          self.course_module_element.course_module_element_quiz.best_possible_score_retry
-    elsif self.is_jumbo_quiz
-      self.quiz_score_potential = self.recent_attempts.count == 0 ?
-          self.course_module_jumbo_quiz.best_possible_score_first_attempt :
-          self.course_module_jumbo_quiz.best_possible_score_retry
+    if self.is_quiz || self.is_jumbo_quiz
+      self.quiz_score_actual = self.quiz_attempts.sum(:score)
+      if self.is_quiz
+        self.quiz_score_potential = self.recent_attempts.count == 0 ?
+            self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
+            self.course_module_element.course_module_element_quiz.best_possible_score_retry
+      elsif self.is_jumbo_quiz
+        self.quiz_score_potential = self.recent_attempts.count == 0 ?
+            self.course_module_jumbo_quiz.best_possible_score_first_attempt :
+            self.course_module_jumbo_quiz.best_possible_score_retry
+      end
+      self.save(callbacks: false, validate: false)
     end
-    self.save(callbacks: false, validate: false)
   end
 
   def create_or_update_student_exam_track
-    set = StudentExamTrack.where(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id).first_or_initialize
+    set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
     set.exam_level_id ||= self.course_module.exam_level_id
     set.exam_section_id ||= self.course_module.exam_section_id
     set.latest_course_module_element_id = self.course_module_element_id
     set.jumbo_quiz_taken = true if self.is_jumbo_quiz
     set.save!
+    set.recalculate_completeness
   end
 
   def set_booleans
@@ -147,6 +154,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
     true
+  end
+
+  def update_student_exam_track
+    self.student_exam_track.try(:recalculate_completeness)
   end
 
 end
