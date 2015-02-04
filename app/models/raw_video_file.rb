@@ -114,7 +114,7 @@ class RawVideoFile < ActiveRecord::Base
         sqs_messages = sqs_connection.receive_message(
                 queue_url: sqs_queue_url,
                 max_number_of_messages: 10, #@max_messages per batch,
-                wait_time_seconds: 5).data[:messages]
+                wait_time_seconds: 15).data[:messages]
         all_messages = []
         Rails.logger.debug "...Received #{sqs_messages.count} messages."
         sqs_messages.each do |sqs_message|
