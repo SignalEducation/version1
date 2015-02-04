@@ -1015,6 +1015,7 @@ en:
         logged_in_required: Logged-in required
         uploads: Uploads
         code_samples: Code Samples
+        show_standard_footer: Show the standard footer
 
       index:
         h1: Static Pages
