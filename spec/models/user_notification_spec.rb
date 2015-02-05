@@ -72,7 +72,6 @@ describe UserNotification do
   it { expect(UserNotification).to respond_to(:read) }
   it { expect(UserNotification).to respond_to(:deleted) }
   it { expect(UserNotification).to respond_to(:visible) }
-  it { expect(UserNotification).to respond_to(:all_in_order) }
 
   # class methods
 

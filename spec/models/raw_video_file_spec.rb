@@ -12,6 +12,8 @@
 #  transcode_completed_at :datetime
 #  raw_file_modified_at   :datetime
 #  aws_etag               :string(255)
+#  duration_in_seconds    :integer          default(0)
+#  guid_prefix            :string(255)
 #
 
 require 'rails_helper'
@@ -40,16 +42,22 @@ describe RawVideoFile do
   it { should validate_presence_of(:file_name) }
 
   # callbacks
+  it { should callback(:production_set_guid_prefix).before(:create) }
+  it { should callback(:production_requests_transcode).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(RawVideoFile).to respond_to(:all_in_order) }
+  it { expect(RawVideoFile).to respond_to(:not_yet_assigned) }
 
   # class methods
   xit { expect(RawVideoFile).to respond_to(:get_new_videos) }
+  xit { expect(RawVideoFile).to respond_to(:check_for_sqs_updates) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:status) }
   it { should respond_to(:url) }
 
 end

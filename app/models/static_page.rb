@@ -28,6 +28,7 @@
 #  logged_in_required         :boolean          default(FALSE), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
+#  show_standard_footer       :boolean          default(TRUE)
 #
 
 # todo make_this_page_sticky
@@ -40,7 +41,7 @@ class StaticPage < ActiveRecord::Base
   serialize :approved_country_ids, Array
 
   # attr-accessible
-  attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :static_page_uploads_attributes
+  attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :static_page_uploads_attributes, :show_standard_footer
 
   # Constants
 

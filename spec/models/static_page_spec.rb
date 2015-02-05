@@ -28,6 +28,7 @@
 #  logged_in_required         :boolean          default(FALSE), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
+#  show_standard_footer       :boolean          default(TRUE)
 #
 
 require 'rails_helper'

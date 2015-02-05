@@ -12,17 +12,24 @@ class OperationalMailer < ActionMailer::Base
     )
   end
 
-  def your_password_has_changed(user) # backgrounded
-    @user = user
-    mail(to: @user.email,
-        subject: I18n.t('mailers.operational.your_password_has_changed.subject_line')
-    )
-  end
-
   def reset_your_password(user) # backgrounded
     @user = user
     mail(to: @user.email,
          subject: I18n.t('mailers.operational.reset_your_password.subject_line')
+    )
+  end
+
+  def send_user_notification(user_notification) # backgrounded
+    @user_notification = user_notification
+    mail(to: @user_notification.user.email,
+         subject: I18n.t('mailers.operational.send_user_notification.subject_line')
+    )
+  end
+
+  def your_password_has_changed(user) # backgrounded
+    @user = user
+    mail(to: @user.email,
+        subject: I18n.t('mailers.operational.your_password_has_changed.subject_line')
     )
   end
 
