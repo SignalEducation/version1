@@ -20,9 +20,7 @@
 
 FactoryGirl.define do
   factory :course_module do
-    institution_id            1
     exam_level_id             1
-    exam_section_id           1
     sequence(:name)           { |n| "Course Module #{n}" }
     sequence(:name_url)       { |n| "course-module-#{n}" }
     description               'Lorem ipsum'
