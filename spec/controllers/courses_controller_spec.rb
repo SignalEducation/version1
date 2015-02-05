@@ -11,6 +11,8 @@ RSpec.describe CoursesController, type: :controller do
   let!(:exam_level) { FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
   let!(:course_module_1) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id, institution_id: institution.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element)}
+
+
   let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log)}
   let!(:valid_params) {FactoryGirl.attributes_for(:course_module_1, course_module_element_user_log_id: course_module_element_user_log.id)}
 
