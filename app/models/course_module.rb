@@ -60,6 +60,7 @@ class CourseModule < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_create :set_sorting_order
   before_save :calculate_estimated_time
+  before_save :unify_hierarchy_ids
   before_save :sanitize_name_url
 
   # scopes
@@ -151,6 +152,14 @@ class CourseModule < ActiveRecord::Base
 
   def calculate_estimated_time
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
+  end
+
+  def unify_hierarchy_ids
+    if self.exam_section_id
+      self.exam_level_id = self.exam_section.exam_level_id
+    end
+    self.qualification_id = self.exam_level.qualification_id
+    self.institution_id = self.qualification.institution_id
   end
 
 end
