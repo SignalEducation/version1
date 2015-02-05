@@ -36,7 +36,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
     @course_module_element_user_log.session_guid = current_session_guid
     @course_module_element_user_log.element_completed = true
-    @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i
+    @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
     @course_module_element = @course_module_element_user_log.course_module_element
     @course_module = @course_module_element_user_log.course_module
     @results = true

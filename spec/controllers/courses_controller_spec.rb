@@ -11,10 +11,8 @@ RSpec.describe CoursesController, type: :controller do
   let!(:exam_level) { FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
   let!(:course_module_1) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id, institution_id: institution.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element)}
-
-
-  let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log)}
-  let!(:valid_params) {FactoryGirl.attributes_for(:course_module_1, course_module_element_user_log_id: course_module_element_user_log.id)}
+  let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id)}
+  let!(:valid_params) { course_module_element_user_log.attributes.merge({time_taken_in_seconds: (Time.now.to_i * -1)}) }
 
   describe "GET show" do
     it 'returns http success' do
@@ -27,13 +25,15 @@ RSpec.describe CoursesController, type: :controller do
 
   describe "POST create" do
     it 'should report OK for valid params' do
-      post :create, course_module_1: valid_params
-      expect_create_success_with_model('course_module', course_modules_url)
+      post :create, course_module_element_user_log: valid_params
+      expect(response.status).to eq(200)
+      expect(response).to render_template(:show)
     end
 
     it 'should report error for invalid params' do
-      post :create, course_module_1: {valid_params.keys.first => ''}
-      expect_create_error_with_model('course_module')
+      post :create, course_module_element_user_log: {valid_params.keys.first => ''}
+      expect(response.status).to eq(200)
+      expect(flash[:error]).to eq(I18n.t('controllers.courses.create.flash.error'))
     end
   end
 
