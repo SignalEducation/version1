@@ -35,6 +35,10 @@ FactoryGirl.define do
     factory :inactive_course_module do
       active false
     end
+
+    factory :course_module_with_video do
+      association :course_module_element_with_video
+    end
   end
 
 end
