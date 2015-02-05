@@ -125,6 +125,7 @@ class StaticPagesController < ApplicationController
             :make_this_page_sticky,
             :logged_in_required,
             :created_by, :updated_by,
+            :show_standard_footer,
             static_page_uploads_attributes: [
                     :id,
                     :description,

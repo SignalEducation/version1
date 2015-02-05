@@ -51,6 +51,7 @@ class RawVideoFile < ActiveRecord::Base
   def self.get_new_videos
     if Rails.env.production? || FAKE_PRODUCTION_MODE
       new_row_limiter = 5
+      skipped = 0
       current_videos = RawVideoFile.all.map {|x| {file_name: x.file_name, raw_file_modified_at: x.raw_file_modified_at, aws_etag: x.aws_etag} }
       array_of_video_names_in_inbox.each do |remote_file|
         local_file = current_videos.find {|x| x[:aws_etag] == remote_file[:aws_etag] }
@@ -69,10 +70,11 @@ class RawVideoFile < ActiveRecord::Base
             end
             new_row_limiter -= 1
           else
-            Rails.logger.warn 'WARNING: RawVideoFile#self.get_new_videos throttled - video not logged'
+            skipped += 1
           end
         end
       end
+      Rails.logger.warn "WARNING: RawVideoFile#self.get_new_videos throttled - #{skipped} videos not logged" if skipped > 0
     else
       Rails.logger.debug 'RawVideoFile#get_new_videos - non-production mode started'
       # all other environments - dev, test and staging
@@ -114,7 +116,7 @@ class RawVideoFile < ActiveRecord::Base
         sqs_messages = sqs_connection.receive_message(
                 queue_url: sqs_queue_url,
                 max_number_of_messages: 10, #@max_messages per batch,
-                wait_time_seconds: 5).data[:messages]
+                wait_time_seconds: 15).data[:messages]
         all_messages = []
         Rails.logger.debug "...Received #{sqs_messages.count} messages."
         sqs_messages.each do |sqs_message|

@@ -54,8 +54,14 @@
                     .col-sm-8.col-sm-offset-4
                       .checkbox
                         %label
-                          =f.check_box :use_standard_page_template
+                          =f.check_box :use_standard_page_template, onclick: "if ($(this).prop('checked') == true) {$('#static_page_show_standard_footer').attr('disabled', true);} else { $('#static_page_show_standard_footer').removeAttr('disabled').prop('checked',true);};".html_safe
                           =t('views.static_pages.form.use_standard_page_template')
+                  .form-group
+                    .col-sm-8.col-sm-offset-4
+                      .checkbox{style: 'padding-left: 20px;'}
+                        %label
+                          =f.check_box :show_standard_footer, disabled: (f.object.use_standard_page_template)
+                          =t('views.static_pages.form.show_standard_footer')
                   .form-group
                     .col-sm-8.col-sm-offset-4
                       .checkbox
