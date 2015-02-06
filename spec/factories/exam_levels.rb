@@ -18,7 +18,7 @@
 
 FactoryGirl.define do
   factory :exam_level do
-    qualification_id 1
+    association :qualification
     name 'MyString'
     name_url 'MyString'
     is_cpd false

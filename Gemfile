@@ -51,11 +51,12 @@ end
 group :development, :test do
   gem 'rspec-rails' # our core testing environment
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
+  gem 'capybara' # Runs tests in a browser
+  gem 'selenium-webdriver', '>=2.45.0.dev3'
 end
 
 group :test do
   # https://semaphoreapp.com/blog/2013/08/14/setting-up-bdd-stack-on-a-new-rails-4-application.html
-  gem 'capybara' # Runs tests in a browser
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'shoulda-matchers' # adds more RSpec test types

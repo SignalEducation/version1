@@ -8,6 +8,7 @@ require 'factory_girl_rails' # suggested by stack overflow
 require 'authlogic/test_case' # required for Authlogic
 include Authlogic::TestCase   # required for Authlogic
 require 'support/dry_specs'   # our handy way of doing lots of repetitive tests
+require 'capybara/rspec'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 

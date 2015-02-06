@@ -9,7 +9,8 @@ class UserSessionsController < ApplicationController
   end
 
   def create
-    @user_session = UserSession.new(params[:user_session])
+    binding.pry
+    @user_session = UserSession.new(allowed_params)
     if @user_session.save
       assign_anonymous_logs_to_user
       flash[:success] = I18n.t('controllers.user_sessions.create.flash.success')
@@ -26,6 +27,10 @@ class UserSessionsController < ApplicationController
   end
 
   protected
+
+  def allowed_params
+    params.require(:user_session).permit(:email, :password)
+  end
 
   def assign_anonymous_logs_to_user
     model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack]
