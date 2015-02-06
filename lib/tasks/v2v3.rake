@@ -1,22 +1,24 @@
 namespace :v2v3 do
 
+  BUCKET = 'learnsignal3-data-migration'
+
   desc 'Import data from v2 website'
   task(import_data: :environment) do
     # USAGE: rake v2v3:import_data {optional_file_name.json}
 
     #### Find the data file and import it into a hash
-    source_file = ARGV[1] || 'tmp/v2_data.json'
-    Rails.logger.info "INFO rake v2v3:import_data - Starting to read file: #{source_file} at #{Time.now}"
+    source_file = ARGV[1] || 'v2_data.json'
+    s3 = connect_to_s3
     puts 'rake v2v3:import_data'
     puts '---------------------'
-    puts "Loading data from: #{source_file}"
-    migrate_data = JSON.parse(File.read(source_file), symbolize_names: true)
+    message('INFO', "Loading data from: #{source_file}")
+    migrate_data = aws_read_file(s3, source_file)
 
     #### Process the data
     migrate_users(migrate_data[:users])
 
     #### Rename the source file, and finish.
-    rename_source_and_finish(source_file)
+    rename_source_and_finish(s3, source_file)
   end
 
   #### courses
@@ -26,7 +28,7 @@ namespace :v2v3 do
   #### users
 
   def migrate_users(exported_users)
-    print '- Users: '
+    message('INFO', 'Starting to import users')
     if exported_users
       exported_users.each do |exported_user|
         # look in the import_tracker for this user
@@ -34,11 +36,9 @@ namespace :v2v3 do
         it.nil? ? create_user(exported_user) :
                   compare_and_update_user(it.user, exported_user)
       end
-      Rails.logger.info "INFO rake v2v3:import_data - processed #{exported_users.count} users"
-      puts ''
+      message('INFO', "processed #{exported_users.count} users")
     else
-      puts 'None found'
-      Rails.logger.warn 'WARN rake v2v3:import_data NO USERS FOUND'
+      message('WARN', 'No users found')
     end
   end
 
@@ -60,7 +60,6 @@ namespace :v2v3 do
   end
 
   def create_user(exported_user) # todo
-    print 'C'
     # Create the User
     # user = User.create!(
     #       email: exported_user[:email],
@@ -81,17 +80,40 @@ namespace :v2v3 do
 
   #### General
 
-  def rename_source_and_finish(source_file)
-    destination_name = source_file + '-processed-' + Time.now.strftime('%Y%m%d-%H%M%S')
-    system("mv #{source_file} #{destination_name}")
-    puts ''
-    Rails.logger.info "INFO rake v2v3:import_data - renamed file to #{destination_name}"
-    puts "Source file renamed to #{destination_name}"
-    Rails.logger.info "INFO rake v2v3:import_data - complete at #{Time.now}"
-    puts 'DONE'
+  def aws_credentials
+    Aws::Credentials.new(
+            ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+            ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
+    )
   end
+
+  def aws_read_file(s3, file_name)
+    JSON.parse(s3.get_object(key: file_name, bucket: BUCKET).body.read, {symbolize_names: true})
+  end
+
+  def connect_to_s3
+    Aws::S3::Client.new(credentials: aws_credentials, region: 'eu-west-1')
+  end
+
+  def message(level, content)
+    puts content
+    Rails.logger.debug "#{level.upcase} rake v2v3:import_data - #{message} at #{Time.now}"
+  end
+
+  def rename_source_and_finish(s3, file_name)
+    destination_name = file_name + '-processed-' + Time.now.strftime('%Y%m%d-%H%M%S')
+    s3.copy_object(bucket: BUCKET, copy_source: BUCKET + '/' + file_name, key: destination_name)
+    s3.delete_object(bucket: BUCKET, key: file_name)
+
+    puts ''
+    message('INFO', "renamed file to #{destination_name}")
+    message('INFO', 'DONE')
+  end
+
 end
 
 # sample data:
 # {"users":[{"id":1,"first_name":"John","last_name":"Murphy"}],"user_groups":[{"id":1,"name":"Students"},{"id":2,"Name":"Admins"}]}
 
+#### See
+# http://ruby.awsblog.com/post/Tx354Y6VTZ421PJ/Downloading-Objects-from-Amazon-S3-using-the-AWS-SDK-for-Ruby
