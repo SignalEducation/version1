@@ -21,8 +21,8 @@ class ImportTracker < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :old_model
-  belongs_to :new_model
+  # belongs_to :old_model
+  # belongs_to :new_model
 
   # validation
   validates :old_model_name, presence: true
