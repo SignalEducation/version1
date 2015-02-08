@@ -9,7 +9,6 @@ class UserSessionsController < ApplicationController
   end
 
   def create
-    binding.pry
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
       assign_anonymous_logs_to_user
