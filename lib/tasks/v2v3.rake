@@ -367,7 +367,7 @@ namespace :v2v3 do
       message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElement #{cme.id} it:id #{it.id}.")
     end
     cme_quiz = cme.course_module_element_quiz
-    unless cme_quiz.number_of_questions == (export[:number_of_questions] > 3 ? export[:number_of_questions] : 3)
+    unless cme_quiz.number_of_questions == 5
       cme_quiz.update_attributes!( # course_module_element_id: cme.id
               number_of_questions: 5, # Default requested by Philip - (export[:number_of_questions] * 30),
               question_selection_strategy: 'random'
