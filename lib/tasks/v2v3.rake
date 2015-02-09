@@ -512,13 +512,13 @@ namespace :v2v3 do
       message('WARN', "-- export:topic #{export[:_id]} UPDATED locally. Your changes may be lost during import - CourseModule #{cm.id} it:id #{it.id}.")
     end
 
-    unless export[:name].squish == cm.name && export[:sequence_number] == cm.sorting_order && cm.exam_section_id == es.id && cm.active == (export[:status] == 'published')
+    unless export[:name].squish == cm.name && cm.exam_section_id == es.id && cm.active == es.active
       cm.update_attributes!(
               name: export[:name],
               name_url: export[:name].downcase,
               exam_section_id: es.id,
-              active: export[:status] == 'published',
-              sorting_order: export[:sequence_number]
+              active: es.active
+              # sorting_order: export[:sequence_number] -could be overwritten by Steps
       )
       it.touch
       message('WARN', "-- export:topic #{export[:_id]} UPDATED to CourseModule #{cm.id} it:id #{it.id}.")
@@ -603,19 +603,21 @@ namespace :v2v3 do
       )
       message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElement #{cme.id} it:id #{it.id}.")
     end
-    cme_video = cme.course_module_element_video
-    unless cme_video.estimated_study_time_seconds == export[:duration].to_i
-      cme_video.update_attributes!( # course_module_element_id: cme.id
-            # raw_video_file_id: nil,
-            # tags: export[:type],
-            # difficulty_level: 'easy',
-            estimated_study_time_seconds: export[:duration].to_i,
-            # transcript: 'Lorem ipsum'
-      )
-      it2 = ImportTracker.where(new_model_name: 'course_module_element_video', new_model_id: cme_video.id).first
-      it2.touch
-      message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElementVideo #{cme_video.id} it:id #{it2.id}.")
-    end
+    #### cme_video can't be adjusted once imported.
+    #### Only the duration can be reset, and it is set by the parent CME.
+    # cme_video = cme.course_module_element_video
+    # unless cme_video.estimated_study_time_seconds == export[:duration].to_i
+    #   cme_video.update_attributes!( # course_module_element_id: cme.id
+    #         # raw_video_file_id: nil,
+    #         # tags: export[:type],
+    #         # difficulty_level: 'easy',
+    #         estimated_study_time_seconds: export[:duration].to_i,
+    #         # transcript: 'Lorem ipsum'
+    #   )
+    #   it2 = ImportTracker.where(new_model_name: 'course_module_element_video', new_model_id: cme_video.id).first
+    #   it2.touch
+    #   message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElementVideo #{cme_video.id} it:id #{it2.id}.")
+    # end
   end
 
   #### users and financial items
