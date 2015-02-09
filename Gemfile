@@ -53,6 +53,8 @@ group :development, :test do
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
   gem 'capybara' # Runs tests in a browser
   gem 'selenium-webdriver', '>=2.45.0.dev3'
+  gem 'capybara-webkit'
+  gem 'poltergeist'
 end
 
 group :test do
