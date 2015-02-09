@@ -58,9 +58,9 @@ class CourseModule < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
+  before_validation :unify_hierarchy_ids
   before_create :set_sorting_order
   before_save :calculate_estimated_time
-  before_save :unify_hierarchy_ids
   before_save :sanitize_name_url
 
   # scopes
@@ -156,10 +156,10 @@ class CourseModule < ActiveRecord::Base
 
   def unify_hierarchy_ids
     if self.exam_section_id
-      self.exam_level_id = self.exam_section.exam_level_id
+      self.exam_level_id = self.exam_section.try(:exam_level_id)
     end
-    self.qualification_id = self.exam_level.qualification_id
-    self.institution_id = self.qualification.institution_id
+    self.qualification_id = self.exam_level.try(:qualification_id)
+    self.institution_id = self.qualification.try(:institution_id)
   end
 
 end
