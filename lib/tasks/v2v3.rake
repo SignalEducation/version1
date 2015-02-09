@@ -149,7 +149,7 @@ namespace :v2v3 do
                 institution_id: INSTITUTION_ID,
                 subject_area_id: SUBJECT_AREA_ID,
                 name_url: shortened_name.downcase,
-                active: export[:status] == 'published',
+                active: (export[:status] == 'published'),
                 sorting_order: export[:sequence] || 1
     )
     es.save!
@@ -171,7 +171,7 @@ namespace :v2v3 do
       es.update_attributes!(
               name: export[:name].split(' - Level 1')[0],
               name_url: export[:name].split(' - Level 1')[0].downcase,
-              active: export[:status] == 'published',
+              active: (export[:status] == 'published'),
               sorting_order: export[:sequence]
       )
       it.touch
