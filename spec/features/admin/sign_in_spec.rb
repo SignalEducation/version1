@@ -9,8 +9,7 @@ describe 'The sign in process', type: :feature do
     activate_authlogic
   end
 
-
-  scenario 'with no details', js: true do
+  scenario 'with no details' do
     visit sign_in_path
     within('.well.well-sm') do
       fill_in 'Email', with: ''
@@ -21,7 +20,7 @@ describe 'The sign in process', type: :feature do
     page.has_selector?('form_for')
   end
 
-  scenario 'with bad details', js: true  do
+  scenario 'with bad details' do
     visit sign_in_path
     within('.well.well-sm') do
       fill_in 'Email', with: 'user@work.com'
@@ -32,7 +31,7 @@ describe 'The sign in process', type: :feature do
     page.has_selector?('form_for')
   end
 
-  scenario 'with bad details', js: true do
+  scenario 'with no password' do
     visit sign_in_path
     within('.well.well-sm') do
       fill_in 'Email', with: 'user@work.com'
@@ -43,14 +42,17 @@ describe 'The sign in process', type: :feature do
     page.has_selector?('form_for')
   end
 
-  scenario 'as an individual student', js: true do
+  scenario 'with correct details and then sign out' do
     visit sign_in_path
     within('.well.well-sm') do
-      fill_in 'Email', with: individual_student_user.email
-      fill_in 'Password', with: individual_student_user.password
+      fill_in 'Email', with: admin_user.email
+      fill_in 'Password', with: admin_user.password
       click_button 'Go'
     end
     expect(page).to have_content 'Welcome back!'
+    click_link('navbar-cog')
+    click_link('Sign out')
+    expect(page).to have_content 'You are now logged out '
   end
 
 end
