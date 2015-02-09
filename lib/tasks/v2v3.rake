@@ -14,7 +14,7 @@ namespace :v2v3 do
     source_file = ARGV[1] || 'v2_data.json'
     s3 = connect_to_s3
 
-    #### set up the anestry for Finance / CFA / CFA Professional / Level 1
+    #### set up the ancestry for Finance / CFA / CFA Professional / Level 1
     if Rails.env.development? || Rails.env.staging?
       SUBJECT_AREA_ID = 1
       INSTITUTION_ID = 2
