@@ -22,7 +22,7 @@ module LearnSignalModelExtras
   end
 
   def name_url_sanitizer(the_name_url)
-    the_name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-').gsub(',','').downcase
+    the_name_url.to_s.gsub(' ', '-').gsub('/', '-').gsub('.', '-').gsub('_', '-').gsub('&', '-').gsub('?', '-').gsub('=', '-').gsub(':', '-').gsub(';', '-').gsub(',','').gsub('[','').gsub(']','').downcase
   end
 
   def set_sorting_order
