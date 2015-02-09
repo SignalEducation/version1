@@ -46,8 +46,8 @@ namespace :v2v3 do
     migrate_questions(migrate_data[:questions]) # Question + 2xQuizContents - done
     migrate_answers(migrate_data[:answers]) # QuizAnswer + QuizContent      - done
     # ---- Can't do this one - it embeds images into questions (only 7 records)
-    # migrate_markdown_images(migrate_data[:markdown_images]) # - wip
-    migrate_steps(migrate_data[:steps])
+    # migrate_markdown_images(migrate_data[:markdown_images]) #             - skip
+    migrate_steps(migrate_data[:steps]) # CME                               - done
 
     # users and payments
     migrate_users(migrate_data[:users])
@@ -323,7 +323,7 @@ namespace :v2v3 do
     # need to create a CME-video too, if one doesn't already exist
     cme_quiz  = CourseModuleElementQuiz.where(course_module_element_id: cme.id).first_or_initialize
     cme_quiz.assign_attributes( # course_module_element_id: cme.id
-            number_of_questions: (export[:number_of_questions] * 30),
+            number_of_questions: 5, # Default requested by Philip - (export[:number_of_questions] * 30),
             question_selection_strategy: 'random'
     )
     cme_quiz.save!
@@ -369,7 +369,7 @@ namespace :v2v3 do
     cme_quiz = cme.course_module_element_quiz
     unless cme_quiz.number_of_questions == (export[:number_of_questions] > 3 ? export[:number_of_questions] : 3)
       cme_quiz.update_attributes!( # course_module_element_id: cme.id
-              number_of_questions: (export[:number_of_questions] > 3 ? export[:number_of_questions] : 3),
+              number_of_questions: 5, # Default requested by Philip - (export[:number_of_questions] * 30),
               question_selection_strategy: 'random'
       )
       it2 = ImportTracker.where(new_model_name: 'course_module_element_quiz', new_model_id: cme_quiz.id).first
