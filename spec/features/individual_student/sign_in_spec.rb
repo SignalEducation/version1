@@ -52,7 +52,7 @@ describe 'The sign in process', type: :feature do
     expect(page).to have_content 'Your account is not active'
   end
 
-  scenario 'with correct details and then sign out' do
+  scenario 'with correct details and then sign out', js: true do
     visit sign_in_path
     within('.well.well-sm') do
       fill_in 'Email', with: individual_student_user.email
