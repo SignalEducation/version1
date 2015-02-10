@@ -158,7 +158,10 @@ class ApplicationController < ActionController::Base
   def course_module_special_link(the_thing) # tutor/admin-facing
     # used for tutor-facing links
 
-    if the_thing.class == CourseModule && !the_thing.id.nil?
+    if the_thing.class == CourseModuleElement && !the_thing.id.nil?
+        edit_course_module_element_url(the_thing.id)
+
+    elsif the_thing.class == CourseModule && !the_thing.id.nil?
       if the_thing.exam_section_id
         course_modules_for_qualification_exam_level_exam_section_and_name_url(
                 the_thing.exam_level.qualification.name_url,
