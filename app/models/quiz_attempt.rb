@@ -18,9 +18,11 @@ class QuizAttempt < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
+  serialize :answer_array, as: Hash
+
   # attr-accessible
   attr_accessible :user_id, :quiz_question_id, :quiz_answer_id, :correct,
-                  :course_module_element_user_log_id
+                  :course_module_element_user_log_id, :answer_array
 
   # Constants
 
