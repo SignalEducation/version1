@@ -760,6 +760,7 @@ en:
         expires_in_next_3_days: Expires in the next 3 days
         published_in_last_3_days: Published in the last 3 days
         publishes_in_next_3_days: Publishes in the next 3 days
+        see_all_static_pages: See All Static Pages
 
     exam_levels:
       form:
