@@ -2,17 +2,24 @@
 #
 # Table name: user_activity_logs
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  session_guid    :string(255)
-#  signed_in       :boolean          default(FALSE), not null
-#  original_uri    :string(255)
-#  controller_name :string(255)
-#  action_name     :string(255)
-#  params          :text
-#  alert_level     :integer          default(0)
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id               :integer          not null, primary key
+#  user_id          :integer
+#  session_guid     :string(255)
+#  signed_in        :boolean          default(FALSE), not null
+#  original_uri     :text
+#  controller_name  :string(255)
+#  action_name      :string(255)
+#  params           :text
+#  alert_level      :integer          default(0)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  ip_address       :string(255)
+#  browser          :string(255)
+#  operating_system :string(255)
+#  phone            :boolean          default(FALSE), not null
+#  tablet           :boolean          default(FALSE), not null
+#  computer         :boolean          default(FALSE), not null
+#  guid             :string(255)
 #
 
 require 'rails_helper'
@@ -47,8 +54,13 @@ describe UserActivityLog do
 
   it { should validate_presence_of(:action_name) }
 
+  it { should validate_presence_of(:ip_address) }
+
   it { should validate_presence_of(:alert_level) }
   it { should validate_numericality_of(:alert_level) }
+
+  it { should validate_presence_of(:guid) }
+  it { should validate_uniqueness_of(:guid) }
 
   # callbacks
   it { should callback(:add_to_rails_logger).after(:create) }
@@ -56,8 +68,12 @@ describe UserActivityLog do
 
   # scopes
   it { expect(UserActivityLog).to respond_to(:all_in_order) }
+  it { expect(UserActivityLog).to respond_to(:for_session_guid) }
+  it { expect(UserActivityLog).to respond_to(:for_unknown_users) }
 
   # class methods
+  it { expect(UserActivityLog).to respond_to(:assign_user_to_session_guid) }
+  it { expect(UserActivityLog).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

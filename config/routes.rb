@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+
+  # Enable /sidekiq for admin users only
+#  require 'sidekiq/web'
+  require 'admin_constraint'
+  mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
 
@@ -33,7 +39,7 @@ Rails.application.routes.draw do
     resources :corporate_customers
     resources :countries
     post 'countries/reorder', to: 'countries#reorder'
-    resources :courses, only: [:index, :create]
+    resources :courses, only: [:show, :create]
     resources :course_modules
     post 'course_modules/reorder', to: 'course_modules#reorder'
     get 'course_modules/:qualification_url', to: 'course_modules#show',
@@ -83,12 +89,16 @@ Rails.application.routes.draw do
     resources :vat_codes
 
     # home page
-    root 'static_pages#deliver_page' # temporary
+    root 'static_pages#deliver_page'
 
     # Catch-all
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'
     get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
         as: :deliver_static_pages
+  end
+
+  namespace :api do
+    resources :user_activities, only: :create
   end
 
   # Catch-all

@@ -1,0 +1,8 @@
+:javascript
+
+  $(document).on('ready', function() {
+    var stripped_url = document.location.toString().split("#");
+    if (stripped_url.length > 1) {
+      $("a[href='#" + stripped_url[1]+"']").first().tab('show');
+    }
+  })

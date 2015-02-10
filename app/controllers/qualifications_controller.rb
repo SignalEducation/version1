@@ -1,14 +1,19 @@
 class QualificationsController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
+  before_action except: [:index, :show] do
     ensure_user_is_of_type(['admin'])
+  end
+  before_action only: [:index, :show] do
+    ensure_user_is_of_type(['tutor'])
   end
   before_action :get_variables
 
   def index
     @institution = Institution.where(name_url: params[:institution_url].to_s).first || Institution.all_in_order.first
-    @qualifications = Qualification.where(institution_id: @institution.id).paginate(per_page: 50, page: params[:page]).all_in_order
+    @qualifications = @institution ?
+           Qualification.where(institution_id: @institution.try(:id)).paginate(per_page: 50, page: params[:page]).all_in_order :
+           Qualification.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show

@@ -34,7 +34,7 @@ class QuizAnswer < ActiveRecord::Base
   validates :quiz_question_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :degree_of_wrongness, inclusion: {in: WRONGNESS}
-  validates :wrong_answer_video_id, presence: true,
+  validates :wrong_answer_video_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
 
   # callbacks
@@ -44,8 +44,12 @@ class QuizAnswer < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:quiz_question_id) }
+  scope :ids_in_specific_order, lambda { |array_of_ids| where(id: array_of_ids).order("CASE #{array_of_ids.map.with_index{|x,c| "WHEN id= #{x} THEN #{c} " }.join } END") }
 
   # class methods
+  # def self.ids_in_specific_order(array_of_ids)
+  #   where(id: array_of_ids).order("CASE #{array_of_ids.map.with_index{|x,c| "WHEN id= #{x} THEN #{c} " }.join } END")
+  # end ##### now I'm a scope!
 
   # instance methods
   def destroyable?

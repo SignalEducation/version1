@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150108113134) do
+ActiveRecord::Schema.define(version: 20150210142311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,17 +69,19 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.integer  "course_module_element_id"
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "element_completed",        default: false, null: false
+    t.boolean  "element_completed",           default: false, null: false
     t.integer  "time_taken_in_seconds"
     t.integer  "quiz_score_actual"
     t.integer  "quiz_score_potential"
-    t.boolean  "is_video",                 default: false, null: false
-    t.boolean  "is_quiz",                  default: false, null: false
+    t.boolean  "is_video",                    default: false, null: false
+    t.boolean  "is_quiz",                     default: false, null: false
     t.integer  "course_module_id"
-    t.boolean  "latest_attempt",           default: true,  null: false
+    t.boolean  "latest_attempt",              default: true,  null: false
     t.integer  "corporate_customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "course_module_jumbo_quiz_id"
+    t.boolean  "is_jumbo_quiz",               default: false, null: false
   end
 
   create_table "course_module_element_videos", force: true do |t|
@@ -119,6 +121,9 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.integer  "total_number_of_questions"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name_url"
+    t.integer  "best_possible_score_first_attempt", default: 0
+    t.integer  "best_possible_score_retry",         default: 0
   end
 
   create_table "course_modules", force: true do |t|
@@ -213,6 +218,17 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.integer  "created_by"
   end
 
+  create_table "import_trackers", force: true do |t|
+    t.string   "old_model_name"
+    t.integer  "old_model_id"
+    t.string   "new_model_name"
+    t.integer  "new_model_id"
+    t.datetime "imported_at"
+    t.text     "original_data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "institution_users", force: true do |t|
     t.integer  "institution_id"
     t.integer  "user_id"
@@ -284,14 +300,16 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.integer  "course_module_element_user_log_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "score",                             default: 0
+    t.string   "answer_array"
   end
 
   create_table "quiz_contents", force: true do |t|
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax",   null: false
-    t.boolean  "contains_image",     null: false
+    t.boolean  "contains_mathjax",   default: false, null: false
+    t.boolean  "contains_image",     default: false, null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -313,10 +331,16 @@ ActiveRecord::Schema.define(version: 20150108113134) do
 
   create_table "raw_video_files", force: true do |t|
     t.string   "file_name"
-    t.integer  "course_module_element_video_id"
-    t.boolean  "transcode_requested",            default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "transcode_requested_at"
+    t.string   "transcode_request_guid"
+    t.string   "transcode_result"
+    t.datetime "transcode_completed_at"
+    t.datetime "raw_file_modified_at"
+    t.string   "aws_etag"
+    t.integer  "duration_in_seconds",    default: 0
+    t.string   "guid_prefix"
   end
 
   create_table "static_page_uploads", force: true do |t|
@@ -356,6 +380,7 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.boolean  "logged_in_required",         default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "show_standard_footer",       default: true
   end
 
   create_table "student_exam_tracks", force: true do |t|
@@ -366,6 +391,11 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.integer  "exam_schedule_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "session_guid"
+    t.integer  "course_module_id"
+    t.boolean  "jumbo_quiz_taken",                default: false
+    t.integer  "percentage_complete",             default: 0
+    t.integer  "count_of_cmes_completed",         default: 0
   end
 
   create_table "subject_areas", force: true do |t|
@@ -429,12 +459,10 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complementary",                 default: false, null: false
+    t.boolean  "complementary",         default: false, null: false
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "stripe_customer_id"
-    t.text     "original_stripe_customer_data"
   end
 
   create_table "system_defaults", force: true do |t|
@@ -448,14 +476,21 @@ ActiveRecord::Schema.define(version: 20150108113134) do
   create_table "user_activity_logs", force: true do |t|
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "signed_in",       default: false, null: false
-    t.string   "original_uri"
+    t.boolean  "signed_in",        default: false, null: false
+    t.text     "original_uri"
     t.string   "controller_name"
     t.string   "action_name"
     t.text     "params"
-    t.integer  "alert_level",     default: 0
+    t.integer  "alert_level",      default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "ip_address"
+    t.string   "browser"
+    t.string   "operating_system"
+    t.boolean  "phone",            default: false, null: false
+    t.boolean  "tablet",           default: false, null: false
+    t.boolean  "computer",         default: false, null: false
+    t.string   "guid"
   end
 
   create_table "user_exam_levels", force: true do |t|
@@ -547,6 +582,7 @@ ActiveRecord::Schema.define(version: 20150108113134) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "locale"
+    t.string   "guid"
   end
 
   create_table "vat_codes", force: true do |t|

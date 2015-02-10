@@ -40,6 +40,7 @@
 #  created_at                               :datetime
 #  updated_at                               :datetime
 #  locale                                   :string(255)
+#  guid                                     :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -133,17 +134,22 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name, :address) }
+  before_create :add_guid
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
 
   # class methods
-  def self.all_tutors
-     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
+  def self.all_admins
+    includes(:user_group).references(:user_groups).where('user_groups.site_admin = ?', true)
   end
 
-  def self.find_and_activate(activation_code)
+  def self.all_tutors
+    includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
+  end
+
+  def self.get_and_activate(activation_code)
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
     if user
       user.account_activated_at = Proc.new{Time.now}.call
@@ -159,7 +165,7 @@ class User < ActiveRecord::Base
       user = User.where(email: the_email_address.to_s).first
       if user
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,        password_reset_token: ApplicationController::generate_random_code(20), active: false)
-        OperationalMailer.reset_your_password(user).deliver
+        Mailers::OperationalMailers::ResetYourPasswordWorker.perform_async(user.id)
       end
     end
   end
@@ -238,7 +244,19 @@ class User < ActiveRecord::Base
     self.user_group.try(:tutor)
   end
 
+  def individual_student?
+    self.user_group.try(:individual_student)
+  end
+
+  def content_manager?
+    self.user_group.try(:content_manager)
+  end
+
   protected
+
+  def add_guid
+    self.guid = ApplicationController.generate_random_code(10)
+  end
 
   def de_activate_user
     self.active = false

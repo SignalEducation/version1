@@ -10,6 +10,8 @@
 #  course_module_element_user_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  score                             :integer          default(0)
+#  answer_array                      :string(255)
 #
 
 FactoryGirl.define do

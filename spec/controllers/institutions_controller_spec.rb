@@ -131,16 +131,22 @@ describe InstitutionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('institutions', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
+      it 'should see institution_1' do
+        get :show, id: institution_1.id
+        expect_show_success_with_model('institution', institution_1.id)
+      end
+
+      # optional - some other object
+      it 'should see institution_2' do
+        get :show, id: institution_2.id
+        expect_show_success_with_model('institution', institution_2.id)
       end
     end
 

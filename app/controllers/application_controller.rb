@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
         DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
-  if Rails.env.staging? || Rails.env.production?
+  if Rails.env.staging?
     http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
   end
 
@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :set_locale
   before_action :set_session_guid
+  before_action :log_user_activity
 
   helper_method :current_user_session, :current_user
 
@@ -111,20 +112,33 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options(options={})
-    logger.debug "default_url_options is passed options: #{options.inspect}\n"
+    Rails.logger.debug "DEBUG: ApplicationController#default_url_options: Received options: #{options.inspect}\n"
     { locale: I18n.locale }
   end
 
 
-  #### Session GUIDs
-
-  def set_session_guid
-    cookies.permanent.encrypted[:session_guid] ||= ApplicationController.generate_random_code(64)
-    @mathjax_required = false # default
-  end
+  #### Session GUIDs and user logging
 
   def current_session_guid
     cookies.permanent.encrypted[:session_guid]
+  end
+  helper_method :current_session_guid
+
+  def set_session_guid
+    cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
+    @mathjax_required = false # default
+  end
+
+  def log_user_activity
+    UserLoggerWorker.perform_async(   ApplicationController.generate_random_code(24),
+            current_user.try(:id),    current_session_guid,
+            request.filtered_path,    controller_name,
+            action_name,              request.filtered_parameters,
+            request.remote_ip,        request.env['HTTP_USER_AGENT']
+    )
+    Rails.logger.debug '*'* 100
+    Rails.logger.debug request.env['HTTP_USER_AGENT']
+    Rails.logger.debug '*'* 100
   end
 
 
@@ -143,7 +157,10 @@ class ApplicationController < ActionController::Base
   def course_module_special_link(the_thing) # tutor/admin-facing
     # used for tutor-facing links
 
-    if the_thing.class == CourseModule && !the_thing.id.nil?
+    if the_thing.class == CourseModuleElement && !the_thing.id.nil?
+        edit_course_module_element_url(the_thing.id)
+
+    elsif the_thing.class == CourseModule && !the_thing.id.nil?
       if the_thing.exam_section_id
         course_modules_for_qualification_exam_level_exam_section_and_name_url(
                 the_thing.exam_level.qualification.name_url,
@@ -221,7 +238,7 @@ class ApplicationController < ActionController::Base
               the_thing.exam_section.try(:name_url) || 'all',
               the_thing.name_url
       )
-    elsif the_thing.class == CourseModuleElement
+    elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
               the_thing.course_module.exam_level.qualification.institution.subject_area.name_url,
               the_thing.course_module.exam_level.qualification.institution.name_url,

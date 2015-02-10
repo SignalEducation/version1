@@ -2,21 +2,23 @@
 #
 # Table name: course_module_element_user_logs
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  user_id                  :integer
-#  session_guid             :string(255)
-#  element_completed        :boolean          default(FALSE), not null
-#  time_taken_in_seconds    :integer
-#  quiz_score_actual        :integer
-#  quiz_score_potential     :integer
-#  is_video                 :boolean          default(FALSE), not null
-#  is_quiz                  :boolean          default(FALSE), not null
-#  course_module_id         :integer
-#  latest_attempt           :boolean          default(TRUE), not null
-#  corporate_customer_id    :integer
-#  created_at               :datetime
-#  updated_at               :datetime
+#  id                          :integer          not null, primary key
+#  course_module_element_id    :integer
+#  user_id                     :integer
+#  session_guid                :string(255)
+#  element_completed           :boolean          default(FALSE), not null
+#  time_taken_in_seconds       :integer
+#  quiz_score_actual           :integer
+#  quiz_score_potential        :integer
+#  is_video                    :boolean          default(FALSE), not null
+#  is_quiz                     :boolean          default(FALSE), not null
+#  course_module_id            :integer
+#  latest_attempt              :boolean          default(TRUE), not null
+#  corporate_customer_id       :integer
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  course_module_jumbo_quiz_id :integer
+#  is_jumbo_quiz               :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do
@@ -33,6 +35,8 @@ FactoryGirl.define do
     course_module_id 1
     latest_attempt false
     corporate_customer_id 1
+    course_module_jumbo_quiz_id 1
+    is_jumbo_quiz false
   end
 
 end

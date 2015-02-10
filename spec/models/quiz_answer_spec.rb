@@ -42,7 +42,7 @@ describe QuizAnswer do
 
   it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
 
-  it { should validate_presence_of(:wrong_answer_video_id).on(:update) }
+  it { should_not validate_presence_of(:wrong_answer_video_id).on(:update) }
   xit { should validate_numericality_of(:wrong_answer_video_id) }
 
   # callbacks
@@ -54,6 +54,7 @@ describe QuizAnswer do
   it { expect(QuizAnswer).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(QuizAnswer).to respond_to(:ids_in_specific_order) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

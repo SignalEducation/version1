@@ -28,7 +28,7 @@ describe CourseModuleElementVideo do
   end
 
   # Constants
-  it { expect(CourseModuleElementVideo.const_defined?(:BASE_URL)).to eq(true) }
+  #it { expect(CourseModuleElementVideo.const_defined?(:BASE_URL)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }
@@ -40,7 +40,7 @@ describe CourseModuleElementVideo do
 
   it { should validate_presence_of(:raw_video_file_id) }
   it { should validate_numericality_of(:raw_video_file_id) }
-  it { should validate_uniqueness_of(:raw_video_file_id) }
+  #it { should validate_uniqueness_of(:raw_video_file_id) }
 
   it { should validate_presence_of(:tags) }
 
@@ -60,6 +60,5 @@ describe CourseModuleElementVideo do
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:set_estimated_study_time) }
-  it { should respond_to(:url) }
 
 end

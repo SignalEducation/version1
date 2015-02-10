@@ -31,7 +31,7 @@ class UserNotification < ActiveRecord::Base
                   :forum_post_id, :tutor_id, :falling_behind, :blog_post_id
 
   # Constants
-  MESSAGE_TYPES = %w(blog forum marketing study_plan)
+  MESSAGE_TYPES = %w(blog forum marketing study_plan, system_alert)
 
   # relationships
   belongs_to :user
@@ -75,7 +75,7 @@ class UserNotification < ActiveRecord::Base
   end
 
   def send_email_if_needed
-   # UserMailer.send_notification(self.id).delayed_job if self.email_required
+    Mailers::OperationalMailers::SendUserNotificationWorker.perform_async(self.id) if self.email_required
   end
 
   def mark_as_read

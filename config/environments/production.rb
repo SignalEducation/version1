@@ -79,11 +79,11 @@ Rails.application.configure do
   # email delivery
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-          address:              'smtp.sendgrid.net',
+          address:              ENV['learnsignal_v2_server_email_smtp'],
           port:                 587,
           domain:               'learnsignal.com',
-          user_name:            ENV['learnsignal_v3_server_sendgrid_username'],
-          password:             ENV['learnsignal_v3_server_sendgrid_password'],
+          user_name:            ENV['learnsignal_v3_server_email_address'],
+          password:             ENV['learnsignal_v3_server_email_password'],
           authentication:       'plain',
           enable_starttls_auto: true
   }
@@ -96,7 +96,7 @@ Rails.application.configure do
       path: '/:class/:id/:filename',
       s3_host_name: 's3-eu-west-1.amazonaws.com',
       s3_credentials: {
-          bucket: ENV['LEARNSIGNAL3_S3_BUCKET_NAME'],
+          bucket: ENV['LEARNSIGNAL3_BUCKET_NAME'],
           access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
           secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
       }

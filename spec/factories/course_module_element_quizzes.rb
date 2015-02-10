@@ -18,6 +18,7 @@ FactoryGirl.define do
     course_module_element_id 1
     number_of_questions 1
     course_module_jumbo_quiz_id 1
+    question_selection_strategy 'random'
   end
 
 end

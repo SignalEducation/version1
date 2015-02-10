@@ -15,7 +15,8 @@
           -@qualification.exam_levels.each do |level|
             =link_to level.name, level
             %br
-          =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
+          -if current_user.admin?
+            =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
   .col-sm-6
     %table.table.table-bordered
       %h3
@@ -37,5 +38,6 @@
         %td.col-sm-8=@qualification.cpd_hours_required_per_year
   %p
     =link_to sanitize('&larr; ' + t('views.qualifications.index.h1')), qualifications_url
-    |
-    =link_to t('views.general.edit'), edit_qualification_url(id: @qualification.id), title: t('views.general.edit_tooltip')
+    -if current_user.admin?
+      |
+      =link_to t('views.general.edit'), edit_qualification_url(id: @qualification.id), title: t('views.general.edit_tooltip')

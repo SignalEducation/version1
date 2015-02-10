@@ -10,6 +10,8 @@
 #  course_module_element_user_log_id :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  score                             :integer          default(0)
+#  answer_array                      :string(255)
 #
 
 require 'rails_helper'
@@ -17,7 +19,7 @@ require 'rails_helper'
 describe QuizAttempt do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at score)
   QuizAttempt.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -36,7 +38,7 @@ describe QuizAttempt do
   it { should belong_to(:user) }
 
   # validation
-  it { should validate_presence_of(:user_id) }
+  it { should_not validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:quiz_question_id) }
@@ -45,10 +47,14 @@ describe QuizAttempt do
   it { should validate_presence_of(:quiz_answer_id) }
   it { should validate_numericality_of(:quiz_answer_id) }
 
-  it { should validate_presence_of(:course_module_element_user_log_id) }
+  it { should validate_presence_of(:course_module_element_user_log_id).on(:update) }
   it { should validate_numericality_of(:course_module_element_user_log_id) }
 
+  it { should validate_presence_of(:answer_array).on(:update) }
+
   # callbacks
+  it { should callback(:serialize_the_array).before(:validation) }
+  it { should callback(:calculate_score).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -57,6 +63,7 @@ describe QuizAttempt do
   # class methods
 
   # instance methods
+  it { should respond_to(:answers) }
   it { should respond_to(:destroyable?) }
 
 end

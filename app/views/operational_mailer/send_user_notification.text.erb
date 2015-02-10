@@ -1,0 +1,12 @@
+<%= t('mailers.operational.send_user_notification.subject_line') %>
+
+<%= t('mailers.general.salutation', fname: @user_notification.user.first_name) %>
+
+<%= t('mailers.operational.send_user_notification.paragraph_1') %>
+
+    <%= @user_notification.subject_line %>: <%= "#{@url}en/user_notifications/#{@user_notification.id}" %>
+
+<%= t('mailers.general.closing') %>
+
+
+<%= t('mailers.general.signature') %>

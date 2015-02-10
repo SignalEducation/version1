@@ -31,6 +31,9 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    -if @mathjax_required
+      %script{type: 'text/javascript', src: 'https://jwpsrv.com/library/w07RSqLlEeOssyIACi0I_Q.js'}
+
     =csrf_meta_tags
     -if Rails.env.production?
       =render partial: 'layouts/google_analytics'
@@ -54,4 +57,7 @@
     -if @mathjax_required
       %script{type: 'text/x-mathjax-config'}
         MathJax.Hub.Config({tex2jax: {inlineMath: [["(math)","(/math)"]]}});
-      %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+      -if Rails.env.production? || Rails.env.staging?
+        %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+      -else
+        %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
