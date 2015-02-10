@@ -11,15 +11,18 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  score                             :integer          default(0)
+#  answer_array                      :string(255)
 #
 
 class QuizAttempt < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
+  serialize :answer_array, Array
+
   # attr-accessible
   attr_accessible :user_id, :quiz_question_id, :quiz_answer_id, :correct,
-                  :course_module_element_user_log_id
+                  :course_module_element_user_log_id, :answer_array
 
   # Constants
 
@@ -41,8 +44,10 @@ class QuizAttempt < ActiveRecord::Base
   validates :course_module_element_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0},
             on: :create
+  validates :answer_array, presence: true, on: :update
 
   # callbacks
+  before_validation :serialize_the_array
   before_create :calculate_score
 
   # scopes
@@ -51,6 +56,13 @@ class QuizAttempt < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  def answers
+    self.answer_array ?
+            QuizAnswer.ids_in_specific_order(self.answer_array) :
+            self.quiz_question.quiz_answers
+  end
+
   def destroyable?
     true
   end
@@ -61,6 +73,10 @@ class QuizAttempt < ActiveRecord::Base
     self.correct = self.quiz_answer.try(:correct) || false
     self.score = self.correct ?
             ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
+  end
+
+  def serialize_the_array
+    self.answer_array = self.answer_array.to_s.split(',') if self.answer_array.to_s.split(',').length > 1
   end
 
 end

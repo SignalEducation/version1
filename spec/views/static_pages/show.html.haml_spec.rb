@@ -6,7 +6,7 @@ RSpec.describe 'static_pages/show', type: :view do
     @static_page = FactoryGirl.create(:static_page)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/#{@static_page.name}/)
     expect(rendered).to match(/#{@static_page.publish_from.to_s(:standard)}/)

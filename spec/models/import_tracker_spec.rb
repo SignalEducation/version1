@@ -31,8 +31,8 @@ describe ImportTracker do
   #it { expect(ImportTracker.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:old_model) }
-  it { should belong_to(:new_model) }
+  #it { should belong_to(:old_model) }
+  #it { should belong_to(:new_model) }
 
   # validation
   it { should validate_presence_of(:old_model_name) }
