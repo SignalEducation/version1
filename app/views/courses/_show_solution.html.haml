@@ -14,7 +14,7 @@
       %h3=t('views.courses.show_results.answers')
   -correct_answer = 0; your_answer = 0
   -if attempt.try(:quiz_question).try(:quiz_answers)
-    -attempt.quiz_question.quiz_answers.each_with_index do |qa, counter2|
+    -attempt.answers.each_with_index do |qa, counter2|
       .row
         .col-sm-12
           .well.well-sm

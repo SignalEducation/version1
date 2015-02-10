@@ -50,7 +50,10 @@ describe QuizAttempt do
   it { should validate_presence_of(:course_module_element_user_log_id).on(:update) }
   it { should validate_numericality_of(:course_module_element_user_log_id) }
 
+  it { should validate_presence_of(:answer_array).on(:update) }
+
   # callbacks
+  it { should callback(:serialize_the_array).before(:validation) }
   it { should callback(:calculate_score).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -60,6 +63,7 @@ describe QuizAttempt do
   # class methods
 
   # instance methods
+  it { should respond_to(:answers) }
   it { should respond_to(:destroyable?) }
 
 end
