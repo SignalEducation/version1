@@ -183,8 +183,8 @@ describe 'The sign in process.', type: :feature do
       visit sign_in_path
       click_link('#nav-login')
       within('#navbar') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: tutor_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
+        fill_in '#hidden-email', with: tutor_user.email
+        fill_in '#hidden-password', with: tutor_user.password
         click_button I18n.t('views.general.go')
       end
       sleep 2
@@ -263,8 +263,8 @@ describe 'The sign in process.', type: :feature do
       visit sign_in_path
       click_link('#nav-login')
       within('#navbar') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: content_manager_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
+        fill_in '#hidden-email', with: content_manager_user.email
+        fill_in '#hidden-password', with: content_manager_user.password
         click_button I18n.t('views.general.go')
       end
       sleep 2
@@ -509,9 +509,9 @@ describe 'The sign in process.', type: :feature do
     scenario 'with correct details and then sign out from the navbar' do
       visit sign_in_path
       click_link('#nav-login')
-      within('#navbar') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: admin_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: admin_user.password
+      within('#login_form') do
+        fill_in '#hidden-email', with: admin_user.email
+        fill_in '#hidden-password', with: admin_user.password
         click_button I18n.t('views.general.go')
       end
       expect(page).to have_content 'Welcome back!'
