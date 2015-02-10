@@ -11,6 +11,7 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  score                             :integer          default(0)
+#  answer_array                      :string(255)
 #
 
 class QuizAttempt < ActiveRecord::Base
