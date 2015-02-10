@@ -13,13 +13,12 @@
         =@seo_title
       -else
         LearnSignal
-
-  =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
-
+    =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -# Bootstrap DateTimePicker
     %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
 
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
+    -# Bootstrap DateTimePicker
     %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
