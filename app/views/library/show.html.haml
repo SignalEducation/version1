@@ -37,6 +37,11 @@
                       .col-sm-8
                         =completion_circle(grand_child)
                         =link_to grand_child.name, library_special_link(grand_child)
+                        -if grand_child.class == CourseModuleElement
+                          -if grand_child.is_video
+                            %span.glyphicon.glyphicon-check
+                          -else
+                            %span.glyphicon.glyphicon-play
                       .col-sm-4
                         .text-right
                           -if grand_child.class == CourseModuleElement
