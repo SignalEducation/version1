@@ -8,6 +8,6 @@
       %p=t('views.user_password_resets.new.paragraph_1')
       =form_tag(user_password_resets_url, {class: 'form', role: 'form'}) do
         .form-group
-          =email_field_tag :email_address, nil, placeholder: t('views.users.form.email_placeholder'), class: 'form-control'
+          =email_field_tag :email_address, nil, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', id: '#email-field'
         .form-group
           =submit_tag t('views.general.send'), class: 'btn btn-success'

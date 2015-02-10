@@ -90,8 +90,8 @@
           %li#login_form.hidden
             =form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
               .form-group{style: 'padding-top: 3px;padding-right: 5px;'}
-                =f.text_field :email, placeholder: 'john@example.com', autofocus: true
-                =f.password_field :password, placeholder: 'password', autocomplete: 'off'
+                =f.text_field :email, placeholder: 'john@example.com', autofocus: true, id: '#hidden-email'
+                =f.password_field :password, placeholder: 'password', autocomplete: 'off', id: '#hidden-password'
                 =f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
-                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
+                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link', id: '#hidden-password-link'
           %li=link_to t('views.general.sign_up'), sign_up_url, style: 'background-color: #5391cf;'
