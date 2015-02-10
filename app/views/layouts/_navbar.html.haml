@@ -1,4 +1,4 @@
-.navbar.navbar-inverse.navbar-fixed-top{role:'navigation'}
+.navbar.navbar-inverse.navbar-fixed-top#navbar{role:'navigation'}
   .container
     .navbar-header
       %button.navbar-toggle.collapsed{type: 'button', data: {toggle: 'collapse', target: '.navbar-collapse'}}
@@ -86,7 +86,7 @@
                 =text_field_tag :search_terms, nil, placeholder: 'Search...'
 
         -else
-          %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;"
+          %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;", id: '#nav-login'
           %li#login_form.hidden
             =form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
               .form-group{style: 'padding-top: 3px;padding-right: 5px;'}
