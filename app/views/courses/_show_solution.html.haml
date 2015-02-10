@@ -8,7 +8,7 @@
     .col-sm-12
       .well.well-sm
         -if attempt.try(:quiz_question).try(:quiz_contents)
-          =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_questionquiz_contents}
+          =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
   .row
     .col-sm-12
       %h3=t('views.courses.show_results.answers')

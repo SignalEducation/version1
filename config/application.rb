@@ -24,7 +24,7 @@ module LearnsignalV3
 
     # suggested by Tinfoil Security 29/10/2014
     config.action_dispatch.default_headers = {
-            'X-Frame-Options' => 'SAMEORIGIN'
+            'X-Frame-Options' => 'DENY' # SAMEORIGIN
             #       'Content-Security-Policy' => {'frame-ancestors' => 'none'}
     }
 

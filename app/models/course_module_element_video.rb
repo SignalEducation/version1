@@ -29,7 +29,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :raw_video_file_id, presence: true, uniqueness: true,
+  validates :raw_video_file_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :tags, presence: true
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}

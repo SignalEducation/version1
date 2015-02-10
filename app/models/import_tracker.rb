@@ -1,0 +1,59 @@
+# == Schema Information
+#
+# Table name: import_trackers
+#
+#  id             :integer          not null, primary key
+#  old_model_name :string(255)
+#  old_model_id   :integer
+#  new_model_name :string(255)
+#  new_model_id   :integer
+#  imported_at    :datetime
+#  original_data  :text
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
+class ImportTracker < ActiveRecord::Base
+
+  # attr-accessible
+  attr_accessible :old_model_name, :old_model_id, :new_model_name, :new_model_id, :imported_at, :original_data
+
+  # Constants
+
+  # relationships
+  # belongs_to :old_model
+  # belongs_to :new_model
+
+  # validation
+  validates :old_model_name, presence: true
+  validates :old_model_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :new_model_name, presence: true
+  validates :new_model_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :imported_at, presence: true
+  validates :original_data, presence: true
+
+  # callbacks
+  before_destroy :check_dependencies
+
+  # scopes
+  scope :all_in_order, -> { order(:old_model_name) }
+
+  # class methods
+
+  # instance methods
+  def destroyable?
+    false
+  end
+
+  protected
+
+  def check_dependencies
+    unless self.destroyable?
+      errors.add(:base, I18n.t('models.general.dependencies_exist'))
+      false
+    end
+  end
+
+end
