@@ -17,4 +17,4 @@
               =render partial: "#{dashboard_type}"
 
 -else
-  =render partial: 'dashboard/individual_student'
+  =render partial: "dashboard/#{@dashboard_type.first}"
