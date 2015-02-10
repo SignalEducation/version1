@@ -497,6 +497,18 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   Country.where(continent: %w(Africa Asia Australia Antarctic)).update_all(currency_id: 2); print '.'
   puts ' DONE'
 
+  if Rails.env.development?
+    puts 'Building simple framework'
+    # SubjectArea.create!(id: 1, name: 'Finance', name_url: 'finance', sorting_order: 1, active: true)
+    Institution.create!(id: 1, name: 'CFA', short_name: 'CFA', name_url: 'cfa', description: 'Lorem ipsum', feedback_url: 'http://example.com/', help_desk_url: 'http://example.com/', subject_area_id: 1, sorting_order: 1, active: true)
+    Qualification.create!(id: 1, institution_id: 1, name: 'CFA Professional', name_url: 'cfa-professional', sorting_order: 1, active: true, cpd_hours_required_per_year: 10)
+    ExamLevel.create(id: 1, qualification_id: 1, name: 'Level 1', name_url: 'level-1', is_cpd: false, sorting_order: 1, active: false, best_possible_first_attempt_score: 0.0, default_number_of_possible_exam_answers: 3, enable_exam_sections: true)
+  end
+
+  ActiveRecord::Base.connection.tables.each do |t|
+    ActiveRecord::Base.connection.reset_pk_sequence!(t)
+  end
+
   puts
   puts 'Completed the db/seed process'
   puts '*' * 100

@@ -6,7 +6,7 @@
   .row
     .col-sm-12
       %h3=t('views.quiz_questions.show.choose_an_answer')
-  -question.quiz_answers.each_with_index do |qa, counter|
+  -question.quiz_answers.sample(question.quiz_answers.size).each_with_index do |qa, counter|
     .row
       .col-sm-12
         .well.well-sm.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}); return false;"}
