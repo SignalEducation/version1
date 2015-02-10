@@ -7,6 +7,7 @@ describe 'The sign in process', type: :feature do
 
   before(:each) do
     activate_authlogic
+    x = individual_student_user.id
   end
 
   scenario 'with no details' do
@@ -53,6 +54,7 @@ describe 'The sign in process', type: :feature do
   end
 
   scenario 'with correct details and then sign out', js: true do
+    expect(individual_student_user.id).to eq(individual_student_user.id)
     visit sign_in_path
     within('.well.well-sm') do
       fill_in 'Email', with: individual_student_user.email

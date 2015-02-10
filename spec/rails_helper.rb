@@ -11,6 +11,7 @@ require 'support/dry_specs'   # our handy way of doing lots of repetitive tests
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 require 'database_cleaner'
+require 'support/database_cleaner' # configuration of database_cleaner
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
