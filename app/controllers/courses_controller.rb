@@ -74,7 +74,8 @@ class CoursesController < ApplicationController
                     :id,
                     :user_id,
                     :quiz_question_id,
-                    :quiz_answer_id
+                    :quiz_answer_id,
+                    :answer_array
             ]
     )
   end
