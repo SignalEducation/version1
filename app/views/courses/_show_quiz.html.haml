@@ -21,6 +21,7 @@
       =attempt.text_field :user_id
       =attempt.text_field :quiz_question_id
       =attempt.text_field :quiz_answer_id
+      =attempt.text_field :answer_array
 
 -else
   .row
@@ -59,11 +60,12 @@
     $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
   }
 
-  function logAnswer(questionId, answerId, difficultyLevel, isCorrect) {
+  function logAnswer(questionId, answerId, difficultyLevel, isCorrect, answerArray) {
     answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
     // log the answer in the form
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
+    $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
     if (currentQuestion < numberOfQuestions) {
       if (selectionStrategy == 'progressive') {
         if (isCorrect == true && difficultyLevel == 'easy') {

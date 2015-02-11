@@ -724,7 +724,7 @@ en:
         h1: Dashboard
 
       individual_student:
-        in-progress: In-progess
+        in-progress: In-progress
         completed: Completed
         none_in_progress: "Remember, you can study multiple modules at the same time."
         none_completed: "This panel will show you the modules that you have completed. Keep going!"

@@ -14,9 +14,9 @@
         %td.col-sm-8
           -@qualification.exam_levels.each do |level|
             =link_to level.name, level
-            -if current_user.admin?
-              %br
-              =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
+            %br
+          -if current_user.admin?
+            =link_to t('views.general.new'), new_exam_level_url(qualification_id: @qualification.id), class: 'btn btn-xs btn-success'
   .col-sm-6
     %table.table.table-bordered
       %h3

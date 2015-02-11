@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150205130748) do
+ActiveRecord::Schema.define(version: 20150210142311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,6 +301,7 @@ ActiveRecord::Schema.define(version: 20150205130748) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "score",                             default: 0
+    t.string   "answer_array"
   end
 
   create_table "quiz_contents", force: true do |t|
