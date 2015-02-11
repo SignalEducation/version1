@@ -16,9 +16,11 @@ describe 'User navigating through the library:' do
   let!(:exam_level_2) { FactoryGirl.create(:active_exam_level, qualification_id: qualification_2.id) }
   let!(:exam_section_1) { FactoryGirl.create(:active_exam_section, exam_level_id: exam_level_1.id) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module, qualification_id: qualification_1.id, exam_section_id: exam_section_1.id) }
+
   let!(:course_module_2) { FactoryGirl.create(:active_course_module, qualification_id: qualification_2.id, exam_level_id: exam_level_2.id) }
-  let!(:course_module_element_1) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
-  let!(:course_module_element_2) { FactoryGirl.create(:course_module_element, course_module_id: course_module_2.id) }
+
+  let!(:course_module_element_1) { FactoryGirl.create(:cme_video, course_module_id: course_module_1.id) }
+  let!(:course_module_element_2) { FactoryGirl.create(:cme_quiz, course_module_id: course_module_2.id) }
   let!(:course_module_element_video_1) { FactoryGirl.create(:course_module_element_video, course_module_element_id: course_module_element_1.id) }
 
   let!(:course_module_element_quiz_1) { FactoryGirl.create(:course_module_element_quiz, course_module_element_id: course_module_element_2.id) }
