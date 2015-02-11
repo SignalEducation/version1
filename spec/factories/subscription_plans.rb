@@ -21,7 +21,7 @@ FactoryGirl.define do
   factory :subscription_plan do
     all_you_can_eat             true
     payment_frequency_in_months 1
-    currency_id                 1
+    currency_id                 { Currency.first.try(:id) || FactoryGirl.create(:euro).id }
     price                       9.99
     available_from              { 14.days.ago }
     available_to                { 7.days.from_now }

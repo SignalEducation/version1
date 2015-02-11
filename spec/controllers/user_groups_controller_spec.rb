@@ -476,7 +476,7 @@ describe UserGroupsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond with OK' do
         get :index
-        expect_index_success_with_model('user_groups', 8)
+        expect_index_success_with_model('user_groups', UserGroup.all.count)
       end
     end
 
@@ -543,6 +543,7 @@ describe UserGroupsController, type: :controller do
       end
 
       it 'should fail to delete as dependant exists' do
+        x = individual_student_user
         delete :destroy, id: individual_student_user_group.id
         expect_delete_error_with_model('user_group', user_groups_url)
       end

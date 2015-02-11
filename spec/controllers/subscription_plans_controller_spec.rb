@@ -6,8 +6,8 @@ describe SubscriptionPlansController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for subscription_plan_1
-  let!(:subscription_plan_1) { FactoryGirl.create(:subscription_plan) }
-  let!(:subscription_plan_2) { FactoryGirl.create(:subscription_plan) }
+  let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
+  let!(:subscription_plan_2) { FactoryGirl.create(:corporate_subscription_plan) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
 
   context 'Not logged in: ' do
@@ -480,7 +480,13 @@ describe SubscriptionPlansController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subscription_plans', 2)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+        expect(assigns(:student_subscription_plans).first.class).to eq(SubscriptionPlan)
+        expect(assigns(:student_subscription_plans).first.class).to eq(SubscriptionPlan)
+        expect(assigns(:corporate_subscription_plans).count).to eq(1)
       end
     end
 

@@ -35,7 +35,7 @@ FactoryGirl.define do
   factory :static_page do
     name 'MyString'
     publish_from '2014-12-17 09:47:56'
-    publish_to nil
+    publish_to 1.month.from_now
     allow_multiples false
     sequence(:public_url) { |n| "/url-#{n}" }
     use_standard_page_template true

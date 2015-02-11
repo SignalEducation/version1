@@ -28,6 +28,13 @@ FactoryGirl.define do
     factory :inactive_currency do
       active                  false
     end
+
+    factory :euro do
+      active                  true
+      name                    'Euro'
+      iso_code                'EUR'
+      leading_symbol          '€'
+    end
   end
 
 end

@@ -11,16 +11,12 @@ class StudentSignUpsController < ApplicationController
   def create
     @user = User.new(allowed_params.merge(user_group_id: 1))
     if @user.save
-      @user = User.find_and_activate(@user.account_activation_code)
+      @user = User.get_and_activate(@user.account_activation_code)
       UserSession.create(@user)
       assign_anonymous_logs_to_user
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url
     else
-      puts '*' * 100
-      puts @user.errors.inspect
-      puts @user.subscriptions.first.errors.inspect
-      puts '*' * 100
       extra_needed = nil
       @user.errors.each do |field, _|
         if field.to_s.include?('.')

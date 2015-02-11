@@ -166,6 +166,11 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
+
+      before(:each) do
+        x = course_module_element_quiz_1.id
+      end
+
       describe "DELETE 'destroy'" do
         it 'should be ERROR as children exist' do
           delete :destroy, id: course_module_element_1.id
@@ -468,6 +473,11 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
+
+      before(:each) do
+        x = course_module_element_quiz_1.id
+      end
+
       it 'should be ERROR as children exist' do
         delete :destroy, id: course_module_element_1.id
         expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1.course_module))
