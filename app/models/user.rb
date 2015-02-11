@@ -79,23 +79,23 @@ class User < ActiveRecord::Base
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
-  has_many :quiz_attempts
-  has_many :invoices
+  has_many :forum_posts
+  has_many :forum_post_concerns
+  has_many :forum_topic_users
   has_many :institution_users
+  has_many :invoices
+  has_many :quiz_attempts
+  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
+  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :subscriptions
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
-  has_many :user_exam_level
-  has_many :user_notifications
-  has_many :forum_topic_users
-  has_many :forum_posts
-  has_many :forum_post_concerns
-  has_many :user_likes
-  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
-  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :user_activity_logs
   belongs_to :user_group
+  has_many :user_exam_level
+  has_many :user_likes
+  has_many :user_notifications
 
   accepts_nested_attributes_for :subscriptions
 
@@ -209,6 +209,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def content_manager?
+    self.user_group.try(:content_manager)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
@@ -240,16 +244,12 @@ class User < ActiveRecord::Base
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
-  def tutor?
-    self.user_group.try(:tutor)
-  end
-
   def individual_student?
     self.user_group.try(:individual_student)
   end
 
-  def content_manager?
-    self.user_group.try(:content_manager)
+  def tutor?
+    self.user_group.try(:tutor)
   end
 
   protected

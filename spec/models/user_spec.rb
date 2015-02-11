@@ -67,23 +67,23 @@ describe User do
   it { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_many(:quiz_attempts) }
-  it { should have_many(:invoices) }
+  it { should have_many(:forum_posts) }
+  it { should have_many(:forum_post_concerns) }
+  it { should have_many(:forum_topic_users) }
   it { should have_many(:institution_users) }
-  it { should have_many(:student_exam_tracks) }
+  it { should have_many(:invoices) }
+  it { should have_many(:quiz_attempts) }
+  it { should have_many(:created_static_pages) }
+  it { should have_many(:updated_static_pages) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
+  it { should have_many(:student_exam_tracks) }
   it { should have_many(:user_exam_level) }
-  it { should have_many(:user_notifications) }
-  it { should have_many(:forum_topic_users) }
-  it { should have_many(:forum_posts) }
-  it { should have_many(:forum_post_concerns) }
-  it { should have_many(:user_likes) }
-  it { should have_many(:created_static_pages) }
-  it { should have_many(:updated_static_pages) }
   it { should have_many(:user_activity_logs) }
   it { should belong_to(:user_group) }
+  it { should have_many(:user_likes) }
+  it { should have_many(:user_notifications) }
 
   # validation
   it { should validate_presence_of(:email) }
@@ -142,11 +142,11 @@ describe User do
   # instance methods
   it { should respond_to(:admin?) }
   it { should respond_to(:change_the_password) }
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:full_name) }
-  it { should respond_to(:frequent_forum_user?) }
-  it { should respond_to(:tutor?) }
-  it { should respond_to(:individual_student?) }
   it { should respond_to(:content_manager?) }
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:frequent_forum_user?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:individual_student?) }
+  it { should respond_to(:tutor?) }
 
 end
