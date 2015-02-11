@@ -66,6 +66,7 @@ group :test do
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
+  gem 'stripe-ruby-mock', '~> 2.0.2', require: 'stripe_mock'
   gem 'webrat' # Runs tests in a "headless" browser
 end
 
