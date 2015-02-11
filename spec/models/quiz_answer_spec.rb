@@ -54,6 +54,7 @@ describe QuizAnswer do
   it { expect(QuizAnswer).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(QuizAnswer).to respond_to(:ids_in_specific_order) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
