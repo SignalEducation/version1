@@ -14,7 +14,7 @@
 #  updated_at                              :datetime
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
-#
+
 
 FactoryGirl.define do
   factory :exam_level do
@@ -25,6 +25,15 @@ FactoryGirl.define do
     sorting_order 1
     active false
     default_number_of_possible_exam_answers 4
+
+    factory :active_exam_level do
+      active              true
+    end
+
+    factory :inactive_exam_level do
+      active              false
+    end
+
   end
 
 end

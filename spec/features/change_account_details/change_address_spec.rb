@@ -7,15 +7,13 @@ describe 'User changing their email' do
 
   let!(:country_1) { FactoryGirl.create(:ireland) }
   let!(:country_2) { FactoryGirl.create(:uk) }
-  let!(:static_page) { FactoryGirl.create(:static_page) }
 
   before(:each) do
     activate_authlogic
   end
 
-  scenario 'when logged in as an individual_student_user', js: true do
-    visit root_path
-    sleep 10
+  scenario 'when logged in as an individual_student_user' do
+    visit sign_in_path
     within('.well.well-sm') do
       fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
       fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
