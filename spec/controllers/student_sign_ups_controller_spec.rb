@@ -12,17 +12,20 @@ RSpec.describe StudentSignUpsController, type: :controller do
   let!(:invalid_params) { FactoryGirl.attributes_for(:individual_student_user, email: '') }
 
   context 'Not logged in' do
-    describe 'GET new' do
+    describe "GET 'new'" do
       it 'returns http success' do
         get :new
         expect_new_success_with_model('user')
+        expect(assigns(:user).subscriptions.first.subscription_plan_id).to eq(SubscriptionPlan.first.id)
       end
     end
 
-    describe 'POST create' do
+    describe "POST 'create'" do
       it 'returns http success' do
         post :create, user: valid_params
         expect_create_success_with_model('user', personal_sign_up_complete_url, I18n.t('controllers.student_sign_ups.create.flash.success'))
+        expect(Subscription.all.count).to eq(1)
+        expect(assigns(:user).subscriptions.count).to eq(1)
       end
 
       it 'returns bad input to the new page' do

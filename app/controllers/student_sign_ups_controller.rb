@@ -13,7 +13,7 @@ class StudentSignUpsController < ApplicationController
     if @user.save
       @user = User.get_and_activate(@user.account_activation_code)
       UserSession.create(@user)
-      assign_anonymous_logs_to_user
+      assign_anonymous_logs_to_user(@user.id)
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url
     else
@@ -58,10 +58,10 @@ class StudentSignUpsController < ApplicationController
     @subscription_plans = SubscriptionPlan.includes(:currency).for_students.all_active.all_in_order
   end
 
-  def assign_anonymous_logs_to_user
+  def assign_anonymous_logs_to_user(user_id)
     model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack]
     model_list.each do |the_model|
-      the_model.assign_user_to_session_guid(@user.id, current_session_guid)
+      the_model.assign_user_to_session_guid(user_id, current_session_guid)
     end
   end
 
