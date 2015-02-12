@@ -4,6 +4,10 @@ RSpec.describe StudentSignUpsController, type: :routing do
   describe 'routing' do
 
     it 'routes to #new' do
+      expect(get: '/student_sign_up').to route_to('student_sign_ups#new')
+    end
+
+    it 'routes to #new' do
       expect(get: '/student_sign_ups/new').to route_to('student_sign_ups#new')
     end
 
