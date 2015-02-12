@@ -25,13 +25,26 @@ FactoryGirl.define do
     sorting_order 1
     active false
     default_number_of_possible_exam_answers 4
+    enable_exam_sections true
 
     factory :active_exam_level do
-      active              true
+      active                       true
+      factory :active_exam_level_with_exam_sections do
+        enable_exam_sections       true
+      end
+      factory :active_exam_level_without_exam_sections do
+        enable_exam_sections       false
+      end
     end
 
     factory :inactive_exam_level do
-      active              false
+      active                       false
+    end
+    factory :inactive_exam_level_with_exam_sections do
+      enable_exam_sections       true
+    end
+    factory :inactive_exam_level_without_exam_sections do
+      enable_exam_sections       false
     end
 
   end

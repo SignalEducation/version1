@@ -36,10 +36,12 @@ FactoryGirl.define do
 
     factory :cme_video do
       is_video                    true
+      is_quiz                     false
     end
 
     factory :cme_quiz do
-      is_quiz                     false
+      is_quiz                     true
+      is_video                    false
     end
 
   end
