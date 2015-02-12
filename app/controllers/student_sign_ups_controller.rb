@@ -5,6 +5,7 @@ class StudentSignUpsController < ApplicationController
 
   def new
     @user = User.new
+    @user.country_id = IpAddress.get_country(request.remote_ip).id
     @user.subscriptions.build(subscription_plan_id: @subscription_plans.first.id)
   end
 
