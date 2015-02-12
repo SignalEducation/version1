@@ -3,7 +3,7 @@
 
 $input-color-placeholder: #ccc;
 $link-color: #222;
-$btn-success-bg: #5391cf;
+//$btn-success-bg: #5391cf;
 
 $navbar-inverse-bg: #d64147; /*#125;*/
 $navbar-inverse-link-active-bg: #ee9a3b;
@@ -14,7 +14,7 @@ $navbar-inverse-link-hover-bg: #ee9a3b;
 $navbar-inverse-border: #fff;
 $navbar-height: 65px;
 
-$well-bg: #e5e5e5;
+//$well-bg: #e5e5e5;
 
 // Fonts
 
@@ -93,10 +93,6 @@ tr {
 
 .orange-background {
   background-color: #ee9a3b;
-}
-
-.btn-success {
-  text-transform: uppercase;
 }
 
 .blue-hover:hover {
