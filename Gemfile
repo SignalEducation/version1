@@ -13,6 +13,7 @@ gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 gem 'aws-s3' # grants timeout-able URLs
 gem 'bootstrap-sass', '~> 3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
+gem 'browser' # user-agent detection
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'figaro' # management of ENV vars
 gem 'geocoder' # a public API for geo-locating IP addresses

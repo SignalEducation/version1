@@ -43,7 +43,7 @@ class IpAddress < ActiveRecord::Base
                            less_than_or_equal_to: 3}
 
   # callbacks
-  before_validation :geo_locate
+  before_validation :geo_locate, on: :create
   before_destroy :check_dependencies
 
   # scopes
@@ -69,8 +69,10 @@ class IpAddress < ActiveRecord::Base
   end
 
   def geo_locate
-    self.geocode if self.ip_address
-    self.reverse_geocode if self.ip_address
+    unless Rails.env.test?
+      self.geocode if self.ip_address
+      self.reverse_geocode if self.ip_address
+    end
     self.alert_level = 0
   end
 

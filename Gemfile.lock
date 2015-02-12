@@ -74,6 +74,7 @@ GEM
       railties (>= 3.0)
     bootstrap-sass (3.2.0.2)
       sass (~> 3.2)
+    browser (0.8.0)
     builder (3.2.2)
     bullet (4.14.0)
       activesupport (>= 3.0.0)
@@ -345,6 +346,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.2)
+  browser
   bullet
   capybara
   capybara-webkit

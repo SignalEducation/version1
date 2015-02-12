@@ -20,7 +20,7 @@ class UserLoggerWorker
             params: req_parameters,
             ip_address: remote_ip,
             alert_level: 0,
-            http_user_agent: the_user_agent,
+            raw_user_agent: the_user_agent,
             guid: job_guid
     )
     if log.save

@@ -21,6 +21,8 @@
 #  computer         :boolean          default(FALSE), not null
 #  guid             :string(255)
 #  ip_address_id    :integer
+#  browser_version  :string(255)
+#  raw_user_agent   :string(255)
 #
 
 require 'rails_helper'
@@ -28,7 +30,7 @@ require 'rails_helper'
 describe UserActivityLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at ip_address_id)
+  black_list = %w(id created_at updated_at ip_address_id browser_version)
   UserActivityLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -58,8 +60,8 @@ describe UserActivityLog do
 
   it { should validate_presence_of(:ip_address) }
 
-  it { should validate_presence_of(:alert_level) }
-  it { should validate_numericality_of(:alert_level) }
+  # it { should validate_presence_of(:alert_level) }
+  # it { should validate_numericality_of(:alert_level) }
 
   it { should validate_presence_of(:guid) }
   it { should validate_uniqueness_of(:guid) }

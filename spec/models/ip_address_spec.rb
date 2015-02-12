@@ -44,7 +44,7 @@ describe IpAddress do
   it { should validate_numericality_of(:longitude) }
 
   # callbacks
-  it { should callback(:geo_locate).before(:validation) }
+  it { should callback(:geo_locate).before(:validation).on(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

@@ -21,6 +21,8 @@
 #  computer         :boolean          default(FALSE), not null
 #  guid             :string(255)
 #  ip_address_id    :integer
+#  browser_version  :string(255)
+#  raw_user_agent   :string(255)
 #
 
 FactoryGirl.define do
