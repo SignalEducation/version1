@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
-#  require 'sidekiq/web'
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
@@ -76,6 +75,7 @@ Rails.application.routes.draw do
          as: :qualifications_filtered
     post 'qualifications/filter', to: 'qualifications#index', as: :qualifications_filter
     resources :qualifications
+    get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
     resources :student_sign_ups, only: [:new, :create]
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]

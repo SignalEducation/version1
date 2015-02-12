@@ -459,12 +459,12 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complementary",                 default: false, null: false
+    t.boolean  "complementary",         default: false, null: false
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "stripe_customer_id"
-    t.text     "original_stripe_customer_data"
+    t.text     "stripe_customer_data"
   end
 
   create_table "system_defaults", force: true do |t|

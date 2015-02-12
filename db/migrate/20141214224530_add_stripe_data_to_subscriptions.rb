@@ -1,5 +1,5 @@
 class AddStripeDataToSubscriptions < ActiveRecord::Migration
   def change
-    add_column :subscriptions, :original_stripe_customer_data, :text
+    add_column :subscriptions, :stripe_customer_data, :text
   end
 end
