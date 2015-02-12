@@ -4,12 +4,14 @@ class Api::PenetrationTestWebhooksController < ApplicationController
 
   def test_starting
     # do nothing for now
+    render nothing: true, status: 200
   end
 
   def test_complete
     tf_user = User.where(last_name: 'Tinfoil').first
     session_guid = UserActivityLog.where(user_id: tf_user.id).order(:created_at).last.session_guid
     PenetrationTestCleanupWorker.perform_async(tf_user.id, session_guid)
+    render nothing: true, status: 200
   end
 
   protected

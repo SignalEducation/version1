@@ -7,6 +7,12 @@ Rails.application.routes.draw do
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
 
+  namespace :api do
+    get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
+    get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
+    resources :user_activities, only: :create
+  end
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
@@ -95,10 +101,6 @@ Rails.application.routes.draw do
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'
     get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
         as: :deliver_static_pages
-  end
-
-  namespace :api do
-    resources :user_activities, only: :create
   end
 
   # Catch-all
