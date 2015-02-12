@@ -20,6 +20,7 @@
 #  tablet           :boolean          default(FALSE), not null
 #  computer         :boolean          default(FALSE), not null
 #  guid             :string(255)
+#  ip_address_id    :integer
 #
 
 require 'rails_helper'
@@ -27,7 +28,7 @@ require 'rails_helper'
 describe UserActivityLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at ip_address_id)
   UserActivityLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -40,6 +41,7 @@ describe UserActivityLog do
   it { expect(UserActivityLog.const_defined?(:ALERT_LEVELS)).to eq(true) }
 
   # relationships
+  it { should belong_to(:tracked_ip_address) }
   it { should belong_to(:user) }
 
   # validation

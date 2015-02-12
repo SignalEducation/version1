@@ -20,6 +20,7 @@
 #  tablet           :boolean          default(FALSE), not null
 #  computer         :boolean          default(FALSE), not null
 #  guid             :string(255)
+#  ip_address_id    :integer
 #
 
 class UserActivityLog < ActiveRecord::Base
@@ -38,6 +39,8 @@ class UserActivityLog < ActiveRecord::Base
   # 0=normal, 1=warning, 2=danger, 3=severe
 
   # relationships
+  belongs_to :tracked_ip_address, class_name: 'IpAddress',
+             foreign_key: :ip_address_id
   belongs_to :user
 
   # validation
@@ -54,6 +57,7 @@ class UserActivityLog < ActiveRecord::Base
   validates :guid, presence: true, uniqueness: true
 
   # callbacks
+  before_validation :track_ip_address
   after_create :add_to_rails_logger
 
   # scopes
@@ -127,6 +131,10 @@ class UserActivityLog < ActiveRecord::Base
     else # where 3 or above
       Rails.logger.fatal message
     end
+  end
+
+  def track_ip_address
+    self.ip_address_id = IpAddress.where(ip_address: self.ip_address).first_or_create.id
   end
 
 end

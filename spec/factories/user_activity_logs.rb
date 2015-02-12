@@ -20,6 +20,7 @@
 #  tablet           :boolean          default(FALSE), not null
 #  computer         :boolean          default(FALSE), not null
 #  guid             :string(255)
+#  ip_address_id    :integer
 #
 
 FactoryGirl.define do

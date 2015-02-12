@@ -140,11 +140,6 @@ class ApplicationController < ActionController::Base
     Rails.logger.debug request.env['HTTP_USER_AGENT']
     Rails.logger.debug '*'* 100
 
-    puts '=' * 100
-    puts 'Welcome to the Application Controller'
-    puts controller_name
-    puts '=' * 100
-
   end
 
 
@@ -160,7 +155,8 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
-  def course_module_special_link(the_thing) # tutor/admin-facing
+  # tutor/admin-facing
+  def course_module_special_link(the_thing)
     # used for tutor-facing links
 
     if the_thing.class == CourseModuleElement && !the_thing.id.nil?
@@ -201,7 +197,8 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_module_special_link
 
-  def library_special_link(the_thing) # customer-facing
+  # customer-facing
+  def library_special_link(the_thing)
     if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
       course_special_link(the_thing)
     elsif the_thing.class == ExamSection
