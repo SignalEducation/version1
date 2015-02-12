@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
         DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
-  if Rails.env.staging?
+  if Rails.env.staging? && !controller_name.include?('api')
     http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
   end
 
