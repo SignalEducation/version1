@@ -134,8 +134,8 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name, :address) }
-  before_create :add_guid
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
+  before_create :add_guid
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }

@@ -2,30 +2,29 @@
 #
 # Table name: subscriptions
 #
-#  id                            :integer          not null, primary key
-#  user_id                       :integer
-#  corporate_customer_id         :integer
-#  subscription_plan_id          :integer
-#  stripe_guid                   :string(255)
-#  next_renewal_date             :date
-#  complementary                 :boolean          default(FALSE), not null
-#  current_status                :string(255)
-#  created_at                    :datetime
-#  updated_at                    :datetime
-#  stripe_customer_id            :string(255)
-#  original_stripe_customer_data :text
+#  id                    :integer          not null, primary key
+#  user_id               :integer
+#  corporate_customer_id :integer
+#  subscription_plan_id  :integer
+#  stripe_guid           :string(255)
+#  next_renewal_date     :date
+#  complementary         :boolean          default(FALSE), not null
+#  current_status        :string(255)
+#  created_at            :datetime
+#  updated_at            :datetime
+#  stripe_customer_id    :string(255)
+#  stripe_customer_data  :text
 #
 
 class Subscription < ActiveRecord::Base
 
   include LearnSignalModelExtras
-
-  serialize :original_stripe_subscription_data
+  serialize :stripe_customer_data, Hash
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complementary, :current_status,
-                  :stripe_customer_id, :original_stripe_customer_data, :stripe_token
+                  :stripe_token
 
   # Constants
   STATUSES = %w(trialing active past_due canceled unpaid suspended paused)
@@ -50,9 +49,9 @@ class Subscription < ActiveRecord::Base
   validates :stripe_token, presence: true, on: :create
 
   # callbacks
-  before_create :create_on_stripe_platform
-  after_create  :create_a_subscription_transaction
-  before_update :update_on_stripe_platform
+  before_validation :create_on_stripe_platform, on: :create
+  before_validation :update_on_stripe_platform, on: :update
+  after_create :create_a_subscription_transaction
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -79,17 +78,19 @@ class Subscription < ActiveRecord::Base
     # todo see https://stripe.com/docs/guides/subscriptions#step-2-subscribe-customers
     stripe_customer = Stripe::Customer.create(
             card: @stripe_token,
-            plan: self.subscription_plan.stripe_guid,
-            email: self.user.email
+            plan: self.subscription_plan.try(:stripe_guid),
+            email: self.user.try(:email)
     )
 
     #self.subscription_plan_id is set in the UI
-    self.stripe_guid = stripe_customer.subscriptions.data[0].id
-    self.next_renewal_date = stripe_customer.subscriptions.data[0].current_period_end
     self.complementary = false
-    self.current_status = stripe_customer.subscriptions.data[0].status
-    self.stripe_customer_id = stripe_customer.id
-    self.original_stripe_customer_data = stripe_customer
+    if stripe_customer && stripe_customer.try(:subscriptions).try(:data).try(:first)
+      self.stripe_guid = stripe_customer.subscriptions.data[0].id
+      self.next_renewal_date = Time.at(stripe_customer.subscriptions.data[0].current_period_end)
+      self.current_status = stripe_customer.subscriptions.data[0].status
+      self.stripe_customer_id = stripe_customer.id
+      self.stripe_customer_data = stripe_customer.to_hash.deep_dup
+    end
 
     if Rails.env.production? && stripe_customer.livemode == false
       errors.add(:base, 'Non-live transaction on the Live server')

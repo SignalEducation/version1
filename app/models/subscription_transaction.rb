@@ -21,7 +21,7 @@ class SubscriptionTransaction < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  serialize :original_data
+  serialize :original_data, Hash
 
   # attr-accessible
   attr_accessible :user_id, :subscription_id, :stripe_transaction_guid,
@@ -29,7 +29,7 @@ class SubscriptionTransaction < ActiveRecord::Base
                   :live_mode, :original_data, :subscription_payment_card_id
 
   # Constants
-  TRANSACTION_TYPES = %w(payment refund failed_payment)
+  TRANSACTION_TYPES = %w(payment refund failed_payment trialing)
 
   # relationships
   belongs_to :currency
@@ -60,17 +60,17 @@ class SubscriptionTransaction < ActiveRecord::Base
 
   # class methods
   def self.create_from_stripe_data(subscription)
-    stripe_sub_data = subscription.original_stripe_customer_data['subscriptions']['data'][0]
-    SubscriptionTransaction.create(
+    stripe_sub_data = subscription.stripe_customer_data[:subscriptions][:data][0]
+    SubscriptionTransaction.create!(
             user_id: subscription.user_id,
             subscription_id: subscription.id,
-            stripe_transaction_guid: stripe_sub_data['id'],
-            transaction_type: stripe_sub_data['status'],
-            amount: stripe_sub_data['plan']['amount'].to_i * 0.01,
-            currency_id: Currency.get_by_iso_code(stripe_sub_data['plan']['currency']),
+            stripe_transaction_guid: stripe_sub_data[:id],
+            transaction_type: stripe_sub_data[:status],
+            amount: stripe_sub_data[:plan][:amount].to_i * 0.01,
+            currency_id: Currency.get_by_iso_code(stripe_sub_data[:plan][:currency].upcase).id,
             alarm: 1,
-            live_mode: 1,
-            original_data: stripe_sub_data,
+            live_mode: (Rails.env.production? ? true : false),
+            original_data: stripe_sub_data.to_hash,
             subscription_payment_card_id: 1
     )
   end

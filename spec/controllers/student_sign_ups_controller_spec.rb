@@ -1,14 +1,36 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'stripe_mock'
 
 RSpec.describe StudentSignUpsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:subscription_plan) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user,
-                        subscription_attributes: [subscription_plan_id: subscription_plan.id,
-                                                  stripe_token: 'abc123']) }
+  #### Needed for Stripe-Ruby-Mocks
+  let(:stripe_helper) { StripeMock.create_test_helper }
+  let(:card_params) { { last4: '4242', exp_mth: 12, exp_year: 2019 } }
+  let(:stripe_card_token) { stripe_helper.generate_card_token(card_params) }
+  before { StripeMock.start }
+  after { StripeMock.stop }
+
+  #### Generic pre-set data
+  let(:subscription_plan) { FactoryGirl.create(:student_subscription_plan) }
+  let(:stripe_subscription_plan) { plan = stripe_helper.create_plan(
+                             id: subscription_plan.id,
+                             amount: (subscription_plan.price * 100).to_i);
+                             subscription_plan.stripe_guid = plan.id;
+                             subscription_plan.save; subscription_plan.reload!; subscription_plan
+  }
+
+  let!(:valid_params) { {email: 'new-user@example.com',
+                         first_name: 'Joe', last_name: 'Smith', locale: 'en',
+                         password: '123123123', password_confirmation: '123123123',
+                         country_id: 1, user_group_id: 1,
+                         subscriptions_attributes: [
+                              subscription_plan_id: subscription_plan.id,
+                              stripe_token: stripe_card_token
+                         ]
+  } }
   let!(:invalid_params) { FactoryGirl.attributes_for(:individual_student_user, email: '') }
 
   context 'Not logged in' do

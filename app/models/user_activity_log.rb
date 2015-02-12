@@ -25,7 +25,7 @@
 class UserActivityLog < ActiveRecord::Base
 
   include LearnSignalModelExtras
-  serialize :params
+  serialize :params, Hash
 
   # attr-accessible
   attr_accessible :user_id, :session_guid, :signed_in, :original_uri, :controller_name,
