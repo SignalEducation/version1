@@ -136,10 +136,6 @@ class ApplicationController < ActionController::Base
             action_name,              request.filtered_parameters,
             request.remote_ip,        request.env['HTTP_USER_AGENT']
     )
-    Rails.logger.debug '*'* 100
-    Rails.logger.debug request.env['HTTP_USER_AGENT']
-    Rails.logger.debug '*'* 100
-
   end
 
 
