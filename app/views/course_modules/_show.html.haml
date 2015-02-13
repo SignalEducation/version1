@@ -27,6 +27,8 @@
       .col-sm-12
         %p
           =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip'), class: 'btn btn-info btn-xs'
+          -if @course_module.destroyable?
+            =link_to t('views.general.delete'), @course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
 
 .row
   .col-sm-12
