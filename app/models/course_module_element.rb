@@ -103,7 +103,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.course_module_element_video.nil? && self.course_module_element_quiz.nil? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty?
+    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty? && !self.active
   end
 
   def my_position_among_siblings
@@ -149,9 +149,9 @@ class CourseModuleElement < ActiveRecord::Base
 
   def self.nested_resource_is_blank?(attributes)
     attributes['name'].blank? &&
-            attributes['description'].blank? &&
-            attributes['upload'].blank? &&
-            attributes['the_url'].blank?
+    attributes['description'].blank? &&
+    attributes['upload'].blank? &&
+    attributes['the_url'].blank?
   end
 
 end

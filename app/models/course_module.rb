@@ -104,7 +104,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty? && self.student_exam_tracks.empty?
+    !self.active && self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty? && self.student_exam_tracks.empty?
   end
 
   def full_name

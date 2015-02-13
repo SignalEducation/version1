@@ -27,6 +27,8 @@
       .col-sm-12
         %p
           =link_to t('views.general.edit'), edit_course_module_url(id: @course_module.id), title: t('views.general.edit_tooltip'), class: 'btn btn-info btn-xs'
+          -if @course_module.destroyable?
+            =link_to t('views.general.delete'), @course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
 
 .row
   .col-sm-12
@@ -55,7 +57,7 @@
                 =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-xs btn-info'
               -else
                 .label.label-warning=t('views.course_modules.show.add_more_questions')
-              -if cme.destroyable? && !cme.active
+              -if cme.destroyable?
                 =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
             %td
               %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
