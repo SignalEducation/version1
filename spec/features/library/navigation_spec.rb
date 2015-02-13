@@ -30,7 +30,6 @@ describe 'User navigating through the library:' do
     expect(page).to have_content 'Institute 2'.upcase
     expect(page).to have_content 'Lorem Ipsum'.upcase
     expect(page).to have_content 'Qualification 3'
-    binding.pry
 
   end
 
