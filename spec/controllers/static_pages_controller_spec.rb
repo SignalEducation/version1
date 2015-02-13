@@ -697,12 +697,12 @@ describe StaticPagesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as it is current' do
-        delete :destroy, id: static_page_2.id
+        delete :destroy, id: static_page_1.id
         expect_delete_error_with_model('static_page', static_pages_url)
       end
 
       it 'should be OK as it is just an ongoing page' do
-        delete :destroy, id: static_page_1.id
+        delete :destroy, id: static_page_2.id
         expect_delete_success_with_model('static_page', static_pages_url)
       end
     end
@@ -791,12 +791,12 @@ describe StaticPagesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as still live' do
-        delete :destroy, id: static_page_2.id
+        delete :destroy, id: static_page_1.id
         expect_delete_error_with_model('static_page', static_pages_url)
       end
 
       it 'should be OK as it is just an ongoing page' do
-        delete :destroy, id: static_page_1.id
+        delete :destroy, id: static_page_2.id
         expect_delete_success_with_model('static_page', static_pages_url)
       end
     end

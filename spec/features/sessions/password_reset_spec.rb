@@ -30,7 +30,7 @@ describe 'The password reset process,', type: :feature do
 
     scenario 'attempt to log in in navbar then reset password' do
       visit dashboard_path
-      click_link('#nav-login')
+      click_link('nav-login')
       within('#login_form') do
         fill_in '#hidden-email' , with: individual_student_user.email
         fill_in '#hidden-password', with: 'abc'

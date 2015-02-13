@@ -155,7 +155,7 @@ describe CourseModuleElementsController, type: :controller do
     describe "DELETE 'destroy'" do
 
       before(:each) do
-        x = course_module_element_quiz_1.id
+        x = course_module_element_quiz_1_1.id
       end
 
       describe "DELETE 'destroy'" do
@@ -463,7 +463,7 @@ describe CourseModuleElementsController, type: :controller do
     describe "DELETE 'destroy'" do
 
       before(:each) do
-        x = course_module_element_quiz_1.id
+        x = course_module_element_quiz_1_1.id
       end
 
       it 'should be ERROR as children exist' do
