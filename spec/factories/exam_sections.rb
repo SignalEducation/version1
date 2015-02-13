@@ -20,11 +20,11 @@ FactoryGirl.define do
     exam_level_id         { ExamLevel.first.try(:id) || FactoryGirl.create(:exam_level).id }
     sequence(:sorting_order) {|n| n * 10}
 
-    factory :active_exam_level do
+    factory :active_exam_section do
       active              true
     end
 
-    factory :inactive_exam_level do
+    factory :inactive_exam_section do
       active              false
     end
   end

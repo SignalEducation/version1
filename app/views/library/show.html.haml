@@ -39,9 +39,9 @@
                         =link_to grand_child.name, library_special_link(grand_child)
                         -if grand_child.class == CourseModuleElement
                           -if grand_child.is_video
-                            %span.glyphicon.glyphicon-check
-                          -else
                             %span.glyphicon.glyphicon-play
+                          -else
+                            %span.glyphicon.glyphicon-check
                       .col-sm-4
                         .text-right
                           -if grand_child.class == CourseModuleElement
@@ -71,7 +71,7 @@
   -if @subject_areas.size > 1
     .col-sm-3
       %h3.no-top-gap=t('views.subject_areas.index.h1')
-      .well.well-sm
+      .well.well-sm#subject-area-panel
         %ul.nav.nav-pills.nav-stacked
           -@subject_areas.all_active.all_in_order.each do |subject_area|
             %li{role: 'presentation', class: (@subject_area.id == subject_area.id ? 'active' : '')}
