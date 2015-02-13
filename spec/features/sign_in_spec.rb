@@ -5,7 +5,7 @@ describe 'The sign in process.', type: :feature do
 
   include_context 'users_and_groups_setup'
 
-  context 'Logged in as a individual_user:' do
+  context 'logged in as a individual_user:' do
 
     before(:each) do
       activate_authlogic
@@ -110,18 +110,19 @@ describe 'The sign in process.', type: :feature do
       page.has_selector?('form_for')
     end
 
-    scenario 'with correct details and then sign out' do
-      visit sign_in_path
-      within('.well.well-sm') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: corporate_student_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: corporate_student_user.password
-        click_button I18n.t('views.general.go')
-      end
-      expect(page).to have_content 'Welcome back!'
-      click_link('navbar-cog')
-      click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
-    end
+    #TODO When the corporate_student_user dashboard partial is built this needs to test for it.
+    #scenario 'with correct details and then sign out' do
+    #  visit sign_in_path
+    #  within('.well.well-sm') do
+    #    fill_in I18n.t('views.user_sessions.form.email'), with: corporate_student_user.email
+    #    fill_in I18n.t('views.user_sessions.form.password'), with: corporate_student_user.password
+    #    click_button I18n.t('views.general.go')
+    #  end
+    #  expect(page).to have_content 'Welcome back!'
+    #  click_link('navbar-cog')
+    #  click_link('Sign out')
+    #  expect(page).to have_content 'You are now logged out '
+    #end
 
   end
 
@@ -183,8 +184,8 @@ describe 'The sign in process.', type: :feature do
       visit sign_in_path
       click_link('#nav-login')
       within('#navbar') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: tutor_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
+        fill_in '#hidden-email', with: tutor_user.email
+        fill_in '#hidden-password', with: tutor_user.password
         click_button I18n.t('views.general.go')
       end
       sleep 2
@@ -263,8 +264,8 @@ describe 'The sign in process.', type: :feature do
       visit sign_in_path
       click_link('#nav-login')
       within('#navbar') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: content_manager_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
+        fill_in '#hidden-email', with: content_manager_user.email
+        fill_in '#hidden-password', with: content_manager_user.password
         click_button I18n.t('views.general.go')
       end
       sleep 2
@@ -321,7 +322,7 @@ describe 'The sign in process.', type: :feature do
       page.has_selector?('form_for')
     end
 
-    #TODO When the blogger dashboard is built this needs to test for it.
+    #TODO When the blogger dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
     #  within('.well.well-sm') do
@@ -377,7 +378,7 @@ describe 'The sign in process.', type: :feature do
       page.has_selector?('form_for')
     end
 
-    #TODO When the corporate customer dashboard is built this needs to test for it.
+    #TODO When the corporate customer dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
     #  within('.well.well-sm') do
@@ -433,7 +434,7 @@ describe 'The sign in process.', type: :feature do
       page.has_selector?('form_for')
     end
 
-    #TODO When the forum manager dashboard is built this needs to test for it.
+    #TODO When the forum manager dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
     #  within('.well.well-sm') do
@@ -509,9 +510,9 @@ describe 'The sign in process.', type: :feature do
     scenario 'with correct details and then sign out from the navbar' do
       visit sign_in_path
       click_link('#nav-login')
-      within('#navbar') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: admin_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: admin_user.password
+      within('#login_form') do
+        fill_in '#hidden-email', with: admin_user.email
+        fill_in '#hidden-password', with: admin_user.password
         click_button I18n.t('views.general.go')
       end
       expect(page).to have_content 'Welcome back!'

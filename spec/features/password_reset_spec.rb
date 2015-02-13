@@ -5,8 +5,6 @@ describe 'The password reset process,', type: :feature do
 
   include_context 'users_and_groups_setup'
 
-  context 'trying to log in as an individual_user:' do
-
     before(:each) do
       activate_authlogic
       x = individual_student_user.id
@@ -51,10 +49,5 @@ describe 'The password reset process,', type: :feature do
       end
       expect(page).to have_content('Home')
     end
-  end
-
-  context 'trying to log in as an individual_user:' do
-
-  end
 
 end
