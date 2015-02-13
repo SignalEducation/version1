@@ -6,8 +6,8 @@ describe StaticPagesController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for static_page_1
-  let!(:static_page_1) { FactoryGirl.create(:static_page, publish_from: Time.now, publish_to: nil) }
-  let!(:static_page_2) { FactoryGirl.create(:static_page) }
+  let!(:static_page_1) { FactoryGirl.create(:static_page, publish_from: Time.now, publish_to: 1.weeks.from_now) }
+  let!(:static_page_2) { FactoryGirl.create(:static_page, publish_to: nil) }
   let!(:valid_params) { FactoryGirl.attributes_for(:static_page) }
 
   context 'Not logged in: ' do

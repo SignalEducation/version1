@@ -98,7 +98,7 @@ class StaticPage < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !(self.publish_from < Proc.new{Time.now}.call && (self.publish_to == nil || self.publish_to > Proc.new{Time.now}.call))
+    self.publish_to == nil || self.publish_to < Proc.new{Time.now}.call
   end
 
   protected
