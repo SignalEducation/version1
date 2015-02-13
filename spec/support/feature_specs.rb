@@ -5,7 +5,13 @@
 ##
 
 def sign_in_via_navbar(user)
-
+  visit root_path
+  within('.nav #login_form') do
+    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
+    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
+    click_button I18n.t('views.general.go')
+  end
+  expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
 end
 
 def sign_in_via_sign_in_page(user)

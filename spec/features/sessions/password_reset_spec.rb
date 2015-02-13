@@ -28,19 +28,16 @@ describe 'The password reset process,', type: :feature do
       expect(page).to have_content('Home')
     end
 
-    scenario 'attempt to log in in navbar then reset password' do
+    scenario 'attempt to log in in navbar then reset password', js: true do
       visit dashboard_path
       click_link('nav-login')
-      within('#login_form') do
-        fill_in '#hidden-email' , with: individual_student_user.email
-        fill_in '#hidden-password', with: 'abc'
+      within('.nav #login_form') do
+        fill_in 'user_session_email' , with: individual_student_user.email
+        fill_in 'user_session_password', with: 'abc'
         click_button I18n.t('views.general.go')
       end
       expect(page).to have_content 'Password is not valid'
-      click_link('#nav-login')
-      within('#login_form') do
-        click_link('#hidden-password-link')
-      end
+      click_link(I18n.t('views.user_sessions.form.forgot_password'))
       page.has_css?('.page-header', text: I18n.t('views.user_sessions.form.forgot_password'))
       page.has_css?('.well.well-sm', text: I18n.t('views.user_password_resets.new.paragraph_1'))
       within('.well.well-sm') do

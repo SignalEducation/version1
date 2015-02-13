@@ -180,23 +180,21 @@ describe 'The sign in process.', type: :feature do
       expect(page).to have_content 'You are now logged out '
     end
 
-    scenario 'with correct details and then sign out from the navbar' do
-      visit sign_in_path
-      click_link('#nav-login')
-      within('#navbar') do
-        fill_in '#hidden-email', with: tutor_user.email
-        fill_in '#hidden-password', with: tutor_user.password
+    scenario 'with correct details and then sign out from the navbar', js: false do
+      visit root_path
+      click_link('nav-login')
+      within('.navbar #login_form') do
+        fill_in 'user_session_email', with: tutor_user.email
+        fill_in 'user_session_password', with: tutor_user.password
         click_button I18n.t('views.general.go')
       end
-      sleep 2
       expect(page).to have_content 'Welcome back!'
       within('#tutor-accordion') do
-        expect(page).to have_content I18n.t('views.user_groups.form.tutor')
+        expect(page).to have_content maybe_upcase I18n.t('views.user_groups.form.tutor')
       end
-      expect(page).to have_content I18n.t('views.general.tools')
+      expect(page).to have_content maybe_upcase I18n.t('views.general.tools')
       click_link(I18n.t('views.general.tools'))
-      expect(page).to have_content I18n.t('views.layouts.navigation.course_content')
-      expect(page).to_not have_content I18n.t('views.subject_areas.index.h1')
+      expect(page).to have_content maybe_upcase I18n.t('views.layouts.navigation.course_content')
       expect(page).to_not have_content I18n.t('views.subject_areas.index.h1')
       click_link('navbar-cog')
       click_link('Sign out')
@@ -204,7 +202,7 @@ describe 'The sign in process.', type: :feature do
     end
 
   end
-  
+
   context 'Logged in as a content_manager_user:' do
 
     before(:each) do
@@ -261,14 +259,13 @@ describe 'The sign in process.', type: :feature do
     end
 
     scenario 'with correct details and then sign out from the navbar' do
-      visit sign_in_path
-      click_link('#nav-login')
-      within('#navbar') do
-        fill_in '#hidden-email', with: content_manager_user.email
-        fill_in '#hidden-password', with: content_manager_user.password
+      visit root_path
+      click_link('nav-login')
+      within('.nav #login_form') do
+        fill_in 'user_session_email', with: content_manager_user.email
+        fill_in 'user_session_password', with: content_manager_user.password
         click_button I18n.t('views.general.go')
       end
-      sleep 2
       expect(page).to have_content 'Welcome back!'
       expect(page).to have_content I18n.t('views.dashboard.content_manager.see_all_static_pages')
       expect(page).to have_content I18n.t('views.general.tools')
@@ -281,7 +278,7 @@ describe 'The sign in process.', type: :feature do
     end
 
   end
-  
+
   context 'Logged in as a blogger_user:' do
 
     before(:each) do
@@ -337,7 +334,7 @@ describe 'The sign in process.', type: :feature do
     #end
 
   end
-  
+
   context 'Logged in as a corporate_customer_user:' do
 
     before(:each) do
@@ -393,7 +390,7 @@ describe 'The sign in process.', type: :feature do
     #end
 
   end
-  
+
   context 'Logged in as a forum_manager_user:' do
 
     before(:each) do
@@ -449,7 +446,7 @@ describe 'The sign in process.', type: :feature do
     #end
 
   end
-  
+
   context 'Logged in as a admin_user:' do
 
     before(:each) do
@@ -508,11 +505,11 @@ describe 'The sign in process.', type: :feature do
     end
 
     scenario 'with correct details and then sign out from the navbar' do
-      visit sign_in_path
-      click_link('#nav-login')
-      within('#login_form') do
-        fill_in '#hidden-email', with: admin_user.email
-        fill_in '#hidden-password', with: admin_user.password
+      visit root_path
+      click_link('nav-login')
+      within('.nav #login_form') do
+        fill_in 'user_session_email', with: admin_user.email
+        fill_in 'user_session_password', with: admin_user.password
         click_button I18n.t('views.general.go')
       end
       expect(page).to have_content 'Welcome back!'
@@ -528,5 +525,5 @@ describe 'The sign in process.', type: :feature do
     end
 
   end
-  
+
 end
