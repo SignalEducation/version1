@@ -16,5 +16,5 @@
             .panel-body
               =render partial: "#{dashboard_type}"
 
--else
+-elsif @dashboard_type.count == 1
   =render partial: "dashboard/#{@dashboard_type.first}"

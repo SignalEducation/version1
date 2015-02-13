@@ -32,4 +32,5 @@ shared_context 'users_and_groups_setup' do
   let(:admin_user) { FactoryGirl.create(:admin_user,
                                 user_group_id: site_admin_user_group.id) }
 
+  let(:user_list) { [individual_student_user, corporate_student_user, tutor_user, content_manager_user, blogger_user, corporate_customer_user, forum_manager_user, admin_user] }
 end

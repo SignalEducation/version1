@@ -12,24 +12,17 @@ describe 'User changing their email' do
     activate_authlogic
   end
 
-  scenario 'when logged in as an individual_student_user' do
-    visit sign_in_path
-    within('.well.well-sm') do
-      fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
-      fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
-      click_button I18n.t('views.general.go')
+  scenario 'when logged in as one of the users', js: false do
+    user_list.each do |this_user|
+      sign_in_via_sign_in_page(this_user)
+      edit_my_profile
+      fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content I18n.t('controllers.users.update.flash.success')
+      expect(page).to have_content maybe_upcase I18n.t('views.users.show.h1')
+      sign_out
+      print '>'
     end
-    expect(page).to have_content 'Welcome back!'
-
-    click_link('navbar-cog')
-    click_link(I18n.t('views.users.show.h1'))
-    expect(page).to have_content I18n.t('views.users.show.h1')
-    click_link I18n.t('views.general.edit')
-    expect(page).to have_content I18n.t('views.users.edit.h1')
-    fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
-    click_button(I18n.t('views.general.save'))
-    expect(page).to have_content 'User details have been updated successfully'
-    expect(page).to have_content I18n.t('views.users.show.h1')
   end
 
 end

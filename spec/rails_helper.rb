@@ -3,11 +3,12 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
-require 'factory_girl_rails' # suggested by stack overflow
+require 'factory_girl_rails'       # suggested by stack overflow
 #require 'rspec/autorun'
-require 'authlogic/test_case' # required for Authlogic
-include Authlogic::TestCase   # required for Authlogic
-require 'support/dry_specs'   # our handy way of doing lots of repetitive tests
+require 'authlogic/test_case'     # required for Authlogic
+include Authlogic::TestCase       # required for Authlogic
+require 'support/dry_specs'       # our handy way of doing lots of repetitive tests
+require 'support/feature_specs'   # shortcuts for our feature tests
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 require 'database_cleaner'
