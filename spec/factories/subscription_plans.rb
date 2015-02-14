@@ -31,6 +31,15 @@ FactoryGirl.define do
     factory :student_subscription_plan do
       available_to_students     true
       available_to_corporates   false
+      factory :student_subscription_plan_m do # monthly
+        payment_frequency_in_months 1
+      end
+      factory :student_subscription_plan_q do # quarterly
+        payment_frequency_in_months 3
+      end
+      factory :student_subscription_plan_y do # yearly
+        payment_frequency_in_months 12
+      end
     end
 
     factory :corporate_subscription_plan do
