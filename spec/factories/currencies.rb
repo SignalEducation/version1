@@ -35,6 +35,21 @@ FactoryGirl.define do
       iso_code                'EUR'
       leading_symbol          '€'
     end
+
+    factory :usd do
+      active                  true
+      name                    'US Dollar'
+      iso_code                'USD'
+      leading_symbol          '$'
+    end
+
+    factory :gbp do
+      active                  true
+      name                    'Pounds Sterling'
+      iso_code                'GBP'
+      leading_symbol          '£'
+      trailing_symbol         'p'
+    end
   end
 
 end

@@ -13,15 +13,6 @@ RSpec.describe StudentSignUpsController, type: :controller do
   before { StripeMock.start }
   after { StripeMock.stop }
 
-  #### Generic pre-set data
-  let(:subscription_plan) { FactoryGirl.create(:student_subscription_plan) }
-  let(:stripe_subscription_plan) { plan = stripe_helper.create_plan(
-                             id: subscription_plan.id,
-                             amount: (subscription_plan.price * 100).to_i);
-                             subscription_plan.stripe_guid = plan.id;
-                             subscription_plan.save; subscription_plan.reload!; subscription_plan
-  }
-
   let!(:valid_params) { {email: 'new-user@example.com',
                          first_name: 'Joe', last_name: 'Smith', locale: 'en',
                          password: '123123123', password_confirmation: '123123123',
