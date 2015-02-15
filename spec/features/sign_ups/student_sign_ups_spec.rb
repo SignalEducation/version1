@@ -110,6 +110,7 @@ describe 'The student sign-up process', type: :feature do
     click_button I18n.t('views.student_sign_ups.form.submit')
     sleep 1
     if expect_sign_up
+      sleep 1
       expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
     else
       expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')

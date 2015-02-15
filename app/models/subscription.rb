@@ -81,8 +81,8 @@ class Subscription < ActiveRecord::Base
             plan: self.subscription_plan.try(:stripe_guid),
             email: self.user.try(:email)
     )
+    # self.subscription_plan_id is set in the UI
 
-    #self.subscription_plan_id is set in the UI
     self.complementary = false
     if stripe_customer && stripe_customer.try(:subscriptions).try(:data).try(:first)
       self.stripe_guid = stripe_customer.subscriptions.data[0].id
