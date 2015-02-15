@@ -19,8 +19,11 @@ class StudentSignUpsController < ApplicationController
       redirect_to personal_sign_up_complete_url
     else
       extra_needed = nil
-      @user.errors.each do |field, _|
-        if field.to_s.include?('.')
+      @user.errors.dup.each do |field, message|
+        if field.to_s.include?('credit_card')
+          @user.errors.delete(field)
+          @user.errors.add(:base, message)
+        elsif field.to_s.include?('.')
           @user.errors.delete(field)
           extra_needed = true
         end
