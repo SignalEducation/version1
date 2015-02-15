@@ -9,7 +9,7 @@
             %p.lead
               =t('views.student_sign_ups.new.lead')
 
-          =render partial: 'layouts/error_messages', locals: {thing: @user, message: nil}
+          =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.student_sign_ups.form.error_panel_caption')}
           .form-group
             .col-sm-4.col-sm-offset-2
               =f.label :first_name, t('views.users.form.first_name')
@@ -39,7 +39,7 @@
           %hr/
           .row
             -@subscription_plans.each do |plan|
-              .col-sm-4.currency.subscription-outer-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
+              .col-sm-4.currency.subscription-outer-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
                 %h3.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                 .well.well-sm.text-center.subscription-panel{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
                   %p

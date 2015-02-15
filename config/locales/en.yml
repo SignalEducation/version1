@@ -1067,6 +1067,7 @@ en:
           a6: Half-yearly
           a12: Yearly
         submit: Sign Up Now
+        error_panel_caption: "prevented your Sign-Up from being completed:"
 
       new:
         h1: Sign Up for Student access
