@@ -99,6 +99,9 @@ class Subscription < ActiveRecord::Base
     else
       true
     end
+  rescue => e
+    errors.add(:credit_card, e.message)
+    return false
   end
 
   def create_a_subscription_transaction
