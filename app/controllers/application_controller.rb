@@ -117,7 +117,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  #### Session GUIDs and user logging
+  #### Session GUIDs and user tracking
 
   def current_session_guid
     cookies.permanent.encrypted[:session_guid]
@@ -126,6 +126,8 @@ class ApplicationController < ActionController::Base
 
   def set_session_guid
     cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
+    cookies.encrypted[:session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    cookies.encrypted[:after_sign_up_redirect_to] ||= {value: nil, httponly: true}
     @mathjax_required = false # default
   end
 
@@ -134,7 +136,9 @@ class ApplicationController < ActionController::Base
             current_user.try(:id),    current_session_guid,
             request.filtered_path,    controller_name,
             action_name,              request.filtered_parameters,
-            request.remote_ip,        request.env['HTTP_USER_AGENT']
+            request.remote_ip,        request.env['HTTP_USER_AGENT'],
+            cookies.encrypted[:session_landing_url],
+            cookies.permanent.encrypted[:after_sign_up_redirect_to]
     )
   end
 
