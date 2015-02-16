@@ -94,7 +94,7 @@ def enter_user_details(first_name, last_name, email=nil, country)
   fill_in('user_password_confirmation', with: temp_password)
 end
 
-def student_picks_a_subscription_pllan(currency, payment_frequency)
+def student_picks_a_subscription_plan(currency, payment_frequency)
   expect([1,3,12].include?(payment_frequency)).to eq(true)
   find("#sub-#{currency.iso_code}-#{payment_frequency}").click
 end

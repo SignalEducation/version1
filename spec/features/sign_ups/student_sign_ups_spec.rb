@@ -59,7 +59,7 @@ describe 'The student sign-up process', type: :feature do
     end
   end
 
-  #### The un-happy path
+  #### The unhappy path
 
   describe 'sign-up with problems:' do
     describe 'bad user details -' do
@@ -105,7 +105,7 @@ describe 'The student sign-up process', type: :feature do
   def student_sign_up_as(user_first_name, user_second_name, user_email, card_type, currency, country, subscription_months, expect_sign_up)
     enter_user_details(user_first_name, user_second_name, user_email, country)
     expect(page).to have_content currency.leading_symbol
-    student_picks_a_subscription_pllan(currency, subscription_months)
+    student_picks_a_subscription_plan(currency, subscription_months)
     enter_credit_card_details(card_type)
     click_button I18n.t('views.student_sign_ups.form.submit')
     sleep 1
