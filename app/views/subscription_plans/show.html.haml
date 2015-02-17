@@ -9,6 +9,9 @@
   .col-sm-12
     %table.table.table-bordered
       %tr
+        %td.col-sm-4=t('views.subscription_plans.form.name')
+        %td.col-sm-8=@subscription_plan.name
+      %tr
         %td.col-sm-4=t('views.subscription_plans.form.available_to_students')
         %td.col-sm-8=tick_or_cross(@subscription_plan.available_to_students)
       %tr
@@ -43,8 +46,14 @@
           Stripe Details
       -Stripe::Plan.retrieve(@subscription_plan.stripe_guid).to_hash.each do |attr_key, attr_value|
         %tr
-          %td.col-sm-4=attr_key.to_s
-          %td.col-sm-8=attr_value.to_s
+          %td.col-sm-4=attr_key.to_s.titleize
+          %td.col-sm-8
+            -if attr_key.to_s == 'created'
+              =Time.at(attr_value).to_s(:standard)
+            -elsif attr_key.to_s == 'amount'
+              =attr_value / 100.0
+            -else
+              =attr_value.to_s
     %p
       =link_to sanitize('&larr; ' + t('views.subscription_plans.index.h1')), subscription_plans_url
       |

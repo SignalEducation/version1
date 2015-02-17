@@ -22,7 +22,7 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def create
-    @subscription_plan = SubscriptionPlan.new(allowed_params)
+    @subscription_plan = SubscriptionPlan.new(create_params)
     if @subscription_plan.save
       flash[:success] = I18n.t('controllers.subscription_plans.create.flash.success')
       redirect_to subscription_plans_url
@@ -32,7 +32,7 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def update
-    if @subscription_plan.update_attributes(allowed_params)
+    if @subscription_plan.update_attributes(update_params)
       flash[:success] = I18n.t('controllers.subscription_plans.update.flash.success')
       redirect_to subscription_plans_url
     else
@@ -61,8 +61,12 @@ class SubscriptionPlansController < ApplicationController
     seo_title_maker(@subscription_plan.try(:id).to_s)
   end
 
-  def allowed_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days)
+  def create_params
+    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name)
+  end
+
+  def update_params
+    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name)
   end
 
 end

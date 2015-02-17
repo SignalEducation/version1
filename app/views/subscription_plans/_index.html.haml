@@ -2,7 +2,10 @@
 %table.table.table-striped.table-bordered
   %thead
     %tr
-      %th=t('views.subscription_plans.form.price')
+      %th
+        =t('views.subscription_plans.form.name')
+        %br/
+        =t('views.subscription_plans.form.price')
       %th=t('views.subscription_plans.form.trial_period_in_days')
       %th=t('views.subscription_plans.form.all_you_can_eat')
       %th=t('views.subscription_plans.form.available_from')
@@ -19,6 +22,8 @@
 
       %tr{id: subscription_plan.id, class: subscription_plan.age_status}
         %td
+          =link_to(subscription_plan.name, subscription_plan, title: t('views.general.tooltips.click_to_view'))
+          %br/
           =link_to(t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription_plan.payment_frequency_in_months}"), subscription_plan, title: t('views.general.view_tooltip'))
           =link_to(number_in_local_currency(subscription_plan.price, subscription_plan.currency_id), subscription_plan, title: t('views.general.view_tooltip'))
 

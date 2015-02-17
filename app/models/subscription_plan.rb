@@ -15,6 +15,7 @@
 #  trial_period_in_days        :integer          default(0)
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  name                        :string(255)
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -25,7 +26,7 @@ class SubscriptionPlan < ActiveRecord::Base
   attr_accessible :available_to_students, :available_to_corporates,
                   :all_you_can_eat, :payment_frequency_in_months,
                   :currency_id, :price, :available_from, :available_to,
-                  :trial_period_in_days
+                  :trial_period_in_days, :name
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
@@ -35,6 +36,7 @@ class SubscriptionPlan < ActiveRecord::Base
   has_many :subscriptions
 
   # validation
+  validates :name, presence: true, uniqueness: true, case_sensitive: false
   validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -71,6 +73,7 @@ class SubscriptionPlan < ActiveRecord::Base
       'success' # live
     end
   end
+
   def destroyable?
     self.subscriptions.empty?
   end
@@ -84,23 +87,34 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    stripe_plan = Stripe::Plan.create(
-            amount: (self.price * 100).to_i,
-            interval: 'month',
-            interval_count: self.payment_frequency_in_months,
-            trial_period_days: self.trial_period_in_days,
-            name: 'LearnSignal ' + I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{self.payment_frequency_in_months}"),
-            statement_description: 'LearnSignal',
-            currency: self.currency.iso_code.downcase,
-            id: Rails.env + '-' + ApplicationController::generate_random_code(20)
-    )
+    if self.valid?
+      stripe_plan = Stripe::Plan.create(
+              amount: (self.price.to_f * 100).to_i,
+              interval: 'month',
+              interval_count: self.payment_frequency_in_months,
+              trial_period_days: self.trial_period_in_days,
+              name: 'LearnSignal ' + self.name,
+              statement_description: 'LearnSignal' + self.name,
+              currency: self.currency.try(:iso_code).try(:downcase),
+              id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
 
-    self.stripe_guid = stripe_plan.id
+      self.stripe_guid = stripe_plan.id
+    else
+      false
+    end
+  rescue => e
+    errors.add(:stripe, e.message)
+    false
   end
 
   def update_on_stripe_platform
-    # todo stripe integration
-    # self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
+    stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
+    stripe_plan.name = 'Learnsignal ' + self.name
+    stripe_plan.save
+  rescue => e
+    errors.add(:stripe, e.message)
+    false
   end
 
 end
