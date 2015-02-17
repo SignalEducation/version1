@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :set_locale
-  before_action :set_session_guid
+  before_action :set_session_stuff
   before_action :log_user_activity
 
   helper_method :current_user_session, :current_user
@@ -124,10 +124,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_session_guid
 
-  def set_session_guid
+  def set_session_stuff
     cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
-    cookies.encrypted[:session_landing_url] ||= {value: request.filtered_path, httponly: true}
-    cookies.encrypted[:after_sign_up_redirect_to] ||= {value: nil, httponly: true}
+    cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
     @mathjax_required = false # default
   end
 
@@ -137,8 +138,9 @@ class ApplicationController < ActionController::Base
             request.filtered_path,    controller_name,
             action_name,              request.filtered_parameters,
             request.remote_ip,        request.env['HTTP_USER_AGENT'],
-            cookies.encrypted[:session_landing_url],
-            cookies.permanent.encrypted[:after_sign_up_redirect_to]
+            cookies.encrypted[:first_session_landing_url],
+            cookies.encrypted[:latest_session_landing_url],
+            cookies.permanent.encrypted[:post_sign_up_redirect_path]
     )
   end
 
