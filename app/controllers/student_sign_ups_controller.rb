@@ -8,8 +8,7 @@ class StudentSignUpsController < ApplicationController
     # this is the 'thank you for registering' page
     @user = User.find_by_guid(params[:id])
     if @user.subscriptions.count == 1
-
-
+      @subscription = @user.subscriptions.first
     else
       redirect_to profile_url
     end
@@ -28,7 +27,7 @@ class StudentSignUpsController < ApplicationController
       UserSession.create(@user)
       assign_anonymous_logs_to_user(@user.id)
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
-      redirect_to personal_sign_up_complete_url
+      redirect_to personal_sign_up_complete_url(@user.guid)
     else
       extra_needed = nil
       @user.errors.dup.each do |field, message|

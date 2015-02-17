@@ -42,6 +42,7 @@
               .col-sm-4.currency.subscription-outer-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
                 %h3.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                 .well.well-sm.text-center.subscription-panel{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
+                  %p=plan.name
                   %p
                     =number_in_local_currency(plan.price, plan.currency_id)
                     =t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")

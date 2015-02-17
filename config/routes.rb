@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit'
 
     # special routes
-    get 'personal_sign_up_complete', to: 'users#show', as: :personal_sign_up_complete
+    get 'personal_sign_up_complete/:id', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
     get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
@@ -82,7 +82,7 @@ Rails.application.routes.draw do
     post 'qualifications/filter', to: 'qualifications#index', as: :qualifications_filter
     resources :qualifications
     get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
-    resources :student_sign_ups, only: [:new, :create]
+    resources :student_sign_ups, only: [:show, :new, :create]
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]
     resources :static_pages

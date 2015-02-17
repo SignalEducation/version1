@@ -1080,6 +1080,25 @@ en:
           subscription_text: Choose a subscription by clicking it
           payment: Enter your payment details
 
+      show:
+        h1: "Thanks for joining us!"
+        sub-head: "We think you're going to love learning with us!"
+        h2: "Your subscription details"
+        your_chosen_plan: "Your chosen plan"
+        free_trial_period: "Free trial period"
+        day: day
+        to: to
+        your_first_payment_will_be_on: "Your first payment will be on"
+        your_next_payment_will_be_on: "Your next payment will be on"
+        price: Price
+        every: every
+        month: month
+        your_card_details: "Your card details"
+        expires: expires
+        if_you_have_any_questions: "If you have any questions about your subscription,"
+        please_get_in_touch: 'please get in touch'
+        lets_get_started: "Let's Get Started"
+
     subject_areas:
       form:
         name: Name

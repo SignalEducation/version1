@@ -40,7 +40,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
     describe "POST 'create'" do
       it 'returns http success' do
         post :create, user: valid_params
-        expect_create_success_with_model('user', personal_sign_up_complete_url, I18n.t('controllers.student_sign_ups.create.flash.success'))
+        expect_create_success_with_model('user', personal_sign_up_complete_url(assigns(:user).guid), I18n.t('controllers.student_sign_ups.create.flash.success'))
         expect(Subscription.all.count).to eq(1)
         expect(assigns(:user).subscriptions.count).to eq(1)
       end
