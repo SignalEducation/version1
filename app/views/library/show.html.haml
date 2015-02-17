@@ -23,7 +23,7 @@
               %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
                 =child.name
               =link_to library_special_link(child) do
-                %span.glyphicon.glyphicon-expand
+                %span.glyphicon.glyphicon-expand#expand-icon
               .pull-right
                 =completion_label(child)
             .text-muted

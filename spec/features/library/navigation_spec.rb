@@ -30,7 +30,12 @@ describe 'User navigating through the library:' do
     expect(page).to have_content maybe_upcase 'Institute 2'
     expect(page).to have_content maybe_upcase 'Lorem Ipsum'
     expect(page).to have_content 'Qualification 3'
-
+    find('#expand-icon').click
+    expect(page).to have_content maybe_upcase 'Qualification 3'
+    expect(page).to have_content 'MyString'
+    find_link('MyString').click
+    expect(page).to have_content maybe_upcase 'Course Module 2'
+    expect(page).to have_content 'Course Module Element 3'
   end
 
 end
