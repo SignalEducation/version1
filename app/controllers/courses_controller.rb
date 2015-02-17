@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
     @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
-    @course_module_element ||= @course_module.course_module_elements.all_in_order.all_active.first unless @course_module_jumbo_quiz
+    @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
     if @course_module_element.nil? && @course_module.nil?
       # The URL is out of date or wrong.
