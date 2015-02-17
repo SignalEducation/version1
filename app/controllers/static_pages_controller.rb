@@ -126,6 +126,7 @@ class StaticPagesController < ApplicationController
             :logged_in_required,
             :created_by, :updated_by,
             :show_standard_footer,
+            :post_sign_up_redirect_url,
             static_page_uploads_attributes: [
                     :id,
                     :description,

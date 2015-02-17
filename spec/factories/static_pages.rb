@@ -29,6 +29,7 @@
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  show_standard_footer       :boolean          default(TRUE)
+#  post_sign_up_redirect_url  :string(255)
 #
 
 FactoryGirl.define do
@@ -57,6 +58,7 @@ FactoryGirl.define do
     make_this_page_sticky false
     logged_in_required false
     show_standard_footer true
+    post_sign_up_redirect_url '/en/library/finance'
     factory :landing_page do
       public_url '/'
       body_content "<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"col-sm-12 text-center\">\r\n      <h1>Welcome to Learn Signal</h1>\r\n    </div>\r\n  </div>\r\n</div>"

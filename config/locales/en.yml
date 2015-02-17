@@ -1024,6 +1024,8 @@ en:
         uploads: Uploads
         code_samples: Code Samples
         show_standard_footer: Show the standard footer
+        post_sign_up_redirect_url: "Post sign-up redirect URL"
+        post_sign_up_redirect_url_placeholder: "/en/library/finance"
 
       index:
         h1: Static Pages

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150216152631) do
+ActiveRecord::Schema.define(version: 20150217115607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -391,6 +391,7 @@ ActiveRecord::Schema.define(version: 20150216152631) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "show_standard_footer",       default: true
+    t.string   "post_sign_up_redirect_url"
   end
 
   create_table "student_exam_tracks", force: true do |t|

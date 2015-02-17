@@ -23,6 +23,12 @@
           -else
             =t('views.static_pages.index.ongoing')
       %tr
+        %td.col-sm-4=t('views.static_pages.form.post_sign_up_redirect_url')
+        %td.col-sm-8
+          -if @static_page.post_sign_up_redirect_url
+            =@static_page.post_sign_up_redirect_url
+            =link_to t('views.general.view'), @static_page.post_sign_up_redirect_url, class: 'btn btn-xs btn-info', target: '_blank'
+      %tr
         %td.col-sm-4=t('views.static_pages.form.allow_multiples')
         %td.col-sm-8=tick_or_cross(@static_page.allow_multiples)
       %tr
