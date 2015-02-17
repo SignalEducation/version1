@@ -562,11 +562,17 @@ describe SubscriptionPlansController, type: :controller do
         delete :destroy, id: subscription_plan_1.id
         # expect_delete_success_with_model('subscription_plan', subscription_plans_url)
         expect_delete_error_with_model('subscription_plan', subscription_plans_url)
+        plan = Stripe::Plan.retrieve(subscription_plan_1.stripe_guid)
+        expect(plan.try(:deleted)).not_to eq(true)
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subscription_plan_2.id
         expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+        expect{Stripe::Plan.retrieve(subscription_plan_2.stripe_guid)}.to raise_error { |e|
+                expect(e).to be_a(Stripe::InvalidRequestError)
+                expect(e.message).to eq("No such plan: #{subscription_plan_2.stripe_guid}")
+        }
       end
     end
 

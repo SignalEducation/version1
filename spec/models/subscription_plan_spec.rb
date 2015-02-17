@@ -68,6 +68,7 @@ describe SubscriptionPlan do
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:create_on_stripe_platform).before(:create) }
   it { should callback(:update_on_stripe_platform).before(:update) }
+  it { should callback(:delete_on_stripe_platform).after(:destroy) }
 
   # scopes
   it { expect(SubscriptionPlan).to respond_to(:all_in_order) }
@@ -79,6 +80,7 @@ describe SubscriptionPlan do
   # class methods
 
   # instance methods
+  it { should respond_to(:age_status) }
   it { should respond_to(:destroyable?) }
 
 end

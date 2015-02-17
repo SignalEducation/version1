@@ -52,6 +52,7 @@ class SubscriptionPlan < ActiveRecord::Base
   # callbacks
   before_create :create_on_stripe_platform
   before_update :update_on_stripe_platform
+  after_destroy :delete_on_stripe_platform
 
   # scopes
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
@@ -102,6 +103,16 @@ class SubscriptionPlan < ActiveRecord::Base
       self.stripe_guid = stripe_plan.id
     else
       false
+    end
+  rescue => e
+    errors.add(:stripe, e.message)
+    false
+  end
+
+  def delete_on_stripe_platform
+    if self.destroyable?
+      stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
+      stripe_plan.delete
     end
   rescue => e
     errors.add(:stripe, e.message)
