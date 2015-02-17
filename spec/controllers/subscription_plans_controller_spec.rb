@@ -1,14 +1,22 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'stripe_mock'
 
 describe SubscriptionPlansController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for subscription_plan_1
+  let(:stripe_helper) { StripeMock.create_test_helper }
+  let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
+  let!(:subscription_1) { FactoryGirl.create(:subscription,
+                          subscription_plan_id: subscription_plan_1.id,
+                          stripe_token: stripe_helper.generate_card_token) }
   let!(:subscription_plan_2) { FactoryGirl.create(:corporate_subscription_plan) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
+
+  #before { StripeMock.start }
+  after { StripeMock.stop }
 
   context 'Not logged in: ' do
 
@@ -537,36 +545,34 @@ describe SubscriptionPlansController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: valid_params
+        put :update, id: subscription_plan_1.id, subscription_plan: {name: 'new-name'}
         expect_update_success_with_model('subscription_plan', subscription_plans_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for subscription_plan_2' do
-        put :update, id: subscription_plan_2.id, subscription_plan: valid_params
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_2.id)
+        expect(assigns(:subscription_plan).name).to eq('new-name')
       end
 
       it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {payment_frequency_in_months: ''}
+        put :update, id: subscription_plan_1.id, subscription_plan: {name: nil}
         expect_update_error_with_model('subscription_plan')
         expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
       end
     end
 
-
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subscription_plan_1.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
-        # todo replace the line above with the line below when subscription plans have children
-        # todo expect_delete_error_with_model('subscription_plan', subscription_plans_url)
+        # expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
+        plan = Stripe::Plan.retrieve(subscription_plan_1.stripe_guid)
+        expect(plan.try(:deleted)).not_to eq(true)
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subscription_plan_2.id
         expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+        expect{Stripe::Plan.retrieve(subscription_plan_2.stripe_guid)}.to raise_error { |e|
+                expect(e).to be_a(Stripe::InvalidRequestError)
+                expect(e.message).to eq("No such plan: #{subscription_plan_2.stripe_guid}")
+        }
       end
     end
 

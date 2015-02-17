@@ -1102,6 +1102,8 @@ en:
 
     subscription_plans:
       form:
+        name: Name
+        name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
         available_to_students: Available to students
         available_to_corporates: Available to corporates
         all_you_can_eat: All you can eat

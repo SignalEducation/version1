@@ -15,10 +15,12 @@
 #  trial_period_in_days        :integer          default(0)
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  name                        :string(255)
 #
 
 FactoryGirl.define do
   factory :subscription_plan do
+    sequence(:name)             { |n| "Test #{n}" }
     all_you_can_eat             true
     payment_frequency_in_months 1
     currency_id                 { Currency.first.try(:id) || FactoryGirl.create(:euro).id }
