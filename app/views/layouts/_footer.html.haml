@@ -1,16 +1,3 @@
-
-.container
-  .row
-    .col-sm-4.well
-      %p First session landing URL
-      %p=cookies.encrypted[:first_session_landing_url]
-    .col-sm-4.well
-      %p Latest session landing URL
-      %p=cookies.encrypted[:latest_session_landing_url]
-    .col-sm-4.well
-      %p Post sign-up URL
-      %p=cookies.encrypted[:post_sign_up_redirect_path]
-
 -#if Rails.env.production? || Rails.env.staging?
   .container
     .row
