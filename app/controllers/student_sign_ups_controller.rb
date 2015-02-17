@@ -1,7 +1,19 @@
 class StudentSignUpsController < ApplicationController
 
-  before_action :logged_out_required
+  before_action :logged_out_required, except: :show
+  before_action :logged_in_required, only: :show
   before_action :get_variables
+
+  def show
+    # this is the 'thank you for registering' page
+    @user = User.find_by_guid(params[:id])
+    if @user.subscriptions.count == 1
+
+
+    else
+      redirect_to profile_url
+    end
+  end
 
   def new
     @user = User.new

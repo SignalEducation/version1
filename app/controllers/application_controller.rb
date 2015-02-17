@@ -132,6 +132,14 @@ class ApplicationController < ActionController::Base
     @mathjax_required = false # default
   end
 
+  def reset_latest_session_landing_url
+    cookies.encrypted[:latest_session_landing_url] = {value: request.filtered_path, httponly: true}
+  end
+
+  def reset_post_sign_up_redirect_path(new_path)
+    cookies.encrypted[:post_sign_up_redirect_path] = {value: new_path, httponly: true} if new_path
+  end
+
   def log_user_activity
     UserLoggerWorker.perform_async(   ApplicationController.generate_random_code(24),
             current_user.try(:id),    current_session_guid,

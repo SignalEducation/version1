@@ -1213,7 +1213,8 @@ en:
         alert_level: Alert level
         created_at: Created
         updated_at: Updated
-        session_landing_page: "Session landing page"
+        first_session_landing_page: "First Session landing page"
+        latest_session_landing_page: "Latest Session landing page"
         post_sign_up_redirect_url: "Post-sign-up redirect URL"
 
       edit:
