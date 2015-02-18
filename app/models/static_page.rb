@@ -29,6 +29,7 @@
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  show_standard_footer       :boolean          default(TRUE)
+#  post_sign_up_redirect_url  :string(255)
 #
 
 # todo make_this_page_sticky
@@ -41,7 +42,7 @@ class StaticPage < ActiveRecord::Base
   serialize :approved_country_ids, Array
 
   # attr-accessible
-  attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :static_page_uploads_attributes, :show_standard_footer
+  attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url, :use_standard_page_template, :head_content, :body_content, :created_by, :updated_by, :add_to_navbar, :add_to_footer, :menu_label, :tooltip_text, :language, :mark_as_noindex, :mark_as_nofollow, :seo_title, :seo_description, :approved_country_ids, :default_page_for_this_url, :make_this_page_sticky, :logged_in_required, :static_page_uploads_attributes, :show_standard_footer, :post_sign_up_redirect_url
 
   # Constants
 
@@ -68,7 +69,7 @@ class StaticPage < ActiveRecord::Base
   validates :seo_description, presence: true
 
   # callbacks
-  before_validation { squish_fields(:name, :public_url, :menu_label, :tooltip_text, :seo_title, :seo_description) }
+  before_validation { squish_fields(:name, :public_url, :menu_label, :tooltip_text, :seo_title, :seo_description, :post_sign_up_redirect_url) }
   before_save :sanitize_public_url
   before_save :sanitize_country_ids
   after_save :update_default_for_related_pages
@@ -98,7 +99,7 @@ class StaticPage < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !(self.publish_from < Proc.new{Time.now}.call && (self.publish_to == nil || self.publish_to > Proc.new{Time.now}.call))
+    self.publish_to == nil || self.publish_to < Proc.new{Time.now}.call
   end
 
   protected

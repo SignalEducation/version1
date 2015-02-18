@@ -32,8 +32,18 @@ FactoryGirl.define do
     tutor_id                    1
     related_quiz_id             nil
     related_video_id            1
-    is_video                    true
-    is_quiz                     false
+    active                      true
+
+    factory :cme_video do
+      is_video                    true
+      is_quiz                     false
+    end
+
+    factory :cme_quiz do
+      is_quiz                     true
+      is_video                    false
+    end
+
   end
 
 end

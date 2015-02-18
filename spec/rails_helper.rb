@@ -3,11 +3,16 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
-require 'factory_girl_rails' # suggested by stack overflow
+require 'factory_girl_rails'       # suggested by stack overflow
 #require 'rspec/autorun'
-require 'authlogic/test_case' # required for Authlogic
-include Authlogic::TestCase   # required for Authlogic
-require 'support/dry_specs'   # our handy way of doing lots of repetitive tests
+require 'authlogic/test_case'     # required for Authlogic
+include Authlogic::TestCase       # required for Authlogic
+require 'support/dry_specs'       # our handy way of doing lots of repetitive tests
+require 'support/feature_specs'   # shortcuts for our feature tests
+require 'capybara/rspec'
+require 'capybara/poltergeist'
+require 'database_cleaner'
+require 'support/database_cleaner' # configuration of database_cleaner
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -37,7 +42,10 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
+
+  #
+  Capybara.javascript_driver = :selenium
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and

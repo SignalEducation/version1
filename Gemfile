@@ -13,6 +13,7 @@ gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 gem 'aws-s3' # grants timeout-able URLs
 gem 'bootstrap-sass', '~> 3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
+gem 'browser' # user-agent detection
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'figaro' # management of ENV vars
 gem 'geocoder' # a public API for geo-locating IP addresses
@@ -20,6 +21,8 @@ gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails', '~> 0.2.24' # communicate with Intercom.io
 gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
+gem 'jquery-ui-rails' # include jQuery UI for Rails
+gem 'mathjax-rails' # maths functions in the UI
 gem 'mixpanel-ruby' # support for MixPanel
 gem 'paperclip', '~> 4.2' # for uploading files (works with RemotiPart)
 gem 'pg' # PostgreSQL database engine
@@ -30,7 +33,8 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
-gem 'stripe' # support for Stripe.com payment processing
+gem 'stripe', git: 'https://github.com/stripe/stripe-ruby'
+# support for Stripe.com payment processing
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
 gem 'will_paginate' # manage long web pages
@@ -51,15 +55,19 @@ end
 group :development, :test do
   gem 'rspec-rails' # our core testing environment
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
+  gem 'capybara' # Runs tests in a browser
+  gem 'selenium-webdriver', '>=2.45.0.dev3'
+  gem 'capybara-webkit'
+  gem 'poltergeist'
 end
 
 group :test do
   # https://semaphoreapp.com/blog/2013/08/14/setting-up-bdd-stack-on-a-new-rails-4-application.html
-  gem 'capybara' # Runs tests in a browser
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
+  gem 'stripe-ruby-mock', '~> 2.0.2', require: 'stripe_mock'
   gem 'webrat' # Runs tests in a "headless" browser
 end
 

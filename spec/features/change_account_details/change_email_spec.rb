@@ -1,0 +1,30 @@
+require 'rails_helper'
+require 'support/users_and_groups_setup'
+
+describe 'User changing their email' do
+
+  include_context 'users_and_groups_setup'
+
+  let!(:country_1) { FactoryGirl.create(:ireland)}
+  let!(:country_2) { FactoryGirl.create(:uk)}
+
+  before(:each) do
+    activate_authlogic
+  end
+
+  scenario 'when logged in as a user', js: false do
+    user_list.each do |this_user|
+      sign_in_via_sign_in_page(this_user)
+      edit_my_profile
+      fill_in I18n.t('views.users.form.email'), with: "user#{rand(9999)}@example.com"
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content I18n.t('controllers.users.update.flash.success')
+      this_user.admin? ?
+          expect(page).to(have_content(maybe_upcase(I18n.t('views.users.index.h1')))) :
+          expect(page).to(have_content(maybe_upcase(I18n.t('views.users.show.h1'))))
+      sign_out
+      print '>'
+    end
+  end
+
+end

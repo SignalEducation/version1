@@ -12,6 +12,8 @@
 #  current_status        :string(255)
 #  created_at            :datetime
 #  updated_at            :datetime
+#  stripe_customer_id    :string(255)
+#  stripe_customer_data  :text
 #
 
 FactoryGirl.define do

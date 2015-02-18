@@ -7,7 +7,7 @@ describe CourseModuleElementsController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:valid_params) { course_module_element_1.attributes.merge({name: 'ABCDE', name_url: 'adcbw'}) }
+  let!(:valid_params) { course_module_element_1_1.attributes.merge({name: 'ABCDE', name_url: 'adcbw'}) }
 
   context 'Not logged in: ' do
 
@@ -115,14 +115,8 @@ describe CourseModuleElementsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with course_module_element_1' do
-        get :edit, id: course_module_element_1.id
-        expect_edit_success_with_model('course_module_element', course_module_element_1.id)
-      end
-
-      # optional
-      it 'should respond OK with course_module_element_2' do
-        get :edit, id: course_module_element_2.id
-        expect_edit_success_with_model('course_module_element', course_module_element_2.id)
+        get :edit, id: course_module_element_2_1.id
+        expect_edit_success_with_model('course_module_element', course_module_element_2_1.id)
       end
     end
 
@@ -140,41 +134,40 @@ describe CourseModuleElementsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_element_1' do
-        put :update, id: course_module_element_1.id, course_module_element: valid_params
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
         expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
-      # optional
-      it 'should respond OK to valid params for course_module_element_2' do
-        put :update, id: course_module_element_2.id, course_module_element: valid_params
-        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1)) # deliberately 1 and not 2.
-        expect(assigns(:course_module_element).id).to eq(course_module_element_2.id)
-      end
-
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1.id, course_module_element: {estimated_time_in_seconds: 'abc'}
+        put :update, id: course_module_element_1_1.id, course_module_element: {estimated_time_in_seconds: 'abc'}
         expect_update_error_with_model('course_module_element')
-        expect(assigns(:course_module_element).id).to eq(course_module_element_1.id)
+        expect(assigns(:course_module_element).id).to eq(course_module_element_1_1.id)
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :reorder, array_of_ids: [course_module_element_2.id, course_module_element_1.id]
+        post :reorder, array_of_ids: [course_module_element_2_1.id, course_module_element_2_2.id]
         expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
+
+      before(:each) do
+        x = course_module_element_quiz_1_1.id
+      end
+
       describe "DELETE 'destroy'" do
         it 'should be ERROR as children exist' do
-          delete :destroy, id: course_module_element_1.id
-          expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1.course_module))
+          delete :destroy, id: course_module_element_1_1.id
+          expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_1.course_module))
         end
 
         it 'should be OK as no dependencies exist' do
-          delete :destroy, id: course_module_element_3.id
-          expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_3.course_module))
+          #course_module_element_2_2
+          delete :destroy, id: course_module_element_2_2.id
+          expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_2_2.course_module))
         end
       end
     end
@@ -416,15 +409,15 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with course_module_element_1' do
-        get :edit, id: course_module_element_1.id
-        expect_edit_success_with_model('course_module_element', course_module_element_1.id)
+      it 'should respond OK with course_module_element_1_1 - quiz' do
+        get :edit, id: course_module_element_1_1.id
+        expect_edit_success_with_model('course_module_element', course_module_element_1_1.id)
       end
 
       # optional
-      it 'should respond OK with course_module_element_2' do
-        get :edit, id: course_module_element_2.id
-        expect_edit_success_with_model('course_module_element', course_module_element_2.id)
+      it 'should respond OK with course_module_element_1_2 - video' do
+        get :edit, id: course_module_element_1_2.id
+        expect_edit_success_with_model('course_module_element', course_module_element_1_2.id)
       end
     end
 
@@ -441,41 +434,46 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for course_module_element_1' do
-        put :update, id: course_module_element_1.id, course_module_element: valid_params
+      it 'should respond OK to valid params for course_module_element_1_1' do
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
         expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
       # optional
-      it 'should respond OK to valid params for course_module_element_2' do
-        put :update, id: course_module_element_2.id, course_module_element: valid_params
+      it 'should respond OK to valid params for course_module_element_1_2' do
+        put :update, id: course_module_element_1_2.id, course_module_element: valid_params
         expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
-        expect(assigns(:course_module_element).id).to eq(course_module_element_2.id)
+        expect(assigns(:course_module_element).id).to eq(course_module_element_1_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1.id, course_module_element: {estimated_time_in_seconds: 'ABC'}
+        put :update, id: course_module_element_1_1.id, course_module_element: {estimated_time_in_seconds: 'ABC'}
         expect_update_error_with_model('course_module_element')
-        expect(assigns(:course_module_element).id).to eq(course_module_element_1.id)
+        expect(assigns(:course_module_element).id).to eq(course_module_element_1_1.id)
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :reorder, array_of_ids: [course_module_element_2.id, course_module_element_1.id]
+        post :reorder, array_of_ids: [course_module_element_2_1.id, course_module_element_2_2.id]
         expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
+
+      before(:each) do
+        x = course_module_element_quiz_1_1.id
+      end
+
       it 'should be ERROR as children exist' do
-        delete :destroy, id: course_module_element_1.id
-        expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1.course_module))
+        delete :destroy, id: course_module_element_1_1.id
+        expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_1.course_module))
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: course_module_element_3.id
-        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_3.course_module))
+        delete :destroy, id: course_module_element_2_2.id
+        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_2_2.course_module))
       end
     end
 

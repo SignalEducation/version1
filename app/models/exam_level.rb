@@ -21,7 +21,10 @@ class ExamLevel < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections
+  attr_accessible :qualification_id, :name, :name_url, :is_cpd,
+                  :sorting_order, :active,
+                  :default_number_of_possible_exam_answers,
+                  :enable_exam_sections
 
   # Constants
 
@@ -66,7 +69,7 @@ class ExamLevel < ActiveRecord::Base
   end
 
   def children
-    if self.enable_exam_sections == true
+    if self.enable_exam_sections
       self.exam_sections.all
     else
       self.course_modules.all

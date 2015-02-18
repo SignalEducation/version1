@@ -17,14 +17,14 @@ FactoryGirl.define do
   factory :exam_section do
     sequence(:name)       {|n| "Exam Section #{n}"}
     sequence(:name_url)   {|n| "exam-section-#{n}"}
-    exam_level_id         { ExamSection.first.try(:id) || 1 }
+    exam_level_id         { ExamLevel.first.try(:id) || FactoryGirl.create(:exam_level).id }
     sequence(:sorting_order) {|n| n * 10}
 
-    factory :active_exam_level do
+    factory :active_exam_section do
       active              true
     end
 
-    factory :inactive_exam_level do
+    factory :inactive_exam_section do
       active              false
     end
   end

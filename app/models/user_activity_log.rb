@@ -2,42 +2,52 @@
 #
 # Table name: user_activity_logs
 #
-#  id               :integer          not null, primary key
-#  user_id          :integer
-#  session_guid     :string(255)
-#  signed_in        :boolean          default(FALSE), not null
-#  original_uri     :text
-#  controller_name  :string(255)
-#  action_name      :string(255)
-#  params           :text
-#  alert_level      :integer          default(0)
-#  created_at       :datetime
-#  updated_at       :datetime
-#  ip_address       :string(255)
-#  browser          :string(255)
-#  operating_system :string(255)
-#  phone            :boolean          default(FALSE), not null
-#  tablet           :boolean          default(FALSE), not null
-#  computer         :boolean          default(FALSE), not null
-#  guid             :string(255)
+#  id                          :integer          not null, primary key
+#  user_id                     :integer
+#  session_guid                :string(255)
+#  signed_in                   :boolean          default(FALSE), not null
+#  original_uri                :text
+#  controller_name             :string(255)
+#  action_name                 :string(255)
+#  params                      :text
+#  alert_level                 :integer          default(0)
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  ip_address                  :string(255)
+#  browser                     :string(255)
+#  operating_system            :string(255)
+#  phone                       :boolean          default(FALSE), not null
+#  tablet                      :boolean          default(FALSE), not null
+#  computer                    :boolean          default(FALSE), not null
+#  guid                        :string(255)
+#  ip_address_id               :integer
+#  browser_version             :string(255)
+#  raw_user_agent              :string(255)
+#  first_session_landing_page  :string(255)
+#  latest_session_landing_page :string(255)
+#  post_sign_up_redirect_url   :string(255)
 #
 
 class UserActivityLog < ActiveRecord::Base
 
   include LearnSignalModelExtras
-  serialize :params
+  serialize :params, Hash
 
   # attr-accessible
-  attr_accessible :user_id, :session_guid, :signed_in, :original_uri, :controller_name,
+  attr_accessible :user_id, :session_guid, :signed_in, :original_uri,
+                  :controller_name,
                   :action_name, :params, :ip_address, :alert_level,
-                  :browser, :operating_system, :phone, :tablet, :computer, :http_user_agent,
-                  :guid
+                  :browser, :operating_system, :phone, :tablet, :computer,
+                  :guid, :raw_user_agent, :first_session_landing_page,
+                  :latest_session_landing_page, :post_sign_up_redirect_url
 
   # Constants
   ALERT_LEVELS = %w(normal warning danger severe)
   # 0=normal, 1=warning, 2=danger, 3=severe
 
   # relationships
+  belongs_to :tracked_ip_address, class_name: 'IpAddress',
+             foreign_key: :ip_address_id
   belongs_to :user
 
   # validation
@@ -54,6 +64,8 @@ class UserActivityLog < ActiveRecord::Base
   validates :guid, presence: true, uniqueness: true
 
   # callbacks
+  before_validation :process_user_agent
+  before_validation :track_ip_address
   after_create :add_to_rails_logger
 
   # scopes
@@ -85,31 +97,28 @@ class UserActivityLog < ActiveRecord::Base
     ['success','info','warning','danger'][self.alert_level]
   end
 
-  def http_user_agent=(agent)
-    # todo: Dan's mac / Safari:
-    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/600.2.5 (KHTML, like Gecko) Version/8.0.2 Safari/600.2.5
-    # todo: Dan's mac / Opera:
-    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 OPR/26.0.1656.60
-    # todo: Dan's mac / Chrome:
-    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36
-    # todo: Dan's mac / Firefox:
-    # Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:33.0) Gecko/20100101 Firefox/33.0
-    # todo: Dan's iPhone / Safari
-    # Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4
-    # todo: Dan's iPad2 / Safari
-    # Mozilla/5.0 (iPad; CPU OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B410 Safari/600.1.4
-
-    # result =~ /Safari/
-
-    if agent
-      self.browser ||= agent[0..254]
-      self.operating_system ||= agent[0..254]
-    else
-      self.alert_level += 1
-    end
-    self.phone ||=
-    self.tablet ||=
-    self.computer ||= false
+  def process_user_agent
+    browser = Browser.new(ua: self.raw_user_agent.to_s[0..255])
+    self.browser = browser.name
+    self.browser_version = browser.version
+    self.operating_system =
+      if browser.mac?
+        'Macintosh'
+      elsif browser.windows?
+        'Windows'
+      elsif browser.name == 'iPad' || browser.name == 'iPhone'
+        browser.name
+      elsif browser.platform == :linux && (browser.mobile? || browser.tablet?)
+        'Android'
+      else
+        browser.platform.to_s
+      end
+    self.browser = 'Safari' if self.browser == 'iPhone' || self.browser == 'iPad'
+    self.phone = browser.mobile?
+    self.tablet = browser.tablet?
+    self.computer = browser.mac? || browser.windows?
+    self.alert_level += 1 if self.operating_system == 'other'
+    self.alert_level += 1 unless browser.known?
   end
 
   protected
@@ -127,6 +136,10 @@ class UserActivityLog < ActiveRecord::Base
     else # where 3 or above
       Rails.logger.fatal message
     end
+  end
+
+  def track_ip_address
+    self.ip_address_id = IpAddress.where(ip_address: self.ip_address).first_or_create.id
   end
 
 end

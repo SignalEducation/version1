@@ -44,14 +44,14 @@ describe CountriesController, type: :controller do
 
     describe "POST 'create'" do
       it 'should redirect to sign_in' do
-        post :create, user: valid_params
+        post :create, country: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should redirect to sign_in' do
-        put :update, id: 1, user: valid_params
+        put :update, id: 1, country: valid_params
         expect_bounce_as_not_signed_in
       end
     end

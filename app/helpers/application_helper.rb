@@ -38,7 +38,7 @@ module ApplicationHelper
     if percentage == 100
       "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
     elsif percentage == 0
-      if hierarchy_thing.first_active_cme
+      if hierarchy_thing.try(:first_active_cme)
         "<a href='#{course_special_link(hierarchy_thing.first_active_cme)}'><span style='background-color: green;' class='label label-default'>Start</span></a>".html_safe
       end
     elsif percentage.nil?

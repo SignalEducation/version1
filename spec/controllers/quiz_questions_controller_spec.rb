@@ -130,7 +130,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new, cme_quiz_id: course_module_element_quiz_1.id
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
         expect_new_success_with_model('quiz_question')
       end
     end
@@ -145,14 +145,14 @@ describe QuizQuestionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, quiz_question: valid_params
-        expect_create_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_create_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for quiz_question_1' do
         put :update, id: quiz_question_1.id, quiz_question: valid_params
-        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
       end
 
       it 'should reject invalid params' do
@@ -167,12 +167,13 @@ describe QuizQuestionsController, type: :controller do
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
-        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
       end
 
       it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
         delete :destroy, id: quiz_question_2.id
-        expect_delete_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_2.id))
+        expect_delete_success_with_model('quiz_question', edit_course_module_element_url(quiz_question_2.course_module_element_id))
       end
     end
 
@@ -455,7 +456,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new, cme_quiz_id: course_module_element_quiz_1.id
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
         expect_new_success_with_model('quiz_question')
       end
     end
@@ -476,7 +477,7 @@ describe QuizQuestionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, quiz_question: valid_params
-        expect_create_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_create_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
       end
 
       it 'should report error for invalid params' do
@@ -488,13 +489,13 @@ describe QuizQuestionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for quiz_question_1' do
         put :update, id: quiz_question_1.id, quiz_question: valid_params
-        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_update_success_with_model('quiz_question', edit_course_module_element_url(quiz_question_1.course_module_element_quiz.course_module_element.id))
       end
 
       # optional
       it 'should respond OK to valid params for quiz_question_2' do
         put :update, id: quiz_question_2.id, quiz_question: valid_params
-        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_update_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
         expect(assigns(:quiz_question).id).to eq(quiz_question_2.id)
       end
 
@@ -512,12 +513,13 @@ describe QuizQuestionsController, type: :controller do
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
-        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element_1.id))
+        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
       end
 
       it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
         delete :destroy, id: quiz_question_2.id
-        expect_delete_success_with_model('quiz_question', edit_course_module_element_url(course_module_element_2.id))
+        expect_delete_success_with_model('quiz_question', edit_course_module_element_url(quiz_question_2.course_module_element_id))
       end
     end
 

@@ -198,6 +198,11 @@ en:
           success: Qualification has been deleted
           error: Qualification was not deleted
 
+    student_sign_ups:
+      create:
+        flash:
+          success: "Welcome aboard! Your sign-up was completed successfully"
+
     quiz_questions:
       create:
         flash:
@@ -420,8 +425,9 @@ en:
       review: Review
       save: Save
       save_and_continue_editing: Save and continue Editing
-      send: Send
+      search: Search...
       select: Select...
+      send: Send
       sign_in: Log in
       sign_out: Sign out
       sign_up: Sign up
@@ -696,7 +702,7 @@ en:
     currencies:
       form:
         iso_code: ISO code
-        iso_code_placeholder: eur
+        iso_code_placeholder: EUR
         name: Name
         name_placeholder: Euro
         leading_symbol: Leading symbol
@@ -754,6 +760,7 @@ en:
         expires_in_next_3_days: Expires in the next 3 days
         published_in_last_3_days: Published in the last 3 days
         publishes_in_next_3_days: Publishes in the next 3 days
+        see_all_static_pages: See All Static Pages
 
     exam_levels:
       form:
@@ -846,36 +853,37 @@ en:
 
     invoices:
       form:
-        user_id: User
-        corporate_customer_id: Corporate customer
-        subscription_transaction_id: Subscription transaction
-        subscription_id: Subscription
-        number_of_users: Number of users
+        user_id: user
+        corporate_customer_id: corporate customer
+        subscription_transaction_id: subscription transaction
+        subscription_id: subscription
+        number_of_users: number of users
         number_of_users_placeholder: 2
-        currency_id: Currency
-        unit_price_ex_vat: Unit price
+        currency_id: currency
+        unit_price_ex_vat: unit price
         unit_price_ex_vat_placeholder: 10.00
-        line_total_ex_vat: Line total ex VAT
-        vat_rate_id: VAT rate
-        line_total_vat_amount: Line total VAT amount
-        line_total_inc_vat: Line total
+        line_total_ex_vat: line total ex vat
+        vat_rate_id: vat rate
+        line_total_vat_amount: line total vat amount
+        line_total_inc_vat: line total
 
       edit:
-        h1: Edit Invoice
+        h1: edit invoice
 
       index:
-        h1: Invoices
+        h1: invoices
 
       new:
-        h1: New Invoice
+        h1: new invoice
 
       show:
-        h1: Invoice
+        h1: invoice
 
     layouts:
       error_messages:
         error: error
         preface: 'prevented this item from being saved:'
+        is_invalid: is invalid
       navigation:
         learn_signal: Learn Signal
         course_content: Course Content
@@ -1016,6 +1024,8 @@ en:
         uploads: Uploads
         code_samples: Code Samples
         show_standard_footer: Show the standard footer
+        post_sign_up_redirect_url: "Post sign-up redirect URL"
+        post_sign_up_redirect_url_placeholder: "/en/library/finance"
 
       index:
         h1: Static Pages
@@ -1040,9 +1050,54 @@ en:
         description: Description
         description_placeholder: A quick description of your upload
         upload: File
-
       modal:
         h1: Upload A File
+
+    student_sign_ups:
+      form:
+        retype_it: Retype it
+        all_you_can_eat_yes: "Unlimited Access"
+        all_you_can_eat_no: "Limited Access"
+        free_trial: "Free trial - "
+        days: Days
+        credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
+        expiry_month_prompt: "Exp Mth"
+        expiry_year_prompt: "Exp Year"
+        payment_frequency_in_months:
+          a1: Monthly
+          a3: Quarterly
+          a6: Half-yearly
+          a12: Yearly
+        submit: Sign Up Now
+        error_panel_caption: "prevented your Sign-Up from being completed:"
+
+      new:
+        h1: Sign Up for Student access
+        lead: "We can't wait to get started helping you to achieve your full potential"
+        h2:
+          emailing: Set your messaging preferences
+          subscription: Choose your subscription plan
+          subscription_text: Choose a subscription by clicking it
+          payment: Enter your payment details
+
+      show:
+        h1: "Thanks for joining us!"
+        sub-head: "We think you're going to love learning with us!"
+        h2: "Your subscription details"
+        your_chosen_plan: "Your chosen plan"
+        free_trial_period: "Free trial period"
+        day: day
+        to: to
+        your_first_payment_will_be_on: "Your first payment will be on"
+        your_next_payment_will_be_on: "Your next payment will be on"
+        price: Price
+        every: every
+        month: month
+        your_card_details: "Your card details"
+        expires: expires
+        if_you_have_any_questions: "If you have any questions about your subscription,"
+        please_get_in_touch: 'please get in touch'
+        lets_get_started: "Let's Get Started"
 
     subject_areas:
       form:
@@ -1068,6 +1123,8 @@ en:
 
     subscription_plans:
       form:
+        name: Name
+        name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
         available_to_students: Available to students
         available_to_corporates: Available to corporates
         all_you_can_eat: All you can eat
@@ -1088,6 +1145,8 @@ en:
 
       index:
         h1: Subscription Plans
+        corporates: For Corporates
+        students: For Students
 
       new:
         h1: New Subscription Plan
@@ -1173,6 +1232,9 @@ en:
         alert_level: Alert level
         created_at: Created
         updated_at: Updated
+        first_session_landing_page: "First Session landing page"
+        latest_session_landing_page: "Latest Session landing page"
+        post_sign_up_redirect_url: "Post-sign-up redirect URL"
 
       edit:
         h1: Edit User Activity Log
