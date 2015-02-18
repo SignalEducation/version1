@@ -8,8 +8,8 @@
       -else
         =@hierarchy_item.try(:name)
     %hr/
-    -if @hierarchy_item.parent != nil
-      =link_to course_special_link(@hierarchy_item.parent) do
+    -unless @hierarchy_item.parent.nil?
+      =link_to course_special_link(@hierarchy_item.parent,'backwards') do
         &larr;
         =t('views.general.back')
 
