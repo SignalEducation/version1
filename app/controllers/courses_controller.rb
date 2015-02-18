@@ -21,7 +21,7 @@ class CoursesController < ApplicationController
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
       # The URL worked out Okay
-      reset_post_sign_up_redirect_path(library_special_link(@course_module_element.course_module.exam_level)) unless current_user
+      reset_post_sign_up_redirect_path(library_special_link(@course_module.exam_level)) unless current_user
       if @course_module_element.try(:is_quiz)
         set_up_quiz
       elsif @course_module_jumbo_quiz
