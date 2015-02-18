@@ -17,8 +17,14 @@ class LibraryController < ApplicationController
       end
     end
     @hierarchy_item = @exam_section || @exam_level || @qualification || @institution || @subject_area
+    unless current_user
+      set_the_sign_up_redirect(@hierarchy_item)
+    end
   end
 
   protected
 
+  def set_the_sign_up_redirect(hierarchy_thing)
+    reset_post_sign_up_redirect_path(library_special_link(hierarchy_thing.try(:exam_level) || hierarchy_thing))
+  end
 end

@@ -72,6 +72,8 @@ class StaticPagesController < ApplicationController
       @delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
       if @delivered_page
         if @delivered_page.use_standard_page_template
+          reset_latest_session_landing_url
+          reset_post_sign_up_redirect_path(@delivered_page.post_sign_up_redirect_url)
           render 'static_pages/deliver_page/with_layout'
         else
           render 'static_pages/deliver_page/without_layout', layout: nil
@@ -126,6 +128,7 @@ class StaticPagesController < ApplicationController
             :logged_in_required,
             :created_by, :updated_by,
             :show_standard_footer,
+            :post_sign_up_redirect_url,
             static_page_uploads_attributes: [
                     :id,
                     :description,

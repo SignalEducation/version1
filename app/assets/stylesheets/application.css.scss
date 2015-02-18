@@ -2,17 +2,30 @@
 // https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
 
 $input-color-placeholder: #ccc;
+$link-color: #222;
+//$btn-success-bg: #5391cf;
 
 $navbar-inverse-bg: #d64147; /*#125;*/
 $navbar-inverse-link-active-bg: #ee9a3b;
 $navbar-inverse-color: #eee;
 $navbar-inverse-link-color: #eee; /*#89A;*/
-$navbar-inverse-link-hover-bg: red;
+$navbar-inverse-link-hover-bg: #ee9a3b;
+//$navbar-inverse-brand-hover-bg: blue;
 $navbar-inverse-border: #fff;
 $navbar-height: 65px;
-$link-color: #222;
+
+//$well-bg: #e5e5e5;
 
 // Fonts
+
+@font-face {
+  font-family: 'EffraRegular';
+  src: font-url('EffraRegular.eot');
+  src: font-url('EffraRegular.eot?#iefix') format('embedded-opentype'),
+       font-url('EffraRegular.woff2') format('woff2'),
+       font-url('EffraRegular.woff') format('woff'),
+       font-url('EffraRegular.ttf') format('truetype');
+}
 @font-face {
   font-family: 'BryantWebRegular';
   src: url(font-path('BryantWebRegular.eot'))  format('eot'),
@@ -34,6 +47,7 @@ $link-color: #222;
 
 body {
   margin-top: 65px;
+  font-family: EffraRegular, "Helvetica Neue", Helvetica, Arial, sans-serif;
   h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .intro-heading {
     font-weight: 100;
     text-transform: uppercase;
@@ -73,6 +87,45 @@ tr {
   padding-top: 4px;
 }
 
+.subscription-panel {
+  background-color: #faebd7;
+}
+
+.subscription-panel.active {
+  background-color: lightgreen;
+}
+
+.orange-background {
+  background-color: #ee9a3b;
+}
+
+.blue-hover:hover {
+  background-color: #5391cf !important;
+}
+
+.navbar .nav > li > a {
+  -webkit-transition: all ease .4s;
+     -moz-transition: all ease .4s;
+       -o-transition: all ease .4s;
+          transition: all ease .4s;
+}
+
+.subscription-outer-panel:hover {
+  cursor: pointer;
+  margin-top: -10px;
+  -webkit-transition: all ease .4s;
+  -moz-transition: all ease .4s;
+  -o-transition: all ease .4s;
+  transition: all ease .4s;
+}
+
+#student-sign-up .well {
+  margin-bottom: 40px;
+}
+
+#student-sign-up form > .row .col-sm-8.col-sm-offset-2 .well:first-child {
+  margin-top: 80px;
+}
 .no-top-gap {
   margin-top: 0;
   padding-top: 0;

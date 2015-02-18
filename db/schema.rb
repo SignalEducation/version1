@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150210142311) do
+ActiveRecord::Schema.define(version: 20150217115607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -271,6 +271,16 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.datetime "updated_at"
   end
 
+  create_table "ip_addresses", force: true do |t|
+    t.string   "ip_address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "country_id"
+    t.integer  "alert_level"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "qualifications", force: true do |t|
     t.integer  "institution_id"
     t.string   "name"
@@ -381,6 +391,7 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "show_standard_footer",       default: true
+    t.string   "post_sign_up_redirect_url"
   end
 
   create_table "student_exam_tracks", force: true do |t|
@@ -436,6 +447,7 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.integer  "trial_period_in_days",        default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
 
   create_table "subscription_transactions", force: true do |t|
@@ -463,6 +475,8 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "stripe_customer_id"
+    t.text     "stripe_customer_data"
   end
 
   create_table "system_defaults", force: true do |t|
@@ -476,21 +490,27 @@ ActiveRecord::Schema.define(version: 20150210142311) do
   create_table "user_activity_logs", force: true do |t|
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "signed_in",        default: false, null: false
+    t.boolean  "signed_in",                   default: false, null: false
     t.text     "original_uri"
     t.string   "controller_name"
     t.string   "action_name"
     t.text     "params"
-    t.integer  "alert_level",      default: 0
+    t.integer  "alert_level",                 default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ip_address"
     t.string   "browser"
     t.string   "operating_system"
-    t.boolean  "phone",            default: false, null: false
-    t.boolean  "tablet",           default: false, null: false
-    t.boolean  "computer",         default: false, null: false
+    t.boolean  "phone",                       default: false, null: false
+    t.boolean  "tablet",                      default: false, null: false
+    t.boolean  "computer",                    default: false, null: false
     t.string   "guid"
+    t.integer  "ip_address_id"
+    t.string   "browser_version"
+    t.string   "raw_user_agent"
+    t.string   "first_session_landing_page"
+    t.string   "latest_session_landing_page"
+    t.string   "post_sign_up_redirect_url"
   end
 
   create_table "user_exam_levels", force: true do |t|

@@ -60,6 +60,7 @@ describe Currency do
   it { expect(Currency).to respond_to(:all_inactive) }
 
   # class methods
+  it { expect(Currency).to respond_to(:get_by_iso_code) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

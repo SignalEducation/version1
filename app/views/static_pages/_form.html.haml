@@ -39,6 +39,10 @@
                     .col-sm-8
                       =f.text_field :public_url, placeholder: t('views.static_pages.form.public_url_placeholder'), class: 'form-control'
                   .form-group
+                    =f.label :post_sign_up_redirect_url, t('views.static_pages.form.post_sign_up_redirect_url'), class: 'control-label col-sm-4'
+                    .col-sm-8
+                      =f.text_field :post_sign_up_redirect_url, placeholder: t('views.static_pages.form.post_sign_up_redirect_url_placeholder'), class: 'form-control'
+                  .form-group
                     .col-sm-8.col-sm-offset-4
                       .checkbox
                         %label

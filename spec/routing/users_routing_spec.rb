@@ -38,7 +38,7 @@ RSpec.describe UsersController, type: :routing do
     end
 
     it 'routes /sign_up to #new' do
-      expect(get: '/sign_up').to route_to('users#new')
+      expect(get: '/sign_up').to route_to('student_sign_ups#new')
     end
 
     it 'routes /change_password to #change_password' do

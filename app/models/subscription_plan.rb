@@ -15,6 +15,7 @@
 #  trial_period_in_days        :integer          default(0)
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  name                        :string(255)
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -25,7 +26,7 @@ class SubscriptionPlan < ActiveRecord::Base
   attr_accessible :available_to_students, :available_to_corporates,
                   :all_you_can_eat, :payment_frequency_in_months,
                   :currency_id, :price, :available_from, :available_to,
-                  :trial_period_in_days
+                  :trial_period_in_days, :name
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
@@ -35,6 +36,7 @@ class SubscriptionPlan < ActiveRecord::Base
   has_many :subscriptions
 
   # validation
+  validates :name, presence: true, uniqueness: true, case_sensitive: false
   validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -50,15 +52,29 @@ class SubscriptionPlan < ActiveRecord::Base
   # callbacks
   before_create :create_on_stripe_platform
   before_update :update_on_stripe_platform
+  after_destroy :delete_on_stripe_platform
 
   # scopes
-  scope :all_in_order, -> { order(:available_to_students) }
+  scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
   scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
+  scope :for_corporates, -> { where(available_to_corporates: true) }
+  scope :for_students, -> { where(available_to_students: true) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
 
   # class methods
 
   # instance methods
+  def age_status
+    right_now = Proc.new{Time.now}.call.to_date
+    if self.available_from > right_now
+       'info' # future
+    elsif self.available_to < right_now
+      'active' # expired
+    else
+      'success' # live
+    end
+  end
+
   def destroyable?
     self.subscriptions.empty?
   end
@@ -72,13 +88,44 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    # todo stripe integration
-    self.stripe_guid = 'plan_PLACEHOLDER-123'
+    if self.valid?
+      stripe_plan = Stripe::Plan.create(
+              amount: (self.price.to_f * 100).to_i,
+              interval: 'month',
+              interval_count: self.payment_frequency_in_months,
+              trial_period_days: self.trial_period_in_days,
+              name: 'LearnSignal ' + self.name,
+              statement_description: 'LearnSignal' + self.name,
+              currency: self.currency.try(:iso_code).try(:downcase),
+              id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+
+      self.stripe_guid = stripe_plan.id
+    else
+      false
+    end
+  rescue => e
+    errors.add(:stripe, e.message)
+    false
+  end
+
+  def delete_on_stripe_platform
+    if self.destroyable?
+      stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
+      stripe_plan.delete
+    end
+  rescue => e
+    errors.add(:stripe, e.message)
+    false
   end
 
   def update_on_stripe_platform
-    # todo stripe integration
-    self.stripe_guid = self.stripe_guid.split('-')[0] + '-' + ((self.stripe_guid.split('-')[1].to_i + 1).to_s)
+    stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
+    stripe_plan.name = 'Learnsignal ' + self.name
+    stripe_plan.save
+  rescue => e
+    errors.add(:stripe, e.message)
+    false
   end
 
 end

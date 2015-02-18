@@ -51,6 +51,10 @@ class Qualification < ActiveRecord::Base
   end
 
   # instance methods
+  def active_children
+    self.children.all_active
+  end
+
   def children
     self.exam_levels.all
   end

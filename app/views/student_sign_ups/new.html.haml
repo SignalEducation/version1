@@ -1,0 +1,186 @@
+#student-sign-up
+  =form_for @user, url: student_sign_ups_url, html: {class: 'form-horizontal', role: 'form'} do |f|
+    =f.hidden_field :locale, value: params[:locale]
+    .row
+      .col-sm-8.col-sm-offset-2
+        .well.well-sm
+          .page-head.text-center
+            %h1=t('views.student_sign_ups.new.h1')
+            %p.lead
+              =t('views.student_sign_ups.new.lead')
+
+          =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.student_sign_ups.form.error_panel_caption')}
+          .form-group
+            .col-sm-4.col-sm-offset-2
+              =f.label :first_name, t('views.users.form.first_name')
+              =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), autofocus: true, required: true, class: 'form-control'
+            .col-sm-4
+              =f.label :last_name, t('views.users.form.last_name')
+              =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control'
+          .form-group
+            .col-sm-8.col-sm-offset-2
+              =f.label :email, t('views.users.form.email')
+              =f.email_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', required: true
+          .form-group
+            .col-sm-4.col-sm-offset-2
+              =f.label :password, t('views.users.form.password')
+              =f.password_field :password, placeholder: t('views.users.form.password_placeholder'), class: 'form-control', required: true
+            .col-sm-4
+              =f.label :password_confirmation, t('views.student_sign_ups.form.retype_it')
+              =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', required: true
+          .form-group
+            .col-sm-8.col-sm-offset-2
+              =f.label :country_id, t('views.users.form.country_id')
+              =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control', required: true, onchange: 'clearPlans(); showPlans(); return false;'}
+
+        .well.well-sm
+          %h2.text-center=t('views.student_sign_ups.new.h2.subscription')
+          -#%p.text-center=t('views.student_sign_ups.new.h2.subscription_text')
+          %hr/
+          .row
+            -@subscription_plans.each do |plan|
+              .col-sm-4.currency.subscription-outer-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
+                %h3.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                .well.well-sm.text-center.subscription-panel{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
+                  %p=plan.name
+                  %p
+                    =number_in_local_currency(plan.price, plan.currency_id)
+                    =t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                  %p
+                    -if plan.trial_period_in_days > 0
+                      =t('views.student_sign_ups.form.free_trial')
+                      =pluralize(plan.trial_period_in_days, t('views.student_sign_ups.form.days'))
+                  %p=plan.all_you_can_eat ? t('views.student_sign_ups.form.all_you_can_eat_yes') : t('views.student_sign_ups.form.all_you_can_eat_no')
+
+          =f.fields_for :subscriptions do |sub|
+            =sub.hidden_field :subscription_plan_id
+            =sub.hidden_field :stripe_token
+
+        .well.well-sm
+          %h2.text-center=t('views.student_sign_ups.new.h2.payment')
+          %hr/
+
+          %p.payment-errors
+
+          .form-group
+            .col-sm-4.col-sm-offset-1
+              =text_field_tag :card_number, nil, placeholder: t('views.student_sign_ups.form.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
+            .col-sm-2
+              =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
+            .col-sm-2
+              =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.student_sign_ups.form.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
+            .col-sm-2
+              =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 5)).to_a), prompt: t('views.student_sign_ups.form.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
+
+    .row
+      .col-sm-2.col-sm-offset-5
+        =f.submit t('views.student_sign_ups.form.submit'), class: 'btn btn-success btn-block'
+
+
+  :javascript
+
+    Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
+
+    var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
+
+    function clearPlans() {
+      $('.subscription-panel').removeClass('active');
+      $('#user_subscriptions_attributes_0_subscription_plan_id').val();
+    }
+
+    function choosePlan(theThing) {
+      clearPlans();
+      $(theThing).find('.subscription-panel').addClass('active');
+      $('#user_subscriptions_attributes_0_subscription_plan_id').val( $(theThing).attr('data-plan-id') );
+    }
+
+    function showPlans() {
+      var country_id = $('#user_country_id').val();
+      var currency = 'EUR';
+      $('.currency').addClass('hide');
+      for (var i=0; i < countries.length; i++) {
+        if (countries[i][0] == country_id) {
+          currency = countries[i][1];
+        }
+      }
+      $('.' + currency).removeClass('hide');
+      $('#user_subscriptions_attributes_0_subscription_plan_id').val(
+        $('.' + currency).find('.active').first().parent().attr('data-plan-id')
+      );
+    }
+
+    function luhnCheckCardNumber(cardNo) {
+      var c = cardNo.replace(/[^\d]/g, '');
+      var cl = parseInt(c.substr(c.length - 1));
+      var c = c.slice(0,-1)
+      var c = c.split("").reverse().join("");
+      var c = c.split("");
+      var a = 2;
+      var cm = [];
+      for (var i = 0; i < c.length; i++) {
+        if (a%2 == 0) {var t = c[i]*2;
+          if (t > 9) {var t = (t -9);}
+          cm.push(t);
+        } else {
+          cm.push(parseInt(c[i]));
+        }
+        a++;
+      }
+      var f = 0;
+      for (var i = 0; i < cm.length; i++) {
+        f += cm[i];
+      }
+      f = f + cl;
+      return (f%10 == 0);
+    }
+
+    $(document).on('ready', function() {
+
+      showPlans();
+
+      $('.creditCardNumber').keyup(function() {
+        $(this).val(function(i, v) {
+          var v = v.replace(/[^\d]/g, '').match(/.{1,4}/g);
+          return v ? v.join(' ') : '';
+        });
+      });
+
+      $('.creditCardNumber').blur(function() {
+        $(this).parent().removeClass('has-success has-error');
+        if (luhnCheckCardNumber( $(this).val() ) ) {
+          $(this).parent().addClass('has-success');
+        } else {
+          $(this).parent().addClass('has-error');
+        }
+      })
+
+      $('#new_user').submit(function(event) {
+        var $form = $(this);
+        // Disable the submit button to prevent repeated clicks
+        $form.find('input:submit').prop('disabled', true);
+        // Create the token
+        Stripe.card.createToken($form, stripeResponseHandler);
+        // Prevent the form from submitting with the default action
+        return false;
+      });
+
+      function stripeResponseHandler(status, response) {
+        var $form = $('#new_user');
+
+        if (response.error) {
+          // Show the errors on the form
+          $form.find('.payment-errors').addClass('alert alert-danger text-center').text(response.error.message);
+          $form.find('input:submit').prop('disabled', false);
+        } else {
+          // response contains id and card, which contains additional card details
+          var token = response.id;
+          // Insert the token into the form so it gets submitted to the server
+          $('#user_subscriptions_attributes_0_stripe_token').val(token);
+          // Kill the credit card details
+          $form.find('[data-stripe]').remove();
+          $form.find('.payment-errors').remove();
+          // and submit the form
+          $form.get(0).submit();
+        }
+      };
+    })

@@ -729,7 +729,7 @@ describe UsersController, type: :controller do
     describe "GET 'index'" do
       it 'should redirect to root' do
         get :index
-        expect_index_success_with_model('users', 9)
+        expect_index_success_with_model('users', User.all.count)
       end
     end
 

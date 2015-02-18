@@ -92,10 +92,81 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   puts ' DONE'
   print 'Subject Areas: '
-  unless Rails.env.test?
-    SubjectArea.where(id: 1).first_or_create!(name: 'Finance', name_url: 'finance',
+  SubjectArea.where(id: 1).first_or_create!(name: 'Finance', name_url: 'finance',
                         sorting_order: 100, active: true); print '.'
-  end
+
+  puts ' DONE'
+  print 'Institutions: '
+  Institution.where(id: 1).first_or_create(
+          name: 'Association of Certified Chartered Accountants',
+          short_name: 'ACCA', name_url: 'acca',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
+          feedback_url: 'http://example.com/feedback',
+          help_desk_url: 'http://help.example.com',
+          subject_area_id: 1, sorting_order: 1, active: false
+  ); print '.'
+  Institution.where(id: 2).first_or_create(
+          name: 'CFA Institute',
+          short_name: 'CFA', name_url: 'cfa-institute',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
+          feedback_url: 'http://example.com/feedback',
+          help_desk_url: 'http://help.example.com',
+          subject_area_id: 1, sorting_order: 1, active: true
+  ); print '.'
+
+  puts ' DONE'
+  print 'Qualifications: '
+  Qualification.where(id: 1).first_or_create(
+          institution_id: 2, name: 'CFA Professional',
+          name_url: 'cfa-professional', sorting_order: 1, active: true,
+          cpd_hours_required_per_year: 0
+  ); print '.'
+  Qualification.where(id: 2).first_or_create(
+          institution_id: 2, name: 'Claritas', name_url: 'claritas',
+          sorting_order: 1, active: true, cpd_hours_required_per_year: 0
+  ); print '.'
+
+  puts ' DONE'
+  print 'Exam Levels: '
+  ExamLevel.where(id: 1).first_or_create(
+          qualification_id: 1, name: 'Level 1', name_url: 'level-1',
+          is_cpd: false, sorting_order: 1, active: true
+  ); print '.'
+  ExamLevel.where(id: 2).first_or_create(
+          qualification_id: 1, name: 'Level 2', name_url: 'level-2',
+          is_cpd: false, sorting_order: 1, active: true
+  ); print '.'
+  ExamLevel.where(id: 3).first_or_create(
+          qualification_id: 1, name: 'Level 3', name_url: 'level-3',
+          is_cpd: false, sorting_order: 1, active: true
+  ); print '.'
+
+  puts ' DONE'
+  print 'Exam Sections: '
+  ExamSection.where(id: 1).first_or_create(
+          name: 'Economics', name_url: 'economics', exam_level_id: 1,
+          active: true, sorting_order: 0
+  ); print '.'
+  ExamSection.where(id: 2).first_or_create(
+          name: 'Quantitative Methods', name_url: 'quantitative-methods',
+          exam_level_id: 1, active: true, sorting_order: 0
+  ); print '.'
+  ExamSection.where(id: 3).first_or_create(
+          name: 'Alternative Investments', name_url: 'alternative-investments',
+          exam_level_id: 1, active: true, sorting_order: 0
+  ); print '.'
+  ExamSection.where(id: 4).first_or_create(
+          name: 'Portfolio Management', name_url: 'portfolio-management',
+          exam_level_id: 1, active: true, sorting_order: 0
+  ); print '.'
+  ExamSection.where(id: 5).first_or_create(
+          name: 'Fixed Income', name_url: 'fixed-income',
+          exam_level_id: 1, active: true, sorting_order: 0
+  ); print '.'
+  ExamSection.where(id: 6).first_or_create(
+          name: 'Derivatives', name_url: 'derivatives',
+          exam_level_id: 1, active: true, sorting_order: 0
+  ); print '.'
 
   puts ' DONE'
   print 'Users: '
@@ -174,24 +245,30 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   puts ' DONE'
   print 'Currencies: '
 
-  Currency.where(id: 1).first_or_create(iso_code: 'EUR', name: 'Euro',
-                                        leading_symbol: '€', trailing_symbol: 'c',
-                                        active: true, sorting_order: 100); print '.'
-  Currency.where(id: 2).first_or_create(iso_code: 'GBP', name: 'Pounds Sterling',
-                                        leading_symbol: '£', trailing_symbol: 'p',
-                                        active: true, sorting_order: 200); print '.'
-  Currency.where(id: 3).first_or_create(iso_code: 'USD', name: 'US Dollar',
-                                        leading_symbol: '$', trailing_symbol: 'c',
-                                        active: true, sorting_order: 300); print '.'
-  Currency.where(id: 4).first_or_create(iso_code: 'CAD', name: 'Canadian Dollar',
-                                        leading_symbol: '$', trailing_symbol: 'c',
-                                        active: false, sorting_order: 400); print '.'
-  Currency.where(id: 5).first_or_create(iso_code: 'HKD', name: 'Hong Kong Dollar',
-                                        leading_symbol: '$', trailing_symbol: 'c',
-                                        active: false, sorting_order: 500); print '.'
-  Currency.where(id: 6).first_or_create(iso_code: 'SGD', name: 'Singapore Dollar',
-                                        leading_symbol: '$', trailing_symbol: 'c',
-                                        active: false, sorting_order: 600); print '.'
+  Currency.where(id: 1).first_or_create(
+          iso_code: 'EUR', name: 'Euro',
+          leading_symbol: '€', trailing_symbol: 'c',
+          active: true, sorting_order: 100); print '.'
+  Currency.where(id: 2).first_or_create(
+          iso_code: 'GBP', name: 'Pounds Sterling',
+          leading_symbol: '£', trailing_symbol: 'p',
+          active: true, sorting_order: 200); print '.'
+  Currency.where(id: 3).first_or_create(
+          iso_code: 'USD', name: 'US Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: true, sorting_order: 300); print '.'
+  Currency.where(id: 4).first_or_create(
+          iso_code: 'CAD', name: 'Canadian Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: false, sorting_order: 400); print '.'
+  Currency.where(id: 5).first_or_create(
+          iso_code: 'HKD', name: 'Hong Kong Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: false, sorting_order: 500); print '.'
+  Currency.where(id: 6).first_or_create(
+          iso_code: 'SGD', name: 'Singapore Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: false, sorting_order: 600); print '.'
 
   puts ' DONE'
   print 'Countries: '
@@ -240,7 +317,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
       {iso_code: 'CF', name: 'Central African Republic', country_tld: '.cf'},
       {iso_code: 'CG', name: 'Republic of Congo', country_tld: '.cg'},
       {iso_code: 'CH', name: 'Switzerland', country_tld: '.ch'},
-      {iso_code: 'CI', name: "Cote d'Ivoire", country_tld: '.ci'},
+      {iso_code: 'CI', name: "'Cote d'Ivoire'", country_tld: '.ci'},
       {iso_code: 'CK', name: 'Cook Islands', country_tld: '.ck'},
       {iso_code: 'CL', name: 'Chile', country_tld: '.cl'},
       {iso_code: 'CM', name: 'Cameroon', country_tld: '.cm'},
@@ -497,6 +574,64 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   Country.where(continent: %w(Africa Asia Australia Antarctic)).update_all(currency_id: 2); print '.'
   puts ' DONE'
 
+  print 'SubscriptionPlans: '
+  subscription_plan_stuff = {
+          available_to_students: true,
+          available_to_corporates: false,
+          all_you_can_eat: true,
+          available_from: '2014-01-01',
+          available_to: '2099-12-31',
+          trial_period_in_days: 7
+  }
+  # Euro
+  SubscriptionPlan.where(id: 1).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 1,
+          currency_id: 1,
+          price: 9.99})); print '.'
+  SubscriptionPlan.where(id: 2).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 3,
+          currency_id: 1,
+          price: 23.99})); print '.'
+  SubscriptionPlan.where(id: 3).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 1,
+          price: 99.99})); print '.'
+  # Sterling
+  SubscriptionPlan.where(id: 4).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 1,
+          currency_id: 2,
+          price: 7.99})); print '.'
+  SubscriptionPlan.where(id: 5).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 3,
+          currency_id: 2,
+          price: 19.99})); print '.'
+  SubscriptionPlan.where(id: 6).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 2,
+          price: 79.99})); print '.'
+  # US Dollar
+  SubscriptionPlan.where(id: 7).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 1,
+          currency_id: 3,
+          price: 14.99})); print '.'
+  SubscriptionPlan.where(id: 8).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 3,
+          currency_id: 3,
+          price: 29.99})); print '.'
+  SubscriptionPlan.where(id: 9).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 3,
+          price: 129.99})); print '.'
+
+  puts ' DONE'
+  puts 'Completed the db:seed process'
+
+  print 'Performing preventative maintenance on PostgreSQL: '
+  ActiveRecord::Base.connection.tables.each do |t|
+    ActiveRecord::Base.connection.reset_pk_sequence!(t)
+  end; nil;
+  puts ' DONE'
+
   if Rails.env.development?
     puts 'Building simple framework'
     # SubjectArea.create!(id: 1, name: 'Finance', name_url: 'finance', sorting_order: 1, active: true)
@@ -514,6 +649,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   puts
   puts 'Completed the db/seed process'
+
   puts '*' * 100
 
 end

@@ -45,6 +45,9 @@ class Currency < ActiveRecord::Base
   scope :all_inactive, -> { where(active: false) }
 
   # class methods
+  def self.get_by_iso_code(the_iso_code)
+    Currency.where(iso_code: the_iso_code).first || nil
+  end
 
   # instance methods
   def destroyable?

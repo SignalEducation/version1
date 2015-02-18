@@ -48,7 +48,7 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code address guid)
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -67,23 +67,23 @@ describe User do
   it { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_many(:quiz_attempts) }
-  it { should have_many(:invoices) }
+  it { should have_many(:forum_posts) }
+  it { should have_many(:forum_post_concerns) }
+  it { should have_many(:forum_topic_users) }
   it { should have_many(:institution_users) }
-  it { should have_many(:student_exam_tracks) }
+  it { should have_many(:invoices) }
+  it { should have_many(:quiz_attempts) }
+  it { should have_many(:created_static_pages) }
+  it { should have_many(:updated_static_pages) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
+  it { should have_many(:student_exam_tracks) }
   it { should have_many(:user_exam_level) }
-  it { should have_many(:user_notifications) }
-  it { should have_many(:forum_topic_users) }
-  it { should have_many(:forum_posts) }
-  it { should have_many(:forum_post_concerns) }
-  it { should have_many(:user_likes) }
-  it { should have_many(:created_static_pages) }
-  it { should have_many(:updated_static_pages) }
   it { should have_many(:user_activity_logs) }
   it { should belong_to(:user_group) }
+  it { should have_many(:user_likes) }
+  it { should have_many(:user_notifications) }
 
   # validation
   it { should validate_presence_of(:email) }
@@ -124,6 +124,7 @@ describe User do
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
 
   # callbacks
+  it { should callback(:set_defaults).before(:validation).on(:create) }
   it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
@@ -141,11 +142,11 @@ describe User do
   # instance methods
   it { should respond_to(:admin?) }
   it { should respond_to(:change_the_password) }
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:full_name) }
-  it { should respond_to(:frequent_forum_user?) }
-  it { should respond_to(:tutor?) }
-  it { should respond_to(:individual_student?) }
   it { should respond_to(:content_manager?) }
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:frequent_forum_user?) }
+  it { should respond_to(:full_name) }
+  it { should respond_to(:individual_student?) }
+  it { should respond_to(:tutor?) }
 
 end
