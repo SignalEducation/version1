@@ -17,20 +17,23 @@ describe 'User navigating through the library:' do
     visit root_path
     click_link 'Library'
     expect(page).to have_content I18n.t('views.general.home')
-    expect(page).to have_content maybe_upcase I18n.t('views.library.show.h1')
+    within('h1') do
+      expect(page).to have_content maybe_upcase I18n.t('views.library.show.h1')
+    end
     expect(page).to_not have_content I18n.t('views.general.back')
     expect(page).to have_content maybe_upcase I18n.t('views.subject_areas.index.h1')
     expect(page).to have_content maybe_upcase 'Lorem Ipsum'
-    expect(page).to have_content maybe_upcase 'Institute 1'
-    expect(page).to have_content 'Qualification 1'
+    expect(page).to have_content maybe_upcase institution_1.name
+    expect(page).to have_content qualification_1.name
     within('#subject-area-panel') do
       find_link('Subject Area 2').click
     end
     expect(page).to have_content maybe_upcase I18n.t('views.subject_areas.index.h1')
-    expect(page).to have_content maybe_upcase 'Institute 2'
+    # the library skips down the hierarchy to exam_level_2
+    expect(page).to have_content maybe_upcase exam_level_2.name
     expect(page).to have_content maybe_upcase 'Lorem Ipsum'
-    expect(page).to have_content 'Qualification 3'
-
+    sleep 10
+    expect(page).to have_content course_module_element_2_1.name
   end
 
 end
