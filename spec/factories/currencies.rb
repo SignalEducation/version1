@@ -28,6 +28,28 @@ FactoryGirl.define do
     factory :inactive_currency do
       active                  false
     end
+
+    factory :euro do
+      active                  true
+      name                    'Euro'
+      iso_code                'EUR'
+      leading_symbol          '€'
+    end
+
+    factory :usd do
+      active                  true
+      name                    'US Dollar'
+      iso_code                'USD'
+      leading_symbol          '$'
+    end
+
+    factory :gbp do
+      active                  true
+      name                    'Pounds Sterling'
+      iso_code                'GBP'
+      leading_symbol          '£'
+      trailing_symbol         'p'
+    end
   end
 
 end

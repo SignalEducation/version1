@@ -7,7 +7,7 @@ RSpec.describe 'subscription_plans/show', type: :view do
     @subscription_plan = FactoryGirl.create(:subscription_plan, currency_id: @currency.id)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/nice_boolean/)
     expect(rendered).to match(/nice_boolean/)

@@ -1,0 +1,61 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.student_sign_ups.show.h1')
+      .leader
+        %p=t('views.student_sign_ups.show.sub-head')
+
+.row
+  .col-sm-12
+    %h2=t('views.student_sign_ups.show.h2')
+
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %thead
+      %tfoot
+      %tbody
+        %tr
+          %th.col-sm-3=t('views.student_sign_ups.show.your_chosen_plan')
+          %td.col-sm-9
+            =@subscription.subscription_plan.name
+            %br/
+        -if @subscription.subscription_plan.trial_period_in_days.to_i > 0
+          %tr
+            %th=t('views.student_sign_ups.show.free_trial_period')
+            %td
+              =pluralize(@subscription.subscription_plan.trial_period_in_days, t('views.student_sign_ups.show.day'))
+              \-
+              =@subscription.created_at.to_date.strftime('%-e %b')
+              =t('views.student_sign_ups.show.to')
+              =(@subscription.created_at.to_date + @subscription.subscription_plan.trial_period_in_days.to_i.days).strftime('%-e %b')
+          %tr
+            %th=t('views.student_sign_ups.show.your_first_payment_will_be_on')
+            %td=@subscription.next_renewal_date.to_date.to_s(:standard)
+        -else
+          %tr
+            %th=t('views.student_sign_ups.show.your_next_payment_will_be_on')
+            %td=@subscription.next_renewal_date.to_date.to_s(:standard)
+        %tr
+          %th=t('views.student_sign_ups.show.price')
+          %td
+            =number_in_local_currency(@subscription.subscription_plan.price, @subscription.subscription_plan.currency_id)
+            =t('views.student_sign_ups.show.every')
+            =@subscription.subscription_plan.payment_frequency_in_months == 1 ? t('views.student_sign_ups.show.month') : pluralize(@subscription.subscription_plan.payment_frequency_in_months, 'month')
+        %tr
+          %th=t('views.student_sign_ups.show.your_card_details')
+          %td
+            ='xxxx-xxxx-xxxx-____,'
+            -# todo: + @subscription.
+            =t('views.student_sign_ups.show.expires')
+            XX / XXXX
+            -# todo:
+
+    %p
+      =t('views.student_sign_ups.show.if_you_have_any_questions')
+      =link_to t('views.student_sign_ups.show.please_get_in_touch'), 'mailto:help@learnsignal.com'
+    %hr
+
+.row
+  .col-sm-3
+    =link_to t('views.student_sign_ups.show.lets_get_started'), cookies.encrypted[:post_sign_up_redirect_path] || library_url, class: 'btn btn-success btn-block'

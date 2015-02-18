@@ -61,6 +61,7 @@ describe Qualification do
   it { expect(Qualification).to respond_to(:get_by_name_url) }
 
   # instance methods
+  it { should respond_to(:active_children) }
   it { should respond_to(:children) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }

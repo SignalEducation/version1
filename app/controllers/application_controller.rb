@@ -11,11 +11,10 @@ class ApplicationController < ActionController::Base
 
   def self.find_multiplier_for_difficulty_level(the_name)
     DIFFICULTY_LEVEL_NAMES.include?(the_name) ?
-        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] :
-        0
+        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
-  if Rails.env.staging?
+  if Rails.env.staging? && !controller_name[0..2] == 'api'
     http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
   end
 
@@ -23,7 +22,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :set_locale
-  before_action :set_session_guid
+  before_action :set_session_stuff
   before_action :log_user_activity
 
   helper_method :current_user_session, :current_user
@@ -118,16 +117,27 @@ class ApplicationController < ActionController::Base
   end
 
 
-  #### Session GUIDs and user logging
+  #### Session GUIDs and user tracking
 
   def current_session_guid
     cookies.permanent.encrypted[:session_guid]
   end
   helper_method :current_session_guid
 
-  def set_session_guid
+  def set_session_stuff
     cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
+    cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
     @mathjax_required = false # default
+  end
+
+  def reset_latest_session_landing_url
+    cookies.encrypted[:latest_session_landing_url] = {value: request.filtered_path, httponly: true}
+  end
+
+  def reset_post_sign_up_redirect_path(new_path)
+    cookies.encrypted[:post_sign_up_redirect_path] = {value: new_path, httponly: true} if new_path
   end
 
   def log_user_activity
@@ -135,11 +145,11 @@ class ApplicationController < ActionController::Base
             current_user.try(:id),    current_session_guid,
             request.filtered_path,    controller_name,
             action_name,              request.filtered_parameters,
-            request.remote_ip,        request.env['HTTP_USER_AGENT']
+            request.remote_ip,        request.env['HTTP_USER_AGENT'],
+            cookies.encrypted[:first_session_landing_url],
+            cookies.encrypted[:latest_session_landing_url],
+            cookies.permanent.encrypted[:post_sign_up_redirect_path]
     )
-    Rails.logger.debug '*'* 100
-    Rails.logger.debug request.env['HTTP_USER_AGENT']
-    Rails.logger.debug '*'* 100
   end
 
 
@@ -155,7 +165,8 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
-  def course_module_special_link(the_thing) # tutor/admin-facing
+  # tutor/admin-facing
+  def course_module_special_link(the_thing)
     # used for tutor-facing links
 
     if the_thing.class == CourseModuleElement && !the_thing.id.nil?
@@ -196,7 +207,31 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_module_special_link
 
-  def library_special_link(the_thing) # customer-facing
+  # customer-facing
+  def library_special_link(the_thing, direction='forwards')
+    the_thing = the_thing
+    if direction == 'forwards'
+
+      until the_thing.try(:active_children).try(:count) != 1 || (the_thing.class == CourseModuleElement || the_thing.class == CourseModule || the_thing.class == ExamLevel || the_thing.class == ExamSection)
+        if the_thing.active_children.count == 1 &&
+                       (the_thing.active_children.first.class == SubjectArea ||
+                        the_thing.active_children.first.class == Institution ||
+                        the_thing.active_children.first.class == Qualification ||
+                        the_thing.active_children.first.class == ExamLevel ||
+                        the_thing.active_children.first.class == ExamSection)
+          the_thing = the_thing.active_children.first
+        end
+      end
+
+    else
+
+      until the_thing.class == SubjectArea || the_thing.try(:active_children).try(:count).to_i > 1
+        if the_thing.try(:active_children).try(:count).to_i == 1
+          the_thing = the_thing.parent
+        end
+      end
+    end
+
     if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
       course_special_link(the_thing)
     elsif the_thing.class == ExamSection
@@ -229,7 +264,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
-  def course_special_link(the_thing)
+  def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
       course_url(
               the_thing.exam_level.qualification.institution.subject_area.name_url,
@@ -251,7 +286,7 @@ class ApplicationController < ActionController::Base
       )
     else
       # shouldn't be here - re-route to /library/bla-bla
-      library_special_link(the_thing)
+      library_special_link(the_thing, direction)
     end
   end
   helper_method :course_special_link

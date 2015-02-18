@@ -29,6 +29,7 @@
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  show_standard_footer       :boolean          default(TRUE)
+#  post_sign_up_redirect_url  :string(255)
 #
 
 require 'rails_helper'

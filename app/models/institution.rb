@@ -59,6 +59,10 @@ class Institution < ActiveRecord::Base
   end
 
   # instance methods
+  def active_children
+    self.children.all_active
+  end
+
   def children
     self.qualifications.all
   end
