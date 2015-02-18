@@ -50,6 +50,10 @@ tr {
   text-transform: uppercase;
 }
 
+.special-navbar {
+  height: 15px;
+}
+
 .navbar-footer {
   margin: 100px 0 0;
   border-radius: 0;
@@ -235,6 +239,10 @@ header {
   color: green;
 }
 
+.blue {
+  color: #0088cc;
+}
+
 .panel-body .col-sm-4 {
   vertical-align: middle;
   .h3 {
@@ -245,4 +253,8 @@ header {
     margin: 7px 0;
   }
 
+}
+
+.wide-button {
+  width: 100%;
 }
