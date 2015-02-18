@@ -208,7 +208,30 @@ class ApplicationController < ActionController::Base
   helper_method :course_module_special_link
 
   # customer-facing
-  def library_special_link(the_thing)
+  def library_special_link(the_thing, direction='forwards')
+    the_thing = the_thing
+    if direction == 'forwards'
+
+      until the_thing.try(:active_children).try(:count) != 1 || (the_thing.class == CourseModuleElement || the_thing.class == CourseModule || the_thing.class == ExamLevel || the_thing.class == ExamSection)
+        if the_thing.active_children.count == 1 &&
+                       (the_thing.active_children.first.class == SubjectArea ||
+                        the_thing.active_children.first.class == Institution ||
+                        the_thing.active_children.first.class == Qualification ||
+                        the_thing.active_children.first.class == ExamLevel ||
+                        the_thing.active_children.first.class == ExamSection)
+          the_thing = the_thing.active_children.first
+        end
+      end
+
+    else
+
+      until the_thing.class == SubjectArea || the_thing.try(:active_children).try(:count).to_i > 1
+        if the_thing.try(:active_children).try(:count).to_i == 1
+          the_thing = the_thing.parent
+        end
+      end
+    end
+
     if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
       course_special_link(the_thing)
     elsif the_thing.class == ExamSection
@@ -241,7 +264,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
-  def course_special_link(the_thing)
+  def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
       course_url(
               the_thing.exam_level.qualification.institution.subject_area.name_url,
@@ -263,7 +286,7 @@ class ApplicationController < ActionController::Base
       )
     else
       # shouldn't be here - re-route to /library/bla-bla
-      library_special_link(the_thing)
+      library_special_link(the_thing, direction)
     end
   end
   helper_method :course_special_link
