@@ -39,15 +39,8 @@ describe SubscriptionPlan do
   it { should belong_to(:currency) }
   it { should have_many(:subscriptions) }
 
-  # validation
-  # todo - this didn't work, so I commented it out
-  # it { should validate_presence_of(:name) }
-  # describe 'uniqueness of name' do
-  #   subject { FactoryGirl.create(:subscription_plan) }
-  #   it { should validate_uniqueness_of(:name).case_insensitive }
-  # end
-
-  it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
+   it { should validate_presence_of(:name) }
+   it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
 
   it { should validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }

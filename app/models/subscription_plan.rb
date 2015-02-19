@@ -36,7 +36,7 @@ class SubscriptionPlan < ActiveRecord::Base
   has_many :subscriptions
 
   # validation
-  validates :name, presence: true, uniqueness: true, case_sensitive: false
+  validates :name, presence: true
   validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
