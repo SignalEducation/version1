@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
     get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
+    post 'stripe_v01', to: 'stripe_v01#create'
     resources :user_activities, only: :create
   end
 
