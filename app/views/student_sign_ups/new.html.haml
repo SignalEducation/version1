@@ -1,6 +1,6 @@
 #student-sign-up
   =form_for @user, url: student_sign_ups_url, html: {class: 'form-horizontal', role: 'form'} do |f|
-    =f.hidden_field :locale, value: params[:locale]
+    =f.hidden_field :locale, value: (params[:locale] || 'en')
     .row
       .col-sm-8.col-sm-offset-2
         .well.well-sm
