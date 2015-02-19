@@ -95,7 +95,7 @@ class SubscriptionPlan < ActiveRecord::Base
               interval_count: self.payment_frequency_in_months,
               trial_period_days: self.trial_period_in_days,
               name: 'LearnSignal ' + self.name,
-              statement_description: 'LearnSignal' + self.name,
+              statement_description: 'LearnSignal',
               currency: self.currency.try(:iso_code).try(:downcase),
               id: Rails.env + '-' + ApplicationController::generate_random_code(20)
       )
