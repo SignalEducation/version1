@@ -7,7 +7,7 @@
       .h2=t('views.general.coming_soon')
 .row
   .col-sm-12
-.row
+-#.row
   .col-sm-12
     %h3=t('views.course_module_elements.form.description')
     %p
@@ -15,19 +15,19 @@
       =cme.tutor.full_name
     .well.well-sm
       =sanitizer(cme.description)
-.row
+-#.row
   .col-sm-12
     %h3=t('views.course_module_element_videos.form.transcript')
     .well.well-sm
       =sanitizer(cme.course_module_element_video.transcript)
 
-.row
+-#.row
   .col-sm-12
     .glyphicon.glyphicon-tags
       -cme.course_module_element_video.tags.split(',').each do |tag|
         .label.label-default=tag
 
--if cme.course_module_element_resources.count > 0
+-#if cme.course_module_element_resources.count > 0
   .row
     .col-sm-12
       %h2=t('views.course_module_element_resources.index.h1')
