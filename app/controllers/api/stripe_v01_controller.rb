@@ -1,7 +1,5 @@
 class Api::StripeV01Controller < ApplicationController
 
-  ACCEPTED_TYPES = %w(invoice.create invoice.payment_succeeded invoice.payment_failed charge.succeeded customer.subscription.trial_will_end customer.subscription.updated)
-
   protect_from_forgery except: :create
 
   # application_controller stuff that we don't want here...
@@ -12,111 +10,18 @@ class Api::StripeV01Controller < ApplicationController
   def create
     if params[:event]
       the_event = JSON.parse(params[:event], {symbolize_names: true})
-      if the_event[:id].to_s.length > 0
-        StripeApiProcessorWorker.perform_async(the_event[:id], 'v01')
-      else
-        Rails.logger.error "ERROR: Api/StripeV01#Create received invalid EVENT data: #{the_event}"
-      end
+      (the_event[:id].to_s.length > 0) ?
+              StripeApiProcessorWorker.perform_async(the_event[:id], 'v01') :
+              Rails.logger.error "ERROR: Api/StripeV01#Create: INVALID data: #{the_event}"
     else
-      Rails.logger.error "ERROR: Api/StripeV01#Create received NO data: #{params}"
+      Rails.logger.error "ERROR: Api/StripeV01#Create: NO data: #{params}"
     end
     render text: nil, status: 200
   end
 
   protected
 
-  def call_stripe_back(event_id)
-    validation_ok = false
-    new_payload = Stripe::Event.retrieve(event_id)
-    return validation_ok, new_payload
-  end
-
-  def permitted_params
-    params.permit(
-
-    )
-  end
-
-  def validate_message(payload)
-    validation_status, new_payload = call_stripe_back(payload)
-    return validation_status, new_payload
-  end
-
   #### Invoices
-
-  def invoice_create(payload)
-    sample = {
-            id: 'test_evt_1',
-            created: 1326853478,
-            livemode: false,
-            type: 'invoice.created',
-            object: 'event',
-            data: {
-                    object: {
-                            id: 'in_00000000000000',
-                            date: 1380674206,
-                            period_start: 1378082075,
-                            period_end: 1380674075,
-                            lines: {
-                                    count: 1,
-                                    object: 'list',
-                                    url: '/v1/invoices/in_00000000000000/lines',
-                                    data: [
-                                            {
-                                                    id: 'su_2hksGtIPylSBg2',
-                                                    object: 'line_item',
-                                                    type: 'subscription',
-                                                    livemode: true,
-                                                    amount: 100,
-                                                    currency: 'usd',
-                                                    proration: false,
-                                                    period: {
-                                                            start: 1383759042,
-                                                            end: 1386351042
-                                                    },
-                                                    quantity: 1,
-                                                    plan: {
-                                                            id: 'fkx0AFo',
-                                                            interval: 'month',
-                                                            name: "Member's Club",
-                                                            amount: 100,
-                                                            currency: 'usd',
-                                                            object: 'plan',
-                                                            livemode: false,
-                                                            interval_count: 1,
-                                                            trial_period_days: nil,
-                                                            metadata: {}
-                                                    },
-                                                    description: nil,
-                                                    metadata: nil
-                                            }
-                                    ]
-                            },
-                            subtotal: 1000,
-                            total: 1000,
-                            customer: 'cus_00000000000000',
-                            object: 'invoice',
-                            attempted: false,
-                            closed: true,
-                            paid: true,
-                            livemode: false,
-                            attempt_count: 1,
-                            amount_due: 1000,
-                            currency: 'usd',
-                            starting_balance: 0,
-                            ending_balance: 0,
-                            next_payment_attempt: nil,
-                            charge: 'ch_00000000000000',
-                            discount: nil,
-                            application_fee: nil,
-                            subscription: 'sub_00000000000000',
-                            metadata: {},
-                            description: nil
-                    }
-            }
-    }
-    ####
-  end
 
   def invoice_payment_succeeded(payload)
     sample = {
