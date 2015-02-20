@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150217115607) do
+ActiveRecord::Schema.define(version: 20150220125611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -392,6 +392,18 @@ ActiveRecord::Schema.define(version: 20150217115607) do
     t.datetime "updated_at"
     t.boolean  "show_standard_footer",       default: true
     t.string   "post_sign_up_redirect_url"
+  end
+
+  create_table "stripe_api_events", force: true do |t|
+    t.string   "guid"
+    t.string   "api_version"
+    t.text     "payload"
+    t.boolean  "processed",     default: false, null: false
+    t.datetime "processed_at"
+    t.boolean  "error",         default: false, null: false
+    t.string   "error_message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "student_exam_tracks", force: true do |t|
