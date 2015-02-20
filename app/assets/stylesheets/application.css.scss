@@ -313,6 +313,7 @@ header {
 }
 
 .side-nav{
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  top: 12%;
+  bottom: 3%;
 }

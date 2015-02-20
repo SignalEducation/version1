@@ -1,11 +1,12 @@
 %br/
 .row
-  .col-sm-3.visible-lg.visible-md.visible-sm.side-nav{style: 'overflow-y: auto;'}
-    .btn.btn-default.btn-lg.wide-button
-      .glyphicon.glyphicon-chevron-left
-      =link_to t('views.library.show.h1'), library_special_link(@course_module.parent)
-    =render partial: 'courses/new_side_nav'
-  .col-sm-9
+  .col-sm-4.visible-lg.visible-md.visible-sm
+    .side-nav{style: 'overflow-y: auto;'}
+      .btn.btn-default.btn-lg.wide-button
+        .glyphicon.glyphicon-chevron-left
+        =link_to t('views.library.show.h1'), library_special_link(@course_module.parent)
+      =render partial: 'courses/new_side_nav'
+  .col-sm-8
     -if defined?(@results)
       =render partial: 'courses/show_results', locals: {cme: @course_module_element}
       -if @course_module_element
