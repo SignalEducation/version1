@@ -47,10 +47,11 @@
   %body
     -if controller_name == 'courses'
       =render partial: 'layouts/special_navbar'
-      .container
+      .container-fluid
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
+      =render partial: 'layouts/footer'
     -else
       =render partial: 'layouts/navbar'
       .container
