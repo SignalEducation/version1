@@ -57,7 +57,7 @@ class Invoice < ActiveRecord::Base
   before_create :calculate_line_totals
 
   # scopes
-  scope :all_in_order, -> { order(:user_id) }
+  scope :all_in_order, -> { order(user_id: :asc, id: :desc) }
 
   # class methods
 

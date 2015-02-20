@@ -856,31 +856,32 @@ en:
 
     invoices:
       form:
-        user_id: user
-        corporate_customer_id: corporate customer
-        subscription_transaction_id: subscription transaction
-        subscription_id: subscription
-        number_of_users: number of users
+        user_id: User
+        corporate_customer_id: Corporate Customer
+        subscription_transaction_id: Subscription transaction
+        subscription_id: Subscription
+        number_of_users: No. of Users
         number_of_users_placeholder: 2
-        currency_id: currency
-        unit_price_ex_vat: unit price
+        currency_id: Currency
+        unit_price_ex_vat: Unit price
         unit_price_ex_vat_placeholder: 10.00
-        line_total_ex_vat: line total ex vat
-        vat_rate_id: vat rate
-        line_total_vat_amount: line total vat amount
-        line_total_inc_vat: line total
+        line_total_ex_vat: Total ex VAT
+        vat_rate_id: VAT Rate
+        line_total_vat_amount: Total VAT
+        line_total_inc_vat: Total
+        status: 'Status'
 
       edit:
-        h1: edit invoice
+        h1: Edit Invoice
 
       index:
-        h1: invoices
+        h1: Invoices
 
       new:
-        h1: new invoice
+        h1: New Invoice
 
       show:
-        h1: invoice
+        h1: Invoice
 
     layouts:
       error_messages:

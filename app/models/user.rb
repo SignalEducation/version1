@@ -213,6 +213,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:content_manager)
   end
 
+  def corporate_customer?
+    self.user_group.try(:corporate_customer)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
