@@ -17,6 +17,14 @@ describe Api::StripeV01Controller, type: :controller do
       post :create
       expect(response.status).to eq(200)
     end
+
+    it 'work in progress' do
+      StripeMock.start
+      event = StripeMock.mock_webhook_event('customer.subscription.updated')
+
+      post :create, event: event
+
+    end
   end
 
 end
