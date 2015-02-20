@@ -4,112 +4,143 @@
       %h1
         =t('views.users.show.h1')
 .row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.users.form.email')
-        %td.col-sm-8=@user.email
-      %tr
-        %td.col-sm-4=t('views.users.form.full_name')
-        %td.col-sm-8=@user.full_name
-      -if @user.address.to_s.length > 1
-        %tr
-          %td.col-sm-4=t('views.users.form.address')
-          %td.col-sm-8=@user.address
-      %tr
-        %td.col-sm-4=t('views.users.form.country_id')
-        %td.col-sm-8=@user.country.try(:name)
-      -if current_user.admin?
-        %tr
-          %td.col-sm-4=t('views.users.form.guid')
-          %td.col-sm-8=@user.guid
-        %tr
-          %td.col-sm-4=t('views.users.form.login_count')
-          %td.col-sm-8=@user.login_count
-        %tr
-          %td.col-sm-4=t('views.users.form.failed_login_count')
-          %td.col-sm-8=@user.failed_login_count
-        %tr
-          %td.col-sm-4=t('views.users.form.last_request_at')
-          %td.col-sm-8
-            -if @user.last_request_at
-              =@user.last_request_at.to_s(:standard)
-        %tr
-          %td.col-sm-4=t('views.users.form.current_login_at')
-          %td.col-sm-8
-            -if @user.current_login_at
-              =@user.current_login_at.to_s(:standard)
-        %tr
-          %td.col-sm-4=t('views.users.form.last_login_at')
-          %td.col-sm-8
-            -if @user.last_login_at
-              =@user.last_login_at.to_s(:standard)
-        %tr
-          %td.col-sm-4=t('views.users.form.current_login_ip')
-          %td.col-sm-8=@user.current_login_ip
-        %tr
-          %td.col-sm-4=t('views.users.form.last_login_ip')
-          %td.col-sm-8=@user.last_login_ip
-        %tr
-          %td.col-sm-4=t('views.users.form.active')
-          %td.col-sm-8=tick_or_cross(@user.active)
-        %tr
-          %td.col-sm-4=t('views.users.form.user_group_id')
-          %td.col-sm-8=link_to @user.user_group.name, @user.user_group
-        %tr
-          %td.col-sm-4=t('views.users.form.password_reset_requested_at')
-          %td.col-sm-8
-            -if @user.password_reset_requested_at
-              =@user.password_reset_requested_at.to_s(:standard)
-        %tr
-          %td.col-sm-4=t('views.users.form.password_reset_at')
-          %td.col-sm-8
-            -if @user.password_reset_at
-              =@user.password_reset_at.to_s(:standard)
-        %tr
-          %td.col-sm-4=t('views.users.form.stripe_customer_id')
-          %td.col-sm-8=@user.stripe_customer_id
+  %div{role: 'tabpanel'}
 
-      -if @user.corporate_customer_id
-        %tr
-          %td.col-sm-4=t('views.users.form.corporate_customer_id')
-          %td.col-sm-8=# todo @user.corporate_customer.try(:name)
-      -if @user.corporate_customer_user_group_id
-        %tr
-          %td.col-sm-4=t('views.users.form.corporate_customer_user_group_id')
-          %td.col-sm-8=# todo @user.corporate_customer_user_group.try(:name)
-      %tr
-        %td.col-sm-4=t('views.users.form.operational_email_frequency')
-        %td.col-sm-8=@user.operational_email_frequency
-      %tr
-        %td.col-sm-4=t('views.users.form.study_plan_notifications_email_frequency')
-        %td.col-sm-8=@user.study_plan_notifications_email_frequency
-      %tr
-        %td.col-sm-4=t('views.users.form.falling_behind_email_alert_frequency')
-        %td.col-sm-8=@user.falling_behind_email_alert_frequency
-      %tr
-        %td.col-sm-4=t('views.users.form.marketing_email_frequency')
-        %td.col-sm-8=@user.marketing_email_frequency
-      %tr
-        %td.col-sm-4=t('views.users.form.marketing_email_permission_given_at')
-        %td.col-sm-8
-          -if @user.marketing_email_permission_given_at
-            =@user.marketing_email_permission_given_at.to_s(:standard)
-      %tr
-        %td.col-sm-4=t('views.users.form.blog_notification_email_frequency')
-        %td.col-sm-8=@user.blog_notification_email_frequency
-      %tr
-        %td.col-sm-4=t('views.users.form.forum_notification_email_frequency')
-        %td.col-sm-8=@user.forum_notification_email_frequency
-
-    %p
+    %ul.nav.nav-tabs{role: 'tablist'}
+      %li.active{role: 'presentation'}
+        %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
+      %li{role: 'presentation'}
+        %a{href: '#notifications', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.notifications')
+      %li{role: 'presentation'}
+        %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
       -if current_user.admin?
-        =link_to sanitize('&larr; ' + t('views.users.index.h1')), users_url
-        |
-      =link_to(I18n.t('views.general.edit'), edit_user_url(@user), title: t('views.general.edit_tooltip'))
-      -if @user.id == current_user.id
-        |
-        =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
+        %li{role: 'presentation'}
+          %a{href: '#admin', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.notifications')
+
+    =form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
+
+      .tab-content
+        %br/
+        .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
+          .row
+            .col-sm-8.col-sm-offset-2
+              .well.well-sm
+                =render partial: 'users/form_personal_details', locals: {f: f}
+
+        .tab-pane.fade#notifications{role: 'tabpanel'}
+          .row
+            .col-sm-8.col-sm-offset-2
+              .well.well-sm
+                =render partial: 'users/form_notifications', locals: {f: f}
+
+        .tab-pane.fade#subscriptions{role: 'tabpanel'}
+          .row
+            .col-sm-12
+              -@invoices = @user.invoices.paginate(page: 1, per_page: 50).all_in_order
+              =render partial: 'invoices/index'
+          .row
+            .col-sm-12
+              %h2 Your card details
+              .well.well-sm
+                %table.table.table-bordered
+                  %tbody
+                    -# todo -@user.payment_cards.each do |card|
+                      %tr
+                        %td
+                          Card No.:
+                          ='xxxx-xxxx-xxxx-' + card.last4
+                        %td
+                          Expires:
+                          =card.exp_month
+                          \/
+                          =card.exp_year
+                        %td
+                          =card.status
+                          -if card.status = 'active'
+                            .label.label-success Active
+                          -else
+                            =link_to 'Make active', '#', class: 'btn btn-success btn-sm'
+          %row
+            .col-sm-12
+              %p
+                =link_to 'Change Credit Card', '#', class: 'btn btn-info'
+                =link_to 'Upgrade Subscription Plan', '#', class: 'btn btn-info'
+                =link_to 'Cancel Subscription Plan', '#', class: 'btn'
+              %hr/
+
+        -if current_user.admin?
+          .tab-pane.fade#admin{role: 'tabpanel'}
+            .row
+              .col-sm-8.col-sm-offset-2
+                %table.table.table-bordered
+                  %tbody
+                    %tr
+                      %td.col-sm-4=t('views.users.form.guid')
+                      %td.col-sm-8=@user.guid
+                    %tr
+                      %td.col-sm-4=t('views.users.form.login_count')
+                      %td.col-sm-8=@user.login_count
+                    %tr
+                      %td.col-sm-4=t('views.users.form.failed_login_count')
+                      %td.col-sm-8=@user.failed_login_count
+                    %tr
+                      %td.col-sm-4=t('views.users.form.last_request_at')
+                      %td.col-sm-8
+                        -if @user.last_request_at
+                          =@user.last_request_at.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.users.form.current_login_at')
+                      %td.col-sm-8
+                        -if @user.current_login_at
+                          =@user.current_login_at.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.users.form.last_login_at')
+                      %td.col-sm-8
+                        -if @user.last_login_at
+                          =@user.last_login_at.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.users.form.current_login_ip')
+                      %td.col-sm-8=@user.current_login_ip
+                    %tr
+                      %td.col-sm-4=t('views.users.form.last_login_ip')
+                      %td.col-sm-8=@user.last_login_ip
+                    %tr
+                      %td.col-sm-4=t('views.users.form.active')
+                      %td.col-sm-8=tick_or_cross(@user.active)
+                    %tr
+                      %td.col-sm-4=t('views.users.form.user_group_id')
+                      %td.col-sm-8=link_to @user.user_group.name, @user.user_group
+                    %tr
+                      %td.col-sm-4=t('views.users.form.password_reset_requested_at')
+                      %td.col-sm-8
+                        -if @user.password_reset_requested_at
+                          =@user.password_reset_requested_at.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.users.form.password_reset_at')
+                      %td.col-sm-8
+                        -if @user.password_reset_at
+                          =@user.password_reset_at.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.users.form.stripe_customer_id')
+                      %td.col-sm-8=@user.stripe_customer_id
+                    -if @user.corporate_customer_id
+                      %tr
+                        %td.col-sm-4=t('views.users.form.corporate_customer_id')
+                        %td.col-sm-8=# todo @user.corporate_customer.try(:name)
+                    -if @user.corporate_customer_user_group_id
+                      %tr
+                        %td.col-sm-4=t('views.users.form.corporate_customer_user_group_id')
+                        %td.col-sm-8=# todo @user.corporate_customer_user_group.try(:name)
+                %p
+                  -if current_user.admin?
+                    =link_to sanitize('&larr; ' + t('views.users.index.h1')), users_url
+
+      .row
+        .col-sm-8.col-sm-offset-2
+          =f.submit t('views.general.save'), class: 'btn btn-success'
+          -if @user.id == current_user.id
+            =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
+
 
 -if @user.id == current_user.id
   =render partial: 'users/change_password'

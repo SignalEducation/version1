@@ -2,83 +2,8 @@
   .col-sm-8.col-sm-offset-2
     =form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
       .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
-        .form-group
-          =f.label :email, t('views.users.form.email'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :first_name, t('views.users.form.first_name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :last_name, t('views.users.form.last_name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control'
-        -if @user.id.nil?
-          .form-group
-            =f.label :password, t('views.users.form.password'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.password_field :password, placeholder: t('views.users.form.password_placeholder'), class: 'form-control'
-          .form-group
-            =f.label :password_confirmation, t('views.users.form.password_confirmation'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :country_id, t('views.users.form.address'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', rows: 4
-        .form-group
-          =f.label :country_id, t('views.users.form.country_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        -if current_user && current_user.admin?
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :active
-                  =t('views.users.form.active')
-          .form-group
-            =f.label :user_group_id, t('views.users.form.user_group_id'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.collection_select :user_group_id, @user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          .form-group
-            =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =# todo f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          .form-group
-            =f.label :corporate_customer_user_group_id, t('views.users.form.corporate_customer_user_group_id'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =# todo f.collection_select :corporate_customer_user_group_id, @corporate_customer_user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
-          =f.label :operational_email_frequency, t('views.users.form.operational_email_frequency'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :operational_email_frequency, @email_frequencies, {}, {class: 'form-control'}
-        .form-group
-          =f.label :study_plan_notifications_email_frequency, t('views.users.form.study_plan_notifications_email_frequency'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :study_plan_notifications_email_frequency, @email_frequencies, {}, {class: 'form-control'}
-        .form-group
-          =f.label :falling_behind_email_alert_frequency, t('views.users.form.falling_behind_email_alert_frequency'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :falling_behind_email_alert_frequency, @email_frequencies, {}, {class: 'form-control'}
-        .form-group
-          =f.label :marketing_email_frequency, t('views.users.form.marketing_email_frequency'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :marketing_email_frequency, @email_frequencies, {}, {class: 'form-control'}
-        -#.form-group
-          =f.label :marketing_email_permission_given_at, t('views.users.form.marketing_email_permission_given_at'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :marketing_email_permission_given_at, class: 'form-control'
-        .form-group
-          =f.label :blog_notification_email_frequency, t('views.users.form.blog_notification_email_frequency'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :blog_notification_email_frequency, @email_frequencies, {}, {class: 'form-control'}
-        .form-group
-          =f.label :forum_notification_email_frequency, t('views.users.form.forum_notification_email_frequency'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :forum_notification_email_frequency, @email_frequencies, {}, {class: 'form-control'}
+        =render partial: 'users/form_personal_details', locals: {f: f}
+        =render partial: 'users/form_notifications', locals: {f: f}
       %p
         =f.submit t('views.general.save'), class: 'btn btn-success'
         =t('views.general.or')

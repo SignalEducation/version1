@@ -1216,6 +1216,11 @@ en:
         change_your_password:
           link: Change your password
           h4: Change your password
+        tabs:
+          personal_details: Personal details
+          subscriptions: Subscriptions
+          notifications: Notifications
+          admin: Admin
 
     user_activity_logs:
       form:

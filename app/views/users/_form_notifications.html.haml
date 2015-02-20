@@ -1,0 +1,28 @@
+.form-group
+  =f.label :operational_email_frequency, t('views.users.form.operational_email_frequency'), class: 'control-label col-sm-4'
+  .col-sm-8
+    =f.select :operational_email_frequency, @email_frequencies, {}, {class: 'form-control'}
+.form-group
+  =f.label :study_plan_notifications_email_frequency, t('views.users.form.study_plan_notifications_email_frequency'), class: 'control-label col-sm-4'
+  .col-sm-8
+    =f.select :study_plan_notifications_email_frequency, @email_frequencies, {}, {class: 'form-control'}
+.form-group
+  =f.label :falling_behind_email_alert_frequency, t('views.users.form.falling_behind_email_alert_frequency'), class: 'control-label col-sm-4'
+  .col-sm-8
+    =f.select :falling_behind_email_alert_frequency, @email_frequencies, {}, {class: 'form-control'}
+.form-group
+  =f.label :marketing_email_frequency, t('views.users.form.marketing_email_frequency'), class: 'control-label col-sm-4'
+  .col-sm-8
+    =f.select :marketing_email_frequency, @email_frequencies, {}, {class: 'form-control'}
+-#.form-group
+        =f.label :marketing_email_permission_given_at, t('views.users.form.marketing_email_permission_given_at'), class: 'control-label col-sm-4'
+        .col-sm-8
+          =f.text_field :marketing_email_permission_given_at, class: 'form-control'
+.form-group
+  =f.label :blog_notification_email_frequency, t('views.users.form.blog_notification_email_frequency'), class: 'control-label col-sm-4'
+  .col-sm-8
+    =f.select :blog_notification_email_frequency, @email_frequencies, {}, {class: 'form-control'}
+.form-group
+  =f.label :forum_notification_email_frequency, t('views.users.form.forum_notification_email_frequency'), class: 'control-label col-sm-4'
+  .col-sm-8
+    =f.select :forum_notification_email_frequency, @email_frequencies, {}, {class: 'form-control'}
