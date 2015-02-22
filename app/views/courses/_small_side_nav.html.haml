@@ -22,15 +22,15 @@
                 -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
                   %span.glyphicon.glyphicon-ok-sign
                 =link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
-      -if @course_module.course_module_jumbo_quiz
-        .list-group-item
-          -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
-            %span.glyphicon.glyphicon-chevron-right.blue
-            -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-              %span.glyphicon.glyphicon-ok-sign
-            =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
-          -else
-            %p
+        -if @course_module.course_module_jumbo_quiz
+          .list-group-item.text-center
+            -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
+              %span.glyphicon.glyphicon-chevron-right.blue
               -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
                 %span.glyphicon.glyphicon-ok-sign
-              =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(course_module.course_module_jumbo_quiz)
+              =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
+            -else
+              %p
+                -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                  %span.glyphicon.glyphicon-ok-sign
+                =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)

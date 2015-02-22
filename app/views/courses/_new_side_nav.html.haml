@@ -25,4 +25,4 @@
             %p
               -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
                 %span.glyphicon.glyphicon-ok-sign
-              =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(course_module.course_module_jumbo_quiz)
+              =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
