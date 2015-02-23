@@ -7,7 +7,7 @@
         .row
           .col-sm-10.col-sm-offset-1
             =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
-          =link_to t('views.course_module_elements.show.continue'), '#', class: 'btn btn-success btn-lg'
+            =link_to t('views.course_module_elements.show.continue'), '#', class: 'btn btn-success btn-lg'
 
 .row
   -unless @hierarchy_item.parent.nil?
