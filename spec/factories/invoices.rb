@@ -38,16 +38,15 @@
 FactoryGirl.define do
   factory :invoice do
     user_id 1
-corporate_customer_id 1
-subscription_transaction_id 1
-subscription_id 1
-number_of_users 1
-currency_id 1
-unit_price_ex_vat "9.99"
-line_total_ex_vat "9.99"
-vat_rate_id 1
-line_total_vat_amount "9.99"
-line_total_inc_vat "9.99"
+    corporate_customer_id nil
+    subscription_transaction_id 1
+    subscription_id 1
+    number_of_users 1
+    currency_id 1
+    sub_total 9.99
+    total 9.99
+    total_tax 9.99
+    vat_rate_id 1
   end
 
 end

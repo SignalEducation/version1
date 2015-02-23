@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     get  'institutions/filter/:subject_area_url', to: 'institutions#index', as: :institutions_filtered
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
-    resources :invoices
+    resources :invoices, only: [:index, :show]
     post 'qualifications/reorder', to: 'qualifications#reorder'
     get  'qualifications/filter/:institution_url', to: 'qualifications#index',
          as: :qualifications_filtered
