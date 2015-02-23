@@ -315,5 +315,18 @@ header {
 }
 
 .library-panel {
-  padding-left: 3%;
+  padding: 0%;
+}
+
+.panel-text {
+  width: 50%;
+}
+
+.label {
+  margin-right: 0%;
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 4;
+  padding: 0.4em 2em;
+  border-radius: 0em 0.25em 0.25em 0em;
 }
