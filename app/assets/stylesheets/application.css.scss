@@ -299,3 +299,16 @@ header {
   }
 
 }
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  .print-only {
+    display: inline-block;
+  }
+  .print-hidden {
+    display: none;
+  }
+}

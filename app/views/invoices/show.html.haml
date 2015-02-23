@@ -1,26 +1,65 @@
-.row
+.print-only
+  .row
+    .col-sm-12.text-center
+      %h1 Learn Signal Limited
+      %p 27 South Frederick Street, Dublin 2, Ireland
+      %h2 Sales Invoice
+      %hr/
+
+.row.print-hidden
   .col-sm-12
     .page-header
       %h1
         =t('views.invoices.show.h1')
         \#
         =@invoice.id
+
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-6{rowspan:5}
+          =@invoice.user.full_name
+          %br/
+          -if @invoice.corporate_customer
+            =@invoice.corporate_customer.name
+            %br/
+          =@invoice.user.address
+          %br/
+          =@invoice.user.country.name
+          %br/
+      %tr
+        %td.col-sm-2
+          Invoice No.
+        %td.col-sm-4
+          =@invoice.id
+      %tr
+        %td.col-sm-2
+          =t('views.users.form.created_at')
+        %td.col-sm-4
+          =@invoice.created_at.to_s(:standard)
+      %tr
+        %td.col-sm-2
+          =t('views.invoices.form.subscription_id')
+        %td.col-sm-4
+          =@invoice.subscription.subscription_plan.name
+
 .row
   .col-sm-12
     %table.table.table-bordered
       %tr
         %td.col-sm-4=t('views.invoices.form.user_id')
-        %td.col-sm-8=@invoice.user.full_name
+        %td.col-sm-8
       -if @invoice.corporate_customer
         %tr
           %td.col-sm-4=t('views.invoices.form.corporate_customer_id')
-          %td.col-sm-8=@invoice.corporate_customer.name
+          %td.col-sm-8
       %tr
         %td.col-sm-4=t('views.invoices.form.subscription_transaction_id')
         %td.col-sm-8=@invoice.subscription_transaction.try(:id)
       %tr
-        %td.col-sm-4=t('views.invoices.form.subscription_id')
-        %td.col-sm-8=@invoice.subscription.subscription_plan.name
+        %td.col-sm-4
+        %td.col-sm-8
       %tr
         %td.col-sm-4=t('views.invoices.form.number_of_users')
         %td.col-sm-8=@invoice.number_of_users

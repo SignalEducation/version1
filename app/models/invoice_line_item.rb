@@ -65,10 +65,6 @@ class InvoiceLineItem < ActiveRecord::Base
             subscription_plan_id: SubscriptionPlan.find_by_stripe_guid(stripe_hash[:plan][:id]).id,
             original_stripe_data: stripe_hash.to_hash
     )
-    li.valid?
-    puts '*' * 100
-    puts li.errors
-    puts '*' * 100
     unless li.save
       Rails.logger.error "ERROR: InvoiceLineItems#build_from_stripe_data failed to create. Errors: #{li.errors.inspect}. Original Data: #{stripe_hash}."
     end
