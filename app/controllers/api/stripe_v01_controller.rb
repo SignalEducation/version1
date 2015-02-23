@@ -10,9 +10,11 @@ class Api::StripeV01Controller < ApplicationController
   def create
     if params[:event]
       the_event = JSON.parse(params[:event], {symbolize_names: true})
-      (the_event[:id].to_s.length > 0) ?
-              StripeApiProcessorWorker.perform_async(the_event[:id], 'v01') :
-              Rails.logger.error "ERROR: Api/StripeV01#Create: INVALID data: #{the_event}"
+      if the_event[:id].to_s.length > 0
+        StripeApiProcessorWorker.perform_async(the_event[:id], 'v01')
+      else
+        Rails.logger.error "ERROR: Api/StripeV01#Create: INVALID data: #{the_event}"
+      end
     else
       Rails.logger.error "ERROR: Api/StripeV01#Create: NO data: #{params}"
     end
