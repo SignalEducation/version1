@@ -37,6 +37,7 @@ describe SubscriptionPlan do
 
   # relationships
   it { should belong_to(:currency) }
+  it { should have_many(:invoice_line_items) }
   it { should have_many(:subscriptions) }
 
   # validation

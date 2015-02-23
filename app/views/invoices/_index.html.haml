@@ -21,10 +21,30 @@
             =link_to(invoice.user.full_name, invoice.user, title: t('views.general.view_tooltip'))
             %br/
             =link_to(invoice.corporate_customer.try(:name), invoice, title: t('views.general.view_tooltip'))
-        %td=link_to(invoice.subscription.name, invoice, title: t('views.general.tooltips.click_to_view'))
+        %td=link_to(invoice.subscription.subscription_plan.name, invoice, title: t('views.general.tooltips.click_to_view'))
         %td=link_to(invoice.created_at.to_s(:standard), invoice, title: t('views.general.tooltips.click_to_view'))
         -if current_user.corporate_customer?
           %td=link_to(invoice.number_of_users, invoice, title: t('views.general.view_tooltip'))
-          %td.text-right=link_to(number_in_local_currency(invoice.unit_price_ex_vat, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
-        %td.text-right=link_to(number_in_local_currency(invoice.line_total_inc_vat, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
-        %td=link_to(invoice.status, invoice, title: t('views.general.view_tooltip'))
+          %td.text-right=link_to(number_in_local_currency(invoice.subtotal, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
+        %td.text-right=link_to(number_in_local_currency(invoice.total, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
+        %td
+          =link_to(invoice.status, invoice, title: t('views.general.view_tooltip'))
+          =link_to 'Print', invoice, title: t('views.general.view_tooltip'), class: 'btn btn-info btn-xs'
+          =link_to t('views.general.details'), '#', class: 'btn btn-info btn-xs', onclick: "$('.invoice-detail').addClass('hide');$('#invoice_#{invoice.id}').removeClass('hide'); $(this).addClass('hide'); return false;"
+      %tr.invoice-detail.hide{id: "invoice_#{invoice.id}"}
+        %td{colspan: 10}
+          %table.table.table-striped.table-bordered
+            %tr
+              %th Period From
+              %th Period To
+              %th Subscription Plan
+              %th.text-right Amount
+            -invoice.invoice_line_items.each do |line_item|
+              %tr{id: "line_item_#{line_item.id}"}
+                %td=line_item.period_start_at.to_s(:standard)
+                %td=line_item.period_end_at.to_s(:standard)
+                %td
+                  =line_item.subscription_plan.name
+                  -if line_item.prorated
+                    \(prorated)
+                %td.text-right=number_in_local_currency(line_item.amount, line_item.currency_id)

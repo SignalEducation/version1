@@ -26,6 +26,7 @@ class Currency < ActiveRecord::Base
   # todo has_many :corporate_customer_prices
   has_many :countries
   has_many :invoices
+  has_many :invoice_line_items
   has_many :subscription_plans
   has_many :subscription_transactions
 
@@ -51,7 +52,7 @@ class Currency < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !self.active && self.countries.empty? && self.invoices.empty? && self.subscription_transactions.empty? && self.subscription_plans.empty?
+    !self.active && self.countries.empty? && self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.subscription_plans.empty?
   end
 
   protected

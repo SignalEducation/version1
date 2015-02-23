@@ -1,3 +1,4 @@
+
 # == Schema Information
 #
 # Table name: currencies
@@ -31,9 +32,10 @@ describe Currency do
   #it { expect()Currency.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  xit { should have_many(:corporate_customer_prices) }
+  # todo it { should have_many(:corporate_customer_prices) }
   it { should have_many(:countries) }
   it { should have_many(:invoices) }
+  it { should have_many(:invoice_line_items) }
   it { should have_many(:subscription_plans) }
   it { should have_many(:subscription_transactions) }
 

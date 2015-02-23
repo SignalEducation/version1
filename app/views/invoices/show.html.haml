@@ -10,16 +10,17 @@
     %table.table.table-bordered
       %tr
         %td.col-sm-4=t('views.invoices.form.user_id')
-        %td.col-sm-8=@invoice.user.name
-      %tr
-        %td.col-sm-4=t('views.invoices.form.corporate_customer_id')
-        %td.col-sm-8=@invoice.corporate_customer.name
+        %td.col-sm-8=@invoice.user.full_name
+      -if @invoice.corporate_customer
+        %tr
+          %td.col-sm-4=t('views.invoices.form.corporate_customer_id')
+          %td.col-sm-8=@invoice.corporate_customer.name
       %tr
         %td.col-sm-4=t('views.invoices.form.subscription_transaction_id')
-        %td.col-sm-8=@invoice.subscription_transaction.name
+        %td.col-sm-8=@invoice.subscription_transaction.try(:id)
       %tr
         %td.col-sm-4=t('views.invoices.form.subscription_id')
-        %td.col-sm-8=@invoice.subscription.name
+        %td.col-sm-8=@invoice.subscription.subscription_plan.name
       %tr
         %td.col-sm-4=t('views.invoices.form.number_of_users')
         %td.col-sm-8=@invoice.number_of_users
@@ -28,19 +29,16 @@
         %td.col-sm-8=@invoice.currency.name
       %tr
         %td.col-sm-4=t('views.invoices.form.unit_price_ex_vat')
-        %td.col-sm-8=@invoice.unit_price_ex_vat
-      %tr
-        %td.col-sm-4=t('views.invoices.form.line_total_ex_vat')
-        %td.col-sm-8=@invoice.line_total_ex_vat
-      %tr
-        %td.col-sm-4=t('views.invoices.form.vat_rate_id')
-        %td.col-sm-8=@invoice.vat_rate.name
-      %tr
-        %td.col-sm-4=t('views.invoices.form.line_total_vat_amount')
-        %td.col-sm-8=@invoice.line_total_vat_amount
+        %td.col-sm-8=@invoice.sub_total
       %tr
         %td.col-sm-4=t('views.invoices.form.line_total_inc_vat')
-        %td.col-sm-8=@invoice.line_total_inc_vat
+        %td.col-sm-8=@invoice.total
+      %tr
+        %td.col-sm-4=t('views.invoices.form.vat_rate_id')
+        %td.col-sm-8=@invoice.vat_rate.try(:name)
+      %tr
+        %td.col-sm-4=t('views.invoices.form.line_total_vat_amount')
+        -#%td.col-sm-8=@invoice.vat
     %p
       =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
       |

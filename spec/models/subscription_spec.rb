@@ -37,6 +37,7 @@ describe Subscription do
   it { should belong_to(:user) }
   it { should belong_to(:corporate_customer) }
   it { should have_many(:invoices) }
+  it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
   it { should have_many(:subscription_transactions) }
 

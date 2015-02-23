@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223112333) do
+ActiveRecord::Schema.define(version: 20150223153714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -255,6 +255,20 @@ ActiveRecord::Schema.define(version: 20150223112333) do
     t.datetime "updated_at"
   end
 
+  create_table "invoice_line_items", force: true do |t|
+    t.integer  "invoice_id"
+    t.decimal  "amount"
+    t.integer  "currency_id"
+    t.boolean  "prorated"
+    t.datetime "period_start_at"
+    t.datetime "period_end_at"
+    t.integer  "subscription_id"
+    t.integer  "subscription_plan_id"
+    t.text     "original_stripe_data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "invoices", force: true do |t|
     t.integer  "user_id"
     t.integer  "corporate_customer_id"
@@ -262,13 +276,30 @@ ActiveRecord::Schema.define(version: 20150223112333) do
     t.integer  "subscription_id"
     t.integer  "number_of_users"
     t.integer  "currency_id"
-    t.decimal  "unit_price_ex_vat"
-    t.decimal  "line_total_ex_vat"
     t.integer  "vat_rate_id"
-    t.decimal  "line_total_vat_amount"
-    t.decimal  "line_total_inc_vat"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "issued_at"
+    t.string   "stripe_guid"
+    t.decimal  "sub_total",                   default: 0.0
+    t.decimal  "total",                       default: 0.0
+    t.decimal  "total_tax",                   default: 0.0
+    t.string   "stripe_customer_guid"
+    t.string   "object_type",                 default: "invoice"
+    t.boolean  "payment_attempted",           default: false
+    t.boolean  "payment_closed",              default: false
+    t.boolean  "forgiven",                    default: false
+    t.boolean  "paid",                        default: false
+    t.boolean  "livemode",                    default: false
+    t.integer  "attempt_count",               default: 0
+    t.decimal  "amount_due",                  default: 0.0
+    t.datetime "next_payment_attempt_at"
+    t.datetime "webhooks_delivered_at"
+    t.string   "charge_guid"
+    t.string   "subscription_guid"
+    t.decimal  "tax_percent"
+    t.decimal  "tax"
+    t.text     "original_stripe_data"
   end
 
   create_table "ip_addresses", force: true do |t|

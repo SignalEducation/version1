@@ -33,6 +33,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :user
   belongs_to :corporate_customer
   has_many :invoices
+  has_many :invoice_line_items
   belongs_to :subscription_plan
   has_many :subscription_transactions
 
@@ -61,7 +62,7 @@ class Subscription < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.invoices.empty? && self.subscription_transactions.empty?
+    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty?
   end
 
   def stripe_token=(t) # setter method
