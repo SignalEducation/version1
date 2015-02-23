@@ -114,8 +114,6 @@ class SubscriptionTransaction < ActiveRecord::Base
 
 
       )
-      x.valid?
-      puts x.errors
       x.save!
       id_of_default = x.id if x.is_default_card
     end
