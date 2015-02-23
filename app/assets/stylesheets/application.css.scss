@@ -304,12 +304,17 @@ header {
 
 }
 
-.wide-button {
-  width: 100%;
-}
-
 .side-nav{
   position: fixed;
-  top: 12%;
-  bottom: 0.5%;
+  //top: 12%;
+  top: 70px;
+  //bottom: 0.5%;
+  bottom: 0px;
+  overflow-y: hidden;
+}
+
+.scrollbar {
+  overflow-y: scroll;
+//  max-height: 400px;
+  max-height: 70%;
 }
