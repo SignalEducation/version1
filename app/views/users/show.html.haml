@@ -44,16 +44,16 @@
               .well.well-sm
                 %table.table.table-bordered
                   %tbody
-                    -# todo -@user.payment_cards.each do |card|
+                    -@user.subscription_payment_cards.each do |card|
                       %tr
                         %td
                           Card No.:
-                          ='xxxx-xxxx-xxxx-' + card.last4
+                          ='xxxx-xxxx-xxxx-' + card.last_4
                         %td
                           Expires:
-                          =card.exp_month
+                          =card.expiry_month
                           \/
-                          =card.exp_year
+                          =card.expiry_year
                         %td
                           =card.status
                           -if card.status = 'active'

@@ -15,10 +15,12 @@ describe 'User changing their password' do
       visit_my_profile
       click_link I18n.t('views.users.show.change_your_password.link')
       expect(page).to have_content I18n.t('views.users.show.change_your_password.h4')
-      fill_in I18n.t('views.users.form.current_password'), with: this_user.password
-      fill_in I18n.t('views.users.form.password'), with: 'abcabc123'
-      fill_in I18n.t('views.users.form.password_confirmation'), with: 'abcabc123'
-      click_button I18n.t('views.general.save')
+      within('#change_password_modal') do
+        fill_in I18n.t('views.users.form.current_password'), with: this_user.password
+        fill_in I18n.t('views.users.form.password'), with: 'abcabc123'
+        fill_in I18n.t('views.users.form.password_confirmation'), with: 'abcabc123'
+        click_button I18n.t('views.general.save')
+      end
       expect(page).to have_content I18n.t('controllers.users.change_password.flash.success')
       sign_out
       print '>'
