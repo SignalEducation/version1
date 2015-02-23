@@ -19,11 +19,13 @@
 .row
   %hr/
   -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
-    .col-sm-12
+    .col-sm-10.col-sm-offset-1
       .panel.panel-default
         .panel-body.library-panel
-          %p.panel-text
-            =link_to child.name, library_special_link(child)
-          -if child.class == CourseModule
-            .label.label-default.pull-right
-              = '15%'
+          .panel-title
+            .list-inline
+              .col-xs-8.panel-text
+                =link_to child.name, library_special_link(child)
+              -if child.class == CourseModule
+                .label.label-default.pull-right
+                  = '15%'
