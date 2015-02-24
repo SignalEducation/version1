@@ -68,6 +68,14 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
 
   # class methods
+  def self.generally_available_or_for_category_guid(the_guid)
+    plan_category = SubscriptionPlanCategory.active_with_guid(the_guid).first
+    if plan_category
+      where(subscription_plan_category_id: plan_category.id)
+    else
+      generally_available
+    end
+  end
 
   # instance methods
   def age_status
