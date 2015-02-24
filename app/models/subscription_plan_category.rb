@@ -45,10 +45,18 @@ class SubscriptionPlanCategory < ActiveRecord::Base
     self.subscription_plans.empty? && self.static_pages.empty?
   end
 
+  def current
+    self.available_from < Proc.new{Time.now}.call && self.available_to > Proc.new{Time.now}.call
+  end
+
   def full_name
     self.name + ' - ' +
             self.available_from.strftime(I18n.t('controllers.application.date_formats.standard')) + ' - ' +
             self.available_to.strftime(I18n.t('controllers.application.date_formats.standard'))
+  end
+
+  def status
+    self.current ? 'success' : ''
   end
 
   protected

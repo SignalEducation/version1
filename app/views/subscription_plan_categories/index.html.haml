@@ -15,7 +15,7 @@
           %th
       %tbody
         -@subscription_plan_categories.each do |subscription_plan_category|
-          %tr{id: subscription_plan_category.id}
+          %tr{id: subscription_plan_category.id, class: subscription_plan_category.status}
             %td=link_to(subscription_plan_category.name, subscription_plan_category, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan_category.available_from.to_s(:standard), subscription_plan_category, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan_category.available_to.to_s(:standard), subscription_plan_category, title: t('views.general.view_tooltip'))

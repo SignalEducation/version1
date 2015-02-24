@@ -52,6 +52,8 @@ describe SubscriptionPlanCategory do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:current) }
   it { should respond_to(:full_name) }
+  it { should respond_to(:status) }
 
 end
