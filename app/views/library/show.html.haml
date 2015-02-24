@@ -23,9 +23,8 @@
       .panel.panel-default
         .panel-body.library-panel
           .panel-title
-            .list-inline
-              .col-xs-8.panel-text
-                =link_to child.name, library_special_link(child)
-              -if child.class == CourseModule
-                .label.label-default.pull-right
-                  = '15%'
+            .col-xs-8.panel-text
+              =link_to child.name, library_special_link(child)
+            -if child.class == CourseModule
+              .label.label-default.pull-right
+                = '15%'
