@@ -251,6 +251,18 @@ en:
           success: Subscription Plan has been deleted
           error: Subscription Plan was not deleted
 
+    subscription_plan_categories:
+      create:
+        flash:
+          success: Subscription Plan Category has been created successfully
+      update:
+        flash:
+          success: Subscription Plan Category details have been updated successfully
+      destroy:
+        flash:
+          success: Subscription Plan Category has been deleted
+          error: Subscription Plan Category was not deleted
+
     users:
       create:
         flash:
