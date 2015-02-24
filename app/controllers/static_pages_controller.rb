@@ -105,6 +105,7 @@ class StaticPagesController < ApplicationController
     seo_title_maker(@static_page.try(:name))
     @countries = Country.all_in_order
     @samples = sample_code
+    @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
   end
 
   def allowed_params
@@ -129,6 +130,9 @@ class StaticPagesController < ApplicationController
             :created_by, :updated_by,
             :show_standard_footer,
             :post_sign_up_redirect_url,
+            :subscription_plan_category_id,
+            :student_sign_up_h1,
+            :student_sign_up_sub_head,
             static_page_uploads_attributes: [
                     :id,
                     :description,
@@ -159,6 +163,9 @@ class StaticPagesController < ApplicationController
             :make_this_page_sticky,
             :logged_in_required,
             :created_by, :updated_by,
+            :subscription_plan_category_id,
+            :student_sign_up_h1,
+            :student_sign_up_sub_head,
             :approved_country_ids => [])
   end
 
