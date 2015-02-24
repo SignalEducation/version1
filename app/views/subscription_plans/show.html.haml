@@ -43,7 +43,7 @@
         %td.col-sm-8=@subscription_plan.trial_period_in_days
       %tr
         %td.col-sm-4=t('views.subscription_plans.form.subscription_plan_category_id')
-        %td.col-sm-8=@subscription_plan.subscription_plan_category.try(:full_name)
+        %td.col-sm-8=link_to @subscription_plan.subscription_plan_category.try(:full_name), @subscription_plan.subscription_plan_category, title: t('views.general.tooltips.click_to_view')
       %tr
         %td.h2{colspan: 2}
           Stripe Details
