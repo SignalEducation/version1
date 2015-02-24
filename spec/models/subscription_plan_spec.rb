@@ -81,6 +81,7 @@ describe SubscriptionPlan do
   it { expect(SubscriptionPlan).to respond_to(:all_active) }
   it { expect(SubscriptionPlan).to respond_to(:for_corporates) }
   it { expect(SubscriptionPlan).to respond_to(:for_students) }
+  it { expect(SubscriptionPlan).to respond_to(:generally_available) }
   it { expect(SubscriptionPlan).to respond_to(:in_currency) }
 
   # class methods

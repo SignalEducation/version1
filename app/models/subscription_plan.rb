@@ -64,6 +64,7 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
   scope :for_corporates, -> { where(available_to_corporates: true) }
   scope :for_students, -> { where(available_to_students: true) }
+  scope :generally_available, -> { where(subscription_plan_category_id: nil) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
 
   # class methods

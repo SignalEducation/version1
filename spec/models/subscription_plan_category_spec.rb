@@ -46,6 +46,7 @@ describe SubscriptionPlanCategory do
 
   # scopes
   it { expect(SubscriptionPlanCategory).to respond_to(:all_in_order) }
+  it { expect(SubscriptionPlanCategory).to respond_to(:active_with_guid) }
 
   # class methods
 

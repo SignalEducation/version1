@@ -36,6 +36,7 @@ class SubscriptionPlanCategory < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:name) }
+  scope :active_with_guid, lambda { |the_guid| where(guid: the_guid).where('available_from < :now AND available_to > :now', {now: Proc.new{Time.now}.call} )}
 
   # class methods
 
