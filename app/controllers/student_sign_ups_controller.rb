@@ -68,9 +68,16 @@ class StudentSignUpsController < ApplicationController
   end
 
   def get_variables
+    @custom_headings = nil
     @countries = Country.includes(:currency).all_in_order
     @email_frequencies = User::EMAIL_FREQUENCIES
-    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.all_active.all_in_order
+    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+
+    static_page = StaticPage.find_active_default_for_url(cookies.encrypted[:latest_session_landing_url].gsub("/#{params[:locale]}",''))
+    @custom_headings = {
+          h1: static_page.try(:student_sign_up_h1),
+          sub_head: static_page.try(:student_sign_up_sub_head)
+    }
   end
 
   def assign_anonymous_logs_to_user(user_id)
