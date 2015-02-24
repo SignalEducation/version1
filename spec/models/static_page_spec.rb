@@ -114,6 +114,7 @@ describe StaticPage do
 
   # class methods
   it { expect(StaticPage).to respond_to(:all_of_type) }
+  it { expect(StaticPage).to respond_to(:find_active_default_for_url) }
   it { expect(StaticPage).to respond_to(:with_logged_in_status) }
 
   # instance methods

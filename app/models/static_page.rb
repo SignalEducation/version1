@@ -103,6 +103,11 @@ class StaticPage < ActiveRecord::Base
     end
   end
 
+  def self.find_active_default_for_url(the_url)
+    return nil if the_url.nil?
+    StaticPage.all_active.where(public_url: the_url).where('allow_multiples != true OR default_page_for_this_url = true').first
+  end
+
   def self.with_logged_in_status(the_status)
     if the_status
       all
