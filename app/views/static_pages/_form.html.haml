@@ -137,7 +137,7 @@
               .form-group
                 =f.label :subscription_plan_category_id, t('views.static_pages.form.subscription_plan_category_id'), class: 'control-label col-sm-4'
                 .col-sm-8
-                  =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control'}
+                  =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :full_name, {include_blank: t('views.general.none')}, {class: 'form-control'}
 
           .tab-pane.fade#images{role: 'tabpanel'}
             %h2=t('views.static_pages.form.uploads')
