@@ -86,6 +86,14 @@ class ExamSection < ActiveRecord::Base
     end
   end
 
+  def total_active_cmes
+    #self.course_module_elements.all_active.count
+    cms = self.active_children
+    cms.each do
+      children_available_count
+    end
+  end
+
   protected
 
   def calculate_best_possible_score

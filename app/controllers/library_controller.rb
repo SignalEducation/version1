@@ -17,6 +17,7 @@ class LibraryController < ApplicationController
       end
     end
     @hierarchy_item = @exam_section || @exam_level || @qualification || @institution || @subject_area
+    @total_cmes = @hierarchy_item.total_active_cmes
     unless current_user
       set_the_sign_up_redirect(@hierarchy_item)
     end

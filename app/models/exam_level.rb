@@ -104,6 +104,11 @@ class ExamLevel < ActiveRecord::Base
     end
   end
 
+#  def total_active_cmes
+ #   self.active_children.children_available_count
+  #end
+
+
   protected
 
   def calculate_best_possible_score

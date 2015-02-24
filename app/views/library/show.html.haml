@@ -26,7 +26,8 @@
             .panel-title
               .col-xs-8.panel-text
                 =link_to child.name, library_special_link(child)
-              .label.label-default.pull-right
+                =#@total_cmes.count
+              .label.label-default.pull-right.library-label
                 = '15%'
         -else
           .panel-body
