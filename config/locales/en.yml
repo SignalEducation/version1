@@ -1044,7 +1044,12 @@ en:
         post_sign_up_redirect_url_placeholder: "/en/library/finance"
         subscription_plan_category_id: Subscription Plan Category
         student_sign_up_h1: "Student Sign-up page H1"
+        student_sign_up_h1_placeholder: "Join LearnSignal"
         student_sign_up_sub_head: "Student Sign-up page sub-heading"
+        student_sign_up_sub_head_placeholder: "We have everything you need right here, right now"
+        sign_ups_tab: Sign Ups
+        general_tab: General
+        code_tab: Code
 
       index:
         h1: Static Pages

@@ -61,6 +61,7 @@ class StaticPage < ActiveRecord::Base
   belongs_to :creator, class_name: 'User', foreign_key: :created_by
   belongs_to :updater, class_name: 'User', foreign_key: :updated_by
   has_many :static_page_uploads, inverse_of: :static_page
+  belongs_to :subscription_plan_category
 
   accepts_nested_attributes_for :static_page_uploads
 

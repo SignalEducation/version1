@@ -55,6 +55,8 @@ describe StaticPage do
   # relationships
   it { should belong_to(:creator) }
   it { should belong_to(:updater) }
+  it { should have_many(:static_page_uploads) }
+  it { should belong_to(:subscription_plan_category) }
 
   # validation
   it { should validate_presence_of(:name) }

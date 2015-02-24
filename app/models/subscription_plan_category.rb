@@ -45,7 +45,7 @@ class SubscriptionPlanCategory < ActiveRecord::Base
   end
 
   def full_name
-    self.name +
+    self.name + ' - ' +
             self.available_from.strftime(I18n.t('controllers.application.date_formats.standard')) + ' - ' +
             self.available_to.strftime(I18n.t('controllers.application.date_formats.standard'))
   end
