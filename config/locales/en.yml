@@ -1170,6 +1170,28 @@ en:
       show:
         h1: Subscription Plan
 
+    subscription_plan_categories:
+      form:
+        name: Name
+        name_placeholder: Special Category Name
+        available_from: Available from
+        available_from_placeholder: "2015-01-01 0:00"
+        available_to: Available to
+        available_to_placeholder: "2015-12-31 23:59"
+        guid: GUID
+
+      edit:
+        h1: Edit Subscription Plan Category
+
+      index:
+        h1: Subscription Plan Categories
+
+      new:
+        h1: New Subscription Plan Category
+
+      show:
+        h1: Subscrption Plan Category
+
     users:
       form:
         email: Email
