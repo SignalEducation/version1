@@ -71,6 +71,8 @@ class StaticPagesController < ApplicationController
       first_element = '/' + params[:first_element].to_s
       @delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
       if @delivered_page
+        cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @delivered_page.subscription_plan_category.try(:guid), httponly: true}
+
         if @delivered_page.use_standard_page_template
           reset_latest_session_landing_url
           reset_post_sign_up_redirect_path(@delivered_page.post_sign_up_redirect_url)
