@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223153714) do
+ActiveRecord::Schema.define(version: 20150224103620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -399,30 +399,33 @@ ActiveRecord::Schema.define(version: 20150223153714) do
     t.string   "name"
     t.datetime "publish_from"
     t.datetime "publish_to"
-    t.boolean  "allow_multiples",            default: false, null: false
+    t.boolean  "allow_multiples",               default: false, null: false
     t.string   "public_url"
-    t.boolean  "use_standard_page_template", default: false, null: false
+    t.boolean  "use_standard_page_template",    default: false, null: false
     t.text     "head_content"
     t.text     "body_content"
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.boolean  "add_to_navbar",              default: false, null: false
-    t.boolean  "add_to_footer",              default: false, null: false
+    t.boolean  "add_to_navbar",                 default: false, null: false
+    t.boolean  "add_to_footer",                 default: false, null: false
     t.string   "menu_label"
     t.string   "tooltip_text"
     t.string   "language"
-    t.boolean  "mark_as_noindex",            default: false, null: false
-    t.boolean  "mark_as_nofollow",           default: false, null: false
+    t.boolean  "mark_as_noindex",               default: false, null: false
+    t.boolean  "mark_as_nofollow",              default: false, null: false
     t.string   "seo_title"
     t.string   "seo_description"
     t.text     "approved_country_ids"
-    t.boolean  "default_page_for_this_url",  default: false, null: false
-    t.boolean  "make_this_page_sticky",      default: false, null: false
-    t.boolean  "logged_in_required",         default: false, null: false
+    t.boolean  "default_page_for_this_url",     default: false, null: false
+    t.boolean  "make_this_page_sticky",         default: false, null: false
+    t.boolean  "logged_in_required",            default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "show_standard_footer",       default: true
+    t.boolean  "show_standard_footer",          default: true
     t.string   "post_sign_up_redirect_url"
+    t.integer  "subscription_plan_category_id"
+    t.string   "student_sign_up_h1"
+    t.string   "student_sign_up_sub_head"
   end
 
   create_table "stripe_api_events", force: true do |t|
@@ -486,20 +489,30 @@ ActiveRecord::Schema.define(version: 20150223153714) do
     t.boolean  "is_default_card",     default: false
   end
 
+  create_table "subscription_plan_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "available_from"
+    t.datetime "available_to"
+    t.string   "guid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "subscription_plans", force: true do |t|
-    t.boolean  "available_to_students",       default: false, null: false
-    t.boolean  "available_to_corporates",     default: false, null: false
-    t.boolean  "all_you_can_eat",             default: true,  null: false
-    t.integer  "payment_frequency_in_months", default: 1
+    t.boolean  "available_to_students",         default: false, null: false
+    t.boolean  "available_to_corporates",       default: false, null: false
+    t.boolean  "all_you_can_eat",               default: true,  null: false
+    t.integer  "payment_frequency_in_months",   default: 1
     t.integer  "currency_id"
     t.decimal  "price"
     t.date     "available_from"
     t.date     "available_to"
     t.string   "stripe_guid"
-    t.integer  "trial_period_in_days",        default: 0
+    t.integer  "trial_period_in_days",          default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "subscription_plan_category_id"
   end
 
   create_table "subscription_transactions", force: true do |t|
