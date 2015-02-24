@@ -1042,6 +1042,9 @@ en:
         show_standard_footer: Show the standard footer
         post_sign_up_redirect_url: "Post sign-up redirect URL"
         post_sign_up_redirect_url_placeholder: "/en/library/finance"
+        subscription_plan_category_id: Subscription Plan Category
+        student_sign_up_h1: "Student Sign-up page H1"
+        student_sign_up_sub_head: "Student Sign-up page sub-heading"
 
       index:
         h1: Static Pages
@@ -1155,6 +1158,7 @@ en:
         stripe_guid: Stripe ID
         trial_period_in_days: Trial period in days
         trial_period_in_days_placeholder: 14
+        subscription_plan_category_id: Subscription Plan Category
 
       edit:
         h1: Edit Subscription Plan
