@@ -36,6 +36,7 @@ class SubscriptionPlan < ActiveRecord::Base
   belongs_to :currency
   has_many :invoice_line_items
   has_many :subscriptions
+  belongs_to :subscription_plan_category
 
   # validation
   validates :name, presence: true, uniqueness: true, case_sensitive: false

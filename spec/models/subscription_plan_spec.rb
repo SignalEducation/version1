@@ -40,6 +40,7 @@ describe SubscriptionPlan do
   it { should belong_to(:currency) }
   it { should have_many(:invoice_line_items) }
   it { should have_many(:subscriptions) }
+  it { should belong_to(:subscription_plan_category) }
 
   # validation
   # todo - this didn't work, so I commented it out

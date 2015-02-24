@@ -59,14 +59,15 @@ class SubscriptionPlansController < ApplicationController
     @currencies = Currency.all_active.all_in_order
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
     seo_title_maker(@subscription_plan.try(:id).to_s)
+    @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
   end
 
   def create_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name)
+    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name, :subscription_plan_category_id)
   end
 
   def update_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name)
+    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name, :subscription_plan_category_id)
   end
 
 end
