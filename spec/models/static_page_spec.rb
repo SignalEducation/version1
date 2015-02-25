@@ -74,7 +74,7 @@ describe StaticPage do
 
   describe 'menu labels and tooltip are required when it appears in the navbar' do
     before :each do
-      subject.stub(:add_to_navbar).and_return(true)
+      allow(subject).to receive(:add_to_navbar).and_return(true)
     end
     it { should validate_presence_of(:menu_label) }
     it { should validate_presence_of(:tooltip_text) }
@@ -82,7 +82,7 @@ describe StaticPage do
 
   describe 'menu labels and tooltip are required when it appears in the navbar' do
     before :each do
-      subject.stub(:add_to_navbar).and_return(true)
+      allow(subject).to receive(:add_to_navbar).and_return(true)
     end
     it { should validate_presence_of(:menu_label) }
     it { should validate_presence_of(:tooltip_text) }
