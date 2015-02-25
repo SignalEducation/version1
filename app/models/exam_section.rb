@@ -87,10 +87,8 @@ class ExamSection < ActiveRecord::Base
   end
 
   def total_active_cmes
-    #self.course_module_elements.all_active.count
-    cms = self.active_children
-    cms.each do
-      children_available_count
+    self.active_children.each do |child|
+      child.children_available_count
     end
   end
 
