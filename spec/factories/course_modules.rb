@@ -16,6 +16,7 @@
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
+#  cme_count                 :integer          default(0)
 #
 
 FactoryGirl.define do
