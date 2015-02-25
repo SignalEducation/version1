@@ -1265,6 +1265,16 @@ en:
           subscriptions: Subscriptions
           notifications: Notifications
           admin: Admin
+        your_subscription: Your Subscription
+        upgrade_subscription_plan: Upgrade Your Subscription Plan
+        cancel_your_subscription_plan: Cancel Your Subscription Plan
+        your_invoices: Your Invoices
+        your_card_details: Your Card Details
+        card_no: "Card No.:"
+        card_expires: "Expires"
+        use_this_card: "Use this card"
+        card_live: "Live"
+        add_new_card: "Add New Card"
 
     user_activity_logs:
       form:
