@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     resources :static_page_uploads, only: [:create]
 
     resources :subject_areas
+    resources :subscriptions, only: [:update, :destroy]
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :user_activity_logs
