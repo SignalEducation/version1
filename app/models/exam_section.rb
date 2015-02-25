@@ -11,6 +11,7 @@
 #  best_possible_first_attempt_score :float
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  cme_count                         :integer          default(0)
 #
 
 class ExamSection < ActiveRecord::Base

@@ -16,6 +16,7 @@
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
+#  cme_count                 :integer          default(0)
 #
 
 class CourseModule < ActiveRecord::Base
@@ -26,7 +27,7 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :active
+                  :active, :cme_count
 
   # Constants
 
@@ -60,6 +61,8 @@ class CourseModule < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_validation :unify_hierarchy_ids
   before_create :set_sorting_order
+  after_create :set_cme_count
+  after_update :set_cme_count
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
 
@@ -152,6 +155,10 @@ class CourseModule < ActiveRecord::Base
 
   def calculate_estimated_time
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
+  end
+
+  def set_cme_count
+    self.cme_count = children_available_count
   end
 
   def unify_hierarchy_ids
