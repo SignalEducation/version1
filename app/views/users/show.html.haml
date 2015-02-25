@@ -26,47 +26,73 @@
             .col-sm-8.col-sm-offset-2
               .well.well-sm
                 =render partial: 'users/form_personal_details', locals: {f: f}
+          .row
+            .col-sm-8.col-sm-offset-2
+              =f.submit t('views.general.save'), class: 'btn btn-success'
+              -if @user.id == current_user.id
+                =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
 
         .tab-pane.fade#notifications{role: 'tabpanel'}
           .row
             .col-sm-8.col-sm-offset-2
               .well.well-sm
                 =render partial: 'users/form_notifications', locals: {f: f}
+          .row
+            .col-sm-8.col-sm-offset-2
+              =f.submit t('views.general.save'), class: 'btn btn-success'
+              -if @user.id == current_user.id
+                =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
 
         .tab-pane.fade#subscriptions{role: 'tabpanel'}
           .row
             .col-sm-12
+              %h2
+                Your Subscription
+                -if Rails.env.development? || current_user.admin?
+                  =link_to profile_url(update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                    .glyphicon.glyphicon-refresh
+              .well
+                =link_to 'Upgrade Subscription Plan', '#', class: 'btn btn-info'
+                =t('views.general.or')
+                =link_to 'Cancel your Subscription Plan', '#'
+
+          .row
+            .col-sm-8
+              %h2
+                Your Invoices
+                -if Rails.env.development? || current_user.admin?
+                  =link_to profile_url(update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                    .glyphicon.glyphicon-refresh
               -@invoices = @user.invoices.paginate(page: 1, per_page: 50).all_in_order
               =render partial: 'invoices/index'
-          .row
-            .col-sm-12
-              %h2 Your card details
-              .well.well-sm
-                %table.table.table-bordered
-                  %tbody
-                    -@user.subscription_payment_cards.each do |card|
-                      %tr
-                        %td
-                          Card No.:
-                          ='xxxx-xxxx-xxxx-' + card.last_4
-                        %td
-                          Expires:
-                          =card.expiry_month
-                          \/
-                          =card.expiry_year
-                        %td
-                          =card.status
-                          -if card.status = 'active'
-                            .label.label-success Active
-                          -else
-                            =link_to 'Make active', '#', class: 'btn btn-success btn-sm'
-          %row
-            .col-sm-12
+
+            .col-sm-4
+              %h2
+                Your card details
+                -if Rails.env.development? || current_user.admin?
+                  =link_to profile_url(update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                    .glyphicon.glyphicon-refresh
+
+              %table.table.table-bordered
+                %tbody
+                  -@user.subscription_payment_cards.each do |card|
+                    %tr
+                      %td
+                        Card No.:
+                        ='xxxx-xxxx-xxxx-' + card.last_4
+                        %br/
+                        Expires:
+                        =card.expiry_month
+                        \/
+                        =card.expiry_year
+                      %td
+                        -if card.status == 'live'
+                          .label.label-success live
+                        -else
+                          =link_to 'Make live', '#', class: 'btn btn-success btn-xs'
               %p
                 =link_to 'Change Credit Card', '#', class: 'btn btn-info'
-                =link_to 'Upgrade Subscription Plan', '#', class: 'btn btn-info'
-                =link_to 'Cancel Subscription Plan', '#', class: 'btn'
-              %hr/
+
 
         -if current_user.admin?
           .tab-pane.fade#admin{role: 'tabpanel'}
@@ -134,13 +160,11 @@
                 %p
                   -if current_user.admin?
                     =link_to sanitize('&larr; ' + t('views.users.index.h1')), users_url
-
-      .row
-        .col-sm-8.col-sm-offset-2
-          =f.submit t('views.general.save'), class: 'btn btn-success'
-          -if @user.id == current_user.id
-            =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
-
+            .row
+              .col-sm-8.col-sm-offset-2
+                =f.submit t('views.general.save'), class: 'btn btn-success'
+                -if @user.id == current_user.id
+                  =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
 
 -if @user.id == current_user.id
   =render partial: 'users/change_password'

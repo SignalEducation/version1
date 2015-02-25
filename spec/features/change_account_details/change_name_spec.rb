@@ -16,7 +16,7 @@ describe 'User changing their name' do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
-      within("#edit_user_#{this_user.id}") do
+      within('#personal-details') do
         fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
         fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
         click_button(I18n.t('views.general.save'))

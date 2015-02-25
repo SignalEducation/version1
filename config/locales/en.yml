@@ -455,6 +455,7 @@ en:
       yes: Yes
       tooltips:
         click_to_edit: click to edit
+        click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
 

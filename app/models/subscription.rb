@@ -95,7 +95,7 @@ class Subscription < ActiveRecord::Base
 
     if Rails.env.production? && stripe_customer.livemode == false
       errors.add(:base, 'Non-live transaction on the Live server')
-      Rails.error.log 'models/subscription.rb#create_on_stripe_platform - Non-live transaction on Production platform. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+      Rails.error.log 'ERROR: Subscription#create_on_stripe_platform - Non-live transaction on Production platform. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
       false
     else
       true

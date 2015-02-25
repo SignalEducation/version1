@@ -7,12 +7,14 @@
       %hr/
 
 .row.print-hidden
-  .col-sm-12
+  .col-sm-9
     .page-header
       %h1
         =t('views.invoices.show.h1')
         \#
         =@invoice.id
+  .col-sm-3.text-right
+    .glyphicon.glyphicon-print
 
 .row
   .col-sm-12
@@ -78,7 +80,9 @@
       %tr
         %td.col-sm-4=t('views.invoices.form.line_total_vat_amount')
         -#%td.col-sm-8=@invoice.vat
-    %p
-      =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
-      |
-      =link_to t('views.general.edit'), edit_invoice_url(id: @invoice.id), title: t('views.general.edit_tooltip')
+    -if current_user.admin?
+      %p
+        =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
+    -else
+      %p
+        =link_to sanitize('&larr; ' + t('views.users.show.h1')), profile_url

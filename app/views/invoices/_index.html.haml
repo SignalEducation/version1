@@ -8,11 +8,10 @@
           =t('views.invoices.form.corporate_customer_id')
       %th=t('views.users.form.created_at')
       %th=t('views.invoices.form.subscription_id')
-      -if current_user.corporate_customer?
+      -if @invoices.try(:first).try(:user).try(:corporate_customer?)
         %th=t('views.invoices.form.number_of_users')
-        %th.text-right=t('views.invoices.form.unit_price_ex_vat')
       %th.text-right=t('views.invoices.form.line_total_inc_vat')
-      %th=t('views.invoices.form.status')
+      %th{colspan: 2}=t('views.invoices.form.status')
   %tbody
     -@invoices.each do |invoice|
       %tr{id: invoice.id}
@@ -21,17 +20,19 @@
             =link_to(invoice.user.full_name, invoice.user, title: t('views.general.view_tooltip'))
             %br/
             =link_to(invoice.corporate_customer.try(:name), invoice, title: t('views.general.view_tooltip'))
-        %td=link_to(invoice.subscription.subscription_plan.name, invoice, title: t('views.general.tooltips.click_to_view'))
         %td=link_to(invoice.created_at.to_s(:standard), invoice, title: t('views.general.tooltips.click_to_view'))
-        -if current_user.corporate_customer?
+        %td=link_to(invoice.subscription.subscription_plan.name, invoice, title: t('views.general.tooltips.click_to_view'))
+        -if invoice.user.corporate_customer?
           %td=link_to(invoice.number_of_users, invoice, title: t('views.general.view_tooltip'))
-          %td.text-right=link_to(number_in_local_currency(invoice.subtotal, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
         %td.text-right=link_to(number_in_local_currency(invoice.total, invoice.currency_id), invoice, title: t('views.general.view_tooltip'))
         %td
           =link_to(invoice.status, invoice, title: t('views.general.view_tooltip'))
+        %td
           =link_to 'Print', invoice, title: t('views.general.view_tooltip'), class: 'btn btn-info btn-xs'
-          =link_to t('views.general.details'), '#', class: 'btn btn-info btn-xs', onclick: "$('.invoice-detail').addClass('hide');$('#invoice_#{invoice.id}').removeClass('hide'); $(this).addClass('hide'); return false;"
-      %tr.invoice-detail.hide{id: "invoice_#{invoice.id}"}
+          -if invoice.user.corporate_customer?
+            =link_to t('views.general.details'), '#', class: 'btn btn-info btn-xs', onclick: "$('.invoice-detail').addClass('hide');$('#invoice_#{invoice.id}').removeClass('hide'); $(this).addClass('hide'); return false;"
+
+      -#%tr.invoice-detail.hide{id: "invoice_#{invoice.id}"}
         %td{colspan: 10}
           %table.table.table-striped.table-bordered
             %tr

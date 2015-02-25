@@ -13,7 +13,9 @@ describe 'User changing their password' do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
-      click_link I18n.t('views.users.show.change_your_password.link')
+      within('#personal-details') do
+        click_link I18n.t('views.users.show.change_your_password.link')
+      end
       expect(page).to have_content I18n.t('views.users.show.change_your_password.h4')
       within('#change_password_modal') do
         fill_in I18n.t('views.users.form.current_password'), with: this_user.password

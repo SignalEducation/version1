@@ -68,6 +68,7 @@ describe SubscriptionTransaction do
   it { expect(SubscriptionTransaction).to respond_to(:all_alarms) }
 
   # class methods
+  it { expect(SubscriptionTransaction).to respond_to(:create_from_stripe_data) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

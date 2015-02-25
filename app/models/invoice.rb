@@ -125,6 +125,18 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def self.get_updates_for_user(stripe_customer_guid)
+    payload = Stripe::Invoice.all(limit: 10, customer: stripe_customer_guid).to_hash
+    if payload[:data].length > 0
+      known_invoice_guids = Invoice.where(stripe_customer_guid: stripe_customer_guid).pluck(:stripe_guid)
+      payload[:data].each do |incoming_inv|
+        unless known_invoice_guids.include?(incoming_inv[:id])
+          Invoice.build_from_stripe_data(incoming_inv)
+        end
+      end
+    end
+  end
+
   # instance methods
   def destroyable?
     !Rails.env.production? && self.invoice_line_items.empty?

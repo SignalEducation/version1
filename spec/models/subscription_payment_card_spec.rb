@@ -43,11 +43,12 @@ describe SubscriptionPaymentCard do
 
   # Constants
   it { expect(SubscriptionPaymentCard.const_defined?(:STATUSES)).to eq(true) }
+  it { expect(SubscriptionPaymentCard.const_defined?(:CHECKING_STATUSES)).to eq(true) }
 
   # relationships
   it { should have_many(:subscription_transactions) }
   it { should belong_to(:user) }
-  it { should belong_to(:billing_country) }
+  it { should belong_to(:billing_address_country) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -75,6 +76,8 @@ describe SubscriptionPaymentCard do
   it { expect(SubscriptionPaymentCard).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(SubscriptionPaymentCard).to respond_to(:build_from_stripe_data) }
+  it { expect(SubscriptionPaymentCard).to respond_to(:get_updates_for_user) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

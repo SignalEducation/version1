@@ -16,7 +16,7 @@ describe 'User changing their email' do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
-      within("#edit_user_#{this_user.id}") do
+      within('#personal-details') do
         fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
         click_button(I18n.t('views.general.save'))
       end

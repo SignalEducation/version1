@@ -12,6 +12,20 @@ class UsersController < ApplicationController
 
   def show
     # profile page
+    if params[:update].to_s.length > 0
+      case params[:update]
+        when 'invoices'
+          Invoice.get_updates_for_user(@user.stripe_customer_id)
+        when 'cards'
+          SubscriptionPaymentCard.get_updates_for_user(@user.stripe_customer_id)
+        when 'subscriptions'
+          # todo
+          ####################################################
+        else
+          # do nothing
+      end
+      @user.reload
+    end
   end
 
   def new
