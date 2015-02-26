@@ -12,7 +12,7 @@
 .row
   -unless @hierarchy_item.parent.nil?
     .btn.btn-default
-      =link_to course_special_link(@hierarchy_item.parent,'backwards') do
+      =link_to course_special_link(@hierarchy_item.parent, 'backwards') do
         &larr;
         =t('views.general.back')
 
@@ -22,11 +22,29 @@
     -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
       .col-sm-6
         .panel.panel-default
-          .panel-heading.panel-title
-            =link_to child.name, library_special_link(child)
+          -if child.name == 'Association of Certified Chartered Accountants'
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-1' do
+              =child.short_name
+          -elsif child.name == 'CFA Institute'
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-2' do
+              =child.short_name
           .panel-body
-            %p= 'Lorem Ipsum'
+            %p=child.description
 
+-elsif @hierarchy_item.class == Institution
+  .row
+    %hr/
+    -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
+      .col-sm-6
+        .panel.panel-default
+          -if child.name == 'ACCA Fundamental'
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-3' do
+              =child.name
+          -elsif child.name == 'ACCA Professional'
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-4' do
+              =child.name
+          .panel-body
+            %p='stuff'
 
 
 -else
