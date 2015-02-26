@@ -14,7 +14,7 @@
     .collapse.navbar-collapse
       %ul.nav.navbar-nav.navbar-left
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'navbar'}
-        %li{class: controller_name == 'blogs' ? 'active' : ''}
+        -#%li{class: controller_name == 'blogs' ? 'active' : ''}
           %a{href: 'http://blog.learnsignal.com/', target: '_blank'} Blog
         %li{class: controller_name == 'dashboard' ? 'active' : ''}
           =link_to t('views.dashboard.index.h1'), dashboard_url
@@ -77,11 +77,11 @@
                 %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
                 %li.divider
               %li=link_to t('views.general.sign_out'), sign_out_url
-          %li
+          -#%li
             =#link_to '#', onclick: "$('#search_form').toggle({ origin: 'right', effect: 'slide', direction: 'horizontal', scale: 'box' }); return false;" do
             =link_to '#', onclick: "$('#search_form').toggle('slide', {direction: 'right'}, 500, function() {$('#search_terms').focus();}); return false;" do
               %span.glyphicon.glyphicon-search
-          %li#search_form{style: 'display: none;'}
+          -#%li#search_form{style: 'display: none;'}
             =form_tag '/', role: 'form', class: 'navbar-form navbar-right' do
               .form-group{style: 'padding-top: 3px;'}
                 =text_field_tag :search_terms, nil, placeholder: t('views.general.search')
@@ -98,4 +98,4 @@
                   =f.password_field :password, placeholder: 'password', autocomplete: 'off'
                   =f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
                   =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
-          %li=link_to t('views.general.sign_up'), student_sign_up_url, style: 'background-color: #5391cf;' # , class: 'blue-hover'
+          %li=link_to t('views.general.sign_up'), student_sign_up_url#, style: 'background-color: #5391cf;' # , class: 'blue-hover'
