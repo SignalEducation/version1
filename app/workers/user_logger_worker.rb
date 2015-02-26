@@ -22,7 +22,7 @@ class UserLoggerWorker
             params: req_parameters,
             ip_address: remote_ip,
             alert_level: 0,
-            raw_user_agent: the_user_agent.to_s[0..2545],
+            raw_user_agent: the_user_agent.to_s[0..254],
             guid: job_guid,
             first_session_landing_page: first_session_landing_page,
             latest_session_landing_page: latest_session_landing_page,
