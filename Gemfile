@@ -7,11 +7,11 @@ gem 'rails', '4.1.8'
 gem 'airbrake'
 gem 'authlogic'
 gem 'scrypt' # S-Crypt for Authlogic
-gem 'autoprefixer-rails' # required by bootstrap-sass
+gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk' # enables AWS functionality - use with AWS::...
 gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 gem 'aws-s3' # grants timeout-able URLs
-gem 'bootstrap-sass', '~> 3.2' # loads Twitter Bootstrap UI framework
+gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)

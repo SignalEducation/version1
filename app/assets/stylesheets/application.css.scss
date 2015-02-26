@@ -71,6 +71,7 @@ body {
     #text-transform: uppercase;
     font-family: 'museo-sans', BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   }
+  background-color: #f9f9f9;
 }
 
 tr {
@@ -384,6 +385,41 @@ header {
   height: 100%;
   background-color: #9E272D !important;
   color: #f9fcff !important;
+}
+
+div.panel-list {
+  border: none;
+  border-radius: 0;
+  margin-bottom: 1px;
+  .panel-title {
+    font-size: 1.25em;
+  }
+  .panel-body{
+    padding: 2.5em;
+  }
+  .panel-body:hover {
+    background-color: #ef5f5f;
+    a {
+      color: #f1f6fd;
+      text-decoration: none;
+    }
+    color: #f1f6fd;
+  }
+}
+
+.btn-color {
+  background-color: #5391cf;
+  color: white;
+  border: none;
+  border-radius: 0;
+  &:hover, &:active, &:focus {
+    background-color: lighten(#5391cf, 5);
+    color: #f1f6fd;
+  }
+}
+
+.progress {
+  border-radius: 0px;
 }
 
 .panel-text {

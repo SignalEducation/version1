@@ -7,7 +7,7 @@
         .row
           .col-sm-10.col-sm-offset-1
             =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
-            =link_to t('views.course_module_elements.show.continue'), '#', class: 'btn btn-success btn-lg'
+            =link_to t('views.course_module_elements.show.continue'), '#', class: 'btn btn-lg btn-color'
 
 .row
   -unless @hierarchy_item.parent.nil?
@@ -52,7 +52,7 @@
     %hr/
     -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
       .col-sm-10.col-sm-offset-1
-        .panel.panel-default
+        .panel.panel-default.panel-list
           -if child.class == CourseModule
             .panel-body.library-panel
               .panel-title
@@ -64,5 +64,6 @@
           -else
             .panel-body
               .panel-title
-                .col-xs-8
+                .col-sm-12
                   =link_to child.name, library_special_link(child)
+                  -#TODO .glyphicon.glyphicon-chevron-right.pull-right
