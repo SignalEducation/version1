@@ -1,8 +1,8 @@
 .panel.panel-default
   .panel-heading.text-center
     %p=@course_module.name
-  .panel-body
-    .list-group
+  .panel-body{style: 'height: 80%;'}
+    .list-group.scrollbar
       -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
         .list-group-item
           -if course_module_element.id == @course_module_element.try(:id)

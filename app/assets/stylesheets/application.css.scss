@@ -339,15 +339,15 @@ header {
 
 }
 
-.wide-button {
-  width: 100%;
-}
-
 .side-nav{
   position: fixed;
-  top: 12%;
-  bottom: 0.5%;
+  //top: 12%;
+  top: 70px;
+  //bottom: 0.5%;
+  bottom: 0px;
+  overflow-y: hidden;
 }
+
 
 .library-panel {
   padding: 0%;
@@ -364,4 +364,10 @@ header {
   line-height: 3;
   padding: 1em 1.5em;
   border-radius: 0em 0.2em 0.2em 0em;
+}
+
+.scrollbar {
+  overflow-y: scroll;
+//  max-height: 400px;
+  max-height: 70%;
 }
