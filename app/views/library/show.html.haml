@@ -11,10 +11,9 @@
 
 .row
   -unless @hierarchy_item.parent.nil?
-    .btn.btn-default
-      =link_to course_special_link(@hierarchy_item.parent, 'backwards') do
-        &larr;
-        =t('views.general.back')
+    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-default' do
+      .glyphicon.glyphicon-menu-left
+      =#t('views.general.back')
 
 -if @hierarchy_item.class == SubjectArea
   .row
@@ -46,24 +45,32 @@
           .panel-body
             %p='stuff'
 
-
 -else
   .row
     %hr/
     -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
       .col-sm-10.col-sm-offset-1
-        .panel.panel-default.panel-list
+        .panel.panel-list
           -if child.class == CourseModule
-            .panel-body.library-panel
+            .panel-body
               .panel-title
                 .col-xs-8.panel-text
                   =link_to child.name, library_special_link(child)
                   =#@total_cmes
-                .label.label-default.pull-right.library-label
+                .label.label-default.pull-right
                   = '15%'
           -else
-            .panel-body
-              .panel-title
-                .col-sm-12
-                  =link_to child.name, library_special_link(child)
-                  -#TODO .glyphicon.glyphicon-chevron-right.pull-right
+            =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
+              =child.name
+              .glyphicon.glyphicon-menu-right.pull-right
+
+            =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
+              =child.name
+              .glyphicon.glyphicon-menu-right.pull-right
+
+
+                -# Old code that didn't allow entire panel to be clickable
+                -#-else
+                  -#.panel-body.panel-title.col-sm-12
+                    -#=link_to child.name, library_special_link(child)
+                    -#.glyphicon.glyphicon-menu-right.pull-right

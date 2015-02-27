@@ -67,7 +67,7 @@ body {
   margin-top: 65px;
   font-family: EffraRegular, "Helvetica Neue", Helvetica, Arial, sans-serif;
   h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .intro-heading {
-    font-weight: 100;
+    font-weight: 300;
     #text-transform: uppercase;
     font-family: 'museo-sans', BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
   }
@@ -387,21 +387,41 @@ header {
   color: #f9fcff !important;
 }
 
+//.panel-list {
+  //border: none;
+  //border-radius: 0;
+  //margin-bottom: 1px;
+  //.panel-title {
+    //font-size: 1.25em;
+    //text-decoration: none;
+  //}
+  //.panel-body{
+    //padding: 2.5em;
+  //}
+  //.panel-body:hover {
+    //background-color: #ef5f5f;
+    //color: #f1f6fd;
+  //}
+//}
+
 div.panel-list {
   border: none;
   border-radius: 0;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
   .panel-title {
     font-size: 1.25em;
   }
   .panel-body{
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
     padding: 2.5em;
+    text-decoration: none;
+    background-color: white;
+    margin-bottom: 1px;
   }
   .panel-body:hover {
     background-color: #ef5f5f;
     a {
       color: #f1f6fd;
-      text-decoration: none;
     }
     color: #f1f6fd;
   }
@@ -420,19 +440,6 @@ div.panel-list {
 
 .progress {
   border-radius: 0px;
-}
-
-.panel-text {
-  padding: 1.5em 2em 0.5em 2em;
-}
-
-.library-label {
-  margin-right: 0%;
-  font-size: 100%;
-  font-weight: normal;
-  line-height: 3;
-  padding: 1em 1.5em;
-  border-radius: 0em 0.2em 0.2em 0em;
 }
 
 .scrollbar {
