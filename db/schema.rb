@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150224103620) do
+ActiveRecord::Schema.define(version: 20150227160558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -573,8 +573,8 @@ ActiveRecord::Schema.define(version: 20150224103620) do
     t.integer  "ip_address_id"
     t.string   "browser_version"
     t.string   "raw_user_agent"
-    t.string   "first_session_landing_page"
-    t.string   "latest_session_landing_page"
+    t.text     "first_session_landing_page"
+    t.text     "latest_session_landing_page"
     t.string   "post_sign_up_redirect_url"
   end
 

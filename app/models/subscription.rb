@@ -78,7 +78,8 @@ class Subscription < ActiveRecord::Base
       response = stripe_subscription.delete(at_period_end: true).to_hash
       if response[:status] == 'canceled'
         self.update_attribute(:current_status, 'canceled-pending')
-        # todo schedule a background job to mark the sub as canceled at the end of the current period.
+        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id)
+        Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
       else
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
