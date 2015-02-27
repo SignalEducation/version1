@@ -74,6 +74,7 @@ describe SubscriptionPaymentCard do
 
   # scopes
   it { expect(SubscriptionPaymentCard).to respond_to(:all_in_order) }
+  it { expect(SubscriptionPaymentCard).to respond_to(:all_default_cards) }
 
   # class methods
   it { expect(SubscriptionPaymentCard).to respond_to(:build_from_stripe_data) }

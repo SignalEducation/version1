@@ -88,7 +88,9 @@ describe SubscriptionPlan do
   it { expect(SubscriptionPlan).to respond_to(:generally_available_or_for_category_guid) }
 
   # instance methods
+  it { should respond_to(:active?) }
   it { should respond_to(:age_status) }
+  it { should respond_to(:description) }
   it { should respond_to(:destroyable?) }
 
 end

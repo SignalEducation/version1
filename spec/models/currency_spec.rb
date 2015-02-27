@@ -66,5 +66,6 @@ describe Currency do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:format_number) }
 
 end

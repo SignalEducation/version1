@@ -144,6 +144,7 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:content_manager?) }
   it { should respond_to(:corporate_customer?) }
+  it { should respond_to(:corporate_student?) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:frequent_forum_user?) }
   it { should respond_to(:full_name) }

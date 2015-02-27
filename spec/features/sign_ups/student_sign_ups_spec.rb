@@ -7,6 +7,8 @@ describe 'The student sign-up process', type: :feature do
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup'
 
+  after { StripeMock.stop }
+
   before(:each) do
     activate_authlogic
     visit root_path

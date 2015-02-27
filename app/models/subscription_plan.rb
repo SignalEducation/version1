@@ -21,6 +21,7 @@
 
 class SubscriptionPlan < ActiveRecord::Base
 
+  include ActionView::Helpers::TextHelper
   include LearnSignalModelExtras
 
   # attr-accessible
@@ -78,6 +79,10 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   # instance methods
+  def active?
+    self.available_from < Proc.new{Time.now}.call && self.available_to > Proc.new{Time.now}.call
+  end
+
   def age_status
     right_now = Proc.new{Time.now}.call.to_date
     if self.available_from > right_now
@@ -87,6 +92,17 @@ class SubscriptionPlan < ActiveRecord::Base
     else
       'success' # live
     end
+  end
+
+  def description
+    self.currency.format_number(self.price) + ' - ' +
+            I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{self.payment_frequency_in_months}") + "\r\n" +
+            (self.trial_period_in_days > 0 ?
+                I18n.t('views.student_sign_ups.form.free_trial') +
+                pluralize(self.trial_period_in_days, I18n.t('views.student_sign_ups.form.days')) + "\r\n" : '') +
+            (self.all_you_can_eat ?
+                I18n.t('views.student_sign_ups.form.all_you_can_eat_yes') :
+                I18n.t('views.student_sign_ups.form.all_you_can_eat_no') )
   end
 
   def destroyable?

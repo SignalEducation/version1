@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
-describe 'User changing their email' do
+describe 'User changing their email', type: :feature do
 
   include_context 'users_and_groups_setup'
 

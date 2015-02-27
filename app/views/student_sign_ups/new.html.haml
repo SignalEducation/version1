@@ -42,7 +42,6 @@
 
         .well.well-sm
           %h2.text-center=t('views.student_sign_ups.new.h2.subscription')
-          -#%p.text-center=t('views.student_sign_ups.new.h2.subscription_text')
           %hr/
           .row
             -@subscription_plans.each do |plan|
@@ -50,14 +49,8 @@
                 %h3.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                 .well.well-sm.text-center.subscription-panel{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
                   %p=plan.name
-                  %p
-                    =number_in_local_currency(plan.price, plan.currency_id)
-                    =t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                  %p
-                    -if plan.trial_period_in_days > 0
-                      =t('views.student_sign_ups.form.free_trial')
-                      =pluralize(plan.trial_period_in_days, t('views.student_sign_ups.form.days'))
-                  %p=plan.all_you_can_eat ? t('views.student_sign_ups.form.all_you_can_eat_yes') : t('views.student_sign_ups.form.all_you_can_eat_no')
+                  -plan.description.lines.each do |line|
+                    %p=line
 
           =f.fields_for :subscriptions do |sub|
             =sub.hidden_field :subscription_plan_id

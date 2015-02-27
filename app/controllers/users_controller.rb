@@ -96,6 +96,7 @@ class UsersController < ApplicationController
     @countries = Country.all_in_order
     @user_groups = UserGroup.all_in_order
     seo_title_maker(@user.try(:full_name))
+    @current_subscription = @user.subscriptions.all_in_order.last
   end
 
   def allowed_params

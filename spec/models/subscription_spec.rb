@@ -68,6 +68,9 @@ describe Subscription do
   # class methods
 
   # instance methods
+  it { should respond_to(:cancel) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:upgrade_options) }
+  it { should respond_to(:upgrade_plan) }
 
 end

@@ -53,7 +53,7 @@
 
     %p
       =t('views.student_sign_ups.show.if_you_have_any_questions')
-      =link_to t('views.student_sign_ups.show.please_get_in_touch'), 'mailto:help@learnsignal.com'
+      =link_to t('views.student_sign_ups.show.please_get_in_touch'), "mailto:#{t('views.student_sign_ups.show.email_address')}?subject=#{t('views.student_sign_ups.show.email_subject')} - ID:#{@user.guid}", class: 'text-info'
     %hr
 
 .row

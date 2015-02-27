@@ -218,6 +218,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_customer)
   end
 
+  def corporate_student?
+    self.user_group.try(:corporate_student)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
@@ -250,7 +254,7 @@ class User < ActiveRecord::Base
   end
 
   def individual_student?
-    self.user_group.try(:individual_student)
+    self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
   end
 
   def tutor?

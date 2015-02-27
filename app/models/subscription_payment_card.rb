@@ -65,11 +65,12 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
+  scope :all_default_cards, -> { where(is_default_card: true) }
 
   # class methods
   def self.build_from_stripe_data(stripe_card_data, user_id=nil)
     if stripe_card_data[:object] == 'card'
-      user_id  ||= User.where(stripe_customer_id: stripe_card_data[:customer]).first.try(:id)
+      user_id ||= User.where(stripe_customer_id: stripe_card_data[:customer]).first.try(:id)
       country_id = Country.find_by_iso_code(stripe_card_data[:country].upcase).try(:id)
       x = SubscriptionPaymentCard.new(
               user_id: user_id,
@@ -90,7 +91,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
               address_zip_check: stripe_card_data[:address_zip_check],
               dynamic_last4: stripe_card_data[:dynamic_last4],
               customer_guid: stripe_card_data[:customer],
-              is_default_card: false, # stripe_card_data[:]
+              is_default_card: true,
               status: 'live'
       )
       unless x.save

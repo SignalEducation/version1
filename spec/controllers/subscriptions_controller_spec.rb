@@ -6,14 +6,18 @@ describe SubscriptionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
+  # let!(:student_user_2) { FactoryGirl.create(:individual_student_user) }
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription,
+  let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
+  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: individual_student_user.id,
                                              subscription_plan_id: subscription_plan_1.id,
                                              stripe_token: stripe_helper.generate_card_token) }
-  let!(:subscription_plan_2) { FactoryGirl.create(:corporate_subscription_plan) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
+  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: corporate_customer_user.id,
+                                             subscription_plan_id: subscription_plan_1.id,
+                                             stripe_token: stripe_helper.generate_card_token) }
+  let!(:valid_params) { {subscription_plan_id: subscription_plan_2.id} }
 
   #before { StripeMock.start }
   after { StripeMock.stop }
@@ -22,7 +26,7 @@ describe SubscriptionsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should redirect to sign_in' do
-        put :update, id: 1, user: valid_params
+        put :update, id: 1, subscription: valid_params
         expect_bounce_as_not_signed_in
       end
     end
@@ -44,16 +48,34 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
-        expect_bounce_as_not_allowed
+      it 'should be OK locally and on Stripe' do
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect_update_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
+      end
+
+      it 'should respond with ERROR as they do not own the subscription' do
+        put :update, id: subscription_2.id, subscription: valid_params
+        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond with OK' do
+        delete :destroy, id: subscription_1.id
+        expect(flash[:error]).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).current_status).to eq('canceled')
+      end
+
+      it 'should respond with ERROR as they do not own the subscription' do
+        delete :destroy, id: subscription_2.id
+        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
       end
     end
 
@@ -68,7 +90,7 @@ describe SubscriptionsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -91,7 +113,7 @@ describe SubscriptionsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -113,16 +135,34 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
-        expect_bounce_as_not_allowed
+      it 'should be OK locally and on Stripe' do
+        put :update, id: subscription_2.id, subscription: valid_params
+        expect_update_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
+      end
+
+      it 'should respond with ERROR as they do not own the subscription' do
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond with OK' do
+        delete :destroy, id: subscription_2.id
+        expect(flash[:error]).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).current_status).to eq('canceled')
+      end
+
+      it 'should respond with ERROR as they do not own the subscription' do
+        delete :destroy, id: subscription_1.id
+        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
       end
     end
 
@@ -205,35 +245,20 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {name: 'new-name'}
-        expect_update_success_with_model('subscription_plan', subscription_plans_url)
-        expect(assigns(:subscription_plan).name).to eq('new-name')
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {name: nil}
-        expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+      it 'should respond OK to valid params' do
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect_update_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        # expect_delete_success_with_model('subscription_plan', subscription_plans_url)
-        expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-        plan = Stripe::Plan.retrieve(subscription_plan_1.stripe_guid)
-        expect(plan.try(:deleted)).not_to eq(true)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
-        expect_delete_success_with_model('subscription_plan', subscription_plans_url)
-        expect{Stripe::Plan.retrieve(subscription_plan_2.stripe_guid)}.to raise_error { |e|
-          expect(e).to be_a(Stripe::InvalidRequestError)
-          expect(e.message).to eq("No such plan: #{subscription_plan_2.stripe_guid}")
-        }
+      it 'should respond with OK' do
+        delete :destroy, id: subscription_1.id
+        expect(flash[:error]).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).current_status).to eq('canceled')
       end
     end
 
