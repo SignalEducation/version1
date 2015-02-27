@@ -9,9 +9,10 @@
             =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
             =link_to t('views.course_module_elements.show.continue'), '#', class: 'btn btn-lg btn-color'
 
+
 .row
   -unless @hierarchy_item.parent.nil?
-    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-default' do
+    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-default btn-ls-default' do
       .glyphicon.glyphicon-menu-left
       =#t('views.general.back')
 
@@ -22,10 +23,11 @@
       .col-sm-6
         .panel.panel-default
           -if child.name == 'Association of Certified Chartered Accountants'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-1' do
-              =child.short_name
+            =link_to library_special_link(child), class: 'panel-heading clickable-panel a' do
+              .panel-title
+                =child.short_name
           -elsif child.name == 'CFA Institute'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-2' do
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel b' do
               =child.short_name
           .panel-body
             %p=child.description
@@ -37,10 +39,10 @@
       .col-sm-6
         .panel.panel-default
           -if child.name == 'ACCA Fundamental'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-3' do
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel c' do
               =child.name
           -elsif child.name == 'ACCA Professional'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel-4' do
+            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel d' do
               =child.name
           .panel-body
             %p='stuff'
@@ -54,11 +56,13 @@
           -if child.class == CourseModule
             .panel-body
               .panel-title
-                .col-xs-8.panel-text
+                .col-xs-10.panel-text
                   =link_to child.name, library_special_link(child)
                   =#@total_cmes
-                .label.label-default.pull-right
-                  = '15%'
+                .col-xs-2
+                  .progress-circle.pull-right.hidden-xs
+                    %p
+                      ='15%'
           -else
             =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
               =child.name
