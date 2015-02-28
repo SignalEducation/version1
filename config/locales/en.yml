@@ -474,6 +474,7 @@ en:
       yes: Yes
       tooltips:
         click_to_edit: click to edit
+        click_to_print: click to print
         click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
@@ -902,6 +903,29 @@ en:
         line_total_vat_amount: Total VAT
         line_total_inc_vat: Total
         status: 'Status'
+        vat_rate_id: "VAT rated"
+        issued_at: "Issued at"
+        stripe_guid: "Stripe GUID"
+        sub_total: "Sub- total"
+        total: "Total"
+        total_tax: "Total Tax"
+        stripe_customer_guid: "Stripe customer GUID"
+        object_type: "Type"
+        payment_attempted: "Payment attempted"
+        payment_closed: "Payment closed"
+        forgiven: "Forgiven"
+        paid: "Paid"
+        due: "Due"
+        livemode: "Livemode"
+        attempt_count: "Attempt count"
+        amount_due: "Amount due"
+        next_payment_attempt_at: "Next payment attempt at"
+        webhooks_delivered_at: "Webhooks delivered at"
+        charge_guid: "Charge GUID"
+        subscription_guid: "Subscription GUID"
+        tax_percent: "Tax %"
+        tax: "Tax"
+        original_stripe_data: "Original Stripe data"
 
       edit:
         h1: Edit Invoice
@@ -914,6 +938,23 @@ en:
 
       show:
         h1: Invoice
+        disclaimer: "E&OE. Use of our services is subject to our Terms Of Business."
+
+    invoice_line_items:
+      form:
+        invoice_id: "invoice ID"
+        amount: "Amount"
+        currency_id: "Currency"
+        prorated: "prorated"
+        period_start_at: "Period Start at"
+        period_end_at: "Period End at"
+        subscription_id: "Subscription"
+        subscription_plan_id: Subscription Plan
+        original_stripe_data: Original Stripe data
+
+      show:
+        from_to: "From / To"
+        description: "Description"
 
     layouts:
       error_messages:

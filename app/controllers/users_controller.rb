@@ -19,8 +19,8 @@ class UsersController < ApplicationController
         when 'cards'
           SubscriptionPaymentCard.get_updates_for_user(@user.stripe_customer_id)
         when 'subscriptions'
-          # todo
-          ####################################################
+          Rails.logger.debug 'DEBUG: start a call to Subscription#get_updates_for_user'
+          Subscription.get_updates_for_user(@user.stripe_customer_id)
         else
           # do nothing
       end

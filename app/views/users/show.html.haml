@@ -51,7 +51,7 @@
                 %h2
                   =t('views.users.show.your_subscription')
                   -if Rails.env.development? || current_user.admin?
-                    =link_to profile_url(anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                    =link_to profile_url(t: Time.now.to_i, anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
                       .glyphicon.glyphicon-refresh
 
                 -if @current_subscription
