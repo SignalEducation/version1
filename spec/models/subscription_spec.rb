@@ -66,9 +66,12 @@ describe Subscription do
   it { expect(Subscription).to respond_to(:all_of_status) }
 
   # class methods
+  it { expect(Subscription).to respond_to(:create_using_stripe_subscription) }
+  it { expect(Subscription).to respond_to(:get_updates_for_user) }
 
   # instance methods
   it { should respond_to(:cancel) }
+  it { should respond_to(:compare_to_stripe_details) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }

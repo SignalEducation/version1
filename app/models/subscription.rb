@@ -59,6 +59,42 @@ class Subscription < ActiveRecord::Base
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
 
   # class methods
+  def self.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
+    user = User.find_by_stripe_customer_id(stripe_customer_hash[:id])
+    plan = SubscriptionPlan.find_by_stripe_guid(stripe_subscription_hash[:plan][:id])
+    x = Subscription.new(
+          user_id: user.id,
+          corporate_customer_id: user.corporate_customer_id,
+          subscription_plan_id: plan.id,
+          complementary: false,
+          current_status: stripe_subscription_hash[:status],
+    )
+    x.stripe_guid = stripe_subscription_hash[:id]
+    x.next_renewal_date = Time.at(stripe_subscription_hash[:current_period_end].to_i)
+    x.stripe_customer_id = user.stripe_customer_id
+    x.stripe_customer_data = stripe_customer_hash
+    unless x.save!(validate: false)
+      Rails.logger.error "Subscription#create_using_stripe_subscription failed to create a subscription. stripe_subscription_hash: #{stripe_subscription_hash.inspect}. Error: #{x.errors.inspect}."
+    end
+  end
+
+  def self.get_updates_for_user(stripe_customer_guid)
+    stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid).to_hash
+    active_stripe_subscriptions = stripe_customer[:subscriptions][:data]
+    # limited to 10 ACTIVE subscriptions on their platform
+    active_stripe_subscriptions.each do |stripe_sub|
+      # search for our copy of stripe_sub
+      our_sub = Subscription.find_by_stripe_guid(stripe_sub[:id])
+      if our_sub
+        our_sub.compare_to_stripe_details(stripe_sub, stripe_customer)
+      else
+        Subscription.create_using_stripe_subscription(stripe_sub, stripe_customer)
+      end
+    end
+
+  rescue => e
+    Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
+  end
 
   # instance methods
   def cancel
@@ -86,6 +122,20 @@ class Subscription < ActiveRecord::Base
     end
     # return true or false - if everything went well
     errors.messages.count == 0
+  end
+
+  def compare_to_stripe_details(stripe_subscription_hash, stripe_customer_hash)
+    if self.subscription_plan.stripe_guid != stripe_subscription_hash[:id]
+      Subscription.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
+      self.update_attribute(:current_status, 'previous')
+    else
+      self.next_renewal_date = Time.at(stripe_subscription_hash[:current_period_end])
+      self.current_status = stripe_subscription_hash[:status]
+      if self.changed?
+        self.stripe_customer_data = stripe_subscription_hash
+        self.save(validate: false)
+      end
+    end
   end
 
   def destroyable?
