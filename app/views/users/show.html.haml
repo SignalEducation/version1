@@ -104,10 +104,10 @@
                       =link_to profile_url(anchor: 'subscriptions', update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
                         .glyphicon.glyphicon-refresh
 
-                  %table.table.table-bordered
+                  %table.table.table-striped
                     %tbody
-                      -@user.subscription_payment_cards.each do |card|
-                        %tr
+                      -@user.subscription_payment_cards.all_in_order.each do |card|
+                        %tr{class: card.status == 'expired' ? 'text-muted' : ''}
                           %td
                             =t('views.users.show.card_no')
                             ='xxxx-xxxx-xxxx-' + card.last_4
@@ -117,12 +117,14 @@
                             \/
                             =card.expiry_year
                           %td
-                            -if card.status == 'live'
+                            -if card.status == 'card-live'
                               .label.label-success=t('views.users.show.card_live')
-                            -else
-                              =link_to t('views.users.show.use_this_card'), '#', class: 'btn btn-success btn-xs'
+                            -elsif card.status == 'not-live'
+                              =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-default btn-xs'
+                            -elsif card.status == 'expired'
+                              =t('views.users.show.card_expired')
                   %p
-                    =link_to t('views.users.show.add_new_card'), '#', class: 'btn btn-info'
+                    =link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-info'
 
 
         -if current_user.admin?
@@ -202,6 +204,7 @@
 
 -if @current_subscription
   =render partial: 'users/upgrade_plan'
+  =render partial: 'subscription_payment_cards/modal'
 
 =render partial: 'shared/activate_tab'
 

@@ -239,6 +239,16 @@ en:
           success: Subject Area has been deleted
           error: Subject Area was not deleted
 
+    subscription_payment_cards:
+      create:
+        flash:
+          success: Your new Card details were successfully added
+          error: Your new Card details were not added
+      update:
+        flash:
+          success: Your Card details have been updated successfully
+          error: Your card details were not updated
+
     subscription_plans:
       create:
         flash:
@@ -415,6 +425,9 @@ en:
         you_are_not_permitted_to_upgrade: "You are not permitted to upgrade your Subscription Plan"
         you_have_no_default_payment_card: "You must first choose a default credit/debit card"
         processing_error_at_stripe: "Sorry, something went wrong with our payment provider. Please try again or contact us for help"
+
+    subscription_payment_cards:
+      card_has_expired: "Can't make this card the default as it has expired"
 
     subscription_plans:
       must_be_in_the_future: Must be in the future
@@ -1208,6 +1221,13 @@ en:
       show:
         h1: Subject Area
 
+    subscription_payment_cards:
+      form:
+        make_default_card: Use this as your default Card
+
+      modal:
+        h4: New Card Details
+
     subscription_plans:
       form:
         name: Name
@@ -1324,6 +1344,7 @@ en:
           link: Change your password
           h4: Change your password
         cancel_your_subscription_plan: Cancel Your Subscription
+        card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live"
         card_no: "Card No.:"

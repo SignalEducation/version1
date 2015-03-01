@@ -31,7 +31,7 @@ FactoryGirl.define do
   factory :subscription_payment_card do
     user_id               1
     stripe_card_guid      'card_FACTORY-abc123'
-    status                'live'
+    status                'card-live'
     brand                 'visa'
     last_4                '4242'
     expiry_month          1
@@ -39,7 +39,16 @@ FactoryGirl.define do
     billing_address       '123 Fake Street'
     billing_country       'Ireland'
     billing_country_id    1
-    account_email         'some.email@example.com'
+    stripe_object_name    'card'
+    funding               'credit'
+    cardholder_name       'Joe Cardholder'
+    fingerprint           'ABC123'
+    cvc_checked           true
+    address_line1_check   false
+    address_zip_check     false
+    dynamic_last4         false
+    customer_guid         'cus_ABC123'
+    is_default_card       true
   end
 
 end

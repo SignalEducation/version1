@@ -70,6 +70,7 @@ describe SubscriptionPaymentCard do
   it { should validate_numericality_of(:billing_country_id) }
 
   # callbacks
+  it { should callback(:create_on_stripe_using_token).before(:validation).on(:create).if(:stripe_token) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -81,6 +82,13 @@ describe SubscriptionPaymentCard do
   it { expect(SubscriptionPaymentCard).to respond_to(:get_updates_for_user) }
 
   # instance methods
+  it { should respond_to(:create_on_stripe_using_token) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:make_default_card=) }
+  it { should respond_to(:make_default_card) }
+  it { should respond_to(:status) }
+  it { should respond_to(:stripe_token=) }
+  it { should respond_to(:stripe_token) }
+  it { should respond_to(:update_as_the_default_card) }
 
 end
