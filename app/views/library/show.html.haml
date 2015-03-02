@@ -17,64 +17,23 @@
       =#t('views.general.back')
 
 -if @hierarchy_item.class == SubjectArea
-  .row
-    %hr/
-    -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
-      .col-sm-6
-        .panel.panel-default
-          -if child.name == 'Association of Certified Chartered Accountants'
-            =link_to library_special_link(child), class: 'panel-heading clickable-panel a' do
-              .panel-title
-                =child.short_name
-          -elsif child.name == 'CFA Institute'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel b' do
-              =child.short_name
-          .panel-body
-            %p=child.description
-
--elsif @hierarchy_item.class == Institution
-  .row
-    %hr/
-    -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
-      .col-sm-6
-        .panel.panel-default
-          -if child.name == 'ACCA Fundamental'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel c' do
-              =child.name
-          -elsif child.name == 'ACCA Professional'
-            =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel d' do
-              =child.name
-          .panel-body
-            %p='stuff'
+  =render 'subject_area_panels'
 
 -else
-  .row
-    %hr/
-    -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
-      .col-sm-10.col-sm-offset-1
-        .panel.panel-list
-          -if child.class == CourseModule
+  =render 'library/progress_panels'
+
+
+  -#elsif @hierarchy_item.class == Institution
+    .row
+      %hr/
+      -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
+        .col-sm-6
+          .panel.panel-default
+            -if child.name == 'ACCA Fundamental'
+              =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel c' do
+                =child.name
+            -elsif child.name == 'ACCA Professional'
+              =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel d' do
+                =child.name
             .panel-body
-              .panel-title
-                .col-xs-10.panel-text
-                  =link_to child.name, library_special_link(child)
-                  =#@total_cmes
-                .col-xs-2
-                  .progress-circle.pull-right.hidden-xs
-                    %p
-                      ='15%'
-          -else
-            =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
-              =child.name
-              .glyphicon.glyphicon-menu-right.pull-right
-
-            =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
-              =child.name
-              .glyphicon.glyphicon-menu-right.pull-right
-
-
-                -# Old code that didn't allow entire panel to be clickable
-                -#-else
-                  -#.panel-body.panel-title.col-sm-12
-                    -#=link_to child.name, library_special_link(child)
-                    -#.glyphicon.glyphicon-menu-right.pull-right
+              %p='stuff'

@@ -10,7 +10,7 @@
         =t('views.library.show.h1')
       =render partial: 'courses/new_side_nav'
 
-  .col-sm-9
+  .col-md-8.col-sm-12{style: 'padding-bottom: 10px'}
     -if defined?(@results)
       =render partial: 'courses/show_results', locals: {cme: @course_module_element}
       -if @course_module_element
