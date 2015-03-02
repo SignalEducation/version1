@@ -7,6 +7,8 @@ describe 'The student sign-up process', type: :feature do
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup'
 
+  after { StripeMock.stop }
+
   before(:each) do
     activate_authlogic
     visit root_path
@@ -96,24 +98,6 @@ describe 'The student sign-up process', type: :feature do
       scenario 'card processing error', js: true do
         student_sign_up_as('Sean', 'Mahony', nil, 'processing_error', usd, usa, 12, false)
       end
-    end
-  end
-
-
-  #### Helpers
-
-  def student_sign_up_as(user_first_name, user_second_name, user_email, card_type, currency, country, subscription_months, expect_sign_up)
-    enter_user_details(user_first_name, user_second_name, user_email, country)
-    expect(page).to have_content currency.leading_symbol
-    student_picks_a_subscription_plan(currency, subscription_months)
-    enter_credit_card_details(card_type)
-    click_button I18n.t('views.student_sign_ups.form.submit')
-    sleep 1
-    if expect_sign_up
-      sleep 1
-      expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
-    else
-      expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
     end
   end
 

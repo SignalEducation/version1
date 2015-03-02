@@ -23,8 +23,8 @@
 #  ip_address_id               :integer
 #  browser_version             :string(255)
 #  raw_user_agent              :string(255)
-#  first_session_landing_page  :string(255)
-#  latest_session_landing_page :string(255)
+#  first_session_landing_page  :text
+#  latest_session_landing_page :text
 #  post_sign_up_redirect_url   :string(255)
 #
 

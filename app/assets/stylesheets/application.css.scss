@@ -299,3 +299,15 @@ header {
   }
 
 }
+
+@media screen {
+  .print-only {
+    display: none;
+  }
+}
+
+@media print {
+  .print-hidden {
+    display: none;
+  }
+}

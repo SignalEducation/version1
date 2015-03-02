@@ -52,6 +52,11 @@
             =f.label :trial_period_in_days, t('views.subscription_plans.form.trial_period_in_days'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.text_field :trial_period_in_days, placeholder: t('views.subscription_plans.form.trial_period_in_days_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :subscription_plan_category_id, t('views.subscription_plans.form.subscription_plan_category_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+
       %p
         =f.submit t('views.general.save'), class: 'btn btn-success'
         =t('views.general.or')
