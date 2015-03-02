@@ -945,6 +945,7 @@ en:
 
       index:
         h1: Invoices
+        print: Print
 
       new:
         h1: New Invoice
@@ -1359,7 +1360,7 @@ en:
         upgrade_now: Upgrade Now
         upgrade_subscription_plan: Upgrade Your Subscription
         use_this_card: "Use this card"
-        your_card_details: Your Card Details
+        your_card_details: Card Details
         your_invoices: Your Invoices
         your_next_payment_will_be_on: "Your next payment will be processed on"
         your_plans_current_status: "Your plan's current status is"

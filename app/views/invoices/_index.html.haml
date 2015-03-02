@@ -1,4 +1,4 @@
-%table.table.table-striped.table-bordered
+%table.table.table-striped.table-bordered#invoices-table
   %thead
     %tr
       -if current_user.admin?
@@ -31,21 +31,3 @@
           =link_to 'Print', invoice, title: t('views.general.view_tooltip'), class: 'btn btn-info btn-xs'
           -if invoice.user.corporate_customer?
             =link_to t('views.general.details'), '#', class: 'btn btn-info btn-xs', onclick: "$('.invoice-detail').addClass('hide');$('#invoice_#{invoice.id}').removeClass('hide'); $(this).addClass('hide'); return false;"
-
-      -#%tr.invoice-detail.hide{id: "invoice_#{invoice.id}"}
-        %td{colspan: 10}
-          %table.table.table-striped.table-bordered
-            %tr
-              %th Period From
-              %th Period To
-              %th Subscription Plan
-              %th.text-right Amount
-            -invoice.invoice_line_items.each do |line_item|
-              %tr{id: "line_item_#{line_item.id}"}
-                %td=line_item.period_start_at.to_s(:standard)
-                %td=line_item.period_end_at.to_s(:standard)
-                %td
-                  =line_item.subscription_plan.name
-                  -if line_item.prorated
-                    \(prorated)
-                %td.text-right=number_in_local_currency(line_item.amount, line_item.currency_id)

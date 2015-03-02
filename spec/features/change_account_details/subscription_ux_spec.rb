@@ -81,6 +81,97 @@ describe 'Subscription UX:', type: :feature do
     end
   end
 
+  scenario 'student_user can view invoices', js: true do
+    # sign up as a student
+    visit root_path
+    click_link I18n.t('views.general.sign_up')
+    expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
+    student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
+
+    # go to my-profile page
+    visit_my_profile
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+    click_link('Subscriptions')
+
+    expect(page).to have_content maybe_upcase I18n.t('views.users.show.your_invoices')
+
+    within('#invoices-panel') do
+      expect(page).not_to have_content(I18n.t('views.invoices.index.print'))
+      click_link('Refresh')
+      expect(page).to have_css('#invoices-table')
+      expect(page).to have_content(I18n.t('views.invoices.index.print'))
+      click_link(I18n.t('views.invoices.index.print'))
+    end
+
+    # on the print page
+    expect(page).to have_css('.glyphicon-print')
+    click_link(I18n.t('views.users.show.h1'))
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+
+    sign_out
+  end
+
+  scenario 'user can update card details', js: true do
+    # sign up as a student
+    visit root_path
+    click_link I18n.t('views.general.sign_up')
+    expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
+    student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
+
+    # go to my-profile page
+    visit_my_profile
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+    click_link('Subscriptions')
+
+    expect(page).to have_content maybe_upcase I18n.t('views.users.show.your_card_details')
+    expect(page).not_to have_css('#new-subscription-payment-card-modal')
+
+    within('#credit-cards-panel') do
+      click_link('Refresh')
+    end
+
+    # omitted:
+    # - bad_number: can't get off the Modal
+    # - valid: already on file
+    %w(expired bad_cvc declined processing_error valid_visa_debit
+valid_mc_debit).each do |this_card|
+      within('#credit-cards-panel') do
+        expect(page).to have_css('#cards-table')
+        click_link(I18n.t('views.users.show.add_new_card'))
+      end
+
+      # new card modal
+      expect(page).to have_css('#new-subscription-payment-card-modal')
+      sleep 1
+      enter_credit_card_details(this_card)
+      click_button(I18n.t('views.general.save'))
+      sleep 1
+
+      # back at the subscriptions page
+      if this_card.include?('valid')
+        expect(page).to have_content I18n.t('controllers.subscription_payment_cards.create.flash.success')
+        expect(page).not_to have_content I18n.t('controllers.subscription_payment_cards.create.flash.error')
+      else
+        expect(page).not_to have_content I18n.t('controllers.subscription_payment_cards.create.flash.success')
+        expect(page).to have_content I18n.t('controllers.subscription_payment_cards.create.flash.error')
+      end
+    end
+
+    # There are now three cards on file. Select an alternate to be the default
+    %w(4242 5556 8210).each do |last4|
+      within('#credit-cards-panel') do
+        within("#card-#{last4}") do # Visa Debit
+          expect(page).not_to have_css('.label-success')
+          click_link(I18n.t('views.users.show.use_this_card'))
+          expect(page).to have_css('.label-success')
+        end
+      end
+    end
+
+    sleep 5
+    sign_out
+  end
+
   def check_that_the_plans_are_visible(plans)
     expect(plans.size).to be > 1
     expect(plans.size).to be <= 3

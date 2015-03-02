@@ -50,9 +50,11 @@
               .col-sm-12
                 %h2
                   =t('views.users.show.your_subscription')
-                  -if Rails.env.development? || current_user.admin?
-                    =link_to profile_url(t: Time.now.to_i, anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                      .glyphicon.glyphicon-refresh
+                  -if Rails.env.development? || Rails.env.test? || current_user.admin?
+                    .pull-right
+                      =link_to profile_url(t: Time.now.to_i, anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                        .glyphicon.glyphicon-refresh
+                        Refresh
 
                 -if @current_subscription
                   .well.well-sm
@@ -87,24 +89,27 @@
                             =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion')}, class: 'text-muted'
 
             .row
-              .col-sm-8
+              .col-sm-8#invoices-panel
                 %h2
                   =t('views.users.show.your_invoices')
-                  -if Rails.env.development? || current_user.admin?
-                    =link_to profile_url(anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                      .glyphicon.glyphicon-refresh
+                  -if Rails.env.development? || Rails.env.test? || current_user.admin?
+                    .pull-right
+                      =link_to profile_url(anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                        %span.glyphicon.glyphicon-refresh
+                        Refresh
                 -@invoices = @user.invoices.paginate(page: 1, per_page: 50).all_in_order
                 =render partial: 'invoices/index'
 
               -unless @current_subscription.current_status.include?('cancel')
-                .col-sm-4
+                .col-sm-4#credit-cards-panel
                   %h2
                     =t('views.users.show.your_card_details')
-                    -if Rails.env.development? || current_user.admin?
-                      =link_to profile_url(anchor: 'subscriptions', update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                        .glyphicon.glyphicon-refresh
-
-                  %table.table.table-striped
+                    -if Rails.env.development? || Rails.env.test? || current_user.admin?
+                      .pull-right
+                        =link_to profile_url(anchor: 'subscriptions', update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                          %span.glyphicon.glyphicon-refresh
+                          Refresh
+                  %table.table.table-striped#cards-table
                     %tbody
                       -@user.subscription_payment_cards.all_in_order.each do |card|
                         %tr{class: card.status == 'expired' ? 'text-muted' : ''}
@@ -116,7 +121,7 @@
                             =card.expiry_month
                             \/
                             =card.expiry_year
-                          %td
+                          %td{id: "card-#{card.last_4}"}
                             -if card.status == 'card-live'
                               .label.label-success=t('views.users.show.card_live')
                             -elsif card.status == 'not-live'
