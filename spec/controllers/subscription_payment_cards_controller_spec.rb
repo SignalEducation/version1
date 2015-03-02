@@ -14,7 +14,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
   let(:card_params) { { last4: '4242', exp_mth: 12, exp_year: 2019 } }
   let(:bad_card_params) { { last4: '4241', exp_mth: 12, exp_year: 2012 } }
   let(:stripe_card_token) { stripe_helper.generate_card_token(card_params) }
-  let(:stripe_bad_token) { stripe_helper.generate_card_token(bad_card_params) }
+  let(:stripe_bad_token) { StripeMock.prepare_card_error(:incorrect_number) }
 
   let!(:stripe_customer_1) { customer = Stripe::Customer.create({
                   email: individual_student_user.email,
@@ -75,8 +75,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
       end
 
-      # todo: StripeMock doesn't handle bad credit card numbers!
-      xit 'should report ERROR as token is invalid' do
+      it 'should report ERROR as token is invalid' do
         post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: individual_student_user.id, make_default_card: true}
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
@@ -142,7 +141,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
   end
 
-  context 'Logged in as blogger_user: ' do
+  context 'Logged in as corporate_customer_user: ' do
 
     before(:each) do
       activate_authlogic
@@ -151,9 +150,17 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should be OK with redirect' do
-        post :create, subscription_payment_card: create_params.merge(user_id: individual_student_user.id)
+        post :create, subscription_payment_card: create_params.merge(user_id: corporate_customer_user.id)
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+      end
+
+      it 'should report ERROR as token is invalid' do
+        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: corporate_customer_user.id, make_default_card: true}
+        expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
+        expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
         expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
       end
@@ -161,7 +168,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
     describe "PUT 'update'" do
       it 'should be OK with redirect' do
-        put :update, id: card_1.id
+        put :update, id: card_2.id
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
@@ -251,6 +258,14 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         post :create, subscription_payment_card: create_params.merge(user_id: individual_student_user.id)
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+      end
+
+      it 'should report ERROR as token is invalid' do
+        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: corporate_customer_user.id, make_default_card: true}
+        expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
+        expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
         expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
       end

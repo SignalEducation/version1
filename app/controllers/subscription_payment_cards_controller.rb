@@ -10,7 +10,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     if @subscription_payment_card.save
       flash[:success] = I18n.t('controllers.subscription_payment_cards.create.flash.success')
     else
-      flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error') + (Rails.env.production? ? '' : @subscription_payment_card.errors.inspect)
+      flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
     end
     redirect_to profile_url(anchor: 'subscriptions')
   end
