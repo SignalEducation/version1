@@ -1,7 +1,7 @@
-.panel.panel-default
+.panel.panel-default.side-nav
   .panel-heading.text-center
     %p=@course_module.name
-  .panel-body{style: 'height: 80%;'}
+  .panel-body{style: 'height: 95%;'}
     .list-group.scrollbar
       -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
         .list-group-item

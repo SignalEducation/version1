@@ -340,15 +340,24 @@ header {
 
 }
 
+.new-side-nav {
+  position: fixed;
+}
+
 .side-nav{
   position: fixed;
   //top: 12%;
-  top: 70px;
+  top: 150px;
   //bottom: 0.5%;
   bottom: 0px;
   overflow-y: hidden;
 }
 
+.scrollbar {
+  overflow-y: scroll;
+  //  max-height: 400px;
+  max-height: 100%;
+}
 
 .library-panel {
   padding: 0%;
@@ -447,10 +456,4 @@ div.panel-list {
 
 .progress {
   border-radius: 0px;
-}
-
-.scrollbar {
-  overflow-y: scroll;
-//  max-height: 400px;
-  max-height: 70%;
 }
