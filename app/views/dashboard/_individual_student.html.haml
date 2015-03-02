@@ -20,7 +20,7 @@
   -if @incomplete_student_exam_tracks.size > 1 || @completed_student_exam_tracks.size > 0
     %div{role: 'tabpanel'}
 
-      %ul.nav.nav-tabs{role: 'tablist'}
+      %ul.nav.nav-tabs.dashboard-tabs{role: 'tablist'}
         %li.active{role: 'presentation'}
           %a{href: '#in-progress', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.dashboard.individual_student.in-progress')
           %li{role: 'presentation'}

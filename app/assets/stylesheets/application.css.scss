@@ -311,13 +311,17 @@ header {
   }
 }
 
-.list-group {
-  margin: 0;
-  border-radius: 0;
-}
+.no-body {
+  padding: 0px;
 
-.list-group-item {
-  border-radius: 0;
+  .list-group {
+    margin: 0;
+    border-radius: 0;
+
+    .list-group-item {
+      border-radius: 0;
+    }
+  }
 }
 
 .glyphicon-ok-sign {
@@ -385,20 +389,20 @@ header {
     width: 100%;
     height: 100%;
     &.a {
-      background-color: #e15258 !important;
-      color: #f9fcff !important;
+      background-color: #e15258;
+      color: #f9fcff;
     }
     &.b {
-      background-color: #53BBB4 !important;
-      color: #f9fcff !important;
+      background-color: #53BBB4;
+      color: #f9fcff;
     }
     &.c {
-      background-color: #CC3B3B !important;
-      color: #f9fcff !important;
+      background-color: #CC3B3B;
+      color: #f9fcff;
     }
     &.d {
-      background-color: #9E272D !important;
-      color: #f9fcff !important;
+      background-color: #9E272D;
+      color: #f9fcff;
     }
   }
 }
@@ -466,15 +470,4 @@ header {
 
 .progress {
   border-radius: 0px;
-}
-
-.nav-tabs > li, .nav-pills > li {
-  float:none;
-  display:inline-block;
-  *display:inline; /* ie7 fix */
-  zoom:1; /* hasLayout ie7 trigger */
-}
-
-.nav-tabs, .nav-pills {
-  text-align:center;
 }
