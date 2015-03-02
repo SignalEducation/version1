@@ -11,14 +11,18 @@ class StaticPagesController < ApplicationController
   end
 
   def show
-    if params[:preview] == 'yes'
-      @delivered_page = @static_page.dup
-      @static_page = nil
-      if @delivered_page.use_standard_page_template
-        render 'static_pages/deliver_page/with_layout'
-      else
-        render 'static_pages/deliver_page/without_layout', layout: nil
+    if @static_page
+      if params[:preview] == 'yes'
+        @delivered_page = @static_page.dup
+        @static_page = nil
+        if @delivered_page.use_standard_page_template
+          render 'static_pages/deliver_page/with_layout'
+        else
+          render 'static_pages/deliver_page/without_layout', layout: nil
+        end
       end
+    else
+      redirect_to '/404-page'
     end
   end
 
@@ -100,7 +104,9 @@ class StaticPagesController < ApplicationController
   def get_variables
     if params[:id].to_i > 0
       @static_page = StaticPage.where(id: params[:id]).first
-      @static_page_uploads = StaticPageUpload.orphans_or_for_page(@static_page.id)
+      if @static_page
+        @static_page_uploads = StaticPageUpload.orphans_or_for_page(@static_page.id)
+      end
     else
       @static_page_uploads = StaticPageUpload.orphans.all_in_order
     end
