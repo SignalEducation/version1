@@ -10,9 +10,9 @@
 #  last_4              :string(255)
 #  expiry_month        :integer
 #  expiry_year         :integer
-#  billing_address     :string(255)
-#  billing_country     :string(255)
-#  billing_country_id  :integer
+#  address_line1       :string(255)
+#  account_country     :string(255)
+#  account_country_id  :integer
 #  created_at          :datetime
 #  updated_at          :datetime
 #  stripe_object_name  :string(255)
@@ -25,6 +25,11 @@
 #  dynamic_last4       :string(255)
 #  customer_guid       :string(255)
 #  is_default_card     :boolean          default(FALSE)
+#  address_line2       :string(255)
+#  address_city        :string(255)
+#  address_state       :string(255)
+#  address_zip         :string(255)
+#  address_country     :string(255)
 #
 
 class SubscriptionPaymentCard < ActiveRecord::Base
@@ -34,7 +39,9 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :stripe_card_guid, :status,
                   :brand, :last_4, :expiry_month, :expiry_year,
-                  :billing_address, :billing_country, :billing_country_id,
+                  :address_line1, :address_line2, :address_city,
+                  :address_state, :address_zip, :address_country,
+                  :account_country, :account_country_id,
                   :stripe_object_name, :funding, :cardholder_name, :fingerprint,
                   :cvc_checked, :address_line1_check, :address_zip_check,
                   :dynamic_last4, :customer_guid, :is_default_card,
@@ -47,8 +54,8 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # relationships
   has_many :subscription_transactions
   belongs_to :user
-  belongs_to :billing_address_country, class_name: 'Country',
-             foreign_key: :billing_country_id
+  belongs_to :account_address_country, class_name: 'Country',
+             foreign_key: :account_country_id
 
   # validation
   validates :user_id, presence: true,
@@ -59,7 +66,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   validates :last_4, presence: true
   validates :expiry_month, presence: true
   validates :expiry_year, presence: true
-  validates :billing_country_id, allow_nil: true,
+  validates :account_country_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
@@ -82,9 +89,14 @@ class SubscriptionPaymentCard < ActiveRecord::Base
               last_4: stripe_card_data[:last4],
               expiry_month: stripe_card_data[:exp_month],
               expiry_year: stripe_card_data[:exp_year],
-              billing_address: stripe_card_data[:address_line1],
-              billing_country: stripe_card_data[:country],
-              billing_country_id: country_id,
+              address_line1: stripe_card_data[:address_line1],
+              address_line2: stripe_card_data[:address_line2],
+              address_city: stripe_card_data[:address_city],
+              address_zip: stripe_card_data[:address_zip],
+              address_state: stripe_card_data[:address_state],
+              address_country: stripe_card_data[:address_country],
+              account_country: stripe_card_data[:country],
+              account_country_id: country_id,
               stripe_object_name: stripe_card_data[:object],
               funding: stripe_card_data[:funding],
               cardholder_name: stripe_card_data[:name],
@@ -155,9 +167,14 @@ class SubscriptionPaymentCard < ActiveRecord::Base
         self.last_4 = new_card_hash[:last4]
         self.expiry_month = new_card_hash[:exp_month]
         self.expiry_year = new_card_hash[:exp_year]
-        self.billing_address = new_card_hash[:address_line_1]
-        self.billing_country = new_card_hash[:country]
-        self.billing_country_id = Country.find_by_iso_code(new_card_hash[:country].upcase)
+        self.address_line1 = new_card_hash[:address_line_1]
+        self.address_line2 = new_card_hash[:address_line_2]
+        self.address_city = new_card_hash[:address_city]
+        self.address_state = new_card_hash[:address_state]
+        self.address_zip = new_card_hash[:address_zip]
+        self.address_country = new_card_hash[:address_country]
+        self.account_country = new_card_hash[:country]
+        self.account_country_id = Country.find_by_iso_code(new_card_hash[:country].upcase)
         self.stripe_object_name = new_card_hash[:object]
         self.funding = new_card_hash[:funding]
         self.cardholder_name = new_card_hash[:name]

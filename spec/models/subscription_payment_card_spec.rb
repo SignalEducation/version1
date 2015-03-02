@@ -10,9 +10,9 @@
 #  last_4              :string(255)
 #  expiry_month        :integer
 #  expiry_year         :integer
-#  billing_address     :string(255)
-#  billing_country     :string(255)
-#  billing_country_id  :integer
+#  address_line1       :string(255)
+#  account_country     :string(255)
+#  account_country_id  :integer
 #  created_at          :datetime
 #  updated_at          :datetime
 #  stripe_object_name  :string(255)
@@ -25,6 +25,11 @@
 #  dynamic_last4       :string(255)
 #  customer_guid       :string(255)
 #  is_default_card     :boolean          default(FALSE)
+#  address_line2       :string(255)
+#  address_city        :string(255)
+#  address_state       :string(255)
+#  address_zip         :string(255)
+#  address_country     :string(255)
 #
 
 require 'rails_helper'
@@ -48,7 +53,7 @@ describe SubscriptionPaymentCard do
   # relationships
   it { should have_many(:subscription_transactions) }
   it { should belong_to(:user) }
-  it { should belong_to(:billing_address_country) }
+  it { should belong_to(:account_address_country) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -66,8 +71,8 @@ describe SubscriptionPaymentCard do
 
   it { should validate_presence_of(:expiry_year) }
 
-  it { should_not validate_presence_of(:billing_country_id) }
-  it { should validate_numericality_of(:billing_country_id) }
+  it { should_not validate_presence_of(:account_country_id) }
+  it { should validate_numericality_of(:account_country_id) }
 
   # callbacks
   it { should callback(:create_on_stripe_using_token).before(:validation).on(:create).if(:stripe_token) }

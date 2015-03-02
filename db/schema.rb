@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150227160558) do
+ActiveRecord::Schema.define(version: 20150302175355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -472,9 +472,9 @@ ActiveRecord::Schema.define(version: 20150227160558) do
     t.string   "last_4"
     t.integer  "expiry_month"
     t.integer  "expiry_year"
-    t.string   "billing_address"
-    t.string   "billing_country"
-    t.integer  "billing_country_id"
+    t.string   "address_line1"
+    t.string   "account_country"
+    t.integer  "account_country_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "stripe_object_name"
@@ -487,6 +487,11 @@ ActiveRecord::Schema.define(version: 20150227160558) do
     t.string   "dynamic_last4"
     t.string   "customer_guid"
     t.boolean  "is_default_card",     default: false
+    t.string   "address_line2"
+    t.string   "address_city"
+    t.string   "address_state"
+    t.string   "address_zip"
+    t.string   "address_country"
   end
 
   create_table "subscription_plan_categories", force: true do |t|

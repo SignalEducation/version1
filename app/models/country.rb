@@ -28,7 +28,7 @@ class Country < ActiveRecord::Base
   # relationships
   has_many :corporate_customers
   belongs_to :currency
-  has_many :subscription_payment_cards, foreign_key: :billing_country_id
+  has_many :subscription_payment_cards, foreign_key: :account_country_id
   has_many :users
   has_many :vat_codes
 
