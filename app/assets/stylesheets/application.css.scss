@@ -312,7 +312,7 @@ header {
 }
 
 .list-group {
-  margin-bottom: 0;
+  margin: 0;
   border-radius: 0;
 }
 
@@ -342,15 +342,26 @@ header {
 
 .new-side-nav {
   position: fixed;
+  width: 22%;
+}
+
+.small-nav {
+ padding-bottom: 50px;
 }
 
 .side-nav{
   position: fixed;
   //top: 12%;
-  top: 150px;
+  top: 130px;
+  width: 22%;
   //bottom: 0.5%;
   bottom: 0px;
   overflow-y: hidden;
+}
+
+.content-area {
+  padding-right: 40px;
+  bottom: 10px;
 }
 
 .scrollbar {
@@ -446,8 +457,6 @@ header {
   &:hover, &:active, &:focus {
     background-color: lighten(#5391cf, 5);
     color: #f1f6fd;
-  }
-  a {
     text-decoration: none;
   }
   .glyphicon {
@@ -457,4 +466,15 @@ header {
 
 .progress {
   border-radius: 0px;
+}
+
+.nav-tabs > li, .nav-pills > li {
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs, .nav-pills {
+  text-align:center;
 }

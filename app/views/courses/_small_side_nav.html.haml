@@ -1,8 +1,9 @@
+%br/
 =link_to library_special_link(@course_module.parent), class: 'btn-ls-default btn-block btn-lg text-center' do
   .glyphicon.glyphicon-chevron-left
   =t('views.library.show.h1')
 %hr/
-.panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
+.panel-group#accordion.small-nav{role: 'tablist', aria: {multiselectable: true }}
   .panel.panel-default
     .panel-heading#headingOne{role: 'tab' }
       %h4.panel-title.text-center

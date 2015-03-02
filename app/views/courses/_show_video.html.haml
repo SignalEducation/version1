@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h1=cme.name
+    %h1.no-top-gap=cme.name
 .row
   .col-sm-12
     .well.text-center#video-window
@@ -58,3 +58,6 @@
     image: "https://dvetmi3t70548.cloudfront.net/video-still-image.jpg",
     width: "100%", aspectratio: "16:9", volume: 80
   });
+
+
+=render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
