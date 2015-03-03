@@ -6,10 +6,12 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      -if Rails.env.production?
-        =link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
-      -else
+      -if Rails.env.staging?
         =link_to Rails.env, root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand'), style: 'background-color: blue;'
+      -else
+        %a.navbar-brand.navbar-logo{href: '/' }
+          %img.img.img-responsive{src: 'http://learnsignal3-production.s3-eu-west-1.amazonaws.com/static_page_uploads/30/LS_Only_Logo.png?1425329517', alt: 'Learn Signal Logo'}
+    -#=link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav.navbar-right
