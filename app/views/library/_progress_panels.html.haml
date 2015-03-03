@@ -3,7 +3,7 @@
   -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
     .col-sm-10.col-sm-offset-1
       .panel.panel-list
-        -if child.class == CourseModule
+        -#if child.class == CourseModule
           =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs panel-text' do
             .col-xs-10.a-tag
               =child.name
@@ -12,11 +12,11 @@
                 ='15%'
           =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 panel-text visible-xs' do
             =child.name
-        -else
-          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
-            =child.name
-            .glyphicon.glyphicon-menu-right.pull-right
+        -#else
+        =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
+          =child.name
+          .glyphicon.glyphicon-menu-right.pull-right
 
-          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
-            =child.name
-            .glyphicon.glyphicon-menu-right.pull-right
+        =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
+          =child.name
+          .glyphicon.glyphicon-menu-right.pull-right

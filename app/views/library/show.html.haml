@@ -1,20 +1,20 @@
 %br/
 .row
-  .col-sm-6.col-sm-offset-3
-    .text-center
-      .h1{style: 'margin: 60px 20px;'}= @hierarchy_item.name
-      -if @hierarchy_item.children.first.class == CourseModule
-        .row
-          .col-sm-10.col-sm-offset-1
-            =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
+  .col-sm-4.col-sm-offset-4.text-center
+    .h1.library-heading.text-center= @hierarchy_item.name
+    -if @hierarchy_item.children.first.class == CourseModule
+      .row
+        .col-sm-10.col-sm-offset-1
+          =#render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
+          .text-center
             =link_to t('views.course_module_elements.show.continue'), '#', class: 'btn btn-lg btn-ls-default'
 
 
 .row
   -unless @hierarchy_item.parent.nil?
-    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-default btn-ls-default' do
-      .glyphicon.glyphicon-menu-left
-      =#t('views.general.back')
+    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-back' do
+      %span.glyphicon.glyphicon-menu-left
+      =t('views.general.back')
 
 -if @hierarchy_item.class == SubjectArea
   =render 'subject_area_panels'
