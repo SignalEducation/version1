@@ -15,6 +15,10 @@ class DashboardController < ApplicationController
       @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
       @completed_student_exam_tracks = @student_exam_tracks.where(percentage_complete: 100)
       @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete < ?', 100)
+
+      @latest_level_or_section = @student_exam_tracks.first.try(:exam_section) || @student_exam_tracks.first.try(:exam_level)
+
+      @other_level_or_section
     end
 
     if @dashboard_type.include?('tutor')

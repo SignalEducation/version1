@@ -1,10 +1,11 @@
+%br/
 -if @incomplete_student_exam_tracks.try(:count).to_i > 0
   -first_set = @incomplete_student_exam_tracks.first
   .row
     .col-sm-6.col-sm-offset-3
-      .well.well-sm
+      .well.well-sm.dashboard-well
         .text-center
-          .h1{style: 'margin: 60px 20px;'}
+          .h1
             = first_set.latest_course_module_element.course_module.parent.name
           .row
             .col-sm-10.col-sm-offset-1
@@ -13,48 +14,23 @@
           .row
             .col-sm-12
               %br/
-              =link_to 'View Overview of Course', library_special_link(first_set.latest_course_module_element.parent.parent)
+              =link_to 'Overview', library_special_link(first_set.latest_course_module_element.parent.parent)
         %br/
 
-  -if @incomplete_student_exam_tracks.size > 1 || @completed_student_exam_tracks.size > 0
-    %div{role: 'tabpanel'}
+  =#@latest_level_or_section.parent.children.all_active
 
-      %ul.nav.nav-tabs.dashboard-tabs{role: 'tablist'}
-        %li.active{role: 'presentation'}
-          %a{href: '#in-progress', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.dashboard.individual_student.in-progress')
-          %li{role: 'presentation'}
-            %a{href: '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.dashboard.individual_student.completed')
-
-      .tab-content
-        %br/
-        .tab-pane.fade.in.active#in-progress{role: 'tabpanel'}
-          .row
-            .col-sm-12
-              -if @incomplete_student_exam_tracks.size < 2
-                .well
-                  =t('views.dashboard.individual_student.none_in_progress')
-              -@incomplete_student_exam_tracks[1..-1].each do |set|
-                .row
-                  .col-sm-12
-                    .panel.panel-default
-                      .panel-body
-                        .col-sm-6
-                          .h3=link_to set.latest_course_module_element.course_module.parent.name, library_special_link(set.latest_course_module_element.parent.parent)
-                        .col-sm-6
-                          =#render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.count_of_cmes_completed, value_max: set.elements_total}
-
-        .tab-pane.fade#completed{role: 'tabpanel'}
-          -if @completed_student_exam_tracks.size == 0
-            .row
-              .col-sm-12
-                .well
-                  =t('views.dashboard.individual_student.none_completed')
-
-          -@completed_student_exam_tracks.each do |completed_set|
-            .row
-              =link_to library_special_link(completed_set.latest_course_module_element.parent.parent), class: 'col-sm-12 panel panel-body' do
-                %h3= completed_set.latest_course_module_element.course_module.parent.name
-                =#render partial: 'shared/static_progress_bar', locals: {percent: completed_set.percentage_complete, value_now: completed_set.count_of_cmes_completed, value_max: completed_set.elements_total}
+  %hr/
+  .row
+    .col-sm-12
+      -@latest_level_or_section.parent.children.all_active.each do |set|
+        .row
+          .col-sm-12
+            .panel.panel-default
+              .panel-body
+                .col-sm-6
+                  .h3=link_to set.name, library_special_link(set)
+                .col-sm-6
+                  =#render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.count_of_cmes_completed, value_max: set.elements_total}
 
 -else
   .row
