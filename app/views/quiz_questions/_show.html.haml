@@ -1,7 +1,7 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.id}"}
   .row
     .col-sm-12
-      .well.well-sm
+      .well.well-sm.quiz-well
         =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
   .row
     .col-sm-12
@@ -10,12 +10,14 @@
   -answers.each_with_index do |qa, counter|
     .row
       .col-sm-12
-        .well.well-sm.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;"}
+        .well.well-sm.quiz-well.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;"}
           %table.table
             %tbody
               %tr
                 %td.col-xs-1{style: 'border: 1px solid transparent;'}
-                  .h1.no-top-gap=('A'..'Z').to_a[counter]
+                  .h1.no-top-gap
+                    =('A'..'Z').to_a[counter]
+                    &#46;
                 %td.col-xs-11{style: 'border: 1px solid transparent;'}
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
   %small
