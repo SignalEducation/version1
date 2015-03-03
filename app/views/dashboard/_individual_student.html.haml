@@ -5,11 +5,10 @@
       .well.well-sm
         .text-center
           .h1{style: 'margin: 60px 20px;'}
-            = first_set.latest_course_module_element.course_module.parent.parent.parent.parent.short_name
-            = first_set.latest_course_module_element.course_module.parent.parent.name
+            = first_set.latest_course_module_element.course_module.parent.name
           .row
             .col-sm-10.col-sm-offset-1
-              =render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.count_of_cmes_completed, value_max: first_set.elements_total}
+              =#render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.count_of_cmes_completed, value_max: first_set.elements_total}
           =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
           .row
             .col-sm-12
@@ -40,9 +39,9 @@
                     .panel.panel-default
                       .panel-body
                         .col-sm-6
-                          .h3=link_to set.latest_course_module_element.course_module.name, library_special_link(set.latest_course_module_element.parent.parent)
+                          .h3=link_to set.latest_course_module_element.course_module.parent.name, library_special_link(set.latest_course_module_element.parent.parent)
                         .col-sm-6
-                          =render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.count_of_cmes_completed, value_max: set.elements_total}
+                          =#render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.count_of_cmes_completed, value_max: set.elements_total}
 
         .tab-pane.fade#completed{role: 'tabpanel'}
           -if @completed_student_exam_tracks.size == 0
@@ -53,12 +52,9 @@
 
           -@completed_student_exam_tracks.each do |completed_set|
             .row
-              .col-sm-12
-                .col-sm-6
-                  =link_to library_special_link(completed_set.latest_course_module_element.parent.parent), class: 'panel panel-body' do
-                    =completed_set.latest_course_module_element.course_module.name
-                    .col-sm-6
-                      =render partial: 'shared/static_progress_bar', locals: {percent: completed_set.percentage_complete, value_now: completed_set.count_of_cmes_completed, value_max: completed_set.elements_total}
+              =link_to library_special_link(completed_set.latest_course_module_element.parent.parent), class: 'col-sm-12 panel panel-body' do
+                %h3= completed_set.latest_course_module_element.course_module.parent.name
+                =#render partial: 'shared/static_progress_bar', locals: {percent: completed_set.percentage_complete, value_now: completed_set.count_of_cmes_completed, value_max: completed_set.elements_total}
 
 -else
   .row
