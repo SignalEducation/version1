@@ -61,7 +61,9 @@ class SubscriptionTransaction < ActiveRecord::Base
   # class methods
   def self.create_from_stripe_data(subscription)
     stripe_sub_data = subscription.stripe_customer_data[:subscriptions][:data][0]
-    stripe_card_data = subscription.stripe_customer_data[:cards]
+    stripe_card_data = subscription.stripe_customer_data[:cards] ?
+            subscription.stripe_customer_data[:cards] :
+            subscription.stripe_customer_data[:sources]
     if stripe_sub_data[:status] == 'trialing'
       tran_type = 'trialing'
     elsif stripe_sub_data[:status] == 'active'
@@ -79,7 +81,7 @@ class SubscriptionTransaction < ActiveRecord::Base
             alarm: 1,
             live_mode: (Rails.env.production? ? true : false),
             original_data: stripe_sub_data.to_hash,
-            subscription_payment_card_id: SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, subscription.stripe_customer_data[:default_card])
+            subscription_payment_card_id: SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
     )
   end
 

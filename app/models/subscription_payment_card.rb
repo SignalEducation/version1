@@ -142,10 +142,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   def self.get_updates_for_user(stripe_customer_guid)
     customer_payload = Stripe::Customer.retrieve(stripe_customer_guid).to_hash
-    if customer_payload && customer_payload[:cards]
+    if customer_payload && customer_payload[:sources]
       user = User.where(stripe_customer_id: stripe_customer_guid).first
 
-      SubscriptionPaymentCard.create_cards_from_stripe_array(customer_payload[:cards][:data], user.id, customer_payload[:default_card])
+      SubscriptionPaymentCard.create_cards_from_stripe_array(customer_payload[:sources][:data], user.id, customer_payload[:default_source])
 
     else
       Rails.logger.warn "WARN: SubscriptionPaymentCard#get_updates_for_user - couldn't retrieve valid customer data for customer guid #{stripe_customer_guid}"
@@ -157,9 +157,9 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   def create_on_stripe_using_token
     if self.stripe_token.to_s.length > 0 && self.user.try(:stripe_customer_id) && self.stripe_card_guid.blank?
       stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
-      new_card_hash = Rails.env.test? ?
-              stripe_customer.cards.create({card: self.stripe_token}).to_hash :
-              stripe_customer.sources.create({source: self.stripe_token}).to_hash
+      new_card_hash = stripe_customer.try(:sources) ?
+              stripe_customer.sources.create({source: self.stripe_token}).to_hash :
+              stripe_customer.cards.create({card: self.stripe_token}).to_hash
       if new_card_hash
         self.stripe_card_guid = new_card_hash[:id]
         self.status = (new_card_hash[:cvc_check] == 'pass' && self.make_default_card) ? 'card-live' : 'not-live'
