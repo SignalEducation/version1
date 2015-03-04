@@ -159,27 +159,27 @@ class Subscription < ActiveRecord::Base
     # compare the currencies of the old and new plans,
     unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-      return false
+      return self
     end
     # make sure new plan is active
     unless new_subscription_plan.active?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-      return false
+      return self
     end
     # make sure the current subscription is in "good standing"
     unless %w(trialing active).include?(self.current_status)
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-      return false
+      return self
     end
     # only individual students are allowed to upgrade their plan
     unless self.user.individual_student? || self.user.corporate_customer?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-      return false
+      return self
     end
     # Make sure they have a default credit card in place
     unless self.user.subscription_payment_cards.all_default_cards.length > 0
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
-      return false
+      return self
     end
 
     # reduce the trial period in the new plan to the remaining trial period in the
@@ -193,7 +193,11 @@ class Subscription < ActiveRecord::Base
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     stripe_subscription.plan = new_subscription_plan.stripe_guid
     stripe_subscription.prorate = true
-    stripe_subscription.trial_end = (Proc.new{Time.now}.call + remaining_trial_days.days).to_i
+    if self.current_status == 'trialing'
+      stripe_subscription.trial_end = (Proc.new{Time.now}.call + remaining_trial_days.days).to_i
+    else
+      stripe_subscription.trial_end = 'now'
+    end
     sample_response_from_stripe = {
           id: 'test_su_4', status: 'trialing',
           current_period_start: 1424881810, current_period_end: 1425486610,
