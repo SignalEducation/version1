@@ -391,7 +391,7 @@ en:
 
       reset_your_password:
         subject_line: Reset your Learn Signal password
-        paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
+        paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your password. To do this, please click on the link below:"
         paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
 
       your_password_has_changed:
@@ -433,7 +433,7 @@ en:
       must_be_in_the_future: Must be in the future
 
     stripe_api_event:
-      guid_required_to_get_payoad_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
+      guid_required_to_get_payload_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
 
   views:
     general:
