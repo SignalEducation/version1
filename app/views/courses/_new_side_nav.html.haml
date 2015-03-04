@@ -1,10 +1,11 @@
 .panel.panel-default.side-nav
   .panel-heading.text-center
-    %p=@course_module.name
+    %p
+      =@course_module.name
   .panel-body.no-body{style: 'height: 95%;'}
     .list-group.scrollbar
       -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
-        .list-group-item-o
+        .list-group-item
           -if course_module_element.id == @course_module_element.try(:id)
             %p.current-list-group-item
               %span.glyphicon.glyphicon-chevron-right.side-nav-chevron
