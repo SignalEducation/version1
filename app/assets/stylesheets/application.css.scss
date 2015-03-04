@@ -621,3 +621,9 @@ header {
     margin: 60px 20px;
   }
 }
+
+.courses-title {
+  @media (max-width: 768px){
+    font-size: 20px;
+  }
+}

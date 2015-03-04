@@ -1,7 +1,8 @@
 -if @enough_questions
   .row
     .col-sm-12
-      %h2.no-top-gap=@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name)
+      %h1.courses-title
+        =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name)
   .row
     .col-sm-12
       .progress
