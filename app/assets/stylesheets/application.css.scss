@@ -226,9 +226,7 @@ nav.navbar.navbar-transparent {
   padding-left: 0;
   padding-right: 0;
   margin: 0 15px;
-  .collapse in{
-    background-color: #eee;
-  }
+  max-width: 75px;
 }
 
 .navbar.navbar-inverse.navbar-fixed-top ul > li:not(.active) {
