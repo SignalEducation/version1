@@ -226,6 +226,9 @@ nav.navbar.navbar-transparent {
   padding-left: 0;
   padding-right: 0;
   margin: 0 15px;
+  .collapse in{
+    background-color: #eee;
+  }
 }
 
 .navbar.navbar-inverse.navbar-fixed-top ul > li:not(.active) {
@@ -242,6 +245,10 @@ nav.navbar.navbar-transparent {
     }
   }
 }
+
+//.navbar-collapse .collapse .in {
+  //background-color: #eee;
+//}
 
 .navbar-shrink {
   transition: all 1s;
@@ -626,4 +633,8 @@ header {
   @media (max-width: 768px){
     font-size: 20px;
   }
+}
+
+.subject-headings {
+  font-size: 22px
 }

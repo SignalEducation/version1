@@ -5,10 +5,11 @@
       .panel.panel-default
         -if child.name == 'Association of Certified Chartered Accountants'
           =link_to library_special_link(child), class: 'panel-heading clickable-panel a' do
-            .panel-title
+            .subject-headings.text-center
               =child.short_name
         -elsif child.name == 'CFA Institute'
           =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel b' do
-            =child.short_name
+            .subject-headings.text-center
+              =child.short_name
         .panel-body
           %p=child.description
