@@ -89,6 +89,9 @@ tr {
 .navbar-logo {
   width: 65px;
   padding: 0;
+  @media screen and (max-width: 780px){
+    padding-left: 20px;
+  }
 
   img {
     $navbar-height: 65px;
