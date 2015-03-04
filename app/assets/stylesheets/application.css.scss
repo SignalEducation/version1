@@ -357,6 +357,7 @@ header {
   .list-group {
     margin: 0;
     border-radius: 0;
+    padding-bottom: 5px;
 
     .list-group-item {
       border-radius: 0;
@@ -399,10 +400,8 @@ header {
 
 .side-nav{
   position: fixed;
-  //top: 12%;
   top: 150px;
   width: 22%;
-  //bottom: 0.5%;
   bottom: 0;
   overflow-y: hidden;
   border: 0;
@@ -421,15 +420,18 @@ header {
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
   }
   .list-group-item {
-    border: 0;
-    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
-    margin: 1px 0;
-  p {
+    border: 1px solid #f5f5f5;
+    //-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    //-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+   // box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
     margin: 0;
-    padding: 10px;
+    p {
+      margin: 0;
+      padding: 10px;
+    }
   }
+  .current-list-group-item {
+    padding: 10px 15px;
   }
 }
 
@@ -486,6 +488,9 @@ header {
   margin-bottom: 2px;
   .panel-title {
     font-size: 1.25em;
+  }
+  h3 {
+    margin: 0;
   }
   .panel-body{
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
