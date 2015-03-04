@@ -16,8 +16,7 @@
               %tr
                 %td.col-xs-1{style: 'border: 1px solid transparent;'}
                   .h1.no-top-gap
-                    =('A'..'Z').to_a[counter]
-                    &#46;
+                    =('A.'..'Z.').to_a[counter]
                 %td.col-xs-11{style: 'border: 1px solid transparent;'}
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
   %small
