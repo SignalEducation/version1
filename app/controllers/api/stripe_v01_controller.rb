@@ -8,20 +8,67 @@ class Api::StripeV01Controller < ApplicationController
   skip_before_action :log_user_activity
 
   def create
-    if params[:event]
-      the_event = JSON.parse(params[:event], {symbolize_names: true})
-      if the_event[:id].to_s.length > 0
-        StripeApiProcessorWorker.perform_async(the_event[:id], 'v01')
-      else
-        Rails.logger.error "ERROR: Api/StripeV01#Create: INVALID data: #{the_event}"
-      end
+    if params[:id]
+      StripeApiProcessorWorker.perform_async(params[:id], Stripe.api_version)
+      Rails.logger.debug "DEBUG: Api/StripeV01#Create: safe-data ID:#{params[:id]} queued OK."
+      render text: nil, status: 200
     else
       Rails.logger.error "ERROR: Api/StripeV01#Create: NO data: #{params}"
+      render text: nil, status: 404
     end
-    render text: nil, status: 200
+  rescue => e
+    Rails.logger.error "ERROR: Api/StripeV01#Create: Error: #{e.inspect}"
+    render text: nil, status: 204 # no content
   end
 
+
   protected
+
+  #### Possible events
+
+  ## Charges to our customers
+  #  charge.succeeded
+  #  charge.failed
+  #  charge.refunded
+  #  charge.captured
+  #  charge.updated
+  #  charge.dispute.created
+  #  charge.dispute.updated
+  #  charge.dispute.closed
+  #  charge.dispute.funds_withdrawn
+  #  charge.dispute.funds_reinstated
+
+  ## Customers
+  #  customer.created
+  #  customer.updated
+  #  customer.deleted
+
+  ## Customer Cards (?)
+  #  customer.card.created
+  #  customer.card.updated
+  #  customer.card.deleted
+
+  ## Customer Subscriptions
+  #  customer.subscription.created
+  #  customer.subscription.updated
+  #  customer.subscription.deleted
+  #  customer.subscription.trial_will_end
+
+  ## Invoices
+  #  invoice.created
+  #  invoice.updated
+  #  invoice.payment_succeeded
+  #  invoice.payment_failed
+  #  invoiceitem.created
+  #  invoiceitem.updated
+  #  invoiceitem.deleted
+
+  ## Plans
+  #  plan.created
+  #  plan.updated
+  #  plan.deleted
+
+  # ping
 
   #### Invoices
 
