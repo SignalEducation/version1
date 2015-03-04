@@ -24,7 +24,14 @@
     -@latest_level_or_section.parent.children.all_active.each do |set|
       .col-sm-10.col-sm-offset-1
         .panel.panel-list
-          =link_to library_special_link(set), class: 'panel-body panel-title col-sm-12 panel-text' do
+          =link_to library_special_link(set), class: 'panel-body panel-title col-sm-12 panel-text hidden-xs' do
+            .col-sm-6
+              =set.name
+            .col-sm-6
+              .continue-container.pull-right
+                .glyphicon.glyphicon-menu-right
+
+          =link_to library_special_link(set), class: 'panel-body panel-title col-sm-12 panel-text visible-xs' do
             .col-sm-6
               =set.name
             .col-sm-6
