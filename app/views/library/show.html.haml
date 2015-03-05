@@ -1,11 +1,11 @@
 %br/
--#first_set = @incomplete_student_exam_tracks.first
+-first_set = @incomplete_student_exam_tracks.first
 
-.row.library-back
+.row
   .col-sm-12
     .col-sm-8.col-sm-offset-2.text-center
       -if @hierarchy_item.class == SubjectArea
-        .library-image
+        .library-image.hidden-xs
           =image_tag 'Welcome02.png', size: '260x260'
       -else
         .h1.library-heading.text-center
@@ -15,9 +15,12 @@
         .row
           .col-sm-10.col-sm-offset-1
             =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
-            -#if @hierarchy_item == first_set.course_module.parent
-              .text-center
-                =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+      -#Todo 'Continue/Start' button
+        -if @hierarchy_item.class == ExamLevel || ExamSection
+          .text-center
+            =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+
+        -#if @hierarchy_item == first_set.course_module.parent.parent || first_set.course_module.parent
 
 .row
   -unless @hierarchy_item.parent.nil?

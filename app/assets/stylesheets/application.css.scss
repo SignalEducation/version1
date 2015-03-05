@@ -506,8 +506,10 @@ header {
     text-decoration: none;
     background-color: white;
     margin-bottom: 1px;
-    &:active {
-      color: #eb4242;
+    &:hover, &:focus, &:active {
+      background-color: #ef5f5f;
+      color: #f1f6fd;
+      text-decoration: none;
     }
   }
   .panel-body:hover {
