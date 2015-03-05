@@ -23,7 +23,7 @@ class Subscription < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :complementary, :current_status,
+                  :complementary, :current_status, :stripe_customer_id,
                   :stripe_token
 
   # Constants
@@ -47,7 +47,6 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}
-  validates :stripe_token, presence: true, on: :create
 
   # callbacks
   before_validation :create_on_stripe_platform, on: :create
@@ -245,26 +244,39 @@ class Subscription < ActiveRecord::Base
 
   def create_on_stripe_platform
     Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform initialised'
-    # see https://stripe.com/docs/guides/subscriptions#step-2-subscribe-customers
-    stripe_customer = Stripe::Customer.create(
-            card: @stripe_token,
-            plan: self.subscription_plan.try(:stripe_guid),
-            email: self.user.try(:email)
-    )
-    # self.subscription_plan_id is set in the UI
-
     self.complementary = false
-    if stripe_customer && stripe_customer.try(:subscriptions).try(:data).try(:first)
-      self.stripe_guid = stripe_customer.subscriptions.data[0].id
-      self.next_renewal_date = Time.at(stripe_customer.subscriptions.data[0].current_period_end)
-      self.current_status = stripe_customer.subscriptions.data[0].status
-      self.stripe_customer_id = stripe_customer.id
+    if self.stripe_customer_id.blank?
+      #### New customer
+      if @stripe_token
+        stripe_customer = Stripe::Customer.create(
+                card: @stripe_token,
+                plan: self.subscription_plan.try(:stripe_guid),
+                email: self.user.try(:email)
+        )
+        stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
+      else
+        errors.add(:stripe_token, I18n.t('models.subscriptions.create.cant_be_blank'))
+        return
+      end
+    else
+      #### Existing customer that is reactivating
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.create(plan: self.subscription_plan.stripe_guid, trial_end: 'now')
+      # refresh...
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    end
+
+    if stripe_customer && stripe_subscription
+      self.stripe_guid = stripe_subscription.id
+      self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+      self.current_status = stripe_subscription.status
+      self.stripe_customer_id ||= stripe_customer.id
       self.stripe_customer_data = stripe_customer.to_hash.deep_dup
     end
 
-    if Rails.env.production? && stripe_customer.livemode == false
-      errors.add(:base, 'Non-live transaction on the Live server')
-      Rails.error.log 'ERROR: Subscription#create_on_stripe_platform - Non-live transaction on Production platform. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+    if Rails.env.production? != stripe_customer.livemode
+      errors.add(:base, I18n.t('models.general.live_mode_error'))
+      Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
       false
     else
       true
