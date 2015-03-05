@@ -244,10 +244,6 @@ nav.navbar.navbar-transparent {
   }
 }
 
-//.navbar-collapse .collapse .in {
-  //background-color: #eee;
-//}
-
 .navbar-shrink {
   transition: all 1s;
   min-height: 50px;
@@ -450,7 +446,7 @@ header {
 .content-area {
   padding-right: 40px;
   bottom: 10px;
-  @media screen and (max-width: 968px){
+  @media (max-width: 968px){
     padding-right: 15px;
   }
 }
