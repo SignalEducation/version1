@@ -4,7 +4,20 @@ class SubscriptionsController < ApplicationController
   before_action do
     ensure_user_is_of_type(%w(admin individual_student corporate_customer))
   end
-  before_action :get_subscription
+  before_action :get_subscription, except: :create
+
+  def create
+    @subscription = Subscription.new(creatable_params)
+    @subscription.stripe_customer_id = current_user.admin? ?
+            User.find_by_id(params[:subscription][:user_id]).stripe_customer_id :
+            current_user.stripe_customer_id
+    if @subscription.save
+      flash[:success] = I18n.t('controllers.subscriptions.create.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.subscriptions.create.flash.error')
+    end
+    redirect_to profile_url(anchor: 'subscriptions')
+  end
 
   def update
     if @subscription
@@ -35,6 +48,10 @@ class SubscriptionsController < ApplicationController
   end
 
   protected
+
+  def creatable_params
+    params.require(:subscription).permit(:subscription_plan_id, :user_id)
+  end
 
   def updatable_params
     params.require(:subscription).permit(:subscription_plan_id)
