@@ -62,6 +62,7 @@ class SubscriptionTransaction < ActiveRecord::Base
   def self.create_from_stripe_data(subscription)
     stripe_sub_data = subscription.stripe_customer_data[:subscriptions][:data][0]
     stripe_card_data = subscription.stripe_customer_data[:cards]
+    default_card = SubscriptionPaymentCard.find_by_stripe_card_guid(subscription.stripe_customer_data[:default_card])
     if stripe_sub_data[:status] == 'trialing'
       tran_type = 'trialing'
     elsif stripe_sub_data[:status] == 'active'
@@ -79,8 +80,11 @@ class SubscriptionTransaction < ActiveRecord::Base
             alarm: 1,
             live_mode: (Rails.env.production? ? true : false),
             original_data: stripe_sub_data.to_hash,
-            subscription_payment_card_id: SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, subscription.stripe_customer_data[:default_card])
+            subscription_payment_card_id: default_card.try(:id) || SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, subscription.stripe_customer_data[:default_card])
     )
+  rescue => e
+    Rails.logger.error "ERROR: SubscriptionTransaction#create_from_stripe_data failed to save. Error:#{e.inspect}"
+    return false
   end
 
   # instance methods

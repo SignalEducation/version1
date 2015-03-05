@@ -14,6 +14,7 @@ class SubscriptionsController < ApplicationController
     if @subscription.save
       flash[:success] = I18n.t('controllers.subscriptions.create.flash.success')
     else
+      Rails.logger.warn "WARN: Subscription#create failed to create a new (reactivated) subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscriptions.create.flash.error')
     end
     redirect_to profile_url(anchor: 'subscriptions')
@@ -25,6 +26,7 @@ class SubscriptionsController < ApplicationController
       if @subscription.try(:subscription_plan_id) == updatable_params[:subscription_plan_id].to_i
         flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
       else
+        Rails.logger.warn "WARN: Subscription#update failed to update a subscription. Errors:#{@subscription.errors.inspect}"
         flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
       end
       redirect_to profile_url(anchor: 'subscriptions')
@@ -39,6 +41,7 @@ class SubscriptionsController < ApplicationController
       if @subscription.cancel
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else
+        Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
         flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
       end
     else

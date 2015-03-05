@@ -262,6 +262,10 @@ en:
           error: Subscription Plan was not deleted
 
     subscriptions:
+      create:
+        flash:
+          success: Your Subscription has been created successfully
+          error: Your Subscription has not been created
       update:
         flash:
           success: Your Subscription has been updated successfully
@@ -402,6 +406,7 @@ en:
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
+      live_mode_error: "Live-mode error: Please contact us for help"
 
     course_module_element:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
@@ -418,6 +423,8 @@ en:
       must_assign_to_at_least_one_thing: Must assign this to a question, a solution OR an answer
 
     subscriptions:
+      create:
+        cant_be_blank: "can't be blank"
       upgrade_plan:
         currencies_mismatch:  "You cannot switch to a Subscription Plan with a different currency"
         new_plan_is_inactive: "You cannot switch to a Subscription Plan that is inactive"
@@ -1352,6 +1359,11 @@ en:
         confirm_deletion: "If you cancel your subscription, you may continue to use LearnSignal until your current billing period expires. After that, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
         confirm_immediate_deletion: "If you cancel your subscription, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
         no_upgrade_options_available: "You are on the best Subscription Plan we offer."
+        reactivate_subscription:
+          h3: Reactivate Your Account
+          features_and_benefits: "Get back on track with your study plans and realise your full career potential. Your study history and an ever expanding range of content are just a few clicks away."
+          button_call_to_action: 'Reactivate Now'
+        re_subscribe_plan: 'Thank you for reactivating'
         tabs:
           personal_details: Personal details
           subscriptions: Subscriptions

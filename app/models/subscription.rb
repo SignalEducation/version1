@@ -149,6 +149,10 @@ class Subscription < ActiveRecord::Base
     @stripe_token
   end
 
+  def reactivation_options
+    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.all_in_order
+  end
+
   def upgrade_options
     SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.where('payment_frequency_in_months >= ?', self.subscription_plan.payment_frequency_in_months).all_in_order
   end
