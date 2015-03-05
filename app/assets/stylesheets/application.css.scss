@@ -400,6 +400,28 @@ header {
 
 .small-nav {
  padding-bottom: 50px;
+ padding-top: 35px;
+ .panel-default {
+   border-radius: 0;
+ }
+ .panel-heading {
+   background-color: #E7E4E4;
+   cursor: pointer;
+   border-radius: 0;
+   p {
+     padding-top: 10px;
+     font-size: 18px;
+   }
+   &:hover, &:focus {
+     background-color: #EFEFEF;
+     color: #222222;
+     text-decoration: none;
+   }
+   &:active {
+     background-color: #eeeeee;
+     color: #222222;
+   }
+ }
 }
 
 .side-nav{

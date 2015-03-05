@@ -2,36 +2,39 @@
 =link_to library_special_link(@course_module.parent), class: 'btn-ls-default btn-block btn-lg text-center' do
   .glyphicon.glyphicon-chevron-left
   =t('views.library.show.h1')
-%hr/
 .panel-group#accordion.small-nav{role: 'tablist', aria: {multiselectable: true }}
   .panel.panel-default
-    .panel-heading#headingOne{role: 'tab'}
+    .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseOne'}
       %h4.panel-title.text-center
-        %a{data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseOne', aria: {expanded: false, controls: 'collapseOne'}}
+        %a{aria: {expanded: false, controls: 'collapseOne'}}
           =@course_module.name
           .glyphicon.glyphicon-chevron-down
     .panel-collapse.collapse{id: 'collapseOne', class: '', role: 'tabpanel', aria: {labelledby: 'headingOne'}}
       .list-group
         -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
-          .list-group-item.text-center
-            -if course_module_element.id == @course_module_element.try(:id)
-              %p
-                %span.glyphicon.glyphicon-chevron-right.blue
-                %span=course_module_element.name
+          -if course_module_element.id == @course_module_element.try(:id)
+            .list-group-item.text-center
+              .glyphicon.glyphicon-chevron-right
+              =course_module_element.name
+          -else
+            -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+              =link_to course_special_link(course_module_element), class: 'list-group-item text-center' do
+                .glyphicon.glyphicon-ok-sign
+                =course_module_element.name
             -else
-              %p
-                -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                  %span.glyphicon.glyphicon-ok-sign
-                =link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
+              =link_to course_special_link(course_module_element), class: 'list-group-item text-center', title: t('views.courses.show.h1') do
+                .glyphicon.glyphicon-record
+                =course_module_element.name
         -if @course_module.course_module_jumbo_quiz
-          .list-group-item.text-center
+          .text-center
             -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
-              %span.glyphicon.glyphicon-chevron-right.blue
-              -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                %span.glyphicon.glyphicon-ok-sign
-              =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
+              .glyphicon.glyphicon-chevron-right.blue
+              =@course_module.course_module_jumbo_quiz.name
+            -elsif @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+              =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
+                .glyphicon.glyphicon-ok-sign
+                =@course_module.course_module_jumbo_quiz.name
             -else
-              %p
-                -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                  %span.glyphicon.glyphicon-ok-sign
-                =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
+              =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
+                .glyphicon.glyphicon-record
+                =@course_module.course_module_jumbo_quiz.name
