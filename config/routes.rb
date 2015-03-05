@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
     get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
     post 'stripe_v01', to: 'stripe_v01#create'
+    post 'stripe_dev/:dev_name', to: 'stripe_dev#create'
     resources :user_activities, only: :create
   end
 
@@ -88,7 +89,7 @@ Rails.application.routes.draw do
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
-
+    resources :stripe_developer_calls
     resources :subject_areas
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]

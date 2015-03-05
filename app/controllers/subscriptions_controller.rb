@@ -23,10 +23,10 @@ class SubscriptionsController < ApplicationController
   def update
     if @subscription
       @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
-      if @subscription.try(:subscription_plan_id) == updatable_params[:subscription_plan_id].to_i
+      if @subscription.try(:subscription_plan_id) == updatable_params[:subscription_plan_id].to_i && @subscription.errors.count == 0
         flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
       else
-        Rails.logger.warn "WARN: Subscription#update failed to update a subscription. Errors:#{@subscription.errors.inspect}"
+        Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong. @subscription.errors: #{@subscription.errors.inspect}."
         flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
       end
       redirect_to profile_url(anchor: 'subscriptions')

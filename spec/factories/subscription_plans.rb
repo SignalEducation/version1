@@ -21,19 +21,20 @@
 
 FactoryGirl.define do
   factory :subscription_plan do
-    sequence(:name)             { |n| "Test #{n}" }
-    all_you_can_eat             true
-    payment_frequency_in_months 1
-    currency_id                 { Currency.first.try(:id) || FactoryGirl.create(:euro).id }
-    price                       9.99
-    available_from              { 14.days.ago }
-    available_to                { 7.days.from_now }
-    stripe_guid                 'plan_ABC123123123'
-    trial_period_in_days        7
+    sequence(:name)                 { |n| "Test #{n}" }
+    all_you_can_eat                 true
+    payment_frequency_in_months     1
+    currency_id                     { Currency.first.try(:id) || FactoryGirl.create(:euro).id }
+    price                           9.99
+    available_from                  { 14.days.ago }
+    available_to                    { 7.days.from_now }
+    #stripe_guid                     'plan_ABC123123123'
+    trial_period_in_days            7
+    subscription_plan_category_id   nil
 
     factory :student_subscription_plan do
-      available_to_students     true
-      available_to_corporates   false
+      available_to_students         true
+      available_to_corporates       false
       factory :student_subscription_plan_m do # monthly
         payment_frequency_in_months 1
       end
@@ -46,8 +47,17 @@ FactoryGirl.define do
     end
 
     factory :corporate_subscription_plan do
-      available_to_students     false
-      available_to_corporates   true
+      available_to_students         false
+      available_to_corporates       true
+      factory :corporate_subscription_plan_m do # monthly
+        payment_frequency_in_months 1
+      end
+      factory :corporate_subscription_plan_q do # quarterly
+        payment_frequency_in_months 3
+      end
+      factory :corporate_subscription_plan_y do # yearly
+        payment_frequency_in_months 12
+      end
     end
   end
 

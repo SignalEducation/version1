@@ -123,6 +123,7 @@ class Invoice < ActiveRecord::Base
     else
       Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice.  Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
     end
+    return inv
   end
 
   def self.get_updates_for_user(stripe_customer_guid)

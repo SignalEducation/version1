@@ -1,0 +1,32 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.stripe_developer_calls.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @stripe_developer_calls, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.stripe_developer_calls.form.user_id')
+          %th=t('views.stripe_developer_calls.form.params_received')
+          %th=t('views.stripe_developer_calls.form.prevent_delete')
+          %th
+          %th
+      %tbody
+        -@stripe_developer_calls.each do |stripe_developer_call|
+          %tr{id: stripe_developer_call.id}
+            %td=link_to(stripe_developer_call.user.name, stripe_developer_call, title: t('views.general.view_tooltip'))
+            %td=link_to(stripe_developer_call.params_received, stripe_developer_call, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(stripe_developer_call.prevent_delete), stripe_developer_call, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), stripe_developer_call
+              =link_to t('views.general.edit'), edit_stripe_developer_call_url(stripe_developer_call), class: 'btn btn-info btn-xs'
+              -if stripe_developer_call.destroyable?
+                =link_to t('views.general.delete'), stripe_developer_call, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_stripe_developer_call_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
