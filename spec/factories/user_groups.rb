@@ -21,43 +21,64 @@
 
 FactoryGirl.define do
   factory :user_group do
-    sequence(:name) { |n| "User Group #{n}" }
-    description 'Lorem ipsum'
+    sequence(:name)                      { |n| "User Group #{n}" }
+    description                          'Lorem ipsum'
+    individual_student                   false
+    corporate_student                    false
+    tutor                                false
+    content_manager                      false
+    blogger                              false
+    corporate_customer                   false
+    site_admin                           false
+    forum_manager                        false
+    subscription_required_at_sign_up     false
+    subscription_required_to_see_content false
+
+    factory :blogger_user_group do
+      name 'Blogger Group'
+      blogger true
+    end
+
+    factory :corporate_student_user_group do
+      name 'Corporate Student Group'
+      individual_student false
+      corporate_student true
+      subscription_required_at_sign_up false
+      subscription_required_to_see_content false
+    end
+
+    factory :corporate_customer_user_group do
+      name 'Corporate Customer Group'
+      corporate_customer true
+      subscription_required_at_sign_up true
+      subscription_required_to_see_content true
+    end
+
+    factory :content_manager_user_group do
+      name 'Content Manager Group'
+      content_manager true
+    end
+
+    factory :forum_manager_user_group do
+      name 'Forum Manager Group'
+      forum_manager true
+    end
 
     factory :individual_student_user_group do
+      name 'Individual Student Group'
       individual_student true
       subscription_required_at_sign_up true
       subscription_required_to_see_content true
     end
 
-    factory :corporate_student_user_group do
-      individual_student true
-      subscription_required_at_sign_up false
-      subscription_required_to_see_content false
-    end
-
-    factory :tutor_user_group do
-      tutor true
-    end
-
-    factory :content_manager_user_group do
-      content_manager true
-    end
-
-    factory :blogger_user_group do
-      blogger true
-    end
-
-    factory :corporate_customer_user_group do
-      corporate_customer true
-    end
-
     factory :site_admin_user_group do
+      name 'Site Admin Group'
       site_admin true
     end
 
-    factory :forum_manager_user_group do
-      forum_manager true
+    factory :tutor_user_group do
+      name 'Tutor Group'
+      tutor true
     end
 
   end

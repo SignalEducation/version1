@@ -62,6 +62,7 @@ FactoryGirl.define do
     locale                                    'en'
 
     factory :individual_student_user do
+      sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                'cu_abc123'
@@ -70,19 +71,22 @@ FactoryGirl.define do
       account_activation_code           'abc123'
 
       factory :inactive_individual_student_user do
+        sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
         active                          false
         account_activation_code         'abcde12345'
         account_activated_at            nil
       end
 
       factory :user_with_reset_requested do
+        sequence(:email)                { |n| "reset.me-#{n}@example.com" }
         active                          false
         password_reset_token            'A1234567890123456789'
         password_reset_requested_at     { Time.now - 1.day }
       end
-   end
+    end
 
     factory :tutor_user do
+      sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
@@ -91,6 +95,7 @@ FactoryGirl.define do
     end
 
     factory :corporate_student_user do
+      sequence(:email)                  { |n| "corporate.student-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
@@ -99,6 +104,7 @@ FactoryGirl.define do
     end
 
     factory :corporate_customer_user do
+      sequence(:email)                  { |n| "corporate.customer-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
@@ -107,6 +113,7 @@ FactoryGirl.define do
     end
 
     factory :blogger_user do
+      sequence(:email)                  { |n| "blogger.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
@@ -115,6 +122,7 @@ FactoryGirl.define do
     end
 
     factory :forum_manager_user do
+      sequence(:email)                  { |n| "forum.manager-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
@@ -123,6 +131,7 @@ FactoryGirl.define do
     end
 
     factory :content_manager_user do
+      sequence(:email)                  { |n| "content.manager-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
@@ -131,6 +140,7 @@ FactoryGirl.define do
     end
 
     factory :admin_user do
+      sequence(:email)                  { |n| "admin.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil

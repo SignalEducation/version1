@@ -45,15 +45,15 @@
         %tr
           %th=t('views.student_sign_ups.show.your_card_details')
           %td
-            ='xxxx-xxxx-xxxx-____,'
-            -# todo: + @subscription.
+            ="xxxx-xxxx-xxxx-#{@subscription.subscription_transactions.first.subscription_payment_card.last_4},"
             =t('views.student_sign_ups.show.expires')
-            XX / XXXX
-            -# todo:
+            =@subscription.subscription_transactions.first.subscription_payment_card.expiry_month
+            \/
+            =@subscription.subscription_transactions.first.subscription_payment_card.expiry_year
 
     %p
       =t('views.student_sign_ups.show.if_you_have_any_questions')
-      =link_to t('views.student_sign_ups.show.please_get_in_touch'), 'mailto:help@learnsignal.com'
+      =link_to t('views.student_sign_ups.show.please_get_in_touch'), "mailto:#{t('views.student_sign_ups.show.email_address')}?subject=#{t('views.student_sign_ups.show.email_subject')} - ID:#{@user.guid}", class: 'text-info'
     %hr
 
 .row

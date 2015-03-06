@@ -12,6 +12,20 @@ class UsersController < ApplicationController
 
   def show
     # profile page
+    if params[:update].to_s.length > 0
+      case params[:update]
+        when 'invoices'
+          Invoice.get_updates_for_user(@user.stripe_customer_id)
+        when 'cards'
+          SubscriptionPaymentCard.get_updates_for_user(@user.stripe_customer_id)
+        when 'subscriptions'
+          Rails.logger.debug 'DEBUG: start a call to Subscription#get_updates_for_user'
+          Subscription.get_updates_for_user(@user.stripe_customer_id)
+        else
+          # do nothing
+      end
+      @user.reload
+    end
   end
 
   def new
@@ -82,6 +96,7 @@ class UsersController < ApplicationController
     @countries = Country.all_in_order
     @user_groups = UserGroup.all_in_order
     seo_title_maker(@user.try(:full_name))
+    @current_subscription = @user.subscriptions.all_in_order.last
   end
 
   def allowed_params

@@ -2,20 +2,34 @@
 #
 # Table name: subscription_payment_cards
 #
-#  id                 :integer          not null, primary key
-#  user_id            :integer
-#  stripe_card_guid   :string(255)
-#  status             :string(255)
-#  brand              :string(255)
-#  last_4             :string(255)
-#  expiry_month       :integer
-#  expiry_year        :integer
-#  billing_address    :string(255)
-#  billing_country    :string(255)
-#  billing_country_id :integer
-#  account_email      :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
+#  id                  :integer          not null, primary key
+#  user_id             :integer
+#  stripe_card_guid    :string(255)
+#  status              :string(255)
+#  brand               :string(255)
+#  last_4              :string(255)
+#  expiry_month        :integer
+#  expiry_year         :integer
+#  address_line1       :string(255)
+#  account_country     :string(255)
+#  account_country_id  :integer
+#  created_at          :datetime
+#  updated_at          :datetime
+#  stripe_object_name  :string(255)
+#  funding             :string(255)
+#  cardholder_name     :string(255)
+#  fingerprint         :string(255)
+#  cvc_checked         :string(255)
+#  address_line1_check :string(255)
+#  address_zip_check   :string(255)
+#  dynamic_last4       :string(255)
+#  customer_guid       :string(255)
+#  is_default_card     :boolean          default(FALSE)
+#  address_line2       :string(255)
+#  address_city        :string(255)
+#  address_state       :string(255)
+#  address_zip         :string(255)
+#  address_country     :string(255)
 #
 
 require 'rails_helper'
@@ -34,11 +48,12 @@ describe SubscriptionPaymentCard do
 
   # Constants
   it { expect(SubscriptionPaymentCard.const_defined?(:STATUSES)).to eq(true) }
+  it { expect(SubscriptionPaymentCard.const_defined?(:CHECKING_STATUSES)).to eq(true) }
 
   # relationships
   it { should have_many(:subscription_transactions) }
   it { should belong_to(:user) }
-  it { should belong_to(:billing_country) }
+  it { should belong_to(:account_address_country) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -56,18 +71,29 @@ describe SubscriptionPaymentCard do
 
   it { should validate_presence_of(:expiry_year) }
 
-  it { should_not validate_presence_of(:billing_country_id) }
-  it { should validate_numericality_of(:billing_country_id) }
+  it { should_not validate_presence_of(:account_country_id) }
+  it { should validate_numericality_of(:account_country_id) }
 
   # callbacks
+  it { should callback(:create_on_stripe_using_token).before(:validation).on(:create).if(:stripe_token) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(SubscriptionPaymentCard).to respond_to(:all_in_order) }
+  it { expect(SubscriptionPaymentCard).to respond_to(:all_default_cards) }
 
   # class methods
+  it { expect(SubscriptionPaymentCard).to respond_to(:build_from_stripe_data) }
+  it { expect(SubscriptionPaymentCard).to respond_to(:get_updates_for_user) }
 
   # instance methods
+  it { should respond_to(:create_on_stripe_using_token) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:make_default_card=) }
+  it { should respond_to(:make_default_card) }
+  it { should respond_to(:status) }
+  it { should respond_to(:stripe_token=) }
+  it { should respond_to(:stripe_token) }
+  it { should respond_to(:update_as_the_default_card) }
 
 end

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
     get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
+    post 'stripe_v01', to: 'stripe_v01#create'
     resources :user_activities, only: :create
   end
 
@@ -75,7 +76,7 @@ Rails.application.routes.draw do
     get  'institutions/filter/:subject_area_url', to: 'institutions#index', as: :institutions_filtered
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
-    resources :invoices
+    resources :invoices, only: [:index, :show]
     post 'qualifications/reorder', to: 'qualifications#reorder'
     get  'qualifications/filter/:institution_url', to: 'qualifications#index',
          as: :qualifications_filtered
@@ -89,7 +90,10 @@ Rails.application.routes.draw do
     resources :static_page_uploads, only: [:create]
 
     resources :subject_areas
+    resources :subscriptions, only: [:update, :destroy]
+    resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
+    resources :subscription_plan_categories
     resources :user_activity_logs
     resources :user_notifications
     resources :vat_codes

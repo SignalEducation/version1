@@ -666,3 +666,15 @@ header {
 .subject-headings {
   font-size: 22px
 }
+
+@media screen {
+  .print-only {
+    display: none;
+  }
+}
+
+@media print {
+  .print-hidden {
+    display: none;
+  }
+}
