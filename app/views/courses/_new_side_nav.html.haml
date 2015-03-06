@@ -18,25 +18,30 @@
                 .glyphicon.glyphicon-record
               %span{title: t('views.courses.show.h1')}= course_module_element.name
 
-      -#-else
-            -#%p
-              -#-if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                -#%span.glyphicon.glyphicon-ok-sign
-              -#-else
-                -#%span.glyphicon.glyphicon-record
-              -#=link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
+        -#-else
+              -#%p
+                -#-if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                  -#%span.glyphicon.glyphicon-ok-sign
+                -#-else
+                  -#%span.glyphicon.glyphicon-record
+                -#=link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
 
 
       -if @course_module.course_module_jumbo_quiz
-        .list-group-item
+        .jumbo-quiz
           -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
-            %span.glyphicon.glyphicon-chevron-right.blue
-            -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-              %span.glyphicon.glyphicon-ok-sign
-            =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
-          -else
-            %p
-              -if @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+            .list-group-item
+              %p
+                .glyphicon.glyphicon-chevron-right.side-nav-chevron
+                =@course_module.course_module_jumbo_quiz.name
+          -elsif @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+            =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
+              %p
                 %span.glyphicon.glyphicon-ok-sign
-              =link_to @course_module.course_module_jumbo_quiz.name, course_special_link(@course_module.course_module_jumbo_quiz)
+                @course_module.course_module_jumbo_quiz.name
+          -else
+            =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
+              %p
+                .glyphicon.glyphicon-ok-sign
+                =@course_module.course_module_jumbo_quiz.name
       %br/
