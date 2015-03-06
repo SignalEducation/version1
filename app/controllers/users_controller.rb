@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(allowed_params)
     @user.locale = 'en'
-    if @user.save
+    if @user.user_group.site_admin == false && @user.save
       Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@user.id)
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
@@ -94,7 +94,7 @@ class UsersController < ApplicationController
                   current_user
     @email_frequencies = User::EMAIL_FREQUENCIES
     @countries = Country.all_in_order
-    @user_groups = UserGroup.all_in_order
+    @user_groups = UserGroup.where(site_admin: false).all_in_order
     seo_title_maker(@user.try(:full_name))
     @current_subscription = @user.subscriptions.all_in_order.last
   end
