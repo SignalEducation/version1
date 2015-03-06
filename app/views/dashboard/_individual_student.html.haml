@@ -1,6 +1,7 @@
 %br/
 -if @incomplete_student_exam_tracks.try(:count).to_i > 0
   -first_set = @incomplete_student_exam_tracks.first
+
   .row
     .col-sm-6.col-sm-offset-3
       .well.well-sm.dashboard-well
@@ -17,7 +18,11 @@
               =link_to 'Overview', library_special_link(first_set.latest_course_module_element.parent.parent)
         %br/
 
-  =#@latest_level_or_section.parent.children.all_active.inspect
+  %h1= 'The discrepancy was between using @incomplete_student_exam_tracks and @completed_student_exam_tracks ?????'
+  =@completed_student_exam_tracks.first.latest_course_module_element.course_module.parent.inspect
+  %hr/
+  =@completed_student_exam_tracks.first.latest_course_module_element.course_module.parent.parent.children.all_active.all_in_order.inspect
+
 
   %hr/
   .row

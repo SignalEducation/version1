@@ -18,7 +18,6 @@ class DashboardController < ApplicationController
 
       @latest_level_or_section = @student_exam_tracks.first.try(:exam_section) || @student_exam_tracks.first.try(:exam_level)
 
-      @other_level_or_section
     end
 
     if @dashboard_type.include?('tutor')
