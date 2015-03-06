@@ -37,6 +37,7 @@ describe Subscription do
   it { should belong_to(:user) }
   it { should belong_to(:corporate_customer) }
   it { should have_many(:invoices) }
+  it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
   it { should have_many(:subscription_transactions) }
 
@@ -65,8 +66,14 @@ describe Subscription do
   it { expect(Subscription).to respond_to(:all_of_status) }
 
   # class methods
+  it { expect(Subscription).to respond_to(:create_using_stripe_subscription) }
+  it { expect(Subscription).to respond_to(:get_updates_for_user) }
 
   # instance methods
+  it { should respond_to(:cancel) }
+  it { should respond_to(:compare_to_stripe_details) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:upgrade_options) }
+  it { should respond_to(:upgrade_plan) }
 
 end

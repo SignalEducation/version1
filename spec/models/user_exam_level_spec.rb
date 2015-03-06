@@ -30,7 +30,7 @@ describe UserExamLevel do
   # relationships
   it { should belong_to(:user) }
   it { should belong_to(:exam_level) }
-  xit { should belong_to(:exam_schedule) }
+  # todo it { should belong_to(:exam_schedule) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -52,7 +52,5 @@ describe UserExamLevel do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

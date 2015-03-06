@@ -8,7 +8,7 @@ RSpec.describe 'subscription_plans/new', type: :view do
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
   end
 
-  it 'renders edit subscription_plan form' do
+  xit 'renders edit subscription_plan form' do
     render
     assert_select 'form[action=?][method=?]', subscription_plans_path, 'post' do
       assert_select 'input#subscription_plan_available_to_students[name=?]', 'subscription_plan[available_to_students]'

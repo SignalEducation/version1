@@ -136,6 +136,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name, :address) }
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
+  after_create :set_stripe_customer_id
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -213,6 +214,14 @@ class User < ActiveRecord::Base
     self.user_group.try(:content_manager)
   end
 
+  def corporate_customer?
+    self.user_group.try(:corporate_customer)
+  end
+
+  def corporate_student?
+    self.user_group.try(:corporate_student)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
@@ -245,7 +254,7 @@ class User < ActiveRecord::Base
   end
 
   def individual_student?
-    self.user_group.try(:individual_student)
+    self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
   end
 
   def tutor?
@@ -272,6 +281,12 @@ class User < ActiveRecord::Base
     self.marketing_email_frequency ||= 'off'
     self.blog_notification_email_frequency ||= 'off'
     self.forum_notification_email_frequency ||= 'off'
+  end
+
+  def set_stripe_customer_id
+    if self.subscriptions.length > 0
+      self.update_attribute(:stripe_customer_id, self.subscriptions.first.stripe_customer_id)
+    end
   end
 
 end

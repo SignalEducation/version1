@@ -40,42 +40,6 @@ describe InvoicesController, type: :controller do
       end
     end
 
-    describe "GET 'new'" do
-      it 'should redirect to sign_in' do
-        get :new
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should redirect to sign_in' do
-        get :edit, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to sign_in' do
-        post :create, user: valid_params
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should redirect to sign_in' do
-        put :update, id: 1, user: valid_params
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-
-    describe "DELETE 'destroy'" do
-      it 'should redirect to sign_in' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
   end
 
   context 'Logged in as a individual_student_user: ' do
@@ -101,42 +65,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+        expect_error_bounce(profile_url)
       end
     end
 
@@ -165,44 +94,10 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(invoices_url)
+        expect_error_bounce(profile_url)
       end
     end
 
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
 
   end
 
@@ -229,42 +124,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+        expect_error_bounce(profile_url)
       end
     end
 
@@ -293,42 +153,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+        expect_error_bounce(profile_url)
       end
     end
 
@@ -357,42 +182,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+        expect_error_bounce(profile_url)
       end
     end
 
@@ -421,42 +211,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+        expect_error_bounce(profile_url)
       end
     end
 
@@ -485,42 +240,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: 1, invoice: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+        expect_error_bounce(profile_url)
       end
     end
 
@@ -550,41 +270,6 @@ describe InvoicesController, type: :controller do
       it 'should see invoice_2' do
         get :show, id: admin_user_invoice.id
         expect_show_success_with_model('invoice', admin_user_invoice.id)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR as not allowed' do
-        get :new
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR as not allowed' do
-        get :edit, id: admin_user_invoice.id
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR as not allowed' do
-        post :create, invoice: valid_params
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR as not allowed' do
-        put :update, id: admin_user_invoice.id, invoice: valid_params
-        expect_error_bounce(invoices_url)
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: admin_user_invoice.id
-        expect_error_bounce(invoices_url)
       end
     end
 
