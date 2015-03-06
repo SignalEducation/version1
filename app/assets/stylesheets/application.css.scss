@@ -401,6 +401,7 @@ header {
 .small-nav {
  padding-bottom: 50px;
  padding-top: 35px;
+
  .panel-default {
    border-radius: 0;
  }
@@ -408,6 +409,7 @@ header {
    background-color: #E7E4E4;
    cursor: pointer;
    border-radius: 0;
+   text-decoration: none;
    p {
      padding-top: 10px;
      font-size: 18px;
@@ -422,6 +424,9 @@ header {
      color: #222222;
    }
  }
+  .jumbo-quiz .list-group-item {
+    margin-top: 1px;
+  }
 }
 
 .side-nav{

@@ -26,7 +26,7 @@
                 .glyphicon.glyphicon-record
                 =course_module_element.name
         -if @course_module.course_module_jumbo_quiz
-          .text-center
+          .jumbo-quiz.text-center
             -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
               .glyphicon.glyphicon-chevron-right.blue
               =@course_module.course_module_jumbo_quiz.name

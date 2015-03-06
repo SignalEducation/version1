@@ -1,4 +1,5 @@
 -if @dashboard_type.length > 1
+  %br/
   .row
     .panel-group#accordion{role: 'tablist', aria: {multiselectable: true}}
       -@dashboard_type.each_with_index do |dashboard_type, counter|
