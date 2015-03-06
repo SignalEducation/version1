@@ -30,6 +30,8 @@
     -if @delivered_page.mark_as_noindex
       %meta{name: 'robots', content: 'noindex'}
 
+    =render partial: 'layouts/favicon'
+
   %body.no-top-margin
     =body_sanitizer(@delivered_page.body_content)
     -if @delivered_page.show_standard_footer

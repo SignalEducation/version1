@@ -1,23 +1,22 @@
 .panel.panel-default.side-nav
   .panel-heading.text-center
-    %p
-      =@course_module.name
+    %p=@course_module.name
   .panel-body.no-body{style: 'height: 95%;'}
     .list-group.scrollbar
       -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
-        .list-group-item
-          -if course_module_element.id == @course_module_element.try(:id)
-            %p.current-list-group-item
-              %span.glyphicon.glyphicon-chevron-right.side-nav-chevron
-              %span=course_module_element.name
-          -else
-            =link_to course_special_link(course_module_element), title: t('views.courses.show.h1'), class: 'list-group-item' do
-              %p
-                -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                  %span.glyphicon.glyphicon-ok-sign
-                -else
-                  %span.glyphicon.glyphicon-record
-                %span{title: t('views.courses.show.h1')}= course_module_element.name
+        -if course_module_element.id == @course_module_element.try(:id)
+          .list-group-item
+            %p
+              .glyphicon.glyphicon-chevron-right.side-nav-chevron
+              =course_module_element.name
+        -else
+          =link_to course_special_link(course_module_element), title: t('views.courses.show.h1'), class: 'list-group-item' do
+            %p
+              -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                .glyphicon.glyphicon-ok-sign
+              -else
+                .glyphicon.glyphicon-record
+              %span{title: t('views.courses.show.h1')}= course_module_element.name
 
       -#-else
             -#%p
