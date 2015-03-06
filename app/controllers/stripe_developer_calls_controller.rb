@@ -23,6 +23,10 @@ class StripeDeveloperCallsController < ApplicationController
   def create
     @stripe_developer_call = StripeDeveloperCall.new(allowed_params)
     @stripe_developer_call.user_id = current_user.id
+    # the next line is required to overcome the jamming of the nested hash by strong-params.
+    unless params[:stripe_developer_call][:params_received].nil?
+      @stripe_developer_call.params_received = JSON.parse(params[:stripe_developer_call][:params_received])
+    end
     if @stripe_developer_call.save
       flash[:success] = I18n.t('controllers.stripe_developer_calls.create.flash.success')
       redirect_to stripe_developer_calls_url
@@ -32,14 +36,17 @@ class StripeDeveloperCallsController < ApplicationController
   end
 
   def update
-    if @stripe_developer_call.update_attributes(allowed_params)
+    @stripe_developer_call.assign_attributes(allowed_params)
+    unless params[:stripe_developer_call][:params_received].nil?
+      @stripe_developer_call.params_received = JSON.parse(params[:stripe_developer_call][:params_received].to_s.gsub('=>',':'))
+    end
+    if @stripe_developer_call.save
       flash[:success] = I18n.t('controllers.stripe_developer_calls.update.flash.success')
       redirect_to stripe_developer_calls_url
     else
       render action: :edit
     end
   end
-
 
   def destroy
     if @stripe_developer_call.destroy

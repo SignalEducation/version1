@@ -5,10 +5,12 @@ describe StripeDeveloperCallsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for stripe_developer_call_1
-  let!(:stripe_developer_call_1) { FactoryGirl.create(:stripe_developer_call) }
-  let!(:stripe_developer_call_2) { FactoryGirl.create(:stripe_developer_call) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:stripe_developer_call) }
+  let!(:stripe_developer_call_1) { FactoryGirl.create(:stripe_developer_call,
+                                                      prevent_delete: false) }
+  let!(:stripe_developer_call_2) { FactoryGirl.create(:stripe_developer_call,
+                                                      prevent_delete: true) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:stripe_developer_call,
+                        params_received: "{\"name\":\"Dan\", \"number\":123}") }
 
   context 'Not logged in: ' do
 
@@ -74,88 +76,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a tutor_user: ' do
@@ -168,88 +133,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a corporate_student_user: ' do
@@ -262,88 +190,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a corporate_customer_user: ' do
@@ -356,88 +247,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a blogger_user: ' do
@@ -450,88 +304,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a forum_manager_user: ' do
@@ -544,88 +361,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a content_manager_user: ' do
@@ -638,88 +418,51 @@ describe StripeDeveloperCallsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('stripe_developer_calls', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see stripe_developer_call_1' do
         get :show, id: stripe_developer_call_1.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional - some other object
-      it 'should see stripe_developer_call_2' do
-        get :show, id: stripe_developer_call_2.id
-        expect_show_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with stripe_developer_call_1' do
         get :edit, id: stripe_developer_call_1.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_1.id)
-      end
-
-      # optional
-      it 'should respond OK with stripe_developer_call_2' do
-        get :edit, id: stripe_developer_call_2.id
-        expect_edit_success_with_model('stripe_developer_call', stripe_developer_call_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, stripe_developer_call: valid_params
-        expect_create_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_create_error_with_model('stripe_developer_call')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for stripe_developer_call_1' do
         put :update, id: stripe_developer_call_1.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
-        expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect_bounce_as_not_allowed
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: stripe_developer_call_1.id
-        expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
-        expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
+        expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a admin_user: ' do
@@ -776,7 +519,7 @@ describe StripeDeveloperCallsController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, stripe_developer_call: {valid_params.keys.first => ''}
+        post :create, stripe_developer_call: {user_id: nil}
         expect_create_error_with_model('stripe_developer_call')
       end
     end
@@ -789,27 +532,20 @@ describe StripeDeveloperCallsController, type: :controller do
 
       # optional
       it 'should respond OK to valid params for stripe_developer_call_2' do
-        put :update, id: stripe_developer_call_2.id, stripe_developer_call: valid_params
-        expect_update_success_with_model('stripe_developer_call', stripe_developer_calls_url)
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: stripe_developer_call_1.id, stripe_developer_call: {valid_params.keys.first => ''}
+        put :update, id: stripe_developer_call_2.id, stripe_developer_call: {user_id: nil}
         expect_update_error_with_model('stripe_developer_call')
-        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_1.id)
+        expect(assigns(:stripe_developer_call).id).to eq(stripe_developer_call_2.id)
       end
     end
 
-
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: stripe_developer_call_1.id
+        delete :destroy, id: stripe_developer_call_2.id
         expect_delete_error_with_model('stripe_developer_call', stripe_developer_calls_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: stripe_developer_call_2.id
+        delete :destroy, id: stripe_developer_call_1.id
         expect_delete_success_with_model('stripe_developer_call', stripe_developer_calls_url)
       end
     end

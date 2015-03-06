@@ -227,6 +227,18 @@ en:
           success: Static Page has been deleted
           error: Static Page was not deleted
 
+    stripe_developer_calls:
+      create:
+        flash:
+          success: Stripe Call has been created successfully
+      update:
+        flash:
+          success: Stripe Call details have been updated successfully
+      destroy:
+        flash:
+          success: Stripe Call has been deleted
+          error: Stripe Call was not deleted
+
     subject_areas:
       create:
         flash:
@@ -1158,6 +1170,25 @@ en:
         upload: File
       modal:
         h1: Upload A File
+
+    stripe_developer_calls:
+      form:
+        user_id: User
+        params_received: Params received
+        params_received_placeholder: '{"name":"something","amount":123}'
+        prevent_delete: Prevent deletion
+
+      edit:
+        h1: Edit Stripe Developer Call
+
+      index:
+        h1: Stripe Developer Calls
+
+      new:
+        h1: New Stripe Developer Call
+
+      show:
+        h1: Stripe Developer Call
 
     student_sign_ups:
       form:

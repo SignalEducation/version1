@@ -16,7 +16,7 @@
       %tbody
         -@stripe_developer_calls.each do |stripe_developer_call|
           %tr{id: stripe_developer_call.id}
-            %td=link_to(stripe_developer_call.user.name, stripe_developer_call, title: t('views.general.view_tooltip'))
+            %td=link_to(stripe_developer_call.user.full_name, stripe_developer_call, title: t('views.general.view_tooltip'))
             %td=link_to(stripe_developer_call.params_received, stripe_developer_call, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(stripe_developer_call.prevent_delete), stripe_developer_call, title: t('views.general.view_tooltip'))
             %td

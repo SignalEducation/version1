@@ -13,8 +13,8 @@
 FactoryGirl.define do
   factory :stripe_developer_call do
     user_id 1
-params_received "MyText"
-prevent_delete false
+    params_received {{some_data: 'MyText'}}
+    prevent_delete false
   end
 
 end
