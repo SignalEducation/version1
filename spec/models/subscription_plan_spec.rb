@@ -91,6 +91,7 @@ describe SubscriptionPlan do
   it { should respond_to(:active?) }
   it { should respond_to(:age_status) }
   it { should respond_to(:description) }
+  it { should respond_to(:description_without_trial) }
   it { should respond_to(:destroyable?) }
 
 end

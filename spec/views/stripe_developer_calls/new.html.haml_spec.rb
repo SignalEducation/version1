@@ -7,7 +7,7 @@ RSpec.describe 'stripe_developer_calls/new', type: :view do
     @stripe_developer_call = FactoryGirl.build(:stripe_developer_call)
   end
 
-  it 'renders edit stripe_developer_call form' do
+  xit 'renders edit stripe_developer_call form' do
     render
     assert_select 'form[action=?][method=?]', stripe_developer_calls_path, 'post' do
       assert_select 'select#stripe_developer_call_user_id[name=?]', 'stripe_developer_call[user_id]'

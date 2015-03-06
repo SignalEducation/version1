@@ -72,6 +72,7 @@ describe Subscription do
   it { should respond_to(:compare_to_stripe_details) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:reactivation_options) }
+  it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
 

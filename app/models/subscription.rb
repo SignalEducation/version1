@@ -107,15 +107,17 @@ class Subscription < ActiveRecord::Base
         self.update_attribute(:current_status, 'canceled')
         self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
       else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel a 'trialing' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     else
       response = stripe_subscription.delete(at_period_end: true).to_hash
-      if response[:status] == 'canceled'
+      if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:current_status, 'canceled-pending')
-        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id)
+        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
         Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
       else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     end
@@ -151,6 +153,19 @@ class Subscription < ActiveRecord::Base
 
   def reactivation_options
     SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.all_in_order
+  end
+
+  def un_cancel
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    latest_subscription.plan = self.subscription_plan.stripe_guid
+    response = latest_subscription.save
+    if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
+      self.update_attribute(:current_status, 'active')
+    else
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    end
+    self
   end
 
   def upgrade_options

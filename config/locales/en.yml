@@ -1363,6 +1363,10 @@ en:
           h3: Reactivate Your Account
           features_and_benefits: "Get back on track with your study plans and realise your full career potential. Your study history and an ever expanding range of content are just a few clicks away."
           button_call_to_action: 'Reactivate Now'
+        un_cancel_subscription:
+          h3: "Un-cancel Your Account"
+          features_and_benefits: "Don't give up! You can do it, and the whole Learn Signal community are here to help. It's not too late to keep uninterrupted access to your account."
+          button_call_to_action: 'Un-cancel Now'
         re_subscribe_plan: 'Thank you for reactivating'
         tabs:
           personal_details: Personal details

@@ -22,8 +22,10 @@ class SubscriptionsController < ApplicationController
 
   def update
     if @subscription
-      @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
-      if @subscription.try(:subscription_plan_id) == updatable_params[:subscription_plan_id].to_i && @subscription.errors.count == 0
+      @subscription = (@subscription.current_status == 'canceled-pending') ?
+              @subscription.un_cancel :
+              @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
+      if @subscription.errors.count == 0
         flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
       else
         Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong. @subscription.errors: #{@subscription.errors.inspect}."

@@ -75,11 +75,15 @@
                           =@current_subscription.next_renewal_date.to_s(:short) + '.'
 
                       .col-sm-4
-                        -if @current_subscription.current_status.include?('cancel')
+                        -if @current_subscription.current_status == 'canceled'
                           %h3=t('views.users.show.reactivate_subscription.h3')
                           %p=t('views.users.show.reactivate_subscription.features_and_benefits')
                           =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), '#', class: 'btn btn-info', data: {toggle: 'modal', target: '#re-subscribe-modal'}
 
+                        -elsif @current_subscription.current_status == 'canceled-pending'
+                          %h3=t('views.users.show.un_cancel_subscription.h3')
+                          %p=t('views.users.show.un_cancel_subscription.features_and_benefits')
+                          =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-success'
                         -else
                           %h3=t('views.users.show.upgrade_subscription_plan')
                           -if @current_subscription.upgrade_options.count > 1

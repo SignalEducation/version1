@@ -7,7 +7,7 @@ RSpec.describe 'stripe_developer_calls/show', type: :view do
     @stripe_developer_call = FactoryGirl.create(:stripe_developer_call, user_id: @user.id)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/#{@stripe_developer_call.user.name}/)
     expect(rendered).to match(/#{@stripe_developer_call.params_received}/)
