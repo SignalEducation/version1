@@ -1,28 +1,22 @@
 %br/
 -if @incomplete_student_exam_tracks.try(:count).to_i > 0
-  -first_set = @incomplete_student_exam_tracks.first
+  -latest_set = @student_exam_tracks.first
 
   .row
     .col-sm-6.col-sm-offset-3
       .well.well-sm.dashboard-well
         .text-center
           .h1
-            = first_set.latest_course_module_element.course_module.parent.name
+            = @latest_level_or_section.name
           .row
             .col-sm-10.col-sm-offset-1
               =#render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.count_of_cmes_completed, value_max: first_set.elements_total}
-          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+          =link_to t('views.course_module_elements.show.continue'), course_special_link(latest_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
           .row
             .col-sm-12
               %br/
-              =link_to 'Overview', library_special_link(first_set.latest_course_module_element.parent.parent)
+              =link_to 'Overview', library_special_link(latest_set.latest_course_module_element.parent.parent)
         %br/
-
-  %h1= 'The discrepancy was between using @incomplete_student_exam_tracks and @completed_student_exam_tracks ?????'
-  =@completed_student_exam_tracks.first.latest_course_module_element.course_module.parent.inspect
-  %hr/
-  =@completed_student_exam_tracks.first.latest_course_module_element.course_module.parent.parent.children.all_active.all_in_order.inspect
-
 
   %hr/
   .row
