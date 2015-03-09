@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150304111157) do
+ActiveRecord::Schema.define(version: 20150309143809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -555,6 +555,7 @@ ActiveRecord::Schema.define(version: 20150304111157) do
     t.datetime "updated_at"
     t.string   "stripe_customer_id"
     t.text     "stripe_customer_data"
+    t.boolean  "livemode",              default: false
   end
 
   create_table "system_defaults", force: true do |t|
