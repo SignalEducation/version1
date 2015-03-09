@@ -55,6 +55,7 @@ describe Subscription do
   it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES) }
 
   it { should validate_inclusion_of(:livemode).in_array(Invoice::STRIPE_LIVE_MODE)}
+
   # callbacks
   it { should callback(:create_on_stripe_platform).before(:validation).on(:create) }
   it { should callback(:create_a_subscription_transaction).after(:create) }

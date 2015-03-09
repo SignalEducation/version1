@@ -17,6 +17,7 @@
 #  updated_at                    :datetime
 #  name                          :string(255)
 #  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -31,6 +32,7 @@ FactoryGirl.define do
     #stripe_guid                     'plan_ABC123123123'
     trial_period_in_days            7
     subscription_plan_category_id   nil
+    livemode                        false
 
     factory :student_subscription_plan do
       available_to_students         true

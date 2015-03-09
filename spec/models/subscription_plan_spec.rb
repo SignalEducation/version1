@@ -17,6 +17,7 @@
 #  updated_at                    :datetime
 #  name                          :string(255)
 #  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
 #
 
 require 'rails_helper'
