@@ -227,6 +227,18 @@ en:
           success: Static Page has been deleted
           error: Static Page was not deleted
 
+    stripe_developer_calls:
+      create:
+        flash:
+          success: Stripe Call has been created successfully
+      update:
+        flash:
+          success: Stripe Call details have been updated successfully
+      destroy:
+        flash:
+          success: Stripe Call has been deleted
+          error: Stripe Call was not deleted
+
     subject_areas:
       create:
         flash:
@@ -262,6 +274,10 @@ en:
           error: Subscription Plan was not deleted
 
     subscriptions:
+      create:
+        flash:
+          success: Your Subscription has been created successfully
+          error: Your Subscription has not been created
       update:
         flash:
           success: Your Subscription has been updated successfully
@@ -391,7 +407,7 @@ en:
 
       reset_your_password:
         subject_line: Reset your Learn Signal password
-        paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your passowrd. To do this, please click on the link below:"
+        paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your password. To do this, please click on the link below:"
         paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
 
       your_password_has_changed:
@@ -402,6 +418,7 @@ en:
   models:
     general:
       dependencies_exist: Couldn't be deleted because dependencies exist
+      live_mode_error: "Live-mode error: Please contact us for help"
 
     course_module_element:
       can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
@@ -418,6 +435,8 @@ en:
       must_assign_to_at_least_one_thing: Must assign this to a question, a solution OR an answer
 
     subscriptions:
+      create:
+        cant_be_blank: "can't be blank"
       upgrade_plan:
         currencies_mismatch:  "You cannot switch to a Subscription Plan with a different currency"
         new_plan_is_inactive: "You cannot switch to a Subscription Plan that is inactive"
@@ -433,7 +452,7 @@ en:
       must_be_in_the_future: Must be in the future
 
     stripe_api_event:
-      guid_required_to_get_payoad_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
+      guid_required_to_get_payload_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
 
   views:
     general:
@@ -1152,6 +1171,25 @@ en:
       modal:
         h1: Upload A File
 
+    stripe_developer_calls:
+      form:
+        user_id: User
+        params_received: Params received
+        params_received_placeholder: '{"name":"something","amount":123}'
+        prevent_delete: Prevent deletion
+
+      edit:
+        h1: Edit Stripe Developer Call
+
+      index:
+        h1: Stripe Developer Calls
+
+      new:
+        h1: New Stripe Developer Call
+
+      show:
+        h1: Stripe Developer Call
+
     student_sign_ups:
       form:
         retype_it: Retype it
@@ -1352,6 +1390,15 @@ en:
         confirm_deletion: "If you cancel your subscription, you may continue to use LearnSignal until your current billing period expires. After that, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
         confirm_immediate_deletion: "If you cancel your subscription, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
         no_upgrade_options_available: "You are on the best Subscription Plan we offer."
+        reactivate_subscription:
+          h3: Reactivate Your Account
+          features_and_benefits: "Get back on track with your study plans and realise your full career potential. Your study history and an ever expanding range of content are just a few clicks away."
+          button_call_to_action: 'Reactivate Now'
+        un_cancel_subscription:
+          h3: "Un-cancel Your Account"
+          features_and_benefits: "Don't give up! You can do it, and the whole Learn Signal community are here to help. It's not too late to keep uninterrupted access to your account."
+          button_call_to_action: 'Un-cancel Now'
+        re_subscribe_plan: 'Thank you for reactivating'
         tabs:
           personal_details: Personal details
           subscriptions: Subscriptions

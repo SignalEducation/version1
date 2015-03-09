@@ -95,14 +95,18 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def description
+    self.description_without_trial + "\r\n" +
+            (self.trial_period_in_days > 0 ?
+                    I18n.t('views.student_sign_ups.form.free_trial') +
+                    pluralize(self.trial_period_in_days, I18n.t('views.student_sign_ups.form.days')) + "\r\n" : '')
+  end
+
+  def description_without_trial
     self.currency.format_number(self.price) + ' - ' +
             I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{self.payment_frequency_in_months}") + "\r\n" +
-            (self.trial_period_in_days > 0 ?
-                I18n.t('views.student_sign_ups.form.free_trial') +
-                pluralize(self.trial_period_in_days, I18n.t('views.student_sign_ups.form.days')) + "\r\n" : '') +
             (self.all_you_can_eat ?
-                I18n.t('views.student_sign_ups.form.all_you_can_eat_yes') :
-                I18n.t('views.student_sign_ups.form.all_you_can_eat_no') )
+                    I18n.t('views.student_sign_ups.form.all_you_can_eat_yes') :
+                    I18n.t('views.student_sign_ups.form.all_you_can_eat_no') )
   end
 
   def destroyable?
@@ -125,7 +129,7 @@ class SubscriptionPlan < ActiveRecord::Base
               interval_count: self.payment_frequency_in_months,
               trial_period_days: self.trial_period_in_days,
               name: 'LearnSignal ' + self.name,
-              statement_description: 'LearnSignal',
+              statement_descriptor: 'LearnSignal',
               currency: self.currency.try(:iso_code).try(:downcase),
               id: Rails.env + '-' + ApplicationController::generate_random_code(20)
       )

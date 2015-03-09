@@ -40,9 +40,9 @@ describe StripeApiEvent do
 
   it { should validate_inclusion_of(:api_version).in_array(StripeApiEvent::KNOWN_API_VERSIONS) }
 
-  it { should validate_presence_of(:payload) }
-
   # callbacks
+  it { should callback(:set_default_values).before(:validation).on(:create) }
+  it { should callback(:get_data_from_stripe).before(:create) }
   it { should callback(:disseminate_payload).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -53,6 +53,7 @@ describe StripeApiEvent do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:disseminate_payload) }
   it { should respond_to(:get_data_from_stripe) }
 
 end

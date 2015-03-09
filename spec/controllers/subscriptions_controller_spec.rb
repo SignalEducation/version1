@@ -11,18 +11,33 @@ describe SubscriptionsController, type: :controller do
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
   let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: individual_student_user.id,
-                                             subscription_plan_id: subscription_plan_1.id,
-                                             stripe_token: stripe_helper.generate_card_token) }
-  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: corporate_customer_user.id,
-                                             subscription_plan_id: subscription_plan_1.id,
-                                             stripe_token: stripe_helper.generate_card_token) }
+  let!(:subscription_1) { x = FactoryGirl.create(:subscription,
+                             user_id: individual_student_user.id,
+                             subscription_plan_id: subscription_plan_1.id,
+                             stripe_token: stripe_helper.generate_card_token)
+                             individual_student_user.stripe_customer_id = x.stripe_customer_id
+                             individual_student_user.save
+                             x }
+  let!(:subscription_2) { x = FactoryGirl.create(:subscription,
+                             user_id: corporate_customer_user.id,
+                             subscription_plan_id: subscription_plan_1.id,
+                             stripe_token: stripe_helper.generate_card_token)
+                             corporate_customer_user.stripe_customer_id = x.stripe_customer_id
+                             corporate_customer_user.save
+                             x }
   let!(:valid_params) { {subscription_plan_id: subscription_plan_2.id} }
 
   #before { StripeMock.start }
   after { StripeMock.stop }
 
   context 'Not logged in: ' do
+
+    describe "POST 'create'" do
+      it 'should redirect to sign_in' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_signed_in
+      end
+    end
 
     describe "PUT 'update/1'" do
       it 'should redirect to sign_in' do
@@ -45,6 +60,14 @@ describe SubscriptionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(individual_student_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should be OK locally and on Stripe' do
+        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
+        expect_create_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+      end
     end
 
     describe "PUT 'update/1'" do
@@ -88,6 +111,13 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(tutor_user)
     end
 
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, subscription: valid_params
@@ -111,6 +141,13 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(corporate_student_user)
     end
 
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, subscription: valid_params
@@ -132,6 +169,14 @@ describe SubscriptionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(corporate_customer_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should be OK locally and on Stripe' do
+        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: corporate_customer_user.id}
+        expect_create_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+      end
     end
 
     describe "PUT 'update/1'" do
@@ -175,6 +220,13 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(blogger_user)
     end
 
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, currency: valid_params
@@ -196,6 +248,13 @@ describe SubscriptionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(forum_manager_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
     end
 
     describe "PUT 'update/1'" do
@@ -221,6 +280,13 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(content_manager_user)
     end
 
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, currency: valid_params
@@ -242,6 +308,14 @@ describe SubscriptionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(admin_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should be OK locally and on Stripe' do
+        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
+        expect_create_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+      end
     end
 
     describe "PUT 'update/1'" do

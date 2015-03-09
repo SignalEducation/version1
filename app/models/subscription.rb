@@ -23,7 +23,7 @@ class Subscription < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :complementary, :current_status,
+                  :complementary, :current_status, :stripe_customer_id,
                   :stripe_token
 
   # Constants
@@ -47,7 +47,6 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}
-  validates :stripe_token, presence: true, on: :create
 
   # callbacks
   before_validation :create_on_stripe_platform, on: :create
@@ -108,15 +107,17 @@ class Subscription < ActiveRecord::Base
         self.update_attribute(:current_status, 'canceled')
         self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
       else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel a 'trialing' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     else
       response = stripe_subscription.delete(at_period_end: true).to_hash
-      if response[:status] == 'canceled'
+      if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:current_status, 'canceled-pending')
-        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id)
+        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
         Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
       else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     end
@@ -150,6 +151,23 @@ class Subscription < ActiveRecord::Base
     @stripe_token
   end
 
+  def reactivation_options
+    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.all_in_order
+  end
+
+  def un_cancel
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    latest_subscription.plan = self.subscription_plan.stripe_guid
+    response = latest_subscription.save
+    if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
+      self.update_attribute(:current_status, 'active')
+    else
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    end
+    self
+  end
+
   def upgrade_options
     SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.where('payment_frequency_in_months >= ?', self.subscription_plan.payment_frequency_in_months).all_in_order
   end
@@ -159,27 +177,27 @@ class Subscription < ActiveRecord::Base
     # compare the currencies of the old and new plans,
     unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-      return false
+      return self
     end
     # make sure new plan is active
     unless new_subscription_plan.active?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-      return false
+      return self
     end
     # make sure the current subscription is in "good standing"
     unless %w(trialing active).include?(self.current_status)
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-      return false
+      return self
     end
     # only individual students are allowed to upgrade their plan
     unless self.user.individual_student? || self.user.corporate_customer?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-      return false
+      return self
     end
     # Make sure they have a default credit card in place
     unless self.user.subscription_payment_cards.all_default_cards.length > 0
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
-      return false
+      return self
     end
 
     # reduce the trial period in the new plan to the remaining trial period in the
@@ -193,7 +211,11 @@ class Subscription < ActiveRecord::Base
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     stripe_subscription.plan = new_subscription_plan.stripe_guid
     stripe_subscription.prorate = true
-    stripe_subscription.trial_end = (Proc.new{Time.now}.call + remaining_trial_days.days).to_i
+    if self.current_status == 'trialing'
+      stripe_subscription.trial_end = (Proc.new{Time.now}.call + remaining_trial_days.days).to_i
+    else
+      stripe_subscription.trial_end = 'now'
+    end
     sample_response_from_stripe = {
           id: 'test_su_4', status: 'trialing',
           current_period_start: 1424881810, current_period_end: 1425486610,
@@ -245,26 +267,39 @@ class Subscription < ActiveRecord::Base
 
   def create_on_stripe_platform
     Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform initialised'
-    # see https://stripe.com/docs/guides/subscriptions#step-2-subscribe-customers
-    stripe_customer = Stripe::Customer.create(
-            card: @stripe_token,
-            plan: self.subscription_plan.try(:stripe_guid),
-            email: self.user.try(:email)
-    )
-    # self.subscription_plan_id is set in the UI
-
     self.complementary = false
-    if stripe_customer && stripe_customer.try(:subscriptions).try(:data).try(:first)
-      self.stripe_guid = stripe_customer.subscriptions.data[0].id
-      self.next_renewal_date = Time.at(stripe_customer.subscriptions.data[0].current_period_end)
-      self.current_status = stripe_customer.subscriptions.data[0].status
-      self.stripe_customer_id = stripe_customer.id
+    if self.stripe_customer_id.blank?
+      #### New customer
+      if @stripe_token
+        stripe_customer = Stripe::Customer.create(
+                card: @stripe_token,
+                plan: self.subscription_plan.try(:stripe_guid),
+                email: self.user.try(:email)
+        )
+        stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
+      else
+        errors.add(:stripe_token, I18n.t('models.subscriptions.create.cant_be_blank'))
+        return
+      end
+    else
+      #### Existing customer that is reactivating
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.create(plan: self.subscription_plan.stripe_guid, trial_end: 'now')
+      # refresh...
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    end
+
+    if stripe_customer && stripe_subscription
+      self.stripe_guid = stripe_subscription.id
+      self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+      self.current_status = stripe_subscription.status
+      self.stripe_customer_id ||= stripe_customer.id
       self.stripe_customer_data = stripe_customer.to_hash.deep_dup
     end
 
-    if Rails.env.production? && stripe_customer.livemode == false
-      errors.add(:base, 'Non-live transaction on the Live server')
-      Rails.error.log 'ERROR: Subscription#create_on_stripe_platform - Non-live transaction on Production platform. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+    if Rails.env.production? != stripe_customer.livemode
+      errors.add(:base, I18n.t('models.general.live_mode_error'))
+      Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
       false
     else
       true
