@@ -9,9 +9,13 @@ describe Api::StripeDevController, type: :controller do
 
   describe "POST 'create'" do
     describe 'preliminary functionality: ' do
-      it 'returns 204 when called with no payload (to support Stripe Pings)' do
-        expect(Rails.logger).to receive(:error)
-        post :create
+      it 'returns 404 when called with no payload' do
+        post :create, dev_name: 'dan'
+        expect(response.status).to eq(404)
+      end
+
+      it 'returns 204 when pinged' do
+        post :create, dev_name: 'dan', type: 'ping'
         expect(response.status).to eq(204)
       end
     end
@@ -28,7 +32,7 @@ describe Api::StripeDevController, type: :controller do
 
       describe 'for Steve (an unknown admin)' do
         it 'should return 200 and store data' do
-          post :create, {dev_name: 'steve', some_param: '123', some_other_param: 456}
+          post :create, {dev_name: 'steve', id: 'abc', some_param: '123', some_other_param: 456}
           expect(response.code).to eq('200')
           expect(StripeDeveloperCall.all.count).to eq(1)
           expect(StripeDeveloperCall.first.user_id).to eq(admin_user_2.id)

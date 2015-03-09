@@ -5,7 +5,7 @@ describe UsersController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
   context 'Not logged in...' do
 

@@ -24,8 +24,10 @@ class Api::StripeDevController < ApplicationController
               prevent_delete: false
       )
       render text: nil, status: 200
-    else
+    elsif params[:type] == 'ping'
       render text: nil, status: 204 # no content
+    else
+      render text: nil, status: 404 # not found
     end
   rescue => e
     Rails.logger.error "ERROR: Api/StripeV01#Create: Error: #{e.inspect}"

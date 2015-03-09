@@ -12,7 +12,7 @@ describe 'User changing their email', type: :feature do
     activate_authlogic
   end
 
-  scenario 'when logged in as a user', js: false do
+  scenario 'should be able to change email', js: true do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile

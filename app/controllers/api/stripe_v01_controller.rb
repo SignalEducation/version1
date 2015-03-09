@@ -12,6 +12,9 @@ class Api::StripeV01Controller < ApplicationController
       StripeApiProcessorWorker.perform_async(params[:id], Stripe.api_version)
       Rails.logger.debug "DEBUG: Api/StripeV01#Create: safe-data ID:#{params[:id]} queued OK."
       render text: nil, status: 200
+    elsif params[:type] == 'ping'
+      Rails.logger.debug 'DEBUG: Api/StripeV01#Create: ping received.'
+      render text: nil, status: 204
     else
       Rails.logger.error "ERROR: Api/StripeV01#Create: NO data: #{params}"
       render text: nil, status: 404
