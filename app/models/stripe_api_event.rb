@@ -50,8 +50,8 @@ class StripeApiEvent < ActiveRecord::Base
 
   def disseminate_payload
     if self.payload && self.payload.class == Hash && self.payload[:type]
-      unless Rails.env.production? == payload[:livemode]
-        Rails.logger.error "ERROR: StripeAPIEvent#disseminate_payload: LiveMode of message incompatible with Rails.env. Rails.env.#{Rails.env} -v- payload:#{payload}."
+      unless Invoice::STRIPE_LIVE_MODE.first == payload[:livemode]
+        Rails.logger.error "ERROR: StripeAPIEvent#disseminate_payload: LiveMode of message incompatible with Rails.env. StripeMode:#{Invoice::STRIPE_LIVE_MODE.first}. Rails.env.#{Rails.env} -v- payload:#{payload}."
         self.update_attributes(processed: false, error: true, error_message: 'Livemode incorrect', callbacks: false, validation: false)
         return true
       end
