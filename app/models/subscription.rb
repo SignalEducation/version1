@@ -14,6 +14,7 @@
 #  updated_at            :datetime
 #  stripe_customer_id    :string(255)
 #  stripe_customer_data  :text
+#  livemode              :boolean          default(FALSE)
 #
 
 class Subscription < ActiveRecord::Base
@@ -24,7 +25,7 @@ class Subscription < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complementary, :current_status, :stripe_customer_id,
-                  :stripe_token
+                  :stripe_token, :livemode
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
@@ -47,6 +48,7 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}
+  validates :livemode, inclusion: {in: Invoice::STRIPE_LIVE_MODE}
 
   # callbacks
   before_validation :create_on_stripe_platform, on: :create
@@ -66,6 +68,7 @@ class Subscription < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: plan.id,
           complementary: false,
+          livemode: (stripe_subscription_hash[:livemode] == 'live'),
           current_status: stripe_subscription_hash[:status],
     )
     x.stripe_guid = stripe_subscription_hash[:id]
@@ -239,6 +242,7 @@ class Subscription < ActiveRecord::Base
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complementary: false,
+              livemode: (result[:livemode] == 'live'),
               current_status: result[:status],
       )
       # mass-assign-protected attributes
@@ -292,12 +296,13 @@ class Subscription < ActiveRecord::Base
     if stripe_customer && stripe_subscription
       self.stripe_guid = stripe_subscription.id
       self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+      self.livemode = (stripe_subscription[:livemode] == 'live')
       self.current_status = stripe_subscription.status
       self.stripe_customer_id ||= stripe_customer.id
       self.stripe_customer_data = stripe_customer.to_hash.deep_dup
     end
 
-    if Rails.env.production? != stripe_customer.livemode
+    if Invoice::STRIPE_LIVE_MODE.first != stripe_customer[:livemode]
       errors.add(:base, I18n.t('models.general.live_mode_error'))
       Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
       false

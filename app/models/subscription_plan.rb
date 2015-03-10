@@ -17,6 +17,7 @@
 #  updated_at                    :datetime
 #  name                          :string(255)
 #  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -28,7 +29,8 @@ class SubscriptionPlan < ActiveRecord::Base
   attr_accessible :available_to_students, :available_to_corporates,
                   :all_you_can_eat, :payment_frequency_in_months,
                   :currency_id, :price, :available_from, :available_to,
-                  :trial_period_in_days, :name, :subscription_plan_category_id
+                  :trial_period_in_days, :name, :subscription_plan_category_id,
+                  :livemode
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
@@ -122,21 +124,23 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    if self.valid?
-      stripe_plan = Stripe::Plan.create(
-              amount: (self.price.to_f * 100).to_i,
-              interval: 'month',
-              interval_count: self.payment_frequency_in_months,
-              trial_period_days: self.trial_period_in_days,
-              name: 'LearnSignal ' + self.name,
-              statement_descriptor: 'LearnSignal',
-              currency: self.currency.try(:iso_code).try(:downcase),
-              id: Rails.env + '-' + ApplicationController::generate_random_code(20)
-      )
-
-      self.stripe_guid = stripe_plan.id
+    stripe_plan = Stripe::Plan.create(
+            amount: (self.price.to_f * 100).to_i,
+            interval: 'month',
+            interval_count: self.payment_frequency_in_months.to_i,
+            trial_period_days: self.trial_period_in_days.to_i,
+            name: 'LearnSignal ' + self.name.to_s,
+            statement_descriptor: 'LearnSignal',
+            currency: self.currency.try(:iso_code).try(:downcase),
+            id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+    )
+    self.stripe_guid = stripe_plan.id
+    self.livemode = stripe_plan[:livemode]
+    if self.livemode == Invoice::STRIPE_LIVE_MODE.first
+      true
     else
-      false
+      errors.add(:stripe, I18n.t('models.general.live_mode_error'))
+      return false
     end
   rescue => e
     errors.add(:stripe, e.message)
