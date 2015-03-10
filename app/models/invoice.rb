@@ -52,6 +52,7 @@ class Invoice < ActiveRecord::Base
                   :original_stripe_data
 
   # Constants
+  STRIPE_LIVE_MODE = [(ENV['learnsignal_v3_stripe_live_mode'] == 'live')]
 
   # relationships
   belongs_to :currency
@@ -77,6 +78,7 @@ class Invoice < ActiveRecord::Base
   validates :total, presence: true
   validates :vat_rate_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :livemode, inclusion: {in: STRIPE_LIVE_MODE}
 
   # callbacks
 
@@ -123,6 +125,7 @@ class Invoice < ActiveRecord::Base
     else
       Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice.  Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
     end
+    return inv
   end
 
   def self.get_updates_for_user(stripe_customer_guid)

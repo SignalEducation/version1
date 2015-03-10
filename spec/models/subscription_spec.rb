@@ -14,6 +14,7 @@
 #  updated_at            :datetime
 #  stripe_customer_id    :string(255)
 #  stripe_customer_data  :text
+#  livemode              :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -21,7 +22,7 @@ require 'rails_helper'
 describe Subscription do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at stripe_guid, next_renewal_date stripe_customer_id stripe_customer_data stripe_guid)
+  black_list = %w(id created_at updated_at stripe_guid, next_renewal_date stripe_customer_data stripe_guid)
   Subscription.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -53,7 +54,7 @@ describe Subscription do
 
   it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES) }
 
-  it { should validate_presence_of(:stripe_token).on(:create) }
+  it { should validate_inclusion_of(:livemode).in_array(Invoice::STRIPE_LIVE_MODE)}
 
   # callbacks
   it { should callback(:create_on_stripe_platform).before(:validation).on(:create) }
@@ -73,6 +74,8 @@ describe Subscription do
   it { should respond_to(:cancel) }
   it { should respond_to(:compare_to_stripe_details) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:reactivation_options) }
+  it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
 

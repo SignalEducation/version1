@@ -7,15 +7,18 @@ describe 'Subscription UX:', type: :feature do
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup' # starts StripeMock up for us.
 
-  let!(:subscription_1) { FactoryGirl.create(:subscription,
+  let!(:subscription_1) { x = FactoryGirl.create(:subscription,
                           user_id: individual_student_user.id,
                           subscription_plan_id: subscription_plan_eur_m.id,
-                          stripe_token: stripe_helper.generate_card_token) }
-  let!(:subscription_2) { FactoryGirl.create(:subscription,
+                          stripe_token: stripe_helper.generate_card_token)
+                          individual_student_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
+                          x }
+  let!(:subscription_2) { x = FactoryGirl.create(:subscription,
                           user_id: corporate_customer_user.id,
                           subscription_plan_id: subscription_plan_eur_m.id,
-                          stripe_token: stripe_helper.generate_card_token) }
-
+                          stripe_token: stripe_helper.generate_card_token)
+                          corporate_customer_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
+                          x }
   #before { StripeMock.start }
   after { StripeMock.stop }
 
@@ -23,7 +26,7 @@ describe 'Subscription UX:', type: :feature do
     activate_authlogic
   end
 
-  scenario 'user can upgrade subscription', js: true do
+  scenario 'user can upgrade a subscription', js: true do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
@@ -58,27 +61,51 @@ describe 'Subscription UX:', type: :feature do
     end
   end
 
-  scenario 'user can cancel subscription', js: true do
+  scenario 'user can cancel and reactivate a subscription', js: true do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
       if this_user.individual_student? || this_user.corporate_customer?
         expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
         click_link('Subscriptions')
-
-        click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
-        page.driver.browser.switch_to.alert.dismiss
-
-        click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
-        page.driver.browser.switch_to.alert.accept
-
-        expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+        cancel_and_un_cancel_a_trial_account
       else
         expect(page).not_to have_content I18n.t('views.users.show.tabs.subscriptions')
       end
       sign_out
       print '>'
     end
+  end
+
+  scenario 'student_user can un-cancel a canceled-pending subscription', js: :true do
+    # sign up as a student
+    visit root_path
+    click_link I18n.t('views.general.sign_up')
+    expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
+    student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
+
+    # go to my-profile page
+    visit_my_profile
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+    click_link('Subscriptions')
+
+    # cancel the trial account and reactivate it as an 'active'
+    cancel_and_un_cancel_a_trial_account
+
+    # cancel the current (active) subscription
+    click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
+    page.driver.browser.switch_to.alert.accept
+    sleep 5
+    expect(page).to have_content 'canceled-pending'
+
+    # un-cancel it
+    click_link(I18n.t('views.users.show.un_cancel_subscription.button_call_to_action'))
+
+    # happy ending
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+    expect(page).to have_content 'active'
+
+    sign_out
   end
 
   scenario 'student_user can view invoices', js: true do
@@ -170,6 +197,25 @@ valid_mc_debit).each do |this_card|
 
     sleep 5
     sign_out
+  end
+
+  def cancel_and_un_cancel_a_trial_account
+    click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
+    page.driver.browser.switch_to.alert.dismiss
+
+    click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
+    page.driver.browser.switch_to.alert.accept
+
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+    expect(page).to have_content maybe_upcase I18n.t('views.users.show.reactivate_subscription.h3')
+    click_link(I18n.t('views.users.show.reactivate_subscription.button_call_to_action'))
+
+    # inside the reactivation modal
+    within('#re-subscribe-modal') do
+      click_button(I18n.t('views.users.show.upgrade_now'))
+    end
+    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
+    expect(page).to have_content 'active'
   end
 
   def check_that_the_plans_are_visible(plans)

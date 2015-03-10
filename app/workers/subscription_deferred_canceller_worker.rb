@@ -10,7 +10,7 @@ class SubscriptionDeferredCancellerWorker
         sub.update_attribute(:current_status, 'canceled')
         Rails.logger.info "INFO: SubscriptionDeferredCancellerWorker - subscription #{subscription_id} cancelled OK."
       else
-        Rails.logger.error "ERROR: SubscriptionDeferredCancellerWorker - subscription #{subscription_id} was NOT cancelled because its status was not set correctly - its status was '#{sub.current_status}'."
+        Rails.logger.error "ERROR: SubscriptionDeferredCancellerWorker - subscription #{subscription_id} was NOT cancelled because its status was not set to 'canceled-pending' - its status was '#{sub.current_status}'."
       end
     else
       Rails.logger.error "ERROR: SubscriptionDeferredCancellerWorker - subscription #{subscription_id} was NOT cancelled because it could not be found using its ID."

@@ -50,7 +50,7 @@ describe Invoice do
   end
 
   # Constants
-  #it { expect()Invoice.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(Invoice.const_defined?(:STRIPE_LIVE_MODE)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }
@@ -83,6 +83,8 @@ describe Invoice do
 
   it { should_not validate_presence_of(:vat_rate_id) }
   it { should validate_numericality_of(:vat_rate_id) }
+
+  it { should validate_inclusion_of(:livemode).in_array(Invoice::STRIPE_LIVE_MODE)}
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
