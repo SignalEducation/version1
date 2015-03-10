@@ -85,14 +85,12 @@ tr {
   letter-spacing: 0.4px;
 }
 
-// RG: Added class to only style the logo image
 .navbar-logo {
   width: 65px;
   padding: 0;
   @media (max-width: 780px){
     padding-left: 20px;
   }
-
   img {
     $navbar-height: 65px;
     $desired-logo-height: 45px;
@@ -119,7 +117,22 @@ tr {
 }
 
 #flash_message {
-  padding-top: 4px;
+  padding-top: 10px;
+  .success {
+    border-radius: 0;
+    background-color: #21CE99;
+    color: #ffffff;
+  }
+  .error {
+    border-radius: 0;
+    background-color: #ef5f5f;
+    color: #ffffff;
+  }
+  .warning {
+    border-radius: 0;
+    background-color: #f0ad4e;
+    color: #ffffff;
+  }
 }
 
 .subscription-panel {

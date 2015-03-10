@@ -15,12 +15,12 @@
         .row
           .col-sm-10.col-sm-offset-1
             =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
-      -#Todo 'Continue/Start' button
-        -if @hierarchy_item.class == ExamLevel || ExamSection
-          .text-center
-            =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
-
-        -#if @hierarchy_item == first_set.course_module.parent.parent || first_set.course_module.parent
+      -#if @hierarchy_item.class == ExamLevel || ExamSection
+        .text-center
+        -if @hierarchy_item.cme_count >= 1
+          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+        -else
+          =link_to t('views.general.start'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
 
 .row
   -unless @hierarchy_item.parent.nil?

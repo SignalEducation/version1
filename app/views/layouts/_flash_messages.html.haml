@@ -3,14 +3,14 @@
     .alert.alert-info
       =flash[:notice]
   -elsif flash[:success]
-    .alert.alert-success
+    .alert.success
       =flash[:success]
   -elsif flash[:alert]
     .alert.alert-warning
       =flash[:alert]
   -elsif flash[:warning]
-    .alert.alert-warning
+    .alert.warning
       =flash[:warning]
   -elsif flash[:error]
-    .alert.alert-danger
+    .alert.error
       =flash[:error]
