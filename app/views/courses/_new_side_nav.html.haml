@@ -18,15 +18,6 @@
                 .glyphicon.glyphicon-record
               %span{title: t('views.courses.show.h1')}= course_module_element.name
 
-        -#-else
-              -#%p
-                -#-if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                  -#%span.glyphicon.glyphicon-ok-sign
-                -#-else
-                  -#%span.glyphicon.glyphicon-record
-                -#=link_to course_module_element.name, course_special_link(course_module_element), title: t('views.courses.show.h1')
-
-
       -if @course_module.course_module_jumbo_quiz
         .jumbo-quiz
           -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
