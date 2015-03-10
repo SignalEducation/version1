@@ -1,7 +1,7 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.id}"}
   .row
     .col-sm-12
-      .well.well-sm.quiz-well
+      .well.quiz-well
         =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
   .row
     .col-sm-12
