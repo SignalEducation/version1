@@ -1,0 +1,47 @@
+.navbar.navbar-inverse.navbar-fixed-top#navbar{role:'navigation'}
+  .special-navbar
+    .navbar-header
+      %button.navbar-toggle.collapsed{type: 'button', data: {toggle: 'collapse', target: '.navbar-collapse'}}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      -if Rails.env.staging?
+        =link_to Rails.env, root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand'), style: 'background-color: blue;'
+      -else
+        =link_to root_url, class: 'navbar-brand navbar-logo' do
+          =image_tag 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/LS_Only_Logo.png', alt: t('views.layouts.navigation.learn_signal'), class: 'img img-responsive'
+    -#=link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
+
+    .collapse.navbar-collapse
+      %ul.nav.navbar-nav.navbar-right
+        -if current_user
+          %li
+            = link_to user_notifications_url do
+              -if current_user && current_user.user_notifications.unread.count > 0
+                %span.badge{style: 'background-color: red;'}
+                  %span.glyphicon.glyphicon-envelope
+                  =current_user.user_notifications.unread.count
+              -else
+                %span.glyphicon.glyphicon-envelope
+                %span.visible-xs-inline=t('views.users.show.tabs.notifications')
+
+          %li.dropdown
+            %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
+              %span.glyphicon.glyphicon-cog
+              %span.visible-xs-inline=t('views.general.settings')
+            %ul.dropdown-menu{role: 'menu'}
+              %li=link_to t('views.users.show.h1'), profile_url
+              %li=link_to t('views.general.sign_out'), sign_out_url
+
+        -else
+          -#%li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;"
+          -#%li#login_form.hidden
+            -#=form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
+              -#.form-group{style: 'padding-top: 3px;padding-right: 5px;'}
+                -#=f.text_field :email, placeholder: 'john@example.com', autofocus: true
+                -#=f.password_field :password, placeholder: 'password', autocomplete: 'off'
+                -#=f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
+                -#=link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
+          %li=link_to t('views.general.sign_in'), sign_in_url, class: 'navbar-link'
+          %li=link_to t('views.general.sign_up'), student_sign_up_url

@@ -494,9 +494,11 @@ en:
       search: Search...
       select: Select...
       send: Send
+      settings: Settings
       sign_in: Log in
       sign_out: Sign out
       sign_up: Sign up
+      start: Start
       these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
@@ -691,8 +693,8 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
-        next_step: Next Step
-        previous_step: Previous Step
+        next_step: Next
+        previous_step: Previous
         preview: Preview
         continue: Continue
 
@@ -803,6 +805,7 @@ en:
         none_in_progress: "Remember, you can study multiple modules at the same time."
         none_completed: "This panel will show you the modules that you have completed. Keep going!"
         no_content_right_now: "This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started, choose a course form our library."
+        overview: Overview
 
       tutor:
         total_course_module_elements: Total Course Modules Elements
@@ -906,6 +909,8 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         active: Active
+        background_colour_code: Background colour code
+        background_colour_code_placeholder: 'FFEE99 (no need for #)'
 
       edit:
         h1: Edit Institution

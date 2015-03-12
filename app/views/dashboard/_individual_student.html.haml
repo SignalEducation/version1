@@ -1,71 +1,40 @@
 -if @incomplete_student_exam_tracks.try(:count).to_i > 0
-  -first_set = @incomplete_student_exam_tracks.first
   .row
     .col-sm-6.col-sm-offset-3
-      .well.well-sm
+      .well.well-sm.dashboard-well
         .text-center
-          .h1{style: 'margin: 60px 20px;'}= first_set.latest_course_module_element.course_module.name
+          %h1=@latest_level_or_section.name
           .row
             .col-sm-10.col-sm-offset-1
-              =render partial: 'shared/static_progress_bar', locals: {percent: first_set.percentage_complete, value_now: first_set.count_of_cmes_completed, value_max: first_set.elements_total}
-          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg'
+              =render partial: 'shared/static_progress_bar', locals: {percent: @latest_set.percentage_complete, value_now: @latest_set.count_of_cmes_completed, value_max: @latest_set.elements_total}
+          =link_to t('views.course_module_elements.show.continue'), course_special_link(@latest_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
           .row
             .col-sm-12
               %br/
-              =link_to 'View Overview of Course', library_special_link(first_set.latest_course_module_element.parent.parent)
-        %br/
+              =link_to t('views.dashboard.individual_student.overview'), library_special_link(@latest_set.latest_course_module_element.parent.parent)
 
-  -if @incomplete_student_exam_tracks.size > 1 || @completed_student_exam_tracks.size > 0
-    %div{role: 'tabpanel'}
+  %hr/
+  .row
+    -@latest_level_or_section.parent.children.all_active.each do |child|
+      .col-sm-10.col-sm-offset-1
+        .panel.panel-list
+          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 panel-text hidden-xs' do
+            =child.name
+            .continue-container.pull-right
+              .glyphicon.glyphicon-menu-right
 
-      %ul.nav.nav-tabs{role: 'tablist'}
-        %li.active{role: 'presentation'}
-          %a{href: '#in-progress', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.dashboard.individual_student.in-progress')
-          %li{role: 'presentation'}
-            %a{href: '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.dashboard.individual_student.completed')
-
-      .tab-content
-        %br/
-        .tab-pane.fade.in.active#in-progress{role: 'tabpanel'}
-          .row
-            .col-sm-12
-              -if @incomplete_student_exam_tracks.size < 2
-                .well
-                  =t('views.dashboard.individual_student.none_in_progress')
-              -@incomplete_student_exam_tracks[1..-1].each do |set|
-                .row
-                  .col-sm-12
-                    .panel.panel-default
-                      .panel-body
-                        .col-sm-4
-                          .h3=link_to set.latest_course_module_element.course_module.name, library_special_link(set.latest_course_module_element.parent.parent)
-                        .col-sm-4
-                          =render partial: 'shared/static_progress_bar', locals: {percent: set.percentage_complete, value_now: set.count_of_cmes_completed, value_max: set.elements_total}
-                        .col-sm-4
-                          =link_to t('views.course_module_elements.show.continue'), course_special_link(set.latest_course_module_element), class: 'btn btn-success pull-right'
-
-        .tab-pane.fade#completed{role: 'tabpanel'}
-          -if @completed_student_exam_tracks.size == 0
-            .row
-              .col-sm-12
-                .well
-                  =t('views.dashboard.individual_student.none_completed')
-
-          -@completed_student_exam_tracks.each do |completed_set|
-            .row
-              .col-sm-12
-                .panel.panel-default
-                  .panel-body
-                    .col-sm-4
-                      .h3=link_to completed_set.latest_course_module_element.course_module.name, library_special_link(completed_set.latest_course_module_element.parent.parent)
-                    .col-sm-4
-                      =render partial: 'shared/static_progress_bar', locals: {percent: completed_set.percentage_complete, value_now: completed_set.count_of_cmes_completed, value_max: completed_set.elements_total}
-                    .col-sm-4
-                      =link_to t('views.course_module_elements.show.continue'), course_special_link(completed_set.latest_course_module_element), class: 'btn btn-success pull-right'
+          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 panel-text visible-xs' do
+            =child.name
+            .continue-container.pull-right
+              .glyphicon.glyphicon-menu-right
 
 -else
   .row
     .col-sm-12
+      .page-header
+        %h1=t('views.dashboard.index.h1')
+  .row
+    .col-sm-12
       .well
         =t('views.dashboard.individual_student.no_content_right_now')
-      =link_to t('views.library.show.h1'), library_url, class: 'btn btn-success btn-lg'
+      =link_to t('views.library.show.h1'), library_url, class: 'btn btn-ls-default btn-lg'
