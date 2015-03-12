@@ -9,7 +9,7 @@ class Api::StripeV01Controller < ApplicationController
 
   def create
     if params[:id]
-      StripeApiProcessorWorker.perform_async(params[:id], Stripe.api_version)
+      # StripeApiProcessorWorker.perform_async(params[:id], Stripe.api_version)
       Rails.logger.debug "DEBUG: Api/StripeV01#Create: safe-data ID:#{params[:id]} queued OK."
       render text: nil, status: 200
     elsif params[:type] == 'ping'
