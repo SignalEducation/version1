@@ -91,6 +91,16 @@ class CourseModuleElementUserLog < ActiveRecord::Base
      cmeul.update_column(:user_id, the_user_id)
      cmeul.quiz_attempts.where(course_module_element_user_log_id: cmeul.id, user_id: nil).update_all(user_id: the_user_id)
     end
+    user_cmeuls = CourseModuleElementUserLog.where(user_id: the_user_id).order(course_module_element_id: :asc, updated_at: :desc)
+    user_cmeuls.update_all(latest_attempt: false)
+    cme_tracker = nil
+    user_cmeuls.each do |cmeul|
+      unless cmeul.course_module_element_id == cme_tracker
+        cmeul.update_column(:latest_attempt, true)
+        cme_tracker = cmeul.course_module_element_id
+      end
+    end
+    true
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)
