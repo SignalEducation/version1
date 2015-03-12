@@ -82,7 +82,7 @@ class Institution < ActiveRecord::Base
 
   def text_colour_class
     number = 0 # default value
-    if self.background_colour_code.size == 6
+    if self.background_colour_code.to_s.size == 6
       little_array = [self.background_colour_code[0..1], self.background_colour_code[2..3], self.background_colour_code[4..5]]
       number = little_array[0].to_i(16) + little_array[1].to_i(16) + little_array[2].to_i(16) # gives us a decimal number between 0 and 765 (=255x3)
     end

@@ -95,7 +95,6 @@ describe 'Subscription UX:', type: :feature do
     # cancel the current (active) subscription
     click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
     page.driver.browser.switch_to.alert.accept
-    sleep 5
     expect(page).to have_content 'canceled-pending'
 
     # un-cancel it
@@ -195,7 +194,6 @@ valid_mc_debit).each do |this_card|
       end
     end
 
-    sleep 5
     sign_out
   end
 

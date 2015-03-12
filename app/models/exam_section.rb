@@ -43,6 +43,7 @@ class ExamSection < ActiveRecord::Base
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
   before_save :recalculate_cme_count
+  after_commit :recalculate_parent_cme_count
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -104,10 +105,14 @@ class ExamSection < ActiveRecord::Base
 
   def recalculate_cme_count
     self.cme_count = self.total_active_cmes
-    if self.cme_count_changed?
+    true
+  end
+
+  def recalculate_parent_cme_count
+    changes = self.previous_changes[:cme_count] # [prev,new]
+    if changes && changes[0] != changes[1]
       self.parent.save
     end
-    true
   end
 
 end

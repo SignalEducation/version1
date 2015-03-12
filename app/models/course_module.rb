@@ -64,6 +64,7 @@ class CourseModule < ActiveRecord::Base
   before_save :set_cme_count
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
+  after_commit :update_parent_cme_count
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
@@ -158,12 +159,6 @@ class CourseModule < ActiveRecord::Base
 
   def set_cme_count
     self.cme_count = children_available_count
-    if self.cme_count_changed?
-      self.parent.save
-      self.student_exam_tracks.each do |set|
-        set.recalculate_completeness # todo - move this to a worker
-      end
-    end
     true
   end
 
@@ -173,6 +168,16 @@ class CourseModule < ActiveRecord::Base
     end
     self.qualification_id = self.exam_level.try(:qualification_id)
     self.institution_id = self.qualification.try(:institution_id)
+  end
+
+  def update_parent_cme_count
+    changes = self.previous_changes[:cme_count] # [prev,new]
+    if changes && changes[0] != changes[1]
+      self.parent.save
+      self.student_exam_tracks.each do |set|
+        set.recalculate_completeness # todo - move this to a worker
+      end
+    end
   end
 
 end
