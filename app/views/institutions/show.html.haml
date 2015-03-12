@@ -50,7 +50,7 @@
         %td.col-sm-8=tick_or_cross(@institution.active)
       %tr
         %td.col-sm-4=t('views.institutions.form.background_colour_code')
-        %td.col-sm-8{class: @institution.text_colour_class, style: 'background-color: #' + @institution.background_colour_code + ';'}=@institution.background_colour_code
+        %td.col-sm-8{class: @institution.text_colour_class, style: 'background-color: #' + (@institution.background_colour_code || 'e15258')+ ';'}=@institution.background_colour_code
   %p
     =link_to sanitize('&larr; ' + t('views.institutions.index.h1')), institutions_url
     -if current_user.admin?
