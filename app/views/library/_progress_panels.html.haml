@@ -15,8 +15,16 @@
         -#else
         =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
           =child.name
-          .glyphicon.glyphicon-menu-right.pull-right
+          .pull-right
+            -if child.class == CourseModule
+              .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+            -else
+              .glyphicon.glyphicon-menu-right
 
         =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
           =child.name
-          .glyphicon.glyphicon-menu-right.pull-right
+          .pull-right
+            -if child.class == CourseModule
+              .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+            -else
+              .glyphicon.glyphicon-menu-right

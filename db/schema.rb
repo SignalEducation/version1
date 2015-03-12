@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150309161222) do
+ActiveRecord::Schema.define(version: 20150311112600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -253,9 +253,10 @@ ActiveRecord::Schema.define(version: 20150309161222) do
     t.string   "help_desk_url"
     t.integer  "subject_area_id"
     t.integer  "sorting_order"
-    t.boolean  "active",          default: false, null: false
+    t.boolean  "active",                 default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "background_colour_code"
   end
 
   create_table "invoice_line_items", force: true do |t|
@@ -462,7 +463,7 @@ ActiveRecord::Schema.define(version: 20150309161222) do
     t.string   "session_guid"
     t.integer  "course_module_id"
     t.boolean  "jumbo_quiz_taken",                default: false
-    t.integer  "percentage_complete",             default: 0
+    t.float    "percentage_complete",             default: 0.0
     t.integer  "count_of_cmes_completed",         default: 0
   end
 

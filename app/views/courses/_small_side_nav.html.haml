@@ -2,6 +2,7 @@
 =link_to library_special_link(@course_module.parent), class: 'btn-ls-default btn-block btn-lg text-center' do
   .glyphicon.glyphicon-chevron-left
   =t('views.library.show.h1')
+
 .panel-group#accordion.small-nav{role: 'tablist', aria: {multiselectable: true }}
   .panel.panel-default
     .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseOne'}
@@ -14,7 +15,7 @@
         -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
           -if course_module_element.id == @course_module_element.try(:id)
             .list-group-item.text-center
-              .glyphicon.glyphicon-chevron-right
+              .glyphicon.glyphicon-chevron-right.side-nav-chevron
               =course_module_element.name
           -else
             -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)

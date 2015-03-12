@@ -2,18 +2,19 @@
 #
 # Table name: institutions
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)
-#  short_name      :string(255)
-#  name_url        :string(255)
-#  description     :text
-#  feedback_url    :string(255)
-#  help_desk_url   :string(255)
-#  subject_area_id :integer
-#  sorting_order   :integer
-#  active          :boolean          default(FALSE), not null
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id                     :integer          not null, primary key
+#  name                   :string(255)
+#  short_name             :string(255)
+#  name_url               :string(255)
+#  description            :text
+#  feedback_url           :string(255)
+#  help_desk_url          :string(255)
+#  subject_area_id        :integer
+#  sorting_order          :integer
+#  active                 :boolean          default(FALSE), not null
+#  created_at             :datetime
+#  updated_at             :datetime
+#  background_colour_code :string(255)
 #
 
 FactoryGirl.define do
@@ -24,8 +25,9 @@ FactoryGirl.define do
     description           'Lorem ipsum'
     feedback_url          'http://example.com/feedback'
     help_desk_url         'http://help.example.com'
-    subject_area_id       1 # todo
+    subject_area_id       1
     sequence(:sorting_order) {|n| n * 10}
+    background_colour_code 'ff1111'
 
     factory :active_institution do
       active              true

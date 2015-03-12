@@ -1,4 +1,3 @@
-%br/
 -first_set = @incomplete_student_exam_tracks.first
 
 .row
@@ -8,19 +7,21 @@
         .library-image.hidden-xs
           =image_tag 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/Welcome02.png', size: '260x260'
       -else
-        .h1.library-heading.text-center
-          =@hierarchy_item.name
+        .library-heading.text-center
+          %h1=@hierarchy_item.name
 
-      -#if @hierarchy_item.children.first.class == CourseModule
+      -if @hierarchy_item.children.first.class == CourseModule
         .row
           .col-sm-10.col-sm-offset-1
-            =render partial: 'shared/static_progress_bar', locals: {percent: '40', value_now: 4, value_max: 10}
-      -#if @hierarchy_item.class == ExamLevel || ExamSection
+            -if Rails.env.development?
+              %p={percent: @hierarchy_item.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid), value_now: @hierarchy_item.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid), value_max: @hierarchy_item.cme_count}.inspect
+            =render partial: 'shared/static_progress_bar', locals: {percent: @hierarchy_item.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid), value_now: @hierarchy_item.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid), value_max: @hierarchy_item.cme_count}
+      -if @hierarchy_item.class == ExamLevel || @hierarchy_item.class == ExamSection
         .text-center
-        -if @hierarchy_item.cme_count >= 1
-          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+        -if @hierarchy_item.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-lg btn-ls-default'
         -else
-          =link_to t('views.general.start'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+          =link_to t('views.general.start'), course_special_link(@hierarchy_item.active_children.first), class: 'btn btn-lg btn-ls-default'
 
 .row
   -unless @hierarchy_item.parent.nil?
@@ -33,19 +34,3 @@
 
 -else
   =render 'library/progress_panels'
-
-
-  -#elsif @hierarchy_item.class == Institution
-    .row
-      %hr/
-      -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
-        .col-sm-6
-          .panel.panel-default
-            -if child.name == 'ACCA Fundamental'
-              =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel c' do
-                =child.name
-            -elsif child.name == 'ACCA Professional'
-              =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel d' do
-                =child.name
-            .panel-body
-              %p='stuff'

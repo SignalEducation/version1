@@ -1,6 +1,8 @@
 // Bootstrap customisation - see
 // https://github.com/twbs/bootstrap-sass/blob/master/templates/project/_bootstrap-variables.sass
 
+$ls-background-color: #f9f9f9;
+
 $input-color-placeholder: #ccc;
 $link-color: #222;
 //$btn-success-bg: #5391cf;
@@ -11,41 +13,46 @@ $navbar-inverse-color: #293c46;
 $navbar-inverse-link-color: #eee; /*#89A;*/
 //$navbar-inverse-link-hover-bg: #eb4242;
 //$navbar-inverse-brand-hover-bg: blue;
-$navbar-inverse-border: #eee;
+$navbar-inverse-border: $ls-background-color;
 $navbar-height: 65px;
+
+// Our colour palette
+$light-text: #f1f6fd;
+$dark-text: #222222;
+$ls-green: #21CE99;
 
 //$well-bg: #e5e5e5;
 
 // Fonts
 
-@font-face {
-  font-family: 'museo-sans';
-  src: font-url('museo-sans.eot');
-  src: font-url('museo-sans.eot?#iefix') format('embedded-opentype'),
-       font-url('museo-sans.woff2') format('woff2'),
-       font-url('museo-sans.woff') format('woff'),
-       font-url('museo-sans.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'EffraRegular';
-  src: font-url('EffraRegular.eot');
-  src: font-url('EffraRegular.eot?#iefix') format('embedded-opentype'),
-       font-url('EffraRegular.woff2') format('woff2'),
-       font-url('EffraRegular.woff') format('woff'),
-       font-url('EffraRegular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'BryantWebRegular';
-  src: url(font-path('BryantWebRegular.eot'))  format('eot'),
-       url(font-path('BryantWebRegular.woff')) format('woff'),
-       url(font-path('BryantWebRegular.ttf'))  format('truetype');
-}
-@font-face {
-  font-family: 'BryantWebRegularAlternative';
-  src: url(font-path('BryantWebRegularAlt.eot'))  format('eot'),
-       url(font-path('BryantWebRegularAlt.woff')) format('woff'),
-       url(font-path('BryantWebRegularAlt.ttf'))  format('truetype');
-}
+//@font-face {
+//  font-family: 'museo-sans';
+//  src: font-url('museo-sans.eot');
+//  src: font-url('museo-sans.eot?#iefix') format('embedded-opentype'),
+//       font-url('museo-sans.woff2') format('woff2'),
+//       font-url('museo-sans.woff') format('woff'),
+//       font-url('museo-sans.ttf') format('truetype');
+//}
+//@font-face {
+//  font-family: 'EffraRegular';
+//  src: font-url('EffraRegular.eot');
+//  src: font-url('EffraRegular.eot?#iefix') format('embedded-opentype'),
+//       font-url('EffraRegular.woff2') format('woff2'),
+//       font-url('EffraRegular.woff') format('woff'),
+//       font-url('EffraRegular.ttf') format('truetype');
+//}
+//@font-face {
+//  font-family: 'BryantWebRegular';
+//  src: url(font-path('BryantWebRegular.eot'))  format('eot'),
+//       url(font-path('BryantWebRegular.woff')) format('woff'),
+//       url(font-path('BryantWebRegular.ttf'))  format('truetype');
+//}
+//@font-face {
+//  font-family: 'BryantWebRegularAlternative';
+//  src: url(font-path('BryantWebRegularAlt.eot'))  format('eot'),
+//       url(font-path('BryantWebRegularAlt.woff')) format('woff'),
+//       url(font-path('BryantWebRegularAlt.ttf'))  format('truetype');
+//}
 
 // Load Bootstrap 3
 @import "bootstrap-sprockets";
@@ -53,34 +60,30 @@ $navbar-height: 65px;
 
 // Further customisation
 
-//body {
-  //margin-top: 65px;
-  //font-family: EffraRegular, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  //h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .intro-heading {
-    //font-weight: 100;
-    //text-transform: uppercase;
-    //font-family: BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', //sans-serif;
-  //}
-//}
-
 body {
   margin-top: 65px;
-  font-family: EffraRegular, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'museo-sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .intro-heading {
     font-weight: 300;
-    #text-transform: uppercase;
-    font-family: 'museo-sans', BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
+    font-family: 'museo-sans', 'Helvetica Neue', 'helvetica', 'arial', sans-serif;
   }
-  background-color: #f9f9f9;
+  background-color: $ls-background-color;
 }
 
 tr {
   vertical-align: top;
 }
 
+.text-dark {
+  color: $link-color !important;
+}
+
+.text-light {
+  color: $light-text !important;
+}
+
 .navbar, .navbar-header, .intro-text {
   font-family: 'museo-sans', BryantWebRegularAlternative, BryantWebRegular, 'helvetica neue', 'helvetica', 'arial', sans-serif;
-  #text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 0.4px;
 }
@@ -92,19 +95,33 @@ tr {
     padding-left: 20px;
   }
   img {
-    $navbar-height: 65px;
     $desired-logo-height: 45px;
     $vertical-padding: ($navbar-height - $desired-logo-height)/2;
     height: $navbar-height;
-    padding-top: $vertical-padding;
-    padding-bottom: $vertical-padding;
+    padding: $vertical-padding 0;
+  }
+}
+
+.special-navbar {
+  padding: 0 20px;
+  .navbar-logo {
+    padding: 0;
+    @media (max-width: 780px){
+      padding-left: 0px;
+    }
+  }
+}
+
+ul.dropdown-menu li, ul.dropdown-menu li a {
+  @media (max-width: 780px) {
+    color: $light-text !important;
+    background-color: $navbar-inverse-bg;
   }
 }
 
 .navbar-footer {
   margin: 100px 0 0;
   border-radius: 0;
-  border: 0 solid green;
 }
 
 .navbar-footer, .navbar-footer a {
@@ -118,20 +135,18 @@ tr {
 
 #flash_message {
   padding-top: 10px;
-  .success {
+  .success, .error, .warning {
     border-radius: 0;
-    background-color: #21CE99;
     color: #ffffff;
+  }
+  .success {
+    background-color: $ls-green;
   }
   .error {
-    border-radius: 0;
     background-color: #ef5f5f;
-    color: #ffffff;
   }
   .warning {
-    border-radius: 0;
     background-color: #f0ad4e;
-    color: #ffffff;
   }
 }
 
@@ -386,7 +401,7 @@ header {
 }
 
 .glyphicon-ok-sign {
-  color: #21CE99;
+  color: $ls-green;
 }
 
 .glyphicon-record {
@@ -415,37 +430,36 @@ header {
 }
 
 .small-nav {
- padding-bottom: 50px;
- padding-top: 35px;
-
- .panel-default {
-   border-radius: 0;
- }
- .panel-heading {
-   background-color: #E7E4E4;
-   cursor: pointer;
-   border-radius: 0;
-   text-decoration: none;
-   p {
-     padding-top: 10px;
-     font-size: 18px;
-   }
-   &:hover, &:focus {
-     background-color: #EFEFEF;
-     color: #222222;
-     text-decoration: none;
-   }
-   &:active {
+  padding-bottom: 50px;
+  padding-top: 35px;
+  .panel-default {
+    border-radius: 0;
+  }
+  .panel-heading {
+    background-color: #E7E4E4;
+    cursor: pointer;
+    border-radius: 0;
+    text-decoration: none;
+    p {
+      padding-top: 10px;
+      font-size: 18px;
+    }
+    &:hover, &:focus {
+      background-color: #EFEFEF;
+      color: #222222;
+      text-decoration: none;
+    }
+    &:active {
      background-color: #eeeeee;
      color: #222222;
-   }
- }
+    }
+  }
   .jumbo-quiz .list-group-item {
     margin-top: 1px;
   }
 }
 
-.side-nav{
+.side-nav {
   position: fixed;
   top: 150px;
   width: 22%;
@@ -492,6 +506,10 @@ header {
 .content-area {
   padding-right: 40px;
   bottom: 10px;
+  h1 {
+    margin-top: 12px;
+    margin-bottom: 23px;
+  }
   @media (max-width: 968px){
     padding-right: 15px;
   }
@@ -501,6 +519,10 @@ header {
   overflow-y: scroll;
   //  max-height: 400px;
   max-height: 100%;
+}
+
+.library-image {
+  margin-top: 50px;
 }
 
 .library-panel {
@@ -517,22 +539,6 @@ header {
     display: block;
     width: 100%;
     height: 100%;
-    &.a {
-      background-color: #e15258;
-      color: #f9fcff;
-    }
-    &.b {
-      background-color: #53BBB4;
-      color: #f9fcff;
-    }
-    &.c {
-      background-color: #CC3B3B;
-      color: #f9fcff;
-    }
-    &.d {
-      background-color: #9E272D;
-      color: #f9fcff;
-    }
   }
 }
 
@@ -558,26 +564,9 @@ header {
       text-decoration: none;
     }
   }
-  .panel-body:hover {
-    background-color: #ef5f5f;
-    a {
-      color: #f1f6fd;
-    }
-    color: #f1f6fd;
-  }
   -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-.panel-text {
-  position: relative;
-  min-height: 3em;
-  .a-tag {
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
-  }
 }
 
 .progress-circle {
@@ -622,12 +611,8 @@ header {
   }
   &:hover, &:focus {
     background-color: #ef5f5f;
-    color: #f1f6fd;
+    color: $light-text;
     text-decoration: none;
-  }
-  &:active {
-    background-color: #ef5f5f;
-    color: #f1f6fd;
   }
   .glyphicon {
     font-size: 0.9em;
@@ -651,10 +636,10 @@ header {
 }
 
 .progress {
-  border-radius: 60px;
-  .quiz-progress-bar {
-    border-radius: 60px;
-    background-color: #21CE99;
+  border-radius: 10px;
+  .quiz-progress-bar, .progress-bar {
+    border-radius: 10px;
+    background-color: $ls-green;
   }
 }
 
@@ -666,10 +651,12 @@ header {
 }
 
 .dashboard-well {
+  margin-top: 20px;
+  padding-bottom: 25px;
   border-radius: 0;
   background-color: #ffffff;
-  .h1 {
-    margin: 60px 20px;
+  h1 {
+    margin: 60px 20px 30px 20px;
   }
 }
 

@@ -6,16 +6,16 @@
   .col-sm-12
     .well.text-center#video-window
       .h2=t('views.general.coming_soon')
-.row
-  .col-sm-12
--#.row
-  .col-sm-12
-    %h3=t('views.course_module_elements.form.description')
-    %p
-      =t('views.user_groups.form.tutor') + ':'
-      =cme.tutor.full_name
-    .well.well-sm
-      =sanitizer(cme.description)
+
+-if cme.description
+  .row
+    .col-sm-12
+      %h3=t('views.course_module_elements.form.description')
+      -#%p
+        =t('views.user_groups.form.tutor') + ':'
+        =cme.tutor.full_name
+      .well.well-sm
+        =sanitizer(cme.description)
 -#.row
   .col-sm-12
     %h3=t('views.course_module_element_videos.form.transcript')
@@ -59,6 +59,5 @@
     image: "https://dvetmi3t70548.cloudfront.net/video-still-image.jpg",
     width: "100%", aspectratio: "16:9", volume: 80
   });
-
 
 =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}

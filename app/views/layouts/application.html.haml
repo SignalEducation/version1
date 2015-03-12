@@ -23,7 +23,7 @@
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
 
-    -# New Font
+    -# Adobe Typekit Fonts
     %script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -49,7 +49,7 @@
 
     =render partial: 'layouts/favicon'
 
-  %body{ontouchstart: ""}
+  %body{ontouchstart: ''}
     -if controller_name == 'courses'
       =render partial: 'layouts/special_navbar'
       .container-fluid

@@ -3,13 +3,8 @@
   -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
     .col-sm-6
       .panel.panel-default
-        -if child.name == 'Association of Certified Chartered Accountants'
-          =link_to library_special_link(child), class: 'panel-heading clickable-panel a' do
-            .subject-headings.text-center
-              =child.short_name
-        -elsif child.name == 'CFA Institute'
-          =link_to library_special_link(child), class: 'panel-heading panel-title clickable-panel b' do
-            .subject-headings.text-center
-              =child.short_name
+        =link_to library_special_link(child), class: ('panel-heading clickable-panel ' + child.try(:text_colour_class)), style: 'background-color: #' + child.try(:background_colour_code) do
+          .subject-headings.text-center
+            =child.short_name
         .panel-body
           %p=child.description

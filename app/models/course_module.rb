@@ -61,8 +61,7 @@ class CourseModule < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_validation :unify_hierarchy_ids
   before_create :set_sorting_order
-  after_create :set_cme_count
-  after_update :set_cme_count
+  before_save :set_cme_count
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
 
@@ -95,19 +94,12 @@ class CourseModule < ActiveRecord::Base
     self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
   end
 
-  def first_active_cme
-    self.active_children.first
-  end
-
-  def percentage_complete_by_user_or_guid(user_id, session_guid)
-    set = user_id ?
-        self.student_exam_tracks.where(user_id: user_id).first :
-        self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
-    set.try(:percentage_complete) || 0
-  end
-
   def destroyable?
     !self.active && self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty? && self.student_exam_tracks.empty?
+  end
+
+  def first_active_cme
+    self.active_children.first
   end
 
   def full_name
@@ -132,6 +124,13 @@ class CourseModule < ActiveRecord::Base
 
   def parent
     self.exam_section ? self.exam_section : self.exam_level
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    set = user_id ?
+            self.student_exam_tracks.where(user_id: user_id).first :
+            self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
+    set.try(:percentage_complete) || 0
   end
 
   def previous_module
@@ -159,6 +158,13 @@ class CourseModule < ActiveRecord::Base
 
   def set_cme_count
     self.cme_count = children_available_count
+    if self.cme_count_changed?
+      self.parent.save
+      self.student_exam_tracks.each do |set|
+        set.recalculate_completeness # todo - move this to a worker
+      end
+    end
+    true
   end
 
   def unify_hierarchy_ids

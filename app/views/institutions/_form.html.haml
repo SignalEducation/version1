@@ -33,6 +33,10 @@
           .col-sm-8
             =f.text_field :help_desk_url, placeholder: t('views.institutions.form.help_desk_url_placeholder'), class: 'form-control'
         .form-group
+          =f.label :help_desbackground_colour_codek_url, t('views.institutions.form.background_colour_code'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :background_colour_code, placeholder: t('views.institutions.form.background_colour_code_placeholder'), class: 'form-control'
+        .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label

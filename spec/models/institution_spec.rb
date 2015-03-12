@@ -2,18 +2,19 @@
 #
 # Table name: institutions
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)
-#  short_name      :string(255)
-#  name_url        :string(255)
-#  description     :text
-#  feedback_url    :string(255)
-#  help_desk_url   :string(255)
-#  subject_area_id :integer
-#  sorting_order   :integer
-#  active          :boolean          default(FALSE), not null
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id                     :integer          not null, primary key
+#  name                   :string(255)
+#  short_name             :string(255)
+#  name_url               :string(255)
+#  description            :text
+#  feedback_url           :string(255)
+#  help_desk_url          :string(255)
+#  subject_area_id        :integer
+#  sorting_order          :integer
+#  active                 :boolean          default(FALSE), not null
+#  created_at             :datetime
+#  updated_at             :datetime
+#  background_colour_code :string(255)
 #
 
 require 'rails_helper'
@@ -76,5 +77,6 @@ describe Institution do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
   it { should respond_to(:parent) }
+  it { should respond_to(:text_colour_class) }
 
 end
