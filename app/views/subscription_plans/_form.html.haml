@@ -4,6 +4,11 @@
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan, message: nil}
         .form-group
+          =f.label :name, t('views.subscription_plans.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.subscription_plans.form.name_placeholder'), class: 'form-control', required: true
+
+        .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label
@@ -15,36 +20,44 @@
               %label
                 =f.check_box :available_to_corporates
                 =t('views.subscription_plans.form.available_to_corporates')
+
+        -if f.object.id.nil?
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :all_you_can_eat
+                  =t('views.subscription_plans.form.all_you_can_eat')
+          .form-group
+            =f.label :payment_frequency_in_months, t('views.subscription_plans.form.payment_frequency_in_months'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.select :payment_frequency_in_months, @payment_frequencies, {}, {class: 'form-control'}
+          .form-group
+            =f.label :currency_id, t('views.subscription_plans.form.currency_id'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+          .form-group
+            =f.label :price, t('views.subscription_plans.form.price'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :price, placeholder: t('views.subscription_plans.form.price_placeholder'), class: 'form-control'
+          .form-group
+            =f.label :available_from, t('views.subscription_plans.form.available_from'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :available_from, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control datepicker', data: {'date-format' => 'YYYY-MM-DD'}
+          .form-group
+            =f.label :available_to, t('views.subscription_plans.form.available_to'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control datepicker', data: {'date-format' => 'YYYY-MM-DD'}
+          .form-group
+            =f.label :trial_period_in_days, t('views.subscription_plans.form.trial_period_in_days'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_field :trial_period_in_days, placeholder: t('views.subscription_plans.form.trial_period_in_days_placeholder'), class: 'form-control'
         .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :all_you_can_eat
-                =t('views.subscription_plans.form.all_you_can_eat')
-        .form-group
-          =f.label :payment_frequency_in_months, t('views.subscription_plans.form.payment_frequency_in_months'), class: 'control-label col-sm-4'
+          =f.label :subscription_plan_category_id, t('views.subscription_plans.form.subscription_plan_category_id'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.select :payment_frequency_in_months, @payment_frequencies, {}, {class: 'form-control'}
-        .form-group
-          =f.label :currency_id, t('views.subscription_plans.form.currency_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
-          =f.label :price, t('views.subscription_plans.form.price'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :price, placeholder: t('views.subscription_plans.form.price_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :available_from, t('views.subscription_plans.form.available_from'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :available_from, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control datepicker', data: {'date-format' => 'YYYY-MM-DD'}
-        .form-group
-          =f.label :available_to, t('views.subscription_plans.form.available_to'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control datepicker', data: {'date-format' => 'YYYY-MM-DD'}
-        .form-group
-          =f.label :trial_period_in_days, t('views.subscription_plans.form.trial_period_in_days'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :trial_period_in_days, placeholder: t('views.subscription_plans.form.trial_period_in_days_placeholder'), class: 'form-control'
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), subscription_plans_path
+            =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+
+      %p
+        =f.submit t('views.general.save'), class: 'btn btn-success'
+        =t('views.general.or')
+        =link_to t('views.general.cancel'), subscription_plans_path

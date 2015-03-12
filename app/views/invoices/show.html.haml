@@ -1,47 +1,87 @@
-.row
+.row.print-only
+  .col-sm-12.text-center
+    .page-header.no-top-gap
+      %h1.no-top-gap Learn Signal Limited
+      %p.lead 27 South Frederick Street, Dublin 2, Ireland
+      %h2 Sales Invoice
+
+.row.print-hidden
   .col-sm-12
     .page-header
       %h1
         =t('views.invoices.show.h1')
         \#
         =@invoice.id
+        %small.pull-right
+          =link_to '#', onclick: 'window.print(); return false;', title: t('views.general.tooltips.click_to_print') do
+            .glyphicon.glyphicon-print
+            =t('views.invoices.index.print')
 .row
-  .col-sm-12
+  .col-xs-12
     %table.table.table-bordered
       %tr
-        %td.col-sm-4=t('views.invoices.form.user_id')
-        %td.col-sm-8=@invoice.user.name
+        %td.col-xs-6{rowspan:5}
+          =@invoice.user.full_name
+          %br/
+          -if @invoice.corporate_customer
+            =@invoice.corporate_customer.name
+            %br/
+          =@invoice.user.address
+          %br/
+          =@invoice.user.country.name
+          %br/
       %tr
-        %td.col-sm-4=t('views.invoices.form.corporate_customer_id')
-        %td.col-sm-8=@invoice.corporate_customer.name
+        %td.col-xs-2
+          Invoice No.
+        %td.col-xs-4
+          =@invoice.id
       %tr
-        %td.col-sm-4=t('views.invoices.form.subscription_transaction_id')
-        %td.col-sm-8=@invoice.subscription_transaction.name
+        %td=t('views.users.form.created_at')
+        %td=@invoice.created_at.to_s(:standard)
       %tr
-        %td.col-sm-4=t('views.invoices.form.subscription_id')
-        %td.col-sm-8=@invoice.subscription.name
+        %td=t('views.invoices.form.number_of_users')
+        %td
+          -if @invoice.number_of_users > 0
+            =@invoice.number_of_users
       %tr
-        %td.col-sm-4=t('views.invoices.form.number_of_users')
-        %td.col-sm-8=@invoice.number_of_users
-      %tr
-        %td.col-sm-4=t('views.invoices.form.currency_id')
-        %td.col-sm-8=@invoice.currency.name
-      %tr
-        %td.col-sm-4=t('views.invoices.form.unit_price_ex_vat')
-        %td.col-sm-8=@invoice.unit_price_ex_vat
-      %tr
-        %td.col-sm-4=t('views.invoices.form.line_total_ex_vat')
-        %td.col-sm-8=@invoice.line_total_ex_vat
-      %tr
-        %td.col-sm-4=t('views.invoices.form.vat_rate_id')
-        %td.col-sm-8=@invoice.vat_rate.name
-      %tr
-        %td.col-sm-4=t('views.invoices.form.line_total_vat_amount')
-        %td.col-sm-8=@invoice.line_total_vat_amount
-      %tr
-        %td.col-sm-4=t('views.invoices.form.line_total_inc_vat')
-        %td.col-sm-8=@invoice.line_total_inc_vat
-    %p
+        %td=t('views.invoices.form.paid')
+        %td=@invoice.paid ? t('views.invoices.form.paid') : t('views.invoices.form.due')
+
+.row
+  .col-xs-12
+    %table.table.table-bordered
+      %thead
+        %tr
+          %th=t('views.invoice_line_items.show.from_to')
+          %th=t('views.invoice_line_items.show.description')
+          %th.text-right=t('views.invoice_line_items.form.amount')
+      %tfoot
+        %tr
+          %td.text-right{colspan: 2}=t('views.invoices.form.line_total_inc_vat')
+          %td.text-right=number_in_local_currency(@invoice.total, @invoice.currency_id)
+      %tbody
+        -@invoice.invoice_line_items.each do |line|
+          %td
+            =line.period_start_at.to_date.to_s(:short)
+            \-
+            =line.period_end_at.to_date.to_s(:short)
+          %td
+            =line.subscription_plan.name
+            %br/
+            =line.subscription_plan.description.lines.join('. ')
+            -if line.prorated
+              ="(#{t('views.invoice_line_items.form.prorated')})"
+          %td.text-right
+            =number_in_local_currency(line.amount, line.currency_id)
+
+.row.print-hidden
+  .col-xs-12
+    -if current_user.admin?
       =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
-      |
-      =link_to t('views.general.edit'), edit_invoice_url(id: @invoice.id), title: t('views.general.edit_tooltip')
+    -else
+      =link_to sanitize('&larr; ' + t('views.users.show.h1')), profile_url
+
+.row.print-only
+  .col-xs-12.text-center
+    %hr/
+    %small=t('views.invoices.show.disclaimer')

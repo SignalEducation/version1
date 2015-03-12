@@ -12,6 +12,9 @@
 #  current_status        :string(255)
 #  created_at            :datetime
 #  updated_at            :datetime
+#  stripe_customer_id    :string(255)
+#  stripe_customer_data  :text
+#  livemode              :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -23,6 +26,7 @@ FactoryGirl.define do
     next_renewal_date     { 6.days.from_now}
     complementary         false
     current_status        'active'
+    livemode              false
   end
 
 end

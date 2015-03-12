@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
     @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
-    @course_module_element ||= @course_module.course_module_elements.all_in_order.all_active.first unless @course_module_jumbo_quiz
+    @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
     if @course_module_element.nil? && @course_module.nil?
       # The URL is out of date or wrong.
@@ -21,6 +21,7 @@ class CoursesController < ApplicationController
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
       # The URL worked out Okay
+      reset_post_sign_up_redirect_path(library_special_link(@course_module.exam_level)) unless current_user
       if @course_module_element.try(:is_quiz)
         set_up_quiz
       elsif @course_module_jumbo_quiz

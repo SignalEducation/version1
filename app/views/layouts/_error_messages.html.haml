@@ -1,11 +1,23 @@
 -if thing.errors.any?
+  -field_list = thing.errors.map {|x,y| x}.uniq
   .panel.panel-danger
     .panel-heading
-      =pluralize(thing.errors.count, t('views.layouts.error_messages.error'))
+      =pluralize(field_list.count, t('views.layouts.error_messages.error'))
       =message || t('views.layouts.error_messages.preface')
 
     .panel-body
       %ul
-        -thing.errors.full_messages.each do |msg|
+        -field_list.each do |field|
           %li
-            =msg
+            =field.to_s.humanize.gsub('Base','')
+            -if thing.errors[field].length > 1
+              =t('views.layouts.error_messages.is_invalid')
+            -else
+              =thing.errors[field].first
+
+  %script
+
+    \$(document).on('ready page:load', function() {
+    -field_list.each do |field_name|
+      $('##{thing.class.name.underscore}_#{field_name}').parent().addClass('has-error');
+    \})

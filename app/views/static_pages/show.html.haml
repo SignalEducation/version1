@@ -23,6 +23,12 @@
           -else
             =t('views.static_pages.index.ongoing')
       %tr
+        %td.col-sm-4=t('views.static_pages.form.post_sign_up_redirect_url')
+        %td.col-sm-8
+          -if @static_page.post_sign_up_redirect_url
+            =@static_page.post_sign_up_redirect_url
+            =link_to t('views.general.view'), @static_page.post_sign_up_redirect_url, class: 'btn btn-xs btn-info', target: '_blank'
+      %tr
         %td.col-sm-4=t('views.static_pages.form.allow_multiples')
         %td.col-sm-8=tick_or_cross(@static_page.allow_multiples)
       %tr
@@ -79,6 +85,16 @@
       %tr
         %td.col-sm-4=t('views.static_pages.form.logged_in_required')
         %td.col-sm-8=tick_or_cross(@static_page.logged_in_required)
+      %tr
+        %td.col-sm-4=t('views.static_pages.form.subscription_plan_category_id')
+        %td.col-sm-8=@static_page.subscription_plan_category.try(:full_name)
+      %tr
+        %td.col-sm-4=t('views.static_pages.form.student_sign_up_h1')
+        %td.col-sm-8=@static_page.student_sign_up_h1
+      %tr
+        %td.col-sm-4=t('views.static_pages.form.student_sign_up_sub_head')
+        %td.col-sm-8=@static_page.student_sign_up_sub_head
+
     %p
       =link_to t('views.general.back'), static_pages_url
       |

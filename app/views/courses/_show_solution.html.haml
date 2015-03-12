@@ -6,7 +6,7 @@
         =counter + 1
   .row
     .col-sm-12
-      .well.well-sm
+      .well.well-sm.quiz-well
         -if attempt.try(:quiz_question).try(:quiz_contents)
           =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
   .row
@@ -17,22 +17,23 @@
     -attempt.answers.each_with_index do |qa, counter2|
       .row
         .col-sm-12
-          .well.well-sm
+          .well.well-sm.quiz-well
             %table.table
               %tbody
                 %tr
                   %td.col-xs-1{style: 'border: 1px solid transparent;'}
-                    .h1.no-top-gap=('A'..'Z').to_a[counter2]
+                    .h1.no-top-gap=('A.'..'Z.').to_a[counter2]
                     -correct_answer = counter2 if qa.correct
                     -your_answer = counter2 if qa.id == attempt.quiz_answer_id
                   %td.col-xs-11{style: 'border: 1px solid transparent;'}
                     =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+  %br/
   .row
     .col-sm-6
-      .well.text-center
+      .well.text-center.quiz-well
         %h3=t('views.courses.show_results.correct_answer') + (('A'..'Z').to_a[correct_answer].to_s)
     .col-sm-6
-      .well.text-center
+      .well.text-center.quiz-well
         %h3=t('views.courses.show_results.your_answer') + (('A'..'Z').to_a[your_answer].to_s)
   -if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
     .row
@@ -40,9 +41,10 @@
         %h3=t('views.courses.show_results.solution')
     .row
       .col-sm-12
-        .well.well-sm
+        .well.well-sm.quiz-well
           -if attempt.try(:quiz_question).try(:quiz_solutions)
             =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+    %br/
   -if attempt.try(:quiz_question).try(:course_module_element).try(:related_video)
     .row
       .col-sm-12

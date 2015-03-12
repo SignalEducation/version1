@@ -1,11 +1,12 @@
 -if @enough_questions
   .row
     .col-sm-12
-      %h2.no-top-gap=@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name)
+      %h1.courses-title
+        =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name)
   .row
     .col-sm-12
       .progress
-        .progress-bar.progress-bar-success{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
+        .progress-bar.quiz-progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
           %span.sr-only 0% Complete
           0%
   -@quiz_questions.each do |question|

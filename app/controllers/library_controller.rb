@@ -17,8 +17,20 @@ class LibraryController < ApplicationController
       end
     end
     @hierarchy_item = @exam_section || @exam_level || @qualification || @institution || @subject_area
+
+    #@total_cmes = @hierarchy_item.children.first.cme_count
+
+    @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
+    @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete <= ?', 100)
+
+    unless current_user
+      set_the_sign_up_redirect(@hierarchy_item)
+    end
   end
 
   protected
 
+  def set_the_sign_up_redirect(hierarchy_thing)
+    reset_post_sign_up_redirect_path(library_special_link(hierarchy_thing.try(:exam_level) || hierarchy_thing))
+  end
 end

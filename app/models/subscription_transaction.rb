@@ -21,7 +21,7 @@ class SubscriptionTransaction < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  serialize :original_data
+  serialize :original_data, Hash
 
   # attr-accessible
   attr_accessible :user_id, :subscription_id, :stripe_transaction_guid,
@@ -29,7 +29,7 @@ class SubscriptionTransaction < ActiveRecord::Base
                   :live_mode, :original_data, :subscription_payment_card_id
 
   # Constants
-  TRANSACTION_TYPES = %w(payment refund failed_payment)
+  TRANSACTION_TYPES = %w(payment refund failed_payment trialing)
 
   # relationships
   belongs_to :currency
@@ -45,7 +45,7 @@ class SubscriptionTransaction < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subscription_payment_card_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_transaction_guid, presence: true
+  validates :stripe_transaction_guid, presence: true, uniqueness: true
   validates :transaction_type, inclusion: {in: TRANSACTION_TYPES}
   validates :amount, presence: true, numericality: true
   validates :currency_id, presence: true,
@@ -59,6 +59,35 @@ class SubscriptionTransaction < ActiveRecord::Base
   scope :all_alarms, -> { where(alarm: true) }
 
   # class methods
+  def self.create_from_stripe_data(subscription)
+    stripe_sub_data = subscription.stripe_customer_data[:subscriptions][:data][0]
+    stripe_card_data = subscription.stripe_customer_data[:cards] ?
+            subscription.stripe_customer_data[:cards] :
+            subscription.stripe_customer_data[:sources]
+    default_card = SubscriptionPaymentCard.find_by_stripe_card_guid(subscription.stripe_customer_data[:default_card])
+    if stripe_sub_data[:status] == 'trialing'
+      tran_type = 'trialing'
+    elsif stripe_sub_data[:status] == 'active'
+      tran_type = 'payment'
+    else
+      tran_type = 'failed_payment'
+    end
+    SubscriptionTransaction.create!(
+            user_id: subscription.user_id,
+            subscription_id: subscription.id,
+            stripe_transaction_guid: stripe_sub_data[:id],
+            transaction_type: tran_type,
+            amount: stripe_sub_data[:plan][:amount].to_i * 0.01,
+            currency_id: Currency.get_by_iso_code(stripe_sub_data[:plan][:currency].upcase).id,
+            alarm: 1,
+            live_mode: (Rails.env.production? ? true : false),
+            original_data: stripe_sub_data.to_hash,
+            subscription_payment_card_id: default_card.try(:id) || SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
+    )
+  rescue => e
+    Rails.logger.error "ERROR: SubscriptionTransaction#create_from_stripe_data failed to save. Error:#{e.inspect}"
+    return false
+  end
 
   # instance methods
   def destroyable?

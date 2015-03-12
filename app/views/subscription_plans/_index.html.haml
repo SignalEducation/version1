@@ -1,0 +1,42 @@
+=will_paginate the_plans, renderer: BootstrapPagination::Rails
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th
+        =t('views.subscription_plans.form.name')
+        %br/
+        =t('views.subscription_plans.form.price')
+      %th=t('views.subscription_plans.form.trial_period_in_days')
+      %th=t('views.subscription_plans.form.all_you_can_eat')
+      %th=t('views.subscription_plans.form.available_from')
+      %th=t('views.subscription_plans.form.available_to')
+      %th=t('views.subscription_plans.form.stripe_guid')
+      %th
+  %tbody
+    -tracker = nil
+    -the_plans.each do |subscription_plan|
+      -unless tracker == subscription_plan.currency_id
+        -tracker = subscription_plan.currency_id
+        %tr
+          %td.h2{colspan: 7}=link_to(subscription_plan.currency.iso_code, subscription_plan, title: t('views.general.view_tooltip'))
+
+      %tr{id: subscription_plan.id, class: subscription_plan.age_status}
+        %td
+          =link_to(subscription_plan.name, subscription_plan, title: t('views.general.tooltips.click_to_view'))
+          %br/
+          =link_to(t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription_plan.payment_frequency_in_months}"), subscription_plan, title: t('views.general.view_tooltip'))
+          =link_to(number_in_local_currency(subscription_plan.price, subscription_plan.currency_id), subscription_plan, title: t('views.general.view_tooltip'))
+          -if subscription_plan.subscription_plan_category
+            %br/
+            .label.label-info
+              =link_to(subscription_plan.subscription_plan_category.try(:full_name), subscription_plan, title: t('views.general.view_tooltip'))
+
+        %td=link_to(subscription_plan.trial_period_in_days, subscription_plan, title: t('views.general.view_tooltip'))
+        %td=link_to(tick_or_cross(subscription_plan.all_you_can_eat), subscription_plan, title: t('views.general.view_tooltip'))
+        %td=link_to(subscription_plan.available_from.to_s(:standard), subscription_plan, title: t('views.general.view_tooltip'))
+        %td=link_to(subscription_plan.available_to.to_s(:standard), subscription_plan, title: t('views.general.view_tooltip'))
+        %td=link_to(subscription_plan.stripe_guid, subscription_plan, title: t('views.general.view_tooltip'))
+        %td
+          =link_to t('views.general.edit'), edit_subscription_plan_url(subscription_plan), class: 'btn btn-info btn-xs'
+          -if subscription_plan.destroyable?
+            =link_to t('views.general.delete'), subscription_plan, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'

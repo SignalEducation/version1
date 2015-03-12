@@ -6,13 +6,15 @@
 
         %ul.nav.nav-pills{role: 'tablist'}
           %li.active{role: 'presentation'}
-            %a{href: '#general', aria: {controls: 'general'}, role: 'tab', data: {toggle: 'tab'}} General
+            %a{href: '#general', aria: {controls: 'general'}, role: 'tab', data: {toggle: 'tab'}}=t('views.static_pages.form.general_tab')
           %li{role: 'presentation'}
-            %a{href: '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}} Images
+            %a{href: '#sign_ups', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}}=t('views.static_pages.form.sign_ups_tab')
           %li{role: 'presentation'}
-            %a{href: '#code', aria: {controls: 'code'}, role: 'tab', data: {toggle: 'tab'}} Code
+            %a{href: '#images', aria: {controls: 'images'}, role: 'tab', data: {toggle: 'tab'}}=t('views.static_pages.form.uploads')
           %li{role: 'presentation'}
-            %a{href: '#samples', aria: {controls: 'samples'}, role: 'tab', data: {toggle: 'tab'}} Samples
+            %a{href: '#code', aria: {controls: 'code'}, role: 'tab', data: {toggle: 'tab'}}=t('views.static_pages.form.code_tab')
+          %li{role: 'presentation'}
+            %a{href: '#samples', aria: {controls: 'samples'}, role: 'tab', data: {toggle: 'tab'}}=t('views.static_pages.form.code_samples')
 
         =render partial: '/layouts/error_messages', locals: {thing: @static_page, message: nil}
 
@@ -20,7 +22,7 @@
           .tab-pane.fade.in.active#general{role: 'tabpanel'}
             .row
               .col-sm-12
-                %h2 General
+                %h2=t('views.static_pages.form.general_tab')
                 .well.well-sm
                   .form-group
                     =f.label :name, t('views.static_pages.form.name'), class: 'control-label col-sm-4'
@@ -38,6 +40,10 @@
                     =f.label :public_url, t('views.static_pages.form.public_url'), class: 'control-label col-sm-4'
                     .col-sm-8
                       =f.text_field :public_url, placeholder: t('views.static_pages.form.public_url_placeholder'), class: 'form-control'
+                  .form-group
+                    =f.label :post_sign_up_redirect_url, t('views.static_pages.form.post_sign_up_redirect_url'), class: 'control-label col-sm-4'
+                    .col-sm-8
+                      =f.text_field :post_sign_up_redirect_url, placeholder: t('views.static_pages.form.post_sign_up_redirect_url_placeholder'), class: 'form-control'
                   .form-group
                     .col-sm-8.col-sm-offset-4
                       .checkbox
@@ -117,6 +123,22 @@
                       %span#helpBlock.help-block=t('views.static_pages.form.approved_country_ids_help')
 
 
+          .tab-pane.fade#sign_ups{role: 'tabpanel'}
+            %h2=t('views.static_pages.form.sign_ups_tab')
+            .well.well-sm
+              .form-group
+                =f.label :student_sign_up_h1, t('views.static_pages.form.student_sign_up_h1'), class: 'control-label col-sm-4'
+                .col-sm-8
+                  =f.text_field :student_sign_up_h1, placeholder: t('views.static_pages.form.student_sign_up_h1_placeholder'), class:  'form-control'
+              .form-group
+                =f.label :student_sign_up_sub_head, t('views.static_pages.form.student_sign_up_sub_head'), class: 'control-label col-sm-4'
+                .col-sm-8
+                  =f.text_field :student_sign_up_sub_head, placeholder: t('views.static_pages.form.student_sign_up_sub_head_placeholder'), class:  'form-control'
+              .form-group
+                =f.label :subscription_plan_category_id, t('views.static_pages.form.subscription_plan_category_id'), class: 'control-label col-sm-4'
+                .col-sm-8
+                  =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :full_name, {include_blank: t('views.general.none')}, {class: 'form-control'}
+
           .tab-pane.fade#images{role: 'tabpanel'}
             %h2=t('views.static_pages.form.uploads')
             .well.well-sm
@@ -127,7 +149,7 @@
           .tab-pane.fade#code{role: 'tabpanel'}
             .row
               .col-sm-12
-                %h2 Code
+                %h2=t('views.static_pages.form.code_tab')
               .col-sm-12
                 .well.well-sm
                   .form-group

@@ -2,19 +2,22 @@
 #
 # Table name: subscription_plans
 #
-#  id                          :integer          not null, primary key
-#  available_to_students       :boolean          default(FALSE), not null
-#  available_to_corporates     :boolean          default(FALSE), not null
-#  all_you_can_eat             :boolean          default(TRUE), not null
-#  payment_frequency_in_months :integer          default(1)
-#  currency_id                 :integer
-#  price                       :decimal(, )
-#  available_from              :date
-#  available_to                :date
-#  stripe_guid                 :string(255)
-#  trial_period_in_days        :integer          default(0)
-#  created_at                  :datetime
-#  updated_at                  :datetime
+#  id                            :integer          not null, primary key
+#  available_to_students         :boolean          default(FALSE), not null
+#  available_to_corporates       :boolean          default(FALSE), not null
+#  all_you_can_eat               :boolean          default(TRUE), not null
+#  payment_frequency_in_months   :integer          default(1)
+#  currency_id                   :integer
+#  price                         :decimal(, )
+#  available_from                :date
+#  available_to                  :date
+#  stripe_guid                   :string(255)
+#  trial_period_in_days          :integer          default(0)
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  name                          :string(255)
+#  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -36,10 +39,12 @@ describe SubscriptionPlan do
 
   # relationships
   it { should belong_to(:currency) }
+  it { should have_many(:invoice_line_items) }
   it { should have_many(:subscriptions) }
+  it { should belong_to(:subscription_plan_category) }
 
-  # validation
-  it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
+   it { should validate_presence_of(:name) }
+   it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
 
   it { should validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
@@ -56,19 +61,31 @@ describe SubscriptionPlan do
   it { should validate_presence_of(:trial_period_in_days) }
   it { should validate_numericality_of(:trial_period_in_days) }
 
+  it { should_not validate_presence_of(:subscription_plan_category_id) }
+  it { should validate_numericality_of(:subscription_plan_category_id) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:create_on_stripe_platform).before(:create) }
   it { should callback(:update_on_stripe_platform).before(:update) }
+  it { should callback(:delete_on_stripe_platform).after(:destroy) }
 
   # scopes
   it { expect(SubscriptionPlan).to respond_to(:all_in_order) }
   it { expect(SubscriptionPlan).to respond_to(:all_active) }
+  it { expect(SubscriptionPlan).to respond_to(:for_corporates) }
+  it { expect(SubscriptionPlan).to respond_to(:for_students) }
+  it { expect(SubscriptionPlan).to respond_to(:generally_available) }
   it { expect(SubscriptionPlan).to respond_to(:in_currency) }
 
   # class methods
+  it { expect(SubscriptionPlan).to respond_to(:generally_available_or_for_category_guid) }
 
   # instance methods
+  it { should respond_to(:active?) }
+  it { should respond_to(:age_status) }
+  it { should respond_to(:description) }
+  it { should respond_to(:description_without_trial) }
   it { should respond_to(:destroyable?) }
 
 end

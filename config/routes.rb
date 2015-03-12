@@ -1,12 +1,19 @@
 Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
-#  require 'sidekiq/web'
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
+
+  namespace :api do
+    get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
+    get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
+    post 'stripe_v01', to: 'stripe_v01#create'
+    post 'stripe_dev/:dev_name', to: 'stripe_dev#create'
+    resources :user_activities, only: :create
+  end
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -19,7 +26,7 @@ Rails.application.routes.draw do
         as: :user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
-    get 'sign_up', to: 'users#new', as: :sign_up
+    get 'sign_up', to: 'student_sign_ups#new', as: :sign_up
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'profile', to: 'users#show', as: :profile
@@ -29,7 +36,7 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit'
 
     # special routes
-    # todo get 'personal_sign_up_complete', to: 'library#show', as: :personal_sign_up_complete
+    get 'personal_sign_up_complete/:id', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
     get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
@@ -70,19 +77,24 @@ Rails.application.routes.draw do
     get  'institutions/filter/:subject_area_url', to: 'institutions#index', as: :institutions_filtered
     post 'institutions/reorder', to: 'institutions#reorder'
     resources :institutions
-    resources :invoices
+    resources :invoices, only: [:index, :show]
     post 'qualifications/reorder', to: 'qualifications#reorder'
     get  'qualifications/filter/:institution_url', to: 'qualifications#index',
          as: :qualifications_filtered
     post 'qualifications/filter', to: 'qualifications#index', as: :qualifications_filter
     resources :qualifications
+    get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
+    resources :student_sign_ups, only: [:show, :new, :create]
     post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
-
+    resources :stripe_developer_calls
     resources :subject_areas
+    resources :subscriptions, only: [:create, :update, :destroy]
+    resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
+    resources :subscription_plan_categories
     resources :user_activity_logs
     resources :user_notifications
     resources :vat_codes
@@ -94,10 +106,6 @@ Rails.application.routes.draw do
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'
     get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
         as: :deliver_static_pages
-  end
-
-  namespace :api do
-    resources :user_activities, only: :create
   end
 
   # Catch-all

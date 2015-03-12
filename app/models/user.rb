@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   end
 
   # attr-accessible
-  attr_accessible :email, :first_name, :last_name, :active, :address,
+  attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
                   :password_reset_token, :password_reset_at, :stripe_customer_id,
                   :corporate_customer_id, :corporate_customer_user_group_id,
@@ -62,7 +62,8 @@ class User < ActiveRecord::Base
                   :marketing_email_permission_given_at,
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
-                  :password_confirmation, :current_password, :locale
+                  :password_confirmation, :current_password, :locale,
+                  :subscriptions_attributes
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -78,23 +79,25 @@ class User < ActiveRecord::Base
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
-  has_many :quiz_attempts
-  has_many :invoices
+  has_many :forum_posts
+  has_many :forum_post_concerns
+  has_many :forum_topic_users
   has_many :institution_users
+  has_many :invoices
+  has_many :quiz_attempts
+  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
+  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :subscriptions
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
-  has_many :user_exam_level
-  has_many :user_notifications
-  has_many :forum_topic_users
-  has_many :forum_posts
-  has_many :forum_post_concerns
-  has_many :user_likes
-  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
-  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :user_activity_logs
   belongs_to :user_group
+  has_many :user_exam_level
+  has_many :user_likes
+  has_many :user_notifications
+
+  accepts_nested_attributes_for :subscriptions
 
   # validation
   validates :email, presence: true, uniqueness: true,
@@ -129,9 +132,11 @@ class User < ActiveRecord::Base
   validates :locale, inclusion: {in: LOCALES}
 
   # callbacks
+  before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name, :address) }
-  before_create :add_guid
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
+  before_create :add_guid
+  after_create :set_stripe_customer_id
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -166,7 +171,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.finish_password_reset_process(reset_token, new_password, new_password_confirmation)
+  def self.finish_password_reset_process(reset_token, new_password,
+          new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
       user = User.where(password_reset_token: reset_token.to_s, active: false).first
       if user
@@ -191,7 +197,10 @@ class User < ActiveRecord::Base
   def change_the_password(options)
     # options = {current_password: '123123123', password: 'new123',
     #            password_confirmation: 'new123'}
-    if options[:password] == options[:password_confirmation] && options[:password].to_s != '' && self.valid_password?(options[:current_password].to_s) && options[:current_password].to_s != ''
+    if options[:password] == options[:password_confirmation] &&
+            options[:password].to_s != '' &&
+            self.valid_password?(options[:current_password].to_s) &&
+            options[:current_password].to_s != ''
       self.update_attributes(
               password: options[:password],
               password_confirmation: options[:password_confirmation]
@@ -199,6 +208,18 @@ class User < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def content_manager?
+    self.user_group.try(:content_manager)
+  end
+
+  def corporate_customer?
+    self.user_group.try(:corporate_customer)
+  end
+
+  def corporate_student?
+    self.user_group.try(:corporate_student)
   end
 
   def destroyable?
@@ -220,27 +241,24 @@ class User < ActiveRecord::Base
         self.user_likes.empty? &&
         self.user_notifications.empty? &&
         self.created_static_pages.empty? &&
-        self.updated_static_pages.empty?
-  end
-
-  def full_name
-    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
+        self.updated_static_pages.empty? &&
+        self.user_activity_logs.empty?
   end
 
   def frequent_forum_user?
     self.forum_posts.count > 100
   end
 
-  def tutor?
-    self.user_group.try(:tutor)
+  def full_name
+    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
   def individual_student?
-    self.user_group.try(:individual_student)
+    self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
   end
 
-  def content_manager?
-    self.user_group.try(:content_manager)
+  def tutor?
+    self.user_group.try(:tutor)
   end
 
   protected
@@ -253,6 +271,22 @@ class User < ActiveRecord::Base
     self.active = false
     self.account_activated_at = nil
     self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
+  def set_defaults
+    self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
+    self.operational_email_frequency ||= 'weekly'
+    self.study_plan_notifications_email_frequency ||= 'off'
+    self.falling_behind_email_alert_frequency ||= 'off'
+    self.marketing_email_frequency ||= 'off'
+    self.blog_notification_email_frequency ||= 'off'
+    self.forum_notification_email_frequency ||= 'off'
+  end
+
+  def set_stripe_customer_id
+    if self.subscriptions.length > 0
+      self.update_attribute(:stripe_customer_id, self.subscriptions.first.stripe_customer_id)
+    end
   end
 
 end

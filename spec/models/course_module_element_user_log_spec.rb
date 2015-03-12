@@ -62,7 +62,7 @@ describe CourseModuleElementUserLog do
 
   describe 'for quizzes...' do
     before :each do
-      subject.stub(:is_quiz).and_return(true)
+      allow(subject).to receive(:is_quiz).and_return(true)
     end
     it { should validate_presence_of(:quiz_score_actual).on(:update) }
     it { should validate_presence_of(:quiz_score_potential).on(:update) }

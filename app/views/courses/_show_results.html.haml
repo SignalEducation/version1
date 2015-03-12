@@ -85,3 +85,7 @@
         =link_to t('views.general.edit'), course_module_special_link(@course_module_element_user_log.course_module), class: 'btn btn-warning btn-sm'
     .col-sm-4.text-right
       =link_to 'Next Module', course_special_link(@course_module.next_module), class: 'btn btn-info btn-sm'
+
+
+-if @course_module_element
+  =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}

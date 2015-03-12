@@ -15,6 +15,7 @@
 
 class Currency < ActiveRecord::Base
 
+  include ActionView::Helpers::NumberHelper
   include LearnSignalModelExtras
 
   # attr-accessible
@@ -26,6 +27,7 @@ class Currency < ActiveRecord::Base
   # todo has_many :corporate_customer_prices
   has_many :countries
   has_many :invoices
+  has_many :invoice_line_items
   has_many :subscription_plans
   has_many :subscription_transactions
 
@@ -45,10 +47,17 @@ class Currency < ActiveRecord::Base
   scope :all_inactive, -> { where(active: false) }
 
   # class methods
+  def self.get_by_iso_code(the_iso_code)
+    Currency.where(iso_code: the_iso_code).first || nil
+  end
 
   # instance methods
   def destroyable?
-    !self.active && self.countries.empty? && self.invoices.empty? && self.subscription_transactions.empty? && self.subscription_plans.empty?
+    !self.active && self.countries.empty? && self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.subscription_plans.empty?
+  end
+
+  def format_number(the_number=0)
+    number_to_currency(the_number, precision: 2, unit: self.leading_symbol)
   end
 
   protected

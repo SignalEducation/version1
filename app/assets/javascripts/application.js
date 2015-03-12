@@ -13,6 +13,7 @@
 // //// Removed Turbolinks from just after jquery-sortable
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require jquery.remotipart
 //= require jquery-sortable
 //= require bootstrap-sprockets

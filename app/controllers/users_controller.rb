@@ -12,6 +12,20 @@ class UsersController < ApplicationController
 
   def show
     # profile page
+    if params[:update].to_s.length > 0
+      case params[:update]
+        when 'invoices'
+          Invoice.get_updates_for_user(@user.stripe_customer_id)
+        when 'cards'
+          SubscriptionPaymentCard.get_updates_for_user(@user.stripe_customer_id)
+        when 'subscriptions'
+          Rails.logger.debug 'DEBUG: start a call to Subscription#get_updates_for_user'
+          Subscription.get_updates_for_user(@user.stripe_customer_id)
+        else
+          # do nothing
+      end
+      @user.reload
+    end
   end
 
   def new
@@ -24,7 +38,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(allowed_params)
     @user.locale = 'en'
-    if @user.save
+    if @user.user_group.try(:site_admin) == false && @user.save
       Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@user.id)
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
@@ -80,8 +94,13 @@ class UsersController < ApplicationController
                   current_user
     @email_frequencies = User::EMAIL_FREQUENCIES
     @countries = Country.all_in_order
-    @user_groups = UserGroup.all_in_order
+    if (action_name == 'show' || action_name == 'edit' || action_name == 'update') && @user.admin?
+      @user_groups = UserGroup.all_in_order
+    else
+      @user_groups = UserGroup.where(site_admin: false).all_in_order
+    end
     seo_title_maker(@user.try(:full_name))
+    @current_subscription = @user.subscriptions.all_in_order.last
   end
 
   def allowed_params

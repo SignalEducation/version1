@@ -31,8 +31,6 @@ describe ImportTracker do
   #it { expect(ImportTracker.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  #it { should belong_to(:old_model) }
-  #it { should belong_to(:new_model) }
 
   # validation
   it { should validate_presence_of(:old_model_name) }
@@ -59,7 +57,5 @@ describe ImportTracker do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 
-describe 'User navigating through the library:' do
+describe 'User navigating through the library:', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
@@ -16,26 +16,8 @@ describe 'User navigating through the library:' do
   scenario 'user signs in then navigates down hierarchy to first cme', js: true  do
     visit root_path
     click_link 'Library'
-    expect(page).to have_content I18n.t('views.general.home')
-    expect(page).to have_content maybe_upcase I18n.t('views.library.show.h1')
-    expect(page).to_not have_content I18n.t('views.general.back')
-    expect(page).to have_content maybe_upcase I18n.t('views.subject_areas.index.h1')
-    expect(page).to have_content maybe_upcase 'Lorem Ipsum'
-    expect(page).to have_content maybe_upcase 'Institute 1'
-    expect(page).to have_content 'Qualification 1'
-    within('#subject-area-panel') do
-      find_link('Subject Area 2').click
-    end
-    expect(page).to have_content maybe_upcase I18n.t('views.subject_areas.index.h1')
-    expect(page).to have_content maybe_upcase 'Institute 2'
-    expect(page).to have_content maybe_upcase 'Lorem Ipsum'
-    expect(page).to have_content 'Qualification 3'
-    find('#expand-icon').click
-    expect(page).to have_content maybe_upcase 'Qualification 3'
-    expect(page).to have_content 'MyString'
-    find_link('MyString').click
-    expect(page).to have_content maybe_upcase 'Course Module 2'
-    expect(page).to have_content 'Course Module Element 3'
+    expect(page).to have_content maybe_upcase institution_1.short_name
+    expect(page).to have_content institution_1.description
   end
 
 end

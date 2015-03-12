@@ -1,0 +1,21 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@subscription_plan_category, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan_category, message: nil}
+        .form-group
+          =f.label :name, t('views.subscription_plan_categories.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :available_from, t('views.subscription_plan_categories.form.available_from'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+        .form-group
+          =f.label :available_to, t('views.subscription_plan_categories.form.available_to'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), subscription_plan_categories_path

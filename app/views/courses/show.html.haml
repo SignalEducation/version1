@@ -1,22 +1,21 @@
-=render partial: 'shared/breadcrumbs', locals: {the_thing: @course_module_jumbo_quiz || @course_module_element || @course_module, use_breadcrumb: true}
-
+%br/
 .row
-  .col-sm-12
-    .page-header
-      %h1=@course_module.try(:name)
-
+  .col-sm-12.visible-xs.visible-sm{style: 'bottom: 5px'}
+    =render partial: 'courses/small_side_nav'
 .row
-  .col-sm-3
-    =render partial: 'courses/side_nav'
-  .col-sm-9
+  .col-sm-3.visible-lg.visible-md
+    .new-side-nav
+      =link_to library_special_link(@course_module.parent), class: ' btn-lg btn-block text-center btn-ls-default' do
+        .glyphicon.glyphicon-chevron-left
+        =t('views.library.show.h1')
+      =render partial: 'courses/new_side_nav'
+
+  .col-md-9.col-sm-12.col-md-offset-3.content-area
     -if defined?(@results)
       =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-      -if @course_module_element
-        =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
     -elsif @course_module_element
       -if @course_module_element.try(:is_video)
         =render partial: 'courses/show_video', locals: {cme: @course_module_element}
-        =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
       -elsif @course_module_element.try(:is_quiz)
         =render partial: 'courses/show_quiz'
       -else

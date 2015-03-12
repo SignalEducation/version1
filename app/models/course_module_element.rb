@@ -149,9 +149,9 @@ class CourseModuleElement < ActiveRecord::Base
 
   def self.nested_resource_is_blank?(attributes)
     attributes['name'].blank? &&
-            attributes['description'].blank? &&
-            attributes['upload'].blank? &&
-            attributes['the_url'].blank?
+    attributes['description'].blank? &&
+    attributes['upload'].blank? &&
+    attributes['the_url'].blank?
   end
 
 end

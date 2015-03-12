@@ -2,8 +2,8 @@ module ApplicationHelper
 
   def tick_or_cross(the_thing)
     the_thing ?
-            "<span style='color: green;' class='glyphicon glyphicon-ok'></span>".html_safe :
-            "<span style='color: red;' class='glyphicon glyphicon-remove'></span>".html_safe
+            "<span style='color: #21CE99;' class='glyphicon glyphicon-ok'></span>".html_safe :
+            "<span style='color: #eb4242;' class='glyphicon glyphicon-remove'></span>".html_safe
   end
 
   def completion_circle(hierarchy_thing)
@@ -38,7 +38,7 @@ module ApplicationHelper
     if percentage == 100
       "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
     elsif percentage == 0
-      if hierarchy_thing.first_active_cme
+      if hierarchy_thing.try(:first_active_cme)
         "<a href='#{course_special_link(hierarchy_thing.first_active_cme)}'><span style='background-color: green;' class='label label-default'>Start</span></a>".html_safe
       end
     elsif percentage.nil?

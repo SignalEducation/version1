@@ -59,9 +59,9 @@ def expect_edit_success_with_model(model_name, expected_id=nil)
   expect(assigns(model_name.to_sym).id).to eq(expected_id) if expected_id
 end
 
-def expect_create_success_with_model(model_name, destination)
-  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.create.flash.success"))
+def expect_create_success_with_model(model_name, destination, special_flash=nil)
   expect(flash[:error]).to be_nil
+  expect(flash[:success]).to eq(special_flash || I18n.t("controllers.#{model_name.pluralize}.create.flash.success"))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
   expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)

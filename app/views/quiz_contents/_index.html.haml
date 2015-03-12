@@ -6,4 +6,5 @@
     .mathjax=sanitizer content.text_content
     %br/
   -elsif content.content_type == 'image'
-    =image_tag content.image.url, class: 'img-responsive col-sm-12'
+    .image
+      =image_tag content.image.url, class: 'img-responsive'

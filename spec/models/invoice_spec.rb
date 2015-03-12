@@ -9,13 +9,30 @@
 #  subscription_id             :integer
 #  number_of_users             :integer
 #  currency_id                 :integer
-#  unit_price_ex_vat           :decimal(, )
-#  line_total_ex_vat           :decimal(, )
 #  vat_rate_id                 :integer
-#  line_total_vat_amount       :decimal(, )
-#  line_total_inc_vat          :decimal(, )
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  issued_at                   :datetime
+#  stripe_guid                 :string(255)
+#  sub_total                   :decimal(, )      default(0.0)
+#  total                       :decimal(, )      default(0.0)
+#  total_tax                   :decimal(, )      default(0.0)
+#  stripe_customer_guid        :string(255)
+#  object_type                 :string(255)      default("invoice")
+#  payment_attempted           :boolean          default(FALSE)
+#  payment_closed              :boolean          default(FALSE)
+#  forgiven                    :boolean          default(FALSE)
+#  paid                        :boolean          default(FALSE)
+#  livemode                    :boolean          default(FALSE)
+#  attempt_count               :integer          default(0)
+#  amount_due                  :decimal(, )      default(0.0)
+#  next_payment_attempt_at     :datetime
+#  webhooks_delivered_at       :datetime
+#  charge_guid                 :string(255)
+#  subscription_guid           :string(255)
+#  tax_percent                 :decimal(, )
+#  tax                         :decimal(, )
+#  original_stripe_data        :text
 #
 
 require 'rails_helper'
@@ -33,11 +50,12 @@ describe Invoice do
   end
 
   # Constants
-  #it { expect()Invoice.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(Invoice.const_defined?(:STRIPE_LIVE_MODE)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }
   it { should belong_to(:corporate_customer) }
+  it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_transaction) }
   it { should belong_to(:subscription) }
   it { should belong_to(:user) }
@@ -50,7 +68,7 @@ describe Invoice do
   it { should_not validate_presence_of(:corporate_customer_id) }
   it { should validate_numericality_of(:corporate_customer_id) }
 
-  it { should validate_presence_of(:subscription_transaction_id) }
+  it { should_not validate_presence_of(:subscription_transaction_id) }
   it { should validate_numericality_of(:subscription_transaction_id) }
 
   it { should validate_presence_of(:subscription_id) }
@@ -61,13 +79,14 @@ describe Invoice do
   it { should validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
 
-  it { should validate_presence_of(:unit_price_ex_vat) }
+  it { should validate_presence_of(:total) }
 
   it { should_not validate_presence_of(:vat_rate_id) }
   it { should validate_numericality_of(:vat_rate_id) }
 
+  it { should validate_inclusion_of(:livemode).in_array(Invoice::STRIPE_LIVE_MODE)}
+
   # callbacks
-  it { should callback(:calculate_line_totals).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

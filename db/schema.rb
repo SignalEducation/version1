@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150210142311) do
+ActiveRecord::Schema.define(version: 20150311112600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.boolean  "active",                    default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "cme_count",                 default: 0
   end
 
   create_table "currencies", force: true do |t|
@@ -165,6 +166,7 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.datetime "updated_at"
     t.integer  "default_number_of_possible_exam_answers", default: 4
     t.boolean  "enable_exam_sections",                    default: true,  null: false
+    t.integer  "cme_count",                               default: 0
   end
 
   create_table "exam_sections", force: true do |t|
@@ -176,6 +178,7 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.float    "best_possible_first_attempt_score"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "cme_count",                         default: 0
   end
 
   create_table "forum_post_concerns", force: true do |t|
@@ -250,7 +253,22 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.string   "help_desk_url"
     t.integer  "subject_area_id"
     t.integer  "sorting_order"
-    t.boolean  "active",          default: false, null: false
+    t.boolean  "active",                 default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "background_colour_code"
+  end
+
+  create_table "invoice_line_items", force: true do |t|
+    t.integer  "invoice_id"
+    t.decimal  "amount"
+    t.integer  "currency_id"
+    t.boolean  "prorated"
+    t.datetime "period_start_at"
+    t.datetime "period_end_at"
+    t.integer  "subscription_id"
+    t.integer  "subscription_plan_id"
+    t.text     "original_stripe_data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -262,11 +280,38 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.integer  "subscription_id"
     t.integer  "number_of_users"
     t.integer  "currency_id"
-    t.decimal  "unit_price_ex_vat"
-    t.decimal  "line_total_ex_vat"
     t.integer  "vat_rate_id"
-    t.decimal  "line_total_vat_amount"
-    t.decimal  "line_total_inc_vat"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "issued_at"
+    t.string   "stripe_guid"
+    t.decimal  "sub_total",                   default: 0.0
+    t.decimal  "total",                       default: 0.0
+    t.decimal  "total_tax",                   default: 0.0
+    t.string   "stripe_customer_guid"
+    t.string   "object_type",                 default: "invoice"
+    t.boolean  "payment_attempted",           default: false
+    t.boolean  "payment_closed",              default: false
+    t.boolean  "forgiven",                    default: false
+    t.boolean  "paid",                        default: false
+    t.boolean  "livemode",                    default: false
+    t.integer  "attempt_count",               default: 0
+    t.decimal  "amount_due",                  default: 0.0
+    t.datetime "next_payment_attempt_at"
+    t.datetime "webhooks_delivered_at"
+    t.string   "charge_guid"
+    t.string   "subscription_guid"
+    t.decimal  "tax_percent"
+    t.decimal  "tax"
+    t.text     "original_stripe_data"
+  end
+
+  create_table "ip_addresses", force: true do |t|
+    t.string   "ip_address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "country_id"
+    t.integer  "alert_level"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -358,29 +403,53 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.string   "name"
     t.datetime "publish_from"
     t.datetime "publish_to"
-    t.boolean  "allow_multiples",            default: false, null: false
+    t.boolean  "allow_multiples",               default: false, null: false
     t.string   "public_url"
-    t.boolean  "use_standard_page_template", default: false, null: false
+    t.boolean  "use_standard_page_template",    default: false, null: false
     t.text     "head_content"
     t.text     "body_content"
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.boolean  "add_to_navbar",              default: false, null: false
-    t.boolean  "add_to_footer",              default: false, null: false
+    t.boolean  "add_to_navbar",                 default: false, null: false
+    t.boolean  "add_to_footer",                 default: false, null: false
     t.string   "menu_label"
     t.string   "tooltip_text"
     t.string   "language"
-    t.boolean  "mark_as_noindex",            default: false, null: false
-    t.boolean  "mark_as_nofollow",           default: false, null: false
+    t.boolean  "mark_as_noindex",               default: false, null: false
+    t.boolean  "mark_as_nofollow",              default: false, null: false
     t.string   "seo_title"
     t.string   "seo_description"
     t.text     "approved_country_ids"
-    t.boolean  "default_page_for_this_url",  default: false, null: false
-    t.boolean  "make_this_page_sticky",      default: false, null: false
-    t.boolean  "logged_in_required",         default: false, null: false
+    t.boolean  "default_page_for_this_url",     default: false, null: false
+    t.boolean  "make_this_page_sticky",         default: false, null: false
+    t.boolean  "logged_in_required",            default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "show_standard_footer",       default: true
+    t.boolean  "show_standard_footer",          default: true
+    t.string   "post_sign_up_redirect_url"
+    t.integer  "subscription_plan_category_id"
+    t.string   "student_sign_up_h1"
+    t.string   "student_sign_up_sub_head"
+  end
+
+  create_table "stripe_api_events", force: true do |t|
+    t.string   "guid"
+    t.string   "api_version"
+    t.text     "payload"
+    t.boolean  "processed",     default: false, null: false
+    t.datetime "processed_at"
+    t.boolean  "error",         default: false, null: false
+    t.string   "error_message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "stripe_developer_calls", force: true do |t|
+    t.integer  "user_id"
+    t.text     "params_received"
+    t.boolean  "prevent_delete",  default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "student_exam_tracks", force: true do |t|
@@ -394,7 +463,7 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.string   "session_guid"
     t.integer  "course_module_id"
     t.boolean  "jumbo_quiz_taken",                default: false
-    t.integer  "percentage_complete",             default: 0
+    t.float    "percentage_complete",             default: 0.0
     t.integer  "count_of_cmes_completed",         default: 0
   end
 
@@ -415,27 +484,53 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.string   "last_4"
     t.integer  "expiry_month"
     t.integer  "expiry_year"
-    t.string   "billing_address"
-    t.string   "billing_country"
-    t.integer  "billing_country_id"
-    t.string   "account_email"
+    t.string   "address_line1"
+    t.string   "account_country"
+    t.integer  "account_country_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "stripe_object_name"
+    t.string   "funding"
+    t.string   "cardholder_name"
+    t.string   "fingerprint"
+    t.string   "cvc_checked"
+    t.string   "address_line1_check"
+    t.string   "address_zip_check"
+    t.string   "dynamic_last4"
+    t.string   "customer_guid"
+    t.boolean  "is_default_card",     default: false
+    t.string   "address_line2"
+    t.string   "address_city"
+    t.string   "address_state"
+    t.string   "address_zip"
+    t.string   "address_country"
+  end
+
+  create_table "subscription_plan_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "available_from"
+    t.datetime "available_to"
+    t.string   "guid"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "subscription_plans", force: true do |t|
-    t.boolean  "available_to_students",       default: false, null: false
-    t.boolean  "available_to_corporates",     default: false, null: false
-    t.boolean  "all_you_can_eat",             default: true,  null: false
-    t.integer  "payment_frequency_in_months", default: 1
+    t.boolean  "available_to_students",         default: false, null: false
+    t.boolean  "available_to_corporates",       default: false, null: false
+    t.boolean  "all_you_can_eat",               default: true,  null: false
+    t.integer  "payment_frequency_in_months",   default: 1
     t.integer  "currency_id"
     t.decimal  "price"
     t.date     "available_from"
     t.date     "available_to"
     t.string   "stripe_guid"
-    t.integer  "trial_period_in_days",        default: 0
+    t.integer  "trial_period_in_days",          default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.integer  "subscription_plan_category_id"
+    t.boolean  "livemode",                      default: false
   end
 
   create_table "subscription_transactions", force: true do |t|
@@ -463,6 +558,9 @@ ActiveRecord::Schema.define(version: 20150210142311) do
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "stripe_customer_id"
+    t.text     "stripe_customer_data"
+    t.boolean  "livemode",              default: false
   end
 
   create_table "system_defaults", force: true do |t|
@@ -476,21 +574,27 @@ ActiveRecord::Schema.define(version: 20150210142311) do
   create_table "user_activity_logs", force: true do |t|
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "signed_in",        default: false, null: false
+    t.boolean  "signed_in",                   default: false, null: false
     t.text     "original_uri"
     t.string   "controller_name"
     t.string   "action_name"
     t.text     "params"
-    t.integer  "alert_level",      default: 0
+    t.integer  "alert_level",                 default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ip_address"
     t.string   "browser"
     t.string   "operating_system"
-    t.boolean  "phone",            default: false, null: false
-    t.boolean  "tablet",           default: false, null: false
-    t.boolean  "computer",         default: false, null: false
+    t.boolean  "phone",                       default: false, null: false
+    t.boolean  "tablet",                      default: false, null: false
+    t.boolean  "computer",                    default: false, null: false
     t.string   "guid"
+    t.integer  "ip_address_id"
+    t.string   "browser_version"
+    t.string   "raw_user_agent"
+    t.text     "first_session_landing_page"
+    t.text     "latest_session_landing_page"
+    t.string   "post_sign_up_redirect_url"
   end
 
   create_table "user_exam_levels", force: true do |t|
