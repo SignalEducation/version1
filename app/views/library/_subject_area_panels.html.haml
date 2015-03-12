@@ -3,7 +3,7 @@
   -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
     .col-sm-6
       .panel.panel-default
-        =link_to library_special_link(child), class: ('panel-heading clickable-panel ' + child.try(:text_colour_class)), style: 'background-color: #' + child.try(:background_colour_code) do
+        =link_to library_special_link(child), class: ('panel-heading clickable-panel ' + child.try(:text_colour_class)), style: 'background-color: #' + (child.try(:background_colour_code) || 'e15258') do
           .subject-headings.text-center
             =child.short_name
         .panel-body
