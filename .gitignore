@@ -38,3 +38,6 @@ config/secrets.yml
 
 # Ignore application configuration - figaro gem
 /config/application.yml
+
+# used by SimpleCov
+coverage
