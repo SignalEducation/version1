@@ -95,6 +95,7 @@ describe 'Subscription UX:', type: :feature do
     # cancel the current (active) subscription
     click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
     page.driver.browser.switch_to.alert.accept
+    click_link('Subscriptions')
     expect(page).to have_content 'canceled-pending'
 
     # un-cancel it

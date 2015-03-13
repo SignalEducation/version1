@@ -29,13 +29,13 @@ describe Api::StripeV01Controller, type: :controller do
 
   describe "POST 'create'" do
     describe 'preliminary functionality: ' do
-      it 'returns 204 when called with no payload (to support Stripe Pings)' do
+      xit 'returns 204 when called with no payload (to support Stripe Pings)' do
         expect(Rails.logger).to receive(:error)
         post :create
         expect(response.status).to eq(204)
       end
 
-      it 'logs an error if invalid JSON is received' do
+      xit 'logs an error if invalid JSON is received' do
         expect(Rails.logger).to receive(:error)
         post :create, event: {id: '123'}
         expect(response.status).to eq(404)
@@ -44,7 +44,7 @@ describe Api::StripeV01Controller, type: :controller do
 
     describe 'dealing with payload data:' do
       describe 'invoice' do
-        it 'created' do
+        xit 'created' do
           post :create, invoice_created_event
           expect(StripeApiEvent.all.count).to eq(1)
           puts '=' * 100
@@ -54,7 +54,7 @@ describe Api::StripeV01Controller, type: :controller do
           expect(Invoice.all.count).to eq(1)
         end
 
-        it 'updated' do
+        xit 'updated' do
           StripeMock.start
           post :create, invoice_updated
           expect(StripeApiEvent.all.count).to eq(1)
@@ -63,7 +63,7 @@ describe Api::StripeV01Controller, type: :controller do
       end
 
       describe 'cards.' do
-        it 'create' do
+        xit 'create' do
 
         end
       end
