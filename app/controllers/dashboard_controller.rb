@@ -13,8 +13,11 @@ class DashboardController < ApplicationController
     # @dashboard_type could == ['blogger','tutor','admin']
     if @dashboard_type.include?('individual_student')
       @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
+      @latest_set = @student_exam_tracks.first
       @completed_student_exam_tracks = @student_exam_tracks.where(percentage_complete: 100)
       @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete < ?', 100)
+      @latest_level_or_section = @latest_set.try(:course_module).try(:parent)
+
     end
 
     if @dashboard_type.include?('tutor')

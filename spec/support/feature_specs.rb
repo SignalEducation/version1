@@ -7,7 +7,8 @@
 #### Generic
 
 def maybe_upcase(thing)
-  Capybara.current_driver == Capybara.javascript_driver ? thing.upcase : thing
+  thing
+  #Capybara.current_driver == Capybara.javascript_driver ? thing.upcase : thing
 end
 
 

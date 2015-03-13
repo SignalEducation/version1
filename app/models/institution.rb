@@ -2,18 +2,19 @@
 #
 # Table name: institutions
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)
-#  short_name      :string(255)
-#  name_url        :string(255)
-#  description     :text
-#  feedback_url    :string(255)
-#  help_desk_url   :string(255)
-#  subject_area_id :integer
-#  sorting_order   :integer
-#  active          :boolean          default(FALSE), not null
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id                     :integer          not null, primary key
+#  name                   :string(255)
+#  short_name             :string(255)
+#  name_url               :string(255)
+#  description            :text
+#  feedback_url           :string(255)
+#  help_desk_url          :string(255)
+#  subject_area_id        :integer
+#  sorting_order          :integer
+#  active                 :boolean          default(FALSE), not null
+#  created_at             :datetime
+#  updated_at             :datetime
+#  background_colour_code :string(255)
 #
 
 class Institution < ActiveRecord::Base
@@ -23,7 +24,7 @@ class Institution < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :short_name, :name_url, :description,
                   :feedback_url, :help_desk_url, :subject_area_id,
-                  :sorting_order, :active
+                  :sorting_order, :active, :background_colour_code
 
   # Constants
 
@@ -77,6 +78,15 @@ class Institution < ActiveRecord::Base
 
   def parent
     self.subject_area
+  end
+
+  def text_colour_class
+    number = 0 # default value
+    if self.background_colour_code.to_s.size == 6
+      little_array = [self.background_colour_code[0..1], self.background_colour_code[2..3], self.background_colour_code[4..5]]
+      number = little_array[0].to_i(16) + little_array[1].to_i(16) + little_array[2].to_i(16) # gives us a decimal number between 0 and 765 (=255x3)
+    end
+    number > 500 ? 'text-dark' : 'text-light'
   end
 
   protected

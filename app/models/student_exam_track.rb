@@ -13,7 +13,7 @@
 #  session_guid                    :string(255)
 #  course_module_id                :integer
 #  jumbo_quiz_taken                :boolean          default(FALSE)
-#  percentage_complete             :integer          default(0)
+#  percentage_complete             :float            default(0.0)
 #  count_of_cmes_completed         :integer          default(0)
 #
 
@@ -64,6 +64,29 @@ class StudentExamTrack < ActiveRecord::Base
     # activate this with the following:
     # StudentExamTrack.assign_user_to_session_guid(123, 'abcde123')
     StudentExamTrack.for_session_guid(the_session_guid).for_unknown_users.update_all(user_id: the_user_id)
+    user_tracks = StudentExamTrack.for_user_or_session(the_user_id, the_session_guid)
+    set_ids = user_tracks.map(&:course_module_id)
+    duplicate_set_cm_ids = set_ids.select{ |e| set_ids.count(e) > 1 }.uniq
+    duplicate_set_cm_ids.each do |duplicate_cm_id|
+      # find the SETs for the user, for the CM-id
+      duplicate_sets = StudentExamTrack.where(user_id: the_user_id, course_module_id: duplicate_cm_id).order(:updated_at)
+      # build a new SET combining all of the data
+      new_one = StudentExamTrack.new(
+              user_id: the_user_id,
+              session_guid: the_session_guid,
+              exam_level_id: duplicate_sets.last.exam_level_id,
+              exam_section_id: duplicate_sets.last.exam_section_id,
+              latest_course_module_element_id: duplicate_sets.last.latest_course_module_element_id,
+              exam_schedule_id: duplicate_sets.last.exam_schedule_id,
+              course_module_id: duplicate_cm_id,
+              jumbo_quiz_taken: duplicate_sets.map(&:jumbo_quiz_taken).any?,
+      )
+      new_one.recalculate_completeness # includes a 'save'
+      # delete the previous SETs
+      duplicate_sets.destroy_all
+    end
+    # put on a happy face
+    return true
   end
 
   def self.for_user_or_session(the_user_id, the_session_guid)
@@ -79,25 +102,25 @@ class StudentExamTrack < ActiveRecord::Base
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id)
   end
 
-  def latest_cme_user_logs
-    self.cme_user_logs.latest_only
+  def destroyable?
+    true
   end
 
   def elements_total
-    self.course_module.active_children.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
+    self.course_module.cme_count
   end
 
   def elements_complete
     self.latest_cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
   end
 
-  def destroyable?
-    true
+  def latest_cme_user_logs
+    self.cme_user_logs.latest_only
   end
 
   def recalculate_completeness
     self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.with_elements_active.count
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.course_module.children_available_count ) * 100
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     self.save(callbacks: false)
   end
 

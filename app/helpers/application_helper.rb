@@ -2,8 +2,8 @@ module ApplicationHelper
 
   def tick_or_cross(the_thing)
     the_thing ?
-            "<span style='color: green;' class='glyphicon glyphicon-ok'></span>".html_safe :
-            "<span style='color: red;' class='glyphicon glyphicon-remove'></span>".html_safe
+            "<span style='color: #21CE99;' class='glyphicon glyphicon-ok'></span>".html_safe :
+            "<span style='color: #eb4242;' class='glyphicon glyphicon-remove'></span>".html_safe
   end
 
   def completion_circle(hierarchy_thing)

@@ -16,6 +16,7 @@
 #  active                    :boolean          default(FALSE), not null
 #  created_at                :datetime
 #  updated_at                :datetime
+#  cme_count                 :integer          default(0)
 #
 
 require 'rails_helper'
@@ -68,10 +69,12 @@ describe CourseModule do
   it { should validate_presence_of(:sorting_order) }
 
   # callbacks
-  it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:unify_hierarchy_ids).before(:validation) }
+  it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
+  it { should callback(:set_cme_count).before(:save) }
+  it { should callback(:update_parent_cme_count).after(:commit) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

@@ -28,10 +28,10 @@ describe 'The password reset process,', type: :feature do
       expect(page).to have_content('Home')
     end
 
-    scenario 'attempt to log in in navbar then reset password', js: true do
+    scenario 'attempt to log in and then reset password', js: true do
       visit dashboard_path
-      click_link('nav-login')
-      within('.nav #login_form') do
+      visit sign_in_path
+      within('.well.well-sm') do
         fill_in 'user_session_email' , with: individual_student_user.email
         fill_in 'user_session_password', with: 'abc'
         click_button I18n.t('views.general.go')

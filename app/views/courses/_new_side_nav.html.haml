@@ -1,0 +1,38 @@
+.panel.panel-default.side-nav
+  .panel-heading.text-center
+    %p=@course_module.name
+  .panel-body.no-body{style: 'height: 87%;'}
+    .list-group.scrollbar
+      -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
+        -if course_module_element.id == @course_module_element.try(:id)
+          .list-group-item
+            %p
+              .glyphicon.glyphicon-chevron-right.side-nav-chevron
+              =course_module_element.name
+        -else
+          =link_to course_special_link(course_module_element), title: t('views.courses.show.h1'), class: 'list-group-item' do
+            %p
+              -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                .glyphicon.glyphicon-ok-sign
+              -else
+                .glyphicon.glyphicon-record
+              =course_module_element.name
+
+      -if @course_module.course_module_jumbo_quiz
+        .jumbo-quiz
+          -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
+            .list-group-item
+              %p
+                .glyphicon.glyphicon-chevron-right.side-nav-chevron
+                =@course_module.course_module_jumbo_quiz.name
+          -elsif @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+            =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
+              %p
+                %span.glyphicon.glyphicon-ok-sign
+                @course_module.course_module_jumbo_quiz.name
+          -else
+            =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
+              %p
+                .glyphicon.glyphicon-ok-sign
+                =@course_module.course_module_jumbo_quiz.name
+      %br/

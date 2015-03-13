@@ -23,6 +23,9 @@
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
 
+    -# Adobe Typekit Fonts
+    %script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -44,13 +47,22 @@
         %meta{name: 'robots', content: 'noindex'}
       %meta{name: 'description', content: @delivered_page.seo_description}
 
-  %body
-    =render partial: 'layouts/navbar'
-    .container
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-    =render partial: 'layouts/footer'
+    =render partial: 'layouts/favicon'
+
+  %body{ontouchstart: ''}
+    -if controller_name == 'courses'
+      =render partial: 'layouts/special_navbar'
+      .container-fluid
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
+    -else
+      =render partial: 'layouts/navbar'
+      .container
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
+      =render partial: 'layouts/footer'
     =render partial: 'layouts/misc_javascript'
     <!-- Mathjax -->
     -if @mathjax_required
@@ -60,3 +72,6 @@
         %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
       -else
         %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+
+    <!-- Load Typekit Kit -->
+    %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}

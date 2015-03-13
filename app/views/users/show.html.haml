@@ -29,7 +29,7 @@
                 =render partial: 'users/form_personal_details', locals: {f: f}
           .row
             .col-sm-8.col-sm-offset-2
-              =f.submit t('views.general.save'), class: 'btn btn-success'
+              =f.submit t('views.general.save'), class: 'btn btn-ls-default'
               -if @user.id == current_user.id
                 =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
 
@@ -40,7 +40,7 @@
                 =render partial: 'users/form_notifications', locals: {f: f}
           .row
             .col-sm-8.col-sm-offset-2
-              =f.submit t('views.general.save'), class: 'btn btn-success'
+              =f.submit t('views.general.save'), class: 'btn btn-ls-default'
               -if @user.id == current_user.id
                 =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
 

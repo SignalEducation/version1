@@ -14,6 +14,7 @@
 #  updated_at                              :datetime
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
+#  cme_count                               :integer          default(0)
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -29,12 +30,12 @@ class ExamLevel < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :qualification
   has_many :exam_sections
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
+  belongs_to :qualification
   has_many :student_exam_tracks
   has_many :user_exam_level
 
@@ -52,6 +53,7 @@ class ExamLevel < ActiveRecord::Base
   before_create :set_sorting_order
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
+  before_save :recalculate_cme_count
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -76,6 +78,10 @@ class ExamLevel < ActiveRecord::Base
     end
   end
 
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
   def destroyable?
     !self.active && self.exam_sections.empty? && self.course_modules.empty? && self.student_exam_tracks.empty? && self.user_exam_level.empty?
   end
@@ -88,17 +94,17 @@ class ExamLevel < ActiveRecord::Base
     self.qualification.name + ' > ' + self.name
   end
 
+  def number_complete_by_user_or_guid(user_id, session_guid)
+    self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
+  end
+
   def parent
     self.qualification
   end
 
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
-  end
-
   def percentage_complete_by_user_or_guid(user_id, session_guid)
-    if self.course_module_elements.all_active.count > 0
-      (self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed).to_f / (self.course_module_elements.all_active.count + self.course_module_jumbo_quizzes.count) * 100).to_i
+    if self.cme_count > 0
+      (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
     else
       0
     end
@@ -108,6 +114,10 @@ class ExamLevel < ActiveRecord::Base
 
   def calculate_best_possible_score
     self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
+  end
+
+  def recalculate_cme_count
+    self.cme_count = self.active_children.sum(:cme_count)
   end
 
 end

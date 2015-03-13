@@ -174,21 +174,6 @@ describe 'The sign in process.', type: :feature do
         click_button I18n.t('views.general.go')
       end
       expect(page).to have_content 'Welcome back!'
-      expect(page).to have_content I18n.t('views.user_groups.form.tutor')
-      click_link('navbar-cog')
-      click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
-    end
-
-    scenario 'with correct details and then sign out from the navbar', js: false do
-      visit root_path
-      click_link('nav-login')
-      within('.navbar #login_form') do
-        fill_in 'user_session_email', with: tutor_user.email
-        fill_in 'user_session_password', with: tutor_user.password
-        click_button I18n.t('views.general.go')
-      end
-      expect(page).to have_content 'Welcome back!'
       within('#tutor-accordion') do
         expect(page).to have_content maybe_upcase I18n.t('views.user_groups.form.tutor')
       end
@@ -251,24 +236,6 @@ describe 'The sign in process.', type: :feature do
         click_button I18n.t('views.general.go')
       end
       expect(page).to have_content 'Welcome back!'
-      click_link(I18n.t('views.general.tools'))
-      expect(page).to have_content I18n.t('views.static_pages.index.h1')
-      click_link('navbar-cog')
-      click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
-    end
-
-    scenario 'with correct details and then sign out from the navbar' do
-      visit root_path
-      click_link('nav-login')
-      within('.nav #login_form') do
-        fill_in 'user_session_email', with: content_manager_user.email
-        fill_in 'user_session_password', with: content_manager_user.password
-        click_button I18n.t('views.general.go')
-      end
-      expect(page).to have_content 'Welcome back!'
-      expect(page).to have_content I18n.t('views.dashboard.content_manager.see_all_static_pages')
-      expect(page).to have_content I18n.t('views.general.tools')
       click_link(I18n.t('views.general.tools'))
       expect(page).to have_content I18n.t('views.static_pages.index.h1')
       expect(page).to_not have_content I18n.t('views.layouts.navigation.course_content')
@@ -496,26 +463,6 @@ describe 'The sign in process.', type: :feature do
       end
       expect(page).to have_content 'Welcome back!'
       expect(page).to have_content I18n.t('views.general.admin')
-      expect(page).to have_content I18n.t('views.general.tools')
-      click_link(I18n.t('views.general.tools'))
-      expect(page).to have_content I18n.t('views.dashboard.admin.subject_areas')
-      click_link('navbar-cog')
-      click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
-    end
-
-    scenario 'with correct details and then sign out from the navbar' do
-      visit root_path
-      click_link('nav-login')
-      within('.nav #login_form') do
-        fill_in 'user_session_email', with: admin_user.email
-        fill_in 'user_session_password', with: admin_user.password
-        click_button I18n.t('views.general.go')
-      end
-      expect(page).to have_content 'Welcome back!'
-      within('#admin-accordion') do
-        expect(page).to have_content I18n.t('views.general.admin')
-      end
       expect(page).to have_content I18n.t('views.general.tools')
       click_link(I18n.t('views.general.tools'))
       expect(page).to have_content I18n.t('views.dashboard.admin.subject_areas')
