@@ -12,7 +12,7 @@
       =link_to t('views.general.sign_in'), sign_in_url, class: 'btn btn-ls-default'
       =link_to t('views.general.sign_up'), student_sign_up_url, class: 'btn btn-ls-default'
 
--elsif @paywall[:course_content][:reason] == 'canceled'
+-elsif @paywall[:course_content][:reason] == 'account_canceled'
   .well.text-center
     %h2=t('views.courses.content_denied.account_cancelled.h2')
     %p=link_to t('views.courses.content_denied.account_cancelled.reactivate'), profile_url(anchor: 'subscriptions'), class: 'btn btn-ls-default'

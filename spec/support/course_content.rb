@@ -22,10 +22,17 @@ shared_context 'course_content' do
                            course_module_id: course_module_1.id) }
   let!(:course_module_element_1_2) { FactoryGirl.create(:cme_video,
                            course_module_id: course_module_1.id) }
+  let!(:course_module_element_1_3) { FactoryGirl.create(:cme_video,
+                           course_module_id: course_module_1.id) }
   let!(:course_module_element_quiz_1_1) { FactoryGirl.create(:course_module_element_quiz,
                            course_module_element_id: course_module_element_1_1.id) }
+  let!(:raw_video_file_1) { FactoryGirl.create(:raw_video_file) }
   let!(:course_module_element_video_1_1_1) { FactoryGirl.create(:course_module_element_video,
-                           course_module_element_id: course_module_element_1_2.id) }
+                           course_module_element_id: course_module_element_1_2.id,
+                           raw_video_file_id: raw_video_file_1.id) }
+  let!(:course_module_element_video_1_1_2) { FactoryGirl.create(:course_module_element_video,
+                           course_module_element_id: course_module_element_1_3.id,
+                           raw_video_file_id: raw_video_file_1.id) }
 
   # Second set
   let!(:subject_area_2)  { FactoryGirl.create(:active_subject_area) }
