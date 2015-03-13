@@ -1,5 +1,7 @@
 class CoursesController < ApplicationController
 
+  before_action :paywall_checkpoint, only: :show
+
   def show
     @mathjax_required = true
     @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first

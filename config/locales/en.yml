@@ -595,6 +595,19 @@ en:
         done: Done
         coming_soon: "We don't have any content for this course module right now."
 
+      content_denied:
+        not_logged_in:
+          h2: Please Sign In To View This Content
+        account_cancelled:
+          h2: Oops! Looks like your account is cancelled. Please re-activate it to continue learning.
+          reactivate: 'Re-activate Your Account'
+        account_problem:
+          h2: Oops! Looks like there is a problem with your account
+          account_details: Account Details
+        other:
+          h2: Oops! Something has gone wrong.
+          p: We have been notified, and will investigate it immediately.
+
       show_results:
         h1: 'Results:'
         summary: Summary
