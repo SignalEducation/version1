@@ -18,9 +18,9 @@
 
 FactoryGirl.define do
   factory :raw_video_file do
-    file_name 'MyString'
-    course_module_element_video_id 1
-    transcode_requested false
+    file_name 'MyFilename.mp4'
+    transcode_requested_at { Time.now }
+    guid_prefix { "ABC#{rand(999999)}" }
   end
 
 end

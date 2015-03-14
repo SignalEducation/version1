@@ -52,6 +52,7 @@ describe UserGroup do
   it { expect(UserGroup).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(UserGroup).to respond_to(:default_student_user_group) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
