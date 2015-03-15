@@ -50,8 +50,10 @@ class CoursesController < ApplicationController
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-    else
+    elsif @course_module && @course_module_element
       render :show
+    else
+      redirect_to library_url
     end
   end
 
