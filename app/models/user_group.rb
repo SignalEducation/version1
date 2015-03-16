@@ -46,8 +46,20 @@ class UserGroup < ActiveRecord::Base
   scope :all_in_order, -> { order(:name) }
 
   # class methods
+  def self.default_admin_user_group
+    where(name: 'Admin', site_admin: true).first
+  end
+
+  def self.default_complimentary_user_group
+    where(individual_student: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+  end
+
   def self.default_student_user_group
     where(individual_student: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, forum_manager: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
+  end
+
+  def self.default_tutor_user_group
+    where(individual_student: false, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, forum_manager: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
   end
 
   # instance methods

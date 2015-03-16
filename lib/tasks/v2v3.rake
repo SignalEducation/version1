@@ -52,15 +52,15 @@ namespace :v2v3 do
     # users and payments
     migrate_users(migrate_data[:users])
     migrate_users_courses(migrate_data[:users_courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
+    # ---- empty; data is embedded inside users
+    # migrate_courses(migrate_data[:billing_addresses])                     - skip
+    # ---- empty; data is embedded inside customers
+    # migrate_courses(migrate_data[:cards])                                 - skip
+    migrate_customers(migrate_data[:customers])
+    # migrate_courses(migrate_data[:invoices])                              - skip
+    # migrate_courses(migrate_data[:invoice_items])                         - skip
+    migrate_plans(migrate_data[:plans])
+    migrate_subscriptions(migrate_data[:subscriptions])
 
     #### Rename the source file, and finish.
 #    rename_source_and_finish(s3, source_file)
@@ -623,7 +623,7 @@ namespace :v2v3 do
     # end
   end
 
-  #### users and financial items
+  #### users
 
   def migrate_users(exports)
     message('INFO', 'Starting to process Users...')
@@ -632,7 +632,7 @@ namespace :v2v3 do
         # look in the import_tracker for this user
         it = ImportTracker.where(old_model_name: 'user', old_model_id: export[:_id]).first
         it.nil? ? create_user(export) :
-                  compare_and_update_user(it.new_model_id, export)
+                  compare_and_update_user(it, export)
       end
       message('INFO', "processed #{exports.count} users")
     else
@@ -640,46 +640,255 @@ namespace :v2v3 do
     end
   end
 
-  def compare_and_update_user(existing_user_id, exported_user) # todo
-    # compare the details
-    # if import_tracker.user.first_name == exported_user[:first_name] ...
-    #         more comparisons
-    #   # do nothing
-        print '.'
-    # else
-    #   import_tracker_user.update_attributes!(
-    #         email: exported_user[:email],
-    #         first_name: exported_user[:first_name],
-    #         etc..
-    #   )
-        print 'U'
-    #   Rails.logger.info "INFO rake v2v3:import_json - user #{import_tracker_user.id} updated"
-    # end
+  def create_user(export) # todo
+    dummy_password = "Pwd#{rand(99999999)}"
+    country = Country.find_by_name(export[:billing_address][:country].gsub('United States of America', 'United States')) || Country.find_by_iso_code('IE')
+    user_group = set_the_user_group(export[:role], export[:complimentary])
+    ActiveRecord::Base.transaction do
+      user = User.where(email: export[:email]).first_or_create!( # email might already exist
+              first_name: export[:first_name],
+              last_name: export[:last_name],
+              address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
+              country_id: country.id,
+              password: dummy_password,
+              password_confirmation: dummy_password,
+              account_activation_code: export[:confirmation_token],
+              account_activated_at: Time.parse(export[:confirmed_at]),
+              active: export[:confirmed_at].length > 5,
+              user_group_id: user_group.id,
+              password_reset_requested_at: export[:reset_password_sent_at] ? Time.parse(export[:reset_password_sent_at]) : nil,
+              password_reset_token: export[:reset_password_token],
+              password_reset_at: nil,
+              stripe_customer_id: 'v2v3-import',
+              corporate_customer_id: nil,
+              corporate_customer_user_group_id: nil,
+              operational_email_frequency: 'off',
+              study_plan_notifications_email_frequency: 'off',
+              falling_behind_email_alert_frequency: 'off',
+              marketing_email_frequency: 'off',
+              marketing_email_permission_given_at: 'off',
+              blog_notification_email_frequency: 'off',
+              forum_notification_email_frequency: 'off',
+              locale: 'en'
+      )
+      if user.id.nil? # only set these values if the user is new
+        # user.failed_login_count =
+        # user.last_request_at =
+        user.login_count = export[:sign_in_count]
+        user.current_login_at = Time.parse(export[:current_sign_in_at])
+        user.last_login_at = Time.parse(export[:last_sign_in_at])
+        user.current_login_ip = export[:current_sign_in_ip]
+        user.last_login_ip = export[:last_sign_in_ip]
+        user.save!
+      else
+        user.touch
+      end
+      it = ImportTracker.create!(
+              old_model_name: 'user',
+              old_model_id: export[:_id],
+              new_model_name: 'user',
+              new_model_id: user.id,
+              imported_at: Time.now,
+              original_data: export
+      )
+      message('INFO', "-- export:user #{export[:_id]} imported as User #{user.id} it:id #{it.id}.")
+    end
+
+    # sample_exported_user = { #### indicates a field that is not imported
+            # _id: 7,
+            # billing_address: {
+            #         first_line: "99 Calumet street, Apt.2\r\nRoxbury Crossing",
+            #         second_line: '',
+            #         country: 'United States of America',
+            #         _id: 424
+            # },
+            #### business_name: '',
+            #### complimentary: false,
+            #### confirmation_sent_at: '2014-08-04T15:42:42.495Z',
+            # confirmation_token: 'b6ec0e034d46ba3d06b5f16984133183daac48bc51d2cf7c307062177e59d105',
+            # confirmed_at: '2014-05-01T12:02:31.869Z',
+            # current_sign_in_at: '2014-10-09T07:24:07.087Z',
+            # current_sign_in_ip: '109.78.90.48',
+            # email: 'philip@em38.com',
+            #### encrypted_password: '$2a$10$OvBMaMnjmU8DON3VIhQBAePiuYsSiyqmDrs9DKplqQTafQxAAbmsO',
+            # first_name: 'Philip',
+            #### forum_username: 'lily',
+            # last_name: 'Meagher',
+            # last_sign_in_at: '2014-09-22T20:44:38.546Z',
+            # last_sign_in_ip: '188.141.95.233',
+            #### remember_created_at: nil,
+            # reset_password_sent_at: nil,
+            # reset_password_token: nil,
+            # role: 'student',
+            # sign_in_count: 11,
+            #### unconfirmed_email: 'lily@bissett.net'
+    # }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
   end
 
-  def create_user(exported_user) # todo
-    # Create the User
-    # user = User.create!(
-    #       email: exported_user[:email],
-    #       first_name: exported_user[:first_name],
-    #       etc.
-    # )
-    # Create an ImportTracker record
-    # it = ImportTracker.create!(
-    #         old_model_name: 'user',
-    #         old_model_id: exported_user[:id],
-    #         new_model_name: 'user',
-    #         new_model_id: user.id,
-    #         imported_at: Time.now,
-    #         original_data: exported_user
-    # )
-    # Rails.logger.info "INFO rake v2v3:import_data - Created user: old ID:#{it.old_model_id}, new ID:#{it.new_model_id}, import tracker ID:#{it.id}."
+  def compare_and_update_user(import_tracker, export)
+    # compare the details
+    if import_tracker.user.email == export[:email] &&
+              import_tracker.imported_at > (Time.parse(export[:confirmed_at]) + 5.seconds)
+      # do nothing
+    else
+      ActiveRecord::Base.transaction do
+        import_tracker.user.assign_attributes(
+              email: export[:email],
+              first_name: export[:first_name],
+              last_name: export[:last_name],
+              user_group_id: set_the_user_group(export[:role], export[:complimentary]).id,
+              address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
+        )
+        import_tracker.user.login_count = export[:sign_in_count]
+        import_tracker.user.current_login_at = Time.parse(export[:current_sign_in_at])
+        import_tracker.user.last_login_at = Time.parse(export[:last_sign_in_at])
+        import_tracker.user.current_login_ip = export[:current_sign_in_ip]
+        import_tracker.user.last_login_ip = export[:last_sign_in_ip]
+        import_tracker.user.save!
+        import_tracker.update_attributes!(imported_at: Time.now, original_data: export)
+      end
+      message('INFO', "rake v2v3:import_json - user #{import_tracker_user.id} updated")
+    end
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{import_tracker.errors.inspect}. User: #{import_tracker.user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
   end
 
   #### users' content tracking
 
-  def migrate_users_courses(imports)
-    #
+  def migrate_users_courses(exports)
+    message('INFO', 'Starting to process UsersCourses...')
+    if exports
+      exports.each do |export|
+        # look in the import_tracker for this user/course
+        it = ImportTracker.where(old_model_name: 'user_course', old_model_id: export[:_id]).first
+        it.nil? ? create_user_course(export) :
+                compare_and_update_user_course(it.new_model_id, export)
+      end
+      message('INFO', "processed #{exports.count} users_courses")
+    else
+      message('WARN', 'No users_courses found')
+    end
+  end
+
+  def create_user_course(exported_data)
+    sample_user_course = {
+            _id: 1,
+            course_id: 1,
+            finished: false,
+            finished_step_ids: [1, 3, 5, 12, 20, 6, 22, 4, 2, 9, 10, 7, 21, 23, 19, 18, 17, 16, 15, 36, 35, 37],
+            first_unfinished_step_id: 24,
+            last_access_date: '2014-07-23T16:13:09.154Z',
+            percentage_completion: 58,
+            user_id: 1
+    }
+  end
+
+  def compare_and_update_user_course(it_new_model_id, exported_data)
+  end
+
+  #### financial items
+
+  def migrate_customers(exports)
+    message('INFO', 'Starting to process Customers...')
+    if exports
+      exports.each do |export|
+        # look in the import_tracker for this customer
+        it = ImportTracker.where(old_model_name: 'customer', old_model_id: export[:_id]).first
+        it.nil? ? create_customer(export) :
+                compare_and_update_customer(it.new_model_id, export)
+      end
+      message('INFO', "processed #{exports.count} customers")
+    else
+      message('WARN', 'No customers found')
+    end
+  end
+
+  def create_customer(exported_data)
+    customer_sample = {
+            status: 'unpaid',
+            user_id: 5,
+            stripe_id: 'cus_4bz3HLniS9Y5wW',
+            _id: 1
+    }
+    another_sample = {
+            status: 'unpaid',
+            user_id: 46,
+            stripe_id: 'cus_4bz4FJXwtxVqHf',
+            _id: 39
+    }
+  end
+
+  def compare_and_update_customer(it_new_model_id, exported_data)
+  end
+
+  def migrate_plans(exports)
+    message('INFO', 'Starting to process Plans...')
+    if exports
+      exports.each do |export|
+        # look in the import_tracker for this plan
+        it = ImportTracker.where(old_model_name: 'plan', old_model_id: export[:_id]).first
+        it.nil? ? create_plan(export) :
+                compare_and_update_plan(it.new_model_id, export)
+      end
+      message('INFO', "processed #{exports.count} plans")
+    else
+      message('WARN', 'No plans found')
+    end
+  end
+
+  def create_plan(exported_data)
+    sample_plan = {
+            currency: 'usd',
+            interval: 'month',
+            interval_count: 1,
+            trial_period_days: 7,
+            name: 'Monthly',
+            amount: 1000,
+            statement_description: 'Monthly',
+            default: true,
+            stripe_id: 'plan_XNbHlgQaOr1GN3QEp+YT',
+            _id: 5
+    }
+  end
+
+  def compare_and_update_plan(it_new_model_id, exported_data)
+  end
+
+  def migrate_subscriptions(exports)
+    message('INFO', 'Starting to process Subscriptions...')
+    if exports
+      exports.each do |export|
+        # look in the import_tracker for this subscription
+        it = ImportTracker.where(old_model_name: 'subscription', old_model_id: export[:_id]).first
+        it.nil? ? create_subscription(export) :
+                compare_and_update_subscription(it.new_model_id, export)
+      end
+      message('INFO', "processed #{exports.count} subscriptions")
+    else
+      message('WARN', 'No subscriptions found')
+    end
+  end
+
+  def create_subscription(exported_data)
+    sample_subscription = {
+            _id: 24,
+            cancel_at_period_end: false,
+            canceled_at: nil,
+            current_period_end: '2014-09-24T17:04:32.000Z',
+            current_period_start: '2014-09-17T17:04:32.000Z',
+            customer_id: 79,
+            ended_at: '2014-09-24T17:04:32.000Z',
+            plan_id: 5,
+            start: '2014-09-17T17:04:32.000Z',
+            status: 'trialing',
+            stripe_id: 'sub_4nMalNQsR7jLqn',
+            user_id: 85
+    }
+  end
+
+  def compare_and_update_subscription(it_new_model_id, exported_data)
   end
 
   #### General
@@ -712,6 +921,20 @@ namespace :v2v3 do
     puts ''
     message('INFO', "renamed file to #{destination_name}")
     message('INFO', 'DONE')
+  end
+
+  def set_the_user_group(the_role, complimentary)
+    if the_role == 'student' && complimentary == false
+      UserGroup.default_student_user_group
+    elsif the_role == 'student' && complimentary == true
+      UserGroup.default_complimentary_user_group
+    elsif the_role == 'tutor'
+      UserGroup.default_tutor_user_group
+    elsif the_role == 'admin'
+      UserGroup.default_admin_user_group
+    else
+      UserGroup.default_student_user_group
+    end
   end
 
 end
