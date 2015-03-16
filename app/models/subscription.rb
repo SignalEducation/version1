@@ -8,7 +8,7 @@
 #  subscription_plan_id  :integer
 #  stripe_guid           :string(255)
 #  next_renewal_date     :date
-#  complementary         :boolean          default(FALSE), not null
+#  complimentary         :boolean          default(FALSE), not null
 #  current_status        :string(255)
 #  created_at            :datetime
 #  updated_at            :datetime
@@ -24,7 +24,7 @@ class Subscription < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :complementary, :current_status, :stripe_customer_id,
+                  :complimentary, :current_status, :stripe_customer_id,
                   :stripe_token, :livemode
 
   # Constants
@@ -67,7 +67,7 @@ class Subscription < ActiveRecord::Base
           user_id: user.id,
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: plan.id,
-          complementary: false,
+          complimentary: false,
           livemode: (stripe_subscription_hash[:livemode] == 'live'),
           current_status: stripe_subscription_hash[:status],
     )
@@ -241,7 +241,7 @@ class Subscription < ActiveRecord::Base
               user_id: self.user_id,
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
-              complementary: false,
+              complimentary: false,
               livemode: (result[:livemode] == 'live'),
               current_status: result[:status],
       )
@@ -271,7 +271,7 @@ class Subscription < ActiveRecord::Base
 
   def create_on_stripe_platform
     Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform initialised'
-    self.complementary = false
+    self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
       if @stripe_token
