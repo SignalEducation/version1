@@ -63,7 +63,7 @@ namespace :v2v3 do
     # migrate_courses(migrate_data[:courses])
 
     #### Rename the source file, and finish.
-    rename_source_and_finish(s3, source_file)
+#    rename_source_and_finish(s3, source_file)
   end
 
   #### course content
@@ -150,7 +150,7 @@ namespace :v2v3 do
                 subject_area_id: SUBJECT_AREA_ID,
                 name_url: shortened_name.downcase,
                 active: (export[:status] == 'published'),
-                sorting_order: export[:sequence] || 1
+                sorting_order: export[:sequence_number] || 1
     )
     es.save!
     it = ImportTracker.create!(
@@ -166,15 +166,18 @@ namespace :v2v3 do
     es = ExamSection.find(it.new_model_id)
     if es.updated_at > it.updated_at
       message('WARN', "-- export:course #{export[:_id]} UPDATED locally. Your changes may be lost during import - ExamSection #{es.id} it:id #{it.id}.")
+    else
+      message('INFO', "-- export:course #{export[:_id]} matches to ExamSection #{es.id} it:id #{it.id}.")
     end
-    if Time.parse(export[:updated_at]) > it.updated_at
+    if Time.parse(export[:updated_at]) > it.imported_at
       es.update_attributes!(
               name: export[:name].split(' - Level 1')[0],
               name_url: export[:name].split(' - Level 1')[0].downcase,
               active: (export[:status] == 'published'),
-              sorting_order: export[:sequence]
+              sorting_order: export[:sequence_number]
       )
-      it.touch
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('WARN', "-- export:course #{export[:_id]} UPDATED to ExamSection #{es.id} it:id #{it.id}.")
     end
   end
