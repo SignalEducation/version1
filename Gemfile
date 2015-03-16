@@ -1,16 +1,16 @@
 source 'https://rubygems.org'
 
-ruby '2.1.5'
-gem 'rails', '4.1.8'
+ruby '2.2.1'
+gem 'rails', '4.2.0'
 
 # Core gems - common to all environments
 gem 'airbrake'
-gem 'authlogic'
+gem 'authlogic', '~> 3.4.3'
 gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk' # enables AWS functionality - use with AWS::...
 gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
-gem 'aws-s3' # grants timeout-able URLs
+#gem 'aws-s3' # grants timeout-able URLs
 gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
@@ -24,7 +24,7 @@ gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'mathjax-rails' # maths functions in the UI
 gem 'mixpanel-ruby' # support for MixPanel
-gem 'paperclip', '~> 4.2' # for uploading files (works with RemotiPart)
+gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'remotipart' # enables file upload in forms that work using AJAX
