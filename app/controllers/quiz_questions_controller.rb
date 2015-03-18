@@ -13,7 +13,7 @@ class QuizQuestionsController < ApplicationController
   def new
     @quiz_question.quiz_contents.build
     @quiz_question.quiz_solutions.build
-    @quiz_question.coourse_module_element_quiz.course_module_element.course_module.exam_level.default_number_of_possible_exam_answers.times do
+    @quiz_question.course_module_element_quiz.course_module_element.course_module.exam_level.default_number_of_possible_exam_answers.times do
       @quiz_question.quiz_answers.build
       @quiz_question.quiz_answers.last.quiz_contents.build
     end
