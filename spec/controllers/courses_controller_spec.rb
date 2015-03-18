@@ -32,7 +32,7 @@ RSpec.describe CoursesController, type: :controller do
 
     it 'should report error for invalid params' do
       post :create, course_module_element_user_log: {valid_params.keys.first => ''}
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(302)
       expect(flash[:error]).to eq(I18n.t('controllers.courses.create.flash.error'))
     end
   end
