@@ -63,7 +63,8 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes
+                  :subscriptions_attributes,
+                  :login_count, :failed_login_count, :last_request_at, :current_login_at, :last_login_at, :current_login_ip, :last_login_ip, :account_activated_at, :account_activation_code, :address, :guid # todo see ticket 277
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -133,7 +134,7 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation :set_defaults, on: :create
-  before_validation { squish_fields(:email, :first_name, :last_name, :address) }
+  before_validation { squish_fields(:email, :first_name, :last_name) }
   before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
