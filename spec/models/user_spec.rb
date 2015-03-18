@@ -126,7 +126,6 @@ describe User do
 
   # callbacks
   it { should callback(:set_defaults).before(:validation).on(:create) }
-  it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -146,6 +145,7 @@ describe User do
   it { should respond_to(:content_manager?) }
   it { should respond_to(:corporate_customer?) }
   it { should respond_to(:corporate_student?) }
+  it { should respond_to(:de_activate_user) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:frequent_forum_user?) }
   it { should respond_to(:full_name) }

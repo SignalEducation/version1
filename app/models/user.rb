@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name) }
-  before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
+  # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
 
@@ -223,6 +223,12 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_student)
   end
 
+  def de_activate_user
+    self.active = false
+    self.account_activated_at = nil
+    self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
@@ -266,12 +272,6 @@ class User < ActiveRecord::Base
 
   def add_guid
     self.guid = ApplicationController.generate_random_code(10)
-  end
-
-  def de_activate_user
-    self.active = false
-    self.account_activated_at = nil
-    self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
   def set_defaults
