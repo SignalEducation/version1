@@ -1,11 +1,15 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
+require 'support/subscription_plans_setup'
+
 
 describe 'User navigating through the dashboard:', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
+  include_context 'subscription_plans_setup'
+
 
   let!(:static_page) { FactoryGirl.create(:landing_page) }
 
@@ -13,7 +17,7 @@ describe 'User navigating through the dashboard:', type: :feature do
     activate_authlogic
   end
 
-  describe 'User navigates to cmes' do
+  describe 'navigates to first cmes' do
 
     scenario 'not logged-in user', js: true  do
       visit root_path
@@ -31,20 +35,51 @@ describe 'User navigating through the dashboard:', type: :feature do
       expect(page).to have_content course_module_element_1_2.name
       expect(page).to have_content course_module_element_1_3.name
       expect(page).to have_content quiz_content_1.text_content
-      binding.pry
-      click_link ''
+      click_link course_module_element_1_2.name
+      within('#navbar') do
+        click_link '#navbar-logo'
+        click_link 'Dashboard'
+      end
+      expect(page).to have_content exam_section_1.name
+      expect(page).to have_css('.progress')
+      expect(page).to have_css('.panel')
+      click_link 'Continue'
+      expect(page).to have_content course_module_element_1_3.name
+      expect(page).to have_content course_module_element_1_3.description
+      expect(page).to have_content I18n.t('views.courses.content_denied.not_logged_in.h2')
     end
 
-    scenario 'when logged in as one of the users', js: true do
-      user_list.each do |this_user|
-        sign_in_via_sign_in_page(this_user)
-        within('#navbar') do
-          click_link 'Library'
-        end
-        expect(page).to have_content maybe_upcase institution_1.short_name
-
-
+    scenario 'when logged in as an individual user', js: true do
+      visit root_path
+      click_link I18n.t('views.general.sign_up')
+      expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
+      student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
+      within('#navbar') do
+        click_link 'Dashboard'
       end
+      expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now')
+      within('#navbar') do
+        click_link 'Library'
+      end
+      expect(page).to have_content maybe_upcase institution_1.short_name
+      expect(page).to have_content institution_1.description
+      click_link institution_1.short_name
+      expect(page).to have_content exam_section_1.name
+      click_link 'Start'
+      expect(page).to have_content course_module_element_1_1.name
+      page.all('.quiz-answer-clickable').first.click
+      expect(page).to have_content I18n.t('views.courses.show_results.h1')
+      click_link 'Next'
+      expect(page).to have_content course_module_element_1_2.name
+      within('#navbar') do
+        click_link '#navbar-logo'
+      end
+      expect(page).to have_content exam_section_1.name
+      expect(page).to have_css('.progress')
+      expect(page).to have_css('.panel')
+      click_link 'Continue'
+      expect(page).to have_content course_module_element_1_2.name
+      sign_out
     end
 
   end

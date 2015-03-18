@@ -9,7 +9,7 @@
       -if Rails.env.staging?
         =link_to Rails.env, root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand'), style: 'background-color: blue;'
       -else
-        =link_to root_url, class: 'navbar-brand navbar-logo' do
+        =link_to root_url, class: 'navbar-brand navbar-logo', id: '#navbar-logo' do
           =image_tag 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/LS_Only_Logo.png', alt: t('views.layouts.navigation.learn_signal'), class: 'img img-responsive'
     -#=link_to t('views.layouts.navigation.learn_signal'), root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand')
 
