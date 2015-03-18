@@ -166,7 +166,10 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user
-        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,        password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        user.update_attributes(
+                password_reset_requested_at: Proc.new{Time.now}.call,
+                password_reset_token: ApplicationController::generate_random_code(20),
+                active: false)
         Mailers::OperationalMailers::ResetYourPasswordWorker.perform_async(user.id)
       end
     end

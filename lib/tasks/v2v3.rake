@@ -56,8 +56,8 @@ namespace :v2v3 do
     migrate_steps(migrate_data[:steps]) # CME                               - done
 
     # users and payments
-    migrate_users(migrate_data[:users])
-  # migrate_users_courses(migrate_data[:users_courses])
+    migrate_users(migrate_data[:users]) #                                   - done
+    migrate_users_courses(migrate_data[:users_courses])
     # ---- empty; data is embedded inside users
     # migrate_courses(migrate_data[:billing_addresses])                     - skip
     # ---- empty; data is embedded inside customers
@@ -646,15 +646,14 @@ namespace :v2v3 do
     end
   end
 
-  def create_user(export) # todo
+  def create_user(export)
     it = ImportTracker.new
     dummy_password = "Pwd#{rand(99999999)}"
     country = Country.find_by_name(export[:billing_address][:country].to_s.gsub('United States of America', 'United States')) || Country.find_by_iso_code('IE')
     user_group = set_the_user_group(export[:role], export[:complimentary])
 
     ActiveRecord::Base.transaction do
-      binding.pry
-      user = User.where(email: export[:email]).first_or_create!( # email might already exist
+      user = User.where(email: export[:email]).first_or_initialize( # email might already exist
               first_name: export[:first_name],
               last_name: export[:last_name],
               address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
@@ -663,7 +662,7 @@ namespace :v2v3 do
               password_confirmation: dummy_password,
               account_activation_code: export[:confirmation_token],
               account_activated_at: (export[:confirmed_at].to_s.length > 5 ? Time.parse(export[:confirmed_at]) : nil),
-              active: (export[:confirmed_at].to_s.length > 5),
+              active: (export[:current_sign_in_at].to_s.length > 5),
               user_group_id: user_group.id,
               password_reset_requested_at: (export[:reset_password_sent_at] ? Time.parse(export[:reset_password_sent_at]) : nil),
               password_reset_token: export[:reset_password_token],
@@ -684,11 +683,12 @@ namespace :v2v3 do
         user.failed_login_count = 0
         user.last_request_at = nil
         user.login_count = export[:sign_in_count]
-        user.current_login_at = Time.parse(export[:current_sign_in_at])
-        user.last_login_at = Time.parse(export[:last_sign_in_at])
+        user.current_login_at = (export[:current_sign_in_at].to_s.length > 5 ? Time.parse(export[:current_sign_in_at]) : nil)
+        user.last_login_at = (export[:last_sign_in_at].to_s.length > 5 ? Time.parse(export[:last_sign_in_at]) : nil)
         user.current_login_ip = export[:current_sign_in_ip]
         user.last_login_ip = export[:last_sign_in_ip]
-        user.save!
+        user.send(:add_guid)
+        user.save!(callbacks: false)
       end
       it = ImportTracker.create!(
               old_model_name: 'user',
@@ -731,7 +731,7 @@ namespace :v2v3 do
             #### unconfirmed_email: 'lily@bissett.net'
     # }
   rescue => e
-    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{it.try(:errors).try(:inspect)}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. User: #{try(:user).try(:errors).inspect}.  Error: #{e.inspect}. Further processing of users halted.")
   end
 
   def compare_and_update_user(it, export)
@@ -784,7 +784,52 @@ namespace :v2v3 do
     end
   end
 
-  def create_user_course(exported_data)
+  def create_user_course(export)
+    binding.pry if export[:_id].to_i == 1
+    ActiveRecord::Base.transaction do
+      (export[:finished_step_ids] || []).each do |step_id|
+        step_it = ImportTracker.where(
+                old_model_name: 'step',
+                old_model_id: step_id).first.new_model_id
+        if step_it # exists
+          cme = CourseModuleElement.find(id: step_it.id)
+          the_user_id = ImportTracker.where(old_model_name: 'user',
+                  old_model_id: export[:user_id].to_i).first.new_model_id
+          cmeul = CourseModuleElementUserLog.create!(
+                  course_module_element_id: cme.id,
+                  user_id: the_user_id,
+                  session_guid: "v2v3:import users-course-#{export[:id]} / step #{}",
+                  element_completed: true,
+                  time_taken_in_seconds: 0,
+                  quiz_score_actual: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
+                  quiz_score_potential: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
+                  is_video: cme.is_video,
+                  is_quiz: cme.is_quiz,
+                  course_module_id: cme.course_module_id,
+                  latest_attempt: true,
+                  corporate_customer_id: nil,
+                  course_module_jumbo_quiz_id: nil,
+                  is_jumbo_quiz: false # didn't exist in v2
+          )
+          set = StudentExamTrack.where(user_id: the_user_id, course_module_id: cme.course_module_id).first_or_create!(
+                  session_guid: "v2v3:import users-course-#{export[:id]} / step #{}",
+                  exam_level_id: cme.course_module.exam_level_id,
+                  exam_section_id: cme.course_module.exam_section_id,
+                  latest_course_module_element_id: ImportTracker.where(
+                          old_model_name: 'step',
+                          old_model_id: export[:finished_step_ids].last).first.new_model_id,
+                  jumbo_quiz_taken: false
+          )
+          it = ImportTracker.create!(
+                  old_model_name: 'users_course', old_model_id: export[:_id].to_i,
+                  new_model_name: 'course_module_element_user_log',
+                  new_model_id: cmeul.id,
+                  imported_at: Time.now, original_data: export.to_json
+          )
+          message('INFO', "-- export:user_course #{export[:_id]} imported as CMEUL #{cmeul.id}, SET: #{set.id}, and it:id #{it.id}.")
+        end # of loop of "steps"
+      end # of if
+    end # of transaction
     sample_user_course = {
             _id: 1,
             course_id: 1,
@@ -795,6 +840,8 @@ namespace :v2v3 do
             percentage_completion: 58,
             user_id: 1
     }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_user_course - transaction rolled back. Export: #{export.inspect}. Step-ID: #{try(:step_id)}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. CMEUL: #{try(:cmeul).try(:errors).inspect}.  SET: #{try(:set).try(:errors).inspect}. Error: #{e.inspect}. Further processing of users_courses halted.")
   end
 
   def compare_and_update_user_course(it_new_model_id, exported_data)
