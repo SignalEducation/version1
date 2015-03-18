@@ -10,6 +10,16 @@ namespace :v2v3 do
   task(import_data: :environment) do
     # USAGE: rake v2v3:import_data {optional_file_name.json}
 
+    puts
+    puts 'rake v2v3:import_data'
+    puts '---------------------'
+
+    #### Make sure we are 'ok' to run
+    if Rails.env.production? && ENV['learnsignal_v3_stripe_live_mode'] == 'live'
+      message('ERROR', 'v2v3:import_data - Execution HALTED as we are in LIVE / Production mode')
+      exit
+    end
+
     #### Find the data file and import it into a hash
     source_file = ARGV[1] || 'v2_data.json'
     s3 = connect_to_s3
@@ -27,10 +37,6 @@ namespace :v2v3 do
       EXAM_LEVEL_ID = 1
     end
     TUTOR_ID = User.all_tutors.first.try(:id) || User.all_admins.first.id
-
-    puts
-    puts 'rake v2v3:import_data'
-    puts '---------------------'
 
     migrate_data = aws_read_file(s3, source_file)
     message('INFO', "Loading data from: #{source_file} - Source environment: #{migrate_data[:environment]}")
@@ -51,16 +57,16 @@ namespace :v2v3 do
 
     # users and payments
     migrate_users(migrate_data[:users])
-    migrate_users_courses(migrate_data[:users_courses])
+  # migrate_users_courses(migrate_data[:users_courses])
     # ---- empty; data is embedded inside users
     # migrate_courses(migrate_data[:billing_addresses])                     - skip
     # ---- empty; data is embedded inside customers
     # migrate_courses(migrate_data[:cards])                                 - skip
-    migrate_customers(migrate_data[:customers])
+  # migrate_customers(migrate_data[:customers])
     # migrate_courses(migrate_data[:invoices])                              - skip
     # migrate_courses(migrate_data[:invoice_items])                         - skip
-    migrate_plans(migrate_data[:plans])
-    migrate_subscriptions(migrate_data[:subscriptions])
+  # migrate_plans(migrate_data[:plans])
+  # migrate_subscriptions(migrate_data[:subscriptions])
 
     #### Rename the source file, and finish.
 #    rename_source_and_finish(s3, source_file)
@@ -540,7 +546,7 @@ namespace :v2v3 do
       it.nil? ? create_video(export) :
               compare_and_update_video(it, export)
     end
-    message('INFO', "Complete: #{exports.count} Videos processed")
+    message('INFO', "processed #{exports.count} Videos")
   end
 
   def create_video(export)
@@ -641,10 +647,13 @@ namespace :v2v3 do
   end
 
   def create_user(export) # todo
+    it = ImportTracker.new
     dummy_password = "Pwd#{rand(99999999)}"
-    country = Country.find_by_name(export[:billing_address][:country].gsub('United States of America', 'United States')) || Country.find_by_iso_code('IE')
+    country = Country.find_by_name(export[:billing_address][:country].to_s.gsub('United States of America', 'United States')) || Country.find_by_iso_code('IE')
     user_group = set_the_user_group(export[:role], export[:complimentary])
+
     ActiveRecord::Base.transaction do
+      binding.pry
       user = User.where(email: export[:email]).first_or_create!( # email might already exist
               first_name: export[:first_name],
               last_name: export[:last_name],
@@ -653,13 +662,13 @@ namespace :v2v3 do
               password: dummy_password,
               password_confirmation: dummy_password,
               account_activation_code: export[:confirmation_token],
-              account_activated_at: Time.parse(export[:confirmed_at]),
-              active: export[:confirmed_at].length > 5,
+              account_activated_at: (export[:confirmed_at].to_s.length > 5 ? Time.parse(export[:confirmed_at]) : nil),
+              active: (export[:confirmed_at].to_s.length > 5),
               user_group_id: user_group.id,
-              password_reset_requested_at: export[:reset_password_sent_at] ? Time.parse(export[:reset_password_sent_at]) : nil,
+              password_reset_requested_at: (export[:reset_password_sent_at] ? Time.parse(export[:reset_password_sent_at]) : nil),
               password_reset_token: export[:reset_password_token],
               password_reset_at: nil,
-              stripe_customer_id: 'v2v3-import',
+              stripe_customer_id: "v2v3-import-#{export[:_id]}",
               corporate_customer_id: nil,
               corporate_customer_user_group_id: nil,
               operational_email_frequency: 'off',
@@ -687,7 +696,7 @@ namespace :v2v3 do
               new_model_name: 'user',
               new_model_id: user.id,
               imported_at: Time.now,
-              original_data: export
+              original_data: export.to_json
       )
       message('INFO', "-- export:user #{export[:_id]} imported as User #{user.id} it:id #{it.id}.")
     end
@@ -722,7 +731,7 @@ namespace :v2v3 do
             #### unconfirmed_email: 'lily@bissett.net'
     # }
   rescue => e
-    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{it.try(:errors).try(:inspect)}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
   end
 
   def compare_and_update_user(it, export)
@@ -730,7 +739,7 @@ namespace :v2v3 do
     user = User.find(it.new_model_id)
     # compare the details
     if user.email == export[:email] &&
-          it.imported_at > (Time.parse(export[:current_sign_in_at]) + 5.seconds)
+          (export[:current_sign_in_at].nil? || it.imported_at > (Time.parse(export[:current_sign_in_at]) + 5.seconds))
       # do nothing
     else
       ActiveRecord::Base.transaction do
@@ -742,17 +751,20 @@ namespace :v2v3 do
               address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
         )
         user.login_count = export[:sign_in_count]
-        user.current_login_at = Time.parse(export[:current_sign_in_at])
-        user.last_login_at = Time.parse(export[:last_sign_in_at])
-        user.current_login_ip = export[:current_sign_in_ip]
-        user.last_login_ip = export[:last_sign_in_ip]
+        if export[:current_sign_in_at].to_s.length > 5 && self.current_login_at > Time.parse(export[:current_sign_in_at])
+          user.current_login_at = Time.parse(export[:current_sign_in_at])
+          user.last_login_at = Time.parse(export[:last_sign_in_at]) if export[:last_sign_in_at].to_s.length > 5
+          user.current_login_ip = export[:current_sign_in_ip]
+          user.last_login_ip = export[:last_sign_in_ip]
+        end
         user.save!
-        it.update_attributes!(imported_at: Time.now, original_data: export)
+        it.update_attributes!(imported_at: Time.now, original_data: export.to_json)
       end
       message('INFO', "rake v2v3:import_data#update_user #{it.id} updated")
     end
   rescue => e
     message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    exit
   end
 
   #### users' content tracking
