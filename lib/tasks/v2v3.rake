@@ -672,16 +672,14 @@ namespace :v2v3 do
               locale: 'en'
       )
       if user.id.nil? # only set these values if the user is new
-        # user.failed_login_count =
-        # user.last_request_at =
+        user.failed_login_count = 0
+        user.last_request_at = nil
         user.login_count = export[:sign_in_count]
         user.current_login_at = Time.parse(export[:current_sign_in_at])
         user.last_login_at = Time.parse(export[:last_sign_in_at])
         user.current_login_ip = export[:current_sign_in_ip]
         user.last_login_ip = export[:last_sign_in_ip]
         user.save!
-      else
-        user.touch
       end
       it = ImportTracker.create!(
               old_model_name: 'user',
@@ -727,32 +725,34 @@ namespace :v2v3 do
     message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
   end
 
-  def compare_and_update_user(import_tracker, export)
+  def compare_and_update_user(it, export)
+    # find the user
+    user = User.find(it.new_model_id)
     # compare the details
-    if import_tracker.user.email == export[:email] &&
-              import_tracker.imported_at > (Time.parse(export[:confirmed_at]) + 5.seconds)
+    if user.email == export[:email] &&
+          it.imported_at > (Time.parse(export[:current_sign_in_at]) + 5.seconds)
       # do nothing
     else
       ActiveRecord::Base.transaction do
-        import_tracker.user.assign_attributes(
+        user.assign_attributes(
               email: export[:email],
               first_name: export[:first_name],
               last_name: export[:last_name],
               user_group_id: set_the_user_group(export[:role], export[:complimentary]).id,
               address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
         )
-        import_tracker.user.login_count = export[:sign_in_count]
-        import_tracker.user.current_login_at = Time.parse(export[:current_sign_in_at])
-        import_tracker.user.last_login_at = Time.parse(export[:last_sign_in_at])
-        import_tracker.user.current_login_ip = export[:current_sign_in_ip]
-        import_tracker.user.last_login_ip = export[:last_sign_in_ip]
-        import_tracker.user.save!
-        import_tracker.update_attributes!(imported_at: Time.now, original_data: export)
+        user.login_count = export[:sign_in_count]
+        user.current_login_at = Time.parse(export[:current_sign_in_at])
+        user.last_login_at = Time.parse(export[:last_sign_in_at])
+        user.current_login_ip = export[:current_sign_in_ip]
+        user.last_login_ip = export[:last_sign_in_ip]
+        user.save!
+        it.update_attributes!(imported_at: Time.now, original_data: export)
       end
-      message('INFO', "rake v2v3:import_json - user #{import_tracker_user.id} updated")
+      message('INFO', "rake v2v3:import_data#update_user #{it.id} updated")
     end
   rescue => e
-    message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{import_tracker.errors.inspect}. User: #{import_tracker.user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
   end
 
   #### users' content tracking
