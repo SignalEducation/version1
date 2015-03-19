@@ -1,4 +1,4 @@
--if @enough_questions
+-if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz
   .row
     .col-sm-12
       %h1.courses-title
