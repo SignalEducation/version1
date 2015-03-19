@@ -785,20 +785,19 @@ namespace :v2v3 do
   end
 
   def create_user_course(export)
-    binding.pry if export[:_id].to_i == 1
     ActiveRecord::Base.transaction do
       (export[:finished_step_ids] || []).each do |step_id|
         step_it = ImportTracker.where(
                 old_model_name: 'step',
-                old_model_id: step_id).first.new_model_id
+                old_model_id: step_id).first
         if step_it # exists
-          cme = CourseModuleElement.find(id: step_it.id)
+          cme = CourseModuleElement.find(step_it.new_model_id)
           the_user_id = ImportTracker.where(old_model_name: 'user',
                   old_model_id: export[:user_id].to_i).first.new_model_id
           cmeul = CourseModuleElementUserLog.create!(
                   course_module_element_id: cme.id,
                   user_id: the_user_id,
-                  session_guid: "v2v3:import users-course-#{export[:id]} / step #{}",
+                  session_guid: "v2v3:import users-course-#{export[:_id]} / step #{step_id}",
                   element_completed: true,
                   time_taken_in_seconds: 0,
                   quiz_score_actual: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
@@ -811,8 +810,15 @@ namespace :v2v3 do
                   course_module_jumbo_quiz_id: nil,
                   is_jumbo_quiz: false # didn't exist in v2
           )
-          set = StudentExamTrack.where(user_id: the_user_id, course_module_id: cme.course_module_id).first_or_create!(
-                  session_guid: "v2v3:import users-course-#{export[:id]} / step #{}",
+          it = ImportTracker.create!(
+                  old_model_name: 'users_course', old_model_id: export[:_id].to_i,
+                  new_model_name: 'course_module_element_user_log',
+                  new_model_id: cmeul.id,
+                  imported_at: Time.now, original_data: export.to_json
+          )
+          message('INFO', "-- export:user_course #{export[:_id]} imported as CMEUL #{cmeul.id} and it:id #{it.id}.")
+          set = StudentExamTrack.where(user_id: the_user_id, course_module_id: cme.course_module_id).first_or_initialize( # deliberately NOT done as a _or_create! ...
+                  session_guid: "v2v3:import users-course-#{export[:_id]} / step #{step_id}",
                   exam_level_id: cme.course_module.exam_level_id,
                   exam_section_id: cme.course_module.exam_section_id,
                   latest_course_module_element_id: ImportTracker.where(
@@ -820,13 +826,16 @@ namespace :v2v3 do
                           old_model_id: export[:finished_step_ids].last).first.new_model_id,
                   jumbo_quiz_taken: false
           )
-          it = ImportTracker.create!(
-                  old_model_name: 'users_course', old_model_id: export[:_id].to_i,
-                  new_model_name: 'course_module_element_user_log',
-                  new_model_id: cmeul.id,
-                  imported_at: Time.now, original_data: export.to_json
-          )
-          message('INFO', "-- export:user_course #{export[:_id]} imported as CMEUL #{cmeul.id}, SET: #{set.id}, and it:id #{it.id}.")
+          if set.id.nil? # ... so we can do this stuff conditionally
+            set.save!
+            it2 = ImportTracker.create!(
+                    old_model_name: 'users_course', old_model_id: export[:_id].to_i,
+                    new_model_name: 'student_exam_track',
+                    new_model_id: set.id,
+                    imported_at: Time.now, original_data: export.to_json
+            )
+            message('INFO', "-- export:user_course #{export[:_id]} imported as SET #{set.id}, SET: #{set.id}, and it:id #{it2.id}.")
+          end
         end # of loop of "steps"
       end # of if
     end # of transaction
@@ -842,6 +851,7 @@ namespace :v2v3 do
     }
   rescue => e
     message('ERROR', "rake v2v3:import_data#create_user_course - transaction rolled back. Export: #{export.inspect}. Step-ID: #{try(:step_id)}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. CMEUL: #{try(:cmeul).try(:errors).inspect}.  SET: #{try(:set).try(:errors).inspect}. Error: #{e.inspect}. Further processing of users_courses halted.")
+    exit
   end
 
   def compare_and_update_user_course(it_new_model_id, exported_data)
