@@ -62,7 +62,7 @@ namespace :v2v3 do
     # migrate_courses(migrate_data[:billing_addresses])                     - skip
     # ---- empty; data is embedded inside customers
     # migrate_courses(migrate_data[:cards])                                 - skip
-  # migrate_customers(migrate_data[:customers])
+    migrate_customers(migrate_data[:customers])
     # migrate_courses(migrate_data[:invoices])                              - skip
     # migrate_courses(migrate_data[:invoice_items])                         - skip
   # migrate_plans(migrate_data[:plans])
@@ -888,7 +888,7 @@ namespace :v2v3 do
         # look in the import_tracker for this customer
         it = ImportTracker.where(old_model_name: 'customer', old_model_id: export[:_id]).first
         it.nil? ? create_customer(export) :
-                compare_and_update_customer(it.new_model_id, export)
+                compare_and_update_customer(it, export)
       end
       message('INFO', "processed #{exports.count} customers")
     else
@@ -896,22 +896,34 @@ namespace :v2v3 do
     end
   end
 
-  def create_customer(exported_data)
-    customer_sample = {
-            status: 'unpaid',
-            user_id: 5,
-            stripe_id: 'cus_4bz3HLniS9Y5wW',
-            _id: 1
-    }
-    another_sample = {
-            status: 'unpaid',
-            user_id: 46,
-            stripe_id: 'cus_4bz4FJXwtxVqHf',
-            _id: 39
-    }
+  def create_customer(export)
+    the_user = User.find(ImportTracker.where(old_model_name: 'user', old_model_id: export[:user_id]).first.new_model_id)
+    the_user.update_column(:stripe_customer_id, export[:stripe_id])
+    it = ImportTracker.create!(
+            old_model_name: 'customer', old_model_id: export[:_id].to_i,
+            new_model_name: 'user',
+            new_model_id: the_user.id,
+            imported_at: Time.now, original_data: export.to_json
+    )
+    message('INFO', "-- export:customer #{export[:_id]} imported into User #{the_user.id} and it:id #{it.id}.")
+
+    customer_sample = {_id: 1, status: 'unpaid', user_id: 5,
+            stripe_id: 'cus_4bz3HLniS9Y5wW'}
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_customer - transaction rolled back. Export: #{export.inspect}. User: #{try(:the_user).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of customers halted.")
+    exit
   end
 
-  def compare_and_update_customer(it_new_model_id, exported_data)
+  def compare_and_update_customer(it, export)
+    the_user = User.find(it.new_model_id)
+    if it.imported_at > ((the_user.last_request_at || the_user.current_login_at || the_user.updated_at) + 5.seconds) && the_user.stripe_customer_id[0..3] != 'cus_'
+      the_user.update_column(:stripe_customer_id, export[:stripe_id])
+      it.update_column(:imported_at, Time.now)
+      message('INFO', "-- export:customer #{export[:_id]} updated to User #{the_user.id} and it:id #{it.id}.")
+    end
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#compare_and_update_customer - transaction rolled back. Export: #{export.inspect}. User: #{try(:the_user).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of customers halted.")
+    exit
   end
 
   def migrate_plans(exports)
@@ -921,7 +933,7 @@ namespace :v2v3 do
         # look in the import_tracker for this plan
         it = ImportTracker.where(old_model_name: 'plan', old_model_id: export[:_id]).first
         it.nil? ? create_plan(export) :
-                compare_and_update_plan(it.new_model_id, export)
+                compare_and_update_plan(it, export)
       end
       message('INFO', "processed #{exports.count} plans")
     else
@@ -929,7 +941,8 @@ namespace :v2v3 do
     end
   end
 
-  def create_plan(exported_data)
+  def create_plan(export)
+
     sample_plan = {
             currency: 'usd',
             interval: 'month',
