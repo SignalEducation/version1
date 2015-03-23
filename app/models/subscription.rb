@@ -143,7 +143,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def destroyable?
-    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty?
+    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE.first
   end
 
   def stripe_token=(t) # setter method
