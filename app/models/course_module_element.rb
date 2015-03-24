@@ -115,7 +115,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def next_element
-    if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+    if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
     elsif self.course_module.course_module_jumbo_quiz
       self.course_module.course_module_jumbo_quiz

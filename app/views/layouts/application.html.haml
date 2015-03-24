@@ -67,7 +67,7 @@
     <!-- Mathjax -->
     -if @mathjax_required
       %script{type: 'text/x-mathjax-config'}
-        MathJax.Hub.Config({tex2jax: {inlineMath: [["(math)","(/math)"]]}});
+        MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
       -if Rails.env.production? || Rails.env.staging?
         %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
       -else

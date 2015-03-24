@@ -60,8 +60,10 @@ describe CourseModule do
   it { should validate_numericality_of(:exam_section_id) }
 
   it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name).scoped_to([:exam_section_id, :exam_level_id]) }
 
   it { should validate_presence_of(:name_url) }
+  it { should validate_uniqueness_of(:name_url).scoped_to([:exam_section_id, :exam_level_id]) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
