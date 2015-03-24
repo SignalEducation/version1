@@ -112,7 +112,7 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def destroyable?
-    self.subscriptions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE.first
+    self.subscriptions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
   end
 
   protected
@@ -137,7 +137,7 @@ class SubscriptionPlan < ActiveRecord::Base
       )
       self.stripe_guid = stripe_plan.id
       self.livemode = stripe_plan[:livemode]
-      if self.livemode == Invoice::STRIPE_LIVE_MODE.first
+      if self.livemode == Invoice::STRIPE_LIVE_MODE
         true
       else
         errors.add(:stripe, I18n.t('models.general.live_mode_error'))

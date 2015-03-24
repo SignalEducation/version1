@@ -15,8 +15,8 @@ namespace :v2v3 do
     puts '---------------------'
 
     #### Make sure we are 'ok' to run
-    if Rails.env.production? && ENV['learnsignal_v3_stripe_live_mode'] == 'live'
-      message('ERROR', 'v2v3:import_data - Execution HALTED as we are in LIVE / Production mode')
+    unless Rails.env.production? == Invoice::STRIPE_LIVE_MODE
+      message('ERROR', 'v2v3:import_data - Execution HALTED as STRIPE_LIVE_MODE is set incorrectly for this environment')
       exit
     end
 
@@ -62,14 +62,14 @@ namespace :v2v3 do
     # migrate_courses(migrate_data[:billing_addresses])                     - skip
     # ---- empty; data is embedded inside customers
     # migrate_courses(migrate_data[:cards])                                 - skip
-    migrate_customers(migrate_data[:customers])
+    migrate_customers(migrate_data[:customers]) #                           - done
     # migrate_courses(migrate_data[:invoices])                              - skip
     # migrate_courses(migrate_data[:invoice_items])                         - skip
-  # migrate_plans(migrate_data[:plans])
-  # migrate_subscriptions(migrate_data[:subscriptions])
+    migrate_plans(migrate_data[:plans]) #                                   - done
+    migrate_subscriptions(migrate_data[:subscriptions]) #                   - done
 
     #### Rename the source file, and finish.
-#    rename_source_and_finish(s3, source_file)
+    rename_source_and_finish(s3, source_file)
   end
 
   #### course content
@@ -748,10 +748,10 @@ namespace :v2v3 do
               first_name: export[:first_name],
               last_name: export[:last_name],
               user_group_id: set_the_user_group(export[:role], export[:complimentary]).id,
-              address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
+              address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}"
         )
         user.login_count = export[:sign_in_count]
-        if export[:current_sign_in_at].to_s.length > 5 && self.current_login_at > Time.parse(export[:current_sign_in_at])
+        if export[:current_sign_in_at].to_s.length > 5 && user.current_login_at > Time.parse(export[:current_sign_in_at])
           user.current_login_at = Time.parse(export[:current_sign_in_at])
           user.last_login_at = Time.parse(export[:last_sign_in_at]) if export[:last_sign_in_at].to_s.length > 5
           user.current_login_ip = export[:current_sign_in_ip]
@@ -760,7 +760,7 @@ namespace :v2v3 do
         user.save!
         it.update_attributes!(imported_at: Time.now, original_data: export.to_json)
       end
-      message('INFO', "rake v2v3:import_data#update_user #{it.id} updated")
+      message('INFO', "rake v2v3:import_data#update_user User:#{user.id} IT:#{it.id} updated")
     end
   rescue => e
     message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
@@ -942,6 +942,30 @@ namespace :v2v3 do
   end
 
   def create_plan(export)
+    currency = Currency.find_by_iso_code(export[:currency].upcase)
+    plan = SubscriptionPlan.new(
+            available_to_students: true,
+            available_to_corporates: false,
+            all_you_can_eat: true,
+            payment_frequency_in_months: export[:interval_count],
+            currency_id: currency.id,
+            price: export[:amount].to_i / 100.0,
+            available_from: Date.new(2014,8,1,),
+            available_to: Date.new(2099,12,31),
+            trial_period_in_days: export[:trial_period_days].to_i,
+            name: export[:name],
+            subscription_plan_category_id: nil,
+            livemode: true
+    )
+    plan.stripe_guid = export[:stripe_id]
+    plan.save!
+    it = ImportTracker.create!(
+            old_model_name: 'plan', old_model_id: export[:_id].to_i,
+            new_model_name: 'subscription_plan',
+            new_model_id: plan.id,
+            imported_at: Time.now, original_data: export.to_json
+    )
+    message('INFO', "-- export:plan #{export[:_id]} imported as SubscriptionPlan #{plan.id} and it:id #{it.id}.")
 
     sample_plan = {
             currency: 'usd',
@@ -951,13 +975,17 @@ namespace :v2v3 do
             name: 'Monthly',
             amount: 1000,
             statement_description: 'Monthly',
-            default: true,
+            default: true, # not imported
             stripe_id: 'plan_XNbHlgQaOr1GN3QEp+YT',
             _id: 5
     }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_plan - transaction rolled back. Export: #{export.inspect}. SubscriptionPlan: #{try(:plan).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of plans halted.")
+    exit
   end
 
-  def compare_and_update_plan(it_new_model_id, exported_data)
+  def compare_and_update_plan(it, export)
+    # Philip pointed out that the Plans will never be amended in the v2 database
   end
 
   def migrate_subscriptions(exports)
@@ -967,7 +995,7 @@ namespace :v2v3 do
         # look in the import_tracker for this subscription
         it = ImportTracker.where(old_model_name: 'subscription', old_model_id: export[:_id]).first
         it.nil? ? create_subscription(export) :
-                compare_and_update_subscription(it.new_model_id, export)
+                compare_and_update_subscription(it, export)
       end
       message('INFO', "processed #{exports.count} subscriptions")
     else
@@ -975,24 +1003,113 @@ namespace :v2v3 do
     end
   end
 
-  def create_subscription(exported_data)
+  def create_subscription(export)
+    user_it = ImportTracker.where(old_model_name: 'user',
+              old_model_id: export[:user_id]).first
+    plan_it = ImportTracker.where(old_model_name: 'plan',
+              old_model_id: export[:plan_id]).first
+    user = User.find(user_it.new_model_id)
+    if user_it && plan_it && user
+      ActiveRecord::Base.transaction do
+        subscription = Subscription.new(
+                user_id: user.id,
+                corporate_customer_id: nil,
+                subscription_plan_id: plan_it.new_model_id,
+                complimentary: false,
+                stripe_customer_id: user.stripe_customer_id,
+                livemode: true,
+                import_from_v2: true
+        )
+        subscription.stripe_guid = export[:stripe_id]
+        if Invoice::STRIPE_LIVE_MODE # == true
+          stripe_cust = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+          stripe_sub = stripe_cust.subscriptions.retrieve(subscription.stripe_guid)
+          subscription.next_renewal_date = Time.at(stripe_sub.current_period_end)
+          subscription.current_status = stripe_sub.status
+          subscription.stripe_customer_data = stripe_cust.to_hash
+        else
+          subscription.current_status = export[:status]
+          subscription.next_renewal_date = Time.parse(export[:current_period_end])
+          subscription.stripe_customer_data = {data: nil, reason: 'not in live mode'}
+        end
+        subscription.save!
+        it = ImportTracker.create!(
+                old_model_name: 'subscription', old_model_id: export[:_id].to_i,
+                new_model_name: 'subscription',
+                new_model_id: subscription.id,
+                imported_at: Time.now, original_data: export.to_json
+        )
+        message('INFO', "-- export:subscription #{export[:_id]} imported as Subscription #{subscription.id} and it:id #{it.id}.")
+      end
+    else
+      message('WARN', "-- export:subscription #{export[:_id]} failed to be imported as related data couldn't be found. Export: #{export.inspect}")
+    end
+
     sample_subscription = {
-            _id: 24,
-            cancel_at_period_end: false,
-            canceled_at: nil,
-            current_period_end: '2014-09-24T17:04:32.000Z',
-            current_period_start: '2014-09-17T17:04:32.000Z',
-            customer_id: 79,
-            ended_at: '2014-09-24T17:04:32.000Z',
-            plan_id: 5,
-            start: '2014-09-17T17:04:32.000Z',
+            _id: 87,
+            cancel_at_period_end: true,
+            canceled_at: '2015-03-16T08:17:05.000Z',
+            current_period_end: '2015-01-07T02:41:49.000Z',
+            current_period_start: '2014-12-31T02:41:49.000Z',
+            customer_id: 143,
+            ended_at: '2015-01-07T02:41:49.000Z',
+            plan_id: 6,
+            start: '2014-12-31T02:41:49.000Z',
             status: 'trialing',
-            stripe_id: 'sub_4nMalNQsR7jLqn',
-            user_id: 85
+            stripe_id: 'sub_5QTNGFzJ9m0y9t',
+            user_id: 374
     }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_subscription - transaction rolled back. Export: #{export.inspect}. Subscription: #{try(:subscription).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of subscriptions halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
   end
 
-  def compare_and_update_subscription(it_new_model_id, exported_data)
+  def compare_and_update_subscription(it, export)
+    sample_subscription = {
+            _id: 87,
+            cancel_at_period_end: true,
+            canceled_at: '2015-03-16T08:17:05.000Z',
+            current_period_end: '2015-01-07T02:41:49.000Z',
+            current_period_start: '2014-12-31T02:41:49.000Z',
+            customer_id: 143,
+            ended_at: '2015-01-07T02:41:49.000Z',
+            plan_id: 6,
+            start: '2014-12-31T02:41:49.000Z',
+            status: 'trialing',
+            stripe_id: 'sub_5QTNGFzJ9m0y9t',
+            user_id: 374
+    }
+    new_user_it = ImportTracker.where(old_model_name: 'user',
+                                  old_model_id: export[:user_id]).first
+    new_user = User.find(new_user_it.new_model_id)
+    new_plan_it = ImportTracker.where(old_model_name: 'plan',
+                                  old_model_id: export[:plan_id]).first
+    new_plan = SubscriptionPlan.find(new_plan_it.new_model_id)
+
+    current_sub = Subscription.find(it.new_model_id)
+    current_user = current_sub.user
+
+    unless current_user.id == new_user.id
+      message('ERROR', "rake v2v3:import_data#compare_and_update_subscription - transaction rolled back. Export: #{export.inspect}. Subscription: #{try(:current_sub).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: User ID has changed - #{current_user.id} -> #{new_user.id}. Further processing of subscriptions halted.")
+      exit
+    end
+
+    unless current_sub.subscription_plan_id == new_plan.id &&
+            current_sub.next_renewal_date == Date.parse(export[:current_period_end]) &&
+            current_sub.current_status == export[:status] &&
+            current_sub.updated_at < (it.imported_at + 5.seconds)
+      current_sub.update_attributes!(
+              subscription_plan_id: new_plan.id,
+              next_renewal_date: Date.parse(export[:current_period_end]),
+              current_status: export[:status],
+              import_from_v2: true
+      )
+      it.update_attributes!(original_data: export.to_json, imported_at: Time.now)
+      message('INFO', "-- export:subscription #{export[:_id]} updated as Subscription #{current_sub.id} and it:id #{it.id}.")
+    end
   end
 
   #### General
