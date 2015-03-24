@@ -147,7 +147,7 @@ GEM
     hike (1.2.3)
     hitimes (1.2.2)
     i18n (0.7.0)
-    intercom-rails (0.2.26)
+    intercom-rails (0.2.27)
       activesupport (> 3.0)
     jbuilder (2.2.3)
       activesupport (>= 3.0.0, < 5)
@@ -366,7 +366,7 @@ DEPENDENCIES
   geocoder
   guard-rspec
   haml-rails
-  intercom-rails (~> 0.2.24)
+  intercom-rails (~> 0.2.27)
   jbuilder (~> 2.0)
   jquery-rails
   jquery-ui-rails
