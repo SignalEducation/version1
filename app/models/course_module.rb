@@ -51,8 +51,10 @@ class CourseModule < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
-  validates :name_url, presence: true
+  validates :name, presence: true,
+            uniqueness: {scope: [:exam_section_id, :exam_level_id]}
+  validates :name_url, presence: true,
+            uniqueness: {scope: [:exam_section_id, :exam_level_id]}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
