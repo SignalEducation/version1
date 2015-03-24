@@ -4,8 +4,8 @@ class CoursesController < ApplicationController
 
   def show
     @mathjax_required = true
-    qualification = Qualification.find_by_name_url(params[:qualification_url])
-    exam_level = qualification.exam_levels.find_by_name_url(params[:exam_level_url])
+    qualification = Qualification.find_by_name_url(params[:qualification_name_url])
+    exam_level = qualification.exam_levels.find_by_name_url(params[:exam_level_name_url])
     @course_module = exam_level.course_modules.find_by_name_url(params[:course_module_name_url])
     @course_module_element = @course_module.course_module_elements.find_by_name_url(params[:course_module_element_name_url])
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
