@@ -15,7 +15,7 @@ describe 'The password reset process,', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password is not valid'
       click_link('#forgot-password')
@@ -34,7 +34,7 @@ describe 'The password reset process,', type: :feature do
       within('.well.well-sm') do
         fill_in 'user_session_email' , with: individual_student_user.email
         fill_in 'user_session_password', with: 'abc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password is not valid'
       click_link(I18n.t('views.user_sessions.form.forgot_password'))
