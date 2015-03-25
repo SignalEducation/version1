@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150311112600) do
+ActiveRecord::Schema.define(version: 20150316145035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -554,7 +554,7 @@ ActiveRecord::Schema.define(version: 20150311112600) do
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complementary",         default: false, null: false
+    t.boolean  "complimentary",         default: false, null: false
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"

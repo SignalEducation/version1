@@ -37,6 +37,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(allowed_params)
+    @user.de_activate_user
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
       Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@user.id)

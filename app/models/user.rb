@@ -63,7 +63,8 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes
+                  :subscriptions_attributes,
+                  :login_count, :failed_login_count, :last_request_at, :current_login_at, :last_login_at, :current_login_ip, :last_login_ip, :account_activated_at, :account_activation_code, :address, :guid # todo see ticket 277
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -133,8 +134,8 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation :set_defaults, on: :create
-  before_validation { squish_fields(:email, :first_name, :last_name, :address) }
-  before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
+  before_validation { squish_fields(:email, :first_name, :last_name) }
+  # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
 
@@ -165,7 +166,10 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user
-        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,        password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        user.update_attributes(
+                password_reset_requested_at: Proc.new{Time.now}.call,
+                password_reset_token: ApplicationController::generate_random_code(20),
+                active: false)
         Mailers::OperationalMailers::ResetYourPasswordWorker.perform_async(user.id)
       end
     end
@@ -222,6 +226,12 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_student)
   end
 
+  def de_activate_user
+    self.active = false
+    self.account_activated_at = nil
+    self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
@@ -265,12 +275,6 @@ class User < ActiveRecord::Base
 
   def add_guid
     self.guid = ApplicationController.generate_random_code(10)
-  end
-
-  def de_activate_user
-    self.active = false
-    self.account_activated_at = nil
-    self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
   def set_defaults

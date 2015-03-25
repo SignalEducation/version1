@@ -25,11 +25,12 @@ def sign_in_via_navbar(user)
 end
 
 def sign_in_via_sign_in_page(user)
-  visit sign_in_path
+  visit root_path
+  click_link I18n.t('views.general.sign_in')
   within('.well.well-sm') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password
-    click_button I18n.t('views.general.go')
+    click_button I18n.t('views.general.sign_in')
   end
   expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
 end

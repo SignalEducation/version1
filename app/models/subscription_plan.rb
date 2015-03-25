@@ -112,7 +112,7 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def destroyable?
-    self.subscriptions.empty?
+    self.subscriptions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
   end
 
   protected
@@ -124,23 +124,27 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    stripe_plan = Stripe::Plan.create(
-            amount: (self.price.to_f * 100).to_i,
-            interval: 'month',
-            interval_count: self.payment_frequency_in_months.to_i,
-            trial_period_days: self.trial_period_in_days.to_i,
-            name: 'LearnSignal ' + self.name.to_s,
-            statement_descriptor: 'LearnSignal',
-            currency: self.currency.try(:iso_code).try(:downcase),
-            id: Rails.env + '-' + ApplicationController::generate_random_code(20)
-    )
-    self.stripe_guid = stripe_plan.id
-    self.livemode = stripe_plan[:livemode]
-    if self.livemode == Invoice::STRIPE_LIVE_MODE.first
-      true
+    if self.stripe_guid.nil? # would be !nil while importing from website v2
+      stripe_plan = Stripe::Plan.create(
+              amount: (self.price.to_f * 100).to_i,
+              interval: 'month',
+              interval_count: self.payment_frequency_in_months.to_i,
+              trial_period_days: self.trial_period_in_days.to_i,
+              name: 'LearnSignal ' + self.name.to_s,
+              statement_descriptor: 'LearnSignal',
+              currency: self.currency.try(:iso_code).try(:downcase),
+              id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+      self.stripe_guid = stripe_plan.id
+      self.livemode = stripe_plan[:livemode]
+      if self.livemode == Invoice::STRIPE_LIVE_MODE
+        true
+      else
+        errors.add(:stripe, I18n.t('models.general.live_mode_error'))
+        return false
+      end
     else
-      errors.add(:stripe, I18n.t('models.general.live_mode_error'))
-      return false
+      true
     end
   rescue => e
     errors.add(:stripe, e.message)

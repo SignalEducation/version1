@@ -18,6 +18,10 @@ describe 'User navigating through the dashboard:', type: :feature do
     page.driver.browser.manage.window.resize_to(300,800)
   end
 
+  after(:each) do
+    page.driver.browser.manage.window.resize_to(1024,768)
+  end
+
   describe 'navigates to first cmes' do
 
     scenario 'not logged-in user', js: true  do

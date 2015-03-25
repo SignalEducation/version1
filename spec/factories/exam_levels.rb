@@ -20,11 +20,11 @@
 FactoryGirl.define do
   factory :exam_level do
     association :qualification
-    name 'MyString'
-    name_url 'MyString'
-    is_cpd false
-    sorting_order 1
-    active false
+    sequence(:name)      { |x| "Exam Level #{x}" }
+    sequence(:name_url)  { |x| "exam-level-#{x}" }
+    is_cpd               false
+    sorting_order        1
+    active               false
     default_number_of_possible_exam_answers 4
     enable_exam_sections true
 

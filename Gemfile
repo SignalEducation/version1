@@ -47,7 +47,7 @@ group :development do
   gem 'better_errors' # gives more useful error report in the browser
   gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
-  gem 'pry' # halts code so you can experiment with it: see RailsCast 280
+  gem 'pry-byebug' # halts code so you can experiment with it
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
 end

@@ -8,7 +8,7 @@
 #  subscription_plan_id  :integer
 #  stripe_guid           :string(255)
 #  next_renewal_date     :date
-#  complementary         :boolean          default(FALSE), not null
+#  complimentary         :boolean          default(FALSE), not null
 #  current_status        :string(255)
 #  created_at            :datetime
 #  updated_at            :datetime
@@ -22,7 +22,7 @@ require 'rails_helper'
 describe Subscription do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at stripe_guid, next_renewal_date stripe_customer_data stripe_guid)
+  black_list = %w(id created_at updated_at next_renewal_date stripe_customer_data stripe_guid)
   Subscription.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -54,7 +54,7 @@ describe Subscription do
 
   it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES) }
 
-  it { should validate_inclusion_of(:livemode).in_array(Invoice::STRIPE_LIVE_MODE)}
+  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
 
   # callbacks
   it { should callback(:create_on_stripe_platform).before(:validation).on(:create) }

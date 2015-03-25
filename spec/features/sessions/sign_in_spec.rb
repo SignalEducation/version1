@@ -17,7 +17,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -28,7 +28,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -39,7 +39,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -50,7 +50,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: inactive_individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: inactive_individual_student_user.password
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Your account is not active'
     end
@@ -60,7 +60,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Welcome back!'
       click_link('navbar-cog')
@@ -82,7 +82,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -93,7 +93,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -104,7 +104,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -138,7 +138,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -149,7 +149,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -160,7 +160,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -171,7 +171,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: tutor_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Welcome back!'
       within('#tutor-accordion') do
@@ -200,7 +200,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -211,7 +211,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -222,7 +222,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -233,7 +233,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: content_manager_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Welcome back!'
       click_link(I18n.t('views.general.tools'))
@@ -258,7 +258,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -269,7 +269,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -280,7 +280,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -314,7 +314,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -325,7 +325,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -336,7 +336,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -370,7 +370,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -381,7 +381,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -392,7 +392,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -426,7 +426,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'You did not provide any details for authentication.'
       page.has_selector?('form_for')
@@ -437,7 +437,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Email is not valid '
       page.has_selector?('form_for')
@@ -448,7 +448,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password cannot be blank'
       page.has_selector?('form_for')
@@ -459,7 +459,7 @@ describe 'The sign in process.', type: :feature do
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: admin_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: admin_user.password
-        click_button I18n.t('views.general.go')
+        click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Welcome back!'
       expect(page).to have_content I18n.t('views.general.admin')
