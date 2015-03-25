@@ -41,7 +41,7 @@ class OperationalMailer < ActionMailer::Base
     elsif Rails.env.staging?
       @url = 'http://staging3.learnsignal.com/'
     else
-      @url = 'https://production3.learnsignal.com/'
+      @url = 'https://learnsignal.com/'
     end
   end
 
