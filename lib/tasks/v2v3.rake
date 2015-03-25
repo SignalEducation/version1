@@ -6,6 +6,9 @@ namespace :v2v3 do
 
   BUCKET = 'learnsignal3-data-migration'
 
+  # list of users we should not import
+  EXCLUDED_USER_IDS = [1, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 26, 27, 32, 33, 34, 35, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 71, 72, 78, 81, 88, 93, 101, 106, 116, 118, 122, 123, 127, 128, 129, 130, 131, 133, 135, 136, 137, 138, 139, 140, 141, 142, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 156, 157, 159, 160, 161, 163, 165, 171, 172, 173, 175, 177, 178, 180, 182, 183, 187, 189, 190, 191, 192, 193, 194, 196, 197, 201, 202, 204, 205, 206, 207, 208, 209, 213, 216, 218, 220, 223, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 242, 243, 251, 255, 257, 259, 276, 277, 278, 279, 280, 281, 283, 284, 286, 288, 291, 294, 306, 308, 309, 310, 314, 338, 339, 340, 341, 342, 343, 344, 351, 355, 369, 378]
+
   desc 'Import data from v2 website'
   task(import_data: :environment) do
     # USAGE: rake v2v3:import_data {optional_file_name.json}
@@ -121,13 +124,18 @@ namespace :v2v3 do
   def compare_and_update_answer(it, export)
     # Answer _id:, sequence_number: nil, question_id: nil, body: "Answer text here...", correct: false
     answer = QuizAnswer.find(it.new_model_id)
-    # nothing can be changed about question.
     content = answer.quiz_contents.first
-    unless content.text_content == export[:body].squish
-      content.update_attributes!(
-              text_content: export[:body]
-      )
-      message('INFO', "-- export:answer #{export[:_id]} UPDATED to QuizContent #{content.id} it:id #{it.id}.")
+    if (it.updated_at + 1.minute) < content.updated_at
+      message('WARN', "-- export:answer #{export[:_id]} UPDATED locally. V2 changes cannot be imported to QuizAnswer #{answer.id} it:id #{it.id}.")
+    else
+      # nothing can be changed about question.
+      unless content.text_content == export[:body].squish
+        content.update_attributes!(text_content: export[:body])
+        answer.touch
+        it.update_attributes!(imported_at: Time.now,
+                              original_data: export.to_json)
+        message('INFO', "-- export:answer #{export[:_id]} UPDATED to QuizContent #{content.id} it:id #{it.id}.")
+      end
     end
   end
 
@@ -170,12 +178,9 @@ namespace :v2v3 do
 
   def compare_and_update_course(it, export)
     es = ExamSection.find(it.new_model_id)
-    if es.updated_at > it.updated_at
-      message('WARN', "-- export:course #{export[:_id]} UPDATED locally. Your changes may be lost during import - ExamSection #{es.id} it:id #{it.id}.")
-    else
-      message('INFO', "-- export:course #{export[:_id]} matches to ExamSection #{es.id} it:id #{it.id}.")
-    end
-    if Time.parse(export[:updated_at]) > it.imported_at
+    if (it.updated_at + 1.minute) < es.updated_at
+      message('WARN', "-- export:course #{export[:_id]} UPDATED locally. V2 changes cannot be imported to ExamSection #{es.id} it:id #{it.id}.")
+    elsif Time.parse(export[:updated_at]) > it.imported_at
       es.update_attributes!(
               name: export[:name].split(' - Level 1')[0],
               name_url: export[:name].split(' - Level 1')[0].downcase,
@@ -185,6 +190,8 @@ namespace :v2v3 do
       it.update_attributes!(imported_at: Time.now,
                             original_data: export.to_json)
       message('WARN', "-- export:course #{export[:_id]} UPDATED to ExamSection #{es.id} it:id #{it.id}.")
+    else
+      # could have been updated but not required
     end
   end
 
@@ -220,11 +227,13 @@ namespace :v2v3 do
 
   def compare_and_update_note(it, export)
     cmev = CourseModuleElementVideo.find(it.new_model_id)
-    unless cmev.transcript == (export[:html_body].gsub('<body>','').gsub('</body>',''))
+    if (it.updated_at + 1.minute) < cmev.updated_at
+      message('WARN', "-- export:note #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElementVideo #{cmev.id} it:id #{it.id}.")
+    elsif cmev.transcript != (export[:html_body].gsub('<body>','').gsub('</body>',''))
       cmev.update_attributes!(transcript: export[:html_body].gsub('<body>','').gsub('</body>',''))
-
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:note #{export[:_id]} UPDATED to CourseModuleElementVideo #{cmev.id} it:id #{it.id}.")
-      it.touch
     end
   end
 
@@ -290,13 +299,17 @@ namespace :v2v3 do
     question = QuizQuestion.find(it.new_model_id)
     # nothing can be changed about question.
     content = question.quiz_contents.first
-    unless content.text_content == export[:body].squish
-      content.update_attributes!(
-            text_content: export[:body]
-      )
+    if (it.updated_at + 1.minute) < content.updated_at
+      message('WARN', "-- export:question #{export[:_id]} UPDATED locally. V2 changes cannot be imported to QuizQuestion #{question.id} it:id #{it.id}.")
+    elsif content.text_content != export[:body].squish
+      content.update_attributes!(text_content: export[:body])
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
+      question.touch
       message('INFO', "-- export:question #{export[:_id]} UPDATED to QuizContent #{content.id} it:id #{it.id}.")
+    else
+      # stuff could have been updated but it wasn't needed
     end
-    # no need to check the solution either - it was auto-populated.
   end
 
   def migrate_quizzes(exports)
@@ -358,9 +371,12 @@ namespace :v2v3 do
   def compare_and_update_quiz(it, export)
     # sample <Quiz _id: , sequence_number: nil, topic_id: nil, name: nil, description: nil, _slugs: [], _type: "Quiz", number_of_questions: 10>
     cme = CourseModuleElement.find(it.new_model_id)
-    unless cme.name == export[:name].to_s.squish && cme.description.to_s.squish == export[:description].to_s.squish &&
-              cme.estimated_time_in_seconds == (export[:number_of_questions] * 30) &&
-              cme.sorting_order == export[:sequence_number]
+    if (it.updated_at + 1.minute) < cme.updated_at
+      message('WARN', "-- export:quiz #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElement #{cme.id} it:id #{it.id}.")
+    elsif cme.name != export[:name].to_s.squish ||
+              cme.description.to_s.squish != export[:description].to_s.squish ||
+              cme.estimated_time_in_seconds != (export[:number_of_questions] * 30) ||
+              cme.sorting_order != export[:sequence_number]
       cme.update_attributes!(
               name: export[:name], # course_module_id: cm.id,
               name_url: export[:name].downcase,
@@ -373,17 +389,19 @@ namespace :v2v3 do
               is_quiz: true
       # active: cm.exam_section.active
       )
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElement #{cme.id} it:id #{it.id}.")
-    end
-    cme_quiz = cme.course_module_element_quiz
-    unless cme_quiz.number_of_questions == 5
-      cme_quiz.update_attributes!( # course_module_element_id: cme.id
-              number_of_questions: 5, # Default requested by Philip - (export[:number_of_questions] * 30),
-              question_selection_strategy: 'random'
-      )
-      it2 = ImportTracker.where(new_model_name: 'course_module_element_quiz', new_model_id: cme_quiz.id).first
-      it2.touch
-      message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElementQuiz #{cme_quiz.id} it:id #{it2.id}.")
+      cme_quiz = cme.course_module_element_quiz
+      unless cme_quiz.number_of_questions == 5
+        cme_quiz.update_attributes!(
+                number_of_questions: 5, # Default requested by Philip
+                question_selection_strategy: 'random'
+        )
+        it2 = ImportTracker.where(new_model_name: 'course_module_element_quiz', new_model_id: cme_quiz.id).first
+        it2.touch
+        message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElementQuiz #{cme_quiz.id} it:id #{it2.id}.")
+      end
     end
   end
 
@@ -419,15 +437,19 @@ namespace :v2v3 do
 
   def compare_and_update_resource(it, export)
     cmer = CourseModuleElementResource.find(it.new_model_id)
-    unless cmer.name == export[:name] && cmer.description == export[:name] &&
-            cmer.web_url == (export[:external_url].blank? ? export[:content] : export[:external_url])
+    if (it.updated_at + 1.minute) < cmer.updated_at
+      message('WARN', "-- export:resource #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElementResource #{question.id} it:id #{it.id}.")
+    elsif cmer.name != export[:name] ||
+            cmer.description != export[:name] ||
+            cmer.web_url != (export[:external_url].blank? ? export[:content] : export[:external_url])
       cmer.update_attributes!(
               name: export[:name],
               description: export[:name],
               web_url: (export[:external_url].blank? ? export[:content] : export[:external_url])
       )
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElementResource #{cmer.id} it:id #{it.id}.")
-      it.touch
     end
   end
 
@@ -468,9 +490,12 @@ namespace :v2v3 do
   def compare_and_update_step(it, export)
     # Quiz _id: 153, sequence_number: 8, topic_id: 24, name: "Quiz: Commodities", description: nil, _slugs: ["quiz-commodities-1"], _type: "Quiz", number_of_questions: 10>
     cme = CourseModuleElement.find(it.new_model_id)
-    unless cme.sorting_order == export[:sequence_number]
+    if (it.updated_at + 1.minute) < cme.updated_at
+      message('WARN', "-- export:step #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElement #{cme.id} it:id #{it.id}.")
+    elsif cme.sorting_order != export[:sequence_number]
       cme.update_attributes(sorting_order: export[:sequence_number])
-      it.touch
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export: step #{export[:_id]} UPDATED CourseModuleElement #{cme.id}")
     end
   end
@@ -515,22 +540,25 @@ namespace :v2v3 do
 
   def compare_and_update_topic(it, export)
     cm = CourseModule.find(it.new_model_id)
-    es_it = ImportTracker.where(old_model_name: 'course', old_model_id: export[:course_id]).first
-    es = ExamSection.find(es_it.new_model_id)
-    if cm.updated_at > (it.updated_at + 10.seconds)
-      message('WARN', "-- export:topic #{export[:_id]} UPDATED locally. Your changes may be lost during import - CourseModule #{cm.id} it:id #{it.id}.")
-    end
-
-    unless export[:name].squish == cm.name && cm.exam_section_id == es.id && cm.active == es.active
+    # es_it = ImportTracker.where(old_model_name: 'course', old_model_id: export[:course_id]).first
+    # es = ExamSection.find(es_it.new_model_id)
+    if (it.updated_at + 1.minute) < cm.updated_at
+      message('WARN', "-- export:topic #{export[:_id]} UPDATED locally. V2 changes cannot be applied to CourseModule #{cm.id} it:id #{it.id}.")
+    elsif export[:name].squish != cm.name
+            # || cm.exam_section_id != es.id ||
+            # cm.active != es.active
       cm.update_attributes!(
               name: export[:name],
-              name_url: export[:name].downcase,
-              exam_section_id: es.id,
-              active: es.active
+              name_url: export[:name].downcase
+              # exam_section_id: es.id,
+              # active: es.active
               # sorting_order: export[:sequence_number] -could be overwritten by Steps
       )
-      it.touch
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('WARN', "-- export:topic #{export[:_id]} UPDATED to CourseModule #{cm.id} it:id #{it.id}.")
+    else
+      # could have been updated but nothing changed.
     end
   end
 
@@ -596,9 +624,12 @@ namespace :v2v3 do
 
   def compare_and_update_video(it, export)
     cme = CourseModuleElement.find(it.new_model_id)
-    unless cme.name == export[:name].squish && cme.description == export[:name].squish &&
-              cme.estimated_time_in_seconds == export[:duration].to_i &&
-              cme.sorting_order == export[:sequence_number]
+    if (it.updated_at + 1.minute) < cme.updated_at
+      message('WARN', "-- export:video #{export[:_id]} UPDATED locally. V2 changes cannot be applied to CourseModuleElement #{cme.id} it:id #{it.id}.")
+    elsif cme.name != export[:name].squish ||
+            cme.description != export[:name].squish ||
+            cme.estimated_time_in_seconds != export[:duration].to_i ||
+            cme.sorting_order != export[:sequence_number]
       cme.update_attributes!(
               name: export[:name], # course_module_id: cm.id,
               name_url: export[:name].downcase,
@@ -610,6 +641,8 @@ namespace :v2v3 do
               is_video: true,
               # active: cm.exam_section.active
       )
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElement #{cme.id} it:id #{it.id}.")
     end
     #### cme_video can't be adjusted once imported.
@@ -633,14 +666,23 @@ namespace :v2v3 do
 
   def migrate_users(exports)
     message('INFO', 'Starting to process Users...')
+    ignored = []
     if exports
       exports.each do |export|
         # look in the import_tracker for this user
-        it = ImportTracker.where(old_model_name: 'user', old_model_id: export[:_id]).first
-        it.nil? ? create_user(export) :
-                  compare_and_update_user(it, export)
+        if EXCLUDED_USER_IDS.include?(export[:_id].to_i)
+          ignored << export[:_id].to_i
+        else
+          it = ImportTracker.where(old_model_name: 'user', old_model_id: export[:_id]).first
+          it.nil? ? create_user(export) :
+                    compare_and_update_user(it, export)
+        end
       end
       message('INFO', "processed #{exports.count} users")
+      message('INFO', "ignored #{ignored.count} users (expected 166)")
+      if ignored.count != 166
+        exit
+      end
     else
       message('WARN', 'No users found')
     end
@@ -778,14 +820,20 @@ namespace :v2v3 do
 
   def migrate_users_courses(exports)
     message('INFO', 'Starting to process UsersCourses...')
+    ignored = []
     if exports
       exports.each do |export|
-        # look in the import_tracker for this user/course
-        it = ImportTracker.where(old_model_name: 'users_course', old_model_id: export[:_id]).first
-        it.nil? ? create_user_course(export) :
-                compare_and_update_user_course(it, export)
+        if EXCLUDED_USER_IDS.include?(export[:user_id].to_i)
+          ignored << export[:_id].to_i
+        else
+          # look in the import_tracker for this user/course
+          it = ImportTracker.where(old_model_name: 'users_course', old_model_id: export[:_id]).first
+          it.nil? ? create_user_course(export) :
+                  compare_and_update_user_course(it, export)
+        end
       end
       message('INFO', "processed #{exports.count} users_courses")
+      message('INFO', "ignored #{ignored.count} users_courses")
     else
       message('WARN', 'No users_courses found')
     end
@@ -897,14 +945,20 @@ namespace :v2v3 do
 
   def migrate_customers(exports)
     message('INFO', 'Starting to process Customers...')
+    ignored = []
     if exports
       exports.each do |export|
-        # look in the import_tracker for this customer
-        it = ImportTracker.where(old_model_name: 'customer', old_model_id: export[:_id]).first
-        it.nil? ? create_customer(export) :
-                compare_and_update_customer(it, export)
+        if EXCLUDED_USER_IDS.include?(export[:user_id].to_i)
+          ignored << export[:_id].to_i
+        else
+          # look in the import_tracker for this customer
+          it = ImportTracker.where(old_model_name: 'customer', old_model_id: export[:_id]).first
+          it.nil? ? create_customer(export) :
+                  compare_and_update_customer(it, export)
+        end
       end
       message('INFO', "processed #{exports.count} customers")
+      message('INFO', "ignored #{ignored.count} customers")
     else
       message('WARN', 'No customers found')
     end
@@ -1013,14 +1067,20 @@ namespace :v2v3 do
 
   def migrate_subscriptions(exports)
     message('INFO', 'Starting to process Subscriptions...')
+    ignored = []
     if exports
       exports.each do |export|
-        # look in the import_tracker for this subscription
-        it = ImportTracker.where(old_model_name: 'subscription', old_model_id: export[:_id]).first
-        it.nil? ? create_subscription(export) :
-                compare_and_update_subscription(it, export)
+        if EXCLUDED_USER_IDS.include?(export[:user_id].to_i)
+          ignored << export[:_id].to_i
+        else
+            # look in the import_tracker for this subscription
+          it = ImportTracker.where(old_model_name: 'subscription', old_model_id: export[:_id]).first
+          it.nil? ? create_subscription(export) :
+                  compare_and_update_subscription(it, export)
+        end
       end
       message('INFO', "processed #{exports.count} subscriptions")
+      message('INFO', "ignored #{ignored.count} subscriptions - #{ignored.inspect}")
     else
       message('WARN', 'No subscriptions found')
     end
@@ -1120,10 +1180,11 @@ namespace :v2v3 do
       exit
     end
 
-    unless current_sub.subscription_plan_id == new_plan.id &&
-            current_sub.next_renewal_date == Date.parse(export[:current_period_end]) &&
-            current_sub.current_status == export[:status] &&
-            current_sub.updated_at < (it.imported_at + 5.seconds)
+    if (it.updated_at + 1.minute) < current_sub.updated_at
+      message('WARN', "-- export:step #{export[:_id]} UPDATED locally. V2 changes cannot be imported to Subscription #{current_sub.id} it:id #{it.id}.")
+    elsif current_sub.subscription_plan_id != new_plan.id ||
+            current_sub.next_renewal_date != Date.parse(export[:current_period_end]) ||
+            current_sub.current_status != export[:status]
       current_sub.update_attributes!(
               subscription_plan_id: new_plan.id,
               next_renewal_date: Date.parse(export[:current_period_end]),
@@ -1158,9 +1219,11 @@ namespace :v2v3 do
   end
 
   def rename_source_and_finish(s3, file_name)
-    destination_name = file_name + '-processed-' + Time.now.strftime('%Y%m%d-%H%M%S')
-    s3.copy_object(bucket: BUCKET, copy_source: BUCKET + '/' + file_name, key: destination_name)
-    s3.delete_object(bucket: BUCKET, key: file_name)
+    unless file_name.include?('-processed-')
+      destination_name = file_name + '-processed-' + Time.now.strftime('%Y%m%d-%H%M%S')
+      s3.copy_object(bucket: BUCKET, copy_source: BUCKET + '/' + file_name, key: destination_name)
+      s3.delete_object(bucket: BUCKET, key: file_name)
+    end
 
     puts ''
     message('INFO', "renamed file to #{destination_name}")
