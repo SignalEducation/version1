@@ -18,7 +18,7 @@ gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'figaro' # management of ENV vars
 gem 'geocoder' # a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
-gem 'intercom-rails', '~> 0.2.24' # communicate with Intercom.io
+gem 'intercom-rails', '~> 0.2.27' # communicate with Intercom.io
 gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
@@ -56,7 +56,7 @@ group :development, :test do
   gem 'rspec-rails' # our core testing environment
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
   gem 'capybara' # Runs tests in a browser
-  gem 'selenium-webdriver', '>=2.45.0.dev3'
+  gem 'selenium-webdriver', '>=2.45.0'
   gem 'capybara-webkit'
   gem 'poltergeist'
 end

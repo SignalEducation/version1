@@ -56,9 +56,10 @@ class StudentExamTrack < ActiveRecord::Base
   # callbacks
 
   # scopes
-  scope :all_in_order, -> { order(:user_id) }
+  scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
+  scope :with_active_cmes, -> { includes(:course_module).where('course_modules.cme_count > 0').references(:course_module) }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)

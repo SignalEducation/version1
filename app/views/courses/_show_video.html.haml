@@ -7,6 +7,9 @@
     .well.text-center#video-window
       .h2=t('views.general.coming_soon')
 
+
+=render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
+
 -if cme.description
   .row
     .col-sm-12
@@ -59,5 +62,3 @@
     image: "https://dvetmi3t70548.cloudfront.net/video-still-image.jpg",
     width: "100%", aspectratio: "16:9", volume: 80
   });
-
-=render partial: 'courses/cme_nav', locals: {cme: @course_module_element}

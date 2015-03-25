@@ -495,7 +495,7 @@ en:
       select: Select...
       send: Send
       settings: Settings
-      sign_in: Log in
+      sign_in: Sign in
       sign_out: Sign out
       sign_up: Sign up
       start: Start
@@ -1499,12 +1499,12 @@ en:
 
     user_password_resets:
       new:
-        h1: Forgot your password?
+        h1: Reset your password?
         paragraph_1: No problem! Enter your email address and we will send you further instructions.
 
       create:
-        h1: Forgot your password...
-        paragraph_1: No problem! check your mailbox for further instructions.
+        h1: Reset your password...
+        paragraph_1: "No problem! check your mailbox for further instructions. If you don't receive an email within a couple of minutes, check your spam folder."
 
       edit:
         h1: Reset your password

@@ -25,7 +25,7 @@
 
 .row
   -unless @hierarchy_item.parent.nil?
-    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-back' do
+    =link_to course_special_link(@hierarchy_item.parent, 'backwards'), class: 'btn btn-back', id: '#back-btn' do
       %span.glyphicon.glyphicon-menu-left
       =t('views.general.back')
 

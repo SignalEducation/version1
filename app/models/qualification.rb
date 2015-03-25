@@ -31,7 +31,7 @@ class Qualification < ActiveRecord::Base
   validates :institution_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
-  validates :name_url, presence: true,uniqueness: true
+  validates :name_url, presence: true, uniqueness: true
   validates :sorting_order, presence: true
   validates :cpd_hours_required_per_year, presence: true
 

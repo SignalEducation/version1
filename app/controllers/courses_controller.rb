@@ -4,8 +4,10 @@ class CoursesController < ApplicationController
 
   def show
     @mathjax_required = true
-    @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
-    @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
+    qualification = Qualification.find_by_name_url(params[:qualification_name_url])
+    exam_level = qualification.exam_levels.find_by_name_url(params[:exam_level_name_url])
+    @course_module = exam_level.course_modules.find_by_name_url(params[:course_module_name_url])
+    @course_module_element = @course_module.course_module_elements.find_by_name_url(params[:course_module_element_name_url])
     @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
     @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
@@ -127,7 +129,6 @@ class CoursesController < ApplicationController
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
     @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
     @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@easy_ids + @medium_ids + @difficult_ids)
-    @enough_questions = @course_module_element.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
     @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
   end
 
@@ -154,7 +155,6 @@ class CoursesController < ApplicationController
     @medium_ids = all_medium_ids.sample(@number_of_questions)
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
-    @enough_questions = @quiz_questions.size >= @course_module_jumbo_quiz.total_number_of_questions || current_user.try(:admin?)
     Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
   end

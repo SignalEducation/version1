@@ -21,11 +21,12 @@ class CourseModulesController < ApplicationController
     if params[:qualification_url]
       @qualification = Qualification.with_url(params[:qualification_url]).first
       if @qualification
-        @exam_level_id = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first.try(:id) || @qualification.exam_levels.first.try(:id)
+        @exam_level = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first || @qualification.exam_levels.first
+        @exam_level_id = @exam_level.try(:id)
         if params[:course_module_url]
-          @course_module = CourseModule.with_url(params[:course_module_url]).first
+          @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
         else
-          @course_module = CourseModule.where(exam_level_id: @exam_level_id).all_in_order.first
+          @course_module = @exam_level.course_modules.all_in_order.first
         end
       else
         flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
