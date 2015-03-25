@@ -36,15 +36,15 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           individual_student: false, tutor: false, content_manager: false,
           blogger: false, corporate_customer: true, site_admin: false,
           subscription_required_at_sign_up: true,
-          subscription_required_to_see_content: false, forum_manager: false
+          subscription_required_to_see_content: true, forum_manager: false
   ); print '.'
 
   UserGroup.where(id: 4).first_or_create!(
           name: 'Tutor', description: 'Can create course content',
-          individual_student: true, tutor: true, content_manager: false,
+          individual_student: false, tutor: true, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: false,
-          subscription_required_at_sign_up:true,
-          subscription_required_to_see_content: true, forum_manager: true
+          subscription_required_at_sign_up: false,
+          subscription_required_to_see_content: false, forum_manager: true
   ); print '.'
 
   UserGroup.where(id: 5).first_or_create!(
@@ -75,10 +75,19 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   UserGroup.where(id: 8).first_or_create!(
           name: 'Admin', description: 'Can do everything', individual_student: false,
-          tutor: false, content_manager: true,
-          blogger: true, corporate_customer: false, site_admin: true,
+          tutor: false, content_manager: false,
+          blogger: false, corporate_customer: false, site_admin: true,
           subscription_required_at_sign_up: false,
           subscription_required_to_see_content: false, forum_manager: true
+  ); print '.'
+
+  UserGroup.where(id: 9).first_or_create!(
+          name: 'Complimentary users', description: 'Like a student, but free',
+          individual_student: true,
+          tutor: false, content_manager: false,
+          blogger: false, corporate_customer: false, site_admin: false,
+          subscription_required_at_sign_up: false,
+          subscription_required_to_see_content: false, forum_manager: false
   ); print '.'
 
   puts ' DONE'

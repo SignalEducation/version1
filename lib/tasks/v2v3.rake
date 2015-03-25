@@ -731,7 +731,11 @@ namespace :v2v3 do
             #### unconfirmed_email: 'lily@bissett.net'
     # }
   rescue => e
-    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. User: #{try(:user).try(:errors).inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: Export:#{export.inspect}. IT:#{try(:it).try(:errors).try(:inspect)}. User: #{try(:user).try(:errors).inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
   end
 
   def compare_and_update_user(it, export)
@@ -764,6 +768,9 @@ namespace :v2v3 do
     end
   rescue => e
     message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
     exit
   end
 
@@ -832,6 +839,9 @@ namespace :v2v3 do
     }
   rescue => e
     message('ERROR', "rake v2v3:import_data#create_user_course - transaction rolled back. Export: #{export.inspect}. Step-ID: #{try(:step_id)}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. CMEUL: #{try(:cmeul).try(:errors).inspect}.  SET: #{try(:set).try(:errors).inspect}. Error: #{e.inspect}. Further processing of users_courses halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
     exit
   end
 
@@ -877,6 +887,10 @@ namespace :v2v3 do
     end
   rescue => e
     message('ERROR', "rake v2v3:import_data#compare_and_update_user_course - transaction rolled back. Export: #{export.inspect}. Step-ID: #{try(:step_id)}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. CMEUL: #{try(:cmeul).try(:errors).inspect}.  SET: #{try(:set).try(:errors).inspect}. Error: #{e.inspect}. Further processing of users_courses halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
   end
 
   #### financial items
@@ -911,6 +925,9 @@ namespace :v2v3 do
             stripe_id: 'cus_4bz3HLniS9Y5wW'}
   rescue => e
     message('ERROR', "rake v2v3:import_data#create_customer - transaction rolled back. Export: #{export.inspect}. User: #{try(:the_user).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of customers halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
     exit
   end
 
@@ -923,6 +940,9 @@ namespace :v2v3 do
     end
   rescue => e
     message('ERROR', "rake v2v3:import_data#compare_and_update_customer - transaction rolled back. Export: #{export.inspect}. User: #{try(:the_user).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of customers halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
     exit
   end
 
@@ -981,6 +1001,9 @@ namespace :v2v3 do
     }
   rescue => e
     message('ERROR', "rake v2v3:import_data#create_plan - transaction rolled back. Export: #{export.inspect}. SubscriptionPlan: #{try(:plan).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of plans halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
     exit
   end
 
