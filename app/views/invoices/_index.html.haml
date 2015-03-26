@@ -6,7 +6,7 @@
           =t('views.invoices.form.user_id')
           %br/
           =t('views.invoices.form.corporate_customer_id')
-      %th=t('views.users.form.created_at')
+      %th=t('views.invoices.form.issued_at')
       %th=t('views.invoices.form.subscription_id')
       -if @invoices.try(:first).try(:user).try(:corporate_customer?)
         %th=t('views.invoices.form.number_of_users')
@@ -20,7 +20,9 @@
             =link_to(invoice.user.full_name, invoice.user, title: t('views.general.view_tooltip'))
             %br/
             =link_to(invoice.corporate_customer.try(:name), invoice, title: t('views.general.view_tooltip'))
-        %td=link_to(invoice.created_at.to_s(:standard), invoice, title: t('views.general.tooltips.click_to_view'))
+        %td
+          -if invoice.issued_at
+            =link_to(invoice.issued_at.to_s(:standard), invoice, title: t('views.general.tooltips.click_to_view'))
         %td=link_to(invoice.subscription.subscription_plan.name, invoice, title: t('views.general.tooltips.click_to_view'))
         -if invoice.user.corporate_customer?
           %td=link_to(invoice.number_of_users, invoice, title: t('views.general.view_tooltip'))
