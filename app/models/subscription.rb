@@ -95,7 +95,8 @@ class Subscription < ActiveRecord::Base
         end
       end
     else
-      Subscription.where(stripe_customer_id: stripe_customer_guid, current_status: ['active', 'trialing', 'canceled-pending']).update_all(current_status: 'canceled')
+      invoice = Invoice.where(stripe_customer_guid: stripe_customer_guid, paid: true).order(:issued_at).last
+      Subscription.where(stripe_customer_id: stripe_customer_guid, current_status: ['active', 'trialing', 'canceled-pending']).update_all(current_status: 'canceled', next_renewal_date: invoice.try(:invoice_line_items).try(:first).try(:period_end_at) || Proc.new{Time.now}.call)
     end
   rescue => e
     Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
