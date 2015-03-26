@@ -150,10 +150,13 @@ class Invoice < ActiveRecord::Base
       'Paid'
     elsif self.forgiven
       'Free'
-    elsif payment_attempted
+    elsif self.payment_attempted && self.next_payment_attempt_at.to_i > 0
       ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
               ' made to charge your card - next attempt at ' +
               Time.at(next_payment_attempt_at).to_s(:standard)
+    elsif self.payment_attempted
+      ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
+              ' made to charge your card'
     else
       'Other'
     end
