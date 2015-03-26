@@ -84,16 +84,19 @@ class Subscription < ActiveRecord::Base
     stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid).to_hash
     active_stripe_subscriptions = stripe_customer[:subscriptions][:data]
     # limited to 10 ACTIVE subscriptions on their platform
-    active_stripe_subscriptions.each do |stripe_sub|
-      # search for our copy of stripe_sub
-      our_sub = Subscription.find_by_stripe_guid(stripe_sub[:id])
-      if our_sub
-        our_sub.compare_to_stripe_details(stripe_sub, stripe_customer)
-      else
-        Subscription.create_using_stripe_subscription(stripe_sub, stripe_customer)
+    if active_stripe_subscriptions.count > 0
+      active_stripe_subscriptions.each do |stripe_sub|
+        # search for our copy of stripe_sub
+        our_sub = Subscription.find_by_stripe_guid(stripe_sub[:id])
+        if our_sub
+          our_sub.compare_to_stripe_details(stripe_sub, stripe_customer)
+        else
+          Subscription.create_using_stripe_subscription(stripe_sub, stripe_customer)
+        end
       end
+    else
+      Subscription.where(stripe_customer_id: stripe_customer_guid, current_status: ['active', 'trialing', 'canceled-pending']).update_all(current_status: 'canceled')
     end
-
   rescue => e
     Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
   end
