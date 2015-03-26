@@ -26,7 +26,7 @@
           -if @invoice.corporate_customer
             =@invoice.corporate_customer.name
             %br/
-          =sanitizer @invoice.user.address.gsub("\r",'<br/>')
+          =sanitizer @invoice.user.address.gsub(', ','<br/>').gsub("\r",'<br/>')
           %br/
           =@invoice.user.country.name
           %br/
