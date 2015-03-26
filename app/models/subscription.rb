@@ -19,21 +19,13 @@
 
 class Subscription < ActiveRecord::Base
 
-  # todo - kill all of this stuff once we are live
-  def import_from_v2=(b)
-    @import_from_v2 = b
-  end
-  def import_from_v2
-    @import_from_v2
-  end
-
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode, :import_from_v2
+                  :stripe_token, :livemode
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
@@ -56,7 +48,7 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}
-  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, if: '!import_from_v2' # todo get rid of this after we go live
+  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}
 
   # callbacks
   before_validation :create_on_stripe_platform, on: :create
@@ -137,7 +129,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def compare_to_stripe_details(stripe_subscription_hash, stripe_customer_hash)
-    if self.subscription_plan.stripe_guid != stripe_subscription_hash[:id]
+    if self.stripe_guid != stripe_subscription_hash[:id]
       Subscription.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
       self.update_attribute(:current_status, 'previous')
     else
