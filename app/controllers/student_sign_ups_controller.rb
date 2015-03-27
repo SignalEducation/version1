@@ -30,13 +30,20 @@ class StudentSignUpsController < ApplicationController
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url(@user.guid)
     else
+      if @user.subscriptions.first.try(:stripe_customer_id)
+        Subscription.remove_orphan_from_stripe(@user.subscriptions.first.stripe_customer_id)
+      elsif @user.stripe_customer_id
+        Subscription.remove_orphan_from_stripe(@user.stripe_customer_id)
+      else
+        Rails.logger.warn "WARN: StudentSignupsController#create failed to delete potentially orphaned Stripe content during a failed sign-up.  @user=#{@user.errors.inspect}"
+      end
       extra_needed = nil
       @user.errors.dup.each do |field, message|
         if field.to_s.include?('credit_card')
           @user.errors.delete(field)
           @user.errors.add(:base, message)
         elsif field.to_s.include?('.')
-          Rails.logger.warn "WARN: StudentSignupsController#create failed to create a user nested attribute.  Error: #{field}-#{message}."
+          Rails.logger.warn "WARN: StudentSignupsController#create failed to create a user nested attribute.  Error: #{field}-#{message}. @user=#{@user.inspect}"
           @user.errors.delete(field)
           extra_needed = true
         end
