@@ -301,10 +301,12 @@ class Subscription < ActiveRecord::Base
       # In this case we do NOT call Stripe.com.
     end
 
+    Rails.logger.warn 'WARN: Subscription#create_on_stripe_platform -- start'
+    Rails.logger.warn "WARN: Subscription#create_on_stripe_platform -- subscription= #{stripe_subscription.inspect} and self=#{self.inspect}"
     if stripe_customer && stripe_subscription
       self.stripe_guid = stripe_subscription.id
       self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-      self.livemode = (stripe_subscription[:plan][:livemode] == 'live')
+      self.livemode = stripe_subscription[:plan][:livemode]
       self.current_status = stripe_subscription.status
       self.stripe_customer_id ||= stripe_customer.id
       self.stripe_customer_data = stripe_customer.to_hash.deep_dup
@@ -317,6 +319,7 @@ class Subscription < ActiveRecord::Base
         true
       end
     end
+    Rails.logger.warn 'WARN: Subscription#create_on_stripe_platform -- start'
 
   rescue => e
     errors.add(:credit_card, e.message)
