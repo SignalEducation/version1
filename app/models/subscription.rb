@@ -304,7 +304,7 @@ class Subscription < ActiveRecord::Base
     if stripe_customer && stripe_subscription
       self.stripe_guid = stripe_subscription.id
       self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-      self.livemode = (stripe_subscription[:livemode] == 'live')
+      self.livemode = (stripe_subscription[:plan][:livemode] == 'live')
       self.current_status = stripe_subscription.status
       self.stripe_customer_id ||= stripe_customer.id
       self.stripe_customer_data = stripe_customer.to_hash.deep_dup
