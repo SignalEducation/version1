@@ -102,6 +102,28 @@ class Subscription < ActiveRecord::Base
     Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
   end
 
+  def self.remove_orphan_from_stripe(stripe_customer_guid)
+    Rails.logger.warn 'WARN: Removing orphaned subscription from stripe STARTED'
+    local_subscription = Subscription.find_by_stripe_customer_id(stripe_customer_guid)
+    if local_subscription
+      Rails.logger.error "ERROR: Subscription#remove_orphan_from_stripe - orphaned subscription is NOT an orphan - it is actually #{local_subscription.inspect}."
+      return false
+    else
+      # local_subscription wasn't found
+      Rails.logger.warn 'WARN: Removing orphan from stripe MID 1'
+      stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid)
+      stripe_subscription = stripe_customer.subscriptions[:data].first
+      if stripe_customer && stripe_subscription && ((Time.at(stripe_subscription[:start].to_i)) + 5.seconds > Proc.new{Time.now}.call)
+        Rails.logger.warn "WARN: Subscription#remove_orphan_from_stripe - rolling back subscription and customer on stripe.com.  Customer & Subscription:#{stripe_customer.inspect}."
+        stripe_subscription.delete
+        stripe_customer.delete
+      end
+    end
+    Rails.logger.warn 'WARN: Removing from stripe FINISHED'
+  rescue => e
+    Rails.logger.error "ERROR: Subscription#remove_from_stripe - failed to remove an orphaned Stripe subscription.  Error:#{e.inspect}. Subscription:#{stripe_customer.inspect}."
+  end
+
   # instance methods
   def cancel
     # call stripe and cancel the subscription
@@ -301,8 +323,6 @@ class Subscription < ActiveRecord::Base
       # In this case we do NOT call Stripe.com.
     end
 
-    Rails.logger.warn 'WARN: Subscription#create_on_stripe_platform -- start'
-    Rails.logger.warn "WARN: Subscription#create_on_stripe_platform -- subscription= #{stripe_subscription.inspect} and self=#{self.inspect}"
     if stripe_customer && stripe_subscription
       self.stripe_guid = stripe_subscription.id
       self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
@@ -319,7 +339,7 @@ class Subscription < ActiveRecord::Base
         true
       end
     end
-    Rails.logger.warn 'WARN: Subscription#create_on_stripe_platform -- start'
+    Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform completed'
 
   rescue => e
     errors.add(:credit_card, e.message)

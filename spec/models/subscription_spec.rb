@@ -69,6 +69,7 @@ describe Subscription do
   # class methods
   it { expect(Subscription).to respond_to(:create_using_stripe_subscription) }
   it { expect(Subscription).to respond_to(:get_updates_for_user) }
+  it { expect(Subscription).to respond_to(:remove_orphan_from_stripe) }
 
   # instance methods
   it { should respond_to(:cancel) }
