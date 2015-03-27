@@ -21,6 +21,7 @@ class StudentSignUpsController < ApplicationController
   end
 
   def create
+    binding.pry
     student_user_group = UserGroup.default_student_user_group.try(:id)
     @user = User.new(allowed_params.merge(user_group_id: student_user_group || 1))
     if @user.save
@@ -36,6 +37,7 @@ class StudentSignUpsController < ApplicationController
           @user.errors.delete(field)
           @user.errors.add(:base, message)
         elsif field.to_s.include?('.')
+          Rails.logger.warn "WARN: StudentSignupsController#create failed to create a user nested attribute.  Error: #{field}-#{message}."
           @user.errors.delete(field)
           extra_needed = true
         end

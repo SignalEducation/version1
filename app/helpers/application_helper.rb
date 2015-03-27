@@ -76,7 +76,11 @@ module ApplicationHelper
   end
 
   def seconds_to_time(seconds)
-    Time.at(seconds).utc.strftime('%M:%S')
+    if seconds > 3600
+      Time.at(seconds).utc.strftime('%H:%M:%S')
+    else
+      Time.at(seconds).utc.strftime('%M:%S')
+    end
   end
 
 end
