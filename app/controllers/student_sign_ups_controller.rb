@@ -21,7 +21,6 @@ class StudentSignUpsController < ApplicationController
   end
 
   def create
-    binding.pry
     student_user_group = UserGroup.default_student_user_group.try(:id)
     @user = User.new(allowed_params.merge(user_group_id: student_user_group || 1))
     if @user.save
