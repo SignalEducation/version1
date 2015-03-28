@@ -32,7 +32,7 @@ class QualificationsController < ApplicationController
     @qualification = Qualification.new(allowed_params)
     if @qualification.save
       flash[:success] = I18n.t('controllers.qualifications.create.flash.success')
-      redirect_to qualifications_filtered_path(@qualification.institution.name_url)
+      redirect_to filtered_qualifications_path(@qualification.institution.name_url)
     else
       render action: :new
     end
@@ -41,7 +41,7 @@ class QualificationsController < ApplicationController
   def update
     if @qualification.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.qualifications.update.flash.success')
-      redirect_to qualifications_filtered_path(@qualification.institution.name_url)
+      redirect_to filtered_qualifications_path(@qualification.institution.name_url)
     else
       render action: :edit
     end

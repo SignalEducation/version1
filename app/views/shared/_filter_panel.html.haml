@@ -2,7 +2,7 @@
   =render partial: 'shared/filter_panel', locals: {controller_name: 'exam_sections', parameters: [{name: 'qualification_id', collection: @qualifications, show_attr: :full_name, value_attr: :name_url}, {name: 'exam_level_id', collection: @exam_levels, show_attr: :full_name, value_attr: :name_url}]}
 
 %p
-  =form_tag(eval(controller_name + '_filter_url'), {class: 'form-inline', role: 'form'}) do
+  =form_tag(eval("filter_#{controller_name}_url"), {class: 'form-inline', role: 'form'}) do
     .form-group
       =t('views.shared.filter_panel.filter')
     -parameters.each do |param|

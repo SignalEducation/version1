@@ -219,7 +219,7 @@ describe ExamSectionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
+        expect_create_success_with_model('exam_section', filtered_exam_sections_url(exam_level.name_url))
       end
 
       it 'should report error for invalid params' do
@@ -231,13 +231,13 @@ describe ExamSectionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_section_1' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
+        expect_update_success_with_model('exam_section', filtered_exam_sections_url(exam_level.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for exam_section_2' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
+        expect_update_success_with_model('exam_section', filtered_exam_sections_url(exam_level.name_url))
         expect(assigns(:exam_section).id).to eq(exam_section_2.id)
       end
 
@@ -809,7 +809,7 @@ describe ExamSectionsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_section: valid_params
-        expect_create_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
+        expect_create_success_with_model('exam_section', filtered_exam_sections_url(exam_level.name_url))
       end
 
       it 'should report error for invalid params' do
@@ -821,13 +821,13 @@ describe ExamSectionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_section_1' do
         put :update, id: exam_section_1.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
+        expect_update_success_with_model('exam_section', filtered_exam_sections_url(exam_level.name_url))
       end
 
       # optional
       it 'should respond OK to valid params for exam_section_2' do
         put :update, id: exam_section_2.id, exam_section: valid_params
-        expect_update_success_with_model('exam_section', exam_sections_filtered_url(exam_level.name_url))
+        expect_update_success_with_model('exam_section', filtered_exam_sections_url(exam_level.name_url))
         expect(assigns(:exam_section).id).to eq(exam_section_2.id)
       end
 
