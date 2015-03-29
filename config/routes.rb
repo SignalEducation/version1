@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  concern :supports_reordering do
+    post :reorder, on: :collection
+  end
+
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
@@ -44,13 +48,9 @@ Rails.application.routes.draw do
 
     # general resources
     resources :corporate_customers
-    resources :countries do
-      post :reorder, on: :collection
-    end
+    resources :countries, concerns: :supports_reordering
     resources :courses, only: [:show, :create]
-    resources :course_modules do
-      post :reorder, on: :collection
-    end
+    resources :course_modules, concerns: :supports_reordering
     get 'course_modules/:qualification_url', to: 'course_modules#show',
         as: :course_modules_for_qualification
     get 'course_modules/:qualification_url/:exam_level_url', to: 'course_modules#show',
@@ -61,32 +61,24 @@ Rails.application.routes.draw do
     get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url/:course_module_url',
         to: 'course_modules#show',
         as: :course_modules_for_qualification_exam_level_exam_section_and_name
-    resources :course_module_elements, except: [:index] do
-      post :reorder, on: :collection
-    end
+    resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
-    resources :currencies do
-      post :reorder, on: :collection
-    end
+    resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
-    resources :exam_levels do
-      post :reorder, on: :collection
+    resources :exam_levels, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:qualification_url', on: :collection, action: :index, as: :filtered
     end
-    resources :exam_sections do
-      post :reorder, on: :collection
+    resources :exam_sections, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
-    resources :institutions do
-      post :reorder, on: :collection
+    resources :institutions, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
     end
     resources :invoices, only: [:index, :show]
-    resources :qualifications do
-      post :reorder, on: :collection
+    resources :qualifications, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
     end
@@ -96,9 +88,7 @@ Rails.application.routes.draw do
     resources :static_pages
     resources :static_page_uploads, only: [:create]
     resources :stripe_developer_calls
-    resources :subject_areas do
-      post :reorder, on: :collection
-    end
+    resources :subject_areas, concerns: :supports_reordering
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
