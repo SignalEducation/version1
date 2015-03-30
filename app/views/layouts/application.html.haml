@@ -48,6 +48,7 @@
       %meta{name: 'description', content: @delivered_page.seo_description}
 
     =render partial: 'layouts/favicon'
+    =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
     -if controller_name == 'courses'

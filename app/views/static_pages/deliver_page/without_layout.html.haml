@@ -31,6 +31,7 @@
       %meta{name: 'robots', content: 'noindex'}
 
     =render partial: 'layouts/favicon'
+    =render partial: 'layouts/mixpanel_head_tag'
 
   %body.no-top-margin
     =body_sanitizer(@delivered_page.body_content)
