@@ -1,6 +1,7 @@
 class CoursesController < ApplicationController
 
   before_action :paywall_checkpoint, only: :show
+  before_action :check_for_old_url_format, only: :show
 
   def show
     @mathjax_required = true
@@ -85,6 +86,20 @@ class CoursesController < ApplicationController
                     :answer_array
             ]
     )
+  end
+
+  def check_for_old_url_format
+    if params[:id].to_i > 0
+      it = ImportTracker.where(old_model_name: 'course', old_model_id: params[:id].to_i, new_model_name: 'exam_section').first
+      if it
+        redirect_to library_special_link(ExamSection.find(it.new_model_id))
+        false
+      else
+        true
+      end
+    else
+      true
+    end
   end
 
   def create_a_cme_user_log
