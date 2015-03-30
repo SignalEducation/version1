@@ -110,10 +110,6 @@ class CourseModuleElement < ActiveRecord::Base
     self.array_of_sibling_ids.index(self.id)
   end
 
-  def parent
-    self.course_module
-  end
-
   def next_element
     if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
@@ -125,8 +121,12 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
+  def parent
+    self.course_module
+  end
+
   def previous_element
-    if self.my_position_among_siblings > 0
+    if self.my_position_among_siblings && self.my_position_among_siblings > 0
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings - 1])
     elsif self.course_module.previous_module.try(:course_module_jumbo_quiz)
       self.course_module.previous_module.course_module_jumbo_quiz
