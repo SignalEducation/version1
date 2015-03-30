@@ -1,3 +1,30 @@
 :javascript
 
   // Mixpanel body tag
+
+  function mixpanel_link(cssTag, name) {
+    mixpanel.track_links(cssTag, name, {
+      user_id: #{current_user.try(:id)},
+      current_page: window.location.href,
+      session_guid: '#{current_session_guid}'
+    });
+  }
+
+  // Page loaded event
+  mixpanel.track('page loaded', {
+    url: window.location.href,
+    user_id: #{current_user.try(:id)},
+    session_guid: '#{current_session_guid}'
+  });
+
+  // Nav Links
+  $("#navbar a:not(.dropdown-toggle)").addClass('mixpanel-footer-link');
+  mixpanel_link(".mixpanel-footer-link", "navbar link clicked");
+
+  // Footer Links
+  mixpanel_link(".navbar-footer a", "footer link clicked");
+
+  // Page Links
+  $("a:not(#navbar a, .navbar-footer a)").addClass('mixpanel-page-link');
+  mixpanel_link(".mixpanel-page-link", "page link clicked");
+
