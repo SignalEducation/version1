@@ -41,6 +41,14 @@ ActiveRecord::Schema.define(version: 20150331154002) do
     t.string   "continent"
   end
 
+  create_table "course_module_element_flash_card_packs", force: true do |t|
+    t.integer  "course_module_element_id"
+    t.string   "background_color"
+    t.string   "foreground_color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "course_module_element_quizzes", force: true do |t|
     t.integer  "course_module_element_id"
     t.integer  "number_of_questions"
