@@ -18,6 +18,7 @@
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
+#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -32,7 +33,8 @@ class CourseModuleElement < ActiveRecord::Base
                   :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
-                  :course_module_element_resources_attributes
+                  :course_module_element_resources_attributes,
+                  :is_cme_flash_card_pack
 
   # Constants
 

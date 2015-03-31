@@ -18,6 +18,7 @@
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
+#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'

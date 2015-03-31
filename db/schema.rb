@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331154002) do
+ActiveRecord::Schema.define(version: 20150331161619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 20150331154002) do
     t.boolean  "is_video",                  default: false, null: false
     t.boolean  "is_quiz",                   default: false, null: false
     t.boolean  "active",                    default: true,  null: false
+    t.boolean  "is_cme_flash_card_pack",    default: false, null: false
   end
 
   create_table "course_module_jumbo_quizzes", force: true do |t|
@@ -381,6 +382,7 @@ ActiveRecord::Schema.define(version: 20150331154002) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "quiz_solution_id"
+    t.integer  "flash_card_id"
   end
 
   create_table "quiz_questions", force: true do |t|
@@ -390,6 +392,7 @@ ActiveRecord::Schema.define(version: 20150331154002) do
     t.text     "hints"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "flash_quiz_id"
   end
 
   create_table "raw_video_files", force: true do |t|

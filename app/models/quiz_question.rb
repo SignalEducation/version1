@@ -9,6 +9,7 @@
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
+#  flash_quiz_id                 :integer
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -19,13 +20,14 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes
+                  :quiz_solutions_attributes, :flash_quiz_id
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
+  belongs_to :flash_quiz_id
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy

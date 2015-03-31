@@ -16,6 +16,7 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  quiz_solution_id   :integer
+#  flash_card_id      :integer
 #
 
 class QuizContent < ActiveRecord::Base
@@ -26,13 +27,14 @@ class QuizContent < ActiveRecord::Base
   attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
                   :text_content, :sorting_order, :content_type, :image,
                   :image_file_name, :image_content_type,
-                  :image_file_size, :image_updated_at
+                  :image_file_size, :image_updated_at, :flash_card_id
 
   # Constants
   CONTENT_TYPES = %w(text image mathjax)
 
   # relationships
   belongs_to :quiz_answer
+  belongs_to :flash_card
   belongs_to :quiz_question
   belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id
   has_attached_file :image, default_url: '/assets/images/missing.png'
