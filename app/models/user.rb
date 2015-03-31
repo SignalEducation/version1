@@ -279,13 +279,15 @@ class User < ActiveRecord::Base
   end
 
   def create_on_mixpanel
-    MixpanelUserUpdateWorker.perform_async({
-          id: self.id, first_name: self.first_name,
-          last_name: self.last_name, email: self.email,
-          user_group_name: self.user_group.try(:name),
-          subscription_plan_name: self.subscriptions.first.try(:subscription_plan).try(:name),
-          guid: self.guid
-    })
+    plan_name = self.subscriptions.first ?
+            self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
+            'none'
+    MixpanelUserUpdateWorker.perform_async(
+          self.id, self.first_name, self.last_name, self.email,
+          self.user_group.try(:name),
+          plan_name,
+          self.guid, self.country.iso_code
+    )
   end
 
   def set_defaults

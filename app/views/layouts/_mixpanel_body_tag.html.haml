@@ -13,12 +13,16 @@
     });
   }
 
+  function mixpanel_track(message) {
+    mixpanel.track(message, {
+      url: window.location.href,
+      user_id: #{current_user.try(:id) || 'null'},
+      session_guid: '#{current_session_guid}'
+    });
+  }
+
   // Page loaded event
-  mixpanel.track('page loaded', {
-    url: window.location.href,
-    user_id: #{current_user.try(:id) || 'null'},
-    session_guid: '#{current_session_guid}'
-  });
+  mixpanel_track('page loaded');
 
   // Nav Links
   $("#navbar a:not(.dropdown-toggle)").addClass('mixpanel-footer-link');
@@ -35,13 +39,4 @@
 
   // Call to action clicked
   mixpanel_link(".call-to-action", "CTA clicked");
-
--if controller_name == 'student_sign_ups' && action_name == 'show'
-  :javascript
-
-    mixpanel.people.set();
--else
-  :javascript
-
-    // not on the sign-up-complete page
 

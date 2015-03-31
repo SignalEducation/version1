@@ -1,4 +1,4 @@
--mixpanel_token = Rails.env.production? ? '362a1cbd7dc8a587c8e0ccb891f8fd8f' : 'adf0d15829ee2f8e588aef51a1193e3d'
+-mixpanel_token = Rails.env.production? ? ENV['mixpanel_live'] : ENV['mixpanel_test']
 :javascript
 
   // Mixpanel HEAD tag content - #{Rails.env} mode
