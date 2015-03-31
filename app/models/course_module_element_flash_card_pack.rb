@@ -19,6 +19,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
+  has_many :flash_card_stacks
 
   # validation
   validates :course_module_element_id, presence: true,

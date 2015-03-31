@@ -29,6 +29,7 @@ describe CourseModuleElementFlashCardPack do
 
   # relationships
   it { should belong_to(:course_module_element) }
+  it { should have_many(:flash_card_stacks) }
 
   # validation
   it { should validate_presence_of(:course_module_element_id) }

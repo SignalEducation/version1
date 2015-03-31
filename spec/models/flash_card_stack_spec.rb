@@ -30,7 +30,7 @@ describe FlashCardStack do
   it { expect(FlashCardStack.const_defined?(:CONTENT_TYPES)).to eq(true) }
 
   # relationships
-  xit { should belong_to(:course_module_element_flash_card_pack) }
+  it { should belong_to(:course_module_element_flash_card_pack) }
 
   # validation
   it { should validate_presence_of(:course_module_element_flash_card_pack_id) }
