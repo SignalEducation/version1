@@ -5,8 +5,7 @@ class MixpanelSubscriptionUpdateWorker
   sidekiq_options queue: 'high'
 
   def perform(user_id, old_plan_name, new_plan_name)
-    mixpanel_token = Rails.env.production? ?  ENV['mixpanel_live'] : ENV['mixpanel_test']
-    tracker1 = Mixpanel::Tracker.new(mixpanel_token)
+    tracker1 = Mixpanel::Tracker.new(ENV['mixpanel_key'])
     tracker1.people.set(user_id, {
             'old_plan_name'       => old_plan_name,
             'subscription_plan'   => new_plan_name,
