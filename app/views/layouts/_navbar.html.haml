@@ -53,6 +53,7 @@
                 %span.badge{style: 'background-color: red;'}
                   %span.glyphicon.glyphicon-envelope
                   =current_user.user_notifications.unread.count
+                %span.visible-xs-inline=t('views.users.show.tabs.notifications')
               -else
                 %span.glyphicon.glyphicon-envelope
                 %span.visible-xs-inline=t('views.users.show.tabs.notifications')

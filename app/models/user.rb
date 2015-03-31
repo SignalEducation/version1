@@ -138,6 +138,7 @@ class User < ActiveRecord::Base
   # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
+  after_save :create_on_mixpanel
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -275,6 +276,18 @@ class User < ActiveRecord::Base
 
   def add_guid
     self.guid = ApplicationController.generate_random_code(10)
+  end
+
+  def create_on_mixpanel
+    plan_name = self.subscriptions.first ?
+            self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
+            'none'
+    MixpanelUserUpdateWorker.perform_async(
+          self.id, self.first_name, self.last_name, self.email,
+          self.user_group.try(:name),
+          plan_name,
+          self.guid, self.country.iso_code
+    )
   end
 
   def set_defaults
