@@ -37,7 +37,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.flash_card_stacks.empty?
   end
 
   protected

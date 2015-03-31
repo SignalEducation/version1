@@ -40,6 +40,7 @@ class CourseModuleElement < ActiveRecord::Base
   belongs_to :course_module
   has_one :course_module_element_video
   has_one :course_module_element_quiz
+  has_many :course_module_element_flash_card_packs
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
   belongs_to :forum_topic
@@ -103,7 +104,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty? && !self.active
+    self.course_module_element_resources.empty? && self.course_module_element_flash_card_packs.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty? && !self.active
   end
 
   def my_position_among_siblings
