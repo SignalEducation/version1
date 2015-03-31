@@ -22,6 +22,7 @@ class FlashCardStack < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element_flash_card_pack
+  has_many :flash_cards
 
   # validation
   validates :course_module_element_flash_card_pack_id, presence: true,
@@ -41,7 +42,7 @@ class FlashCardStack < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.flash_cards.empty?
   end
 
   protected

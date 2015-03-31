@@ -200,6 +200,13 @@ ActiveRecord::Schema.define(version: 20150331161619) do
     t.datetime "updated_at"
   end
 
+  create_table "flash_cards", force: true do |t|
+    t.integer  "flash_card_stack_id"
+    t.integer  "sorting_order"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "forum_post_concerns", force: true do |t|
     t.integer  "forum_post_id"
     t.integer  "user_id"
