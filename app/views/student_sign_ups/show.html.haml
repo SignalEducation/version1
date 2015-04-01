@@ -58,4 +58,4 @@
 
 .row
   .col-sm-3
-    =link_to t('views.student_sign_ups.show.lets_get_started'), cookies.encrypted[:post_sign_up_redirect_path] || library_url, class: 'btn btn-success btn-block'
+    =link_to t('views.student_sign_ups.show.lets_get_started'), (cookies.encrypted[:post_sign_up_redirect_path].blank? ? library_url : cookies.encrypted[:post_sign_up_redirect_path]), class: 'btn btn-ls-default btn-block'

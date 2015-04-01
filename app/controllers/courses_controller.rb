@@ -6,21 +6,23 @@ class CoursesController < ApplicationController
   def show
     @mathjax_required = true
     qualification = Qualification.find_by_name_url(params[:qualification_name_url])
-    exam_level = qualification.exam_levels.find_by_name_url(params[:exam_level_name_url])
-    @course_module = exam_level.course_modules.find_by_name_url(params[:course_module_name_url])
-    @course_module_element = @course_module.course_module_elements.find_by_name_url(params[:course_module_element_name_url])
-    @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
-    @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+    exam_level = qualification.exam_levels.find_by(name_url: params[:exam_level_name_url])
+    @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
+    if @course_module
+      @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
+      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
+      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+    end
 
     if @course_module_element.nil? && @course_module.nil?
       # The URL is out of date or wrong.
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
-            ExamSection.where(name_url: params[:exam_section_name_url]).first
-      @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first
-      @qualification = Qualification.where(name_url: params[:qualification_name_url]).first
-      @institution = Institution.where(name_url: params[:institution_name_url]).first
-      @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url]).first
+            ExamSection.find_by(name_url: params[:exam_section_name_url])
+      @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
+      @qualification = Qualification.find_by(name_url: params[:qualification_name_url])
+      @institution = Institution.find_by(name_url: params[:institution_name_url])
+      @subject_area = SubjectArea.find_by(name_url: params[:subject_area_name_url])
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)

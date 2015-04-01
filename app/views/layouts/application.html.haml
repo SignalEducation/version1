@@ -48,6 +48,7 @@
       %meta{name: 'description', content: @delivered_page.seo_description}
 
     =render partial: 'layouts/favicon'
+    =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
     -if controller_name == 'courses'
@@ -75,3 +76,5 @@
 
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+
+    =render partial: 'layouts/mixpanel_body_tag'

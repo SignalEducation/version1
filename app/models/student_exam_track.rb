@@ -54,6 +54,7 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  after_save :send_cm_complete_to_mixpanel
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -127,5 +128,22 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   protected
+
+  def send_cm_complete_to_mixpanel
+    percent_changes = self.changes[:percentage_complete]
+    if percent_changes && percent_changes[0].to_f.round(2) < 99 && percent_changes[1].to_f.round(2) >= 99
+      MixpanelCourseModuleCompleteWorker.perform_async(
+              self.user_id,
+              self.course_module.name,
+              self.exam_section.try(:name),
+              self.exam_level.name,
+              self.exam_level.parent.name,
+              self.course_module.institution.name,
+              self.course_module.institution.subject_area.name,
+              self.course_module.course_module_elements.all_active.all_videos.count,
+              self.course_module.course_module_elements.all_active.all_quizzes.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
+      )
+    end
+  end
 
 end
