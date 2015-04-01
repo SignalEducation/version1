@@ -40,11 +40,11 @@ class CourseModuleElement < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module
-  has_one :course_module_element_video
+  has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
-  has_many :course_module_element_flash_card_packs
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
+  has_one :course_module_element_video
   belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
