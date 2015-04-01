@@ -1,0 +1,369 @@
+# Controllers language - English
+
+en:
+  controllers:
+    application:
+      datetime_formats:
+        simple: "%-e %b %Y"
+        standard: "%-e %b %Y %H:%M %Z"
+      date_formats:
+        simple: "%-e/%m/%Y"
+        standard: "%-e %b %Y"
+      datepicker_datetime_format: "YYYY-MM-DD HH:MM"
+      datepicker_date_format: "YYYY-MM-DD"
+      difficulty_levels:
+        name:
+          easy: Easy
+          medium: Medium
+          difficult: Difficult
+      logged_in_required:
+        flash_error: 'You must be signed in to access that page - please sign in'
+      logged_out_required:
+        flash_error: 'You must be logged out to do that'
+      you_are_not_permitted_to_do_that: 'You are not permitted to do that'
+
+    duplicate_me_for_controller:
+      create:
+        flash:
+          success: NameOfThing has been created successfully
+      update:
+        flash:
+          success: NameOfThing details have been updated successfully
+      destroy:
+        flash:
+          success: NameOfThing has been deleted
+          error: NameOfThing was not deleted
+
+    corporate_customers:
+      create:
+        flash:
+          success: Corporate Customer has been created successfully
+      update:
+        flash:
+          success: Corporate Customer details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Customer has been deleted
+          error: Corporate Customer was not deleted
+
+    countries:
+      create:
+        flash:
+          success: Country has been created successfully
+      update:
+        flash:
+          success: Country details have been updated successfully
+      destroy:
+        flash:
+          success: Country has been deleted
+          error: Country was not deleted
+
+    courses:
+      show:
+        warning: "Sorry, we couldn't find the exact thing you were looking for"
+      create:
+        flash:
+          error: "Sorry, your quiz attempt could not be saved."
+
+    course_modules:
+      index:
+        no_exam_level: Sorry, there are no Exam Levels for that Qualification
+      show:
+        cant_find: Sorry, that could not be found
+      create:
+        flash:
+          success: Course Module has been created successfully
+      update:
+        flash:
+          success: Course Module details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module has been deleted
+          error: Course Module was not deleted
+
+    course_module_elements:
+      create:
+        flash:
+          success: Course Module Element has been created successfully
+      update:
+        flash:
+          success: Course Module Element details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module Element has been deleted
+          error: Course Module Element was not deleted
+
+    course_module_jumbo_quizzes:
+      create:
+        flash:
+          success: Jumbo Quiz has been created successfully
+      update:
+        flash:
+          success: Jumbo Quiz details have been updated successfully
+      destroy:
+        flash:
+          success: Jumbo Quiz has been deleted
+          error: Jumbo Quiz was not deleted
+
+    currencies:
+      create:
+        flash:
+          success: Currency has been created successfully
+      update:
+        flash:
+          success: Currency details have been updated successfully
+      destroy:
+        flash:
+          success: Currency has been deleted
+          error: Currency was not deleted
+
+    exam_levels:
+      create:
+        flash:
+          success: Exam Level has been created successfully
+      update:
+        flash:
+          success: Exam Level details have been updated successfully
+      destroy:
+        flash:
+          success: Exam Level has been deleted
+          error: Exam Level was not deleted
+
+    exam_sections:
+      create:
+        flash:
+          success: Exam Section has been created successfully
+      update:
+        flash:
+          success: Exam Section details have been updated successfully
+      destroy:
+        flash:
+          success: Exam Section has been deleted
+          error: Exam Section was not deleted
+
+    institutions:
+      create:
+        flash:
+          success: Institution has been created successfully
+      update:
+        flash:
+          success: Institution details have been updated successfully
+      destroy:
+        flash:
+          success: Institution has been deleted
+          error: Institution was not deleted
+
+    invoices:
+      create:
+        flash:
+          success: Invoice has been created successfully
+      update:
+        flash:
+          success: Invoice details have been updated successfully
+      destroy:
+        flash:
+          success: Invoice has been deleted
+          error: Invoice was not deleted
+
+    qualifications:
+      create:
+        flash:
+          success: Qualification has been created successfully
+      update:
+        flash:
+          success: Qualification details have been updated successfully
+      destroy:
+        flash:
+          success: Qualification has been deleted
+          error: Qualification was not deleted
+
+    student_sign_ups:
+      create:
+        flash:
+          success: "Welcome aboard! Your sign-up was completed successfully"
+
+    quiz_questions:
+      create:
+        flash:
+          success: Quiz Question has been created successfully
+      update:
+        flash:
+          success: Quiz Question details have been updated successfully
+      destroy:
+        flash:
+          success: Quiz Question has been deleted
+          error: Quiz Question was not deleted
+
+    static_pages:
+      create:
+        flash:
+          success: Static Page has been created successfully
+      update:
+        flash:
+          success: Static Page details have been updated successfully
+      destroy:
+        flash:
+          success: Static Page has been deleted
+          error: Static Page was not deleted
+
+    stripe_developer_calls:
+      create:
+        flash:
+          success: Stripe Call has been created successfully
+      update:
+        flash:
+          success: Stripe Call details have been updated successfully
+      destroy:
+        flash:
+          success: Stripe Call has been deleted
+          error: Stripe Call was not deleted
+
+    subject_areas:
+      create:
+        flash:
+          success: Subject Area has been created successfully
+      update:
+        flash:
+          success: Subject Area details have been updated successfully
+      destroy:
+        flash:
+          success: Subject Area has been deleted
+          error: Subject Area was not deleted
+
+    subscription_payment_cards:
+      create:
+        flash:
+          success: Your new Card details were successfully added
+          error: Your new Card details were not added
+      update:
+        flash:
+          success: Your Card details have been updated successfully
+          error: Your card details were not updated
+
+    subscription_plans:
+      create:
+        flash:
+          success: Subscription Plan has been created successfully
+      update:
+        flash:
+          success: Subscription Plan details have been updated successfully
+      destroy:
+        flash:
+          success: Subscription Plan has been deleted
+          error: Subscription Plan was not deleted
+
+    subscriptions:
+      create:
+        flash:
+          success: Your Subscription has been created successfully
+          error: Your Subscription has not been created
+      update:
+        flash:
+          success: Your Subscription has been updated successfully
+          error: Your Subscription has not been updated
+      destroy:
+        flash:
+          success: Your Subscription has been cancelled
+          error: Your Subscription has not been cancelled
+
+    subscription_plan_categories:
+      create:
+        flash:
+          success: Subscription Plan Category has been created successfully
+      update:
+        flash:
+          success: Subscription Plan Category details have been updated successfully
+      destroy:
+        flash:
+          success: Subscription Plan Category has been deleted
+          error: Subscription Plan Category was not deleted
+
+    users:
+      create:
+        flash:
+          success: User has been created successfully
+      update:
+        flash:
+          success: User details have been updated successfully
+      destroy:
+        flash:
+          success: User has been deleted
+          error: User was not deleted
+      change_password:
+        flash:
+          success: Your password has been updated successfully
+          error: Your password was not chnaged
+
+    user_activations:
+      update:
+        success: Your account has been activated, and you have been logged in.
+        error: Sorry, something went wrong. Please contact us for assistance.
+
+    user_activity_logs:
+      create:
+        flash:
+          success: User Activity Log has been created successfully
+      update:
+        flash:
+          success: User Activity Log details have been updated successfully
+      destroy:
+        flash:
+          success: User Activity Log has been deleted
+          error: User Activity Log was not deleted
+
+    user_groups:
+      create:
+        flash:
+          success: User Group has been created successfully
+      update:
+        flash:
+          success: User Group details have been updated successfully
+      destroy:
+        flash:
+          success: User Group has been deleted
+          error: User Group was not deleted
+
+    user_notifications:
+      create:
+        flash:
+          success: User Notification has been created successfully
+      update:
+        flash:
+          success: User Notification details have been updated successfully
+      destroy:
+        flash:
+          success: User Notification has been deleted
+          error: User Notification was not deleted
+
+    user_password_resets:
+      create:
+        flash:
+          success: Your request has been received. Please check your email for further instructions
+      edit:
+        flash:
+          error: Sorry, that reset request is invalid. Please start again.
+      update:
+        flash:
+          success: Your password has been successsfully reset; welcome back!
+          error: Your password has not been reset. Please start again.
+
+    user_sessions:
+      create:
+        flash:
+          success: 'Welcome back!'
+      destroy:
+        flash:
+          success: 'You are now logged out'
+
+    vat_codes:
+      create:
+        flash:
+          success: Vat Code has been created successfully
+      update:
+        flash:
+          success: Vat Code details have been updated successfully
+      destroy:
+        flash:
+          success: Vat Code has been deleted
+          error: Vat Code was not deleted
+

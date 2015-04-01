@@ -6,8 +6,8 @@ class StudentSignUpsController < ApplicationController
 
   def show
     # this is the 'thank you for registering' page
-    @user = User.find_by_guid(params[:id])
-    if @user.subscriptions.count == 1
+    @user = User.find_by(guid: params[:id])
+    if @user && @user.subscriptions.count == 1
       @subscription = @user.subscriptions.first
     else
       redirect_to profile_url

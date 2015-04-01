@@ -1,0 +1,42 @@
+# Models language - English
+
+en:
+  models:
+    general:
+      dependencies_exist: Couldn't be deleted because dependencies exist
+      live_mode_error: "Live-mode error: Please contact us for help"
+
+    course_module_element:
+      can_only_link_to_a_video_or_quiz_not_both: You may only link this course module element to a video OR a quiz, and not both
+
+    course_module_element_resources:
+      web_url_or_upload_error: You must enter a web URL or upload a file
+      must_link_with_an_upload_or_url: You must link this Resource to an upload or URL
+
+    institution_users:
+      can_t_be_blank_for_students: "Can't be blank for students"
+
+    quiz_content:
+      can_t_assign_to_multiple_things: Can't assign this to a more than one parent
+      must_assign_to_at_least_one_thing: Must assign this to a question, a solution OR an answer
+
+    subscriptions:
+      create:
+        cant_be_blank: "can't be blank"
+      upgrade_plan:
+        currencies_mismatch:  "You cannot switch to a Subscription Plan with a different currency"
+        new_plan_is_inactive: "You cannot switch to a Subscription Plan that is inactive"
+        this_subscription_cant_be_upgraded: "Can't switch from a subscription in this current status"
+        you_are_not_permitted_to_upgrade: "You are not permitted to upgrade your Subscription Plan"
+        you_have_no_default_payment_card: "You must first choose a default credit/debit card"
+        processing_error_at_stripe: "Sorry, something went wrong with our payment provider. Please try again or contact us for help"
+
+    subscription_payment_cards:
+      card_has_expired: "Can't make this card the default as it has expired"
+
+    subscription_plans:
+      must_be_in_the_future: Must be in the future
+
+    stripe_api_event:
+      guid_required_to_get_payload_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
+

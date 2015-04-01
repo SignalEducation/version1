@@ -275,7 +275,9 @@ class User < ActiveRecord::Base
   protected
 
   def add_guid
+    Rails.logger.debug 'DEBUG: User#add_guid - START'
     self.guid = ApplicationController.generate_random_code(10)
+    Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
   def create_on_mixpanel
@@ -291,6 +293,7 @@ class User < ActiveRecord::Base
   end
 
   def set_defaults
+    Rails.logger.debug "DEBUG: User#set_defaults - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
     self.operational_email_frequency ||= 'weekly'
     self.study_plan_notifications_email_frequency ||= 'off'
@@ -298,12 +301,15 @@ class User < ActiveRecord::Base
     self.marketing_email_frequency ||= 'off'
     self.blog_notification_email_frequency ||= 'off'
     self.forum_notification_email_frequency ||= 'off'
+    Rails.logger.debug "DEBUG: User#set_defaults - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
   def set_stripe_customer_id
+    Rails.logger.debug "DEBUG: User#set_stripe_customer_id - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
     if self.subscriptions.length > 0
       self.update_attribute(:stripe_customer_id, self.subscriptions.first.stripe_customer_id)
     end
+    Rails.logger.debug "DEBUG: User#set_stripe_customer_id - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
 end
