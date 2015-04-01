@@ -62,6 +62,7 @@ class Subscription < ActiveRecord::Base
 
   # class methods
   def self.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
+    Rails.logger.debug "DEBUG: Subscription#self.create_using_stripe_subscription START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     user = User.find_by_stripe_customer_id(stripe_customer_hash[:id])
     plan = SubscriptionPlan.find_by_stripe_guid(stripe_subscription_hash[:plan][:id])
     x = Subscription.new(
@@ -77,8 +78,9 @@ class Subscription < ActiveRecord::Base
     x.stripe_customer_id = user.stripe_customer_id
     x.stripe_customer_data = stripe_customer_hash
     unless x.save!(validate: false)
-      Rails.logger.error "Subscription#create_using_stripe_subscription failed to create a subscription. stripe_subscription_hash: #{stripe_subscription_hash.inspect}. Error: #{x.errors.inspect}."
+      Rails.logger.error "ERROR: Subscription#create_using_stripe_subscription failed to create a subscription. stripe_subscription_hash: #{stripe_subscription_hash.inspect}. Error: #{x.errors.inspect}."
     end
+    Rails.logger.debug "DEBUG: Subscription#self.create_using_stripe_subscription FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
   def self.get_updates_for_user(stripe_customer_guid)
@@ -114,7 +116,7 @@ class Subscription < ActiveRecord::Base
       Rails.logger.warn 'WARN: Removing orphan from stripe MID 1'
       stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid)
       stripe_subscription = stripe_customer.subscriptions[:data].first
-      if stripe_customer && stripe_subscription && ((Time.at(stripe_subscription[:start].to_i)) + 5.seconds > Proc.new{Time.now}.call)
+      if stripe_customer && stripe_subscription && ((Time.at(stripe_subscription[:start].to_i)) + 15.seconds > Proc.new{Time.now}.call)
         Rails.logger.warn "WARN: Subscription#remove_orphan_from_stripe - rolling back subscription and customer on stripe.com.  Customer & Subscription:#{stripe_customer.inspect}."
         stripe_subscription.delete
         stripe_customer.delete
@@ -297,7 +299,7 @@ class Subscription < ActiveRecord::Base
   protected
 
   def create_on_stripe_platform
-    Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform initialised'
+    Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform initialised at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
@@ -340,7 +342,7 @@ class Subscription < ActiveRecord::Base
         true
       end
     end
-    Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform completed'
+    Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform completed at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
 
   rescue => e
     errors.add(:credit_card, e.message)
@@ -348,7 +350,9 @@ class Subscription < ActiveRecord::Base
   end
 
   def create_a_subscription_transaction
+    Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)
+    Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
   def prefix
