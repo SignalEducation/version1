@@ -28,6 +28,7 @@ describe FlashCard do
 
   # relationships
   it { should belong_to(:flash_card_stack) }
+  it { should have_many(:quiz_contents) }
 
   # validation
   it { should validate_presence_of(:flash_card_stack_id) }

@@ -18,6 +18,7 @@ class FlashCard < ActiveRecord::Base
 
   # relationships
   belongs_to :flash_card_stack
+  has_many :quiz_contents
 
   # validation
   validates :flash_card_stack_id, presence: true,
@@ -34,7 +35,7 @@ class FlashCard < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.quiz_contents.empty?
   end
 
   protected
