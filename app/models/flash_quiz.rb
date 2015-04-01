@@ -1,0 +1,52 @@
+# == Schema Information
+#
+# Table name: flash_quizzes
+#
+#  id                  :integer          not null, primary key
+#  flash_card_stack_id :integer
+#  background_color    :string(255)
+#  foreground_color    :string(255)
+#  created_at          :datetime
+#  updated_at          :datetime
+#
+
+class FlashQuiz < ActiveRecord::Base
+
+  # attr-accessible
+  attr_accessible :flash_card_stack_id, :background_color, :foreground_color
+
+  # Constants
+
+  # relationships
+  belongs_to :flash_card_stack
+  has_many :quiz_questions
+
+  # validation
+  validates :flash_card_stack_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :background_color, presence: true
+  validates :foreground_color, presence: true
+
+  # callbacks
+  before_destroy :check_dependencies
+
+  # scopes
+  scope :all_in_order, -> { order(:flash_card_stack_id) }
+
+  # class methods
+
+  # instance methods
+  def destroyable?
+    false
+  end
+
+  protected
+
+  def check_dependencies
+    unless self.destroyable?
+      errors.add(:base, I18n.t('models.general.dependencies_exist'))
+      false
+    end
+  end
+
+end

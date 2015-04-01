@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331161619) do
+ActiveRecord::Schema.define(version: 20150401160352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,14 @@ ActiveRecord::Schema.define(version: 20150331161619) do
   create_table "flash_cards", force: true do |t|
     t.integer  "flash_card_stack_id"
     t.integer  "sorting_order"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "flash_quizzes", force: true do |t|
+    t.integer  "flash_card_stack_id"
+    t.string   "background_color"
+    t.string   "foreground_color"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

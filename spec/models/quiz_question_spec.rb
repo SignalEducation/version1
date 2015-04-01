@@ -32,6 +32,7 @@ describe QuizQuestion do
   # relationships
   it { should belong_to(:course_module_element_quiz) }
   it { should belong_to(:course_module_element) }
+  it { should belong_to(:flash_quiz) }
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
   it { should have_many(:quiz_answers) }

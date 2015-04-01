@@ -22,6 +22,7 @@ class FlashCardStack < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element_flash_card_pack
+  has_many :flash_quizzes
   has_many :flash_cards
 
   # validation

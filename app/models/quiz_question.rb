@@ -27,7 +27,7 @@ class QuizQuestion < ActiveRecord::Base
   # relationships
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
-  belongs_to :flash_quiz_id
+  belongs_to :flash_quiz
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
