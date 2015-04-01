@@ -130,7 +130,8 @@ class StudentExamTrack < ActiveRecord::Base
   protected
 
   def send_cm_complete_to_mixpanel
-    if self.percentage_complete.round(2) > 99
+    percent_changes = self.changes[:percentage_complete]
+    if percent_changes && percent_changes[0].to_f.round(2) < 99 && percent_changes[1].to_f.round(2) >= 99
       MixpanelCourseModuleCompleteWorker.perform_async(
               self.user_id,
               self.course_module.name,
