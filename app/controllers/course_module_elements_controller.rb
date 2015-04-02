@@ -49,8 +49,8 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.build_course_module_element_flash_card_pack
       3.times do
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards')
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.build
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.last.quiz_contents.build
       end
       # todo
     end
