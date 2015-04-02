@@ -47,7 +47,10 @@ class CourseModuleElementsController < ApplicationController
       spawn_quiz_children
     elsif params[:type] == 'flash_cards'
       @course_module_element.build_course_module_element_flash_card_pack
-      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build
+      3.times do
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards')
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build
+      end
       # todo
     end
     set_related_cmes

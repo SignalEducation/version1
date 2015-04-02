@@ -1,0 +1,2 @@
+=stack.fields_for :flash_cards do |card|
+  =render partial: 'flash_cards/fields_for', locals: {f: f, stack: stack, pack: pack, card: card}

@@ -1,4 +1,4 @@
--unless Rails.env.test?
+-if !Rails.env.test? && (!current_user || current_user.try(:individual_student?))
   :javascript
 
     // Mixpanel body tag
