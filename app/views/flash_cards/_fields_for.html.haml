@@ -1,4 +1,9 @@
 -# I am the page that shows the fields_for ONE single flash card.
-%p Hello world, I am a single flash card.
-=card.hidden_field :sorting_order
-=card.hidden_field :flash_card_stack_id # not sure if this is needed
+%tr{id: '1'}
+  %td
+    Hello world, I am a single flash card.
+    Fields go here.
+    =card.hidden_field :sorting_order
+    =card.hidden_field :flash_card_stack_id # not sure if this is needed
+  %td.text-right
+    .glyphicon.glyphicon-sort
