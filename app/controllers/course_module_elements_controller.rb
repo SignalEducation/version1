@@ -50,6 +50,7 @@ class CourseModuleElementsController < ApplicationController
       3.times do
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards')
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build
       end
       # todo
     end
@@ -62,7 +63,7 @@ class CourseModuleElementsController < ApplicationController
     elsif @course_module_element.is_video
       @course_module_element.course_module_element_resources.build
     elsif @course_module_element.is_cme_flash_card_pack
-      # todo
+      # nothing needed here (for now anyway!!)
     end
     set_related_cmes
   end
@@ -246,7 +247,69 @@ class CourseModuleElementsController < ApplicationController
                 :id,
                 :course_module_element_id,
                 :background_color,
-                :foreground_color
+                :foreground_color,
+                flash_card_stacks_attributes: [
+                        :id,
+                        :course_module_element_flash_card_pack_id,
+                        :name,
+                        :sorting_order,
+                        :content_type,
+                        flash_cards_attributes: [
+                                :id,
+                                :flash_card_stack_id,
+                                :sorting_order,
+                                quiz_contents_attributes: [
+                                        :id,
+                                        :text_content,
+                                        :contains_mathjax,
+                                        :contains_image,
+                                        :sorting_order,
+                                        :image_file_name,
+                                        :image_content_type,
+                                        :image_file_size,
+                                        :image_updated_at,
+                                        :flash_card_id
+                                ]
+                        ],
+                        flash_quiz_attributes: [
+                                :id,
+                                :flash_card_stack_id,
+                                :background_color,
+                                :foreground_color,
+                                quiz_questions_attributes: [
+                                        :id,
+                                        :flash_quiz_id,
+                                        :difficulty_level,
+                                        :hints,
+                                        quiz_answers_attributes: [
+                                                :id,
+                                                :quiz_question_id,
+                                                :correct,
+                                                :degree_of_wrongness,
+                                                :wrong_answer_explanation_text,
+                                                :wrong_answer_video_id,
+                                                quiz_contents_attributes: [
+                                                        :id,
+                                                        :quiz_question_id,
+                                                        :quiz_answer_id,
+                                                        :text_content,
+                                                        :contains_mathjax,
+                                                        :contains_image,
+                                                        :content_type,
+                                                        :sorting_order]
+                                        ],
+                                        quiz_contents_attributes: [
+                                                :id,
+                                                :quiz_question_id,
+                                                :quiz_answer_id,
+                                                :text_content,
+                                                :contains_mathjax,
+                                                :contains_image,
+                                                :content_type,
+                                                :sorting_order]
+                                ]
+                        ]
+                ]
         ]
     )
   end
