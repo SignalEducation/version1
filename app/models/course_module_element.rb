@@ -56,6 +56,7 @@ class CourseModuleElement < ActiveRecord::Base
            foreign_key: :latest_course_module_element_id
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
+  accepts_nested_attributes_for :course_module_element_flash_card_pack
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video, update_only: true
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }

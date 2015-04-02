@@ -45,6 +45,10 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.is_video = true
     elsif params[:type] == 'quiz'
       spawn_quiz_children
+    elsif params[:type] == 'flash_cards'
+      @course_module_element.build_course_module_element_flash_card_pack
+      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build
+      # todo
     end
     set_related_cmes
   end
@@ -52,8 +56,10 @@ class CourseModuleElementsController < ApplicationController
   def edit
     if @course_module_element.is_quiz
       @course_module_element.course_module_element_quiz.add_an_empty_question
-    else
+    elsif @course_module_element.is_video
       @course_module_element.course_module_element_resources.build
+    elsif @course_module_element.is_cme_flash_card_pack
+      # todo
     end
     set_related_cmes
   end
@@ -232,6 +238,12 @@ class CourseModuleElementsController < ApplicationController
                 :upload_content_type,
                 :upload_file_size,
                 :upload_updated_at
+        ],
+        course_module_element_flash_card_pack_attributes: [
+                :id,
+                :course_module_element_id,
+                :background_color,
+                :foreground_color
         ]
     )
   end

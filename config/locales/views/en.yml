@@ -236,6 +236,7 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_flash_card_pack: New Flash Card Pack
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
@@ -257,6 +258,13 @@ en:
         previous_step: Previous
         preview: Preview
         continue: Continue
+
+    course_module_element_flash_card_packs:
+      form:
+        background_color: Background colour
+        background_color_placeholder: '222222'
+        foreground_color: Foreground colour
+        foreground_color_placeholder: 'eeeeee'
 
     course_module_element_quizzes:
       form:
