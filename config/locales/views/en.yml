@@ -639,6 +639,7 @@ en:
           question: Ask the question
           solution: Enter the solution
           answer: Fill in the answer here
+          flash_cards_text: Enter the Text Here
 
     quiz_questions:
       form:
