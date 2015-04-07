@@ -9,7 +9,6 @@
           =card.hidden_field :sorting_order
           =card.hidden_field :flash_card_stack_id # not sure if this is needed
           =card.fields_for :quiz_contents do |qc, counter|
-            -counter = 1
             %h4="Card #" + "#{counter}"
             -if qc.object.content_type == 'image'
               .thumbnail
@@ -63,6 +62,7 @@
       theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
       theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
     })
+
     theClone.find('.content_type_radios').prop('checked', false);
     theClone.find('.content_type_radios').eq(0).prop('checked', true);
     theClone.find('.thumbnail').remove();
@@ -70,7 +70,9 @@
     theClone.find('.content_type_radios').on('click', function() {
       monitorRadioButtons(this);
     })
+
     $('tr' + 'td:nth-child(' + (position + 1) + ')').after(theClone);
+
   }
 
 
