@@ -19,6 +19,18 @@ Rails.application.routes.draw do
     resources :user_activities, only: :create
   end
 
+  # unscoped routes - to support incoming traffic from v2 cached pages
+  get '/courses/:subject_area_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
