@@ -28,7 +28,7 @@
                 .col-sm-2
                   =stack.select :content_type, FlashCardStack::CONTENT_TYPES, {}, {class: 'form-control', onchange: "$(this).closest('.panel').find('.card_panel').toggleClass('hide');"}
                 .col-sm-1.text-right
-                  %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+                  %span.glyphicon.glyphicon-sort{title: t('views.general.tooltips.coming_soon')}
 
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: "heading_#{counter}"}}
               .panel-body
