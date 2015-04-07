@@ -1,4 +1,4 @@
-%table.table.table-bordered
+%table.table.table-bordered.table-sorted
   %tbody
     =stack.fields_for :flash_cards do |card|
       -#=render partial: 'flash_cards/fields_for'#, locals: {f: f, stack: stack, pack: pack, card: card}
@@ -15,8 +15,9 @@
                 =image_tag qc.object.image.url
                 =qc.object.image_file_name
                 =number_to_human_size(qc.object.image_file_size)
-            =qc.file_field :image, style: (qc.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
-            =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 6, style: (qc.object.content_type == 'image' ? 'display: none;' : '')
+              =qc.file_field :image, style: (qc.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
+            -else
+              =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 6, style: (qc.object.content_type == 'image' ? 'display: none;' : '')
             .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
               =link_to '#', class: 'btn btn-default', onclick: 'addQuizContent($(this)); return false;' do
                 %span.glyphicon.glyphicon-plus
