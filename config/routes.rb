@@ -46,10 +46,22 @@ Rails.application.routes.draw do
     get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
     get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
 
+    get 'courses/:subject_area_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
+        to: redirect('%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
+
     # general resources
     resources :corporate_customers
     resources :countries, concerns: :supports_reordering
-    resources :courses, only: [:show, :create]
+    resources :courses, only: [:create]
+    #resources :courses, only: [:show, :create]
     resources :course_modules, concerns: :supports_reordering
     get 'course_modules/:qualification_url', to: 'course_modules#show',
         as: :course_modules_for_qualification
