@@ -5,32 +5,33 @@
 
       -# I am the page that shows the fields_for ONE single flash card.
       %tr{id: '1'}
-        %td
-          =card.hidden_field :sorting_order
-          =card.hidden_field :flash_card_stack_id # not sure if this is needed
-          =card.fields_for :quiz_contents do |qc, counter|
-            %h4="Card #" + "#{counter}"
-            -if qc.object.content_type == 'image'
-              .thumbnail
-                =image_tag qc.object.image.url
-                =qc.object.image_file_name
-                =number_to_human_size(qc.object.image_file_size)
-              =qc.file_field :image, style: (qc.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
-            -else
-              =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 6, style: (qc.object.content_type == 'image' ? 'display: none;' : '')
-            .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
-              =link_to '#', class: 'btn btn-default', onclick: 'addQuizContent($(this)); return false;' do
-                %span.glyphicon.glyphicon-plus
-              =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
-                %span.glyphicon.glyphicon-minus
-            .pull-right.text-right
-              -QuizContent::CONTENT_TYPES[0, 2].each do |t|
-                =qc.radio_button :content_type, t, class: 'content_type_radios'
-                =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+        %td.col-sm-11
+          .quiz_content
+            =card.hidden_field :sorting_order
+            =card.hidden_field :flash_card_stack_id # not sure if this is needed
+            =card.fields_for :quiz_contents do |qc, counter|
+              %h4="Card ##{counter}"
+              .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
+                .thumbnail
+                  =image_tag qc.object.image.url
+                  =qc.object.image_file_name
+                  =number_to_human_size(qc.object.image_file_size)
+                =qc.file_field :image, class: 'well col-sm-12'
+              .quiz_content_text{class: qc.object.content_type == 'text' ? '' : 'hide'}
+                =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 2
+              .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
+                =link_to '#', class: 'btn btn-default', onclick: 'addQuizContent($(this)); return false;' do
+                  %span.glyphicon.glyphicon-plus
+                =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
+                  %span.glyphicon.glyphicon-minus
+              .pull-right.text-right
+                -QuizContent::CONTENT_TYPES[0, 2].each do |t|
+                  =qc.radio_button :content_type, t, class: 'content_type_radios'
+                  =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
 
 
 
-        %td.text-center
+        %td.text-center.col-sm-1
           .glyphicon.glyphicon-sort
 
 
@@ -39,16 +40,23 @@
   // Adding Quiz Content Blocks
   function addQuizContent(me) {
     var theTime = (new Date).getTime();
-    var theClone = me.parent().parent().clone();
-    var position = $('tr').children().index(me.parent().parent());
+    var theClone = me.parent().parent().clone(); // .quiz_content
+    var position = me.parent().parent().parent().children().index(me.parent().parent());
 
-    theClone.find('textarea').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theTime + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theTime + '_text_content');
-    theClone.find('textarea').attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theTime + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theTime + '][text_content]');
+    // text area
+    var textArea = theClone.find('textarea');
+    textArea.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theTime + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theTime + '_text_content');
+    textArea.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theTime + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theTime + '][text_content]');
+    textArea.val('');
+    theClone.find('.quiz_content_text').removeClass('hide');
 
+    // image stuff
     theClone.find('.quiz_content_image').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theTime + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theTime + '_image');
     theClone.find('.quiz_content_image').attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theTime + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theTime + '][image]');
+    theClone.find('.thumbnail').remove();
+    theClone.find('.quiz_content_image').addClass('hide');
 
-    theClone.find('textarea').val('').show();
+    // radio button stuff
     theClone.find('.content_type_radios').each(function(counter){
       console.log(counter);
       var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
@@ -66,28 +74,18 @@
 
     theClone.find('.content_type_radios').prop('checked', false);
     theClone.find('.content_type_radios').eq(0).prop('checked', true);
-    theClone.find('.thumbnail').remove();
-    theClone.find('.quiz_content_image').hide();
     theClone.find('.content_type_radios').on('click', function() {
       monitorRadioButtons(this);
     })
 
     $('tr' + 'td:nth-child(' + (position + 1) + ')').after(theClone);
-
   }
 
 
   // Radio Buttons
   function monitorRadioButtons(theButton) {
-    if ($(theButton).val() == 'image') {
-      $(theButton).parent().parent().find('.quiz_content_image').show();
-      $(theButton).parent().parent().find('.thumbnail').show();
-      $(theButton).parent().parent().find('textarea').hide();
-    } else {
-      $(theButton).parent().parent().find('.quiz_content_image').hide();
-      $(theButton).parent().parent().find('.thumbnail').hide();
-      $(theButton).parent().parent().find('textarea').show();
-    }
+    $(theButton).parent().parent().find('.quiz_content_image').toggleClass('hide');
+    $(theButton).parent().parent().find('.quiz_content_text').toggleClass('hide');
   }
 
   $(document).on('ready page:load', function() {
