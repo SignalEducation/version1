@@ -1,1 +1,17 @@
-%p hello world - I'm a quiz panel
+%p FlashQuiz questions will be delivered to users in random order.
+-#  f: f, stack: stack, pack: pack
+=pack.fields_for :flash_quiz do |flash_quiz|
+  =flash_quiz.fields_for :quiz_questions do |question|
+    .well.well-sm
+      %h3.no-top-gap
+        -if question.object
+          Question
+          =question.object.id
+        -else
+          New Question
+      .col-sm-4
+        Question part
+      .col-sm-4
+        answer part
+  %hr/
+  =link_to 'Add a new question', '#', class: 'btn btn-xs btn-info', onclick: "alert('hello'); return false;"

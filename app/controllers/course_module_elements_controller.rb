@@ -47,12 +47,22 @@ class CourseModuleElementsController < ApplicationController
       spawn_quiz_children
     elsif params[:type] == 'flash_cards'
       @course_module_element.build_course_module_element_flash_card_pack
-      3.times do
+      1.times do
+        # flash cards
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards')
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.build
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.last.quiz_contents.build
+        # flash quiz
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.build
+        1.times do
+          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.build
+          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.last.quiz_contents.build
+          2.times do
+            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.last.quiz_answers.build
+            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.last.quiz_answers.last.quiz_contents.build
+          end
+        end
       end
-      # todo
     end
     set_related_cmes
   end
