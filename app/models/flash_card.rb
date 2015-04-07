@@ -12,18 +12,18 @@
 class FlashCard < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :flash_card_stack_id, :sorting_order
+  attr_accessible :flash_card_stack_id, :sorting_order, :quiz_contents_attributes
 
   # Constants
 
   # relationships
   belongs_to :flash_card_stack
-  has_many :quiz_contents
+  has_many :quiz_contents, -> { order(:sorting_order) }
   accepts_nested_attributes_for :quiz_contents
 
   # validation
   validates :flash_card_stack_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :sorting_order, presence: true
 
   # callbacks

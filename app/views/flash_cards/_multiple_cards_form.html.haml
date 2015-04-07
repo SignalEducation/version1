@@ -6,17 +6,18 @@
       -# I am the page that shows the fields_for ONE single flash card.
       %tr{id: '1'}
         %td.col-sm-11
-          .quiz_content
-            =card.hidden_field :sorting_order
-            =card.hidden_field :flash_card_stack_id # not sure if this is needed
-            =card.fields_for :quiz_contents do |qc, counter|
-              %h4="Card ##{counter}"
+          =card.hidden_field :sorting_order
+          =card.hidden_field :flash_card_stack_id # not sure if this is needed
+          %h4="Card ##{card.try(:object).try(:id)}"
+          =card.fields_for :quiz_contents do |qc|
+            .quiz_content
+              =qc.hidden_field :sorting_order, class: 'qc-sorting-order'
               .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
                 .thumbnail
                   =image_tag qc.object.image.url
                   =qc.object.image_file_name
                   =number_to_human_size(qc.object.image_file_size)
-                =qc.file_field :image, class: 'well col-sm-12'
+                =qc.file_field :image, class: 'well col-sm-12 file_field'
               .quiz_content_text{class: qc.object.content_type == 'text' ? '' : 'hide'}
                 =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 2
               .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
@@ -31,7 +32,7 @@
 
 
 
-        %td.text-center.col-sm-1
+        %td.text-right.col-sm-1
           .glyphicon.glyphicon-sort
 
 
@@ -40,32 +41,47 @@
   // Adding Quiz Content Blocks
   function addQuizContent(me) {
     var theTime = (new Date).getTime();
+    me.parent().parent().parent().find('.quiz_content').each(function(counter) {
+      $(this).find('.qc-sorting-order').val(counter * 10);
+      console.log($(this));
+      console.log(counter);
+    });
     var theClone = me.parent().parent().clone(); // .quiz_content
     var position = me.parent().parent().parent().children().index(me.parent().parent());
 
+    // image stuff
+    var theImage = theClone.find('.quiz_content_image');
+    theImage.find('.thumbnail').html(null);
+    theImage.find('.thumbnail').html("<img alt='Missing' src='/assets/images/missing.png'>");
+    var theFileField = theImage.find('.file_field');
+    var theFileFieldNameArray = theFileField.attr('id').split('_');
+    theFileField.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_image');
+    theFileField.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][image]');
+    theClone.find('.quiz_content_image').addClass('hide');
+
     // text area
     var textArea = theClone.find('textarea');
-    textArea.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theTime + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theTime + '_text_content');
-    textArea.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theTime + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theTime + '][text_content]');
+    textArea.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_text_content');
+    textArea.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][text_content]');
     textArea.val('');
     theClone.find('.quiz_content_text').removeClass('hide');
 
-    // image stuff
-    theClone.find('.quiz_content_image').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theTime + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theTime + '_image');
-    theClone.find('.quiz_content_image').attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theTime + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theTime + '][image]');
-    theClone.find('.thumbnail').remove();
-    theClone.find('.quiz_content_image').addClass('hide');
+    // sorting_order field
+    var sortOrder = theClone.find('.qc-sorting-order');
+    sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_sorting_order');
+    sortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][sorting_order]');
+    sortOrder.val( parseInt(sortOrder.val()) + 5);
 
     // radio button stuff
     theClone.find('.content_type_radios').each(function(counter){
       console.log(counter);
       var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
       var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
-      temp_array[14] = theTime;
-      temp_array[18] = theTime;
+      temp_array[14] = theFileFieldNameArray[14];
+      temp_array[18] = theFileFieldNameArray[18];
       temp_array[22] = theTime;
-      temp_array2[2] = theTime;
-      temp_array2[4] = theTime;
+      temp_array2[2] = theFileFieldNameArray[14];
+      temp_array2[4] = theFileFieldNameArray[18];
       temp_array2[6] = theTime;
       theClone.find('.content_type_radios').eq(counter).attr('id', temp_array.join('_'));
       theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
@@ -78,7 +94,7 @@
       monitorRadioButtons(this);
     })
 
-    $('tr' + 'td:nth-child(' + (position + 1) + ')').after(theClone);
+    me.parent().parent().parent().find('.quiz_content:nth-child(' + (position + 1) + ')').after(theClone);
   }
 
 

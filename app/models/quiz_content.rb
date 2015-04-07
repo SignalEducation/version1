@@ -110,7 +110,7 @@ class QuizContent < ActiveRecord::Base
   end
 
   def one_parent_only
-    test_list = [self.quiz_question_id, self.quiz_answer_id, self.quiz_solution_id].compact # gets rid of "nil"s
+    test_list = [self.quiz_question_id, self.quiz_answer_id, self.quiz_solution_id, self.flash_card_id].compact # gets rid of "nil"s
     if test_list.length > 1
       errors.add(:base, I18n.t('models.quiz_content.can_t_assign_to_multiple_things'))
     elsif test_list.length == 0

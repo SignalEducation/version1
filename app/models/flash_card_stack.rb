@@ -15,7 +15,7 @@
 class FlashCardStack < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_flash_card_pack_id, :name, :sorting_order, :final_button_label, :content_type
+  attr_accessible :course_module_element_flash_card_pack_id, :name, :sorting_order, :final_button_label, :content_type, :flash_cards_attributes
 
   # Constants
   CONTENT_TYPES = %w(Quiz Cards)
@@ -28,7 +28,7 @@ class FlashCardStack < ActiveRecord::Base
 
   # validation
   validates :course_module_element_flash_card_pack_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :name, presence: true
   validates :sorting_order, presence: true
   validates :final_button_label, presence: true

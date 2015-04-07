@@ -13,7 +13,8 @@
 class CourseModuleElementFlashCardPack < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :background_color, :foreground_color
+  attr_accessible :course_module_element_id, :background_color, :foreground_color,
+                  :flash_card_stacks_attributes
 
   # constants
 
@@ -24,7 +25,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :background_color, presence: true
   validates :foreground_color, presence: true
 

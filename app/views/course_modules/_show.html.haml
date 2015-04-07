@@ -44,11 +44,11 @@
               -else
                 %span.label.label-default=t('views.general.inactive')
             %td
-              -if cme.course_module_element_video
+              -if cme.is_video
                 Video
-              -elsif cme.course_module_element_quiz
+              -elsif cme.is_quiz
                 Quiz
-              -elsif cme.course_module_element_flash_card_pack
+              -elsif cme.is_cme_flash_card_pack
                 FlashCards
               -else
                 Unknown

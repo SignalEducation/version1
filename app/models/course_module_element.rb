@@ -34,6 +34,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
+                  :course_module_element_flash_card_pack_attributes,
                   :is_cme_flash_card_pack
 
   # Constants
