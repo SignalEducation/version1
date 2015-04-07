@@ -16,9 +16,12 @@ RSpec.describe CoursesController, type: :controller do
 
   describe 'GET show' do
     it 'returns http success' do
-      get :show, id: 1, course_module_name_url: course_module_1.name_url,
+      get :show, subject_area_name_url: subject_area.name_url,
+          institution_name_url: institution.name_url,
           qualification_name_url: qualification.name_url,
-          exam_level_name_url: exam_level.name_url
+          exam_level_name_url: exam_level.name_url,
+          exam_section_name_url: 'all',
+          course_module_name_url: course_module_1.name_url
       expect_show_success_with_model('course_module', course_module_1.id)
     end
   end
