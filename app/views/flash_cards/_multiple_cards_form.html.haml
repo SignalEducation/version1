@@ -5,34 +5,33 @@
 
       -# I am the page that shows the fields_for ONE single flash card.
       %tr{id: '1'}
-        .flash-cards
-          %td
-            =card.hidden_field :sorting_order
-            =card.hidden_field :flash_card_stack_id # not sure if this is needed
-            =card.fields_for :quiz_contents do |qc, counter|
-              -counter = 1
-              %h4="Card #" + "#{counter}"
-              -if qc.object.content_type == 'image'
-                .thumbnail
-                  =image_tag qc.object.image.url
-                  =qc.object.image_file_name
-                  =number_to_human_size(qc.object.image_file_size)
-              =qc.file_field :image, style: (qc.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
-              =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 6, style: (qc.object.content_type == 'image' ? 'display: none;' : '')
-              .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
-                =link_to '#', class: 'btn btn-default', onclick: 'addQuizContent($(this)); return false;' do
-                  %span.glyphicon.glyphicon-plus
-                =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
-                  %span.glyphicon.glyphicon-minus
-              .pull-right.text-right
-                -QuizContent::CONTENT_TYPES[0, 2].each do |t|
-                  =qc.radio_button :content_type, t, class: 'content_type_radios'
-                  =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+        %td
+          =card.hidden_field :sorting_order
+          =card.hidden_field :flash_card_stack_id # not sure if this is needed
+          =card.fields_for :quiz_contents do |qc, counter|
+            -counter = 1
+            %h4="Card #" + "#{counter}"
+            -if qc.object.content_type == 'image'
+              .thumbnail
+                =image_tag qc.object.image.url
+                =qc.object.image_file_name
+                =number_to_human_size(qc.object.image_file_size)
+            =qc.file_field :image, style: (qc.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
+            =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 6, style: (qc.object.content_type == 'image' ? 'display: none;' : '')
+            .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
+              =link_to '#', class: 'btn btn-default', onclick: 'addQuizContent($(this)); return false;' do
+                %span.glyphicon.glyphicon-plus
+              =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
+                %span.glyphicon.glyphicon-minus
+            .pull-right.text-right
+              -QuizContent::CONTENT_TYPES[0, 2].each do |t|
+                =qc.radio_button :content_type, t, class: 'content_type_radios'
+                =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
 
 
 
-          %td.text-center
-            .glyphicon.glyphicon-sort
+        %td.text-center
+          .glyphicon.glyphicon-sort
 
 
 :javascript
@@ -41,7 +40,7 @@
   function addQuizContent(me) {
     var theTime = (new Date).getTime();
     var theClone = me.parent().parent().clone();
-    var position = $('.flash-cards').children().index(me.parent().parent());
+    var position = $('tr').children().index(me.parent().parent());
 
     theClone.find('textarea').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theTime + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theTime + '_text_content');
     theClone.find('textarea').attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theTime + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theTime + '][text_content]');
@@ -71,7 +70,7 @@
     theClone.find('.content_type_radios').on('click', function() {
       monitorRadioButtons(this);
     })
-    $('.flash-cards' + 'tr:nth-child(' + (position + 1) + ')').after(theClone);
+    $('tr' + 'td:nth-child(' + (position + 1) + ')').after(theClone);
   }
 
 
