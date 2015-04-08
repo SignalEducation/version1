@@ -33,7 +33,7 @@
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: "heading_#{counter}"}}
               .panel-body
                 %div{class: stack.object.content_type == 'Quiz' ? 'card_panel hide' : 'card_panel'}
-                  =render partial: 'flash_cards/multiple_cards_form', locals: {f: f, stack: stack, pack: pack}
+                  =render partial: 'flash_cards/fields_for', locals: {f: f, stack: stack, pack: pack}
                 %div{class: stack.object.content_type == 'Quiz' ? 'card_panel' : 'card_panel hide'}
                   =render partial: 'flash_quizzes/fields_for', locals: {f: f, stack: stack, pack: pack}
 .row
