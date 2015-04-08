@@ -1,14 +1,20 @@
-%p FlashQuiz questions will be delivered to users in random order.
+%p FlashQuiz questions will be delivered to users in random order.  Every FlashQuiz question will be delivered to the user.
 -#  f: f, stack: stack, pack: pack
 =pack.fields_for :flash_quiz do |flash_quiz|
   =flash_quiz.fields_for :quiz_questions do |question|
     .well.well-sm
-      %h3.no-top-gap
-        -if question.object
-          Question
-          =question.object.id
-        -else
-          New Question
+      .row
+        .col-sm-12
+          %h3.no-top-gap
+            -if question.object
+              Question
+              =question.object.id
+            -else
+              New Question
+    =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {question: question, parent: flash_quiz, mode: 'flash'}
+
+    %hr/
+    .row
       .col-sm-4
         Question part
       .col-sm-4
