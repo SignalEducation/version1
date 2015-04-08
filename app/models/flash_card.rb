@@ -19,7 +19,7 @@ class FlashCard < ActiveRecord::Base
   # relationships
   belongs_to :flash_card_stack
   has_many :quiz_contents, -> { order(:sorting_order) }
-  accepts_nested_attributes_for :quiz_contents
+  accepts_nested_attributes_for :quiz_contents, allow_destroy: true
 
   # validation
   validates :flash_card_stack_id, presence: true,

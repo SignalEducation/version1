@@ -283,7 +283,8 @@ class CourseModuleElementsController < ApplicationController
                                         :image_file_size,
                                         :image_updated_at,
                                         :flash_card_id,
-                                        :content_type
+                                        :content_type,
+                                        :_destroy
                                 ]
                         ],
                         flash_quiz_attributes: [
