@@ -11,6 +11,8 @@
           %h4="Card ##{card.try(:object).try(:id)}"
           =card.fields_for :quiz_contents do |qc|
             .quiz_content
+              =qc.hidden_field :_destroy, value: false, class: 'destroy'
+              =qc.hidden_field :id, class: 'the_id'
               =qc.hidden_field :sorting_order, class: 'qc-sorting-order'
               .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
                 .thumbnail
@@ -66,6 +68,17 @@
     textArea.val('');
     theClone.find('.quiz_content_text').removeClass('hide');
 
+    // destroy
+    var destroy = theClone.find('destroy');
+    destroy.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '__destroy');
+    destroy.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][_destroy]');
+
+    // the_id
+    var the_id = theClone.find('the_id');
+    the_id.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_id');
+    the_id.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][id]');
+    the_id.val('');
+
     // sorting_order field
     var sortOrder = theClone.find('.qc-sorting-order');
     sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_sorting_order');
@@ -95,6 +108,22 @@
     })
 
     me.parent().parent().parent().find('.quiz_content:nth-child(' + (position + 1) + ')').after(theClone);
+  }
+
+  // Removing Quiz Content Blocks
+  function removeContent(me) {
+    if (me.parent().parent().parent().children().length == 1 ) {
+      alert('Sorry, you cannot delete the last text block');
+    } else {
+      if (confirm('Are you sure?')) {
+        if (parseInt(me.parent().parent().find('.the_id').val()) > 0 ) {
+          me.parent().parent().hide();
+          me.parent().parent().find('.destroy').val('1')
+        } else {
+          me.parent().parent().remove();
+        }
+      }
+    }
   }
 
 
