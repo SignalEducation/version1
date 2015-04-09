@@ -1,0 +1,226 @@
+%table.table.table-bordered.table-sorted
+  %tbody
+    =stack.fields_for :flash_cards do |card|
+      -#=render partial: 'flash_cards/fields_for'#, locals: {f: f, stack: stack, pack: pack, card: card}
+
+      -# I am the page that shows the fields_for ONE single flash card.
+      %tr{id: '1'}
+        %td.col-sm-11
+          =card.hidden_field :sorting_order, class: 'card-sorting-order'
+          %h4="Card ##{card.try(:object).try(:id)}"
+          =card.fields_for :quiz_contents do |qc|
+            .quiz_content
+              =qc.hidden_field :_destroy, value: false, class: 'destroy'
+              =qc.hidden_field :id, class: 'the_id'
+              =qc.hidden_field :sorting_order, class: 'qc-sorting-order'
+              .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
+                .thumbnail
+                  =image_tag qc.object.image.url
+                  =qc.object.image_file_name
+                  =number_to_human_size(qc.object.image_file_size)
+                =qc.file_field :image, class: 'well col-sm-12 file_field'
+              .quiz_content_text{class: qc.object.content_type == 'text' ? '' : 'hide'}
+                =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control', rows: 2
+              .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
+                =link_to '#', class: 'btn btn-default', onclick: 'addQuizContent($(this)); return false;' do
+                  %span.glyphicon.glyphicon-plus
+                =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
+                  %span.glyphicon.glyphicon-minus
+              .pull-right.text-right
+                -QuizContent::CONTENT_TYPES[0, 2].each do |t|
+                  =qc.radio_button :content_type, t, class: 'content_type_radios'
+                  =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+
+
+
+        %td.text-right.col-sm-1
+          .glyphicon.glyphicon-sort{title: t('views.general.tooltips.coming_soon')}
+
+.row
+  .col-sm-12
+    =link_to 'Add a new Flash Card', '#', class: 'btn btn-info btn-sm', onclick: 'addNewCard(); return false;'
+
+:javascript
+
+  // QUIZ CONTENT STUFF
+
+  // Adding Quiz Content Blocks
+  function addQuizContent(me) {
+    var theTime = (new Date).getTime();
+    me.parent().parent().parent().find('.quiz_content').each(function(counter) {
+      $(this).find('.qc-sorting-order').val(counter * 10);
+      console.log($(this));
+      console.log(counter);
+    });
+    var theClone = me.parent().parent().clone(); // .quiz_content
+    var position = me.parent().parent().parent().children().index(me.parent().parent());
+
+    // image stuff
+    var theImage = theClone.find('.quiz_content_image');
+    theImage.find('.thumbnail').html(null);
+    theImage.find('.thumbnail').html("<img alt='Missing' src='/assets/images/missing.png'>");
+    var theFileField = theImage.find('.file_field');
+    var theFileFieldNameArray = theFileField.attr('id').split('_');
+    theFileField.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_image');
+    theFileField.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][image]');
+    theClone.find('.quiz_content_image').addClass('hide');
+
+    // text area
+    var textArea = theClone.find('textarea');
+    textArea.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_text_content');
+    textArea.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][text_content]');
+    textArea.val('');
+    theClone.find('.quiz_content_text').removeClass('hide');
+
+    // destroy
+    var destroy = theClone.find('destroy');
+    destroy.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '__destroy');
+    destroy.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][_destroy]');
+
+    // the_id
+    var the_id = theClone.find('the_id');
+    the_id.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_id');
+    the_id.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][id]');
+    the_id.val('');
+
+    // sorting_order field
+    var sortOrder = theClone.find('.qc-sorting-order');
+    sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_sorting_order');
+    sortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][sorting_order]');
+    sortOrder.val( parseInt(sortOrder.val()) + 5);
+
+    // radio button stuff
+    theClone.find('.content_type_radios').each(function(counter){
+      console.log(counter);
+      var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
+      var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
+      temp_array[14] = theFileFieldNameArray[14];
+      temp_array[18] = theFileFieldNameArray[18];
+      temp_array[22] = theTime;
+      temp_array2[2] = theFileFieldNameArray[14];
+      temp_array2[4] = theFileFieldNameArray[18];
+      temp_array2[6] = theTime;
+      theClone.find('.content_type_radios').eq(counter).attr('id', temp_array.join('_'));
+      theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
+      theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
+    })
+
+    theClone.find('.content_type_radios').prop('checked', false);
+    theClone.find('.content_type_radios').eq(0).prop('checked', true);
+    theClone.find('.content_type_radios').on('click', function() {
+      monitorRadioButtons(this);
+    })
+
+    me.parent().parent().parent().find('.quiz_content:nth-child(' + (position + 1) + ')').after(theClone);
+  }
+
+  // Removing Quiz Content Blocks
+  function removeContent(me) {
+    if (me.parent().parent().parent().children().length == 1 ) {
+      alert('Sorry, you cannot delete the last text block');
+    } else {
+      if (confirm('Are you sure?')) {
+        if (parseInt(me.parent().parent().find('.the_id').val()) > 0 ) {
+          me.parent().parent().hide();
+          me.parent().parent().find('.destroy').val('1')
+        } else {
+          me.parent().parent().remove();
+        }
+      }
+    }
+  }
+
+  // Radio Buttons
+  function monitorRadioButtons(theButton) {
+    $(theButton).parent().parent().find('.quiz_content_image').toggleClass('hide');
+    $(theButton).parent().parent().find('.quiz_content_text').toggleClass('hide');
+  }
+
+  $(document).on('ready page:load', function() {
+      $('.content_type_radios').on('click', function() {
+        monitorRadioButtons(this);
+      })
+  })
+
+
+  // FLASH CARD STUFF
+
+  // Add a new flash card
+
+  function addNewCard() {
+    var theClone = $('tr').first().clone()
+    var theTime = (new Date).getTime();
+    var theFileField = theClone.first().find('.file_field').first();
+    var theFileFieldNameArray = theFileField.attr('id').split('_');
+
+    var sortOrder = theClone.find('.card-sorting-order');
+    sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theTime + '_sorting_order')
+    sortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][sorting_order]')
+    sortOrder.val( parseInt(sortOrder.val()) + 5);
+
+    theClone.find('.quiz_content').each(function(index) {
+      if(index == 0) {
+        //Rename Stuff
+
+        // image stuff
+        var theImage = theClone.find('.quiz_content_image');
+        theImage.find('.thumbnail').html(null);
+        theImage.find('.thumbnail').html("<img alt='Missing' src='/assets/images/missing.png'>");
+        //var theFileField = theImage.find('.file_field');
+        //var theFileFieldNameArray = theFileField.attr('id').split('_');
+        theFileField.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theFileFieldNameArray[22] + '_image');
+        theFileField.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theFileFieldNameArray[22] + '][image]');
+    theClone.find('.quiz_content_image').addClass('hide');
+
+        // text area
+        var textArea = theClone.find('textarea');
+        textArea.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theFileFieldNameArray[22] + '_text_content');
+        textArea.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theFileFieldNameArray[22] + '][text_content]');
+        textArea.val('');
+        theClone.find('.quiz_content_text').removeClass('hide');
+
+        // destroy
+        var destroy = theClone.find('destroy');
+        destroy.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theTime + '_quiz_contents_attributes_' + theFileFieldNameArray[22] + '__destroy');
+        destroy.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theFileFieldNameArray[22] + '][_destroy]');
+
+        // the_id
+        var the_id = theClone.find('the_id');
+        the_id.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theTime + '_quiz_contents_attributes_' + theFileFieldNameArray[22] + '_id');
+        the_id.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theFileFieldNameArray[22] + '][id]');
+        the_id.val('');
+
+        // sorting_order field
+        var sortOrder = theClone.find('.qc-sorting-order');
+        sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theTime + '_quiz_contents_attributes_' + theFileFieldNameArray[22] + '_sorting_order');
+        sortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][quiz_contents_attributes][' + theFileFieldNameArray[22] + '][sorting_order]');
+
+        // radio button stuff
+        theClone.find('.content_type_radios').each(function(counter){
+          console.log(counter);
+          var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
+          var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
+          temp_array[14] = theFileFieldNameArray[14];
+          temp_array[18] = theTime;
+          temp_array[22] = theFileFieldNameArray[22];
+          temp_array2[2] = theFileFieldNameArray[14];
+          temp_array2[4] = theTime;
+          temp_array2[6] = theFileFieldNameArray[22];
+          theClone.find('.content_type_radios').eq(counter).attr('id', temp_array.join('_'));
+          theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
+          theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
+        })
+
+        theClone.find('.content_type_radios').prop('checked', false);
+        theClone.find('.content_type_radios').eq(0).prop('checked', true);
+        theClone.find('.content_type_radios').on('click', function() {
+          monitorRadioButtons(this);
+        })
+
+      } else {
+        $(this).remove();
+      }
+    })
+
+    $('tr').last().after(theClone);
+  }
