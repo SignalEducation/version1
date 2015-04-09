@@ -150,6 +150,29 @@ function addNewFlashCard(theThing) {
   me.closest('.panel-body').find('tbody').append(theClone);
 }
 
+// Removing Flash Cards
+function removeFlashCard(theThing) {
+    var me = $(theThing);
+    if (me.parent().parent().parent().parent().find('tr').length == 1) {
+        alert('Sorry, you cannot delete the last Flash Card');
+    } else {
+        if (confirm('Are you sure?')) {
+            if (me.parent().parent().find('.quiz_content').length == 0 ) {
+                me.parent().parent().hide();
+                me.parent().parent().children().first().find('.destroy').val('1');
+                me.parent().parent().find('.flash-card-destroy').val('1')
+            } else {
+                me.parent().parent().remove();
+            }
+        }
+    }
+}
+
+$(document).on('click', '.removeFlashCard', function() {
+    removeFlashCard(this);
+    return false;
+});
+
 $(document).on('click', '.addNewFlashCard', function() {
   addNewFlashCard($(this));
   return false;
