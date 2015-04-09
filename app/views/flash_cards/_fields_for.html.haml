@@ -12,7 +12,7 @@
               =t('views.flash_cards.form.new_card')
           =card.fields_for :quiz_contents do |qc|
             .quiz_content
-              =qc.hidden_field :_destroy, value: false, class: 'destroy'
+              =qc.hidden_field :_destroy, value: false, class: 'flash-card-qc-destroy'
               =qc.hidden_field :id, class: 'the_id'
               =qc.hidden_field :sorting_order, class: 'qc-sorting-order'
               .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
