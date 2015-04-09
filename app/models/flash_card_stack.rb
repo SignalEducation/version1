@@ -24,7 +24,7 @@ class FlashCardStack < ActiveRecord::Base
   belongs_to :course_module_element_flash_card_pack
   has_many :flash_quizzes
   has_many :flash_cards
-  accepts_nested_attributes_for :flash_cards
+  accepts_nested_attributes_for :flash_cards, allow_destroy: true
 
   # validation
   validates :course_module_element_flash_card_pack_id, presence: true,

@@ -7,6 +7,7 @@
       %tr{id: '1'}
         %td.col-sm-11
           =card.hidden_field :sorting_order, class: 'card-sorting-order'
+          =card.hidden_field :_destroy, value: false, class: 'destroy'
           %h4="Card ##{card.try(:object).try(:id)}"
           =card.fields_for :quiz_contents do |qc|
             .quiz_content
@@ -35,6 +36,8 @@
 
         %td.text-right.col-sm-1
           .glyphicon.glyphicon-sort{title: t('views.general.tooltips.coming_soon')}
+          =link_to 'Delete Card', '#', class: 'btn btn-danger btn-xs', onclick: 'removeCard(this); return false;'
+
 
 .row
   .col-sm-12
@@ -146,7 +149,6 @@
   // FLASH CARD STUFF
 
   // Add a new flash card
-
   function addNewCard() {
     var theClone = $('tr').first().clone()
     var theTime = (new Date).getTime();
@@ -157,6 +159,7 @@
     sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theTime + '_sorting_order')
     sortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theTime + '][sorting_order]')
     sortOrder.val( parseInt(sortOrder.val()) + 5);
+
 
     theClone.find('.quiz_content').each(function(index) {
       if(index == 0) {
@@ -224,3 +227,16 @@
 
     $('tr').last().after(theClone);
   }
+
+  // Removing Quiz Content Blocks
+  function removeCard(me) {
+    if (me.parent().parent().parent().children().length == 1 ) {
+      alert('Sorry, you cannot delete the last text block');
+    } else {
+      if (confirm('Are you sure?')) {
+          me.parent().parent().hide();
+          me.parent().parent().find('.destroy').val('1')
+        }
+      }
+  }
+

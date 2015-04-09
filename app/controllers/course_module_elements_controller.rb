@@ -271,6 +271,7 @@ class CourseModuleElementsController < ApplicationController
                                 :id,
                                 :flash_card_stack_id,
                                 :sorting_order,
+                                :_destroy,
                                 quiz_contents_attributes: [
                                         :id,
                                         :text_content,
