@@ -62,7 +62,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def complex_question?
     answer_ids = self.quiz_answer_ids
-    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil).count > 4
+    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil, flash_card_id: nil).count > 4
   end
 
   def destroyable?

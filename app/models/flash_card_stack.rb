@@ -15,16 +15,17 @@
 class FlashCardStack < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_flash_card_pack_id, :name, :sorting_order, :final_button_label, :content_type, :flash_cards_attributes
+  attr_accessible :course_module_element_flash_card_pack_id, :name, :sorting_order, :final_button_label, :content_type, :flash_cards_attributes, :flash_quiz_attributes
 
   # Constants
   CONTENT_TYPES = %w(Quiz Cards)
 
   # relationships
   belongs_to :course_module_element_flash_card_pack
-  has_many :flash_quizzes
+  has_one :flash_quiz
   has_many :flash_cards
   accepts_nested_attributes_for :flash_cards, allow_destroy: true
+  accepts_nested_attributes_for :flash_quiz, allow_destroy: true
 
   # validation
   validates :course_module_element_flash_card_pack_id, presence: true,

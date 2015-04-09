@@ -1,0 +1,85 @@
+// Flash quiz interactivity - CME management
+
+
+function addNewFlashQuizQuestion(thing) {
+  alert('hello addNewFlashQuizQuestion');
+}
+
+function addFlashQuizAnswer(thing) {
+  var theParent = $(thing).closest('.panel').find('.row.quiz_answer').parent(),
+      timeStamp = (new Date).getTime().toString();
+  var theClone = theParent.find('.row.quiz_answer').last().clone();
+  theClone.find('.col-sm-1').text(nextLetter(theClone.find('.col-sm-1').text()));
+
+  // sorting_order hidden field
+  var sortingOrderField = theClone.find('.answer-sorting-order').last();
+  var sortingOrderId = sortingOrderField.attr('id').split('_');
+  sortingOrderId[25] = timeStamp;
+  var sortingOrderName = sortingOrderField.attr('name').split('][');
+  sortingOrderName[7] = timeStamp;
+  sortingOrderField.val(timeStamp).attr('id', sortingOrderId.join('_')).attr('name', sortingOrderName.join(']['));
+
+  // content_type hidden field
+  var contentTypeField = theClone.find('.answer-content-type').last();
+  var contentTypeId = contentTypeField.attr('id').split('_');
+  contentTypeId[25] = timeStamp;
+  var contentTypeName = contentTypeField.attr('name').split('][');
+  contentTypeName[7] = timeStamp;
+  contentTypeField.attr('id', contentTypeId.join('_')).attr('name', contentTypeName.join(']['));
+
+  // text_content field
+  var textAreaField = theClone.find('textarea').last();
+  var textAreaId = textAreaField.attr('id').split('_');
+  textAreaId[25] = timeStamp;
+  var textAreaName = textAreaField.attr('name').split('][');
+  textAreaName[7] = timeStamp;
+  textAreaField.val('').attr('id', textAreaId.join('_')).attr('name', textAreaName.join(']['));
+
+  // degree_of_wrongness field
+  var degreeOfWrongnessField = theClone.find('select').last();
+  var degreeOfWrongnessId = degreeOfWrongnessField.attr('id').split('_');
+  degreeOfWrongnessId[25] = timeStamp;
+  var degreeOfWrongnessName = degreeOfWrongnessField.attr('name').split('][');
+  textAreaName[7] = timeStamp;
+  degreeOfWrongnessField.val('').attr('id', degreeOfWrongnessId.join('_')).attr('name', degreeOfWrongnessName.join(']['));
+
+  // add it back in
+  console.log(theParent);
+  theParent.append(theClone);
+}
+
+function deleteFlashQuizQuestion(thing) {
+  var confirmation = confirm("<%= I18n.t('views.general.delete_confirmation') %>");
+  if (confirmation) {
+    var theQuestion = $(thing).closest('.question');
+    if (theQuestion.find('.question_id').val() == '') {
+      if ($(thing).parent().find('.question').length > 1) {
+        theQuestion.remove();
+      } else {
+        alert("Sorry, you can't delete the only question in a stack");
+      }
+    } else {
+      theQuestion.find('.destroy_field').val('1');
+      theQuestion.hide();
+    }
+  }
+}
+
+function nextLetter(theLetter) {
+  return String.fromCharCode(theLetter.trim().charCodeAt() + 1);
+}
+
+$(document).on('click', '.addNewFlashQuizQuestion', function() {
+  addNewFlashQuizQuestion(this);
+  return false;
+});
+
+$(document).on('click', '.addExtraFlashQuizAnswer', function() {
+  addFlashQuizAnswer(this);
+  return false;
+});
+
+$(document).on('click', '.deleteFlashQuizQuestion', function() {
+  deleteFlashQuizQuestion(this);
+  return false;
+});

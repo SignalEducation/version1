@@ -460,12 +460,20 @@ en:
       new:
         h1: New Exam Section
 
+    flash_cards:
+      form:
+        new_card: New card
+
     flash_card_packs:
       form:
         name: Name
         name_placeholder: Public title of this stack
         final_button_label: Button label
         final_button_label_placeholder: "Label for the 'next' button"
+
+    flash_quizzes:
+      form:
+        add_extra_answer: 'Add an extra answer'
 
     institutions:
       form:
