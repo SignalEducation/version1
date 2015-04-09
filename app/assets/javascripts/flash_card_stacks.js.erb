@@ -1,0 +1,42 @@
+// regarding HTML in app/views/flash_card_stacks/
+
+function addNewFlashCardStack() {
+  $('#' + $(".panel").find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
+  var theClone = $('.panel').first().clone(),
+      timeStamp = (new Date).getTime().toString();
+  theClone.find('input').val(null);
+  theClone.find('.panel-heading select').val('Cards');
+  theClone.find('.card_panel_cards').removeClass('hide');
+  theClone.find('.card_panel_quiz').addClass('hide');
+  theClone.find('.panel-heading').attr('id','heading_' + timeStamp);
+  theClone.find('.panel-heading').find('.disclosure-triangles').attr('aria-controls','collapse_' + timeStamp).attr('href','#collapse_' + timeStamp);
+  theClone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_name').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_name'.replace('0', timeStamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][name]'.replace('0', timeStamp));
+  theClone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_final_button_label').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_final_button_label'.replace('0', timeStamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][final_button_label]'.replace('0', timeStamp));
+  theClone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_content_type').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_content_type'.replace('0', timeStamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][content_type]'.replace('0', timeStamp));
+
+  theClone.find('.panel-collapse').attr('id','collapse_' + timeStamp);
+  theClone.find('.panel-collapse').attr('aria-labelledby','heading_' + timeStamp);
+  $('#cme-flash-card-pack').append(theClone);
+  setTimeout(function() {
+    $('#cme-flash-card-pack').find('.disclosure-triangles').last().click();
+  }, 500);
+
+}
+
+function addDisclosureBehaviour(thing) {
+  $(".disclosure-triangles span").removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+  if ( $(thing).closest('.panel').find('.panel-collapse').hasClass('in')) {
+    // do nothing
+  } else {
+    $(thing).find('span').toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
+  }
+}
+
+$(document).on('click', '.addNewFlashCardStack', function() {
+  addNewFlashCardStack(this);
+  return false;
+});
+
+$(document).on('click', '.addDisclosureBehaviour', function() {
+  addDisclosureBehaviour(this);
+});

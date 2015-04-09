@@ -29,12 +29,20 @@
             =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :active
-                  =t('views.course_modules.form.active')
+          -if f.object.is_cme_flash_card_pack
+            .form-group
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :active, checked: false, disabled: true
+                    =t('views.course_modules.form.active')
+          -else
+            .form-group
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    =t('views.course_modules.form.active')
         -if @course_module_element.course_module_element_video
           .col-sm-6
             =render partial: 'course_module_element_videos/fields_for', locals: {f: f}

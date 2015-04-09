@@ -20,11 +20,11 @@ class FlashQuiz < ActiveRecord::Base
   # relationships
   belongs_to :flash_card_stack
   has_many :quiz_questions
-  accepts_nested_attributes_for :quiz_questions
+  accepts_nested_attributes_for :quiz_questions, allow_destroy: true
 
   # validation
   validates :flash_card_stack_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :background_color, presence: true
   validates :foreground_color, presence: true
 
@@ -38,7 +38,7 @@ class FlashQuiz < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.quiz_questions.empty?
   end
 
   protected

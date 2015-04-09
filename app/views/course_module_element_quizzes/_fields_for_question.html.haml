@@ -22,4 +22,4 @@
                 =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-danger'
 
     -else
-      =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {question: question, parent: cme_quiz, mode: 'full'}
+      =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: cme_quiz, mode: 'full'}

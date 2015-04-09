@@ -467,6 +467,10 @@ en:
         final_button_label: Button label
         final_button_label_placeholder: "Label for the 'next' button"
 
+    flash_quizzes:
+      form:
+        add_extra_answer: 'Add an extra answer'
+
     institutions:
       form:
         name: Name

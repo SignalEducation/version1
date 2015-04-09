@@ -12,10 +12,10 @@
           =stack.hidden_field :sorting_order
           -counter += 1
           .panel.panel-default
-            .panel-heading{id: "heading_#{counter}",role: 'tab'}
+            .panel-heading{id: "heading_#{counter}", role: 'tab'}
               .row
                 .col-sm-1
-                  %a{data: {toggle: 'collapse', parent: '#cme-flash-card-pack'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}, class: 'h2 disclosure-triangles', onclick: 'addDisclosureBehaviour(this);'}
+                  %a{data: {toggle: 'collapse', parent: '#cme-flash-card-pack'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}, class: 'h2 disclosure-triangles addDisclosureBehaviour'}
                     -if counter == 0
                       %span.glyphicon.glyphicon-chevron-down{title: t('views.general.tooltips.click_to_view')}
                     -else
@@ -32,58 +32,12 @@
 
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: "heading_#{counter}"}}
               .panel-body
-                %div{class: stack.object.content_type == 'Quiz' ? 'card_panel hide' : 'card_panel'}
+                .card_panel.card_panel_cards{class: stack.object.content_type == 'Quiz' ? 'hide' : ''}
                   =render partial: 'flash_cards/multiple_cards_form', locals: {f: f, stack: stack, pack: pack}
-                %div{class: stack.object.content_type == 'Quiz' ? 'card_panel' : 'card_panel hide'}
+                .card_panel.card_panel_quiz{class: stack.object.content_type == 'Quiz' ? '' : 'hide'}
                   =render partial: 'flash_quizzes/fields_for', locals: {f: f, stack: stack, pack: pack}
 .row
   .col-sm-12
-    =link_to 'Add a new card stack', '#', class: 'btn btn-info btn-sm', onclick: 'addNewStack(); return false;'
+    %p=link_to 'Add a new card stack', '#', class: 'btn btn-info btn-sm addNewFlashCardStack'
 
 %hr
-:javascript
-
-  function updateAttributesForQuiz(the_clone) {
-    // Stuff goes here
-    return the_clone;
-  }
-
-  function updateAttributesForCards(the_clone) {
-    // Stuff goes here
-    return the_clone;
-  }
-
-  function addNewStack() {
-    $('#' + $(".panel").find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
-    var clone = $('.panel').first().clone(),
-        timestamp = (new Date).getTime();
-    clone.find('input').val(null);
-
-    clone.find('.panel-heading').attr('id','heading_' + timestamp);
-    clone.find('.panel-heading').find('.disclosure-triangles').attr('aria-controls','collapse_' + timestamp).attr('href','#collapse_' + timestamp);
-    clone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_name').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_name'.replace('0', timestamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][name]'.replace('0', timestamp));
-    clone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_final_button_label').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_final_button_label'.replace('0', timestamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][final_button_label]'.replace('0', timestamp));
-    clone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_content_type').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_content_type'.replace('0', timestamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][content_type]'.replace('0', timestamp));
-
-    clone.find('.panel-collapse').attr('id','collapse_' + timestamp);
-    clone.find('.panel-collapse').attr('aria-labelledby','heading_' + timestamp);
-    clone = updateAttributesForQuiz(clone);
-    clone = updateAttributesForCards(clone);
-    //clone.on('click', function() {
-    //  addDisclosureBehaviour();
-    //})
-    $('#cme-flash-card-pack').append(clone);
-    setTimeout(function() {
-      $('#cme-flash-card-pack').find('.disclosure-triangles').last().click();
-    }, 500);
-
-  }
-
-  function addDisclosureBehaviour(me) {
-    $('.disclosure-triangles span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
-    if ( $(me).closest('.panel').find('.panel-collapse').hasClass('in')) {
-      // do nothing
-    } else {
-      $(me).find('span').toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
-    }
-  }

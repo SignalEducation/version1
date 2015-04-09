@@ -54,13 +54,13 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.build(sorting_order: 0)
         @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.last.quiz_contents.build(sorting_order: 0)
         # flash quiz
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.build
+        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.build_flash_quiz
         1.times do
-          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.build
-          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.last.quiz_contents.build(sorting_order: 0)
+          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.build
+          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.last.quiz_contents.build(sorting_order: 0)
           2.times do |counter|
-            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.last.quiz_answers.build
-            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quizzes.last.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: counter)
+            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.last.quiz_answers.build
+            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: counter)
           end
         end
       end
@@ -297,6 +297,7 @@ class CourseModuleElementsController < ApplicationController
                                         :flash_quiz_id,
                                         :difficulty_level,
                                         :hints,
+                                        :_destroy,
                                         quiz_answers_attributes: [
                                                 :id,
                                                 :quiz_question_id,
@@ -312,7 +313,9 @@ class CourseModuleElementsController < ApplicationController
                                                         :contains_mathjax,
                                                         :contains_image,
                                                         :content_type,
-                                                        :sorting_order]
+                                                        :sorting_order,
+                                                        :_destroy
+                                                ]
                                         ],
                                         quiz_contents_attributes: [
                                                 :id,
@@ -322,7 +325,9 @@ class CourseModuleElementsController < ApplicationController
                                                 :contains_mathjax,
                                                 :contains_image,
                                                 :content_type,
-                                                :sorting_order]
+                                                :sorting_order,
+                                                :_destroy
+                                        ]
                                 ]
                         ]
                 ]
