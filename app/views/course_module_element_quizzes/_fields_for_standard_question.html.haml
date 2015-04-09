@@ -1,7 +1,7 @@
 -# =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: flash_quiz, mode: 'flash'}
   - mode can be 'flash' or 'full'
 
-.well.well-sm.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id)}
+.well.well-sm.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id.to_s)}
   .row
     %div{class: mode == 'full' ? 'col-sm-12' : 'col-sm-6'}
       %h3.no-top-gap=question.object.id.nil? ? t('views.course_module_element_quizzes.form.h3.question_new') : t('views.course_module_element_quizzes.form.h3.question_number') + question.object.id.to_s

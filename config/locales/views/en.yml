@@ -460,6 +460,10 @@ en:
       new:
         h1: New Exam Section
 
+    flash_cards:
+      form:
+        new_card: New card
+
     flash_card_packs:
       form:
         name: Name
