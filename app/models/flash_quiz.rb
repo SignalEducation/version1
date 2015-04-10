@@ -13,18 +13,20 @@
 class FlashQuiz < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :flash_card_stack_id, :background_color, :foreground_color
+  attr_accessible :flash_card_stack_id, :background_color, :foreground_color,
+                  :quiz_questions_attributes
 
   # Constants
 
   # relationships
-  belongs_to :flash_card_stack
-  has_many :quiz_questions
+  belongs_to :flash_card_stack, inverse_of: :flash_quiz
+  has_many :quiz_questions, inverse_of: :flash_quiz
   accepts_nested_attributes_for :quiz_questions, allow_destroy: true
 
   # validation
   validates :flash_card_stack_id, presence: true, on: :update
-  validates :flash_card_stack_id, numericality: {only_integer: true, greater_than: 0}
+  validates :flash_card_stack_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :background_color, presence: true
   validates :foreground_color, presence: true
 

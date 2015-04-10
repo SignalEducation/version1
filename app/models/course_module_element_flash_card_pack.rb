@@ -20,7 +20,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
-  has_many :flash_card_stacks
+  has_many :flash_card_stacks, inverse_of: :course_module_element_flash_card_pack
   accepts_nested_attributes_for :flash_card_stacks
 
   # validation
@@ -42,29 +42,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
     self.flash_card_stacks.empty?
   end
 
-  def spawn_flash_card_stack
-    self.flash_card_stacks.build(content_type: 'Cards', sorting_order: 0)
-  end
-
-  def spawn_flash_card
-    self.flash_card_stacks.last.flash_cards.build(sorting_order: 0)
-    self.flash_card_stacks.last.flash_cards.last.quiz_contents.build(sorting_order: 0)
-  end
-
   def spawn_flash_quiz
-    self.flash_card_stacks.first.build_flash_quiz
-    self.flash_card_stacks.first.flash_quiz.quiz_questions.build
-    self.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_contents.build(sorting_order: 0)
-    2.times do |counter|
-      self.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_answers.build
-      self.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: counter)
-    end
-  end
-
-  def spawn_missing_children
-    spawn_flash_card_stack if self.flash_card_stacks.empty?
-    spawn_flash_quiz if self.flash_card_stacks.first.try(:flash_quiz).nil?
-    spawn_flash_card if self.flash_card_stacks.first.try(:flash_cards).empty?
   end
 
   protected

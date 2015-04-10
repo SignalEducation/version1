@@ -27,7 +27,7 @@ class QuizQuestion < ActiveRecord::Base
   # relationships
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
-  belongs_to :flash_quiz
+  belongs_to :flash_quiz, inverse_of: :quiz_questions
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
@@ -39,7 +39,7 @@ class QuizQuestion < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_solutions, allow_destroy: true
 
   # validation
-  validates :course_module_element_quiz_id, presence: true,
+  validates :course_module_element_quiz_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
@@ -83,7 +83,7 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def set_course_module_element
-    self.course_module_element_id = self.course_module_element_quiz.course_module_element_id
+    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id)
     true
   end
 

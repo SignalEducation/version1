@@ -17,7 +17,7 @@ class FlashCard < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :flash_card_stack
+  belongs_to :flash_card_stack, inverse_of: :flash_cards
   has_many :quiz_contents, -> { order(:sorting_order) }
   accepts_nested_attributes_for :quiz_contents, allow_destroy: true
 
