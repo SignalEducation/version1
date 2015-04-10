@@ -152,11 +152,15 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def allowed_params # todo
-    # if params[:course_module_element][:is_cme_flash_card_pack] == true
-    #   if params[:course_module_element][]
-    #
-    #   end
-    # end
+    if params[:course_module_element][:is_cme_flash_card_pack] == true
+      params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes].each_with_index do |attributes, index|
+        if params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index][:content_type] == 'Cards'
+          params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index].delete(:flash_quiz_attributes)
+        elsif params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index][:content_type] == 'Quiz'
+          params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index].delete(:flash_cards_attributes)
+        end
+      end
+    end
     params.require(:course_module_element).permit(
         :name,
         :name_url,
