@@ -58,12 +58,22 @@
     //$('#new_user').submit(function(event) {
     $('.payment-errors').closest("form").submit(function(event) {
       var $form = $(this);
-      // Disable the submit button to prevent repeated clicks
-      $form.find('input:submit').prop('disabled', true);
-      // Create the token
-      Stripe.card.createToken($form, stripeResponseHandler);
-      // Prevent the form from submitting with the default action
-      return false;
+      console.log('Happy Friday Dan!');
+      console.log($form);
+      // If we're in the student-signups page, make sure we have a subscription plan chosen
+      if ((window.location.pathname == '/en/student_sign_ups' || window.location.pathname == '/en/student_sign_up') && isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {
+        alert('Please choose a subscription plan');
+
+        return false;
+      } else {
+
+        // Disable the submit button to prevent repeated clicks
+        $form.find('input:submit').prop('disabled', true);
+        // Create the token
+        Stripe.card.createToken($form, stripeResponseHandler);
+        // Prevent the form from submitting with the default action
+        return false;
+      }
     });
 
     function stripeResponseHandler(status, response) {
