@@ -140,14 +140,14 @@ class CourseModuleElementsController < ApplicationController
 
   def create_empty_cme_flash_card_pack
     @course_module_element.build_course_module_element_flash_card_pack
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards', sorting_order: 0)
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Quiz', sorting_order: 0)
 
     # flash cards
     @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
     @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build(sorting_order: 0)
 
     # flash quiz
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz(background_color: '#333333', foreground_color: '#eeeeee')
     @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.build
     @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.first.quiz_contents.build(sorting_order: 0)
     2.times do |counter|

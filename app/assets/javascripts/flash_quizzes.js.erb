@@ -2,11 +2,35 @@
 
 
 function addNewFlashQuizQuestion(thing) {
-  alert('hello addNewFlashQuizQuestion');
+  var me = $(thing),
+      timeStamp = (new Date).getTime().toString(),
+      theClone = $('.well.well-sm.question').first().clone();
+
+  theClone.find('h3').text('<%= I18n.t('views.course_module_element_quizzes.form.h3.question_new') %>');
+  theClone.attr('id', 'new_question_' + timeStamp);
+
+  // Update all the form fields
+  var theFieldList = theClone.find('textarea, input, select');
+  theFieldList.val('');
+  theFieldList.each(function(index) {
+    var fieldId = theFieldList.eq(index).attr('id').split('_'),
+        fieldName = theFieldList.eq(index).attr('name').split('][');
+    fieldId[21] = timeStamp;
+    fieldName[5] = timeStamp;
+    theFieldList.eq(index).attr('id', fieldId.join('_'));
+    theFieldList.eq(index).attr('name', fieldName.join(']['));
+  });
+
+  theClone.find('.destroy_field').val('false');
+  theClone.find('.qc-sorting-order, .answer-sorting-order').val('0');
+  theClone.find('.content-type, .answer-content-type').val('text');
+  theClone.find('.difficulty-level').val('easy');
+
+  me.before(theClone);
 }
 
 function addFlashQuizAnswer(thing) {
-  var theParent = $(thing).closest('.panel').find('.row.quiz_answer').parent(),
+  var theParent = $(thing).closest('.question').find('.row.quiz_answer').parent(),
       timeStamp = (new Date).getTime().toString();
   var theClone = theParent.find('.row.quiz_answer').last().clone();
   theClone.find('.col-sm-1').text(nextLetter(theClone.find('.col-sm-1').text()));
@@ -44,7 +68,6 @@ function addFlashQuizAnswer(thing) {
   degreeOfWrongnessField.val('').attr('id', degreeOfWrongnessId.join('_')).attr('name', degreeOfWrongnessName.join(']['));
 
   // add it back in
-  console.log(theParent);
   theParent.append(theClone);
 }
 
@@ -53,7 +76,7 @@ function deleteFlashQuizQuestion(thing) {
   if (confirmation) {
     var theQuestion = $(thing).closest('.question');
     if (theQuestion.find('.question_id').val() == '') {
-      if ($(thing).parent().find('.question').length > 1) {
+      if (theQuestion.parent().find('.question').length > 1) {
         theQuestion.remove();
       } else {
         alert("Sorry, you can't delete the only question in a stack");
