@@ -774,8 +774,12 @@ en:
         error_panel_caption: "prevented your Sign-Up from being completed:"
 
       new:
-        h1: Sign Up for Student access
-        lead: "We can't wait to get started helping you to achieve your full potential"
+        h1: Start Your Free Trial
+        lead: Pay nothing until your trial is complete
+        list:
+          one: Get full access.
+          two: You will not be billed during the free trial.
+          three: You can cancel at any time during your free trial. Nothing billed at all.
         h2:
           emailing: Set your messaging preferences
           subscription: Choose your subscription plan

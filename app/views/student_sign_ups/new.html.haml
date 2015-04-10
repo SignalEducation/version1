@@ -11,10 +11,17 @@
               -else
                 =@custom_headings[:h1]
             %p.lead
-              -if @custom_headings[:sub_head].blank?
-                =t('views.student_sign_ups.new.lead')
-              -else
-                =@custom_headings[:sub_head]
+              .row
+                .col-sm-6.col-sm-offset-3
+                  -if @custom_headings[:sub_head].blank?
+                    .h3.no-top-gap=t('views.student_sign_ups.new.lead')
+                    %ol.text-left
+                      %li=t('views.student_sign_ups.new.list.one')
+                      %li=t('views.student_sign_ups.new.list.two')
+                      %li=t('views.student_sign_ups.new.list.three')
+                    %hr/
+                  -else
+                    =@custom_headings[:sub_head]
 
           =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.student_sign_ups.form.error_panel_caption')}
           .form-group
