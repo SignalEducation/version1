@@ -31,7 +31,7 @@ describe FlashCardStack do
 
   # relationships
   it { should belong_to(:course_module_element_flash_card_pack) }
-  it { should have_many(:flash_quizzes) }
+  it { should have_one(:flash_quiz) }
   it { should have_many(:flash_cards) }
 
   # validation

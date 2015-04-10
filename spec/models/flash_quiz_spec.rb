@@ -32,7 +32,7 @@ describe FlashQuiz do
   it { should have_many(:quiz_questions) }
 
   # validation
-  it { should validate_presence_of(:flash_card_stack_id) }
+  it { should validate_presence_of(:flash_card_stack_id).on(:update) }
   it { should validate_numericality_of(:flash_card_stack_id) }
 
   it { should validate_presence_of(:background_color) }
@@ -49,7 +49,5 @@ describe FlashQuiz do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

@@ -49,5 +49,9 @@ describe CourseModuleElementFlashCardPack do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:spawn_flash_card_stack) }
+  it { should respond_to(:spawn_flash_card) }
+  it { should respond_to(:spawn_flash_quiz) }
+  it { should respond_to(:spawn_missing_children) }
 
 end

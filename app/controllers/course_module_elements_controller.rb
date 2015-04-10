@@ -48,22 +48,7 @@ class CourseModuleElementsController < ApplicationController
     elsif params[:type] == 'flash_cards'
       @course_module_element.is_cme_flash_card_pack = true
       @course_module_element.build_course_module_element_flash_card_pack
-      1.times do
-        # flash cards
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards', sorting_order: 0)
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.build(sorting_order: 0)
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_cards.last.quiz_contents.build(sorting_order: 0)
-        # flash quiz
-        @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.build_flash_quiz
-        1.times do
-          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.build
-          @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.last.quiz_contents.build(sorting_order: 0)
-          2.times do |counter|
-            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.last.quiz_answers.build
-            @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.last.flash_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: counter)
-          end
-        end
-      end
+      @course_module_element.course_module_element_flash_card_pack.spawn_missing_children
     end
     set_related_cmes
   end
@@ -74,7 +59,7 @@ class CourseModuleElementsController < ApplicationController
     elsif @course_module_element.is_video
       @course_module_element.course_module_element_resources.build
     elsif @course_module_element.is_cme_flash_card_pack
-      # nothing needed here (for now anyway!!)
+      @course_module_element.course_module_element_flash_card_pack.spawn_missing_children
     end
     set_related_cmes
   end
@@ -166,7 +151,12 @@ class CourseModuleElementsController < ApplicationController
     end
   end
 
-  def allowed_params
+  def allowed_params # todo
+    # if params[:course_module_element][:is_cme_flash_card_pack] == true
+    #   if params[:course_module_element][]
+    #
+    #   end
+    # end
     params.require(:course_module_element).permit(
         :name,
         :name_url,

@@ -23,8 +23,8 @@ class FlashQuiz < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_questions, allow_destroy: true
 
   # validation
-  validates :flash_card_stack_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :flash_card_stack_id, presence: true, on: :update
+  validates :flash_card_stack_id, numericality: {only_integer: true, greater_than: 0}
   validates :background_color, presence: true
   validates :foreground_color, presence: true
 
