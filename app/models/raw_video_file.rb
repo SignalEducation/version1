@@ -54,14 +54,14 @@ class RawVideoFile < ActiveRecord::Base
       skipped = 0
       current_videos = RawVideoFile.all.map {|x| {file_name: x.file_name, raw_file_modified_at: x.raw_file_modified_at, aws_etag: x.aws_etag} }
       array_of_video_names_in_inbox.each do |remote_file|
-        local_file = current_videos.find {|x| x[:aws_etag] == remote_file[:aws_etag] }
+        local_file = current_videos.find {|x| x[:file_name] == remote_file[:file_name] }
 
         if remote_file[:file_name] == local_file.try(:[], :file_name)
           if remote_file[:raw_file_modified_at] > local_file[:raw_file_modified_at]
             send_notifications(:file_updated, {remote_file: remote_file, local_file: local_file})
           end
-        elsif remote_file[:aws_etag] == local_file.try(:[], :aws_etag)
-          send_notifications(:file_renamed, {remote_file: remote_file, local_file: local_file})
+        # elsif remote_file[:aws_etag] == local_file.try(:[], :aws_etag)
+        #   send_notifications(:file_renamed, {remote_file: remote_file, local_file: local_file})
         else
           if new_row_limiter > 0
             x = RawVideoFile.new(remote_file)
