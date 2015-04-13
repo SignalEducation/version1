@@ -60,14 +60,14 @@ class CourseModuleElementsController < ApplicationController
     elsif @course_module_element.is_cme_flash_card_pack
       # edit_empty_cme_flash_card_pack
       if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
-        @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
-        @quiz_question = @flash_quiz.quiz_questions.build
-        @quiz_question.quiz_contents.build(sorting_order: 0)
+        # @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
+        # @quiz_question = @flash_quiz.quiz_questions.build
+        # @quiz_question.quiz_contents.build(sorting_order: 0)
 
 
       else
-        flash_card = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
-        flash_card.quiz_contents.build(sorting_order: 0)
+        # flash_card = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
+        # flash_card.quiz_contents.build(sorting_order: 0)
 
       end
 
@@ -199,8 +199,9 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def allowed_params # todo
-    if params[:course_module_element][:is_cme_flash_card_pack] == 'true'
+    if params[:course_module_element][:is_cme_flash_card_pack] == 't' || params[:course_module_element][:is_cme_flash_card_pack] == 'true'
       params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes].keys.each do |index|
+        binding.pry
         if params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Cards'
           params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s].delete(:flash_quiz_attributes)
         elsif params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Quiz'

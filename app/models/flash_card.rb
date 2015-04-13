@@ -36,13 +36,15 @@ class FlashCard < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_contents.empty?
+    self.quiz_contents.count > 1
   end
 
   protected
 
   def check_dependencies
-    unless self.destroyable?
+    if self.destroyable?
+      self.quiz_contents.destroy_all # actually only deletes ONE quiz_content
+    else
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end

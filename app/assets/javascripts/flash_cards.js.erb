@@ -139,7 +139,7 @@ function addNewFlashCard(theThing) {
       qcDestroy.val('false');
 
       // the_id
-      var the_id = theClone.find('the_id');
+      var the_id = theClone.find('.the_id');
       the_id.val('');
 
       // sorting_order field
@@ -162,60 +162,31 @@ $(document).on('click', '.addNewFlashCard', function() {
   return false;
 });
 
-//// Removing Flash Cards
-//function removeFlashCard(theThing) {
-  //var me = $(theThing);
-  //var theTrTag = me.parent().parent();
-//
-  //if (theTrTag.parent().find('tr').length == 1) {
-    //alert('Sorry, you cannot delete the last Flash Card');
-  //} else if (theTrTag.find('.quiz_content').length > 1) {
-    //alert('Sorry, you cannot delete a card that still has contents');
-  //} else if (confirm('Are you sure?')) {
-    //if (parseInt(theTrTag.attr('id)')) > 1000000000)  /// I'm a problem child
-      //theTrTag.remove();
-      //console.log('removed the TR tag');
-      //console.log(theTrTag);
-    //} else {
-      //// this is a card that has previously been saved in the database
-      //theTrTag.hide();
-      //theTrTag.find('.flash-card-destroy').val('1');
-      //var theQuizContents = theTrTag.find('.quiz_contents');
-      //theQuizContents.each(function(counter) {
-        //if (theQuizContents.eq(counter).find('.the_id').val() == '') {
-          //theQuizContents.eq(counter).remove();
-        //} else {
-          //theQuizContents.eq(counter).find('.flash-card-qc-destroy').val('1');
-        //}
-      //});
-    //}
-  //}
-//}
 
 function removeFlashCard(theThing) {
-    var me = $(theThing);
-    var theTrTag = me.parent().parent();
+  var me = $(theThing);
+  var theTrTag = me.parent().parent();
 
-    if (theTrTag.parent().find('tr').length == 1) {
-        alert('Sorry, you cannot delete the last Flash Card');
-    } else if (theTrTag.find('.quiz_content').length > 1) {
-        alert('Sorry, you cannot delete a card that still has contents');
-    } else if (confirm('Are you sure?')) {
-        if (parseInt(theTrTag.attr('id')) > 1000000000) {
-            theTrTag.remove();
+  if (theTrTag.parent().find('tr').length == 1) {
+    alert('Sorry, you cannot delete the last Flash Card');
+  } else if (theTrTag.find('.quiz_content').length > 1) {
+    alert('Sorry, you cannot delete a card that still has contents');
+  } else if (confirm('Are you sure?')) {
+    if (parseInt(theTrTag.attr('id')) > 1000000000) {
+      theTrTag.remove();
+    } else {
+      theTrTag.hide();
+      theTrTag.find('.flash-card-destroy').val('1');
+      var theQuizContents = theTrTag.find('.quiz_contents');
+      theQuizContents.each(function(counter) {
+        if (theQuizContents.eq(counter).find('.the_id').val() == '') {
+          theQuizContents.eq(counter).remove();
         } else {
-            theTrTag.hide;
-            theTrTag.find('flash-card-destroy').val('1');
-            var theQuizContents = theTrTag.find('.quiz_contents');
-            theQuizContents.each(function(counter) {
-                if (theQuizContents.eq(counter).find('.the_id').val() == '') {
-                    theQuizContents.eq(counter).remove();
-                } else {
-                    theQuizContents.eq(counter).find('.flash-card-qc-destroy').val('1');
-                }
-            })
+          theQuizContents.eq(counter).find('.flash-card-qc-destroy').val('1');
         }
+      })
     }
+  }
 }
 
 $(document).on('click', '.removeFlashCard', function() {
@@ -244,7 +215,7 @@ function removeFlashCardQuizContent(theThing) {
     if (confirm('Are you sure?')) {
       if (parseInt(me.parent().parent().find('.the_id').val()) > 0 ) {
         me.parent().parent().hide();
-        me.parent().parent().find('.destroy').val('1')
+        me.parent().parent().find('.flash-card-qc-destroy').val('1')
       } else {
         me.parent().parent().remove();
       }

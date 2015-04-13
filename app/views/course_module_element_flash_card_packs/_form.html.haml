@@ -9,7 +9,13 @@
         =pack.hidden_field :course_module_element_id
         -counter = -1
         =pack.fields_for :flash_card_stacks do |stack|
-          =stack.hidden_field :sorting_order
+          -if stack.object == pack.object.flash_card_stacks.first && !stack.object.flash_cards.any?
+            -new_card = stack.object.flash_cards.build(flash_card_stack_id: stack.object.id, sorting_order: 0)
+            -new_card.quiz_contents.build(text_content: 'hello', sorting_order: 0)
+            .well
+              .h3 Flash_cards
+              =stack.object.flash_cards.inspect
+          =stack.hidden_field :sorting_order, class: 'stack_sorting_order stack_field'
           -counter += 1
           .panel.panel-default
             .panel-heading{id: "heading_#{counter}", role: 'tab'}
@@ -21,20 +27,28 @@
                     -else
                       %span.glyphicon.glyphicon-chevron-right{title: t('views.general.tooltips.click_to_view')}
                 .col-sm-4
-                  =stack.text_field :name, placeholder: t('views.flash_card_packs.form.name_placeholder'), class: 'form-control', required: true
+                  =stack.text_field :name, placeholder: t('views.flash_card_packs.form.name_placeholder'), class: 'form-control stack_field', required: true
                 .col-sm-4
-                  =stack.text_field :final_button_label, placeholder: t('views.flash_card_packs.form.final_button_label_placeholder'), class: 'form-control', required: true
+                  =stack.text_field :final_button_label, placeholder: t('views.flash_card_packs.form.final_button_label_placeholder'), class: 'form-control stack_field', required: true
 
                 .col-sm-2
-                  =stack.select :content_type, FlashCardStack::CONTENT_TYPES, {}, {class: 'form-control', onchange: "$(this).closest('.panel').find('.card_panel').toggleClass('hide');"}
+                  -if stack.object.flash_quiz && stack.object.flash_cards.any?
+                    =stack.select :content_type, FlashCardStack::CONTENT_TYPES, {}, {class: 'form-control stack_field', onchange: "$(this).closest('.panel').find('.card_panel').toggleClass('hide');"}
+                  -elsif stack.object.flash_quiz
+                    .form-control-static Quiz
+                  -elsif stack.object.flash_cards.count > 0
+                    .form-control-static Cards
+                  -else
+                    .form-control-static UNKNOWN!!
+                    -Rails.logger.error "ERROR: app/views/course_module_element_flash_card_packs/_form.html.haml encountered an unknown flash_card_stack type. Stack: #{stack.object.inspect}. Pack: #{pack.object.inspect}. User-ID: #{current_user.id}."
                 .col-sm-1.text-right
                   %span.glyphicon.glyphicon-sort{title: t('views.general.tooltips.coming_soon')}
 
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: "heading_#{counter}"}}
               .panel-body
-                .card_panel.card_panel_cards{class: stack.object.content_type == 'Quiz' ? 'hide' : ''}
+                .card_panel.card_panel_cards{class: stack.object.content_type == 'Quiz' ? 'shide' : ''}
                   =render partial: 'flash_cards/fields_for', locals: {f: f, stack: stack, pack: pack}
-                .card_panel.card_panel_quiz{class: stack.object.content_type == 'Quiz' ? '' : 'hide'}
+                .card_panel.card_panel_quiz{class: stack.object.content_type == 'Quiz' ? '' : 'shide'}
                   =render partial: 'flash_quizzes/fields_for', locals: {f: f, stack: stack, pack: pack}
 .row
   .col-sm-12
