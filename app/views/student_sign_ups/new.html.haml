@@ -64,7 +64,11 @@
             =sub.hidden_field :stripe_token
 
         .well.well-sm
-          %h2.text-center=t('views.student_sign_ups.new.h2.payment')
+          %h2.text-center
+            =t('views.student_sign_ups.new.h2.payment')
+          .row
+            .col-sm-4.col-sm-offset-4.text-center
+              =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;'), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
           %hr/
 
           =render partial: 'subscription_payment_cards/form', locals: {f: f}
