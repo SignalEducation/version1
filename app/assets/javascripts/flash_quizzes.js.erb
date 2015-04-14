@@ -1,6 +1,5 @@
 // Flash quiz interactivity - CME management
 
-
 function addNewFlashQuizQuestion(thing) {
   var me = $(thing),
       timeStamp = (new Date).getTime().toString(),
@@ -28,6 +27,11 @@ function addNewFlashQuizQuestion(thing) {
 
   me.before(theClone);
 }
+
+$(document).on('click', '.addNewFlashQuizQuestion', function() {
+  addNewFlashQuizQuestion(this);
+  return false;
+});
 
 function addFlashQuizAnswer(thing) {
   var theParent = $(thing).closest('.question').find('.row.quiz_answer').parent(),
@@ -71,38 +75,34 @@ function addFlashQuizAnswer(thing) {
   theParent.append(theClone);
 }
 
-function deleteFlashQuizQuestion(thing) {
-  var confirmation = confirm("<%= I18n.t('views.general.delete_confirmation') %>");
-  if (confirmation) {
-    var theQuestion = $(thing).closest('.question');
-    if (theQuestion.find('.question_id').val() == '') {
-      if (theQuestion.parent().find('.question').length > 1) {
-        theQuestion.remove();
-      } else {
-        alert("Sorry, you can't delete the only question in a stack");
-      }
-    } else {
-      theQuestion.find('.destroy_field').val('1');
-      theQuestion.hide();
-    }
-  }
-}
-
-function nextLetter(theLetter) {
-  return String.fromCharCode(theLetter.trim().charCodeAt() + 1);
-}
-
-$(document).on('click', '.addNewFlashQuizQuestion', function() {
-  addNewFlashQuizQuestion(this);
-  return false;
-});
-
 $(document).on('click', '.addExtraFlashQuizAnswer', function() {
   addFlashQuizAnswer(this);
   return false;
 });
 
+function deleteFlashQuizQuestion(thing) {
+  var theQuestion = $(thing).closest('.question');
+  if (theQuestion.parent().find('.question').length > 1) {
+    var confirmation = confirm("<%= I18n.t('views.general.delete_confirmation') %>");
+    if (confirmation) {
+      if (theQuestion.find('.question_id').val() == '') {
+        theQuestion.remove();
+      } else {
+        theQuestion.find('.destroy_field').val('1');
+        theQuestion.hide();
+      }
+    }
+  } else {
+    alert("Sorry, you can't delete the only question in a stack");
+  }
+}
+
 $(document).on('click', '.deleteFlashQuizQuestion', function() {
   deleteFlashQuizQuestion(this);
   return false;
 });
+
+function nextLetter(theLetter) {
+  return String.fromCharCode(theLetter.trim().charCodeAt() + 1);
+}
+

@@ -3,6 +3,7 @@
     =stack.fields_for :flash_cards do |card|
       %tr{id: card.object.id || Time.now.to_i}
         %td.col-sm-11
+          =card.hidden_field :id, class: 'card_id card_field'
           =card.hidden_field :sorting_order, class: 'card-sorting-order card_field'
           =card.hidden_field :_destroy, value: false, class: 'flash-card-destroy card_field'
           %h4
@@ -15,6 +16,7 @@
               =qc.hidden_field :_destroy, value: false, class: 'flash-card-qc-destroy card_qc_field'
               =qc.hidden_field :id, class: 'the_id card_qc_field'
               =qc.hidden_field :sorting_order, class: 'qc-sorting-order card_qc_field'
+              =#qc.hidden_field :flash_card_id, class: 'qc-flash-card-id card_field'
               .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
                 =image_tag qc.object.image.url, class: 'thumbnail img-responsive col-xs-12'
                 %br/

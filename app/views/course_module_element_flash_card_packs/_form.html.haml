@@ -9,15 +9,23 @@
         =pack.hidden_field :course_module_element_id
         -counter = -1
         =pack.fields_for :flash_card_stacks do |stack|
+
           -if stack.object == pack.object.flash_card_stacks.first && !stack.object.flash_cards.any?
             -new_card = stack.object.flash_cards.build(flash_card_stack_id: stack.object.id, sorting_order: 0)
-            -new_card.quiz_contents.build(text_content: 'hello', sorting_order: 0)
-            .well
-              .h3 Flash_cards
-              =stack.object.flash_cards.inspect
-          =stack.hidden_field :sorting_order, class: 'stack_sorting_order stack_field'
+            -new_card.quiz_contents.build(text_content: '', sorting_order: 0, content_type: 'text')
+
+          -elsif stack.object == pack.object.flash_card_stacks.first && stack.object.flash_quiz.nil?
+            -flash_quiz = stack.object.build_flash_quiz(background_color: '#222222', foreground_color: '#eeeeee')
+            -question = flash_quiz.quiz_questions.build(difficulty_level: 'easy')
+            -question_qc = question.quiz_contents.build(content_type: 'text', sorting_order: 0)
+            -answer1 = question.quiz_answers.build
+            -answer1_qc = answer1.quiz_contents.build(content_type: 'text', sorting_order: 0)
+            -answer2 = question.quiz_answers.build
+            -answer2_qc = answer2.quiz_contents.build(content_type: 'text', sorting_order: 0)
+
           -counter += 1
           .panel.panel-default
+            =stack.hidden_field :sorting_order, class: 'stack_sorting_order stack_field'
             .panel-heading{id: "heading_#{counter}", role: 'tab'}
               .row
                 .col-sm-1
@@ -46,9 +54,9 @@
 
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: "heading_#{counter}"}}
               .panel-body
-                .card_panel.card_panel_cards{class: stack.object.content_type == 'Quiz' ? 'shide' : ''}
+                .card_panel.card_panel_cards{class: stack.object.content_type == 'Quiz' ? 'hide' : ''}
                   =render partial: 'flash_cards/fields_for', locals: {f: f, stack: stack, pack: pack}
-                .card_panel.card_panel_quiz{class: stack.object.content_type == 'Quiz' ? '' : 'shide'}
+                .card_panel.card_panel_quiz{class: stack.object.content_type == 'Quiz' ? '' : 'hide'}
                   =render partial: 'flash_quizzes/fields_for', locals: {f: f, stack: stack, pack: pack}
 .row
   .col-sm-12

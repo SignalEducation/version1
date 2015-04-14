@@ -36,7 +36,7 @@ class FlashCard < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_contents.count > 1
+    self.quiz_contents.count <= 1
   end
 
   protected

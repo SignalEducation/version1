@@ -6,7 +6,8 @@ function addNewFlashCardStack() {
   var theClone = panels.first().clone(),
       timeStamp = (new Date).getTime().toString();
   theClone.find('input, textarea').val(null);
-  theClone.find('.stack_sorting_order').val(timeStamp);
+  theClone.find('.stack_sorting_order').val(parseInt($('.stack_sorting_order').last().val()) + 5);
+  theClone.find('h4').text('<%= I18n.t('views.flash_cards.form.new_card') %>');
   theClone.find('.card-sorting-order').val(0);
   theClone.find('.panel-heading select').val('Cards');
   theClone.find('.card_panel_cards').removeClass('hide');
@@ -19,7 +20,6 @@ function addNewFlashCardStack() {
   // reset ID and Name for fields in the Stack, cards, and card QCs
   var stackFields = theClone.find('.stack_field, .card_field, .card_qc_field');
   stackFields.each(function(index) {
-    console.log(stackFields.eq(index));
     var fieldId = stackFields.eq(index).attr('id').split('_'),
         fieldName = stackFields.eq(index).attr('name').split('][');
     fieldId[14] = timeStamp;

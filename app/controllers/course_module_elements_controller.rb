@@ -140,7 +140,7 @@ class CourseModuleElementsController < ApplicationController
 
   def create_empty_cme_flash_card_pack
     @course_module_element.build_course_module_element_flash_card_pack
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Quiz', sorting_order: 0)
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards', sorting_order: 0)
 
     # flash cards
     @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
@@ -201,7 +201,6 @@ class CourseModuleElementsController < ApplicationController
   def allowed_params # todo
     if params[:course_module_element][:is_cme_flash_card_pack] == 't' || params[:course_module_element][:is_cme_flash_card_pack] == 'true'
       params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes].keys.each do |index|
-        binding.pry
         if params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Cards'
           params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s].delete(:flash_quiz_attributes)
         elsif params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Quiz'
@@ -209,6 +208,9 @@ class CourseModuleElementsController < ApplicationController
         end
       end
     end
+
+    Rails.logger.debug "DEBUG: Revised params: #{params.inspect}."
+
     params.require(:course_module_element).permit(
         :name,
         :name_url,
