@@ -45,7 +45,7 @@ function addFlashQuizAnswer(thing) {
   sortingOrderId[25] = timeStamp;
   var sortingOrderName = sortingOrderField.attr('name').split('][');
   sortingOrderName[7] = timeStamp;
-  sortingOrderField.val(timeStamp).attr('id', sortingOrderId.join('_')).attr('name', sortingOrderName.join(']['));
+  sortingOrderField.val( parseInt(sortingOrderField.val()) + 5).attr('id', sortingOrderId.join('_')).attr('name', sortingOrderName.join(']['));
 
   // content_type hidden field
   var contentTypeField = theClone.find('.answer-content-type').last();

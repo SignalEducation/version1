@@ -1,7 +1,7 @@
 // regarding HTML in app/views/flash_card_stacks/
 
 function addNewFlashCardStack() {
-  var panels = $(".panel");
+  var panels = $(".panel").not('.panel-danger');
   $('#' + panels.find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
   var theClone = panels.first().clone(),
       timeStamp = (new Date).getTime().toString();
@@ -16,9 +16,12 @@ function addNewFlashCardStack() {
   theClone.find('tbody').find('tr').not(':first').remove();
   theClone.find('.panel-heading').attr('id','heading_' + timeStamp);
   theClone.find('.panel-heading').find('.disclosure-triangles').attr('aria-controls','collapse_' + timeStamp).attr('href','#collapse_' + timeStamp);
+  theClone.find('.flash_quiz_bg_col').val('#222222');
+  theClone.find('.flash_quiz_col').val('#eeeeee');
+  theClone.find('.difficulty-level').val('easy');
 
   // reset ID and Name for fields in the Stack, cards, and card QCs
-  var stackFields = theClone.find('.stack_field, .card_field, .card_qc_field');
+  var stackFields = theClone.find('.stack_field, .card_field, .card_qc_field, .flash_quiz_field, .quiz_question_field');
   stackFields.each(function(index) {
     var fieldId = stackFields.eq(index).attr('id').split('_'),
         fieldName = stackFields.eq(index).attr('name').split('][');
@@ -38,11 +41,6 @@ function addNewFlashCardStack() {
 //    fieldName[2] = timeStamp;
 //    cardFields.eq(index).attr('id', fieldId.join('_')).attr('name', fieldName.join(']['));
 //  });
-
-
-//  theClone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_name').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_name'.replace('0', timeStamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][name]'.replace('0', timeStamp));
-//  theClone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_final_button_label').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_final_button_label'.replace('0', timeStamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][final_button_label]'.replace('0', timeStamp));
-//  theClone.find('#course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_content_type').attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_content_type'.replace('0', timeStamp)).attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][content_type]'.replace('0', timeStamp));
 
   theClone.find('.panel-collapse').attr('id','collapse_' + timeStamp);
   theClone.find('.panel-collapse').attr('aria-labelledby','heading_' + timeStamp);

@@ -39,7 +39,6 @@ describe QuizQuestion do
   it { should have_many(:quiz_solutions) }
 
   # validation
-  it { should validate_presence_of(:course_module_element_quiz_id).on(:update) }
   xit { should validate_numericality_of(:course_module_element_quiz_id) }
 
   it { should validate_presence_of(:course_module_element_id).on(:update) }

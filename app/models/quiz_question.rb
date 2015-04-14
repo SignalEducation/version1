@@ -83,7 +83,7 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def set_course_module_element
-    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id)
+    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id) || self.flash_quiz.flash_card_stack.course_module_element_flash_card_pack.course_module_element_id
     true
   end
 
