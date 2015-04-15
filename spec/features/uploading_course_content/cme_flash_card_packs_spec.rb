@@ -40,7 +40,6 @@ describe 'Admin uploading flash card packs:', type: :feature do
       end
       click_button 'Save'
       sleep 10
-      binding.pry
     end
 
 
