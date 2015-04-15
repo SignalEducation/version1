@@ -312,7 +312,9 @@ class ApplicationController < ActionController::Base
   helper_method :course_special_link
 
   def seo_title_maker(last_element)
-    @seo_title = "LearnSignal – #{controller_name.humanize.titleize}" + (last_element ? ' - ' + last_element : ' - ' + action_name.gsub('index','list').gsub('create','new').titleize)
+    #@seo_title = "LearnSignal – #{controller_name.humanize.titleize}" + (last_element ? ' - ' + last_element : ' - ' + action_name.gsub('index','list').gsub('create','new').titleize)
+
+    @seo_title = "LearnSignal – #{last_element}"
   end
 
 end

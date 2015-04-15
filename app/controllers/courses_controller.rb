@@ -4,9 +4,12 @@ class CoursesController < ApplicationController
   before_action :check_for_old_url_format, only: :show
 
   def show
+
     @mathjax_required = true
+    institution = Institution.find_by(name_url: params[:institution_name_url])
     qualification = Qualification.find_by_name_url(params[:qualification_name_url])
     exam_level = qualification.exam_levels.find_by(name_url: params[:exam_level_name_url])
+    course_module_element = CourseModuleElement.find_by(name_url: params[:course_module_element_url])
     @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
     if @course_module
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
@@ -37,6 +40,9 @@ class CoursesController < ApplicationController
         create_a_cme_user_log
       end
     end
+
+    seo_title_maker("#{institution.short_name}" + " - #{exam_level.name}" + " - #{course_module_element.try(:name)}")
+
   end
 
   def create # course_module_element_user_log and children
