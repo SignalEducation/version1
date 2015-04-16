@@ -36,6 +36,7 @@ en:
 
     subscription_plans:
       must_be_in_the_future: Must be in the future
+      at_least_one_customer_type: Subscription Plans must be available to at least one customer type
 
     stripe_api_event:
       guid_required_to_get_payload_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
