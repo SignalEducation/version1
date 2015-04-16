@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.5'
+ruby '2.1.6'
 gem 'rails', '4.1.8'
 
 # Core gems - common to all environments
@@ -23,7 +23,7 @@ gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'mathjax-rails' # maths functions in the UI
-gem 'mixpanel-ruby' # support for MixPanel
+gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
 gem 'paperclip', '~> 4.2' # for uploading files (works with RemotiPart)
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
