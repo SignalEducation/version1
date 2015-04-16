@@ -38,7 +38,7 @@ class CourseModuleJumboQuizzesController < ApplicationController
     if params[:id].to_i > 0
       @course_module_jumbo_quiz = CourseModuleJumboQuiz.where(id: params[:id]).first
     end
-    seo_title_maker(@course_module_jumbo_quiz.try(:name))
+    seo_title_maker(@course_module_jumbo_quiz.try(:name) || 'Jumbo Quizzes', '', true)
   end
 
   def allowed_params

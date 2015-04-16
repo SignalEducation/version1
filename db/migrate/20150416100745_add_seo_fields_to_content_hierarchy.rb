@@ -22,16 +22,16 @@ class AddSeoFieldsToContentHierarchy < ActiveRecord::Migration
       ExamSection.update_all(seo_description: 'SEO Description goes here')
       CourseModule.all.each do |cm|
         if cm.description.blank?
-          cm.update(seo_description: cm.description.to_s.truncate(200) )
-        else
           cm.update(seo_description: 'SEO Description goes here')
+        else
+          cm.update(seo_description: cm.description.to_s.truncate(200) )
         end
       end
       CourseModuleElement.all.each do |cme|
         if cme.description.blank?
-          cme.update(seo_description: cme.description.to_s.truncate(200) )
-        else
           cme.update(seo_description: 'SEO Description goes here')
+        else
+          cme.update(seo_description: cme.description.to_s.truncate(200) )
         end
       end
     end

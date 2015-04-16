@@ -792,6 +792,7 @@ en:
         error_panel_caption: "prevented your Sign-Up from being completed:"
 
       new:
+        seo_description: 'Sign up for student access on LearnSignal.com and pay nothing until your free trial period is complete. Commitment free - cancel anytime'
         h1: Start Your Free Trial
         lead: Pay nothing until your trial is complete
         list:

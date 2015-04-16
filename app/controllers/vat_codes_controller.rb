@@ -57,7 +57,7 @@ class VatCodesController < ApplicationController
       @vat_code = VatCode.where(id: params[:id]).first
     end
     @countries = Country.all_in_order
-    seo_title_maker(@vat_code.try(:name))
+    seo_title_maker(@vat_code.try(:name) || 'VAT Codes', '', true)
   end
 
   def allowed_params
