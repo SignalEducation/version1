@@ -20,7 +20,7 @@ class Qualification < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :institution_id, :name, :name_url, :sorting_order, :active, :cpd_hours_required_per_year
+  attr_accessible :institution_id, :name, :name_url, :sorting_order, :active,:cpd_hours_required_per_year, :seo_description, :seo_no_index
 
   # Constants
 
@@ -36,6 +36,7 @@ class Qualification < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true
   validates :sorting_order, presence: true
   validates :cpd_hours_required_per_year, presence: true
+  validates :seo_description, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

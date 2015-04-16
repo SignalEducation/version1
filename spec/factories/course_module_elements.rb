@@ -36,6 +36,8 @@ FactoryGirl.define do
     related_quiz_id             nil
     related_video_id            1
     active                      true
+    seo_description             'Lorem Ipsum'
+    seo_no_index                false
 
     factory :cme_video do
       is_video                    true

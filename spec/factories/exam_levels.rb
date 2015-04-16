@@ -29,6 +29,9 @@ FactoryGirl.define do
     active               false
     default_number_of_possible_exam_answers 4
     enable_exam_sections true
+    seo_description       'Lorem ipsum'
+    seo_no_index           false
+
 
     factory :active_exam_level do
       active                       true

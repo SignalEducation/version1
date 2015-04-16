@@ -61,6 +61,8 @@ describe ExamLevel do
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
   it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
+  it { should validate_presence_of(:seo_description) }
+
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_best_possible_score).before(:save) }

@@ -35,7 +35,8 @@ class CourseModuleElement < ActiveRecord::Base
                   :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
-                  :course_module_element_resources_attributes
+                  :course_module_element_resources_attributes,
+                  :seo_description, :seo_no_index
 
   # Constants
 

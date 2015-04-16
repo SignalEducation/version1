@@ -30,6 +30,8 @@ FactoryGirl.define do
     tutor_id                  1
     sequence(:sorting_order)  { |n| n * 100 }
     estimated_time_in_seconds 0
+    seo_description           'Lorem Ipsum'
+    seo_no_index              false
 
     factory :active_course_module do
       active true

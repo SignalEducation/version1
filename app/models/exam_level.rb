@@ -27,7 +27,8 @@ class ExamLevel < ActiveRecord::Base
   attr_accessible :qualification_id, :name, :name_url, :is_cpd,
                   :sorting_order, :active,
                   :default_number_of_possible_exam_answers,
-                  :enable_exam_sections
+                  :enable_exam_sections, :seo_description,
+                  :seo_no_index
 
   # Constants
 
@@ -51,6 +52,7 @@ class ExamLevel < ActiveRecord::Base
   validates :sorting_order, presence: true
   validates :default_number_of_possible_exam_answers, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :seo_description, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
