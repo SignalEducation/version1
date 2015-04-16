@@ -18,17 +18,18 @@ class LibraryController < ApplicationController
       end
     end
     @hierarchy_item = @exam_section || @exam_level || @qualification || @institution || @subject_area
-    #@total_cmes = @hierarchy_item.children.first.cme_count
 
     # SEO Titles
-    if @hierarchy_item == @subject_area
-      seo_title_maker('Library')
+    if @hierarchy_item == @exam_section
+      seo_title_maker("#{@institution.short_name} - #{@exam_level.name} - #{@exam_section.name}", @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
     elsif @hierarchy_item == @exam_level
-      seo_title_maker("#{@institution.short_name}" + " - #{@exam_level.name}")
+      seo_title_maker("#{@institution.short_name} - #{@exam_level.name}", @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
     elsif @hierarchy_item == @qualification
-          seo_title_maker("#{@institution.short_name}" + " - #{@qualification.name}")
-    elsif @hierarchy_item == @exam_section
-      seo_title_maker("#{@institution.short_name}" + " - #{@exam_level.name}" + " - #{@exam_section.name}")
+      seo_title_maker("#{@institution.short_name} - #{@qualification.name}", @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    elsif @hierarchy_item == @institution
+      seo_title_maker(@institution.short_name, @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    elsif @hierarchy_item == @subject_area
+      seo_title_maker('Library', @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
     end
 
     @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)

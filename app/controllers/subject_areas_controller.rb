@@ -65,11 +65,10 @@ class SubjectAreasController < ApplicationController
     if params[:id].to_i > 0
       @subject_area = SubjectArea.where(id: params[:id]).first
     end
-    seo_title_maker(@subject_area.try(:name))
   end
 
   def allowed_params
-    params.require(:subject_area).permit(:name, :name_url, :sorting_order, :active)
+    params.require(:subject_area).permit(:name, :name_url, :sorting_order, :active, :seo_description, :seo_no_index)
   end
 
 end

@@ -194,6 +194,9 @@ en:
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
         active: "Active?"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Course Module
@@ -239,6 +242,9 @@ en:
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Course Module Element
@@ -410,6 +416,9 @@ en:
         default_number_of_possible_exam_answers_placeholder: 4
         default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
         enable_exam_sections: "Enable exam sections?"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Exam Levels
@@ -438,6 +447,9 @@ en:
         sorting_order_placeholder: 100
         best_possible_first_attempt_score: Best-possible first attempt score
         best_possible_first_attempt_score_placeholder: 100
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Exam Sections
@@ -471,6 +483,9 @@ en:
         active: Active
         background_colour_code: Background colour code
         background_colour_code_placeholder: 'FFEE99 (no need for #)'
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Institution
@@ -593,6 +608,9 @@ en:
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Qualifications
@@ -813,6 +831,9 @@ en:
         name_placeholder: Human resources
         name_url: Name URL
         name_url_placeholder: "human-resources"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         active: Active

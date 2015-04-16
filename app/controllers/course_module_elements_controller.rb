@@ -133,7 +133,6 @@ class CourseModuleElementsController < ApplicationController
       @raw_video_files = RawVideoFile.all_in_order
     #end
     @letters = ('A'..'Z').to_a
-    seo_title_maker(@course_module_element.try(:name))
     @mathjax_required = true
   end
 
@@ -162,6 +161,8 @@ class CourseModuleElementsController < ApplicationController
         :related_video_id,
         :is_video,
         :is_quiz,
+        :seo_description,
+        :seo_no_index,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
