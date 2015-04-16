@@ -67,7 +67,7 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def update_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name, :subscription_plan_category_id)
+    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat)
   end
 
 end
