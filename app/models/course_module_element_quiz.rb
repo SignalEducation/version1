@@ -45,6 +45,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # callbacks
   before_save :set_jumbo_quiz_id
   before_update :set_high_score_fields
+  after_commit :set_ancestors_best_scores
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -92,10 +93,20 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   protected
 
+  def set_ancestors_best_scores
+    changes = self.previous_changes[:best_possible_score_first_attempt] # [prev,new]
+    if changes && changes[0] != changes[1]
+      self.course_module_element.course_module.exam_section.try(:save)
+      self.course_module_element.course_module.exam_level.save
+    end
+    true
+  end
+
   def set_high_score_fields
     max_score = ApplicationController::DIFFICULTY_LEVELS.last[:score]
     self.best_possible_score_retry = self.number_of_questions.to_i * max_score
-    # The best possible score for first attempt assumes the first question is easy the next question is medium and all other questions are hard.
+    # The best possible score for first attempt assumes the first question is easy,
+    # the next question is medium, and all other questions are hard.
     self.best_possible_score_first_attempt = self.best_possible_score_retry
     ApplicationController::DIFFICULTY_LEVELS.each do |level|
       self.best_possible_score_first_attempt -= (max_score - level[:score])
@@ -103,7 +114,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   def set_jumbo_quiz_id
-    self.course_module_jumbo_quiz_id = self.course_module_element.try(:course_module).try(:course_module_jumbo_quiz).try(:id)
+    self.course_module_jumbo_quiz_id ||= self.course_module_element.try(:course_module).try(:course_module_jumbo_quiz).try(:id)
   end
 
   def self.quiz_question_fields_blank?(the_attributes)

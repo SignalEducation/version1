@@ -181,7 +181,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.4.3)
     mini_portile (0.6.0)
-    minitest (5.5.1)
+    minitest (5.6.0)
     mixpanel-ruby (1.5.0)
     multi_json (1.10.1)
     multi_xml (0.5.5)
@@ -284,7 +284,7 @@ GEM
       websocket (~> 1.0)
     shoulda-callback-matchers (1.1.1)
       activesupport (>= 3)
-    shoulda-matchers (2.7.0)
+    shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
     sidekiq (3.3.0)
       celluloid (>= 0.16.0)
@@ -320,7 +320,7 @@ GEM
       libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
-    thread_safe (0.3.4)
+    thread_safe (0.3.5)
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
