@@ -19,6 +19,8 @@ FactoryGirl.define do
     sequence(:name_url)       { |n| "subject-area #{n}" }
     sequence(:sorting_order)  { |n| n * 10 }
     seo_description           'Lorem ipsum'
+    seo_description       'Lorem ipsum'
+    seo_no_index           false
 
     factory :active_subject_area do
       active                  true

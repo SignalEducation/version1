@@ -21,7 +21,8 @@ class ExamSection < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
+                  :seo_description, :seo_no_index
 
   # Constants
 

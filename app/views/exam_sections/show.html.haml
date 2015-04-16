@@ -33,6 +33,12 @@
         %td.col-sm-4=t('views.exam_sections.form.name')
         %td.col-sm-8=@exam_section.name
       %tr
+        %td.col-sm-4=t('views.exam_sections.form.seo_description')
+        %td.col-sm-8=@exam_section.seo_description
+      %tr
+        %td.col-sm-4=t('views.exam_sections.form.seo_no_index')
+        %td.col-sm-8=tick_or_cross(@exam_section.seo_no_index)
+      %tr
         %td.col-sm-4=t('views.exam_sections.form.name_url')
         %td.col-sm-8=@exam_section.name_url
       %tr

@@ -22,6 +22,8 @@ FactoryGirl.define do
     sequence(:name_url)   {|n| "exam-section-#{n}"}
     exam_level_id         { ExamLevel.first.try(:id) || FactoryGirl.create(:exam_level).id }
     sequence(:sorting_order) {|n| n * 10}
+    seo_description       'Lorem ipsum'
+    seo_no_index           false
 
     factory :active_exam_section do
       active              true
