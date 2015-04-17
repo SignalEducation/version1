@@ -19,11 +19,8 @@
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
 #  is_cme_flash_card_pack    :boolean          default(FALSE), not null
-<<<<<<< HEAD
 #  seo_description           :string(255)
 #  seo_no_index              :boolean          default(FALSE)
-=======
->>>>>>> FETCH_HEAD
 #
 
 require 'rails_helper'

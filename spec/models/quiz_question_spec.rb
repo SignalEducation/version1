@@ -50,7 +50,7 @@ describe QuizQuestion do
   it { should ensure_length_of(:hints).is_at_most(65535) }
 
   # callbacks
-  it { should callback(:set_course_module_element).before(:save) }
+  it { should callback(:set_course_module_element).before(:validation) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
