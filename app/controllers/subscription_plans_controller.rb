@@ -58,7 +58,7 @@ class SubscriptionPlansController < ApplicationController
     end
     @currencies = Currency.all_active.all_in_order
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
-    seo_title_maker(@subscription_plan.try(:id).to_s)
+    seo_title_maker(@subscription_plan.try(:id).to_s, '', true)
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
   end
 
@@ -67,7 +67,7 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def update_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name, :subscription_plan_category_id)
+    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat)
   end
 
 end

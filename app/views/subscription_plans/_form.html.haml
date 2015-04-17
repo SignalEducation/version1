@@ -20,14 +20,14 @@
               %label
                 =f.check_box :available_to_corporates
                 =t('views.subscription_plans.form.available_to_corporates')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :all_you_can_eat
+                =t('views.subscription_plans.form.all_you_can_eat')
 
         -if f.object.id.nil?
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :all_you_can_eat
-                  =t('views.subscription_plans.form.all_you_can_eat')
           .form-group
             =f.label :payment_frequency_in_months, t('views.subscription_plans.form.payment_frequency_in_months'), class: 'control-label col-sm-4'
             .col-sm-8

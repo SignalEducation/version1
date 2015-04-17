@@ -38,13 +38,12 @@ describe CourseModuleElementQuiz do
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_id) }
+  xit { should validate_numericality_of(:course_module_element_id).on(:update) }
 
   it { should validate_presence_of(:number_of_questions).on(:update) }
-  xit { should validate_numericality_of(:number_of_questions) }
+  xit { should validate_numericality_of(:number_of_questions).on(:update) }
 
-  xit { should validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_jumbo_quiz_id) }
+  it { should_not validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
 
   it { should validate_inclusion_of(:question_selection_strategy).in_array(CourseModuleElementQuiz::STRATEGIES) }
 
@@ -52,6 +51,7 @@ describe CourseModuleElementQuiz do
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_jumbo_quiz_id).before(:save) }
   it { should callback(:set_high_score_fields).before(:update) }
+  it { should callback(:set_ancestors_best_scores).after(:commit) }
 
   # scopes
   it { expect(CourseModuleElementQuiz).to respond_to(:all_in_order) }

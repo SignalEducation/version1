@@ -4,7 +4,9 @@ class CoursesController < ApplicationController
   before_action :check_for_old_url_format, only: :show
 
   def show
+
     @mathjax_required = true
+    institution = Institution.find_by(name_url: params[:institution_name_url])
     qualification = Qualification.find_by_name_url(params[:qualification_name_url])
     exam_level = qualification.exam_levels.find_by(name_url: params[:exam_level_name_url])
     @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
@@ -12,6 +14,8 @@ class CoursesController < ApplicationController
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
       @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
       @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+
+      seo_title_maker("#{institution.short_name} - #{exam_level.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
     end
 
     if @course_module_element.nil? && @course_module.nil?
@@ -37,6 +41,7 @@ class CoursesController < ApplicationController
         create_a_cme_user_log
       end
     end
+
   end
 
   def create # course_module_element_user_log and children

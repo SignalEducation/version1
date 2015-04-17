@@ -74,72 +74,56 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subscription_plan_category_2' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be bounced as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -154,72 +138,50 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_category_2' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be bounced as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -234,72 +196,50 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_category_2' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -314,72 +254,50 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_category_2' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be bounced as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -394,72 +312,50 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_category_2' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be bounced as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -474,72 +370,50 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_category_2' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be bounced as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -554,72 +428,50 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see subscription_plan_category_2' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should be bounced as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should be bounced as not allowed' do
         post :create, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subscription_plan_category_1' do
+      it 'should be bounced as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: subscription_plan_category_1.id, subscription_plan_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be bounced as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end

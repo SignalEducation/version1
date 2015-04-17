@@ -15,6 +15,8 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  background_colour_code :string(255)
+#  seo_description        :string(255)
+#  seo_no_index           :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -28,6 +30,8 @@ FactoryGirl.define do
     subject_area_id       1
     sequence(:sorting_order) {|n| n * 10}
     background_colour_code 'ff1111'
+    seo_description       'Lorem ipsum'
+    seo_no_index           false
 
     factory :active_institution do
       active              true

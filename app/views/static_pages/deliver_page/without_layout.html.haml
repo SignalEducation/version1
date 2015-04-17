@@ -22,7 +22,7 @@
 
     =csrf_meta_tags
 
-    -if Rails.env.production?
+    -if Rails.env.production? && (!current_user || current_user.try(:individual_student?))
       =render partial: 'layouts/google_analytics'
     =head_sanitizer(@delivered_page.head_content)
     -if @delivered_page.mark_as_nofollow

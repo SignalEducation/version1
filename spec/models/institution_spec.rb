@@ -15,6 +15,8 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  background_colour_code :string(255)
+#  seo_description        :string(255)
+#  seo_no_index           :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -57,6 +59,8 @@ describe Institution do
 
   it { should validate_presence_of(:subject_area_id) }
   it { should validate_numericality_of(:subject_area_id) }
+
+  it { should validate_presence_of(:seo_description) }
 
   it { should validate_presence_of(:sorting_order) }
 

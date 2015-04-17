@@ -69,11 +69,10 @@ class InstitutionsController < ApplicationController
       @institution = Institution.where(id: params[:id]).first
     end
     @subject_areas = SubjectArea.all_in_order
-    seo_title_maker(@institution.try(:name))
   end
 
   def allowed_params
-    params.require(:institution).permit(:name, :short_name, :name_url, :description, :feedback_url, :help_desk_url, :subject_area_id, :sorting_order, :active, :background_colour_code)
+    params.require(:institution).permit(:name, :short_name, :name_url, :description, :feedback_url, :help_desk_url, :subject_area_id, :sorting_order, :active, :background_colour_code, :seo_description, :seo_no_index)
   end
 
 end

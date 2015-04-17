@@ -67,11 +67,10 @@ class ExamLevelsController < ApplicationController
       @exam_level = ExamLevel.where(id: params[:id]).first
     end
     @qualifications = Qualification.all_in_order
-    seo_title_maker(@exam_level.try(:name))
   end
 
   def allowed_params
-    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections)
+    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections, :seo_description, :seo_no_index)
   end
 
 end
