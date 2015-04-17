@@ -17,6 +17,8 @@
 #  created_at                :datetime
 #  updated_at                :datetime
 #  cme_count                 :integer          default(0)
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default(FALSE)
 #
 
 class CourseModule < ActiveRecord::Base
@@ -27,7 +29,7 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :active, :cme_count
+                  :active, :cme_count, :seo_description, :seo_no_index
 
   # Constants
 

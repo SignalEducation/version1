@@ -15,6 +15,8 @@
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
 #  cme_count                               :integer          default(0)
+#  seo_description                         :string(255)
+#  seo_no_index                            :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -58,6 +60,8 @@ describe ExamLevel do
 
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
   it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
+
+  it { should validate_presence_of(:seo_description) }
 
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }

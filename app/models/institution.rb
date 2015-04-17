@@ -15,6 +15,8 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  background_colour_code :string(255)
+#  seo_description        :string(255)
+#  seo_no_index           :boolean          default(FALSE)
 #
 
 class Institution < ActiveRecord::Base
@@ -24,7 +26,8 @@ class Institution < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :short_name, :name_url, :description,
                   :feedback_url, :help_desk_url, :subject_area_id,
-                  :sorting_order, :active, :background_colour_code
+                  :sorting_order, :active, :background_colour_code,
+                  :seo_description, :seo_no_index
 
   # Constants
 
@@ -43,6 +46,7 @@ class Institution < ActiveRecord::Base
   validates :help_desk_url, presence: true
   validates :subject_area_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :seo_description, presence: true
   validates :sorting_order, presence: true
 
   # callbacks

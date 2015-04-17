@@ -62,7 +62,7 @@ class CurrenciesController < ApplicationController
     if params[:id].to_i > 0
       @currency = Currency.where(id: params[:id]).first
     end
-    seo_title_maker(@currency.try(:name))
+    seo_title_maker(@currency.try(:name) || 'Currencies', '', true)
   end
 
   def allowed_params

@@ -21,7 +21,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
   # relationships
   belongs_to :course_module_element
   has_many :flash_card_stacks, inverse_of: :course_module_element_flash_card_pack
-  accepts_nested_attributes_for :flash_card_stacks
+  accepts_nested_attributes_for :flash_card_stacks, allow_destroy: true
 
   # validation
   validates :course_module_element_id, presence: true,

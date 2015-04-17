@@ -186,7 +186,6 @@ class CourseModuleElementsController < ApplicationController
       @raw_video_files = RawVideoFile.all_in_order
     #end
     @letters = ('A'..'Z').to_a
-    seo_title_maker(@course_module_element.try(:name))
     @mathjax_required = true
   end
 
@@ -227,6 +226,8 @@ class CourseModuleElementsController < ApplicationController
         :related_video_id,
         :is_video,
         :is_quiz,
+        :seo_description,
+        :seo_no_index,
         :is_cme_flash_card_pack,
         course_module_element_video_attributes: [
             :course_module_element_id,
@@ -311,6 +312,7 @@ class CourseModuleElementsController < ApplicationController
                         :sorting_order,
                         :final_button_label,
                         :content_type,
+                        :_destroy,
                         flash_cards_attributes: [
                                 :id,
                                 :flash_card_stack_id,
@@ -351,6 +353,7 @@ class CourseModuleElementsController < ApplicationController
                                                 :degree_of_wrongness,
                                                 :wrong_answer_explanation_text,
                                                 :wrong_answer_video_id,
+                                                :_destroy,
                                                 quiz_contents_attributes: [
                                                         :id,
                                                         :quiz_question_id,

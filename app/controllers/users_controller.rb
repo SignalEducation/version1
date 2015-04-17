@@ -100,7 +100,7 @@ class UsersController < ApplicationController
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-    seo_title_maker(@user.try(:full_name))
+    seo_title_maker(@user.try(:full_name), '', true)
     @current_subscription = @user.subscriptions.all_in_order.last
   end
 

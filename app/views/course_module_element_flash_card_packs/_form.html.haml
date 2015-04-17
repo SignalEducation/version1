@@ -25,7 +25,9 @@
 
           -counter += 1
           .panel.panel-default
+            =stack.hidden_field :id, class: 'stack_id stack_field'
             =stack.hidden_field :sorting_order, class: 'stack_sorting_order stack_field'
+            =stack.hidden_field :_destroy, class: 'stack-destroy stack_field'
             .panel-heading{id: "heading_#{counter}", role: 'tab'}
               .row
                 .col-sm-1
@@ -51,8 +53,11 @@
                   -else
                     .form-control-static UNKNOWN!!
                     -Rails.logger.error "ERROR: app/views/course_module_element_flash_card_packs/_form.html.haml encountered an unknown flash_card_stack type. Stack: #{stack.object.inspect}. Pack: #{pack.object.inspect}. User-ID: #{current_user.id}."
-                .col-sm-1.text-right
-                  %span.glyphicon.glyphicon-sort{title: t('views.general.tooltips.coming_soon')}
+                .col-sm-1
+                  .form-control-static
+                    =link_to '#', class: 'removeFlashCardStack pull-left' do
+                      %span.glyphicon.glyphicon-trash{title: t('views.general.delete')}
+                    %span.glyphicon.glyphicon-sort.pull-right{title: t('views.general.tooltips.coming_soon')}
 
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 0 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: "heading_#{counter}"}}
               .panel-body

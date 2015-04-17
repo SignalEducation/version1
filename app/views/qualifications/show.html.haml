@@ -31,6 +31,12 @@
         %td.col-sm-4=t('views.qualifications.form.name_url')
         %td.col-sm-8=@qualification.name_url
       %tr
+        %td.col-sm-4=t('views.qualifications.form.seo_description')
+        %td.col-sm-8=@qualification.seo_description
+      %tr
+        %td.col-sm-4=t('views.qualifications.form.seo_no_index')
+        %td.col-sm-8=tick_or_cross(@qualification.seo_no_index)
+      %tr
         %td.col-sm-4=t('views.qualifications.form.active')
         %td.col-sm-8=tick_or_cross(@qualification.active)
       %tr

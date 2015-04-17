@@ -2,13 +2,15 @@
 #
 # Table name: subject_areas
 #
-#  id            :integer          not null, primary key
-#  name          :string(255)
-#  name_url      :string(255)
-#  sorting_order :integer
-#  active        :boolean          default(FALSE), not null
-#  created_at    :datetime
-#  updated_at    :datetime
+#  id              :integer          not null, primary key
+#  name            :string(255)
+#  name_url        :string(255)
+#  sorting_order   :integer
+#  active          :boolean          default(FALSE), not null
+#  created_at      :datetime
+#  updated_at      :datetime
+#  seo_description :string(255)
+#  seo_no_index    :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -40,6 +42,8 @@ describe SubjectArea do
 
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
+
+  it { should validate_presence_of(:seo_description) }
 
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }

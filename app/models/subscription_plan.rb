@@ -56,6 +56,7 @@ class SubscriptionPlan < ActiveRecord::Base
                            less_than: 32}
   validates :subscription_plan_category_id, allow_blank: true,
             numericality: {greater_than_or_equal_to: 0}
+  validate  :one_of_customer_types_checked
 
   # callbacks
   before_create :create_on_stripe_platform
@@ -159,6 +160,13 @@ class SubscriptionPlan < ActiveRecord::Base
   rescue => e
     errors.add(:stripe, e.message)
     false
+  end
+
+  def one_of_customer_types_checked
+    if !self.available_to_students && !self.available_to_corporates
+      errors.add(:base, I18n.t('models.subscription_plans.at_least_one_customer_type'))
+      false
+    end
   end
 
   def update_on_stripe_platform

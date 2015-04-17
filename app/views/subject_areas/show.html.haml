@@ -28,6 +28,12 @@
         %td.col-sm-4=t('views.subject_areas.form.name_url')
         %td.col-sm-8=@subject_area.name_url
       %tr
+        %td.col-sm-4=t('views.subject_areas.form.seo_description')
+        %td.col-sm-8=@subject_area.seo_description
+      %tr
+        %td.col-sm-4=t('views.subject_areas.form.seo_no_index')
+        %td.col-sm-8=tick_or_cross(@subject_area.seo_no_index)
+      %tr
         %td.col-sm-4=t('views.subject_areas.form.active')
         %td.col-sm-8=tick_or_cross(@subject_area.active)
 

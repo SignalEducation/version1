@@ -12,6 +12,8 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  cme_count                         :integer          default(0)
+#  seo_description                   :string(255)
+#  seo_no_index                      :boolean          default(FALSE)
 #
 
 class ExamSection < ActiveRecord::Base
@@ -19,7 +21,8 @@ class ExamSection < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
+                  :seo_description, :seo_no_index
 
   # Constants
 

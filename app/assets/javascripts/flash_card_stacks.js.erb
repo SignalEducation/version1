@@ -30,18 +30,6 @@ function addNewFlashCardStack() {
     stackFields.eq(index).attr('id', fieldId.join('_')).attr('name', fieldName.join(']['));
   });
 
-//  // reset ID and Name for fields in the Flash Card Content items
-//  var cardFields = theClone.find(' card_qc_field');
-//  cardFields.each(function(index) {
-//    var fieldId = cardFields.eq(index).attr('id').split('_'),
-//        fieldName = cardFields.eq(index).attr('name').split('][');
-//    fieldId[14] = timeStamp;
-//    fieldId[14] = timeStamp;
-//    fieldName[2] = timeStamp;
-//    fieldName[2] = timeStamp;
-//    cardFields.eq(index).attr('id', fieldId.join('_')).attr('name', fieldName.join(']['));
-//  });
-
   theClone.find('.panel-collapse').attr('id','collapse_' + timeStamp);
   theClone.find('.panel-collapse').attr('aria-labelledby','heading_' + timeStamp);
   theClone.find('tr').attr('id', timeStamp);
@@ -53,6 +41,11 @@ function addNewFlashCardStack() {
 
 }
 
+$(document).on('click', '.addNewFlashCardStack', function() {
+  addNewFlashCardStack(this);
+  return false;
+});
+
 function addDisclosureBehaviour(thing) {
   $(".disclosure-triangles span").removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
   if ( $(thing).closest('.panel').find('.panel-collapse').hasClass('in')) {
@@ -62,11 +55,29 @@ function addDisclosureBehaviour(thing) {
   }
 }
 
-$(document).on('click', '.addNewFlashCardStack', function() {
-  addNewFlashCardStack(this);
-  return false;
-});
-
 $(document).on('click', '.addDisclosureBehaviour', function() {
   addDisclosureBehaviour(this);
+});
+
+function removeFlashCardStack(me) {
+  if ($('.panel-default').not('.hide').length == 1) {
+    alert('Sorry, you cannot delete the last remaining stack.');
+  } else {
+    var confirmation = confirm('<%= I18n.t('views.general.delete_confirmation') %>');
+    if (confirmation) {
+      var theStack = $(me).closest('.panel-default');
+      console.log(theStack);
+      if ( parseInt(theStack.find('.stack_id').first().val()) > 0) {
+        theStack.find('.stack-destroy').val('1');
+        theStack.addClass('hide');
+      } else {
+        theStack.remove();
+      }
+    }
+  }
+}
+
+$(document).on('click', '.removeFlashCardStack', function() {
+  removeFlashCardStack(this);
+  return false
 });

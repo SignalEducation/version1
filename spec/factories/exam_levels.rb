@@ -15,6 +15,8 @@
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
 #  cme_count                               :integer          default(0)
+#  seo_description                         :string(255)
+#  seo_no_index                            :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -27,6 +29,9 @@ FactoryGirl.define do
     active               false
     default_number_of_possible_exam_answers 4
     enable_exam_sections true
+    seo_description       'Lorem ipsum'
+    seo_no_index           false
+
 
     factory :active_exam_level do
       active                       true

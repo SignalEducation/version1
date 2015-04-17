@@ -110,7 +110,7 @@ class StaticPagesController < ApplicationController
     else
       @static_page_uploads = StaticPageUpload.orphans.all_in_order
     end
-    seo_title_maker(@static_page.try(:name))
+    seo_title_maker(@static_page.try(:name) || 'Static Pages', '', true)
     @countries = Country.all_in_order
     @samples = sample_code
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order

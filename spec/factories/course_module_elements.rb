@@ -19,6 +19,8 @@
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
 #  is_cme_flash_card_pack    :boolean          default(FALSE), not null
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -34,6 +36,8 @@ FactoryGirl.define do
     related_quiz_id             nil
     related_video_id            1
     active                      true
+    seo_description             'Lorem Ipsum'
+    seo_no_index                false
 
     factory :cme_video do
       is_video                    true
