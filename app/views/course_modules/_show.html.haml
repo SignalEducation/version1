@@ -44,16 +44,18 @@
               -else
                 %span.label.label-default=t('views.general.inactive')
             %td
-              -if cme.course_module_element_video
+              -if cme.is_video
                 Video
-              -elsif cme.course_module_element_quiz
+              -elsif cme.is_quiz
                 Quiz
+              -elsif cme.is_cme_flash_card_pack
+                FlashCards
               -else
                 Unknown
             %td.text-right=seconds_to_time(cme.estimated_time_in_seconds)
             %td
               =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info'
-              -if cme.is_video || cme.course_module_element_quiz.try(:enough_questions?)
+              -if cme.is_video || cme.course_module_element_quiz.try(:enough_questions?) || cme.is_cme_flash_card_pack
                 =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-xs btn-info', target: '_blank'
               -else
                 .label.label-warning=t('views.course_modules.show.add_more_questions')
@@ -64,5 +66,6 @@
     %p
       =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: @course_module.id), class: 'btn btn-success'
       =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: @course_module.id), class: 'btn btn-success'
+      =link_to t('views.course_module_elements.form.new_flash_card_pack'), new_course_module_element_url(type: 'flash_cards', cm_id: @course_module.id), class: 'btn btn-success'
 
     =render partial: 'course_module_jumbo_quizzes/show'

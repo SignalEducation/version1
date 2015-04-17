@@ -59,6 +59,7 @@ en:
         click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
+        coming_soon: Coming Soon
 
     locales:
       en: English
@@ -239,6 +240,7 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_flash_card_pack: New Flash Card Pack
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
@@ -263,6 +265,13 @@ en:
         previous_step: Previous
         preview: Preview
         continue: Continue
+
+    course_module_element_flash_card_packs:
+      form:
+        background_color: Background colour
+        background_color_placeholder: '222222'
+        foreground_color: Foreground colour
+        foreground_color_placeholder: 'eeeeee'
 
     course_module_element_quizzes:
       form:
@@ -463,6 +472,21 @@ en:
       new:
         h1: New Exam Section
 
+    flash_cards:
+      form:
+        new_card: New card
+
+    flash_card_packs:
+      form:
+        name: Name
+        name_placeholder: Public title of this stack
+        final_button_label: Button label
+        final_button_label_placeholder: "Label for the 'next' button"
+
+    flash_quizzes:
+      form:
+        add_extra_answer: 'Add an extra answer'
+
     institutions:
       form:
         name: Name
@@ -642,6 +666,7 @@ en:
           question: Ask the question
           solution: Enter the solution
           answer: Fill in the answer here
+          flash_cards_text: Enter the Text Here
 
     quiz_questions:
       form:

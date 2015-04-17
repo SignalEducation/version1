@@ -19,8 +19,11 @@
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
 #  is_cme_flash_card_pack    :boolean          default(FALSE), not null
+<<<<<<< HEAD
 #  seo_description           :string(255)
 #  seo_no_index              :boolean          default(FALSE)
+=======
+>>>>>>> FETCH_HEAD
 #
 
 require 'rails_helper'
@@ -42,6 +45,7 @@ describe CourseModuleElement do
 
   # relationships
   it { should belong_to(:course_module) }
+  it { should have_one(:course_module_element_flash_card_pack)}
   it { should have_one(:course_module_element_quiz) }
   it { should have_many(:course_module_element_resources)}
   it { should have_many(:course_module_element_user_logs) }

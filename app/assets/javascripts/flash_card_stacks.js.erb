@@ -1,0 +1,72 @@
+// regarding HTML in app/views/flash_card_stacks/
+
+function addNewFlashCardStack() {
+  var panels = $(".panel").not('.panel-danger');
+  $('#' + panels.find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
+  var theClone = panels.first().clone(),
+      timeStamp = (new Date).getTime().toString();
+  theClone.find('input, textarea').val(null);
+  theClone.find('.stack_sorting_order').val(parseInt($('.stack_sorting_order').last().val()) + 5);
+  theClone.find('h4').text('<%= I18n.t('views.flash_cards.form.new_card') %>');
+  theClone.find('.card-sorting-order').val(0);
+  theClone.find('.panel-heading select').val('Cards');
+  theClone.find('.card_panel_cards').removeClass('hide');
+  theClone.find('.card_panel_quiz').addClass('hide');
+  theClone.find('tbody').find('tr:first-child').find('.quiz_content').not(':first').remove();
+  theClone.find('tbody').find('tr').not(':first').remove();
+  theClone.find('.panel-heading').attr('id','heading_' + timeStamp);
+  theClone.find('.panel-heading').find('.disclosure-triangles').attr('aria-controls','collapse_' + timeStamp).attr('href','#collapse_' + timeStamp);
+  theClone.find('.flash_quiz_bg_col').val('#222222');
+  theClone.find('.flash_quiz_col').val('#eeeeee');
+  theClone.find('.difficulty-level').val('easy');
+
+  // reset ID and Name for fields in the Stack, cards, and card QCs
+  var stackFields = theClone.find('.stack_field, .card_field, .card_qc_field, .flash_quiz_field, .quiz_question_field');
+  stackFields.each(function(index) {
+    var fieldId = stackFields.eq(index).attr('id').split('_'),
+        fieldName = stackFields.eq(index).attr('name').split('][');
+    fieldId[14] = timeStamp;
+    fieldName[2] = timeStamp;
+    stackFields.eq(index).attr('id', fieldId.join('_')).attr('name', fieldName.join(']['));
+  });
+
+//  // reset ID and Name for fields in the Flash Card Content items
+//  var cardFields = theClone.find(' card_qc_field');
+//  cardFields.each(function(index) {
+//    var fieldId = cardFields.eq(index).attr('id').split('_'),
+//        fieldName = cardFields.eq(index).attr('name').split('][');
+//    fieldId[14] = timeStamp;
+//    fieldId[14] = timeStamp;
+//    fieldName[2] = timeStamp;
+//    fieldName[2] = timeStamp;
+//    cardFields.eq(index).attr('id', fieldId.join('_')).attr('name', fieldName.join(']['));
+//  });
+
+  theClone.find('.panel-collapse').attr('id','collapse_' + timeStamp);
+  theClone.find('.panel-collapse').attr('aria-labelledby','heading_' + timeStamp);
+  theClone.find('tr').attr('id', timeStamp);
+
+  $('#cme-flash-card-pack').append(theClone);
+  setTimeout(function() {
+    $('#cme-flash-card-pack').find('.disclosure-triangles').last().click();
+  }, 500);
+
+}
+
+function addDisclosureBehaviour(thing) {
+  $(".disclosure-triangles span").removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+  if ( $(thing).closest('.panel').find('.panel-collapse').hasClass('in')) {
+    // do nothing
+  } else {
+    $(thing).find('span').toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
+  }
+}
+
+$(document).on('click', '.addNewFlashCardStack', function() {
+  addNewFlashCardStack(this);
+  return false;
+});
+
+$(document).on('click', '.addDisclosureBehaviour', function() {
+  addDisclosureBehaviour(this);
+});

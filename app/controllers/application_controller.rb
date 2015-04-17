@@ -150,6 +150,7 @@ class ApplicationController < ActionController::Base
     cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
     @mathjax_required = false # default
+    @show_mixpanel = (Rails.env.staging? || Rails.env.production?) && (!current_user || current_user.try(:individual_student?))
   end
 
   def reset_latest_session_landing_url
