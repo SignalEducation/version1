@@ -8,6 +8,9 @@ function addNewFlashQuizQuestion(thing) {
   theClone.find('h3').text('<%= I18n.t('views.course_module_element_quizzes.form.h3.question_new') %>');
   theClone.attr('id', 'new_question_' + timeStamp);
 
+  // just keep the first two quiz answers
+  theClone.find('.quiz_answer').not(':eq(0)').not(':eq(1)').remove();
+
   // Update all the form fields
   var theFieldList = theClone.find('textarea, input, select');
   theFieldList.val('');
