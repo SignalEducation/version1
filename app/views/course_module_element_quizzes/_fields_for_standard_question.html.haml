@@ -15,6 +15,7 @@
       .form-group
         .col-sm-12
           =question.hidden_field :course_module_element_quiz_id, class: 'flash_quiz_field'
+          =question.hidden_field :flash_quiz_id, class: 'flash_quiz_field'
           =question.hidden_field :id, class: 'question_id flash_quiz_field'
           =question.hidden_field :_destroy, value: false, class: 'destroy_field flash_quiz_field'
           =question.fields_for :quiz_contents do |content|
@@ -37,14 +38,15 @@
     .col-sm-8
       -counter = 0
       =question.fields_for :quiz_answers do |answer|
-        =answer.hidden_field :id, class: 'answer-id flash_quiz_field'
-        =answer.hidden_field :wrong_answer_video_id, class: 'related_video flash_quiz_field'
         .row.quiz_answer
           .col-sm-5
             .row
               .col-sm-1
                 =@letters[counter]
               .col-sm-10
+                =answer.hidden_field :wrong_answer_video_id, class: 'related_video flash_quiz_field'
+                =answer.hidden_field :id, class: 'answer-id flash_quiz_field'
+                =answer.hidden_field :_destroy, class: 'answer-destroy flash_quiz_field'
                 =answer.fields_for :quiz_contents do |content|
                   =content.hidden_field :id, class: 'answer-qc-id flash_quiz_field'
                   =content.hidden_field :sorting_order, class: 'answer-sorting-order flash_quiz_field'
@@ -52,9 +54,10 @@
                   .form-group
                     .col-sm-12
                       =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control flash_quiz_field', rows: 3
-          .col-sm-2
+          .col-sm-2.text-left
             .form-group
               =answer.select :degree_of_wrongness, QuizAnswer::WRONGNESS, {include_blank: t('views.general.select')}, {onchange: "if ($(this).val() == 'correct') { $(this).parent().parent().parent().find('.wrong-answer-explanation').hide(); } else {  $(this).parent().parent().parent().find('.wrong-answer-explanation').show(); }", class: 'form-control flash_quiz_field'}
+            =link_to 'Delete this answer' ,'#', class: 'btn btn-danger btn-xs deleteFlashAnswer'
           .col-sm-5
             .form-group
               .col-sm-12
