@@ -20,8 +20,11 @@
         =render partial: 'courses/show_video', locals: {cme: @course_module_element}
       -elsif @course_module_element.try(:is_quiz)
         =render partial: 'courses/show_quiz'
+      -elsif @course_module_element.try(:is_cme_flash_card_pack)
+        =render partial: 'course_module_element_flash_card_packs/show', locals: {cme: @course_module_element}
       -else
-        %p course module element - type unknown
+        %h2 Course module element - type unknown
+        -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
     -elsif @course_module_jumbo_quiz
       =render partial: 'courses/show_quiz'
     -elsif @course_module

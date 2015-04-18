@@ -1,0 +1,67 @@
+function hideAllFlashCardStacks() {
+  $('.flash-card-stack').addClass('hide');
+}
+
+function showRelativeStack(direction) {
+  // direction should be a +1 or -1
+  var allStacks = $('.flash-card-stack');
+  var currentStack = allStacks.not('.hide').first();
+  if (currentStack.length > 0) {
+    var positionInList = allStacks.index(currentStack);
+    if ((positionInList < (allStacks.length - 1) && direction > 0) || (positionInList > 0 && direction < 0)) {
+      currentStack.addClass('hide');
+      allStacks.eq(positionInList + direction).removeClass('hide');
+    }
+  } else {
+    allStacks.first().removeClass('hide');
+  }
+}
+
+function showNextStack() {
+  showRelativeStack(+1);
+  return false;
+}
+
+function showPreviousStack() {
+  showRelativeStack(-1);
+  return false;
+}
+
+function showRelativeQuestion(direction) {
+
+}
+
+function showNextQuestion() {
+  showRelativeQuestion(+1);
+  return false;
+}
+
+function showPreviousQuestion() {
+  showRelativeQuestion(-1);
+  return false;
+}
+
+function showRelativeCard(direction) {
+
+}
+
+function showNextCard() {
+  showRelativeCard(+1);
+  return false;
+}
+
+function showPreviousCard() {
+  showRelativeCard(-1);
+  return false;
+}
+
+$(document).on('ready', function() {
+  hideAllFlashCardStacks();
+  showNextStack();
+  $(document).on('click', '.next-stack-button', showNextStack);
+  $(document).on('click', '.previous-stack-button', showPreviousStack);
+  $(document).on('click', '.card-back', showPreviousCard);
+  $(document).on('click', '.question-back', showPreviousQuestion);
+  $(document).on('click', '.card-next', showNextCard);
+  $(document).on('click', '.question-next', showNextQuestion);
+});

@@ -23,7 +23,7 @@ class FlashCardStack < ActiveRecord::Base
   # relationships
   belongs_to :course_module_element_flash_card_pack, inverse_of: :flash_card_stacks
   has_one :flash_quiz, inverse_of: :flash_card_stack
-  has_many :flash_cards, inverse_of: :flash_card_stack
+  has_many :flash_cards, -> { order(:sorting_order) }, inverse_of: :flash_card_stack
   accepts_nested_attributes_for :flash_cards, allow_destroy: true
   accepts_nested_attributes_for :flash_quiz, allow_destroy: true
 

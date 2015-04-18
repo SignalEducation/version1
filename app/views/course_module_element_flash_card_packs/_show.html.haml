@@ -1,0 +1,69 @@
+.row
+  .col-sm-12
+    %h1=cme.name
+-cme.course_module_element_flash_card_pack.flash_card_stacks.each do |stack|
+
+  .flash-card-stack
+    -if stack.content_type == 'Cards'
+      .well.well-sm{style: "background-color: #{cme.course_module_element_flash_card_pack.background_color}; color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
+        .row
+          .col-sm-1
+            =link_to '#', class: 'card-back' do
+              .h2{style: "color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
+                %span.glyphicon.glyphicon-circle-arrow-left
+          .col-sm-10.text-center
+            %h2=stack.name
+
+        -stack.flash_cards.each do |card|
+          .flash-card
+            .row.text-center
+              .col-sm-12
+                %hr/
+                -card.quiz_contents.each do |content|
+                  .flash-card-content
+                  -if content.content_type == 'text' || content.content_type == 'mathjax'
+                    %p=content.text_content
+                  -else
+                    =image_tag content.image.url, class: 'img-responsive'
+                -if card.id == stack.flash_cards.last.id
+                  %p.text-center=link_to stack.final_button_label, '#', class: 'btn btn-lg btn-default next-stack-button'
+                -else
+                  =link_to '#', class: 'next-card-button' do
+                    .h2{style: "color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
+                      %span.glyphicon.glyphicon-circle-arrow-down
+
+    -elsif stack.content_type == 'Quiz'
+      .well.well-sm{style: "background-color: #{stack.flash_quiz.background_color}; color: #{stack.flash_quiz.foreground_color};"}
+        .row
+          .col-sm-1
+            =link_to '#', class: 'card-back' do
+              .h2{style: "color: #{stack.flash_quiz.foreground_color;}"}
+                %span.glyphicon.glyphicon-circle-arrow-left
+          .col-sm-10.text-center
+            %h2=stack.name
+        -stack.flash_quiz.quiz_questions.each do |question|
+          .quiz_question.text-center
+            %hr/
+            %h3=question.quiz_contents.first.text_content
+            -question.quiz_answers.each do |answer|
+              =link_to '#', class: 'btn btn-block btn-default h3' do
+                =answer.quiz_contents.first.text_content
+            =link_to '#', class: 'next-question-button' do
+              .h3{style: "color: #{stack.flash_quiz.foreground_color};"}
+                %span.glyphicon.glyphicon-circle-arrow-down
+
+        .quiz_results.text-center
+          %hr/
+          .row
+            .col-sm-12
+              %h3 Results
+          .row.h1
+            .col-sm-5.text-right.final-score
+              1
+            .col-sm-2.text-center
+              out of
+            .col-sm-5.text-left
+              =stack.flash_quiz.quiz_questions.count
+          .row
+
+          %p=link_to stack.final_button_label, '#', class: 'btn btn-lg btn-default next-stack-button'
