@@ -17,14 +17,38 @@
           =child.name
           .pull-right
             -if child.class == CourseModule
-              .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+              -#.badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+              -if child.active_children.all_videos.count > 1
+                =(child.active_children.all_videos.count).to_s + (' Videos')
+              -elsif child.active_children.all_videos.count == 1
+                =(child.active_children.all_videos.count).to_s + (' Video')
+
+              -if child.active_children.all_quizzes.count > 1
+                |
+                =(child.active_children.all_quizzes.count).to_s + (' MCQs')
+              -elsif child.active_children.all_quizzes.count == 1
+                |
+                =(child.active_children.all_quizzes.count).to_s + (' MCQ')
+              -else
             -else
               .glyphicon.glyphicon-menu-right
 
         =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
           =child.name
-          .pull-right
-            -if child.class == CourseModule
-              .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+          -if child.class == CourseModule
+            -#.badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+            %hr/
+            -if child.active_children.all_videos.count > 1
+              =(child.active_children.all_videos.count).to_s + (' Videos')
+            -elsif child.active_children.all_videos.count == 1
+              =(child.active_children.all_videos.count).to_s + (' Video')
             -else
-              .glyphicon.glyphicon-menu-right
+
+            -if child.active_children.all_quizzes.count > 1
+              |
+              =(child.active_children.all_quizzes.count).to_s + (' MCQs')
+            -elsif child.active_children.all_quizzes.count == 1
+              |
+              =(child.active_children.all_quizzes.count).to_s + (' MCQ')
+          -else
+            .glyphicon.glyphicon-menu-right
