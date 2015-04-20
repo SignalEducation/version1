@@ -41,17 +41,14 @@ describe 'Admin uploading flash card packs:', type: :feature do
         fill_in 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][name]', with: 'CME Pack 1'
         fill_in 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][final_button_label]', with: 'Next!'
       end
-      within('.panel-body') do
-        fill_in 'quiz_content_text:first-child', with: 'My lovely lovely lovely horse.'
+      within('.panel-body ') do
+        click_link 'plus-btn'
+        page.find('quiz_content_text:first-child')
         binding.pry
-        fill_in 'quiz_content_text:first', with: 'My lovely lovely lovely horse.'
-        within('.btn-group') do
-          click_link 'plus-btn'
-          fill_in 'card_qc_field:last', with: 'My lovely lovely lovely horse.'
-          binding.pry
-        end
-        click_button 'Add a new Flash Card'
+        fill_in textarea, with: 'My lovely horse running through a field'
       end
+
+
     end
   end
 
