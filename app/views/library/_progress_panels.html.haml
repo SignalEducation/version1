@@ -17,14 +17,17 @@
           =child.name
           .pull-right
             -if child.class == CourseModule
-              .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+              -#.badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+              -if child.active_children.all_videos.count > 0
+                =pluralize(child.active_children.all_videos.count, t('views.library.show.video'))
+
+              -if child.active_children.all_videos.count > 0 && child.active_children.all_quizzes.count > 0
+                \|
+              -if child.active_children.all_quizzes.count > 0
+                =pluralize(child.active_children.all_quizzes.count, t('views.library.show.quiz'))
             -else
               .glyphicon.glyphicon-menu-right
 
-        =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
-          =child.name
-          .pull-right
-            -if child.class == CourseModule
-              .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
-            -else
-              .glyphicon.glyphicon-menu-right
+        =link_to child.name, library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs text-center'
+        -#if child.class == CourseModule
+          .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'

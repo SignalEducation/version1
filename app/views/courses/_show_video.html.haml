@@ -8,9 +8,9 @@
       .h2=t('views.general.coming_soon')
 
 
-=render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
 
--if cme.description
+-if !cme.description.blank?
+  =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
   .row
     .col-sm-12
       %h3=t('views.course_module_elements.form.description')
@@ -19,6 +19,11 @@
         =cme.tutor.full_name
       .well.well-sm
         =sanitizer(cme.description)
+
+-else
+  .cme-nav
+    =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
+
 -#.row
   .col-sm-12
     %h3=t('views.course_module_element_videos.form.transcript')
