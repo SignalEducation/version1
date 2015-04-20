@@ -9,6 +9,7 @@ describe 'Admin uploading flash card packs:', type: :feature do
 
   before(:each) do
     activate_authlogic
+    expect(tutor_user.id).to be > 0
   end
 
   describe 'Uploading flash cards' do
@@ -41,13 +42,12 @@ describe 'Admin uploading flash card packs:', type: :feature do
         fill_in 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][name]', with: 'CME Pack 1'
         fill_in 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][final_button_label]', with: 'Next!'
       end
-      within('.panel-body ') do
+      within('.panel-body') do
         click_link 'plus-btn'
-        page.find('quiz_content_text:first-child')
-        binding.pry
-        fill_in textarea, with: 'My lovely horse running through a field'
+        fill_in 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_flash_cards_attributes_0_quiz_contents_attributes_0_text_content', with: ('AA'..'ZZ').to_a.join()
+        page.find(:css, '.quiz_content_text textarea', match: :first).set('ABC' * 100)
+        page.all(:css, '.quiz_content_text textarea').last.set('123' * 100)
       end
-
 
     end
   end
