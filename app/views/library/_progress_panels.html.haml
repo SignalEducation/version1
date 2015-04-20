@@ -25,30 +25,15 @@
 
               -if child.active_children.all_quizzes.count > 1
                 |
-                =(child.active_children.all_quizzes.count).to_s + (' MCQs')
+                =(child.active_children.all_quizzes.count).to_s + (' Quizzes')
               -elsif child.active_children.all_quizzes.count == 1
                 |
-                =(child.active_children.all_quizzes.count).to_s + (' MCQ')
-              -else
+                =(child.active_children.all_quizzes.count).to_s + (' Quiz')
             -else
               .glyphicon.glyphicon-menu-right
 
         =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs' do
-          =child.name
-          -if child.class == CourseModule
-            -#.badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
-            %hr/
-            -if child.active_children.all_videos.count > 1
-              =(child.active_children.all_videos.count).to_s + (' Videos')
-            -elsif child.active_children.all_videos.count == 1
-              =(child.active_children.all_videos.count).to_s + (' Video')
-            -else
-
-            -if child.active_children.all_quizzes.count > 1
-              |
-              =(child.active_children.all_quizzes.count).to_s + (' MCQs')
-            -elsif child.active_children.all_quizzes.count == 1
-              |
-              =(child.active_children.all_quizzes.count).to_s + (' MCQ')
-          -else
-            .glyphicon.glyphicon-menu-right
+          .text-center
+            =child.name
+          -#if child.class == CourseModule
+            .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
