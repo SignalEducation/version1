@@ -1,3 +1,5 @@
+var flashQuizResponseTracker = [];
+
 function hideAllFlashCardStacks() {
   $('.flash-card-stack').addClass('hide');
 }
@@ -9,8 +11,13 @@ function showRelativeStack(direction) {
   if (currentStack.length > 0) {
     var positionInList = allStacks.index(currentStack);
     if ((positionInList < (allStacks.length - 1) && direction > 0) || (positionInList > 0 && direction < 0)) {
-      currentStack.addClass('hide');
-      allStacks.eq(positionInList + direction).removeClass('hide');
+      allStacks.eq(positionInList + direction).hide().removeClass('hide').fadeIn(750);
+      currentStack.fadeOut(250, function() {
+        currentStack.addClass('hide');
+      });
+      if (allStacks.eq(positionInList + direction).data('content-type') == 'Cards') {
+        allStacks.eq(positionInList + direction).find('.flash-card').first().hide().removeClass('hide').fadeIn(750);
+      }
     }
   } else {
     allStacks.first().removeClass('hide');
@@ -27,31 +34,69 @@ function showPreviousStack() {
   return false;
 }
 
-function showRelativeQuestion(direction) {
+function showRelativeQuestion(direction, thisAnswer) {
+  var thisQuestion = thisAnswer.closest('.quiz_question');
+  var thisStack = thisQuestion.closest('.flash-card-stack');
+  var currentPosition = thisStack.find('.quiz_question').index(thisQuestion);
+  var thisStackId = parseInt(thisStack.data('id'));
 
+  thisAnswer.removeClass('btn-default');
+  thisQuestion.find('a').prop('disabled', true);
+  if (currentPosition == 0) {
+    // reset the counter for this flash quiz
+    flashQuizResponseTracker[thisStackId] = 0;
+  }
+  if (thisAnswer.data('correct') == true) {
+    thisAnswer.addClass('btn-success');
+    flashQuizResponseTracker[thisStackId] += 1
+  } else {
+    thisAnswer.addClass('btn-danger');
+  }
+  setTimeout(function() {
+    thisQuestion.fadeOut(750, function() {
+      thisQuestion.addClass('hide');
+      thisStack.find('.quiz_question').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(500);
+      thisQuestion.find('a').prop('disabled', true);
+      if (currentPosition == (thisStack.find('.quiz_question').length - 1)) {
+        thisStack.find('.quiz_results').hide().removeClass('hide').fadeIn(500);
+        thisStack.find('.final-score').text(flashQuizResponseTracker[thisStackId]);
+      }
+    });
+  },750);
 }
 
 function showNextQuestion() {
-  showRelativeQuestion(+1);
+  showRelativeQuestion(+1, $(this));
   return false;
 }
 
 function showPreviousQuestion() {
-  showRelativeQuestion(-1);
+  showRelativeQuestion(-1, $(this));
   return false;
 }
 
-function showRelativeCard(direction) {
+function showRelativeCard(direction, thisButton) {
+  var thisCard = thisButton.closest('.flash-card');
+  var thisStack = thisCard.closest('.flash-stack');
+  var currentPosition = thisStack.find('.flash-card').index(thisCard);
+  var thisStackId = parseInt(thisStack.data('id'));
 
+  thisCard.fadeOut(750, function() {
+    if (currentPosition == 0 && direction < 0) {
+      showPreviousStack();
+    } else {
+      thisStack.find('.flash-card').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(750);
+    }
+  })
 }
 
 function showNextCard() {
-  showRelativeCard(+1);
+  showRelativeCard(+1, $(this));
   return false;
 }
 
 function showPreviousCard() {
-  showRelativeCard(-1);
+  showRelativeCard(-1, $(this));
   return false;
 }
 
