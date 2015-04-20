@@ -13,9 +13,9 @@
   .col-md-9.col-sm-12.col-md-offset-3.content-area
     -if defined?(@results)
       =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-    -elsif @course_module_element && @paywall[:course_content][:view_all] == false && @course_module_element.my_position_among_siblings > 1
+    -elsif @course_module_element && @paywall[:course_content][:view_all] == false && @course_module_element.my_position_among_siblings && @course_module_element.my_position_among_siblings > 1
       =render partial: 'courses/content_denied'
-    -elsif @course_module_element
+    -elsif @course_module_element && @course_module_element.active
       -if @course_module_element.try(:is_video)
         =render partial: 'courses/show_video', locals: {cme: @course_module_element}
       -elsif @course_module_element.try(:is_quiz)
