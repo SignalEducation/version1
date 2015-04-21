@@ -35,20 +35,53 @@ describe 'Admin uploading flash card packs:', type: :feature do
       expect(page).to have_content 'Flash Card Pack'
       within('.well.well-sm') do
         fill_in 'Name', with: 'CME Pack 1'
+        fill_in 'Name URL', with: 'cme-pack-1'
         fill_in 'Description', with: 'My lovely horse running through a field'
+        fill_in 'SEO description', with: ('abc' * 50)
+        check 'SEO no-index flag'
         fill_in 'Estimated time (seconds)', with: '123'
       end
-      within('.panel-heading ') do
-        fill_in 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][name]', with: 'CME Pack 1'
-        fill_in 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][0][final_button_label]', with: 'Next!'
-      end
+      page.all(:css, '#stack-title input').first.set('CME Stack 1')
+      page.all(:css, '#stack-btn input').first.set('Next!')
       within('.panel-body') do
-        click_link 'plus-btn'
-        fill_in 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_0_flash_cards_attributes_0_quiz_contents_attributes_0_text_content', with: ('AA'..'ZZ').to_a.join()
         page.find(:css, '.quiz_content_text textarea', match: :first).set('ABC' * 100)
+        click_link 'plus-btn'
+        page.all(:css, '.quiz_content_text textarea').last.set('123' * 100)
+        minus_btn = page.all(:id, 'minus-btn', match: :first).first
+        minus_btn.click
+        page.driver.browser.switch_to.alert.accept
+        click_link 'Add a new Flash Card'
+        page.all(:css, '.quiz_content_text textarea').last.set('123' * 100)
+        click_link 'Add a new Flash Card'
+        page.all(:css, '.quiz_content_text textarea').last.set('xyz' * 100)
+      end
+      click_link 'Add a new card stack'
+      page.all(:css, '#stack-title input').last.set('CME Stack 2')
+      page.all(:css, '#stack-btn input').last.set('Go!')
+      within('.panel-body') do
+        page.find(:css, '.quiz_content_text textarea', match: :first).set('ABC' * 100)
+        click_link 'plus-btn'
+        page.all(:css, '.quiz_content_text textarea').last.set('123' * 100)
+        click_link 'Add a new Flash Card'
         page.all(:css, '.quiz_content_text textarea').last.set('123' * 100)
       end
-
+      click_button 'Save'
+      expect(page).to have_content 'Course Module Element has been created successfully'
+      page.all(:id, 'edit-btn').last.click
+      expect(page).to have_content 'Edit Course Module Element'
+      expect(page).to have_content 'Card #3'
+      page.all(:id, 'delete-card').last.click
+      page.driver.browser.switch_to.alert.accept
+      page.all(:id, 'delete-stack').last.click
+      page.driver.browser.switch_to.alert.accept
+      expect(page).to_not have_content 'CME Stack 2'
+      click_link 'Add a new card stack'
+      page.all(:css, '#stack-title input').last.set('CME Stack 3')
+      page.all(:css, '#stack-btn input').last.set('Continue!')
+     # within('.panel-heading') do
+     #   select 'Quiz', from: 'content-type-select'
+     # end
+      sleep 15
     end
   end
 
