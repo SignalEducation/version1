@@ -1,7 +1,14 @@
 var flashQuizResponseTracker = [];
+window.targetFlashCardStackHeight = 0;
 
-function hideAllFlashCardStacks() {
-  $('.flash-card-stack').addClass('hide');
+function setTargetHeight() {
+  window.targetFlashCardStackHeight = parseInt($(window).height() -
+          $('.flash-card-stack .well').first().offset().top - 75);
+}
+
+function resizeFlashCardStacks() {
+  $('.flash-card-stack .well').css('height', targetFlashCardStackHeight);
+  console.log(window.targetFlashCardStackHeight);
 }
 
 function showRelativeStack(direction) {
@@ -22,6 +29,7 @@ function showRelativeStack(direction) {
   } else {
     allStacks.first().removeClass('hide');
   }
+  resizeFlashCardStacks();
 }
 
 function showNextStack() {
@@ -53,21 +61,21 @@ function showRelativeQuestion(direction, thisAnswer) {
     thisAnswer.addClass('btn-danger');
   }
   setTimeout(function() {
-    thisQuestion.fadeOut(750, function() {
+    thisQuestion.fadeOut(500, function() {
       thisQuestion.addClass('hide');
-      thisStack.find('.quiz_question').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(500);
+      thisStack.find('.quiz_question').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(350);
       thisQuestion.find('a').prop('disabled', true);
       if (currentPosition == (thisStack.find('.quiz_question').length - 1)) {
         thisStack.find('.quiz_results').hide().removeClass('hide').fadeIn(500);
         thisStack.find('.final-score').text(flashQuizResponseTracker[thisStackId]);
       }
     });
-  },750);
+  },500);
 }
 
 function showNextQuestion() {
   showRelativeQuestion(+1, $(this));
-  return false;
+  return false
 }
 
 function showPreviousQuestion() {
@@ -77,15 +85,15 @@ function showPreviousQuestion() {
 
 function showRelativeCard(direction, thisButton) {
   var thisCard = thisButton.closest('.flash-card');
-  var thisStack = thisCard.closest('.flash-stack');
+  var thisStack = thisCard.closest('.flash-card-stack');
   var currentPosition = thisStack.find('.flash-card').index(thisCard);
   var thisStackId = parseInt(thisStack.data('id'));
 
-  thisCard.fadeOut(750, function() {
+  thisCard.fadeOut(500, function() {
     if (currentPosition == 0 && direction < 0) {
       showPreviousStack();
     } else {
-      thisStack.find('.flash-card').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(750);
+      thisStack.find('.flash-card').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(250);
     }
   })
 }
@@ -101,12 +109,13 @@ function showPreviousCard() {
 }
 
 $(document).on('ready', function() {
-  hideAllFlashCardStacks();
   showNextStack();
+  setTargetHeight();
+  resizeFlashCardStacks();
   $(document).on('click', '.next-stack-button', showNextStack);
   $(document).on('click', '.previous-stack-button', showPreviousStack);
-  $(document).on('click', '.card-back', showPreviousCard);
+  $(document).on('click', '.previous-card-button', showPreviousCard);
   $(document).on('click', '.question-back', showPreviousQuestion);
-  $(document).on('click', '.card-next', showNextCard);
+  $(document).on('click', '.next-card-button', showNextCard);
   $(document).on('click', '.question-next', showNextQuestion);
 });

@@ -8,27 +8,20 @@
     -if stack.content_type == 'Cards'
       .well.well-sm{style: "background-color: #{cme.course_module_element_flash_card_pack.background_color}; color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
         -stack.flash_cards.each_with_index do |card, card_counter|
-          .flash-card
-            .row
-              .col-sm-1
-                -if stack_counter > 0 || card_counter > 0
-                  =link_to '#', class: 'card-back' do
-                    .h2{style: "color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
-                      %span.glyphicon.glyphicon-circle-arrow-left
-              .col-sm-10.text-center
-                %h2=stack.name
+          .flash-card.hide
+            =render partial: 'course_module_element_flash_card_packs/show_stack_heading', locals: {the_title: stack.name, the_color: cme.course_module_element_flash_card_pack.foreground_color, show_back_btn: (stack_counter > 0 || card_counter > 0)}
 
             .row.text-center
-              .col-sm-12
-                %hr/
+              .col-sm-10.col-sm-offset-1
                 -card.quiz_contents.each do |content|
                   .flash-card-content
-                  -if content.content_type == 'text' || content.content_type == 'mathjax'
-                    %p=content.text_content
-                  -else
-                    =image_tag content.image.url, class: 'img-responsive'
+                    -if content.content_type == 'text' || content.content_type == 'mathjax'
+                      %p=content.text_content
+                    -else
+                      =image_tag content.image.url, class: 'img-responsive'
                 -if card.id == stack.flash_cards.last.id
-                  %p.text-center=link_to stack.final_button_label, '#', class: 'btn btn-lg btn-default next-stack-button'
+                  =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: ((cme.course_module_element_flash_card_pack.flash_card_stacks.size - 1) == stack_counter), next_cme_url: course_special_link(cme.next_element), the_label: stack.final_button_label}
+
                 -else
                   =link_to '#', class: 'next-card-button' do
                     .h2{style: "color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
@@ -36,30 +29,28 @@
 
     -elsif stack.content_type == 'Quiz'
       .well.well-sm{style: "background-color: #{stack.flash_quiz.background_color}; color: #{stack.flash_quiz.foreground_color};"}
-        .row
-          .col-sm-1
-            =link_to '#', class: 'card-back' do
-              .h2{style: "color: #{stack.flash_quiz.foreground_color;}"}
-                %span.glyphicon.glyphicon-circle-arrow-left
-          .col-sm-10.text-center
-            %h2=stack.name
-        -stack.flash_quiz.quiz_questions.each_with_index do |question, counter|
-          .quiz_question.text-center{class: counter == 0 ? '' : 'hide'}
-            %hr/
+        -stack.flash_quiz.quiz_questions.each_with_index do |question, question_counter|
+          .quiz_question.text-center{class: question_counter == 0 ? '' : 'hide'}
+
+            =render partial: 'course_module_element_flash_card_packs/show_stack_heading', locals: {the_title: stack.name, the_color: stack.flash_quiz.foreground_color,show_back_btn: (stack_counter > 0 || question_counter > 0)}
+
             %h3=question.quiz_contents.first.text_content
             -question.quiz_answers.each do |answer|
-              =link_to answer.quiz_contents.first.text_content, '#', class: 'btn btn-block btn-default h3 question-next', data: {correct: (answer.degree_of_wrongness == 'correct')}
+              .row
+                .col-sm-4.col-sm-offset-4
+                  =link_to answer.quiz_contents.first.text_content, '#', class: 'btn btn-block btn-default h3 question-next', data: {correct: (answer.degree_of_wrongness == 'correct')}
 
         .quiz_results.text-center.hide
-          %hr/
+          =render partial: 'course_module_element_flash_card_packs/show_stack_heading', locals: {the_title: stack.name, the_color: stack.flash_quiz.foreground_color,show_back_btn: true}
           .row
             .col-sm-12
               %h3 Results
           .row.h1
             .col-sm-6.col-sm-offset-3.text-center
-              %span.final-score 0
-              out of
-              =stack.flash_quiz.quiz_questions.count
+              %p
+                %span.final-score 0
+                out of
+                =stack.flash_quiz.quiz_questions.count
           .row
 
-          %p=link_to stack.final_button_label, '#', class: 'btn btn-lg btn-default next-stack-button'
+          =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: ((cme.course_module_element_flash_card_pack.flash_card_stacks.size - 1) == stack_counter), next_cme_url: course_special_link(cme.next_element), the_label: stack.final_button_label}

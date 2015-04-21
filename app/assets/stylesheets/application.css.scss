@@ -692,3 +692,12 @@ header {
 .cme-nav {
   padding-bottom: 75px;
 }
+
+.flash-card-stack .well {
+  overflow-y: auto;
+  overflow-x: hidden;
+  h3, a, p {
+    line-height: 1.5em;
+    font-size: 2em !important;
+  }
+}
