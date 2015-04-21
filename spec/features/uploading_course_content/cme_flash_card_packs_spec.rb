@@ -74,14 +74,24 @@ describe 'Admin uploading flash card packs:', type: :feature do
       page.driver.browser.switch_to.alert.accept
       page.all(:id, 'delete-stack').last.click
       page.driver.browser.switch_to.alert.accept
+      binding.pry
+      click_button 'Save'
+
       expect(page).to_not have_content 'CME Stack 2'
       click_link 'Add a new card stack'
-      page.all(:css, '#stack-title input').last.set('CME Stack 3')
-      page.all(:css, '#stack-btn input').last.set('Continue!')
-     # within('.panel-heading') do
-     #   select 'Quiz', from: 'content-type-select'
-     # end
-      sleep 15
+      within(page.all(:css, '.panel-heading').last) do
+        page.all(:css, '#stack-title input').last.set('CME Stack 3')
+        page.all(:css, '#stack-btn input').last.set('Continue!')
+        find('#content-type-select').select('Quiz')
+      end
+      within('.panel-body') do
+        page.all(:css, '.quiz-question textarea').first.set('Question Text')
+        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
+        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
+        page.all(:css, '#degree-of-wrongness').first.select('slightly wrong')
+        page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
+      end
+      binding.pry
     end
   end
 

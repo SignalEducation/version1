@@ -41,9 +41,9 @@
                 .col-sm-4#stack-btn
                   =stack.text_field :final_button_label, placeholder: t('views.flash_card_packs.form.final_button_label_placeholder'), class: 'form-control stack_field', required: true
 
-                .col-sm-2
+                .col-sm-2#content-type-select
                   -if stack.object.flash_quiz && stack.object.flash_cards.length > 0
-                    =stack.select :content_type, FlashCardStack::CONTENT_TYPES, {}, {class: 'form-control stack_field content-type-select', onchange: "$(this).closest('.panel').find('.card_panel').toggleClass('hide');"}
+                    =stack.select :content_type, FlashCardStack::CONTENT_TYPES, {}, {class: 'form-control stack_field', onchange: "$(this).closest('.panel').find('.card_panel').toggleClass('hide');"}
                   -elsif stack.object.flash_quiz
                     .form-control-static Quiz
                     =stack.hidden_field :content_type, class: 'stack_field'
