@@ -3,8 +3,10 @@
 function addNewFlashCardStack() {
   var panels = $(".panel").not('.panel-danger');
   $('#' + panels.find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
-  var theClone = panels.first().clone(),
+  $(panels.first().addClass('cloneMe'));
+  var theClone = $('cloneMe').clone(),
       timeStamp = (new Date).getTime().toString();
+
   theClone.find('input, textarea').val(null);
   theClone.find('.stack_sorting_order').val(parseInt($('.stack_sorting_order').last().val()) + 5);
   theClone.find('h4').text('<%= I18n.t('views.flash_cards.form.new_card') %>');
