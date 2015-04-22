@@ -72,12 +72,11 @@ describe 'Admin uploading flash card packs:', type: :feature do
       expect(page).to have_content 'Card #3'
       page.all(:id, 'delete-card').last.click
       page.driver.browser.switch_to.alert.accept
-      page.all(:id, 'delete-stack').last.click
+      page.all(:id, 'delete-card').last.click
       page.driver.browser.switch_to.alert.accept
-      binding.pry
-      click_button 'Save'
-
-      expect(page).to_not have_content 'CME Stack 2'
+      page.all(:id, 'delete-stack').first.click
+      page.driver.browser.switch_to.alert.accept
+      expect(page).to_not have_content 'CME Stack 1'
       click_link 'Add a new card stack'
       within(page.all(:css, '.panel-heading').last) do
         page.all(:css, '#stack-title input').last.set('CME Stack 3')
@@ -91,7 +90,7 @@ describe 'Admin uploading flash card packs:', type: :feature do
         page.all(:css, '#degree-of-wrongness').first.select('slightly wrong')
         page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
       end
-      binding.pry
+      click_button 'Save'
     end
   end
 
