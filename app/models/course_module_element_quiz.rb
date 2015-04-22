@@ -50,7 +50,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   after_commit :set_ancestors_best_scores
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id, destroyed_at: nil) }
+  scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
 
   # class methods
 

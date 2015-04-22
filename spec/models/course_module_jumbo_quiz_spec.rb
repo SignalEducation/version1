@@ -21,7 +21,7 @@ require 'rails_helper'
 describe CourseModuleJumboQuiz do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at best_possible_score_first_attempt best_possible_score_retry)
+  black_list = %w(id created_at updated_at best_possible_score_first_attempt best_possible_score_retry destroyed_at)
   CourseModuleJumboQuiz.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -62,12 +62,14 @@ describe CourseModuleJumboQuiz do
 
   # scopes
   it { expect(CourseModuleJumboQuiz).to respond_to(:all_in_order) }
+  it { expect(CourseModuleJumboQuiz).to respond_to(:all_destroyed) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
   it { should respond_to(:name_url) }
   it { should respond_to(:parent) }
 

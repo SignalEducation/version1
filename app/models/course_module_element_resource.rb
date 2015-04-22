@@ -45,7 +45,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id, destroyed_at: nil) }
+  scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
 
   # class methods
 
