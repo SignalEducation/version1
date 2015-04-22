@@ -20,10 +20,11 @@ module Archivable
 
   def destroy
     # Assumes the model has a "destroyed_at" attribute.
-    self.update_attributes(destroyed_at: Proc.new{Time.now}.call)
-    if self.try(:destroyable_children)
-      self.destroyable_children.map {|x| x.destroy}
-    end
+    self.respond_to?(:active) ?
+            self.update_attributes(destroyed_at: Proc.new { Time.now }.call, active: false) :
+            self.update_attributes(destroyed_at: Proc.new { Time.now }.call)
+
+    self.destroyable_children.map { |x| x.destroy } if self.respond_to?(:destroyable_children)
   end
 
   def un_delete
