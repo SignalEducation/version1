@@ -111,7 +111,12 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty? && !self.active
+    self.course_module_element_resources.empty? &&
+            self.course_module_element_user_logs.empty? &&
+            self.quiz_answers.empty? &&
+            self.quiz_questions.empty? &&
+            self.student_exam_tracks.empty? &&
+            !self.active
   end
 
   def my_position_among_siblings

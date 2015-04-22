@@ -2,13 +2,14 @@ var flashQuizResponseTracker = [];
 window.targetFlashCardStackHeight = 0;
 
 function setTargetHeight() {
-  window.targetFlashCardStackHeight = parseInt($(window).height() -
-          $('.flash-card-stack .well').first().offset().top - 75);
+  var stack = $('.flash-card-stack .well').first();
+  if (stack.length > 0) {
+    window.targetFlashCardStackHeight = parseInt($(window).height() - stack.offset().top - 75);
+  }
 }
 
 function resizeFlashCardStacks() {
   $('.flash-card-stack .well').css('min-height', targetFlashCardStackHeight);
-  console.log(window.targetFlashCardStackHeight);
 }
 
 function showRelativeStack(direction) {

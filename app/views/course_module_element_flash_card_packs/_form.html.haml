@@ -24,7 +24,7 @@
             -answer2_qc = answer2.quiz_contents.build(content_type: 'text', sorting_order: 0)
 
           -counter += 1
-          .panel.panel-default
+          .panel.panel-default{id: counter == 0 ? 'first-stack' : ''}
             =stack.hidden_field :id, class: 'stack_id stack_field'
             =stack.hidden_field :sorting_order, class: 'stack_sorting_order stack_field'
             =stack.hidden_field :_destroy, class: 'stack-destroy stack_field'

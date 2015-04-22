@@ -45,7 +45,7 @@ class FlashCardStack < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.flash_cards.empty?
+    true # children are killed automatically via the nested attributes declaration above.
   end
 
   protected
