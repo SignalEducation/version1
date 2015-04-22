@@ -54,7 +54,7 @@
                 Unknown
             %td.text-right=seconds_to_time(cme.estimated_time_in_seconds)
             %td
-              =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info'
+              =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-info', id: 'edit-btn'
               -if cme.is_video || cme.course_module_element_quiz.try(:enough_questions?) || cme.is_cme_flash_card_pack
                 =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-xs btn-info', target: '_blank'
               -else

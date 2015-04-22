@@ -55,6 +55,7 @@
     =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
+
     -if controller_name == 'courses'
       =render partial: 'layouts/special_navbar'
       .container-fluid
