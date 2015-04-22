@@ -1,10 +1,10 @@
 -# call using
-  =render partial: 'show_stack_heading', locals: {the_title: 'Something", the_color: "#abcdef",show_back_btn: true}
+  =render partial: 'show_stack_heading', locals: {the_title: 'Something", the_color: "#abcdef",show_back_btn: true, stack_type: 'quiz | cards'}
 
 .row
   .col-sm-1
     -if show_back_btn
-      =link_to '#', class: 'previous-card-button' do
+      =link_to '#', class: (stack_type == 'quiz' ? 'restart-quiz-button' : 'previous-card-button') do
         .h2{style: "color: #{the_color};"}
           %span.glyphicon.glyphicon-circle-arrow-left
   .col-sm-10.text-center

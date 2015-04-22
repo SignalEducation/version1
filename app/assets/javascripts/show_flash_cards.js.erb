@@ -20,14 +20,17 @@ function showRelativeStack(direction) {
     if ((positionInList < (allStacks.length - 1) && direction > 0) || (positionInList > 0 && direction < 0)) {
       allStacks.eq(positionInList + direction).hide().removeClass('hide').fadeIn(750);
       currentStack.fadeOut(250, function() {
-        currentStack.addClass('hide');
+        currentStack.addClass('hide').show();
+        currentStack.find('.flash-card').addClass('hide').show();
+        currentStack.find('.flash-card:first').removeClass('hide');
       });
       if (allStacks.eq(positionInList + direction).data('content-type') == 'Cards') {
-        allStacks.eq(positionInList + direction).find('.flash-card').first().hide().removeClass('hide').fadeIn(750);
+        allStacks.eq(positionInList + direction).find('.flash-card').first().hide().removeClass('hide').fadeIn(500);
       }
     }
   } else {
-    allStacks.first().removeClass('hide');
+    allStacks.first().hide().removeClass('hide').fadeIn(500);
+    allStacks.first().find('.flash-card:first').removeClass('hide');
   }
   resizeFlashCardStacks();
 }
@@ -94,6 +97,7 @@ function showRelativeCard(direction, thisButton) {
       showPreviousStack();
     } else {
       thisStack.find('.flash-card').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(250);
+      thisCard.addClass('hide').show();
     }
   })
 }
@@ -108,14 +112,26 @@ function showPreviousCard() {
   return false;
 }
 
+function restartQuiz() {
+  var theButton = $(this);
+  var theQuiz = theButton.closest('.flash-card-stack');
+  theQuiz.find('.next-question-button').removeClass('btn-success').removeClass('btn-danger').addClass('btn-default').prop('disabled', false);
+  theQuiz.find('.quiz_question').addClass('hide').show();
+  theQuiz.find('.quiz_results').addClass('hide').show();
+  theQuiz.find('.quiz_question:first').hide().removeClass('hide').fadeIn(350);
+  flashQuizResponseTracker[parseInt(theQuiz.data('id'))] = 0;
+  return false;
+}
+
 $(document).on('ready', function() {
   showNextStack();
   setTargetHeight();
   resizeFlashCardStacks();
-  $(document).on('click', '.next-stack-button', showNextStack);
   $(document).on('click', '.previous-stack-button', showPreviousStack);
+  $(document).on('click', '.next-stack-button', showNextStack);
   $(document).on('click', '.previous-card-button', showPreviousCard);
-  $(document).on('click', '.question-back', showPreviousQuestion);
   $(document).on('click', '.next-card-button', showNextCard);
-  $(document).on('click', '.question-next', showNextQuestion);
+  $(document).on('click', '.next-question-button', showNextQuestion);
+  $(document).on('click', '.previous-question-button', showPreviousQuestion);
+  $(document).on('click', '.restart-quiz-button', restartQuiz);
 });
