@@ -18,7 +18,7 @@ require 'rails_helper'
 describe QuizAnswer do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at correct)
+  black_list = %w(id created_at updated_at correct destroyed_at)
   QuizAnswer.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -53,11 +53,13 @@ describe QuizAnswer do
 
   # scopes
   it { expect(QuizAnswer).to respond_to(:all_in_order) }
+  it { expect(QuizAnswer).to respond_to(:all_destroyed) }
 
   # class methods
   it { expect(QuizAnswer).to respond_to(:ids_in_specific_order) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
 
 end

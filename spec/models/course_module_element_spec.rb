@@ -93,9 +93,9 @@ describe CourseModuleElement do
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
   it { expect(CourseModuleElement).to respond_to(:all_active) }
+  it { expect(CourseModuleElement).to respond_to(:all_destroyed) }
   it { expect(CourseModuleElement).to respond_to(:all_videos) }
   it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
-  it { expect(CourseModuleElement).to respond_to(:all_destroyed) }
 
   # class methods
 
@@ -103,11 +103,11 @@ describe CourseModuleElement do
   it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
   it { should respond_to(:my_position_among_siblings) }
   it { should respond_to(:next_element) }
   it { should respond_to(:parent) }
   it { should respond_to(:previous_element) }
   it { should respond_to(:update_the_module_total_time) }
-  it { should respond_to(:destroyable_children) }
 
 end

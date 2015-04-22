@@ -16,6 +16,7 @@
 class QuizAnswer < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
@@ -44,7 +45,7 @@ class QuizAnswer < ActiveRecord::Base
   before_update :set_wrong_answer_video_id
 
   # scopes
-  scope :all_in_order, -> { order(:quiz_question_id) }
+  scope :all_in_order, -> { order(:quiz_question_id).where(destroy_at: nil) }
   scope :ids_in_specific_order, lambda { |array_of_ids| where(id: array_of_ids).order("CASE #{array_of_ids.map.with_index{|x,c| "WHEN id= #{x} THEN #{c} " }.join } END") }
 
   # class methods
@@ -54,7 +55,13 @@ class QuizAnswer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_attempts.empty?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.quiz_contents.to_a
+    the_list
   end
 
   protected

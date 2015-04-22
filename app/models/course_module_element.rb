@@ -113,11 +113,11 @@ class CourseModuleElement < ActiveRecord::Base
 
   def destroyable_children
     the_list = []
-    the_list << self.course_module_element_quiz if self.course_module_element_quiz
     the_list << self.course_module_element_video if self.course_module_element_video
-    the_list << self.quiz_questions if self.quiz_questions
-    the_list << self.quiz_answers if self.quiz_answers
+    the_list << self.course_module_element_quiz if self.course_module_element_quiz
     the_list += self.course_module_element_resources.to_a
+    the_list += self.quiz_answers.to_a
+    the_list += self.quiz_questions.to_a
     the_list
   end
 

@@ -69,7 +69,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
 
   def destroyable_children
     the_list = []
-    the_list << self.course_module_element_quizzes
+    the_list += self.course_module_element_quizzes.to_a
     the_list
   end
 

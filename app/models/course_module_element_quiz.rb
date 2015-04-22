@@ -72,7 +72,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def destroyable_children
     the_list = []
-    the_list += self.quiz_questions
+    the_list += self.quiz_questions.to_a
     the_list
   end
 
