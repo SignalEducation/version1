@@ -11,6 +11,7 @@
 #  course_module_jumbo_quiz_id       :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  destroyed_at                      :datetime
 #
 
 class CourseModuleElementQuiz < ActiveRecord::Base

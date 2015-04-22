@@ -16,6 +16,8 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  quiz_solution_id   :integer
+#  flash_card_id      :integer
+#  destroyed_at       :datetime
 #
 
 FactoryGirl.define do

@@ -11,6 +11,8 @@
 #  cpd_hours_required_per_year :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  seo_description             :string(255)
+#  seo_no_index                :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

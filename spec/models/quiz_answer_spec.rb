@@ -10,6 +10,7 @@
 #  wrong_answer_video_id         :integer
 #  created_at                    :datetime
 #  updated_at                    :datetime
+#  destroyed_at                  :datetime
 #
 
 require 'rails_helper'

@@ -13,6 +13,7 @@
 #  name_url                          :string(255)
 #  best_possible_score_first_attempt :integer          default(0)
 #  best_possible_score_retry         :integer          default(0)
+#  destroyed_at                      :datetime
 #
 
 require 'rails_helper'

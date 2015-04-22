@@ -13,6 +13,7 @@
 #  upload_content_type      :string(255)
 #  upload_file_size         :integer
 #  upload_updated_at        :datetime
+#  destroyed_at             :datetime
 #
 
 class CourseModuleElementResource < ActiveRecord::Base
