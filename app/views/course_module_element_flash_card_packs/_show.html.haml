@@ -52,5 +52,5 @@
                 out of
                 =stack.flash_quiz.quiz_questions.count
           .row
-
-          =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: ((cme.course_module_element_flash_card_pack.flash_card_stacks.size - 1) == stack_counter), next_cme_url: course_special_link(cme.next_element), the_label: stack.final_button_label}
+            .col-sm-8.col-sm-offset-2
+              =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: ((cme.course_module_element_flash_card_pack.flash_card_stacks.size - 1) == stack_counter), next_cme_url: course_special_link(cme.next_element), the_label: stack.final_button_label}
