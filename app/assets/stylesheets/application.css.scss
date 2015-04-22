@@ -700,4 +700,11 @@ header {
     line-height: 1.5em;
     font-size: 2em !important;
   }
+  .btn {
+    white-space: normal;
+    border-radius: 0;
+    .end-of-stack {
+      font-size: 1.75em !important;
+    }
+  }
 }

@@ -39,7 +39,7 @@ class FlashCardStack < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :course_module_element_flash_card_pack_id) }
+  scope :all_in_order, -> { order(:course_module_element_flash_card_pack_id, :sorting_order) }
 
   # class methods
 
