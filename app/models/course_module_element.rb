@@ -27,6 +27,7 @@
 class CourseModuleElement < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :name, :name_url, :description,
@@ -88,7 +89,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
-  scope :all_active, -> { where(active: true) }
+  scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_videos, -> { where(is_video: true) }
   scope :all_quizzes, -> { where(is_quiz: true) }
 
@@ -107,7 +108,17 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty? && !self.active
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list << self.course_module_element_quiz if self.course_module_element_quiz
+    the_list << self.course_module_element_video if self.course_module_element_video
+    the_list << self.quiz_questions if self.quiz_questions
+    the_list << self.quiz_answers if self.quiz_answers
+    the_list += self.course_module_element_resources.to_a
+    the_list
   end
 
   def my_position_among_siblings

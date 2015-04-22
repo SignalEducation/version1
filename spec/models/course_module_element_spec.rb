@@ -29,7 +29,7 @@ require 'rails_helper'
 describe CourseModuleElement do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at )
+  black_list = %w(id created_at updated_at destroyed_at )
   CourseModuleElement.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -95,6 +95,7 @@ describe CourseModuleElement do
   it { expect(CourseModuleElement).to respond_to(:all_active) }
   it { expect(CourseModuleElement).to respond_to(:all_videos) }
   it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
+  it { expect(CourseModuleElement).to respond_to(:all_destroyed) }
 
   # class methods
 
@@ -107,5 +108,6 @@ describe CourseModuleElement do
   it { should respond_to(:parent) }
   it { should respond_to(:previous_element) }
   it { should respond_to(:update_the_module_total_time) }
+  it { should respond_to(:destroyable_children) }
 
 end

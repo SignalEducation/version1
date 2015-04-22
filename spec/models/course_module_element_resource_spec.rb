@@ -21,7 +21,7 @@ require 'rails_helper'
 describe CourseModuleElementResource do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at)
+  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at destroyed_at)
   CourseModuleElementResource.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -49,11 +49,13 @@ describe CourseModuleElementResource do
 
   # scopes
   it { expect(CourseModuleElementResource).to respond_to(:all_in_order) }
+  it { expect(CourseModuleElementResource).to respond_to(:all_destroyed) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should_not respond_to(:destroyable_children) }
 
 
 end

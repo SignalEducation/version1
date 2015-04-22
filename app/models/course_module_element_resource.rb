@@ -19,6 +19,7 @@
 class CourseModuleElementResource < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :course_module_element_id, :name, :description, :web_url, :upload
@@ -44,7 +45,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_in_order, -> { order(:course_module_element_id, destroyed_at: nil) }
 
   # class methods
 
