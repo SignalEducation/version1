@@ -69,6 +69,7 @@ class User < ActiveRecord::Base
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
+  SORT_OPTIONS = %w(user_group name email created)
 
   # relationships
   belongs_to :corporate_customer
@@ -142,6 +143,10 @@ class User < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
+  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
+  scope :sort_by_email, -> { order(:email) }
+  scope :sort_by_name, -> { order(:last_name, :first_name) }
+  scope :sort_by_recent_registration, -> { order(created_at: :desc) }
 
   # class methods
   def self.all_admins
@@ -191,6 +196,23 @@ class User < ActiveRecord::Base
       end
     else
       false # return false
+    end
+  end
+
+  def self.sort_by(choice)
+    if SORT_OPTIONS.include?(choice)
+      case choice
+        when 'name'
+          sort_by_name
+        when 'email'
+          sort_by_email
+        when 'created'
+          sort_by_recent_registration
+        else # also covers 'user_group'
+          all_in_order
+      end
+    else
+      all_in_order
     end
   end
 
