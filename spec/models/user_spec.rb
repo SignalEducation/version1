@@ -60,6 +60,8 @@ describe User do
 
   # Constants
   it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
+  it { expect(User.const_defined?(:LOCALES)).to eq(true) }
+  it { expect(User.const_defined?(:SORT_OPTIONS)).to eq(true) }
 
   # relationships
   it { should belong_to(:corporate_customer) }
@@ -131,6 +133,10 @@ describe User do
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
+  it { expect(User).to respond_to(:search_for) }
+  it { expect(User).to respond_to(:sort_by_email) }
+  it { expect(User).to respond_to(:sort_by_name) }
+  it { expect(User).to respond_to(:sort_by_recent_registration) }
 
   # class methods
   it { expect(User).to respond_to(:all_admins) }
@@ -138,6 +144,7 @@ describe User do
   it { expect(User).to respond_to(:get_and_activate) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:finish_password_reset_process) }
+  it { expect(User).to respond_to(:sort_by) }
 
   # instance methods
   it { should respond_to(:admin?) }
