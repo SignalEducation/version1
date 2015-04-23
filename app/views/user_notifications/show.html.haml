@@ -19,7 +19,7 @@
       .well.well-sm
         %p
           =t('views.user_notifications.form.message_type') + ': '
-          =@user_notification.message_type.capitalize
+          =@user_notification.message_type.humanize.capitalize
 -# todo .row
   .col-sm-12
     %table.table.table-bordered
