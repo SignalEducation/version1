@@ -7,7 +7,14 @@ class UsersController < ApplicationController
   before_action :get_variables
 
   def index
-    @users = User.paginate(per_page: 50, page: params[:page]).all_in_order
+    @users = params[:search_term].to_s.blank? ?
+             @users = User.paginate(per_page: 50, page: params[:page]) :
+             @users = User.search_for(params[:search_term].to_s).
+                     paginate(per_page: 50, page: params[:page])
+    @users = params[:sort_by].to_s.blank? ?
+             @users.all_in_order :
+             @users = @users.sort_by(params[:sort_by].to_s)
+    @sort_choices = User::SORT_OPTIONS.map { |x| [x.humanize.camelcase, x] }
   end
 
   def show
