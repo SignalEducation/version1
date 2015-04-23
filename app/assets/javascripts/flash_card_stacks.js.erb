@@ -1,10 +1,12 @@
 // regarding HTML in app/views/flash_card_stacks/
 
 function addNewFlashCardStack() {
-    var panels = $(".panel").not('.panel-danger');
-    $('#' + panels.find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
-    var theClone = panels.first().clone(),
-        timeStamp = (new Date).getTime().toString();
+  var panels = $(".panel").not('.panel-danger');
+  $('#' + panels.find('.in').attr('aria-labelledby') ).find('.disclosure-triangles').first().click();
+  //var theClone = panels.first().clone(),
+  var theClone = $('#first-stack').clone(),
+      timeStamp = (new Date).getTime().toString();
+  theClone.attr('id', null).removeClass('hide');
   theClone.find('input, textarea').val(null);
   theClone.find('.stack_sorting_order').val(parseInt($('.stack_sorting_order').last().val()) + 5);
   theClone.find('h4').text('<%= I18n.t('views.flash_cards.form.new_card') %>');
