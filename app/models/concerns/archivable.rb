@@ -15,7 +15,9 @@ module Archivable
   extend ActiveSupport::Concern
 
   included do
-    scope :all_destroyed, -> { where.not(destroyed_at: nil) }
+    scope :all_destroyed, -> { unscoped.where.not(destroyed_at: nil) }
+    scope :all_live, -> { where(destroyed_at: nil) }
+    default_scope{all_live}
   end
 
   def destroy

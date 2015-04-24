@@ -53,7 +53,7 @@ class QuizQuestion < ActiveRecord::Base
   before_validation :set_course_module_element
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_quiz_id).where(destroyed_at: nil) }
+  scope :all_in_order, -> { order(:course_module_element_quiz_id) }
   scope :all_easy, -> { where(difficulty_level: 'easy') }
   scope :all_medium, -> { where(difficulty_level: 'medium') }
   scope :all_difficult, -> { where(difficulty_level: 'difficult') }
