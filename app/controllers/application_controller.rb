@@ -14,8 +14,12 @@ class ApplicationController < ActionController::Base
         DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
-  if Rails.env.staging? && controller_name[0..2] != 'api'
-    http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
+  before_action :use_basic_auth_for_staging
+
+  def use_basic_auth_for_staging
+    if Rails.env.development? && !request.original_fullpath.include?('/api/')
+      ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
+    end
   end
 
   # Prevent CSRF attacks by raising an exception.
