@@ -48,7 +48,7 @@ describe QuizQuestion do
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES).on(:update) }
 
   it { should allow_value(nil).for(:hints) }
-  it { should ensure_length_of(:hints).is_at_most(65535) }
+  it { should validate_length_of(:hints).is_at_most(65535) }
 
   # callbacks
   it { should callback(:set_course_module_element).before(:validation) }
