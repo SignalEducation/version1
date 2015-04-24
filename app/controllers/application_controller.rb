@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   before_action :use_basic_auth_for_staging
 
   def use_basic_auth_for_staging
-    if Rails.env.development? && !request.original_fullpath.include?('/api/')
+    if Rails.env.staging? && !request.original_fullpath.include?('/api/')
       ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
     end
   end
