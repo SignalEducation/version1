@@ -18,6 +18,10 @@
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
+#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
 #
 
 require 'rails_helper'
@@ -25,7 +29,7 @@ require 'rails_helper'
 describe CourseModuleElement do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at )
+  black_list = %w(id created_at updated_at destroyed_at )
   CourseModuleElement.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -89,6 +93,7 @@ describe CourseModuleElement do
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
   it { expect(CourseModuleElement).to respond_to(:all_active) }
+  it { expect(CourseModuleElement).to respond_to(:all_destroyed) }
   it { expect(CourseModuleElement).to respond_to(:all_videos) }
   it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
 
@@ -98,6 +103,7 @@ describe CourseModuleElement do
   it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
   it { should respond_to(:my_position_among_siblings) }
   it { should respond_to(:next_element) }
   it { should respond_to(:parent) }

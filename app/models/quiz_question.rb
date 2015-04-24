@@ -9,11 +9,14 @@
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
+#  flash_quiz_id                 :integer
+#  destroyed_at                  :datetime
 #
 
 class QuizQuestion < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :course_module_element_quiz_id,
@@ -49,7 +52,7 @@ class QuizQuestion < ActiveRecord::Base
   before_save :set_course_module_element
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_quiz_id) }
+  scope :all_in_order, -> { order(:course_module_element_quiz_id).where(destroyed_at: nil) }
   scope :all_easy, -> { where(difficulty_level: 'easy') }
   scope :all_medium, -> { where(difficulty_level: 'medium') }
   scope :all_difficult, -> { where(difficulty_level: 'difficult') }
@@ -64,7 +67,15 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def destroyable?
-    self.quiz_attempts.empty?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.quiz_answers.to_a
+    the_list += self.quiz_contents.to_a
+    the_list += self.quiz_solutions.to_a
+    the_list
   end
 
   protected
