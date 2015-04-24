@@ -11,11 +11,13 @@
 #  transcript                   :text
 #  created_at                   :datetime
 #  updated_at                   :datetime
+#  destroyed_at                 :datetime
 #
 
 class CourseModuleElementVideo < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript
@@ -40,7 +42,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   before_update :set_estimated_study_time
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
 
   # class methods
 

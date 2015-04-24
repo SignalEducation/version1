@@ -17,6 +17,7 @@
 #  image_updated_at   :datetime
 #  quiz_solution_id   :integer
 #  flash_card_id      :integer
+#  destroyed_at       :datetime
 #
 
 require 'rails_helper'
@@ -24,7 +25,7 @@ require 'rails_helper'
 describe QuizContent do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at contains_mathjax contains_image)
+  black_list = %w(id created_at updated_at contains_mathjax contains_image destroyed_at)
   QuizContent.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -91,6 +92,7 @@ describe QuizContent do
 
   # scopes
   it { expect(QuizContent).to respond_to(:all_in_order) }
+  it { expect(QuizContent).to respond_to(:all_destroyed) }
 
   # class methods
 

@@ -10,6 +10,7 @@
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  flash_quiz_id                 :integer
+#  destroyed_at                  :datetime
 #
 
 FactoryGirl.define do

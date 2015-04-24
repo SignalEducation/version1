@@ -19,6 +19,7 @@
 #  cme_count                 :integer          default(0)
 #  seo_description           :string(255)
 #  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
 #
 
 require 'rails_helper'
@@ -26,7 +27,7 @@ require 'rails_helper'
 describe CourseModule do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at destroyed_at)
   CourseModule.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -84,6 +85,7 @@ describe CourseModule do
   # scopes
   it { expect(CourseModule).to respond_to(:all_in_order) }
   it { expect(CourseModule).to respond_to(:all_active) }
+  it { expect(CourseModule).to respond_to(:all_destroyed) }
   it { expect(CourseModule).to respond_to(:all_inactive) }
   it { expect(CourseModule).to respond_to(:with_url) }
 
@@ -94,6 +96,7 @@ describe CourseModule do
   it { should respond_to(:children) }
   it { should respond_to(:completed_by_user_or_guid) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
   it { should respond_to(:full_name) }
   it { should respond_to(:my_position_among_siblings) }
   it { should respond_to(:next_module) }

@@ -13,11 +13,13 @@
 #  name_url                          :string(255)
 #  best_possible_score_first_attempt :integer          default(0)
 #  best_possible_score_retry         :integer          default(0)
+#  destroyed_at                      :datetime
 #
 
 class CourseModuleJumboQuiz < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :course_module_id, :name, :name_url,
@@ -50,7 +52,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   after_create :update_student_exam_tracks
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_id) }
+  scope :all_in_order, -> { order(:course_module_id).where(destroyed_at: nil) }
 
   # class methods
 
@@ -63,6 +65,12 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
 
   def destroyable?
     !Rails.env.production?
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.course_module_element_quizzes.to_a
+    the_list
   end
 
   def name_url

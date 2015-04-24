@@ -7,7 +7,7 @@ class CountriesController < ApplicationController
   before_action :get_variables
 
   def index
-    @countries = Country.paginate(per_page: 50, page: params[:page]).all_in_order
+    @countries = Country.includes(:vat_codes, :users, :subscription_payment_cards, :corporate_customers, :currency).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show

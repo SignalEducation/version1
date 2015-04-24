@@ -11,6 +11,7 @@
 #  transcript                   :text
 #  created_at                   :datetime
 #  updated_at                   :datetime
+#  destroyed_at                 :datetime
 #
 
 FactoryGirl.define do
