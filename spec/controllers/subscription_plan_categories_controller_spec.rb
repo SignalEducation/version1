@@ -74,7 +74,7 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
@@ -121,7 +121,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a tutor_user: ' do

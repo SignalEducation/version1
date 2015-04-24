@@ -7,6 +7,7 @@
 #  sorting_order       :integer
 #  created_at          :datetime
 #  updated_at          :datetime
+#  destroyed_at        :datetime
 #
 
 class FlashCard < ActiveRecord::Base

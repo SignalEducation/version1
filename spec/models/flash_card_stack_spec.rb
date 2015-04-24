@@ -10,6 +10,7 @@
 #  content_type                             :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  destroyed_at                             :datetime
 #
 
 require 'rails_helper'
@@ -17,7 +18,7 @@ require 'rails_helper'
 describe FlashCardStack do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at destroyed_at)
   FlashCardStack.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

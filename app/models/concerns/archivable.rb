@@ -4,7 +4,7 @@
 # Add the following into the model:
 # def destroyable_children
 #   the_list = []
-#   self.related_things.to_a + self.other_things.to_a
+#   the_list += self.related_things.to_a + self.other_things.to_a
 #   the_list << self.has_one_thing if self.has_one_thing
 #   the_list
 # end
