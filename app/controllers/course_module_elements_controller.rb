@@ -200,6 +200,7 @@ class CourseModuleElementsController < ApplicationController
                     :degree_of_wrongness,
                     :wrong_answer_explanation_text,
                     :wrong_answer_video_id,
+                    :_destroy,
                     quiz_contents_attributes: [
                         :id,
                         :quiz_question_id,
