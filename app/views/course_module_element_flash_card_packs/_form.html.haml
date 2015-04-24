@@ -35,7 +35,7 @@
                     -if counter == 0
                       %span.glyphicon.glyphicon-chevron-down{title: t('views.general.tooltips.click_to_view')}
                     -else
-                      %span.glyphicon.glyphicon-chevron-right{title: t('views.general.tooltips.click_to_view')}
+                      %span.glyphicon.glyphicon-chevron-right#closed{title: t('views.general.tooltips.click_to_view')}
                 .col-sm-4#stack-title
                   =stack.text_field :name, placeholder: t('views.flash_card_packs.form.name_placeholder'), class: 'form-control stack_field', required: true
                 .col-sm-4#stack-btn

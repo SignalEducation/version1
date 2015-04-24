@@ -88,9 +88,21 @@ describe 'Admin uploading flash card packs:', type: :feature do
         page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
         page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
         page.all(:css, '#degree-of-wrongness').first.select('slightly wrong')
-        page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
+        page.all(:css, '#degree-of-wrongness').last.select('correct')
       end
       click_button 'Save'
+      expect(page).to have_content 'Course Module Element details have been updated successfully'
+      page.all(:id, 'edit-btn').last.click
+      expect(page).to have_content 'Edit Course Module Element'
+      page.all(:css, '#closed').last.click
+      click_link 'Add a new question'
+      within(page.all(:css, '#quiz-well').last) do
+        #page.all(:css, '.quiz-question textarea').first.set('Question Text 2')
+        #page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
+        #page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
+        #page.all(:css, '#degree-of-wrongness').first.select('correct')
+        #page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
+      end
     end
   end
 
