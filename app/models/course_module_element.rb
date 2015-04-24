@@ -93,7 +93,7 @@ class CourseModuleElement < ActiveRecord::Base
   after_save :update_student_exam_tracks
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_videos, -> { where(is_video: true) }
   scope :all_quizzes, -> { where(is_quiz: true) }
