@@ -44,12 +44,14 @@ describe CourseModuleElementFlashCardPack do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(CourseModuleElementFlashCardPack).to respond_to(:all_destroyed) }
   it { expect(CourseModuleElementFlashCardPack).to respond_to(:all_in_order) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
   it { should respond_to(:spawn_flash_quiz) }
 
 end

@@ -13,6 +13,9 @@
 
 class FlashQuiz < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+  include Archivable
+
   # attr-accessible
   attr_accessible :flash_card_stack_id, :background_color, :foreground_color,
                   :quiz_questions_attributes
@@ -32,25 +35,23 @@ class FlashQuiz < ActiveRecord::Base
   validates :foreground_color, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:flash_card_stack_id) }
+  scope :all_in_order, -> { order(:flash_card_stack_id).where(destoyed_at: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    self.quiz_questions.empty?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.quiz_questions.to_a
+    the_list
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

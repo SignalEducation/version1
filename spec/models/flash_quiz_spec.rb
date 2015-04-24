@@ -44,11 +44,13 @@ describe FlashQuiz do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(FlashQuiz).to respond_to(:all_destroyed) }
   it { expect(FlashQuiz).to respond_to(:all_in_order) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
 
 end

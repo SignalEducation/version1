@@ -51,13 +51,13 @@ describe FlashCardStack do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(FlashCardStack).to respond_to(:all_destroyed) }
   it { expect(FlashCardStack).to respond_to(:all_in_order) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:destroyable_children) }
 
 end

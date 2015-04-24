@@ -15,6 +15,9 @@
 
 class FlashCardStack < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+  include Archivable
+
   # attr-accessible
   attr_accessible :course_module_element_flash_card_pack_id, :name, :sorting_order, :final_button_label, :content_type, :flash_cards_attributes, :flash_quiz_attributes
 
@@ -37,10 +40,9 @@ class FlashCardStack < ActiveRecord::Base
   validates :content_type, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_flash_card_pack_id, :sorting_order) }
+  scope :all_in_order, -> { order(:course_module_element_flash_card_pack_id, :sorting_order).where(destroyed_at: nil) }
 
   # class methods
 
@@ -49,13 +51,13 @@ class FlashCardStack < ActiveRecord::Base
     true # children are killed automatically via the nested attributes declaration above.
   end
 
-  protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+  def destroyable_children
+    the_list = []
+    the_list << self.flash_quiz if self.flash_quiz
+    the_list += self.flash_cards.to_a
+    the_list
   end
+
+  protected
 
 end

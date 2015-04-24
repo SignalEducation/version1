@@ -12,6 +12,9 @@
 
 class FlashCard < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+  include Archivable
+
   # attr-accessible
   attr_accessible :flash_card_stack_id, :sorting_order, :quiz_contents_attributes
 
@@ -28,27 +31,23 @@ class FlashCard < ActiveRecord::Base
   validates :sorting_order, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:flash_card_stack_id, :sorting_order) }
+  scope :all_in_order, -> { order(:flash_card_stack_id, :sorting_order).where(destroyed_at: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    self.quiz_contents.count <= 1
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.quiz_contents.to_a
+    the_list
   end
 
   protected
-
-  def check_dependencies
-    if self.destroyable?
-      self.quiz_contents.destroy_all # actually only deletes ONE quiz_content
-    else
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end

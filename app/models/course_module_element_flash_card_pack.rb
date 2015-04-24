@@ -13,6 +13,9 @@
 
 class CourseModuleElementFlashCardPack < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+  include Archivable
+
   # attr-accessible
   attr_accessible :course_module_element_id, :background_color, :foreground_color,
                   :flash_card_stacks_attributes
@@ -31,28 +34,26 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
   validates :foreground_color, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    self.flash_card_stacks.empty?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.flash_card_stacks.to_a
+    the_list
   end
 
   def spawn_flash_quiz
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, i18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end
