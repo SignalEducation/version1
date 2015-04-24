@@ -45,7 +45,6 @@ class UserNotificationsController < ApplicationController
     end
   end
 
-
   def destroy
     if @user_notification.destroy
       flash[:success] = I18n.t('controllers.user_notifications.destroy.flash.success')
@@ -59,9 +58,23 @@ class UserNotificationsController < ApplicationController
 
   def get_variables
     if params[:id].to_i > 0
-      @user_notification = UserNotification.where(id: params[:id]).first
+      if current_user.try(:admin?)
+        @user_notification = UserNotification.where(id: params[:id]).first
+        @users = User.all_in_order
+      else
+        @user_notification = current_user.user_notifications.find_by_id(params[:id].to_i)
+        if current_user.tutor?
+          @users = User.all_in_order
+        else
+          @users = User.none
+        end
+      end
     end
-    @users = User.all_in_order
+    if params[:id].to_i > 0 && @user_notification.nil?
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to root_url
+      return false
+    end
     #@forum_topics = ForumTopic.all_in_order
     #@forum_posts = ForumPost.all_in_order
     #@tutors = Tutor.all_in_order

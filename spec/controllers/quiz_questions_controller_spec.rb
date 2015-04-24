@@ -167,7 +167,7 @@ describe QuizQuestionsController, type: :controller do
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
-        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
+        expect_archive_success_with_model('quiz_question', quiz_question_1.id, edit_course_module_element_url(course_module_element_1_1.id))
       end
 
       it 'should be OK as no dependencies exist' do
@@ -513,7 +513,7 @@ describe QuizQuestionsController, type: :controller do
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
-        expect_delete_error_with_model('quiz_question', edit_course_module_element_url(course_module_element_1_1.id))
+        expect_archive_success_with_model('quiz_question', quiz_question_2.id, edit_course_module_element_url(course_module_element_1_1.id))
       end
 
       it 'should be OK as no dependencies exist' do

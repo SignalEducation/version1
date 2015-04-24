@@ -11,11 +11,13 @@
 #  course_module_jumbo_quiz_id       :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
+#  destroyed_at                      :datetime
 #
 
 class CourseModuleElementQuiz < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # Constants
   STRATEGIES = %w(random progressive)
@@ -48,7 +50,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   after_commit :set_ancestors_best_scores
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
 
   # class methods
 
@@ -65,7 +67,13 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   def destroyable?
-    self.quiz_questions.empty?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.quiz_questions.to_a
+    the_list
   end
 
   def enough_questions?

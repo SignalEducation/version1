@@ -21,6 +21,7 @@
 #  is_cme_flash_card_pack    :boolean          default(FALSE), not null
 #  seo_description           :string(255)
 #  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
 #
 
 FactoryGirl.define do

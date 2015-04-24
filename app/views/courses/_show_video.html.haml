@@ -36,12 +36,12 @@
       -cme.course_module_element_video.tags.split(',').each do |tag|
         .label.label-default=tag
 
--#if cme.course_module_element_resources.count > 0
+-if cme.course_module_element_resources.all_in_order.count > 0
   .row
     .col-sm-12
       %h2=t('views.course_module_element_resources.index.h1')
       %ul
-        -cme.course_module_element_resources.each do |r|
+        -cme.course_module_element_resources.all_in_order.each do |r|
           -if r.web_url.length > 0
             %li
               =link_to r.name, r.web_url, target: '_blank'

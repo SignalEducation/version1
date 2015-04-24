@@ -19,6 +19,7 @@
 #  cme_count                 :integer          default(0)
 #  seo_description           :string(255)
 #  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
 #
 
 FactoryGirl.define do
