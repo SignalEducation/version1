@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422151507) do
+ActiveRecord::Schema.define(version: 20150424085635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 20150422151507) do
     t.string   "foreground_color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "destroyed_at"
   end
 
   create_table "course_module_element_quizzes", force: true do |t|
@@ -212,31 +213,7 @@ ActiveRecord::Schema.define(version: 20150422151507) do
     t.string   "content_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "flash_cards", force: true do |t|
-    t.integer  "flash_card_stack_id"
-    t.integer  "sorting_order"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "flash_quizzes", force: true do |t|
-    t.integer  "flash_card_stack_id"
-    t.string   "background_color"
-    t.string   "foreground_color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "flash_card_stacks", force: true do |t|
-    t.integer  "course_module_element_flash_card_pack_id"
-    t.string   "name"
-    t.integer  "sorting_order"
-    t.string   "final_button_label"
-    t.string   "content_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "destroyed_at"
   end
 
   create_table "flash_cards", force: true do |t|
