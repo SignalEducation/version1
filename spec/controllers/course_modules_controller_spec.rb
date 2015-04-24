@@ -226,14 +226,14 @@ describe CourseModulesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be OK even though dependencies exist' do
         delete :destroy, id: course_module_1.id
-        expect_delete_error_with_model('course_module', course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_1.id, course_modules_url)
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: course_module_2.id
-        expect_delete_success_with_model('course_module', course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_2.id, course_modules_url)
       end
     end
 
@@ -625,14 +625,14 @@ describe CourseModulesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be OK even though dependencies exist' do
         delete :destroy, id: course_module_1.id
-        expect_delete_error_with_model('course_module', course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_1.id, course_modules_url)
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: course_module_2.id
-        expect_delete_success_with_model('course_module', course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_2.id, course_modules_url)
       end
     end
 
