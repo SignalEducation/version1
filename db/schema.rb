@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 20150424085635) do
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "destroyed_at"
   end
 
   create_table "flash_quizzes", force: true do |t|
@@ -229,6 +230,7 @@ ActiveRecord::Schema.define(version: 20150424085635) do
     t.string   "foreground_color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "destroyed_at"
   end
 
   create_table "forum_post_concerns", force: true do |t|
