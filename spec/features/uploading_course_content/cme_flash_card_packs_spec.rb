@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 
-describe 'Admin uploading flash card packs:', type: :feature do
+describe 'Admin/Tutor uploading flash card packs:', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
@@ -96,13 +96,18 @@ describe 'Admin uploading flash card packs:', type: :feature do
       expect(page).to have_content 'Edit Course Module Element'
       page.all(:css, '#closed').last.click
       click_link 'Add a new question'
-      within(page.all(:css, '#quiz-well').last) do
-        #page.all(:css, '.quiz-question textarea').first.set('Question Text 2')
-        #page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
-        #page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
-        #page.all(:css, '#degree-of-wrongness').first.select('correct')
-        #page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
+      within all('.well.well-sm.question')[1] do
+        page.all(:css, '.quiz-question textarea').last.set('Question Text 2')
+        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
+        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
+        page.all(:css, '#degree-of-wrongness').first.select('correct')
+        page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
+        click_link 'Add an extra answer'
+        page.all(:css, '.quiz-answer-text textarea')[2].set('Answer 3')
+        page.all(:css, '#degree-of-wrongness')[2].select('wrong')
       end
+      click_button 'Save'
+      expect(page).to have_content 'Course Module Element details have been updated successfully'
     end
   end
 
