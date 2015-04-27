@@ -38,5 +38,8 @@ module LearnsignalV3
       g.javascripts     false
       g.helper          false
     end
+
+    # to enable Rack-Attack gem
+    config.middleware.use Rack::Attack
   end
 end

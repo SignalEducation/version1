@@ -210,6 +210,8 @@ GEM
       byebug (~> 4.0)
       pry (~> 0.10)
     rack (1.5.2)
+    rack-attack (4.2.0)
+      rack
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -384,6 +386,7 @@ DEPENDENCIES
   poltergeist
   protected_attributes
   pry-byebug
+  rack-attack
   rails (= 4.1.8)
   remotipart
   rspec-rails

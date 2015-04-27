@@ -1,9 +1,10 @@
 source 'https://rubygems.org'
 
-ruby '2.1.5'
+ruby '2.1.6'
 gem 'rails', '4.1.8'
 
 # Core gems - common to all environments
+gem 'rack-attack' # todo: needs to be moved to the production group later
 gem 'airbrake'
 gem 'authlogic'
 gem 'scrypt' # S-Crypt for Authlogic
@@ -85,7 +86,7 @@ group :staging, :production do
 end
 
 group :production do
-
+  gem 'rack-attack'
 end
 
 #############################################
