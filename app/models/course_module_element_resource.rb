@@ -38,6 +38,8 @@ class CourseModuleElementResource < ActiveRecord::Base
   validates :description, presence: true
   validates_attachment_content_type :upload,
             content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+  validates :web_url, format: {with: URI::regexp(%w(http https)) },
+            if: '!web_url.blank?'
   validate  :web_url_or_upload_required
 
   # callbacks

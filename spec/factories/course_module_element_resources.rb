@@ -19,9 +19,9 @@
 FactoryGirl.define do
   factory :course_module_element_resource do
     course_module_element_id 1
-    name "MyString"
-    description "MyText"
-    web_url "MyString"
+    name 'MyString'
+    description 'MyText'
+    web_url 'https://linkedin.com'
   end
 
 end
