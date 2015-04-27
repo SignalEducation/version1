@@ -41,8 +41,10 @@ class Institution < ActiveRecord::Base
   validates :short_name, presence: true, uniqueness: true
   validates :name_url, presence: true
   validates :description, presence: true
-  validates :feedback_url, presence: true
-  validates :help_desk_url, presence: true
+  validates :feedback_url, presence: true,
+            format: {with: URI::regexp(%w(http https)) }
+  validates :help_desk_url, presence: true,
+            format: {with: URI::regexp(%w(http https)) }
   validates :subject_area_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true

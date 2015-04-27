@@ -44,6 +44,10 @@ describe CourseModuleElementResource do
 
   it { should validate_presence_of(:description) }
 
+  it { should allow_value('http://linkedin.com/').for(:web_url) }
+  it { should_not allow_value('www.linkedin.com/').for(:web_url) }
+  it { should_not allow_value('linkedin.com/').for(:web_url) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
