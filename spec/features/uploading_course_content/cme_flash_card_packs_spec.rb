@@ -12,7 +12,7 @@ describe 'Admin/Tutor uploading flash card packs:', type: :feature do
     expect(tutor_user.id).to be > 0
   end
 
-  describe 'Uploading flash cards' do
+  describe 'Uploading flash cards/quizzes' do
 
     scenario 'uploading card and quiz content', js: true  do
       visit root_path
@@ -84,9 +84,9 @@ describe 'Admin/Tutor uploading flash card packs:', type: :feature do
         find('#content-type-select').select('Quiz')
       end
       within('.panel-body') do
-        page.all(:css, '.quiz-question textarea').first.set('Question Text')
-        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
-        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
+        page.all(:css, '.quiz-question textarea').first.set('Question Text 1')
+        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 11')
+        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 12')
         page.all(:css, '#degree-of-wrongness').first.select('slightly wrong')
         page.all(:css, '#degree-of-wrongness').last.select('correct')
       end
@@ -98,13 +98,29 @@ describe 'Admin/Tutor uploading flash card packs:', type: :feature do
       click_link 'Add a new question'
       within all('.well.well-sm.question')[1] do
         page.all(:css, '.quiz-question textarea').last.set('Question Text 2')
-        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 1')
-        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 2')
+        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 21')
+        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 22')
         page.all(:css, '#degree-of-wrongness').first.select('correct')
         page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
         click_link 'Add an extra answer'
-        page.all(:css, '.quiz-answer-text textarea')[2].set('Answer 3')
+        page.all(:css, '.quiz-answer-text textarea')[2].set('Answer 23')
         page.all(:css, '#degree-of-wrongness')[2].select('wrong')
+      end
+      click_link 'Add a new question'
+      within all('.well.well-sm.question')[2] do
+        page.all(:css, '.quiz-question textarea').last.set('Question Text 3')
+        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 31')
+        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 32')
+        page.all(:css, '#degree-of-wrongness').first.select('correct')
+        page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
+      end
+      click_link 'Add a new question'
+      within all('.well.well-sm.question')[3] do
+        page.all(:css, '.quiz-question textarea').last.set('Question Text 4')
+        page.all(:css, '.quiz-answer-text textarea').first.set('Answer 41')
+        page.all(:css, '.quiz-answer-text textarea').last.set('Answer 42')
+        page.all(:css, '#degree-of-wrongness').first.select('correct')
+        page.all(:css, '#degree-of-wrongness').last.select('slightly wrong')
       end
       click_button 'Save'
       expect(page).to have_content 'Course Module Element details have been updated successfully'
