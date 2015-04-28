@@ -24,10 +24,8 @@ class Rack::Attack
   # Throttle all requests by IP (60rpm)
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:req/ip:#{req.ip}"
-  throttle('req/ip', limit: 10, period: 1.minutes) do |req|
-    req.env['REMOTE_ADDR'] unless req.path.starts_with?('/assets')
-    Rails.logger.warn "WARN ********.#{req.ip}."
-    Rails.logger.warn "WARN ********.#{req.env['REMOTE_ADDR']}."
+  throttle('req/ip', limit: 20, period: 1.minutes) do |req|
+    req.ip unless req.path.starts_with?('/assets')
   end
 
   ### Prevent Brute-Force Login Attacks ###
