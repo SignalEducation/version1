@@ -24,7 +24,7 @@ class Rack::Attack
   # Throttle all requests by IP (60rpm)
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:req/ip:#{req.ip}"
-  throttle('req/ip', limit: 20, period: 1.minutes) do |req|
+  throttle('req/ip', limit: 30, period: 2.minutes) do |req|
     req.ip unless req.path.starts_with?('/assets')
   end
 
@@ -129,4 +129,12 @@ class Rack::Attack
   #     auth.credentials != ['signal', 'MeagherMacRedmond']
   #   end
   # end
+end
+
+# Always allow requests from localhost
+# (blacklist & throttles are skipped)
+Rack::Attack.whitelist('allow from localhost') do |req|
+  # Requests are allowed if the return value is truthy
+  '127.0.0.1' == req.ip ||
+  '109.79.44.36' == req.ip # current Vodafone base station 31AD external IP
 end
