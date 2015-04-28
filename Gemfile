@@ -59,6 +59,7 @@ group :development, :test do
   gem 'selenium-webdriver', '>=2.45.0'
   gem 'capybara-webkit'
   gem 'poltergeist'
+  gem 'thin' # new web server
 end
 
 group :test do
