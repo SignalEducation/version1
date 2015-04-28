@@ -367,3 +367,14 @@ en:
           success: Vat Code has been deleted
           error: Vat Code was not deleted
 
+    marketing_categories:
+      create:
+        flash:
+          success: Marketing Category has been created successfully
+      update:
+        flash:
+          success: Marketing Category details have been updated successfully
+      destroy:
+        flash:
+          success: Marketing Category has been deleted
+          error: Marketing Category was not deleted

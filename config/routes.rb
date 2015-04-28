@@ -120,6 +120,7 @@ Rails.application.routes.draw do
     resources :user_activity_logs
     resources :user_notifications
     resources :vat_codes
+    resources :marketing_categories
 
     # home page
     root 'static_pages#deliver_page'

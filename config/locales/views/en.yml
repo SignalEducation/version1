@@ -1150,3 +1150,20 @@ en:
         percentage_rate_placeholder: "12.5"
         effective_from: Effective from
         effective_from_placeholder: "2014-12-31"
+
+    marketing_categories:
+      form:
+        name: Name
+        name_placeholder: Marketing Category Name
+
+      index:
+        h1: Marketing Categories
+
+      show:
+        h1: Marketing Category
+
+      edit:
+        h1: Edit Marketing Category
+
+      new:
+        h1: New Marketing Category
