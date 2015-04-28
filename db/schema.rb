@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422151507) do
+ActiveRecord::Schema.define(version: 20150428075539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -318,6 +318,22 @@ ActiveRecord::Schema.define(version: 20150422151507) do
     t.float    "longitude"
     t.integer  "country_id"
     t.integer  "alert_level"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "marketing_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "marketing_tokens", force: true do |t|
+    t.string   "code"
+    t.integer  "marketing_category_id"
+    t.boolean  "is_hard",               default: false, null: false
+    t.boolean  "is_direct",             default: false, null: false
+    t.boolean  "is_seo",                default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
