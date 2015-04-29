@@ -31,7 +31,7 @@ class Subscription < ActiveRecord::Base
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
 
   # relationships
-  belongs_to :user
+  belongs_to :user, inverse_of: :subscriptions
   belongs_to :corporate_customer
   has_many :invoices
   has_many :invoice_line_items
