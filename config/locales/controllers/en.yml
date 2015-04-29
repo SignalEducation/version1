@@ -387,6 +387,7 @@ en:
       update:
         flash:
           success: Marketing Token details have been updated successfully
+          error: Marketing Token details have not been updated
       destroy:
         flash:
           success: Marketing Token has been deleted

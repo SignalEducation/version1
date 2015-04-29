@@ -32,7 +32,10 @@ class MarketingTokensController < ApplicationController
   end
 
   def update
-    if @marketing_token.update_attributes(allowed_params)
+    if !@marketing_token.editable?
+      flash[:error] = I18n.t('controllers.marketing_tokens.update.flash.error')
+      redirect_to marketing_tokens_url
+    elsif @marketing_token.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.marketing_tokens.update.flash.success')
       redirect_to marketing_tokens_url
     else

@@ -791,6 +791,13 @@ describe MarketingTokensController, type: :controller do
         expect_update_error_with_model('marketing_token')
         expect(assigns(:marketing_token).id).to eq(marketing_token_1.id)
       end
+
+      it 'should not update non-editable token' do
+        system_token = FactoryGirl.create(:marketing_token, code: 'seo')
+        put :update, id: system_token.id, marketing_token: valid_params
+        expect(response).to redirect_to(marketing_tokens_url)
+        expect(flash[:error]).to eq(I18n.t('controllers.marketing_tokens.update.flash.error'))
+      end
     end
 
 
