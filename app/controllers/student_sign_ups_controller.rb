@@ -2,7 +2,7 @@ class StudentSignUpsController < ApplicationController
 
   before_action :logged_out_required, except: :show
   before_action :logged_in_required, only: :show
-  before_action :get_variables
+  before_action :get_variables, except: :show
 
   def show
     # this is the 'thank you for registering' page
@@ -17,16 +17,21 @@ class StudentSignUpsController < ApplicationController
   def new
     @user = User.new
     @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-    @user.subscriptions.build(subscription_plan_id: @subscription_plans.first.id)
+    if @user.country
+      @user.subscriptions.build(subscription_plan_id: @subscription_plans.in_currency(@user.country.currency_id).first.try(:id))
+    else
+      @user.subscriptions.build(subscription_plan_id: @subscription_plans.first.try(:id))
+    end
   end
 
   def create
     student_user_group_id = UserGroup.default_student_user_group.try(:id)
-    @user = User.new(allowed_params.merge(user_group_id: student_user_group_id || 1))
+    @user = User.new(allowed_params.merge(user_group_id: student_user_group_id))
     if @user.save
       @user = User.get_and_activate(@user.account_activation_code)
       UserSession.create(@user)
-      assign_anonymous_logs_to_user(@user.id)
+      @user.assign_anonymous_logs_to_user(current_session_guid)
+      # Mailers::OperationalMailers::SignupCompletedWorker.perform_async(@user.id)
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url(@user.guid)
     else
@@ -87,13 +92,6 @@ class StudentSignUpsController < ApplicationController
           h1: static_page.try(:student_sign_up_h1),
           sub_head: static_page.try(:student_sign_up_sub_head)
     }
-  end
-
-  def assign_anonymous_logs_to_user(user_id)
-    model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack]
-    model_list.each do |the_model|
-      the_model.assign_user_to_session_guid(user_id, current_session_guid)
-    end
   end
 
 end
