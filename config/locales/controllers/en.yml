@@ -374,6 +374,7 @@ en:
       update:
         flash:
           success: Marketing Category details have been updated successfully
+          error: Marketing Category details have not been updated
       destroy:
         flash:
           success: Marketing Category has been deleted

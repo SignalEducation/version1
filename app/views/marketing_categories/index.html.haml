@@ -15,7 +15,8 @@
           %tr{id: marketing_category.id}
             %td=link_to marketing_category.name, marketing_category
             %td
-              =link_to t('views.general.edit'), edit_marketing_category_url(marketing_category), class: 'btn btn-info btn-xs'
+              - if marketing_category.editable?
+                =link_to t('views.general.edit'), edit_marketing_category_url(marketing_category), class: 'btn btn-info btn-xs'
               -if marketing_category.destroyable?
                 =link_to t('views.general.delete'), marketing_category, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
 

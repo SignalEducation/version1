@@ -18,6 +18,7 @@ class MarketingCategoriesController < ApplicationController
   end
 
   def edit
+    redirect_to marketing_categories_url unless @marketing_category.editable?
   end
 
   def create
@@ -31,7 +32,10 @@ class MarketingCategoriesController < ApplicationController
   end
 
   def update
-    if @marketing_category.update_attributes(allowed_params)
+    if !@marketing_category.editable?
+      flash[:error] = I18n.t('controllers.marketing_categories.update.flash.error')
+      redirect_to marketing_categories_url
+    elsif @marketing_category.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.marketing_categories.update.flash.success')
       redirect_to marketing_categories_url
     else

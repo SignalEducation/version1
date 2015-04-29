@@ -754,6 +754,12 @@ describe MarketingCategoriesController, type: :controller do
         get :edit, id: marketing_category_2.id
         expect_edit_success_with_model('marketing_category', marketing_category_2.id)
       end
+
+      it "should redirect to index page for non-editable category" do
+        system_category = FactoryGirl.create(:marketing_category, name: 'SEO and Direct')
+        get :edit, id: system_category.id
+        expect(response).to redirect_to(marketing_categories_url)
+      end
     end
 
     describe "POST 'create'" do
@@ -785,6 +791,13 @@ describe MarketingCategoriesController, type: :controller do
         put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_update_error_with_model('marketing_category')
         expect(assigns(:marketing_category).id).to eq(marketing_category_1.id)
+      end
+
+      it 'should not update non-editable category' do
+        system_category = FactoryGirl.create(:marketing_category, name: "SEO and Direct")
+        put :update, id: system_category.id, marketing_category: valid_params
+        expect(response).to redirect_to(marketing_categories_url)
+        expect(flash[:error]).to eq(I18n.t('controllers.marketing_categories.update.flash.error'))
       end
     end
 

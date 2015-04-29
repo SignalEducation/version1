@@ -31,7 +31,11 @@ class MarketingCategory < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.marketing_tokens.empty?
+    self.marketing_tokens.empty? && !system_defined?
+  end
+
+  def editable?
+    !system_defined?
   end
 
   protected
@@ -43,4 +47,7 @@ class MarketingCategory < ActiveRecord::Base
     end
   end
 
+  def system_defined?
+    self.name == "SEO and Direct"
+  end
 end
