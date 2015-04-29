@@ -17,7 +17,7 @@ require 'rails_helper'
 describe MarketingToken do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id is_direct is_seo created_at updated_at)
   MarketingToken.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -34,6 +34,7 @@ describe MarketingToken do
 
   # validation
   it { should validate_presence_of(:code) }
+  it { should validate_uniqueness_of(:code).case_insensitive }
 
   it { should validate_presence_of(:marketing_category_id) }
   it { should validate_numericality_of(:marketing_category_id) }

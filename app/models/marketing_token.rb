@@ -15,7 +15,7 @@
 class MarketingToken < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :code, :marketing_category_id, :is_hard, :is_direct, :is_seo
+  attr_accessible :code, :marketing_category_id, :is_hard
 
   # Constants
 
@@ -23,7 +23,8 @@ class MarketingToken < ActiveRecord::Base
   belongs_to :marketing_category
 
   # validation
-  validates :code, presence: true
+  validates :code, presence: true, uniqueness: { case_sensitive: false },
+            format: { with: /\w+/ }
   validates :marketing_category_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
 

@@ -19,7 +19,7 @@ class MarketingCategory < ActiveRecord::Base
   has_many :marketing_tokens
 
   # validation
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   # callbacks
   before_destroy :check_dependencies

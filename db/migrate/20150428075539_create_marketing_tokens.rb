@@ -1,5 +1,5 @@
 class CreateMarketingTokens < ActiveRecord::Migration
-  def change
+  def up
     create_table :marketing_tokens do |t|
       t.string :code
       t.integer :marketing_category_id, index: true
@@ -9,5 +9,12 @@ class CreateMarketingTokens < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    MarketingToken.create(code: "seo", marketing_category_id: MarketingCategory.first.id, is_seo: true)
+    MarketingToken.create(code: "direct", marketing_category_id: MarketingCategory.first.id, is_direct: true)
+  end
+
+  def down
+    drop_table :marketing_tokens
   end
 end

@@ -30,6 +30,7 @@ describe MarketingCategory do
 
   # validation
   it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
