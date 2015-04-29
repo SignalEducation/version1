@@ -696,3 +696,49 @@ header {
 .user-pagination .pagination {
   margin: 0;
 }
+
+.sign-up-well {
+  border-radius: 0;
+  background-color: #f5f5f5;
+  margin-top: 30px !important;
+  .sign-up-heading {
+    color: $light-text;
+    background-color: #5cc8cb;
+    border-radius: 28px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
+    h1 {
+      padding: 10px 0;
+    }
+  }
+}
+
+
+.sub-panel {
+  border: 0;
+  color: $light-text;
+  border-radius: 8px;
+  .panel-heading {
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #5cc8cb;
+    p {
+      margin-bottom: 0;
+    }
+  }
+  .panel-body {
+    background-color: #66d9dc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+}
+
+.sub-panel.active {
+  .panel-heading {
+    background-color: #37ba8e;
+  }
+  .panel-body {
+    background-color: #21ce99;
+  }
+}

@@ -3,72 +3,81 @@
     =f.hidden_field :locale, value: (params[:locale] || 'en')
     .row
       .col-sm-8.col-sm-offset-2
-        .well.well-sm
+        .well.sign-up-well
           .page-head.text-center
-            %h1
-              -if @custom_headings[:h1].blank?
-                =t('views.student_sign_ups.new.h1')
-              -else
-                =@custom_headings[:h1]
+            .sign-up-heading
+              %h1
+                -if @custom_headings[:h1].blank?
+                  =t('views.student_sign_ups.new.h1')
+                -else
+                  =@custom_headings[:h1]
             %p.lead
               .row
                 .col-sm-6.col-sm-offset-3
                   -if @custom_headings[:sub_head].blank?
-                    .h3.no-top-gap=t('views.student_sign_ups.new.lead')
-                    %ol.text-left
-                      %li=t('views.student_sign_ups.new.list.one')
-                      %li=t('views.student_sign_ups.new.list.two')
-                      %li=t('views.student_sign_ups.new.list.three')
-                    %hr/
+                    %h3.no-top-gap=t('views.student_sign_ups.new.list.one')
+                    %h3.no-top-gap=t('views.student_sign_ups.new.list.two')
+                    %h3.no-top-gap=t('views.student_sign_ups.new.list.three')
                   -else
                     =@custom_headings[:sub_head]
+            %hr/
 
           =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.student_sign_ups.form.error_panel_caption')}
-          .form-group
-            .col-sm-4.col-sm-offset-2
-              =f.label :first_name, t('views.users.form.first_name')
-              =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), autofocus: true, required: true, class: 'form-control'
-            .col-sm-4
-              =f.label :last_name, t('views.users.form.last_name')
-              =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control'
-          .form-group
-            .col-sm-8.col-sm-offset-2
-              =f.label :email, t('views.users.form.email')
-              =f.email_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', required: true
-          .form-group
-            .col-sm-4.col-sm-offset-2
-              =f.label :password, t('views.users.form.password')
-              =f.password_field :password, placeholder: t('views.users.form.password_placeholder'), class: 'form-control', required: true
-            .col-sm-4
-              =f.label :password_confirmation, t('views.student_sign_ups.form.retype_it')
-              =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', required: true
-          .form-group
-            .col-sm-8.col-sm-offset-2
-              =f.label :country_id, t('views.users.form.country_id')
-              =f.collection_select :country_id, @countries, :id, :name, {prompt: t('views.general.select')}, {class: 'form-control', required: true, onchange: 'clearPlans(); showPlans(); return false;'}
 
-        .well.well-sm
           %h2.text-center=t('views.student_sign_ups.new.h2.subscription')
-          %hr/
-          .row
+          -#.row
             -@subscription_plans.each do |plan|
               .col-sm-4.currency.subscription-outer-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
-                %h3.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                 .well.well-sm.text-center.subscription-panel{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
+                  %h3.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                   %p=plan.name
                   -plan.description.lines.each do |line|
                     %p=line
+
+          .row
+            -@subscription_plans.each do |plan|
+              .col-sm-4
+                .panel.sub-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
+                  .panel-heading{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
+                    %p.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                  .panel-body.text-center
+                    -plan.description.lines.each do |line|
+                      %p=line
 
           =f.fields_for :subscriptions do |sub|
             =sub.hidden_field :subscription_plan_id
             =sub.hidden_field :stripe_token
 
+
+        .well.sign-up-well
+          %h2.text-center.no-top-gap=t('views.users.show.tabs.personal_details')
+          .form-group{style: 'padding-top: 20px'}
+            .col-sm-4.col-sm-offset-2
+              =f.text_field :first_name, placeholder: t('views.users.form.first_name'), required: true, class: 'form-control'
+            .col-sm-4
+              =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control'
+          .form-group
+            .col-sm-8.col-sm-offset-2
+              =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true
+          .form-group
+            .col-sm-4.col-sm-offset-2
+              =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true
+            .col-sm-4
+              =f.password_field :password_confirmation, placeholder: t('views.student_sign_ups.form.retype_it'), class: 'form-control', required: true
+
+
         .well.well-sm
           %h2.text-center
             =t('views.student_sign_ups.new.h2.payment')
           .row
-            .col-sm-4.col-sm-offset-4.text-center
-              =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;'), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
+            .col-sm-6.col-sm-offset-3.text-center
+              .col-sm-6
+                =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;'), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
+              .col-sm-6
+                %p
+                  .glyphicon.glyphicon-lock
+                  ='Secure server'
           %hr/
 
           =render partial: 'subscription_payment_cards/form', locals: {f: f}
@@ -83,13 +92,13 @@
     var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
 
     function clearPlans() {
-      $('.subscription-panel').removeClass('active');
+      $('.sub-panel').removeClass('active');
       $('#user_subscriptions_attributes_0_subscription_plan_id').val();
     }
 
     function choosePlan(theThing) {
       clearPlans();
-      $(theThing).find('.subscription-panel').addClass('active');
+      $(theThing).find('.sub-panel').addClass('active');
       $('#user_subscriptions_attributes_0_subscription_plan_id').val( $(theThing).attr('data-plan-id') );
     }
 
