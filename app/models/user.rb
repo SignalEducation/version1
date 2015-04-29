@@ -111,6 +111,7 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6}, on: :create
   validates_confirmation_of :password, on: :create
+  validates_confirmation_of :password, if: '!password.blank?'
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :user_group_id, presence: true,
