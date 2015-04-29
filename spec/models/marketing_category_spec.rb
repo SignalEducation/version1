@@ -42,6 +42,6 @@ describe MarketingCategory do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { shoudl respond_to(:editable?)}
+  it { should respond_to(:editable?)}
 
 end
