@@ -29,6 +29,7 @@ class MarketingToken < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:code) }
@@ -37,9 +38,16 @@ class MarketingToken < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    !['seo', 'direct'].include?(self.code.to_s)
   end
 
   protected
+
+  def check_dependencies
+    unless self.destroyable?
+      errors.add(:base, I18n.t('models.general.dependencies_exist'))
+      false
+    end
+  end
 
 end
