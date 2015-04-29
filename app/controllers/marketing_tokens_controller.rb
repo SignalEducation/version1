@@ -53,6 +53,11 @@ class MarketingTokensController < ApplicationController
     redirect_to marketing_tokens_url
   end
 
+  def import_csv
+    MarketingToken.import(params[:upload].read) if params[:upload] && params[:upload].respond_to?(:read)
+    redirect_to marketing_tokens_url
+  end
+
   protected
 
   def get_variables

@@ -1,0 +1,20 @@
+.modal.fade#new-upload-modal{tabindex: -1, role: 'dialog', aria: {labelledby: 'uploadModalLabel', hidden: true} }
+  =form_tag(import_csv_marketing_tokens_path, authenticity_token: true, id: 'import_csv_marketing_tokens_form', role: 'form', multipart: true, data: {type: 'csv'}, class: 'form-horizontal') do
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button{type: 'button', class: 'close', data: {dismiss: 'modal'}}
+            %span{aria: {hidden: true}} &times
+            %span{class: 'sr-only'}=t('views.general.close')
+          %h4.modal-title#uploadmodallabel=t('views.marketing_tokens.modal.h1')
+
+        .modal-body
+          .form-group
+            %label.control-label.col-sm4{for: :upload}=t('views.marketing_tokens.modal.file')
+            .col-sm-8
+              =file_field_tag :upload, class: 'form-control', required: true
+
+        .modal-footer
+          %button{type: 'button', class: 'btn btn-default', data: {dismiss: 'modal'}}
+            =t('views.general.cancel')
+          =submit_tag t('views.general.save'), class: 'btn btn-success'

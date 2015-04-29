@@ -50,4 +50,29 @@ describe MarketingToken do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:editable?) }
 
+  describe "CSV import" do
+    let!(:category) { FactoryGirl.create(:marketing_category) }
+
+    it "should not process line with one field" do
+      expect {MarketingToken.import("abcd")}.to_not change {MarketingToken.count}
+    end
+
+    it "should not change system defined token" do
+      sys_token = FactoryGirl.create(:marketing_token, code: "seo")
+      MarketingToken.import("seo,#{category.name},true")
+      expect(sys_token.reload.is_hard).to eq(false)
+    end
+
+    it "should change is_token flag to true for existing token" do
+      token = FactoryGirl.create(:marketing_token, marketing_category_id: category.id)
+      MarketingToken.import("#{token.code},#{category.name},true")
+      expect(token.reload.is_hard).to eq(true)
+    end
+
+    it "should create tokens if they do not exist" do
+      token = FactoryGirl.create(:marketing_token, marketing_category_id: category.id)
+      csv = "123,#{category.name},false\nabc,#{category.name},true"
+      expect { MarketingToken.import(csv) }.to change { MarketingToken.count }.by(2)
+    end
+  end
 end

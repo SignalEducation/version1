@@ -35,6 +35,18 @@ class MarketingToken < ActiveRecord::Base
   scope :all_in_order, -> { order(:code) }
 
   # class methods
+  def self.import(csv_content)
+    return unless csv_content.respond_to?(:each_line)
+    csv_content.each_line do |line|
+      line.split(',').tap do |fields|
+        if fields.length == 3
+          category = MarketingCategory.where(name: fields[1].strip).first
+          token = self.where(code: fields[0].strip, marketing_category_id: category.id).first_or_create if category
+          token.update_attribute(:is_hard, fields[2].strip == "true") if token && token.valid? && token.editable?
+        end
+      end
+    end
+  end
 
   # instance methods
   def destroyable?

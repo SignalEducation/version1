@@ -31,3 +31,7 @@
 .row
   .col-sm-12
     =link_to t('views.general.new'), new_marketing_token_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.marketing_tokens.index.csv_upload'), '#', data: {toggle: 'modal', target: '#new-upload-modal'}, class: 'btn btn-success'
+
+
+=render partial: 'csv_file_upload'

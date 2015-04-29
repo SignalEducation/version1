@@ -1179,6 +1179,7 @@ en:
 
       index:
         h1: Marketing Tokens
+        csv_upload: CSV Upload
 
       show:
         h1: Marketing Token
@@ -1188,3 +1189,7 @@ en:
 
       new:
         h1: New Marketing Token
+
+      modal:
+        h1: Upload CSV File
+        file: File

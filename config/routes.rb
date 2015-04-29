@@ -121,7 +121,9 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :vat_codes
     resources :marketing_categories
-    resources :marketing_tokens
+    resources :marketing_tokens do
+      post :import_csv, on: :collection, action: :import_csv
+    end
 
     # home page
     root 'static_pages#deliver_page'
