@@ -121,6 +121,7 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :vat_codes
     resources :marketing_categories
+    resources :marketing_tokens
 
     # home page
     root 'static_pages#deliver_page'

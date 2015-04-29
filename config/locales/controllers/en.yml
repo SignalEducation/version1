@@ -378,3 +378,15 @@ en:
         flash:
           success: Marketing Category has been deleted
           error: Marketing Category was not deleted
+
+    marketing_tokens:
+      create:
+        flash:
+          success: Marketing Token has been created successfully
+      update:
+        flash:
+          success: Marketing Token details have been updated successfully
+      destroy:
+        flash:
+          success: Marketing Token has been deleted
+          error: Marketing Token was not deleted

@@ -38,7 +38,11 @@ class MarketingToken < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !['seo', 'direct'].include?(self.code.to_s)
+    !system_defined?
+  end
+
+  def editable?
+    !system_defined?
   end
 
   protected
@@ -48,6 +52,10 @@ class MarketingToken < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def system_defined?
+    ['seo', 'direct'].include?(self.code.to_s)
   end
 
 end

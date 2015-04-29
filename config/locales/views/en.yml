@@ -1167,3 +1167,24 @@ en:
 
       new:
         h1: New Marketing Category
+
+    marketing_tokens:
+      form:
+        code: Code
+        is_hard: Hard
+        is_seo: SEO
+        is_direct: Direct
+        code_placeholder: Token Code
+        marketing_category_id: Category
+
+      index:
+        h1: Marketing Tokens
+
+      show:
+        h1: Marketing Token
+
+      edit:
+        h1: Edit Marketing Token
+
+      new:
+        h1: New Marketing Token
