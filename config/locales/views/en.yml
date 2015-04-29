@@ -46,6 +46,7 @@ en:
       sign_out: Sign out
       sign_up: Sign up
       start: Start
+      start_free_trial: Free Trial
       these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
@@ -143,7 +144,11 @@ en:
         coming_soon: "We don't have any content for this course module right now."
 
       content_denied:
+        panel:
+          need_to_sign_in: You need to be signed in with a Learn Signal account to view this material.
         not_logged_in:
+          sign_up_btn: Sign up for Learn Signal
+          start_free_trial: Start your free trial
           h2: Please Sign In To View This Content
         account_cancelled:
           h2: Oops! Looks like your account is cancelled. Please re-activate it to continue learning.
