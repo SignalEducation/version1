@@ -151,7 +151,7 @@ en:
           start_free_trial: Start your free trial
           h2: Please Sign In To View This Content
         account_cancelled:
-          h2: Oops! Looks like your account is cancelled. Please re-activate it to continue learning.
+          h2: Oops! Looks like your account is cancelled. Please re-activate it to continue.
           reactivate: 'Re-activate Your Account'
         account_problem:
           h2: Oops! Looks like there is a problem with your account
