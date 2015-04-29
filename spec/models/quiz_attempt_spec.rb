@@ -59,6 +59,8 @@ describe QuizAttempt do
 
   # scopes
   it { expect(QuizAttempt).to respond_to(:all_in_order) }
+  it { expect(QuizAttempt).to respond_to(:all_correct) }
+  it { expect(QuizAttempt).to respond_to(:all_incorrect) }
 
   # class methods
 

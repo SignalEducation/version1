@@ -52,6 +52,8 @@ class QuizAttempt < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
+  scope :all_correct, -> { where(correct: true) }
+  scope :all_incorrect, -> { where(correct: false) }
 
   # class methods
 
