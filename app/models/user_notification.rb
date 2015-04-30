@@ -31,7 +31,7 @@ class UserNotification < ActiveRecord::Base
                   :forum_post_id, :tutor_id, :falling_behind, :blog_post_id
 
   # Constants
-  MESSAGE_TYPES = %w(blog forum marketing study_plan, system_alert)
+  MESSAGE_TYPES = %w(blog forum marketing study_plan system_alert)
 
   # relationships
   belongs_to :user

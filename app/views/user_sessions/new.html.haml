@@ -2,6 +2,13 @@
   .col-sm-12
     .page-header
       %h1=t('views.user_sessions.new.h1')
+
+.row
+  .col-sm-8.col-sm-offset-2
+    .well
+      We recently updated our platform; if you haven't already reset your password,
+      =link_to 'please click here to reset it now.', forgot_password_url, style: 'text-decoration: underline;'
+
 .row
   .col-sm-8.col-sm-offset-2
     .well.well-sm
@@ -18,8 +25,6 @@
             =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off'
         .form-group
           .col-sm-8.col-sm-offset-4
-            =f.submit t('views.general.go'), class: 'btn btn-ls-default'
-            =t('views.general.or')
-            =link_to t('views.general.cancel'), user_groups_path
+            =f.submit t('views.general.sign_in'), class: 'btn btn-ls-default'
 
     %p=link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'

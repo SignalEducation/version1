@@ -17,11 +17,15 @@
 #  created_at                :datetime
 #  updated_at                :datetime
 #  cme_count                 :integer          default(0)
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
 #
 
 class CourseModule < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
@@ -51,8 +55,10 @@ class CourseModule < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
-  validates :name_url, presence: true
+  validates :name, presence: true,
+            uniqueness: {scope: [:exam_section_id, :exam_level_id]}
+  validates :name_url, presence: true,
+            uniqueness: {scope: [:exam_section_id, :exam_level_id]}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
@@ -68,7 +74,7 @@ class CourseModule < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
-  scope :all_active, -> { where(active: true) }
+  scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
@@ -96,7 +102,17 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.active && self.course_module_elements.empty? && self.course_module_jumbo_quiz.nil? && self.course_module_element_user_logs.empty? && self.student_exam_tracks.empty?
+    !self.active
+  end
+
+  def destroyable_children
+    # not destroyable:
+    # - self.course_module_element_user_logs
+    # - self.student_exam_tracks.empty?
+    the_list = []
+    the_list += self.course_module_elements.to_a
+    the_list << self.course_module_jumbo_quiz if self.course_module_jumbo_quiz
+    the_list
   end
 
   def first_active_cme

@@ -52,9 +52,14 @@
                   =t('views.users.show.your_subscription')
                   -if Rails.env.development? || Rails.env.test? || current_user.admin?
                     .pull-right
-                      =link_to profile_url(t: Time.now.to_i, anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                        .glyphicon.glyphicon-refresh
-                        Refresh
+                      -if @user.id == current_user.id
+                        =link_to profile_url(t: Time.now.to_i, anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                          .glyphicon.glyphicon-refresh
+                          Refresh
+                      -else
+                        =link_to user_url(id: @user.id, t: Time.now.to_i, anchor: 'subscriptions', update: 'subscriptions'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                          .glyphicon.glyphicon-refresh
+                          Refresh
 
                 -if @current_subscription
                   .well.well-sm
@@ -103,9 +108,15 @@
                   =t('views.users.show.your_invoices')
                   -if Rails.env.development? || Rails.env.test? || current_user.admin?
                     .pull-right
-                      =link_to profile_url(anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                        %span.glyphicon.glyphicon-refresh
-                        Refresh
+                      -if @user.id == current_user.id
+                        =link_to profile_url(anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                          %span.glyphicon.glyphicon-refresh
+                          Refresh
+                      -else
+                        =link_to user_url(id: @user.id, anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                          %span.glyphicon.glyphicon-refresh
+                          Refresh
+
                 -@invoices = @user.invoices.paginate(page: 1, per_page: 50).all_in_order
                 =render partial: 'invoices/index'
 
@@ -115,9 +126,15 @@
                     =t('views.users.show.your_card_details')
                     -if Rails.env.development? || Rails.env.test? || current_user.admin?
                       .pull-right
-                        =link_to profile_url(anchor: 'subscriptions', update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                          %span.glyphicon.glyphicon-refresh
-                          Refresh
+                        -if @user.id == current_user.id
+                          =link_to profile_url(anchor: 'subscriptions', update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                            %span.glyphicon.glyphicon-refresh
+                            Refresh
+                        -else
+                          =link_to user_url(id: @user.id, anchor: 'subscriptions', update: 'cards'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
+                            %span.glyphicon.glyphicon-refresh
+                            Refresh
+
                   %table.table.table-striped#cards-table
                     %tbody
                       -@user.subscription_payment_cards.all_in_order.each do |card|

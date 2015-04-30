@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  concern :supports_reordering do
+    post :reorder, on: :collection
+  end
+
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
@@ -14,6 +18,18 @@ Rails.application.routes.draw do
     post 'stripe_dev/:dev_name', to: 'stripe_dev#create'
     resources :user_activities, only: :create
   end
+
+  # unscoped routes - to support incoming traffic from v2 cached pages
+  get '/courses/:subject_area_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
+  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
+      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -42,13 +58,23 @@ Rails.application.routes.draw do
     get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
     get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
 
+    get 'courses/:subject_area_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
+        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
+        to: redirect('%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
+
     # general resources
     resources :corporate_customers
-    resources :countries
-    post 'countries/reorder', to: 'countries#reorder'
-    resources :courses, only: [:show, :create]
-    resources :course_modules
-    post 'course_modules/reorder', to: 'course_modules#reorder'
+    resources :countries, concerns: :supports_reordering
+    resources :courses, only: [:create]
+    #resources :courses, only: [:show, :create]
+    resources :course_modules, concerns: :supports_reordering
     get 'course_modules/:qualification_url', to: 'course_modules#show',
         as: :course_modules_for_qualification
     get 'course_modules/:qualification_url/:exam_level_url', to: 'course_modules#show',
@@ -59,38 +85,34 @@ Rails.application.routes.draw do
     get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url/:course_module_url',
         to: 'course_modules#show',
         as: :course_modules_for_qualification_exam_level_exam_section_and_name
-    post 'course_module_elements/reorder', to: 'course_module_elements#reorder'
-    resources :course_module_elements, except: [:index]
+    resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
-    post 'currencies/reorder', to: 'currencies#reorder'
-    resources :currencies
+    resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
-    post 'exam_levels/reorder', to: 'exam_levels#reorder'
-    get  'exam_levels/filter/:qualification_url', to: 'exam_levels#index', as: :exam_levels_filtered
-    post 'exam_levels/filter', to: 'exam_levels#index', as: :exam_levels_filter
-    resources :exam_levels
-    post 'exam_sections/reorder', to: 'exam_sections#reorder'
-    get  'exam_sections/filter/:exam_level_url', to: 'exam_sections#index', as: :exam_sections_filtered
-    post 'exam_sections/filter', to: 'exam_sections#index', as: :exam_sections_filter
-    resources :exam_sections
-    post 'institutions/filter', to: 'institutions#index', as: :institutions_filter
-    get  'institutions/filter/:subject_area_url', to: 'institutions#index', as: :institutions_filtered
-    post 'institutions/reorder', to: 'institutions#reorder'
-    resources :institutions
+    resources :exam_levels, concerns: :supports_reordering do
+      post :filter, on: :collection, action: :index
+      get  '/filter/:qualification_url', on: :collection, action: :index, as: :filtered
+    end
+    resources :exam_sections, concerns: :supports_reordering do
+      post :filter, on: :collection, action: :index
+      get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
+    end
+    resources :institutions, concerns: :supports_reordering do
+      post :filter, on: :collection, action: :index
+      get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
+    end
     resources :invoices, only: [:index, :show]
-    post 'qualifications/reorder', to: 'qualifications#reorder'
-    get  'qualifications/filter/:institution_url', to: 'qualifications#index',
-         as: :qualifications_filtered
-    post 'qualifications/filter', to: 'qualifications#index', as: :qualifications_filter
-    resources :qualifications
+    resources :qualifications, concerns: :supports_reordering do
+      post :filter, on: :collection, action: :index
+      get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
+    end
     get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
     resources :student_sign_ups, only: [:show, :new, :create]
-    post 'subject_areas/reorder', to: 'subject_areas#reorder'
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
     resources :stripe_developer_calls
-    resources :subject_areas
+    resources :subject_areas, concerns: :supports_reordering
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans

@@ -48,7 +48,8 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code address guid)
+  # todo see ticket #277 black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code address guid)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token)
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -59,6 +60,8 @@ describe User do
 
   # Constants
   it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
+  it { expect(User.const_defined?(:LOCALES)).to eq(true) }
+  it { expect(User.const_defined?(:SORT_OPTIONS)).to eq(true) }
 
   # relationships
   it { should belong_to(:corporate_customer) }
@@ -125,12 +128,15 @@ describe User do
 
   # callbacks
   it { should callback(:set_defaults).before(:validation).on(:create) }
-  it { should callback(:de_activate_user).before(:validation).on(:create) }
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
+  it { expect(User).to respond_to(:search_for) }
+  it { expect(User).to respond_to(:sort_by_email) }
+  it { expect(User).to respond_to(:sort_by_name) }
+  it { expect(User).to respond_to(:sort_by_recent_registration) }
 
   # class methods
   it { expect(User).to respond_to(:all_admins) }
@@ -138,6 +144,7 @@ describe User do
   it { expect(User).to respond_to(:get_and_activate) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:finish_password_reset_process) }
+  it { expect(User).to respond_to(:sort_by) }
 
   # instance methods
   it { should respond_to(:admin?) }
@@ -145,6 +152,7 @@ describe User do
   it { should respond_to(:content_manager?) }
   it { should respond_to(:corporate_customer?) }
   it { should respond_to(:corporate_student?) }
+  it { should respond_to(:de_activate_user) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:frequent_forum_user?) }
   it { should respond_to(:full_name) }

@@ -20,6 +20,7 @@ module LearnsignalV3
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')] # see http://guides.rubyonrails.org/i18n.html
     config.i18n.default_locale = :en
 
     # suggested by Tinfoil Security 29/10/2014

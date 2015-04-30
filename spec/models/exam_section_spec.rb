@@ -12,6 +12,8 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  cme_count                         :integer          default(0)
+#  seo_description                   :string(255)
+#  seo_no_index                      :boolean          default(FALSE)
 #
 
 require 'rails_helper'

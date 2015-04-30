@@ -84,7 +84,7 @@ describe Invoice do
   it { should_not validate_presence_of(:vat_rate_id) }
   it { should validate_numericality_of(:vat_rate_id) }
 
-  it { should validate_inclusion_of(:livemode).in_array(Invoice::STRIPE_LIVE_MODE)}
+  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

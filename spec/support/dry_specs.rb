@@ -96,11 +96,20 @@ def expect_reorder_success
 end
 
 def expect_delete_success_with_model(model_name, destination)
-  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.destroy.flash.success"))
   expect(flash[:error]).to be_nil
+  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.destroy.flash.success"))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
   expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+end
+
+def expect_archive_success_with_model(model_name, record_id, destination)
+  expect(flash[:error]).to be_nil
+  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.destroy.flash.success"))
+  expect(response.status).to eq(302)
+  expect(response).to redirect_to(destination)
+  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(model_name.to_sym).destroyed_at).to_not be_nil
 end
 
 def expect_delete_error_with_model(model_name, destination)

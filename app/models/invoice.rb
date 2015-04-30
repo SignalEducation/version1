@@ -52,7 +52,7 @@ class Invoice < ActiveRecord::Base
                   :original_stripe_data
 
   # Constants
-  STRIPE_LIVE_MODE = [(ENV['learnsignal_v3_stripe_live_mode'] == 'live')]
+  STRIPE_LIVE_MODE = (ENV['learnsignal_v3_stripe_live_mode'] == 'live')
 
   # relationships
   belongs_to :currency
@@ -78,7 +78,7 @@ class Invoice < ActiveRecord::Base
   validates :total, presence: true
   validates :vat_rate_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :livemode, inclusion: {in: STRIPE_LIVE_MODE}
+  validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}
 
   # callbacks
 
@@ -150,10 +150,13 @@ class Invoice < ActiveRecord::Base
       'Paid'
     elsif self.forgiven
       'Free'
-    elsif payment_attempted
+    elsif self.payment_attempted && self.next_payment_attempt_at.to_i > 0
       ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
               ' made to charge your card - next attempt at ' +
               Time.at(next_payment_attempt_at).to_s(:standard)
+    elsif self.payment_attempted
+      ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
+              ' made to charge your card'
     else
       'Other'
     end

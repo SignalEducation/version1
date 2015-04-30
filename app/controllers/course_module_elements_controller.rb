@@ -12,13 +12,24 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element_user_log = CourseModuleElementUserLog.new(
               course_module_id: @course_module_element.course_module_id,
               course_module_element_id: @course_module_element.id,
-              user_id: current_user.try(:id)
-              # session_guid: current_session_guid
-              # -- not needed as this is not being persisted (yet!)
+              user_id: current_user.try(:id),
+              session_guid: current_session_guid
       )
-      @course_module_element.course_module_element_quiz.number_of_questions.times do
+      @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
+      @number_of_questions.times do
         @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
       end
+      all_questions = @course_module_element.course_module_element_quiz.quiz_questions
+      all_easy_ids = all_questions.all_easy.map(&:id)
+      all_medium_ids = all_questions.all_medium.map(&:id)
+      all_difficult_ids = all_questions.all_difficult.map(&:id)
+      @easy_ids = all_easy_ids.sample(@number_of_questions)
+      @medium_ids = all_medium_ids.sample(@number_of_questions)
+      @difficult_ids = all_difficult_ids.sample(@number_of_questions)
+      @all_ids = @easy_ids + @medium_ids + @difficult_ids
+      @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+      @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
+      @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
     end
     @demo_mode = true
   end
@@ -115,11 +126,12 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element = CourseModuleElement.where(id: params[:id]).first
     end
     @tutors = User.all_tutors.all_in_order
-    if action_name == 'new' || action_name == 'create'
-      @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
-    else
+    # todo reverse this when Philip asks for it
+    #if action_name == 'new' || action_name == 'create'
+    #  @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
+    #else
       @raw_video_files = RawVideoFile.all_in_order
-    end
+    #end
     @letters = ('A'..'Z').to_a
     seo_title_maker(@course_module_element.try(:name))
     @mathjax_required = true
@@ -188,6 +200,7 @@ class CourseModuleElementsController < ApplicationController
                     :degree_of_wrongness,
                     :wrong_answer_explanation_text,
                     :wrong_answer_video_id,
+                    :_destroy,
                     quiz_contents_attributes: [
                         :id,
                         :quiz_question_id,

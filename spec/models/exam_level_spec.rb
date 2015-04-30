@@ -15,6 +15,8 @@
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
 #  cme_count                               :integer          default(0)
+#  seo_description                         :string(255)
+#  seo_no_index                            :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -49,8 +51,10 @@ describe ExamLevel do
   it { should validate_numericality_of(:qualification_id) }
 
   it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name).scoped_to(:qualification_id) }
 
   it { should validate_presence_of(:name_url) }
+  it { should validate_uniqueness_of(:name_url).scoped_to(:qualification_id) }
 
   it { should validate_presence_of(:sorting_order) }
 

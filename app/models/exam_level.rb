@@ -15,6 +15,8 @@
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
 #  cme_count                               :integer          default(0)
+#  seo_description                         :string(255)
+#  seo_no_index                            :boolean          default(FALSE)
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -42,8 +44,10 @@ class ExamLevel < ActiveRecord::Base
   # validation
   validates :qualification_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
-  validates :name_url, presence: true
+  validates :name, presence: true,
+            uniqueness: {scope: :qualification_id}
+  validates :name_url, presence: true,
+            uniqueness: {scope: :qualification_id}
   validates :sorting_order, presence: true
   validates :default_number_of_possible_exam_answers, presence: true,
             numericality: {only_integer: true, greater_than: 0}

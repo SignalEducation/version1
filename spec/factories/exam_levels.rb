@@ -15,16 +15,18 @@
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
 #  cme_count                               :integer          default(0)
+#  seo_description                         :string(255)
+#  seo_no_index                            :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
   factory :exam_level do
     association :qualification
-    name 'MyString'
-    name_url 'MyString'
-    is_cpd false
-    sorting_order 1
-    active false
+    sequence(:name)      { |x| "Exam Level #{x}" }
+    sequence(:name_url)  { |x| "exam-level-#{x}" }
+    is_cpd               false
+    sorting_order        1
+    active               false
     default_number_of_possible_exam_answers 4
     enable_exam_sections true
 

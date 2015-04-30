@@ -11,6 +11,7 @@
 #  transcript                   :text
 #  created_at                   :datetime
 #  updated_at                   :datetime
+#  destroyed_at                 :datetime
 #
 
 require 'rails_helper'
@@ -18,7 +19,7 @@ require 'rails_helper'
 describe CourseModuleElementVideo do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at estimated_study_time_seconds)
+  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at)
   CourseModuleElementVideo.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -54,6 +55,7 @@ describe CourseModuleElementVideo do
 
   # scopes
   it { expect(CourseModuleElementVideo).to respond_to(:all_in_order) }
+  it { expect(CourseModuleElementVideo).to respond_to(:all_destroyed) }
 
   # class methods
 

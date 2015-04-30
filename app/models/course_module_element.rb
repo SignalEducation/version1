@@ -18,11 +18,16 @@
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
+#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
+#  seo_description           :string(255)
+#  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
 #
 
 class CourseModuleElement < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :name, :name_url, :description,
@@ -83,8 +88,8 @@ class CourseModuleElement < ActiveRecord::Base
   after_save :update_student_exam_tracks
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :name) }
-  scope :all_active, -> { where(active: true) }
+  scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
+  scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_videos, -> { where(is_video: true) }
   scope :all_quizzes, -> { where(is_quiz: true) }
 
@@ -103,19 +108,25 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_module_element_resources.empty? && self.course_module_element_user_logs.empty? && self.quiz_answers.empty? && self.quiz_questions.empty? && self.student_exam_tracks.empty? && !self.active
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list << self.course_module_element_video if self.course_module_element_video
+    the_list << self.course_module_element_quiz if self.course_module_element_quiz
+    the_list += self.course_module_element_resources.to_a
+    the_list += self.quiz_answers.to_a
+    the_list += self.quiz_questions.to_a
+    the_list
   end
 
   def my_position_among_siblings
     self.array_of_sibling_ids.index(self.id)
   end
 
-  def parent
-    self.course_module
-  end
-
   def next_element
-    if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+    if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
     elsif self.course_module.course_module_jumbo_quiz
       self.course_module.course_module_jumbo_quiz
@@ -125,8 +136,12 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
+  def parent
+    self.course_module
+  end
+
   def previous_element
-    if self.my_position_among_siblings > 0
+    if self.my_position_among_siblings && self.my_position_among_siblings > 0
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings - 1])
     elsif self.course_module.previous_module.try(:course_module_jumbo_quiz)
       self.course_module.previous_module.course_module_jumbo_quiz

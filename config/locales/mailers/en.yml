@@ -1,0 +1,29 @@
+# Mailers language - English
+
+en:
+  mailers:
+    general:
+      salutation: "Hi %{fname},"
+      closing: "Best regards,"
+      signature: "Philip @ learnsignal"
+
+    operational:
+      activate_account:
+        subject_line: Welcome to Learn Signal
+        h1: Welcome to Learn Signal
+        paragraph_1: "Thank you so much for signing up to our service. To activate your account, please click the following link:"
+        paragraph_2: "We can't wait for you to get started!"
+
+      send_user_notification:
+        subject_line: You have received a notification
+        paragraph_1: "You have received a notification from our system that we think you should take a look at. "
+
+      reset_your_password:
+        subject_line: Reset your Learn Signal password
+        paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your password. To do this, please click on the link below:"
+        paragraph_2: If you did not make this request, please notify us immediately so we can investigate things further.
+
+      your_password_has_changed:
+        subject_line: Your Learn Signal password has changed
+        paragraph_1: We wanted to let you know that someone (hopefully you) has just changed your Learn Signal account password.  If it was you, then you can ingnore this email.
+        paragraph_2: If you did not change your password, please notify us immediately so we can investigate things further.

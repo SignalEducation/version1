@@ -6,9 +6,22 @@ namespace :v2v3 do
 
   BUCKET = 'learnsignal3-data-migration'
 
+  # list of users we should not import
+  EXCLUDED_USER_IDS = [1, 5, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 26, 27, 32, 33, 34, 35, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 71, 72, 78, 81, 88, 93, 101, 106, 116, 118, 122, 123, 127, 128, 129, 130, 131, 133, 135, 136, 137, 138, 139, 140, 141, 142, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 156, 157, 159, 160, 161, 163, 165, 171, 172, 173, 175, 177, 178, 180, 182, 183, 187, 189, 190, 191, 192, 193, 194, 196, 197, 201, 202, 204, 205, 206, 207, 208, 209, 213, 216, 218, 220, 223, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 242, 243, 251, 255, 257, 259, 276, 277, 278, 279, 280, 281, 283, 284, 286, 288, 291, 294, 306, 308, 309, 310, 314, 338, 339, 340, 341, 342, 343, 344, 351, 355, 369, 378]
+
   desc 'Import data from v2 website'
   task(import_data: :environment) do
     # USAGE: rake v2v3:import_data {optional_file_name.json}
+
+    puts
+    puts 'rake v2v3:import_data'
+    puts '---------------------'
+
+    #### Make sure we are 'ok' to run
+    unless Rails.env.production? == Invoice::STRIPE_LIVE_MODE
+      message('ERROR', 'v2v3:import_data - Execution HALTED as STRIPE_LIVE_MODE is set incorrectly for this environment')
+      exit
+    end
 
     #### Find the data file and import it into a hash
     source_file = ARGV[1] || 'v2_data.json'
@@ -28,10 +41,6 @@ namespace :v2v3 do
     end
     TUTOR_ID = User.all_tutors.first.try(:id) || User.all_admins.first.id
 
-    puts
-    puts 'rake v2v3:import_data'
-    puts '---------------------'
-
     migrate_data = aws_read_file(s3, source_file)
     message('INFO', "Loading data from: #{source_file} - Source environment: #{migrate_data[:environment]}")
 
@@ -50,17 +59,17 @@ namespace :v2v3 do
     migrate_steps(migrate_data[:steps]) # CME                               - done
 
     # users and payments
-    migrate_users(migrate_data[:users])
+    migrate_users(migrate_data[:users]) #                                   - done
     migrate_users_courses(migrate_data[:users_courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
-    # migrate_courses(migrate_data[:courses])
+    # ---- empty; data is embedded inside users
+    # migrate_courses(migrate_data[:billing_addresses])                     - skip
+    # ---- empty; data is embedded inside customers
+    # migrate_courses(migrate_data[:cards])                                 - skip
+    migrate_customers(migrate_data[:customers]) #                           - done
+    # migrate_courses(migrate_data[:invoices])                              - skip
+    # migrate_courses(migrate_data[:invoice_items])                         - skip
+    migrate_plans(migrate_data[:plans]) #                                   - done
+    migrate_subscriptions(migrate_data[:subscriptions]) #                   - done
 
     #### Rename the source file, and finish.
     rename_source_and_finish(s3, source_file)
@@ -115,13 +124,18 @@ namespace :v2v3 do
   def compare_and_update_answer(it, export)
     # Answer _id:, sequence_number: nil, question_id: nil, body: "Answer text here...", correct: false
     answer = QuizAnswer.find(it.new_model_id)
-    # nothing can be changed about question.
     content = answer.quiz_contents.first
-    unless content.text_content == export[:body].squish
-      content.update_attributes!(
-              text_content: export[:body]
-      )
-      message('INFO', "-- export:answer #{export[:_id]} UPDATED to QuizContent #{content.id} it:id #{it.id}.")
+    if (it.updated_at + 1.minute) < content.updated_at
+      message('WARN', "-- export:answer #{export[:_id]} UPDATED locally. V2 changes cannot be imported to QuizAnswer #{answer.id} it:id #{it.id}.")
+    else
+      # nothing can be changed about question.
+      unless content.text_content == export[:body].squish
+        content.update_attributes!(text_content: export[:body])
+        answer.touch
+        it.update_attributes!(imported_at: Time.now,
+                              original_data: export.to_json)
+        message('INFO', "-- export:answer #{export[:_id]} UPDATED to QuizContent #{content.id} it:id #{it.id}.")
+      end
     end
   end
 
@@ -150,7 +164,7 @@ namespace :v2v3 do
                 subject_area_id: SUBJECT_AREA_ID,
                 name_url: shortened_name.downcase,
                 active: (export[:status] == 'published'),
-                sorting_order: export[:sequence] || 1
+                sorting_order: export[:sequence_number] || 1
     )
     es.save!
     it = ImportTracker.create!(
@@ -164,18 +178,20 @@ namespace :v2v3 do
 
   def compare_and_update_course(it, export)
     es = ExamSection.find(it.new_model_id)
-    if es.updated_at > it.updated_at
-      message('WARN', "-- export:course #{export[:_id]} UPDATED locally. Your changes may be lost during import - ExamSection #{es.id} it:id #{it.id}.")
-    end
-    if Time.parse(export[:updated_at]) > it.updated_at
+    if (it.updated_at + 1.minute) < es.updated_at
+      message('WARN', "-- export:course #{export[:_id]} UPDATED locally. V2 changes cannot be imported to ExamSection #{es.id} it:id #{it.id}.")
+    elsif Time.parse(export[:updated_at]) > it.imported_at
       es.update_attributes!(
               name: export[:name].split(' - Level 1')[0],
               name_url: export[:name].split(' - Level 1')[0].downcase,
               active: (export[:status] == 'published'),
-              sorting_order: export[:sequence]
+              sorting_order: export[:sequence_number]
       )
-      it.touch
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('WARN', "-- export:course #{export[:_id]} UPDATED to ExamSection #{es.id} it:id #{it.id}.")
+    else
+      # could have been updated but not required
     end
   end
 
@@ -211,11 +227,13 @@ namespace :v2v3 do
 
   def compare_and_update_note(it, export)
     cmev = CourseModuleElementVideo.find(it.new_model_id)
-    unless cmev.transcript == (export[:html_body].gsub('<body>','').gsub('</body>',''))
+    if (it.updated_at + 1.minute) < cmev.updated_at
+      message('WARN', "-- export:note #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElementVideo #{cmev.id} it:id #{it.id}.")
+    elsif cmev.transcript != (export[:html_body].gsub('<body>','').gsub('</body>',''))
       cmev.update_attributes!(transcript: export[:html_body].gsub('<body>','').gsub('</body>',''))
-
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:note #{export[:_id]} UPDATED to CourseModuleElementVideo #{cmev.id} it:id #{it.id}.")
-      it.touch
     end
   end
 
@@ -281,13 +299,17 @@ namespace :v2v3 do
     question = QuizQuestion.find(it.new_model_id)
     # nothing can be changed about question.
     content = question.quiz_contents.first
-    unless content.text_content == export[:body].squish
-      content.update_attributes!(
-            text_content: export[:body]
-      )
+    if (it.updated_at + 1.minute) < content.updated_at
+      message('WARN', "-- export:question #{export[:_id]} UPDATED locally. V2 changes cannot be imported to QuizQuestion #{question.id} it:id #{it.id}.")
+    elsif content.text_content != export[:body].squish
+      content.update_attributes!(text_content: export[:body])
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
+      question.touch
       message('INFO', "-- export:question #{export[:_id]} UPDATED to QuizContent #{content.id} it:id #{it.id}.")
+    else
+      # stuff could have been updated but it wasn't needed
     end
-    # no need to check the solution either - it was auto-populated.
   end
 
   def migrate_quizzes(exports)
@@ -349,9 +371,12 @@ namespace :v2v3 do
   def compare_and_update_quiz(it, export)
     # sample <Quiz _id: , sequence_number: nil, topic_id: nil, name: nil, description: nil, _slugs: [], _type: "Quiz", number_of_questions: 10>
     cme = CourseModuleElement.find(it.new_model_id)
-    unless cme.name == export[:name].to_s.squish && cme.description.to_s.squish == export[:description].to_s.squish &&
-              cme.estimated_time_in_seconds == (export[:number_of_questions] * 30) &&
-              cme.sorting_order == export[:sequence_number]
+    if (it.updated_at + 1.minute) < cme.updated_at
+      message('WARN', "-- export:quiz #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElement #{cme.id} it:id #{it.id}.")
+    elsif cme.name != export[:name].to_s.squish ||
+              cme.description.to_s.squish != export[:description].to_s.squish ||
+              cme.estimated_time_in_seconds != (export[:number_of_questions] * 30) ||
+              cme.sorting_order != export[:sequence_number]
       cme.update_attributes!(
               name: export[:name], # course_module_id: cm.id,
               name_url: export[:name].downcase,
@@ -364,17 +389,19 @@ namespace :v2v3 do
               is_quiz: true
       # active: cm.exam_section.active
       )
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElement #{cme.id} it:id #{it.id}.")
-    end
-    cme_quiz = cme.course_module_element_quiz
-    unless cme_quiz.number_of_questions == 5
-      cme_quiz.update_attributes!( # course_module_element_id: cme.id
-              number_of_questions: 5, # Default requested by Philip - (export[:number_of_questions] * 30),
-              question_selection_strategy: 'random'
-      )
-      it2 = ImportTracker.where(new_model_name: 'course_module_element_quiz', new_model_id: cme_quiz.id).first
-      it2.touch
-      message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElementQuiz #{cme_quiz.id} it:id #{it2.id}.")
+      cme_quiz = cme.course_module_element_quiz
+      unless cme_quiz.number_of_questions == 5
+        cme_quiz.update_attributes!(
+                number_of_questions: 5, # Default requested by Philip
+                question_selection_strategy: 'random'
+        )
+        it2 = ImportTracker.where(new_model_name: 'course_module_element_quiz', new_model_id: cme_quiz.id).first
+        it2.touch
+        message('INFO', "-- export:quiz #{export[:_id]} UPDATED to CourseModuleElementQuiz #{cme_quiz.id} it:id #{it2.id}.")
+      end
     end
   end
 
@@ -410,15 +437,19 @@ namespace :v2v3 do
 
   def compare_and_update_resource(it, export)
     cmer = CourseModuleElementResource.find(it.new_model_id)
-    unless cmer.name == export[:name] && cmer.description == export[:name] &&
-            cmer.web_url == (export[:external_url].blank? ? export[:content] : export[:external_url])
+    if (it.updated_at + 1.minute) < cmer.updated_at
+      message('WARN', "-- export:resource #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElementResource #{question.id} it:id #{it.id}.")
+    elsif cmer.name != export[:name] ||
+            cmer.description != export[:name] ||
+            cmer.web_url != (export[:external_url].blank? ? export[:content] : export[:external_url])
       cmer.update_attributes!(
               name: export[:name],
               description: export[:name],
               web_url: (export[:external_url].blank? ? export[:content] : export[:external_url])
       )
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElementResource #{cmer.id} it:id #{it.id}.")
-      it.touch
     end
   end
 
@@ -459,9 +490,12 @@ namespace :v2v3 do
   def compare_and_update_step(it, export)
     # Quiz _id: 153, sequence_number: 8, topic_id: 24, name: "Quiz: Commodities", description: nil, _slugs: ["quiz-commodities-1"], _type: "Quiz", number_of_questions: 10>
     cme = CourseModuleElement.find(it.new_model_id)
-    unless cme.sorting_order == export[:sequence_number]
+    if (it.updated_at + 1.minute) < cme.updated_at
+      message('WARN', "-- export:step #{export[:_id]} UPDATED locally. V2 changes cannot be imported to CourseModuleElement #{cme.id} it:id #{it.id}.")
+    elsif cme.sorting_order != export[:sequence_number]
       cme.update_attributes(sorting_order: export[:sequence_number])
-      it.touch
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export: step #{export[:_id]} UPDATED CourseModuleElement #{cme.id}")
     end
   end
@@ -506,22 +540,25 @@ namespace :v2v3 do
 
   def compare_and_update_topic(it, export)
     cm = CourseModule.find(it.new_model_id)
-    es_it = ImportTracker.where(old_model_name: 'course', old_model_id: export[:course_id]).first
-    es = ExamSection.find(es_it.new_model_id)
-    if cm.updated_at > (it.updated_at + 10.seconds)
-      message('WARN', "-- export:topic #{export[:_id]} UPDATED locally. Your changes may be lost during import - CourseModule #{cm.id} it:id #{it.id}.")
-    end
-
-    unless export[:name].squish == cm.name && cm.exam_section_id == es.id && cm.active == es.active
+    # es_it = ImportTracker.where(old_model_name: 'course', old_model_id: export[:course_id]).first
+    # es = ExamSection.find(es_it.new_model_id)
+    if (it.updated_at + 1.minute) < cm.updated_at
+      message('WARN', "-- export:topic #{export[:_id]} UPDATED locally. V2 changes cannot be applied to CourseModule #{cm.id} it:id #{it.id}.")
+    elsif export[:name].squish != cm.name
+            # || cm.exam_section_id != es.id ||
+            # cm.active != es.active
       cm.update_attributes!(
               name: export[:name],
-              name_url: export[:name].downcase,
-              exam_section_id: es.id,
-              active: es.active
+              name_url: export[:name].downcase
+              # exam_section_id: es.id,
+              # active: es.active
               # sorting_order: export[:sequence_number] -could be overwritten by Steps
       )
-      it.touch
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('WARN', "-- export:topic #{export[:_id]} UPDATED to CourseModule #{cm.id} it:id #{it.id}.")
+    else
+      # could have been updated but nothing changed.
     end
   end
 
@@ -537,7 +574,7 @@ namespace :v2v3 do
       it.nil? ? create_video(export) :
               compare_and_update_video(it, export)
     end
-    message('INFO', "Complete: #{exports.count} Videos processed")
+    message('INFO', "processed #{exports.count} Videos")
   end
 
   def create_video(export)
@@ -587,9 +624,12 @@ namespace :v2v3 do
 
   def compare_and_update_video(it, export)
     cme = CourseModuleElement.find(it.new_model_id)
-    unless cme.name == export[:name].squish && cme.description == export[:name].squish &&
-              cme.estimated_time_in_seconds == export[:duration].to_i &&
-              cme.sorting_order == export[:sequence_number]
+    if (it.updated_at + 1.minute) < cme.updated_at
+      message('WARN', "-- export:video #{export[:_id]} UPDATED locally. V2 changes cannot be applied to CourseModuleElement #{cme.id} it:id #{it.id}.")
+    elsif cme.name != export[:name].squish ||
+            cme.description != export[:name].squish ||
+            cme.estimated_time_in_seconds != export[:duration].to_i ||
+            cme.sorting_order != export[:sequence_number]
       cme.update_attributes!(
               name: export[:name], # course_module_id: cm.id,
               name_url: export[:name].downcase,
@@ -601,6 +641,8 @@ namespace :v2v3 do
               is_video: true,
               # active: cm.exam_section.active
       )
+      it.update_attributes!(imported_at: Time.now,
+                            original_data: export.to_json)
       message('INFO', "-- export:video #{export[:_id]} UPDATED to CourseModuleElement #{cme.id} it:id #{it.id}.")
     end
     #### cme_video can't be adjusted once imported.
@@ -620,63 +662,538 @@ namespace :v2v3 do
     # end
   end
 
-  #### users and financial items
+  #### users
 
   def migrate_users(exports)
     message('INFO', 'Starting to process Users...')
+    ignored = []
     if exports
       exports.each do |export|
         # look in the import_tracker for this user
-        it = ImportTracker.where(old_model_name: 'user', old_model_id: export[:_id]).first
-        it.nil? ? create_user(export) :
-                  compare_and_update_user(it.new_model_id, export)
+        if EXCLUDED_USER_IDS.include?(export[:_id].to_i)
+          ignored << export[:_id].to_i
+        else
+          it = ImportTracker.where(old_model_name: 'user', old_model_id: export[:_id]).first
+          it.nil? ? create_user(export) :
+                    compare_and_update_user(it, export)
+        end
       end
       message('INFO', "processed #{exports.count} users")
+      message('INFO', "ignored #{ignored.count} users (expected 166)")
+      if ignored.count != 166
+        exit
+      end
     else
       message('WARN', 'No users found')
     end
   end
 
-  def compare_and_update_user(existing_user_id, exported_user) # todo
-    # compare the details
-    # if import_tracker.user.first_name == exported_user[:first_name] ...
-    #         more comparisons
-    #   # do nothing
-        print '.'
-    # else
-    #   import_tracker_user.update_attributes!(
-    #         email: exported_user[:email],
-    #         first_name: exported_user[:first_name],
-    #         etc..
-    #   )
-        print 'U'
-    #   Rails.logger.info "INFO rake v2v3:import_json - user #{import_tracker_user.id} updated"
-    # end
+  def create_user(export)
+    it = ImportTracker.new
+    dummy_password = "Pwd#{rand(99999999)}"
+    country = Country.find_by_name(export[:billing_address][:country].to_s.gsub('United States of America', 'United States')) || Country.find_by_iso_code('IE')
+    user_group = set_the_user_group(export[:role], export[:complimentary])
+
+    ActiveRecord::Base.transaction do
+      user = User.where(email: export[:email]).first_or_initialize( # email might already exist
+              first_name: export[:first_name],
+              last_name: export[:last_name],
+              address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}",
+              country_id: country.id,
+              password: dummy_password,
+              password_confirmation: dummy_password,
+              account_activation_code: export[:confirmation_token],
+              account_activated_at: (export[:confirmed_at].to_s.length > 5 ? Time.parse(export[:confirmed_at]) : nil),
+              active: (export[:current_sign_in_at].to_s.length > 5),
+              user_group_id: user_group.id,
+              password_reset_requested_at: (export[:reset_password_sent_at] ? Time.parse(export[:reset_password_sent_at]) : nil),
+              password_reset_token: export[:reset_password_token],
+              password_reset_at: nil,
+              stripe_customer_id: "v2v3-import-#{export[:_id]}",
+              corporate_customer_id: nil,
+              corporate_customer_user_group_id: nil,
+              operational_email_frequency: 'off',
+              study_plan_notifications_email_frequency: 'off',
+              falling_behind_email_alert_frequency: 'off',
+              marketing_email_frequency: 'off',
+              marketing_email_permission_given_at: 'off',
+              blog_notification_email_frequency: 'off',
+              forum_notification_email_frequency: 'off',
+              locale: 'en'
+      )
+      if user.id.nil? # only set these values if the user is new
+        user.failed_login_count = 0
+        user.last_request_at = nil
+        user.login_count = export[:sign_in_count]
+        user.current_login_at = (export[:current_sign_in_at].to_s.length > 5 ? Time.parse(export[:current_sign_in_at]) : nil)
+        user.last_login_at = (export[:last_sign_in_at].to_s.length > 5 ? Time.parse(export[:last_sign_in_at]) : nil)
+        user.current_login_ip = export[:current_sign_in_ip]
+        user.last_login_ip = export[:last_sign_in_ip]
+        user.send(:add_guid)
+        user.save!(callbacks: false)
+      end
+      it = ImportTracker.create!(
+              old_model_name: 'user',
+              old_model_id: export[:_id],
+              new_model_name: 'user',
+              new_model_id: user.id,
+              imported_at: Time.now,
+              original_data: export.to_json
+      )
+      message('INFO', "-- export:user #{export[:_id]} imported as User #{user.id} it:id #{it.id}.")
+    end
+
+    # sample_exported_user = { #### indicates a field that is not imported
+            # _id: 7,
+            # billing_address: {
+            #         first_line: "99 Calumet street, Apt.2\r\nRoxbury Crossing",
+            #         second_line: '',
+            #         country: 'United States of America',
+            #         _id: 424
+            # },
+            #### business_name: '',
+            #### complimentary: false,
+            #### confirmation_sent_at: '2014-08-04T15:42:42.495Z',
+            # confirmation_token: 'b6ec0e034d46ba3d06b5f16984133183daac48bc51d2cf7c307062177e59d105',
+            # confirmed_at: '2014-05-01T12:02:31.869Z',
+            # current_sign_in_at: '2014-10-09T07:24:07.087Z',
+            # current_sign_in_ip: '109.78.90.48',
+            # email: 'philip@em38.com',
+            #### encrypted_password: '$2a$10$OvBMaMnjmU8DON3VIhQBAePiuYsSiyqmDrs9DKplqQTafQxAAbmsO',
+            # first_name: 'Philip',
+            #### forum_username: 'lily',
+            # last_name: 'Meagher',
+            # last_sign_in_at: '2014-09-22T20:44:38.546Z',
+            # last_sign_in_ip: '188.141.95.233',
+            #### remember_created_at: nil,
+            # reset_password_sent_at: nil,
+            # reset_password_token: nil,
+            # role: 'student',
+            # sign_in_count: 11,
+            #### unconfirmed_email: 'lily@bissett.net'
+    # }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_user - transaction rolled back. ImportTracker: Export:#{export.inspect}. IT:#{try(:it).try(:errors).try(:inspect)}. User: #{try(:user).try(:errors).inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
   end
 
-  def create_user(exported_user) # todo
-    # Create the User
-    # user = User.create!(
-    #       email: exported_user[:email],
-    #       first_name: exported_user[:first_name],
-    #       etc.
-    # )
-    # Create an ImportTracker record
-    # it = ImportTracker.create!(
-    #         old_model_name: 'user',
-    #         old_model_id: exported_user[:id],
-    #         new_model_name: 'user',
-    #         new_model_id: user.id,
-    #         imported_at: Time.now,
-    #         original_data: exported_user
-    # )
-    # Rails.logger.info "INFO rake v2v3:import_data - Created user: old ID:#{it.old_model_id}, new ID:#{it.new_model_id}, import tracker ID:#{it.id}."
+  def compare_and_update_user(it, export)
+    # find the user
+    user = User.find(it.new_model_id)
+    # compare the details
+    if user.email == export[:email] &&
+          (export[:current_sign_in_at].nil? || it.imported_at > (Time.parse(export[:current_sign_in_at]) + 5.seconds))
+      # do nothing
+    else
+      ActiveRecord::Base.transaction do
+        user.assign_attributes(
+              email: export[:email],
+              first_name: export[:first_name],
+              last_name: export[:last_name],
+              user_group_id: set_the_user_group(export[:role], export[:complimentary]).id,
+              address: "#{export[:billing_address][:first_line]}\r\n#{export[:billing_address][:second_line]}\r\n#{export[:billing_address][:country]}"
+        )
+        user.login_count = export[:sign_in_count]
+        if export[:current_sign_in_at].to_s.length > 5 && user.current_login_at > Time.parse(export[:current_sign_in_at])
+          user.current_login_at = Time.parse(export[:current_sign_in_at])
+          user.last_login_at = Time.parse(export[:last_sign_in_at]) if export[:last_sign_in_at].to_s.length > 5
+          user.current_login_ip = export[:current_sign_in_ip]
+          user.last_login_ip = export[:last_sign_in_ip]
+        end
+        user.save!
+        it.update_attributes!(imported_at: Time.now, original_data: export.to_json)
+      end
+      message('INFO', "rake v2v3:import_data#update_user User:#{user.id} IT:#{it.id} updated")
+    end
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#update_user - transaction rolled back. ImportTracker: #{it.errors.inspect}. User: #{user.errors.inspect}.  Error: #{e.inspect}. Further processing of users halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
   end
 
   #### users' content tracking
 
-  def migrate_users_courses(imports)
-    #
+  def migrate_users_courses(exports)
+    message('INFO', 'Starting to process UsersCourses...')
+    ignored = []
+    if exports
+      exports.each do |export|
+        if EXCLUDED_USER_IDS.include?(export[:user_id].to_i)
+          ignored << export[:_id].to_i
+        else
+          # look in the import_tracker for this user/course
+          it = ImportTracker.where(old_model_name: 'users_course', old_model_id: export[:_id]).first
+          it.nil? ? create_user_course(export) :
+                  compare_and_update_user_course(it, export)
+        end
+      end
+      message('INFO', "processed #{exports.count} users_courses")
+      message('INFO', "ignored #{ignored.count} users_courses")
+    else
+      message('WARN', 'No users_courses found')
+    end
+  end
+
+  def create_user_course(export)
+    ActiveRecord::Base.transaction do
+      (export[:finished_step_ids] || []).each do |step_id|
+        step_it = ImportTracker.where(
+                old_model_name: 'step',
+                old_model_id: step_id).first
+        if step_it # exists
+          cme = CourseModuleElement.find(step_it.new_model_id)
+          the_user_id = ImportTracker.where(old_model_name: 'user',
+                  old_model_id: export[:user_id].to_i).first.new_model_id
+          cmeul = CourseModuleElementUserLog.create!(
+                  course_module_element_id: cme.id,
+                  user_id: the_user_id,
+                  session_guid: "v2v3:import users-course-#{export[:_id]} / step #{step_id}",
+                  element_completed: true,
+                  time_taken_in_seconds: 0,
+                  quiz_score_actual: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
+                  quiz_score_potential: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
+                  is_video: cme.is_video,
+                  is_quiz: cme.is_quiz,
+                  course_module_id: cme.course_module_id,
+                  latest_attempt: true,
+                  corporate_customer_id: nil,
+                  course_module_jumbo_quiz_id: nil,
+                  is_jumbo_quiz: false # didn't exist in v2
+          )
+          it = ImportTracker.create!(
+                  old_model_name: 'users_course', old_model_id: export[:_id].to_i,
+                  new_model_name: 'course_module_element_user_log',
+                  new_model_id: cmeul.id,
+                  imported_at: Time.now, original_data: export.to_json
+          )
+          message('INFO', "-- export:user_course #{export[:_id]} imported as CMEUL #{cmeul.id} and it:id #{it.id}.")
+        end # of loop of "steps"
+      end # of if
+    end # of transaction
+    sample_user_course = {
+            _id: 1,
+            course_id: 1,
+            finished: false,
+            finished_step_ids: [1, 3, 5, 12, 20, 6, 22, 4, 2, 9, 10, 7, 21, 23, 19, 18, 17, 16, 15, 36, 35, 37],
+            first_unfinished_step_id: 24,
+            last_access_date: '2014-07-23T16:13:09.154Z',
+            percentage_completion: 58,
+            user_id: 1
+    }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_user_course - transaction rolled back. Export: #{export.inspect}. Step-ID: #{try(:step_id)}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. CMEUL: #{try(:cmeul).try(:errors).inspect}.  SET: #{try(:set).try(:errors).inspect}. Error: #{e.inspect}. Further processing of users_courses halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
+  end
+
+  def compare_and_update_user_course(it, export)
+    if Time.parse(export[:last_access_date]) > (it.imported_at + 5.seconds)
+      # We only care about two of export's attributes - finished_step_ids and last_access_date
+      (export[:finished_step_ids] || []).each do |step_id|
+        cme = CourseModuleElement.find(
+                ImportTracker.where(old_model_name: 'step',
+                        old_model_id: step_id).first.new_model_id)
+        cmeul = CourseModuleElementUserLog.where(
+                user_id: ImportTracker.where(old_model_name: 'user',
+                         old_model_id: export[:user_id]).first.new_model_id,
+                course_module_element_id: cme.id
+        ).first_or_initialize(
+                session_guid: "v2v3:import users-course-#{export[:_id]} / step #{step_id}",
+                element_completed: true,
+                time_taken_in_seconds: 0,
+                quiz_score_actual: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
+                quiz_score_potential: cme.try(:course_module_element_quiz).try(:best_possible_score_first_attempt),
+                is_video: cme.is_video,
+                is_quiz: cme.is_quiz,
+                course_module_id: cme.course_module_id,
+                latest_attempt: true,
+                corporate_customer_id: nil,
+                course_module_jumbo_quiz_id: nil,
+                is_jumbo_quiz: false # didn't exist in v2
+        )
+        if cmeul.id.nil?
+          cmeul.save!
+          new_it = ImportTracker.create!(
+                old_model_name: 'users_course', old_model_id: export[:_id].to_i,
+                new_model_name: 'course_module_element_user_log',
+                new_model_id: cmeul.id,
+                imported_at: Time.now, original_data: export.to_json
+          )
+          message('INFO', "-- export:user_course #{export[:_id]} imported an EXTRA CMEUL #{cmeul.id} and it:id #{new_it.id}.")
+        end
+      end
+
+    else
+      # no update required
+    end
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#compare_and_update_user_course - transaction rolled back. Export: #{export.inspect}. Step-ID: #{try(:step_id)}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. CMEUL: #{try(:cmeul).try(:errors).inspect}.  SET: #{try(:set).try(:errors).inspect}. Error: #{e.inspect}. Further processing of users_courses halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
+  end
+
+  #### financial items
+
+  def migrate_customers(exports)
+    message('INFO', 'Starting to process Customers...')
+    ignored = []
+    if exports
+      exports.each do |export|
+        if EXCLUDED_USER_IDS.include?(export[:user_id].to_i)
+          ignored << export[:_id].to_i
+        else
+          # look in the import_tracker for this customer
+          it = ImportTracker.where(old_model_name: 'customer', old_model_id: export[:_id]).first
+          it.nil? ? create_customer(export) :
+                  compare_and_update_customer(it, export)
+        end
+      end
+      message('INFO', "processed #{exports.count} customers")
+      message('INFO', "ignored #{ignored.count} customers")
+    else
+      message('WARN', 'No customers found')
+    end
+  end
+
+  def create_customer(export)
+    the_user = User.find(ImportTracker.where(old_model_name: 'user', old_model_id: export[:user_id]).first.new_model_id)
+    the_user.update_column(:stripe_customer_id, export[:stripe_id])
+    it = ImportTracker.create!(
+            old_model_name: 'customer', old_model_id: export[:_id].to_i,
+            new_model_name: 'user',
+            new_model_id: the_user.id,
+            imported_at: Time.now, original_data: export.to_json
+    )
+    message('INFO', "-- export:customer #{export[:_id]} imported into User #{the_user.id} and it:id #{it.id}.")
+
+    customer_sample = {_id: 1, status: 'unpaid', user_id: 5,
+            stripe_id: 'cus_4bz3HLniS9Y5wW'}
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_customer - transaction rolled back. Export: #{export.inspect}. User: #{try(:the_user).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of customers halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
+  end
+
+  def compare_and_update_customer(it, export)
+    the_user = User.find(it.new_model_id)
+    if it.imported_at > ((the_user.last_request_at || the_user.current_login_at || the_user.updated_at) + 5.seconds) && the_user.stripe_customer_id[0..3] != 'cus_'
+      the_user.update_column(:stripe_customer_id, export[:stripe_id])
+      it.update_column(:imported_at, Time.now)
+      message('INFO', "-- export:customer #{export[:_id]} updated to User #{the_user.id} and it:id #{it.id}.")
+    end
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#compare_and_update_customer - transaction rolled back. Export: #{export.inspect}. User: #{try(:the_user).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of customers halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
+  end
+
+  def migrate_plans(exports)
+    message('INFO', 'Starting to process Plans...')
+    if exports
+      exports.each do |export|
+        # look in the import_tracker for this plan
+        it = ImportTracker.where(old_model_name: 'plan', old_model_id: export[:_id]).first
+        it.nil? ? create_plan(export) :
+                compare_and_update_plan(it, export)
+      end
+      message('INFO', "processed #{exports.count} plans")
+    else
+      message('WARN', 'No plans found')
+    end
+  end
+
+  def create_plan(export)
+    currency = Currency.find_by_iso_code(export[:currency].upcase)
+    plan = SubscriptionPlan.new(
+            available_to_students: true,
+            available_to_corporates: false,
+            all_you_can_eat: true,
+            payment_frequency_in_months: export[:interval_count],
+            currency_id: currency.id,
+            price: export[:amount].to_i / 100.0,
+            available_from: Date.new(2014,8,1,),
+            available_to: Date.new(2099,12,31),
+            trial_period_in_days: export[:trial_period_days].to_i,
+            name: export[:name],
+            subscription_plan_category_id: nil,
+            livemode: true
+    )
+    plan.stripe_guid = export[:stripe_id]
+    plan.save!
+    it = ImportTracker.create!(
+            old_model_name: 'plan', old_model_id: export[:_id].to_i,
+            new_model_name: 'subscription_plan',
+            new_model_id: plan.id,
+            imported_at: Time.now, original_data: export.to_json
+    )
+    message('INFO', "-- export:plan #{export[:_id]} imported as SubscriptionPlan #{plan.id} and it:id #{it.id}.")
+
+    sample_plan = {
+            currency: 'usd',
+            interval: 'month',
+            interval_count: 1,
+            trial_period_days: 7,
+            name: 'Monthly',
+            amount: 1000,
+            statement_description: 'Monthly',
+            default: true, # not imported
+            stripe_id: 'plan_XNbHlgQaOr1GN3QEp+YT',
+            _id: 5
+    }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_plan - transaction rolled back. Export: #{export.inspect}. SubscriptionPlan: #{try(:plan).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of plans halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
+  end
+
+  def compare_and_update_plan(it, export)
+    # Philip pointed out that the Plans will never be amended in the v2 database
+  end
+
+  def migrate_subscriptions(exports)
+    message('INFO', 'Starting to process Subscriptions...')
+    ignored = []
+    if exports
+      exports.each do |export|
+        if EXCLUDED_USER_IDS.include?(export[:user_id].to_i)
+          ignored << export[:_id].to_i
+        else
+            # look in the import_tracker for this subscription
+          it = ImportTracker.where(old_model_name: 'subscription', old_model_id: export[:_id]).first
+          it.nil? ? create_subscription(export) :
+                  compare_and_update_subscription(it, export)
+        end
+      end
+      message('INFO', "processed #{exports.count} subscriptions")
+      message('INFO', "ignored #{ignored.count} subscriptions - #{ignored.inspect}")
+    else
+      message('WARN', 'No subscriptions found')
+    end
+  end
+
+  def create_subscription(export)
+    user_it = ImportTracker.where(old_model_name: 'user',
+              old_model_id: export[:user_id]).first
+    plan_it = ImportTracker.where(old_model_name: 'plan',
+              old_model_id: export[:plan_id]).first
+    user = User.find(user_it.new_model_id)
+    if user_it && plan_it && user
+      ActiveRecord::Base.transaction do
+        subscription = Subscription.new(
+                user_id: user.id,
+                corporate_customer_id: nil,
+                subscription_plan_id: plan_it.new_model_id,
+                complimentary: false,
+                stripe_customer_id: user.stripe_customer_id,
+                livemode: true,
+                import_from_v2: true
+        )
+        subscription.stripe_guid = export[:stripe_id]
+        if Invoice::STRIPE_LIVE_MODE # == true
+          stripe_cust = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+          stripe_sub = stripe_cust.subscriptions.retrieve(subscription.stripe_guid)
+          subscription.next_renewal_date = Time.at(stripe_sub.current_period_end)
+          subscription.current_status = stripe_sub.status
+          subscription.stripe_customer_data = stripe_cust.to_hash
+        else
+          subscription.current_status = export[:status]
+          subscription.next_renewal_date = Time.parse(export[:current_period_end])
+          subscription.stripe_customer_data = {data: nil, reason: 'not in live mode'}
+        end
+        subscription.save!
+        it = ImportTracker.create!(
+                old_model_name: 'subscription', old_model_id: export[:_id].to_i,
+                new_model_name: 'subscription',
+                new_model_id: subscription.id,
+                imported_at: Time.now, original_data: export.to_json
+        )
+        message('INFO', "-- export:subscription #{export[:_id]} imported as Subscription #{subscription.id} and it:id #{it.id}.")
+      end
+    else
+      message('WARN', "-- export:subscription #{export[:_id]} failed to be imported as related data couldn't be found. Export: #{export.inspect}")
+    end
+
+    sample_subscription = {
+            _id: 87,
+            cancel_at_period_end: true,
+            canceled_at: '2015-03-16T08:17:05.000Z',
+            current_period_end: '2015-01-07T02:41:49.000Z',
+            current_period_start: '2014-12-31T02:41:49.000Z',
+            customer_id: 143,
+            ended_at: '2015-01-07T02:41:49.000Z',
+            plan_id: 6,
+            start: '2014-12-31T02:41:49.000Z',
+            status: 'trialing',
+            stripe_id: 'sub_5QTNGFzJ9m0y9t',
+            user_id: 374
+    }
+  rescue => e
+    message('ERROR', "rake v2v3:import_data#create_subscription - transaction rolled back. Export: #{export.inspect}. Subscription: #{try(:subscription).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: #{e.inspect}. Further processing of subscriptions halted.")
+    e.backtrace.split("\r") do |line|
+      puts line
+    end
+    exit
+  end
+
+  def compare_and_update_subscription(it, export)
+    sample_subscription = {
+            _id: 87,
+            cancel_at_period_end: true,
+            canceled_at: '2015-03-16T08:17:05.000Z',
+            current_period_end: '2015-01-07T02:41:49.000Z',
+            current_period_start: '2014-12-31T02:41:49.000Z',
+            customer_id: 143,
+            ended_at: '2015-01-07T02:41:49.000Z',
+            plan_id: 6,
+            start: '2014-12-31T02:41:49.000Z',
+            status: 'trialing',
+            stripe_id: 'sub_5QTNGFzJ9m0y9t',
+            user_id: 374
+    }
+    new_user_it = ImportTracker.where(old_model_name: 'user',
+                                  old_model_id: export[:user_id]).first
+    new_user = User.find(new_user_it.new_model_id)
+    new_plan_it = ImportTracker.where(old_model_name: 'plan',
+                                  old_model_id: export[:plan_id]).first
+    new_plan = SubscriptionPlan.find(new_plan_it.new_model_id)
+
+    current_sub = Subscription.find(it.new_model_id)
+    current_user = current_sub.user
+
+    unless current_user.id == new_user.id
+      message('ERROR', "rake v2v3:import_data#compare_and_update_subscription - transaction rolled back. Export: #{export.inspect}. Subscription: #{try(:current_sub).inspect}. ImportTracker: #{try(:it).try(:errors).try(:inspect)}. Error: User ID has changed - #{current_user.id} -> #{new_user.id}. Further processing of subscriptions halted.")
+      exit
+    end
+
+    if (it.updated_at + 1.minute) < current_sub.updated_at
+      message('WARN', "-- export:step #{export[:_id]} UPDATED locally. V2 changes cannot be imported to Subscription #{current_sub.id} it:id #{it.id}.")
+    elsif current_sub.subscription_plan_id != new_plan.id ||
+            current_sub.next_renewal_date != Date.parse(export[:current_period_end]) ||
+            current_sub.current_status != export[:status]
+      current_sub.update_attributes!(
+              subscription_plan_id: new_plan.id,
+              next_renewal_date: Date.parse(export[:current_period_end]),
+              current_status: export[:status],
+              import_from_v2: true
+      )
+      it.update_attributes!(original_data: export.to_json, imported_at: Time.now)
+      message('INFO', "-- export:subscription #{export[:_id]} updated as Subscription #{current_sub.id} and it:id #{it.id}.")
+    end
   end
 
   #### General
@@ -702,13 +1219,29 @@ namespace :v2v3 do
   end
 
   def rename_source_and_finish(s3, file_name)
-    destination_name = file_name + '-processed-' + Time.now.strftime('%Y%m%d-%H%M%S')
-    s3.copy_object(bucket: BUCKET, copy_source: BUCKET + '/' + file_name, key: destination_name)
-    s3.delete_object(bucket: BUCKET, key: file_name)
+    unless file_name.include?('-processed-')
+      destination_name = file_name + '-processed-' + Time.now.strftime('%Y%m%d-%H%M%S')
+      s3.copy_object(bucket: BUCKET, copy_source: BUCKET + '/' + file_name, key: destination_name)
+      s3.delete_object(bucket: BUCKET, key: file_name)
+    end
 
     puts ''
     message('INFO', "renamed file to #{destination_name}")
     message('INFO', 'DONE')
+  end
+
+  def set_the_user_group(the_role, complimentary)
+    if the_role == 'student' && complimentary == false
+      UserGroup.default_student_user_group
+    elsif the_role == 'student' && complimentary == true
+      UserGroup.default_complimentary_user_group
+    elsif the_role == 'tutor'
+      UserGroup.default_tutor_user_group
+    elsif the_role == 'admin'
+      UserGroup.default_admin_user_group
+    else
+      UserGroup.default_student_user_group
+    end
   end
 
 end

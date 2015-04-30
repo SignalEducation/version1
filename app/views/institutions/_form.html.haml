@@ -27,11 +27,11 @@
         .form-group
           =f.label :feedback_url, t('views.institutions.form.feedback_url'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :feedback_url, placeholder: t('views.institutions.form.feedback_url_placeholder'), class: 'form-control'
+            =f.url_field :feedback_url, placeholder: t('views.institutions.form.feedback_url_placeholder'), class: 'form-control'
         .form-group
           =f.label :help_desk_url, t('views.institutions.form.help_desk_url'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :help_desk_url, placeholder: t('views.institutions.form.help_desk_url_placeholder'), class: 'form-control'
+            =f.url_field :help_desk_url, placeholder: t('views.institutions.form.help_desk_url_placeholder'), class: 'form-control'
         .form-group
           =f.label :help_desbackground_colour_codek_url, t('views.institutions.form.background_colour_code'), class: 'control-label col-sm-4'
           .col-sm-8

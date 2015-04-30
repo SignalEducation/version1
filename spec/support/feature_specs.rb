@@ -25,11 +25,12 @@ def sign_in_via_navbar(user)
 end
 
 def sign_in_via_sign_in_page(user)
-  visit sign_in_path
+  visit root_path
+  click_link I18n.t('views.general.sign_in')
   within('.well.well-sm') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password
-    click_button I18n.t('views.general.go')
+    click_button I18n.t('views.general.sign_in')
   end
   expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
 end
@@ -61,7 +62,7 @@ def student_sign_up_as(user_first_name, user_second_name, user_email, card_type,
   click_button I18n.t('views.student_sign_ups.form.submit')
   sleep 1
   if expect_sign_up
-    sleep 1
+    sleep 2
     expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
   else
     expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')

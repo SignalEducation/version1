@@ -48,8 +48,11 @@
       %meta{name: 'description', content: @delivered_page.seo_description}
 
     =render partial: 'layouts/favicon'
+    =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
+    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+      =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'courses'
       =render partial: 'layouts/special_navbar'
       .container-fluid
@@ -64,10 +67,11 @@
         =yield
       =render partial: 'layouts/footer'
     =render partial: 'layouts/misc_javascript'
+    =render partial: 'layouts/intercom'
     <!-- Mathjax -->
     -if @mathjax_required
       %script{type: 'text/x-mathjax-config'}
-        MathJax.Hub.Config({tex2jax: {inlineMath: [["(math)","(/math)"]]}});
+        MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
       -if Rails.env.production? || Rails.env.staging?
         %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
       -else
@@ -75,3 +79,5 @@
 
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+
+    =render partial: 'layouts/mixpanel_body_tag'

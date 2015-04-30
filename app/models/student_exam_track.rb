@@ -24,7 +24,8 @@ class StudentExamTrack < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :exam_level_id, :exam_section_id,
                   :latest_course_module_element_id, :exam_schedule_id,
-                  :session_guid, :course_module_id, :jumbo_quiz_taken,                                   :percentage_complete, :count_of_cmes_completed
+                  :session_guid, :course_module_id, :jumbo_quiz_taken,
+                  :percentage_complete, :count_of_cmes_completed
 
   # Constants
 
@@ -53,11 +54,14 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  after_save :send_cm_complete_to_mixpanel
 
   # scopes
-  scope :all_in_order, -> { order(:user_id) }
+  scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
+  scope :with_active_cmes, -> { includes(:course_module).where('course_modules.cme_count > 0').references(:course_module) }
+  scope :all_complete, -> { where('percentage_complete > 99') }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
@@ -125,5 +129,22 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   protected
+
+  def send_cm_complete_to_mixpanel
+    percent_changes = self.changes[:percentage_complete]
+    if percent_changes && percent_changes[0].to_f.round(2) < 99 && percent_changes[1].to_f.round(2) >= 99
+      MixpanelCourseModuleCompleteWorker.perform_async(
+              self.user_id,
+              self.course_module.name,
+              self.exam_section.try(:name),
+              self.exam_level.name,
+              self.exam_level.parent.name,
+              self.course_module.institution.name,
+              self.course_module.institution.subject_area.name,
+              self.course_module.course_module_elements.all_active.all_videos.count,
+              self.course_module.course_module_elements.all_active.all_quizzes.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
+      )
+    end
+  end
 
 end

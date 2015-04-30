@@ -26,7 +26,7 @@
           -if @invoice.corporate_customer
             =@invoice.corporate_customer.name
             %br/
-          =@invoice.user.address
+          =sanitizer @invoice.user.address.to_s.gsub(', ','<br/>').gsub("\r",'<br/>')
           %br/
           =@invoice.user.country.name
           %br/
@@ -36,13 +36,15 @@
         %td.col-xs-4
           =@invoice.id
       %tr
-        %td=t('views.users.form.created_at')
-        %td=@invoice.created_at.to_s(:standard)
+        %td=t('views.invoices.form.issued_at')
+        %td=@invoice.issued_at.to_s(:standard)
       %tr
         %td=t('views.invoices.form.number_of_users')
         %td
           -if @invoice.number_of_users > 0
             =@invoice.number_of_users
+          -else
+            1
       %tr
         %td=t('views.invoices.form.paid')
         %td=@invoice.paid ? t('views.invoices.form.paid') : t('views.invoices.form.due')

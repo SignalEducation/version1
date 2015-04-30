@@ -1,23 +1,28 @@
 class CoursesController < ApplicationController
 
   before_action :paywall_checkpoint, only: :show
+  before_action :check_for_old_url_format, only: :show
 
   def show
     @mathjax_required = true
-    @course_module = CourseModule.where(name_url: params[:course_module_name_url]).first
-    @course_module_element = CourseModuleElement.where(name_url: params[:course_module_element_name_url]).first
-    @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
-    @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+    qualification = Qualification.find_by_name_url(params[:qualification_name_url])
+    exam_level = qualification.exam_levels.find_by(name_url: params[:exam_level_name_url])
+    @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
+    if @course_module
+      @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
+      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
+      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+    end
 
     if @course_module_element.nil? && @course_module.nil?
       # The URL is out of date or wrong.
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
-            ExamSection.where(name_url: params[:exam_section_name_url]).first
-      @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first
-      @qualification = Qualification.where(name_url: params[:qualification_name_url]).first
-      @institution = Institution.where(name_url: params[:institution_name_url]).first
-      @subject_area = SubjectArea.where(name_url: params[:subject_area_name_url]).first
+            ExamSection.find_by(name_url: params[:exam_section_name_url])
+      @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
+      @qualification = Qualification.find_by(name_url: params[:qualification_name_url])
+      @institution = Institution.find_by(name_url: params[:institution_name_url])
+      @subject_area = SubjectArea.find_by(name_url: params[:subject_area_name_url])
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
       redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
@@ -85,6 +90,20 @@ class CoursesController < ApplicationController
     )
   end
 
+  def check_for_old_url_format
+    if params[:id].to_i > 0
+      it = ImportTracker.where(old_model_name: 'course', old_model_id: params[:id].to_i, new_model_name: 'exam_section').first
+      if it
+        redirect_to library_special_link(ExamSection.find(it.new_model_id))
+        false
+      else
+        true
+      end
+    else
+      true
+    end
+  end
+
   def create_a_cme_user_log
     CourseModuleElementUserLog.create!(
             course_module_element_id: @course_module_element.id,
@@ -127,7 +146,6 @@ class CoursesController < ApplicationController
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
     @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
     @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@easy_ids + @medium_ids + @difficult_ids)
-    @enough_questions = @course_module_element.course_module_element_quiz.enough_questions? || current_user.try(:admin?)
     @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
   end
 
@@ -154,7 +172,6 @@ class CoursesController < ApplicationController
     @medium_ids = all_medium_ids.sample(@number_of_questions)
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
-    @enough_questions = @quiz_questions.size >= @course_module_jumbo_quiz.total_number_of_questions || current_user.try(:admin?)
     Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
   end

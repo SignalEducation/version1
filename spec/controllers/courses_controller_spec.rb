@@ -14,16 +14,19 @@ RSpec.describe CoursesController, type: :controller do
   let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id)}
   let!(:valid_params) { course_module_element_user_log.attributes.merge({time_taken_in_seconds: (Time.now.to_i * -1)}) }
 
-  describe "GET show" do
+  describe 'GET show' do
     it 'returns http success' do
-      get :show, id: 1, course_module_name_url: course_module_1.name_url,
-          qualification_url: qualification.name_url
+      get :show, subject_area_name_url: subject_area.name_url,
+          institution_name_url: institution.name_url,
+          qualification_name_url: qualification.name_url,
+          exam_level_name_url: exam_level.name_url,
+          exam_section_name_url: 'all',
+          course_module_name_url: course_module_1.name_url
       expect_show_success_with_model('course_module', course_module_1.id)
     end
   end
 
-
-  describe "POST create" do
+  describe 'POST create' do
     it 'should report OK for valid params' do
       post :create, course_module_element_user_log: valid_params
       expect(response.status).to eq(200)

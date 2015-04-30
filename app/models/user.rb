@@ -63,11 +63,13 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes
+                  :subscriptions_attributes,
+                  :login_count, :failed_login_count, :last_request_at, :current_login_at, :last_login_at, :current_login_ip, :last_login_ip, :account_activated_at, :account_activation_code, :address, :guid # todo see ticket 277
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
+  SORT_OPTIONS = %w(user_group name email created)
 
   # relationships
   belongs_to :corporate_customer
@@ -133,13 +135,18 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation :set_defaults, on: :create
-  before_validation { squish_fields(:email, :first_name, :last_name, :address) }
-  before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
+  before_validation { squish_fields(:email, :first_name, :last_name) }
+  # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
+  after_save :create_on_mixpanel, if: '!Rails.env.test?'
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
+  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
+  scope :sort_by_email, -> { order(:email) }
+  scope :sort_by_name, -> { order(:last_name, :first_name) }
+  scope :sort_by_recent_registration, -> { order(created_at: :desc) }
 
   # class methods
   def self.all_admins
@@ -165,7 +172,10 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user
-        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,        password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        user.update_attributes(
+                password_reset_requested_at: Proc.new{Time.now}.call,
+                password_reset_token: ApplicationController::generate_random_code(20),
+                active: false)
         Mailers::OperationalMailers::ResetYourPasswordWorker.perform_async(user.id)
       end
     end
@@ -186,6 +196,23 @@ class User < ActiveRecord::Base
       end
     else
       false # return false
+    end
+  end
+
+  def self.sort_by(choice)
+    if SORT_OPTIONS.include?(choice)
+      case choice
+        when 'name'
+          sort_by_name
+        when 'email'
+          sort_by_email
+        when 'created'
+          sort_by_recent_registration
+        else # also covers 'user_group'
+          all_in_order
+      end
+    else
+      all_in_order
     end
   end
 
@@ -220,6 +247,12 @@ class User < ActiveRecord::Base
 
   def corporate_student?
     self.user_group.try(:corporate_student)
+  end
+
+  def de_activate_user
+    self.active = false
+    self.account_activated_at = nil
+    self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
   def destroyable?
@@ -264,16 +297,25 @@ class User < ActiveRecord::Base
   protected
 
   def add_guid
+    Rails.logger.debug 'DEBUG: User#add_guid - START'
     self.guid = ApplicationController.generate_random_code(10)
+    Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
-  def de_activate_user
-    self.active = false
-    self.account_activated_at = nil
-    self.account_activation_code = ApplicationController::generate_random_code(20)
+  def create_on_mixpanel
+    plan_name = self.subscriptions.first ?
+            self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
+            'none'
+    MixpanelUserUpdateWorker.perform_async(
+          self.id, self.first_name, self.last_name, self.email,
+          self.user_group.try(:name),
+          plan_name,
+          self.guid, self.country.iso_code
+    )
   end
 
   def set_defaults
+    Rails.logger.debug "DEBUG: User#set_defaults - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
     self.operational_email_frequency ||= 'weekly'
     self.study_plan_notifications_email_frequency ||= 'off'
@@ -281,12 +323,15 @@ class User < ActiveRecord::Base
     self.marketing_email_frequency ||= 'off'
     self.blog_notification_email_frequency ||= 'off'
     self.forum_notification_email_frequency ||= 'off'
+    Rails.logger.debug "DEBUG: User#set_defaults - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
   def set_stripe_customer_id
+    Rails.logger.debug "DEBUG: User#set_stripe_customer_id - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
     if self.subscriptions.length > 0
       self.update_attribute(:stripe_customer_id, self.subscriptions.first.stripe_customer_id)
     end
+    Rails.logger.debug "DEBUG: User#set_stripe_customer_id - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
 end

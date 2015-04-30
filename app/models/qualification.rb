@@ -11,6 +11,8 @@
 #  cpd_hours_required_per_year :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
+#  seo_description             :string(255)
+#  seo_no_index                :boolean          default(FALSE)
 #
 
 class Qualification < ActiveRecord::Base
@@ -31,7 +33,7 @@ class Qualification < ActiveRecord::Base
   validates :institution_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
-  validates :name_url, presence: true,uniqueness: true
+  validates :name_url, presence: true, uniqueness: true
   validates :sorting_order, presence: true
   validates :cpd_hours_required_per_year, presence: true
 

@@ -203,6 +203,7 @@ ul.dropdown-menu li, ul.dropdown-menu li a {
 
 
 .quiz-well {
+  font-size: 20px;
   border-radius: 0;
   margin-bottom: 1px;
   background-color: white;
@@ -218,6 +219,10 @@ ul.dropdown-menu li, ul.dropdown-menu li a {
   .image {
     padding: 20px;
   }
+}
+
+.mathjax {
+  font-size: 15px;
 }
 
 .quiz-answer-clickable {
@@ -682,4 +687,12 @@ header {
   .print-hidden {
     display: none;
   }
+}
+
+.cme-nav {
+  padding-bottom: 75px;
+}
+
+.user-pagination .pagination {
+  margin: 0;
 }

@@ -28,7 +28,7 @@ class ExamLevelsController < ApplicationController
     @exam_level = ExamLevel.new(allowed_params)
     if @exam_level.save
       flash[:success] = I18n.t('controllers.exam_levels.create.flash.success')
-      redirect_to exam_levels_filtered_url(@exam_level.qualification.name_url)
+      redirect_to filtered_exam_levels_url(@exam_level.qualification.name_url)
     else
       render action: :new
     end
@@ -37,7 +37,7 @@ class ExamLevelsController < ApplicationController
   def update
     if @exam_level.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.exam_levels.update.flash.success')
-      redirect_to exam_levels_filtered_url(@exam_level.qualification.name_url)
+      redirect_to filtered_exam_levels_url(@exam_level.qualification.name_url)
     else
       render action: :edit
     end

@@ -33,6 +33,7 @@ FactoryGirl.define do
     trial_period_in_days            7
     subscription_plan_category_id   nil
     livemode                        false
+    available_to_students           true
 
     factory :student_subscription_plan do
       available_to_students         true

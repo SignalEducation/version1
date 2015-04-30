@@ -54,7 +54,7 @@ module ApplicationHelper
   end
 
   def sanitizer(some_text)
-    sanitize(some_text.to_s.gsub("\r",'<br />'), tags: %w(p strong em br hr table tbody thead tfoot tr th td b i u ol ul li), attributes: %w(id class) )
+    sanitize(some_text.to_s.gsub("\r",'<br />'), tags: %w(p strong em br hr table caption tbody thead tfoot tr th td b i u ol ul li), attributes: %w(id class) )
   end
 
   def head_sanitizer(some_text)
@@ -76,7 +76,11 @@ module ApplicationHelper
   end
 
   def seconds_to_time(seconds)
-    Time.at(seconds).utc.strftime('%M:%S')
+    if seconds > 3600
+      Time.at(seconds).utc.strftime('%H:%M:%S')
+    else
+      Time.at(seconds).utc.strftime('%M:%S')
+    end
   end
 
 end

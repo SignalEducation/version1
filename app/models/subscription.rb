@@ -8,7 +8,7 @@
 #  subscription_plan_id  :integer
 #  stripe_guid           :string(255)
 #  next_renewal_date     :date
-#  complementary         :boolean          default(FALSE), not null
+#  complimentary         :boolean          default(FALSE), not null
 #  current_status        :string(255)
 #  created_at            :datetime
 #  updated_at            :datetime
@@ -24,7 +24,7 @@ class Subscription < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :complementary, :current_status, :stripe_customer_id,
+                  :complimentary, :current_status, :stripe_customer_id,
                   :stripe_token, :livemode
 
   # Constants
@@ -48,12 +48,13 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}
-  validates :livemode, inclusion: {in: Invoice::STRIPE_LIVE_MODE}
+  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}
 
   # callbacks
   before_validation :create_on_stripe_platform, on: :create
   before_validation :update_on_stripe_platform, on: :update
   after_create :create_a_subscription_transaction
+  after_update :send_update_event_to_mixpanel
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -61,13 +62,14 @@ class Subscription < ActiveRecord::Base
 
   # class methods
   def self.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
+    Rails.logger.debug "DEBUG: Subscription#self.create_using_stripe_subscription START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     user = User.find_by_stripe_customer_id(stripe_customer_hash[:id])
     plan = SubscriptionPlan.find_by_stripe_guid(stripe_subscription_hash[:plan][:id])
     x = Subscription.new(
           user_id: user.id,
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: plan.id,
-          complementary: false,
+          complimentary: false,
           livemode: (stripe_subscription_hash[:livemode] == 'live'),
           current_status: stripe_subscription_hash[:status],
     )
@@ -76,26 +78,53 @@ class Subscription < ActiveRecord::Base
     x.stripe_customer_id = user.stripe_customer_id
     x.stripe_customer_data = stripe_customer_hash
     unless x.save!(validate: false)
-      Rails.logger.error "Subscription#create_using_stripe_subscription failed to create a subscription. stripe_subscription_hash: #{stripe_subscription_hash.inspect}. Error: #{x.errors.inspect}."
+      Rails.logger.error "ERROR: Subscription#create_using_stripe_subscription failed to create a subscription. stripe_subscription_hash: #{stripe_subscription_hash.inspect}. Error: #{x.errors.inspect}."
     end
+    Rails.logger.debug "DEBUG: Subscription#self.create_using_stripe_subscription FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
   def self.get_updates_for_user(stripe_customer_guid)
     stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid).to_hash
     active_stripe_subscriptions = stripe_customer[:subscriptions][:data]
     # limited to 10 ACTIVE subscriptions on their platform
-    active_stripe_subscriptions.each do |stripe_sub|
-      # search for our copy of stripe_sub
-      our_sub = Subscription.find_by_stripe_guid(stripe_sub[:id])
-      if our_sub
-        our_sub.compare_to_stripe_details(stripe_sub, stripe_customer)
-      else
-        Subscription.create_using_stripe_subscription(stripe_sub, stripe_customer)
+    if active_stripe_subscriptions.count > 0
+      active_stripe_subscriptions.each do |stripe_sub|
+        # search for our copy of stripe_sub
+        our_sub = Subscription.find_by_stripe_guid(stripe_sub[:id])
+        if our_sub
+          our_sub.compare_to_stripe_details(stripe_sub, stripe_customer)
+        else
+          Subscription.create_using_stripe_subscription(stripe_sub, stripe_customer)
+        end
       end
+    else
+      invoice = Invoice.where(stripe_customer_guid: stripe_customer_guid, paid: true).order(:issued_at).last
+      Subscription.where(stripe_customer_id: stripe_customer_guid, current_status: ['active', 'trialing', 'canceled-pending']).update_all(current_status: 'canceled', next_renewal_date: invoice.try(:invoice_line_items).try(:first).try(:period_end_at) || Proc.new{Time.now}.call)
     end
-
   rescue => e
     Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
+  end
+
+  def self.remove_orphan_from_stripe(stripe_customer_guid)
+    Rails.logger.warn 'WARN: Removing orphaned subscription from stripe STARTED'
+    local_subscription = Subscription.find_by_stripe_customer_id(stripe_customer_guid)
+    if local_subscription
+      Rails.logger.error "ERROR: Subscription#remove_orphan_from_stripe - orphaned subscription is NOT an orphan - it is actually #{local_subscription.inspect}."
+      return false
+    else
+      # local_subscription wasn't found
+      Rails.logger.warn 'WARN: Removing orphan from stripe MID 1'
+      stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid)
+      stripe_subscription = stripe_customer.subscriptions[:data].first
+      if stripe_customer && stripe_subscription && ((Time.at(stripe_subscription[:start].to_i)) + 15.seconds > Proc.new{Time.now}.call)
+        Rails.logger.warn "WARN: Subscription#remove_orphan_from_stripe - rolling back subscription and customer on stripe.com.  Customer & Subscription:#{stripe_customer.inspect}."
+        stripe_subscription.delete
+        stripe_customer.delete
+      end
+    end
+    Rails.logger.warn 'WARN: Removing from stripe FINISHED'
+  rescue => e
+    Rails.logger.error "ERROR: Subscription#remove_from_stripe - failed to remove an orphaned Stripe subscription.  Error:#{e.inspect}. Subscription:#{stripe_customer.inspect}."
   end
 
   # instance methods
@@ -129,7 +158,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def compare_to_stripe_details(stripe_subscription_hash, stripe_customer_hash)
-    if self.subscription_plan.stripe_guid != stripe_subscription_hash[:id]
+    if self.stripe_guid != stripe_subscription_hash[:id]
       Subscription.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
       self.update_attribute(:current_status, 'previous')
     else
@@ -143,7 +172,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def destroyable?
-    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty?
+    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
   end
 
   def stripe_token=(t) # setter method
@@ -241,7 +270,7 @@ class Subscription < ActiveRecord::Base
               user_id: self.user_id,
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
-              complementary: false,
+              complimentary: false,
               livemode: (result[:livemode] == 'live'),
               current_status: result[:status],
       )
@@ -270,8 +299,8 @@ class Subscription < ActiveRecord::Base
   protected
 
   def create_on_stripe_platform
-    Rails.logger.debug 'DEBUG: Subscription#create_on_stripe_platform initialised'
-    self.complementary = false
+    Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform initialised at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+    self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
       if @stripe_token
@@ -285,37 +314,45 @@ class Subscription < ActiveRecord::Base
         errors.add(:stripe_token, I18n.t('models.subscriptions.create.cant_be_blank'))
         return
       end
-    else
+    elsif self.stripe_guid.blank?
       #### Existing customer that is reactivating
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.create(plan: self.subscription_plan.stripe_guid, trial_end: 'now')
       # refresh...
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    else
+      # self.stripe_guid and self.stripe_customer_id are both provided;
+      # this means that the subscription is being imported from v2.
+      # In this case we do NOT call Stripe.com.
     end
 
     if stripe_customer && stripe_subscription
       self.stripe_guid = stripe_subscription.id
       self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-      self.livemode = (stripe_subscription[:livemode] == 'live')
+      self.livemode = stripe_subscription[:plan][:livemode]
       self.current_status = stripe_subscription.status
       self.stripe_customer_id ||= stripe_customer.id
       self.stripe_customer_data = stripe_customer.to_hash.deep_dup
-    end
 
-    if Invoice::STRIPE_LIVE_MODE.first != stripe_customer[:livemode]
-      errors.add(:base, I18n.t('models.general.live_mode_error'))
-      Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
-      false
-    else
-      true
+      if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
+        errors.add(:base, I18n.t('models.general.live_mode_error'))
+        Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+        false
+      else
+        true
+      end
     end
+    Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform completed at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+
   rescue => e
     errors.add(:credit_card, e.message)
     return false
   end
 
   def create_a_subscription_transaction
+    Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)
+    Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
   def prefix
@@ -328,6 +365,17 @@ class Subscription < ActiveRecord::Base
     else # development and all others
       "Dev-#{rand(9999)}: "
     end
+  end
+
+  def send_update_event_to_mixpanel
+    if self.changes[:subscription_plan_id]
+      MixpanelSubscriptionUpdateWorker.perform_async(
+              self.user_id,
+              SubscriptionPlan.find(self.changes[:subscription_plan_id].first).description.strip.gsub("\r\n",', '),
+              self.subscription_plan.description.strip.gsub("\r\n",', ')
+      )
+    end
+    true
   end
 
   def update_on_stripe_platform
