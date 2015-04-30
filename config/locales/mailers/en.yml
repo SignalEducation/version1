@@ -18,6 +18,16 @@ en:
         subject_line: You have received a notification
         paragraph_1: "You have received a notification from our system that we think you should take a look at. "
 
+      signup_completed:
+        subject_line: Thank you for signing up with Learn Signal
+        salutation: "Hi %{name},"
+        paragraph_1: "We're really excited to have you as our student!"
+        paragraph_2: "Just so you know that we're here to help, and embark on this journey with you. Here at Learn Signal, we've been working very closely to create a highly effective prep course in the form of exam standard quizzes and summary videos to challenge and prepare you for your examinations."
+        paragraph_3: "So why not get acquainted with the platform."
+        cta_button_label: "Get Started Now"
+        closing: "Thanks,"
+        signature: "Learn Signal Team"
+
       reset_your_password:
         subject_line: Reset your Learn Signal password
         paragraph_1: "We have received a request to reset your password. To safeguard your account, it has been de-activated until you reset your password. To do this, please click on the link below:"
