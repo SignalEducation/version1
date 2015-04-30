@@ -20,6 +20,7 @@ class MarketingCategory < ActiveRecord::Base
 
   # validation
   validates :name, presence: true, uniqueness: true
+  validates :name, format: { without: /,+/ }
 
   # callbacks
   before_destroy :check_dependencies
