@@ -25,9 +25,9 @@ class StudentSignUpsController < ApplicationController
   end
 
   def create
-    student_user_group_id = UserGroup.default_student_user_group.try(:id)
-    @user = User.new(allowed_params.merge(user_group_id: student_user_group_id))
-    if @user.save
+    @user = User.new(allowed_params)
+    @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+    if @user.valid? && @user.save
       @user = User.get_and_activate(@user.account_activation_code)
       UserSession.create(@user)
       @user.assign_anonymous_logs_to_user(current_session_guid)
