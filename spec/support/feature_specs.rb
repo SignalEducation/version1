@@ -62,7 +62,7 @@ def student_sign_up_as(user_first_name, user_second_name, user_email, card_type,
   click_button I18n.t('views.student_sign_ups.form.submit')
   sleep 1
   if expect_sign_up
-    sleep 1
+    sleep 2
     expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
   else
     expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
