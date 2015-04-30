@@ -35,7 +35,8 @@
                     %p.text-center=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
 
                   .panel-body.text-center
-                    -plan.description.lines.each do |line|
+                    %h2.no-top-gap=plan.currency.format_number(plan.price)
+                    -plan.description.lines[1..2].each do |line|
                       %p=line
 
           =f.fields_for :subscriptions do |sub|
