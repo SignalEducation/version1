@@ -151,13 +151,13 @@ ul.dropdown-menu li, ul.dropdown-menu li a {
   }
 }
 
-.subscription-panel {
-  background-color: #faebd7;
-}
+//.subscription-panel {
+  //background-color: #faebd7;
+//}
 
-.subscription-panel.active {
-  background-color: lightgreen;
-}
+//.subscription-panel.active {
+  //background-color: lightgreen;
+//}
 
 .orange-background {
   background-color: #ee9a3b;
@@ -704,8 +704,9 @@ header {
   .sign-up-heading {
     color: $light-text;
     background-color: #5cc8cb;
+    max-width: 400px;
     border-radius: 28px;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 1px darken(#5cc8cb, 15);
     h1 {
       padding: 10px 0;
     }
@@ -713,7 +714,7 @@ header {
 }
 
 
-.sub-panel {
+.subscription-panel {
   border: 0;
   color: $light-text;
   border-radius: 8px;
@@ -734,7 +735,7 @@ header {
   }
 }
 
-.sub-panel.active {
+.subscription-panel.active {
   .panel-heading {
     background-color: #37ba8e;
   }
