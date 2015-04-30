@@ -712,11 +712,13 @@ header {
   .sign-up-heading {
     color: $light-text;
     background-color: #5cc8cb;
-    max-width: 400px;
+    //max-width: 400px;
     border-radius: 28px;
-    box-shadow: 0 2px 1px darken(#5cc8cb, 15);
+    //box-shadow: 0 2px 1px darken(#5cc8cb, 15);
     h1 {
-      padding: 10px 0;
+      //padding: 10px 0;
+      margin-bottom: 10px;
+      margin-top: 10px;
     }
   }
   .form-control {
@@ -763,7 +765,6 @@ header {
 
 .sign-up-btn {
   @media (max-width: 767px) {
-
     max-width: 300px;
   }
 }

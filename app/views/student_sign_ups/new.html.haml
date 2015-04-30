@@ -1,19 +1,15 @@
 #student-sign-up
   =form_for @user, url: student_sign_ups_url, html: {class: 'form-horizontal', role: 'form'} do |f|
     =f.hidden_field :locale, value: (params[:locale] || 'en')
-    =f.hidden_field :country, value: @user.country
+    =f.hidden_field :country_id, value: @user.country_id
     .row
       .sign-up-form
-        .col-sm-8.col-sm-offset-2
+        .col-sm-10.col-sm-offset-1
           .well.sign-up-well.text-center
             .row
               .col-sm-6.col-sm-offset-3
-                .sign-up-heading
-                  %h1
-                    -if @custom_headings[:h1].blank?
-                      =t('views.student_sign_ups.new.h1')
-                    -else
-                      =@custom_headings[:h1]
+                .panel.panel-default.sign-up-heading
+                  %h1=t('views.student_sign_ups.new.h1')
             %p.lead
               .row
                 .col-sm-6.col-sm-offset-3
@@ -65,6 +61,7 @@
           .well.sign-up-well
             %h2.text-center{style: 'margin-bottom: 18px'}
               =t('views.student_sign_ups.new.h2.payment')
+            %p.text-center=t('views.student_sign_ups.form.you_wont_be_charged')
 
             =render partial: 'subscription_payment_cards/form', locals: {f: f}
             .row

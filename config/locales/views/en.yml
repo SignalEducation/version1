@@ -760,11 +760,12 @@ en:
         retype_it: Confirm Password
         all_you_can_eat_yes: "Unlimited Access"
         all_you_can_eat_no: "Limited Access"
-        free_trial: "Free trial - "
-        days: Days
+        free_trial: " Free Trial"
+        day: " Day"
         credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
         expiry_month_prompt: "Exp Mth"
         expiry_year_prompt: "Exp Year"
+        you_wont_be_charged: Your card won't be charged for until the end of your trial period. If you cancel before then, your card won't be charged.
         payment_frequency_in_months:
           a1: Monthly
           a3: Quarterly
