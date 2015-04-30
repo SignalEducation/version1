@@ -697,9 +697,11 @@ header {
   margin: 0;
 }
 
-.sign-up-form {
-  @media (max-width: 992px) {
-
+.form-spacing {
+  @media (max-width: 767px) {
+    .form-control {
+      margin-bottom: 15px;
+    }
   }
 }
 
@@ -756,5 +758,12 @@ header {
   }
   .panel-body {
     background-color: #21ce99;
+  }
+}
+
+.sign-up-btn {
+  @media (max-width: 767px) {
+
+    max-width: 300px;
   }
 }
