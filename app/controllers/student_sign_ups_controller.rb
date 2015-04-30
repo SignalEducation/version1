@@ -35,12 +35,8 @@ class StudentSignUpsController < ApplicationController
       flash[:success] = I18n.t('controllers.student_sign_ups.create.flash.success')
       redirect_to personal_sign_up_complete_url(@user.guid)
     else
-      if @user.subscriptions.first.try(:stripe_customer_id)
-        Subscription.remove_orphan_from_stripe(@user.subscriptions.first.stripe_customer_id)
-      elsif @user.stripe_customer_id
-        Subscription.remove_orphan_from_stripe(@user.stripe_customer_id)
-      else
-        Rails.logger.warn "WARN: StudentSignupsController#create failed to delete potentially orphaned Stripe content during a failed sign-up.  @user=#{@user.errors.inspect}"
+      if @user.subscriptions.first.try(:errors)
+        @user.subscriptions.first.errors.each { |cat, msg| @user.errors.add(cat, msg) }
       end
       extra_needed = nil
       @user.errors.dup.each do |field, message|
@@ -66,13 +62,6 @@ class StudentSignUpsController < ApplicationController
     params.require(:user).permit(
           :email, :first_name, :last_name,
           :country_id, :locale,
-          #:operational_email_frequency,
-          #:study_plan_notifications_email_frequency,
-          #:falling_behind_email_alert_frequency,
-          #:marketing_email_frequency,
-          #:marketing_email_permission_given_at,
-          #:blog_notification_email_frequency,
-          #:forum_notification_email_frequency,
           :password, :password_confirmation,
           subscriptions_attributes: [
                   :subscription_plan_id,
