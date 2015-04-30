@@ -122,6 +122,7 @@ Rails.application.routes.draw do
     resources :vat_codes
     resources :marketing_categories
     resources :marketing_tokens do
+      post :preview_csv, on: :collection, action: :preview_csv
       post :import_csv, on: :collection, action: :import_csv
     end
 

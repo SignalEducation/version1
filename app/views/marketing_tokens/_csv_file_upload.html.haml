@@ -1,5 +1,5 @@
 .modal.fade#new-upload-modal{tabindex: -1, role: 'dialog', aria: {labelledby: 'uploadModalLabel', hidden: true} }
-  =form_tag(import_csv_marketing_tokens_path, authenticity_token: true, id: 'import_csv_marketing_tokens_form', role: 'form', multipart: true, data: {type: 'csv'}, class: 'form-horizontal') do
+  =form_tag(preview_csv_marketing_tokens_path, authenticity_token: true, id: 'preview_csv_marketing_tokens_form', role: 'form', multipart: true, data: {type: 'csv'}, class: 'form-horizontal') do
     .modal-dialog
       .modal-content
         .modal-header

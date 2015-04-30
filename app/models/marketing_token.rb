@@ -18,6 +18,7 @@ class MarketingToken < ActiveRecord::Base
   attr_accessible :code, :marketing_category_id, :is_hard
 
   # Constants
+  SYSTEM_TOKEN_CODES = %w{seo direct}
 
   # relationships
   belongs_to :marketing_category
@@ -35,17 +36,56 @@ class MarketingToken < ActiveRecord::Base
   scope :all_in_order, -> { order(:code) }
 
   # class methods
-  def self.import(csv_content)
-    return unless csv_content.respond_to?(:each_line)
-    csv_content.each_line do |line|
-      line.split(',').tap do |fields|
-        if fields.length == 3
-          category = MarketingCategory.where(name: fields[1].strip).first
-          token = self.where(code: fields[0].strip, marketing_category_id: category.id).first_or_create if category
-          token.update_attribute(:is_hard, fields[2].strip == "true") if token && token.valid? && token.editable?
+  def self.parse_csv(csv_content)
+    csv_data = []
+    has_errors = false
+    if csv_content.respond_to?(:each_line)
+      csv_content.each_line do |line|
+        line.strip.split(',').tap do |fields|
+          error_msgs = []
+          if fields.length == 3
+            error_msgs << I18n.t('models.marketing_tokens.invalid_marketing_category_name') if MarketingCategory.where(name: fields[1].strip).count != 1
+            token = self.where(code: fields[0].strip).first
+            error_msgs << I18n.t('models.marketing_tokens.cannot_change_system_token') if token && token.system_defined?
+            error_msgs << I18n.t('models.marketing_tokens.invalid_flag_value') unless ['true', 'false'].include?(fields[2].strip)
+          else
+            error_msgs << I18n.t('models.marketing_tokens.invalid_field_count')
+          end
+          has_errors = true unless error_msgs.empty?
+          csv_data << { values: fields, error_messages: error_msgs }
+        end
+      end
+    else
+      has_errors = true
+    end
+    has_errors = true if csv_data.empty?
+    return csv_data, has_errors
+  end
+
+  def self.bulk_create(tokens_data)
+    tokens = []
+    if tokens_data.is_a?(Hash)
+      self.transaction do
+        tokens_data.each do |k,v|
+          category = MarketingCategory.where(name: v["category"]).first
+          if category.nil? || v['code'].empty?
+            tokens = []
+            raise ActiveRecord::Rollback
+          end
+
+          token = self.where(code: v["code"], marketing_category_id: category.id).first_or_create
+
+          if !token.valid? || !token.editable?
+            tokens = []
+            raise ActiveRecord::Rollback
+          end
+          token.update_attribute(:is_hard, v["flag"] == "true")
+
+          tokens << token
         end
       end
     end
+    tokens
   end
 
   # instance methods
@@ -57,6 +97,10 @@ class MarketingToken < ActiveRecord::Base
     !system_defined?
   end
 
+  def system_defined?
+    SYSTEM_TOKEN_CODES.include?(self.code.to_s)
+  end
+
   protected
 
   def check_dependencies
@@ -64,10 +108,6 @@ class MarketingToken < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
-  end
-
-  def system_defined?
-    ['seo', 'direct'].include?(self.code.to_s)
   end
 
 end

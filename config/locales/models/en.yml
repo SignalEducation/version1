@@ -41,3 +41,8 @@ en:
     stripe_api_event:
       guid_required_to_get_payload_from_stripe: "Event GUID is required before a Stripe Event can be downloaded"
 
+    marketing_tokens:
+      invalid_field_count: "Invalid fields count."
+      invalid_marketing_category_name: "Invalid marketing category name."
+      cannot_change_system_token: "System defined token cannot be changed."
+      invalid_flag_value: "Invalid flag value. Must be true or false."

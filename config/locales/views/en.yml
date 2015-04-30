@@ -1193,3 +1193,11 @@ en:
       modal:
         h1: Upload CSV File
         file: File
+
+      preview_csv:
+        h1: CSV Data Preview
+        code: Code
+        is_hard: Hard Token
+        marketing_category: Category
+        errors: Errors
+        submit: Submit
