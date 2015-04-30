@@ -38,6 +38,7 @@ gem 'stripe', git: 'https://github.com/stripe/stripe-ruby'
 # support for Stripe.com payment processing
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
+gem 'utf8-cleaner' # removes illegal characters from inbound requests
 gem 'will_paginate' # manage long web pages
 gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
 
