@@ -27,7 +27,6 @@ RSpec.describe MarketingCategoriesController, type: :routing do
       expect(put: '/marketing_categories/1').to route_to('marketing_categories#update', id: '1')
     end
 
-
     it 'routes to #destroy' do
       expect(delete: '/marketing_categories/1').to route_to('marketing_categories#destroy', id: '1')
     end
