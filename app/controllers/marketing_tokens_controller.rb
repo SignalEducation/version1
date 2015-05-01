@@ -61,6 +61,14 @@ class MarketingTokensController < ApplicationController
     @tokens = MarketingToken.bulk_create(params[:csvdata])
   end
 
+  def download_csv
+    tokens_csv = MarketingToken.includes(:marketing_category).where('code not in (?)', MarketingToken::SYSTEM_TOKEN_CODES).map do |token|
+      "#{token.code},#{token.marketing_category.name},#{token.is_hard}"
+    end.join("\n")
+
+    send_data tokens_csv, filename: "MarketingTokens.csv", type: "text/csv"
+  end
+
   protected
 
   def get_variables

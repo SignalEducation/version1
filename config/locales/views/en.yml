@@ -1180,6 +1180,7 @@ en:
       index:
         h1: Marketing Tokens
         csv_upload: CSV Upload
+        csv_download: Download CSV
 
       show:
         h1: Marketing Token

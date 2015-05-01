@@ -34,5 +34,9 @@ RSpec.describe MarketingTokensController, type: :routing do
     it 'routes to #import_csv' do
       expect(post: '/marketing_tokens/import_csv').to route_to('marketing_tokens#import_csv')
     end
+
+    it 'routes to #download_csv' do
+      expect(get: '/marketing_tokens/download_csv').to route_to('marketing_tokens#download_csv')
+    end
   end
 end

@@ -124,6 +124,7 @@ Rails.application.routes.draw do
     resources :marketing_tokens do
       post :preview_csv, on: :collection, action: :preview_csv
       post :import_csv, on: :collection, action: :import_csv
+      get :download_csv, on: :collection, action: :download_csv
     end
 
     # home page
