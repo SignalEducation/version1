@@ -103,7 +103,7 @@ tr {
 }
 
 .special-navbar {
-  padding: 0 30px;
+  padding: 0 40px;
   .navbar-logo {
     padding: 0;
     @media (max-width: 780px){
@@ -279,6 +279,25 @@ nav.navbar.navbar-transparent {
       color: #222222;
     }
   }
+  .free_trial {
+    padding: 10px 15px;
+    margin: 11px 6px 6px 6px;
+
+    background-color: #ef5f5f;
+    color: #f1f6fd;
+    border: none;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    &:hover, &:focus {
+      background-color: darken(#ef5f5f, 7);
+      color: #f1f6fd;
+      text-decoration: none;
+    }
+    &:active {
+      background-color: #ef5f5f;
+      color: #f1f6fd;
+    }
+  }
+
 }
 
 .navbar-shrink {
@@ -730,9 +749,20 @@ header {
     border-color: #37ba8e;
     box-shadow:  0 0 0;
   }
+
+.no-content-well {
+  font-size: 20px;
+  border-radius: 0;
+  margin-bottom: 1px;
+  background-color: #2E2F30;
+  color: #f1f6fd;
+  border: 0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  padding: 160px 20px;
+  @media (max-width: 992px) {
+    padding: 80px 2px;
   }
 }
-
 
 .subscription-panel {
   border: 0;
@@ -767,5 +797,29 @@ header {
 .sign-up-btn {
   @media (max-width: 767px) {
     max-width: 300px;
+  }
+}
+
+.free-trial-btn {
+  background-color: #ef5f5f;
+  color: #f1f6fd;
+  border: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  &:hover, &:focus {
+    background-color: darken(#ef5f5f, 5);
+    color: #f1f6fd;
+    text-decoration: none;
+  }
+  &:active {
+    background-color: #ef5f5f;
+    color: #f1f6fd;
+  }
+}
+
+.sign-in-panel {
+  background-color: $ls-green;
+  color: #f1f6fd;
+  .content-text {
+    margin-bottom: 0;
   }
 }
