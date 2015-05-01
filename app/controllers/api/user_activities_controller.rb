@@ -1,5 +1,7 @@
 class Api::UserActivitiesController < ApplicationController
 
+  # todo: Consider switching dependency to Api::BaseController
+
   def create
 
 
