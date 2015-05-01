@@ -1,7 +1,7 @@
 #student-sign-up
   =form_for @user, url: student_sign_ups_url, html: {class: 'form-horizontal', role: 'form'} do |f|
     =f.hidden_field :locale, value: (params[:locale] || 'en')
-    =f.hidden_field :country_id, value: @user.country_id
+    =f.hidden_field :country_id, value: @user.country_id, onchange: 'clearPlans(); showPlans(); return false;'
     .row
       .sign-up-form
         .col-sm-10.col-sm-offset-1
@@ -81,36 +81,36 @@
           =f.submit t('views.student_sign_ups.form.submit'), class: 'btn btn-lg btn-ls-default sign-up-btn'
 
 
-  :javascript
+:javascript
 
-    var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
+  var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
 
-    function clearPlans() {
-      $('.subscription-panel').removeClass('active');
-      $('#user_subscriptions_attributes_0_subscription_plan_id').val();
-    }
+  function clearPlans() {
+    $('.subscription-panel').removeClass('active');
+    $('#user_subscriptions_attributes_0_subscription_plan_id').val();
+  }
 
-    function choosePlan(theThing) {
-      clearPlans();
-      $(theThing).find('.subscription-panel').addClass('active');
-      $('#user_subscriptions_attributes_0_subscription_plan_id').val( $(theThing).attr('data-plan-id') );
-    }
+  function choosePlan(theThing) {
+    clearPlans();
+    $(theThing).find('.subscription-panel').addClass('active');
+    $('#user_subscriptions_attributes_0_subscription_plan_id').val( $(theThing).attr('data-plan-id') );
+  }
 
-    function showPlans() {
-      var country_id = $('#user_country_id').val();
-      var currency = 'EUR';
-      $('.currency').addClass('hide');
-      for (var i=0; i < countries.length; i++) {
-        if (countries[i][0] == country_id) {
-          currency = countries[i][1];
-        }
+  function showPlans() {
+    var country_id = $('#user_country_id').val();
+    var currency = 'EUR';
+    $('.currency').addClass('hide');
+    for (var i=0; i < countries.length; i++) {
+      if (countries[i][0] == country_id) {
+        currency = countries[i][1];
       }
-      $('.' + currency).removeClass('hide');
-      $('#user_subscriptions_attributes_0_subscription_plan_id').val(
-        $('.' + currency).find('.active').first().parent().attr('data-plan-id')
-      );
     }
+    $('.' + currency).removeClass('hide');
+    $('#user_subscriptions_attributes_0_subscription_plan_id').val(
+      $('.' + currency).find('.active').first().parent().attr('data-plan-id')
+    );
+  }
 
-    $(document).on('ready', function() {
-      showPlans();
-    })
+  $(document).on('ready', function() {
+    showPlans();
+  })

@@ -105,7 +105,7 @@ def enter_user_details(first_name, last_name, email=nil, country)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  select country.name, from: 'user_country_id'
+  page.execute_script("$('#user_country_id').val(#{country.id}); clearPlans(); showPlans(); return false;")
   temp_password = ApplicationController.generate_random_code(10)
   fill_in('user_password', with: temp_password)
   fill_in('user_password_confirmation', with: temp_password)
