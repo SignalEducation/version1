@@ -49,6 +49,6 @@ class MarketingCategory < ActiveRecord::Base
   end
 
   def system_defined?
-    self.name == "SEO and Direct"
+    self.name == 'SEO and Direct'
   end
 end

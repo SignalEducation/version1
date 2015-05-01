@@ -31,9 +31,9 @@ describe MarketingCategory do
   # validation
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
-  describe "invalid category name" do
-    it "should mark invalid names with comma" do
-      mc = MarketingCategory.create(name: "Name, with comma")
+  describe 'invalid category name' do
+    it 'should mark invalid names with comma' do
+      mc = MarketingCategory.create(name: 'Name, with comma')
       expect(mc.valid?).to eq(false)
     end
   end

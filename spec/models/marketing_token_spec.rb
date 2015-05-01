@@ -31,6 +31,7 @@ describe MarketingToken do
 
   # relationships
   it { should belong_to(:marketing_category) }
+  it { should have_many(:user_activity_logs) }
 
   # validation
   it { should validate_presence_of(:code) }
@@ -50,32 +51,32 @@ describe MarketingToken do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:editable?) }
 
-  describe "check CSV consistency" do
+  describe 'check CSV consistency' do
     let!(:category) { FactoryGirl.create(:marketing_category) }
     let!(:system_token) { FactoryGirl.create(:marketing_token, code: MarketingToken::SYSTEM_TOKEN_CODES.first)}
 
-    it "should set error message for invalid fields count" do
-      csv_data, has_errors = MarketingToken.parse_csv("abcd")
+    it 'should set error message for invalid fields count' do
+      csv_data, has_errors = MarketingToken.parse_csv('abcd')
       expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
       expect(has_errors).to eq(true)
 
-      csv_data, has_errors = MarketingToken.parse_csv("abcd,Fake category")
+      csv_data, has_errors = MarketingToken.parse_csv('abcd,Fake category')
       expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
       expect(has_errors).to eq(true)
 
-      csv_data, has_errors = MarketingToken.parse_csv("abcd,Fake category,true,1")
+      csv_data, has_errors = MarketingToken.parse_csv('abcd,Fake category,true,1')
       expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
       expect(has_errors).to eq(true)
     end
 
-    it "should set error message if system token name was submitted" do
+    it 'should set error message if system token name was submitted' do
       csv_data, has_errors = MarketingToken.parse_csv("#{MarketingToken::SYSTEM_TOKEN_CODES.first},#{category.name},true")
       expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.cannot_change_system_token'))
       expect(has_errors).to eq(true)
     end
 
-    it "should set error message if marketing category with given name does not exist" do
-      csv_data, has_errors = MarketingToken.parse_csv("aykh001,Fake Category,true")
+    it 'should set error message if marketing category with given name does not exist' do
+      csv_data, has_errors = MarketingToken.parse_csv('aykh001,Fake Category,true')
       expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_marketing_category_name'))
       expect(has_errors).to eq(true)
     end
@@ -86,7 +87,7 @@ describe MarketingToken do
       expect(has_errors).to eq(true)
     end
 
-    it "should return array with requested number of tokens data and no error messages" do
+    it 'should return array with requested number of tokens data and no error messages' do
       csv_data, has_errors = MarketingToken.parse_csv("aykh001,#{category.name},true\n0002,#{category.name},false")
       expect(csv_data.length).to eq(2)
       csv_data.each { |csd| expect(csd[:error_messages]).to be_empty }
@@ -94,33 +95,33 @@ describe MarketingToken do
     end
   end
 
-  describe "bulk tokens creation" do
+  describe 'bulk tokens creation' do
     let!(:category) { FactoryGirl.create(:marketing_category) }
     let!(:valid_data) {
       {
-        "0" => {"code" => "abyh001", "category" => category.name, "flag" => "true"},
-        "1" => {"code" => "yhko002", "category" => category.name, "flag" => "false"}
+        '0' => {'code' => 'abyh001', 'category' => category.name, 'flag' => 'true'},
+        '1' => {'code' => 'yhko002', 'category' => category.name, 'flag' => 'false'}
       }
     }
 
-    it "should not import any token if any group name is not valid" do
-      expect{MarketingToken.bulk_create(valid_data.merge({"2" => {"code" => "001", "category" => "Dummy", "flag" => "true"}}))}
+    it 'should not import any token if any group name is not valid' do
+      expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => '001', 'category' => 'Dummy', 'flag' => 'true'}}))}
         .to change {MarketingToken.count}.by(0)
     end
 
-    it "should not import any token if any token code is not valid" do
-      expect{MarketingToken.bulk_create(valid_data.merge({"2" => {"code" => "   ", "category" => "Dummy", "flag" => "true"}}))}
+    it 'should not import any token if any token code is not valid' do
+      expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => '   ', 'category' => 'Dummy', 'flag' => 'true'}}))}
         .to change {MarketingToken.count}.by(0)
-      expect{MarketingToken.bulk_create(valid_data.merge({"2" => {"code" => nil, "category" => "Dummy", "flag" => "true"}}))}
-        .to change {MarketingToken.count}.by(0)
-    end
-
-    it "should not import any token token code is system defined" do
-      expect{MarketingToken.bulk_create(valid_data.merge({"2" => {"code" => MarketingToken::SYSTEM_TOKEN_CODES.first, "category" => "Dummy", "flag" => "true"}}))}
+      expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => nil, 'category' => 'Dummy', 'flag' => 'true'}}))}
         .to change {MarketingToken.count}.by(0)
     end
 
-    it "should import valid data" do
+    it 'should not import any token token code is system defined' do
+      expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => MarketingToken::SYSTEM_TOKEN_CODES.first, 'category' => 'Dummy', 'flag' => 'true'}}))}
+        .to change {MarketingToken.count}.by(0)
+    end
+
+    it 'should import valid data' do
       tokens = MarketingToken.bulk_create(valid_data)
       expect(tokens.length).to eq(valid_data.keys.length)
     end

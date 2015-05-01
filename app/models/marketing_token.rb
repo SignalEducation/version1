@@ -76,19 +76,19 @@ class MarketingToken < ActiveRecord::Base
     if tokens_data.is_a?(Hash)
       self.transaction do
         tokens_data.each do |k,v|
-          category = MarketingCategory.where(name: v["category"]).first
+          category = MarketingCategory.where(name: v['category']).first
           if category.nil? || v['code'].empty?
             tokens = []
             raise ActiveRecord::Rollback
           end
 
-          token = self.where(code: v["code"], marketing_category_id: category.id).first_or_create
+          token = self.where(code: v['code'], marketing_category_id: category.id).first_or_create
 
           if !token.valid? || !token.editable?
             tokens = []
             raise ActiveRecord::Rollback
           end
-          token.update_attribute(:is_hard, v["flag"] == "true")
+          token.update_attribute(:is_hard, v['flag'] == 'true')
 
           tokens << token
         end
@@ -99,7 +99,7 @@ class MarketingToken < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !system_defined? && user_activity_logs.empty?
+    !system_defined? && self.user_activity_logs.empty?
   end
 
   def editable?
