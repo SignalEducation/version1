@@ -75,84 +75,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -167,84 +133,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -259,84 +191,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -351,84 +249,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -443,84 +307,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -535,84 +365,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -627,84 +423,50 @@ describe MarketingCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :show, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see marketing_category_2' do
-        get :show, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with marketing_category_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with marketing_category_2' do
-        get :edit, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for marketing_category_1' do
+      it 'should bounce as not allowed' do
         put :update, id: marketing_category_1.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for marketing_category_2' do
-        put :update, id: marketing_category_2.id, marketing_category: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: marketing_category_1.id, marketing_category: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: marketing_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: marketing_category_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -757,7 +519,7 @@ describe MarketingCategoriesController, type: :controller do
         expect_edit_success_with_model('marketing_category', marketing_category_2.id)
       end
 
-      it "should redirect to index page for non-editable category" do
+      it 'should redirect to index page for non-editable category' do
         system_category = FactoryGirl.create(:marketing_category, name: 'SEO and Direct')
         get :edit, id: system_category.id
         expect(response).to redirect_to(marketing_categories_url)
@@ -796,13 +558,12 @@ describe MarketingCategoriesController, type: :controller do
       end
 
       it 'should not update non-editable category' do
-        system_category = FactoryGirl.create(:marketing_category, name: "SEO and Direct")
+        system_category = FactoryGirl.create(:marketing_category, name: 'SEO and Direct')
         put :update, id: system_category.id, marketing_category: valid_params
         expect(response).to redirect_to(marketing_categories_url)
         expect(flash[:error]).to eq(I18n.t('controllers.marketing_categories.update.flash.error'))
       end
     end
-
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
