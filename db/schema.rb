@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428075539) do
+ActiveRecord::Schema.define(version: 20150430125741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -599,20 +599,20 @@ ActiveRecord::Schema.define(version: 20150428075539) do
   create_table "user_activity_logs", force: true do |t|
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "signed_in",                   default: false, null: false
+    t.boolean  "signed_in",                        default: false, null: false
     t.text     "original_uri"
     t.string   "controller_name"
     t.string   "action_name"
     t.text     "params"
-    t.integer  "alert_level",                 default: 0
+    t.integer  "alert_level",                      default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ip_address"
     t.string   "browser"
     t.string   "operating_system"
-    t.boolean  "phone",                       default: false, null: false
-    t.boolean  "tablet",                      default: false, null: false
-    t.boolean  "computer",                    default: false, null: false
+    t.boolean  "phone",                            default: false, null: false
+    t.boolean  "tablet",                           default: false, null: false
+    t.boolean  "computer",                         default: false, null: false
     t.string   "guid"
     t.integer  "ip_address_id"
     t.string   "browser_version"
@@ -620,6 +620,8 @@ ActiveRecord::Schema.define(version: 20150428075539) do
     t.text     "first_session_landing_page"
     t.text     "latest_session_landing_page"
     t.string   "post_sign_up_redirect_url"
+    t.integer  "marketing_token_id"
+    t.datetime "marketing_token_cookie_issued_at"
   end
 
   create_table "user_exam_levels", force: true do |t|

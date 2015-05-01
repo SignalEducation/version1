@@ -22,6 +22,7 @@ class MarketingToken < ActiveRecord::Base
 
   # relationships
   belongs_to :marketing_category
+  has_many :user_activity_logs
 
   # validation
   validates :code, presence: true, uniqueness: { case_sensitive: false },
@@ -36,6 +37,14 @@ class MarketingToken < ActiveRecord::Base
   scope :all_in_order, -> { order(:code) }
 
   # class methods
+  def self.direct_token
+    return self.where(code: 'direct').first
+  end
+
+  def self.seo_token
+    return self.where(code: 'seo').first
+  end
+
   def self.parse_csv(csv_content)
     csv_data = []
     has_errors = false
@@ -90,7 +99,7 @@ class MarketingToken < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !system_defined?
+    !system_defined? && user_activity_logs.empty?
   end
 
   def editable?

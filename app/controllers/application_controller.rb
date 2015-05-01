@@ -1,3 +1,4 @@
+# coding: utf-8
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -27,6 +28,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
+  before_action :process_marketing_tokens # not for Api::
   before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user
@@ -164,7 +166,31 @@ class ApplicationController < ActionController::Base
     cookies.encrypted[:post_sign_up_redirect_path] = {value: new_path, httponly: true} if new_path
   end
 
+  def process_marketing_tokens
+    existing_cookie = cookies.encrypted[:marketing_data]
+    saved_token_code, saved_epoch_time = existing_cookie.split(',') if existing_cookie
+    saved_token = MarketingToken.where(code: saved_token_code).first if saved_token_code
+
+    current_token = if request.params[:ls_midcode]
+                      MarketingToken.where(code: request.params[:ls_midcode]).first
+                    elsif request.env["HTTP_REFERER"] =~ /google|bing/
+                      MarketingToken.seo_token
+                    end
+
+    # Leave this assignment outside of if statement because if ls_midcode value
+    # is not valid (has code that does not exist in the DB) we will be left with
+    # current_token that is nil which will cause exception in bottom if statement.
+    current_token = MarketingToken.direct_token if current_token.nil?
+
+    if saved_token.nil? || current_token.is_hard? || (saved_token.system_defined? && !current_token.system_defined?)
+      cookies.encrypted[:marketing_data] = { value: "#{current_token.code},#{Time.now.to_i}", expires: 30.days.from_now, httponly: true }
+    end
+  end
+
   def log_user_activity
+    saved_token_code, saved_epoch_time = cookies.encrypted[:marketing_data].split(',')
+    marketing_token = MarketingToken.where(code: saved_token_code).first
+    marketing_token_cookie_issued_at = Time.at(saved_epoch_time.to_i)
     UserLoggerWorker.perform_async(   ApplicationController.generate_random_code(24),
             current_user.try(:id),    current_session_guid,
             request.filtered_path,    controller_name,
@@ -172,7 +198,9 @@ class ApplicationController < ActionController::Base
             request.remote_ip,        request.env['HTTP_USER_AGENT'],
             cookies.encrypted[:first_session_landing_url],
             cookies.encrypted[:latest_session_landing_url],
-            cookies.permanent.encrypted[:post_sign_up_redirect_path]
+            cookies.permanent.encrypted[:post_sign_up_redirect_path],
+            marketing_token.id,
+            marketing_token_cookie_issued_at
     )
   end
 
