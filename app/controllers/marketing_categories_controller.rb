@@ -43,7 +43,6 @@ class MarketingCategoriesController < ApplicationController
     end
   end
 
-
   def destroy
     if @marketing_category.destroy
       flash[:success] = I18n.t('controllers.marketing_categories.destroy.flash.success')
