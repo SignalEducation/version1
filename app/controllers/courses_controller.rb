@@ -1,6 +1,5 @@
 class CoursesController < ApplicationController
 
-  before_action :paywall_checkpoint, only: :show
   before_action :check_for_old_url_format, only: :show
 
   def show
@@ -38,10 +37,10 @@ class CoursesController < ApplicationController
       elsif @course_module_jumbo_quiz
         set_up_jumbo_quiz
       elsif @course_module_element.try(:is_video)
-        create_a_cme_user_log
+        create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
       end
     end
-
+    @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
   end
 
   def create # course_module_element_user_log and children

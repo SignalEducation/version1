@@ -1,28 +1,33 @@
-%h1=@course_module_element.name
--if @course_module_element.description.to_s.length > 0
-  .well.well-sm
-    =truncate(@course_module_element.description, length: 300)
--else
-  %hr/
+%h1=@course_module_element.try(:name) || @course_module_jumbo_quiz.name
 
 -if @paywall[:course_content][:reason] == 'not_logged_in'
-  .well.text-center
-    %h2=t('views.courses.content_denied.not_logged_in.h2')
+  .panel.sign-in-panel
+    .panel-body
+      %p.content-text
+        =t('views.courses.content_denied.panel.need_to_sign_in')
+
+  .well.no-content-well.text-center
+    %p=t('views.courses.content_denied.not_logged_in.start_free_trial')
+    %br/
     %p
-      =link_to t('views.general.sign_in'), sign_in_url, class: 'btn btn-ls-default'
-      =link_to t('views.general.sign_up'), student_sign_up_url, class: 'btn btn-ls-default'
+      =link_to t('views.courses.content_denied.not_logged_in.sign_up_btn'), student_sign_up_url, class: 'btn free-trial-btn'
 
 -elsif @paywall[:course_content][:reason] == 'account_canceled'
-  .well.text-center
-    %h2=t('views.courses.content_denied.account_cancelled.h2')
-    %p=link_to t('views.courses.content_denied.account_cancelled.reactivate'), profile_url(anchor: 'subscriptions'), class: 'btn btn-ls-default'
+  .well.no-content-well.text-center
+    %p=t('views.courses.content_denied.account_cancelled.h2')
+    %p=link_to t('views.courses.content_denied.account_cancelled.reactivate'), profile_url(anchor: 'subscriptions'), class: 'btn free-trial-btn'
 
 -elsif @paywall[:course_content][:reason][0..7] == 'account_'
-  .well.text-center
+  .well.no-content-well.text-center
     %h2=t('views.courses.content_denied.account_problem.h2')
-    %p=link_to t('views.courses.content_denied.account_problem.account_details'), profile_url(anchor: 'subscriptions'), class: 'btn btn-ls-default'
+    %p=link_to t('views.courses.content_denied.account_problem.account_details'), profile_url(anchor: 'subscriptions'), class: 'btn free-trial-btn'
 
 -else
   %h2=t('views.courses.content_denied.other.h2')
   %p=t('views.courses.content_denied.other.p')
   -Rails.logger.error "ERROR: Views/Courses/_content_denied.html.  Unknown reason for refusing content.  @paywall:#{@paywall.inspect}. CurrentUser:#{current_user.try(:id)}. CourseModuleElement.ID:#{@course_module_element.try(:id)}."
+
+%br/
+-if @course_module_element &&  @course_module_element.description.to_s.length > 0
+  .well.well-sm{style: 'border-radius: 0'}
+    =truncate(@course_module_element.description, length: 300)

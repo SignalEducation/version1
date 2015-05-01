@@ -148,6 +148,7 @@ describe User do
 
   # instance methods
   it { should respond_to(:admin?) }
+  it { should respond_to(:assign_anonymous_logs_to_user) }
   it { should respond_to(:change_the_password) }
   it { should respond_to(:content_manager?) }
   it { should respond_to(:corporate_customer?) }
