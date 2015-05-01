@@ -151,14 +151,6 @@ ul.dropdown-menu li, ul.dropdown-menu li a {
   }
 }
 
-//.subscription-panel {
-  //background-color: #faebd7;
-//}
-
-//.subscription-panel.active {
-  //background-color: lightgreen;
-//}
-
 .orange-background {
   background-color: #ee9a3b;
 }
@@ -418,7 +410,6 @@ header {
     margin: 0;
     border-radius: 0;
     //padding-bottom: 5px;
-
     .list-group-item {
       border-radius: 0;
     }
@@ -745,10 +736,12 @@ header {
     border-radius: 6px;
     //min-height: 45px;
     height: 45px;
-  &:focus {
-    border-color: #37ba8e;
-    box-shadow:  0 0 0;
+    &:focus {
+      border-color: #37ba8e;
+      box-shadow: 0 0 0;
+    }
   }
+}
 
 .no-content-well {
   font-size: 20px;
