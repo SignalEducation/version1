@@ -43,7 +43,6 @@ class MarketingTokensController < ApplicationController
     end
   end
 
-
   def destroy
     if @marketing_token.destroy
       flash[:success] = I18n.t('controllers.marketing_tokens.destroy.flash.success')
@@ -66,7 +65,7 @@ class MarketingTokensController < ApplicationController
       "#{token.code},#{token.marketing_category.name},#{token.is_hard}"
     end.join("\n")
 
-    send_data tokens_csv, filename: "MarketingTokens.csv", type: "text/csv"
+    send_data tokens_csv, filename: 'MarketingTokens.csv', type: 'text/csv'
   end
 
   protected
