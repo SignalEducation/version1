@@ -1,7 +1,7 @@
 #student-sign-up
   =form_for @user, url: student_sign_ups_url, html: {class: 'form-horizontal', role: 'form'} do |f|
     =f.hidden_field :locale, value: (params[:locale] || 'en')
-    =f.hidden_field :country_id, value: @user.country_id, onchange: 'clearPlans(); showPlans(); return false;'
+    =f.hidden_field :country_id, value: @user.country_id
     .row
       .sign-up-form
         .col-sm-10.col-sm-offset-1
