@@ -28,8 +28,6 @@
   -Rails.logger.error "ERROR: Views/Courses/_content_denied.html.  Unknown reason for refusing content.  @paywall:#{@paywall.inspect}. CurrentUser:#{current_user.try(:id)}. CourseModuleElement.ID:#{@course_module_element.try(:id)}."
 
 %br/
--if @course_module_element
-  -if @course_module_element.description.to_s.length > 0
-    .well.well-sm{style: 'border-radius: 0'}
-      =truncate(@course_module_element.description, length: 300)
-  -else
+-if @course_module_element &&  @course_module_element.description.to_s.length > 0
+  .well.well-sm{style: 'border-radius: 0'}
+    =truncate(@course_module_element.description, length: 300)
