@@ -8,6 +8,8 @@ describe MarketingTokensController, type: :controller do
   # todo: Try to create children for marketing_token_1
   let!(:marketing_token_1) { FactoryGirl.create(:marketing_token) }
   let!(:marketing_token_2) { FactoryGirl.create(:marketing_token) }
+  let!(:direct_token) { FactoryGirl.create(:marketing_token, code: 'direct') } # required by application_controller
+  let!(:seo_token) { FactoryGirl.create(:marketing_token, code: 'seo') } # required by application_controller
   let!(:valid_params) { FactoryGirl.attributes_for(:marketing_token) }
 
   context 'Not logged in: ' do
@@ -718,7 +720,7 @@ describe MarketingTokensController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('marketing_tokens', 2)
+        expect_index_success_with_model('marketing_tokens', 4)
       end
     end
 
@@ -755,8 +757,10 @@ describe MarketingTokensController, type: :controller do
       end
 
       it "should redirect to index page for non-editable token" do
-        system_token = FactoryGirl.create(:marketing_token, code: 'seo')
-        get :edit, id: system_token.id
+        get :edit, id: seo_token.id
+        expect(response).to redirect_to(marketing_tokens_url)
+
+        get :edit, id: direct_token.id
         expect(response).to redirect_to(marketing_tokens_url)
       end
     end
@@ -793,8 +797,11 @@ describe MarketingTokensController, type: :controller do
       end
 
       it 'should not update non-editable token' do
-        system_token = FactoryGirl.create(:marketing_token, code: 'seo')
-        put :update, id: system_token.id, marketing_token: valid_params
+        put :update, id: seo_token.id, marketing_token: valid_params
+        expect(response).to redirect_to(marketing_tokens_url)
+        expect(flash[:error]).to eq(I18n.t('controllers.marketing_tokens.update.flash.error'))
+
+        put :update, id: direct_token.id, marketing_token: valid_params
         expect(response).to redirect_to(marketing_tokens_url)
         expect(flash[:error]).to eq(I18n.t('controllers.marketing_tokens.update.flash.error'))
       end
@@ -803,11 +810,9 @@ describe MarketingTokensController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR for predefined tokens' do
-        seo_token = FactoryGirl.create(:marketing_token, code: 'seo')
         delete :destroy, id: seo_token.id
         expect_delete_error_with_model('marketing_token', marketing_tokens_url)
 
-        direct_token = FactoryGirl.create(:marketing_token, code: 'direct')
         delete :destroy, id: direct_token.id
         expect_delete_error_with_model('marketing_token', marketing_tokens_url)
       end

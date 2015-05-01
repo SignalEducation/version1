@@ -8,6 +8,8 @@ describe MarketingCategoriesController, type: :controller do
   # todo: Try to create children for marketing_category_1
   let!(:marketing_category_1) { FactoryGirl.create(:marketing_category) }
   let!(:marketing_category_2) { FactoryGirl.create(:marketing_category) }
+  let!(:direct_token) { FactoryGirl.create(:marketing_token, code: 'direct') } # required by application_controller
+  let!(:seo_token) { FactoryGirl.create(:marketing_token, code: 'seo') } # required by application_controller
   let!(:marketing_token) { FactoryGirl.create(:marketing_token, marketing_category_id: marketing_category_1.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:marketing_category) }
 
