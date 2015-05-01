@@ -103,7 +103,7 @@ tr {
 }
 
 .special-navbar {
-  padding: 0 30px;
+  padding: 0 40px;
   .navbar-logo {
     padding: 0;
     @media (max-width: 780px){
@@ -149,14 +149,6 @@ ul.dropdown-menu li, ul.dropdown-menu li a {
   .warning {
     background-color: #f0ad4e;
   }
-}
-
-.subscription-panel {
-  background-color: #faebd7;
-}
-
-.subscription-panel.active {
-  background-color: lightgreen;
 }
 
 .orange-background {
@@ -279,6 +271,25 @@ nav.navbar.navbar-transparent {
       color: #222222;
     }
   }
+  .free_trial {
+    padding: 11px 15px 10px;
+    margin: 12px 6px 6px 6px;
+    font-weight: 500;
+    background-color: #ef5f5f;
+    color: #f1f6fd;
+    border: none;
+    //box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    &:hover, &:focus {
+      background-color: darken(#ef5f5f, 7);
+      color: #f1f6fd;
+      text-decoration: none;
+    }
+    &:active {
+      background-color: #ef5f5f;
+      color: #f1f6fd;
+    }
+  }
+
 }
 
 .navbar-shrink {
@@ -399,7 +410,6 @@ header {
     margin: 0;
     border-radius: 0;
     //padding-bottom: 5px;
-
     .list-group-item {
       border-radius: 0;
     }
@@ -695,4 +705,114 @@ header {
 
 .user-pagination .pagination {
   margin: 0;
+}
+
+.form-spacing {
+  @media (max-width: 767px) {
+    .form-control {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.sign-up-well {
+  border-radius: 0;
+  background-color: #f5f5f5;
+  margin-top: 30px !important;
+  .sign-up-heading {
+    color: $light-text;
+    background-color: #5cc8cb;
+    border-color: #5cc8cb;
+    //max-width: 400px;
+    border-radius: 28px;
+    //box-shadow: 0 2px 1px darken(#5cc8cb, 15);
+    h1 {
+      //padding: 10px 0;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+  }
+  .form-control {
+    border-radius: 6px;
+    //min-height: 45px;
+    height: 45px;
+    &:focus {
+      border-color: #37ba8e;
+      box-shadow: 0 0 0;
+    }
+  }
+}
+
+.no-content-well {
+  font-size: 20px;
+  border-radius: 0;
+  margin-bottom: 1px;
+  background-color: #2E2F30;
+  color: #f1f6fd;
+  border: 0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  padding: 160px 20px;
+  @media (max-width: 992px) {
+    padding: 80px 2px;
+  }
+}
+
+.subscription-panel {
+  border: 0;
+  color: $light-text;
+  border-radius: 8px;
+  .panel-heading {
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #5cc8cb;
+    p {
+      margin-bottom: 0;
+    }
+  }
+  .panel-body {
+    background-color: #66d9dc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+}
+
+.subscription-panel.active {
+  .panel-heading {
+    background-color: #37ba8e;
+  }
+  .panel-body {
+    background-color: #21ce99;
+  }
+}
+
+.sign-up-btn {
+  @media (max-width: 767px) {
+    max-width: 300px;
+  }
+}
+
+.free-trial-btn {
+  background-color: #ef5f5f;
+  color: #f1f6fd;
+  border: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  &:hover, &:focus {
+    background-color: darken(#ef5f5f, 5);
+    color: #f1f6fd;
+    text-decoration: none;
+  }
+  &:active {
+    background-color: #ef5f5f;
+    color: #f1f6fd;
+  }
+}
+
+.sign-in-panel {
+  background-color: $ls-green;
+  color: #f1f6fd;
+  .content-text {
+    margin-bottom: 0;
+  }
 }
