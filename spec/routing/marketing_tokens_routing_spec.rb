@@ -27,5 +27,12 @@ RSpec.describe MarketingTokensController, type: :routing do
       expect(delete: '/marketing_tokens/1').to route_to('marketing_tokens#destroy', id: '1')
     end
 
+    it 'routes to #preview_csv' do
+      expect(post: '/marketing_tokens/preview_csv').to route_to('marketing_tokens#preview_csv')
+    end
+
+    it 'routes to #import_csv' do
+      expect(post: '/marketing_tokens/import_csv').to route_to('marketing_tokens#import_csv')
+    end
   end
 end
