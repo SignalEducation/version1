@@ -6,7 +6,7 @@
         .form-group
           =f.label :code, t('views.marketing_tokens.form.code'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :code, placeholder: t('views.marketing_tokens.form.code_placeholder'), class: 'form-control', autofocus: true
+            =f.text_field :code, placeholder: t('views.marketing_tokens.form.code_placeholder'), class: 'form-control', disabled: !@marketing_token.new_record?
         .form-group
           =f.label :marketing_category_id, t('views.marketing_tokens.form.marketing_category_id'), class: 'control-label col-sm-4'
           .col-sm-8
