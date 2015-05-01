@@ -55,33 +55,42 @@ describe MarketingToken do
     let!(:system_token) { FactoryGirl.create(:marketing_token, code: MarketingToken::SYSTEM_TOKEN_CODES.first)}
 
     it "should set error message for invalid fields count" do
-      expect(MarketingToken.parse_csv("abcd")
-              .first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
-      expect(MarketingToken.parse_csv("abcd,Fake category").
-              first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
-      expect(MarketingToken.parse_csv("abcd,Fake category,true,1").
-              first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
+      csv_data, has_errors = MarketingToken.parse_csv("abcd")
+      expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
+      expect(has_errors).to eq(true)
+
+      csv_data, has_errors = MarketingToken.parse_csv("abcd,Fake category")
+      expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
+      expect(has_errors).to eq(true)
+
+      csv_data, has_errors = MarketingToken.parse_csv("abcd,Fake category,true,1")
+      expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_field_count'))
+      expect(has_errors).to eq(true)
     end
 
     it "should set error message if system token name was submitted" do
-      expect(MarketingToken.parse_csv("#{MarketingToken::SYSTEM_TOKEN_CODES.first},#{category.name},true")
-              .first[:error_messages]).to include(I18n.t('models.marketing_tokens.cannot_change_system_token'))
+      csv_data, has_errors = MarketingToken.parse_csv("#{MarketingToken::SYSTEM_TOKEN_CODES.first},#{category.name},true")
+      expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.cannot_change_system_token'))
+      expect(has_errors).to eq(true)
     end
 
     it "should set error message if marketing category with given name does not exist" do
-      expect(MarketingToken.parse_csv("aykh001,Fake Category,true")
-              .first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_marketing_category_name'))
+      csv_data, has_errors = MarketingToken.parse_csv("aykh001,Fake Category,true")
+      expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_marketing_category_name'))
+      expect(has_errors).to eq(true)
     end
 
     it "should set error message if 'is_hard' flag value is not valid" do
-      expect(MarketingToken.parse_csv("aykh001,#{category.name},1")
-              .first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_flag_value'))
+      csv_data, has_errors = MarketingToken.parse_csv("aykh001,#{category.name},1")
+      expect(csv_data.first[:error_messages]).to include(I18n.t('models.marketing_tokens.invalid_flag_value'))
+      expect(has_errors).to eq(true)
     end
 
     it "should return array with requested number of tokens data and no error messages" do
-      csv_data = MarketingToken.parse_csv("aykh001,#{category.name},true\n0002,#{category.name},false")
+      csv_data, has_errors = MarketingToken.parse_csv("aykh001,#{category.name},true\n0002,#{category.name},false")
       expect(csv_data.length).to eq(2)
       csv_data.each { |csd| expect(csd[:error_messages]).to be_empty }
+      expect(has_errors).to eq(false)
     end
   end
 
