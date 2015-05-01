@@ -18,10 +18,10 @@
                     %h3.no-top-gap=t('views.student_sign_ups.new.list.two')
                     %h3.no-top-gap=t('views.student_sign_ups.new.list.three')
                   -else
-                    =@custom_headings[:sub_head]
+                    %h3.no-top-gap=@custom_headings[:sub_head]
             %hr/
 
-            =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.student_sign_ups.form.error_panel_caption')}
+            .text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.student_sign_ups.form.error_panel_caption')}
 
             %h2.text-center{style: 'margin-bottom: 18px'}
               =t('views.student_sign_ups.new.h2.subscription')
@@ -69,11 +69,11 @@
             .row
               .col-sm-6.col-sm-offset-3.text-center
                 .col-sm-6
-                  =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;'), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
+                  =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.student_sign_ups.form.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
                 .col-sm-6
-                  %p
+                  %p{style: 'padding-top: 4px;'}
                     .glyphicon.glyphicon-lock
-                    ='Secure server'
+                    =t('views.student_sign_ups.form.secure_server')
 
 
       .row

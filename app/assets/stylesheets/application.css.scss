@@ -272,13 +272,13 @@ nav.navbar.navbar-transparent {
     }
   }
   .free_trial {
-    padding: 10px 15px;
-    margin: 11px 6px 6px 6px;
-
+    padding: 11px 15px 10px;
+    margin: 12px 6px 6px 6px;
+    font-weight: 500;
     background-color: #ef5f5f;
     color: #f1f6fd;
     border: none;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    //box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     &:hover, &:focus {
       background-color: darken(#ef5f5f, 7);
       color: #f1f6fd;

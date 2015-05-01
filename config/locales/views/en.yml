@@ -770,7 +770,7 @@ en:
         credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
         expiry_month_prompt: "Exp Mth"
         expiry_year_prompt: "Exp Year"
-        you_wont_be_charged: Your card won't be charged for until the end of your trial period. If you cancel before then, your card won't be charged.
+        you_wont_be_charged: Your card won't be charged until the end of your trial period. If you cancel before then, your card won't be charged.
         payment_frequency_in_months:
           a1: Monthly
           a3: Quarterly
@@ -778,6 +778,8 @@ en:
           a12: Yearly
         submit: Sign Up Now
         error_panel_caption: "prevented your Sign-Up from being completed:"
+        secure_server: "Secure server"
+        stripe_com_logo: "Stripe.com logo"
 
       new:
         h1: Start Your Free Trial
