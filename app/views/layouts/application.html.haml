@@ -51,7 +51,7 @@
     =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
-    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'courses'
       =render partial: 'layouts/special_navbar'
@@ -67,6 +67,7 @@
         =yield
       =render partial: 'layouts/footer'
     =render partial: 'layouts/misc_javascript'
+    =render partial: 'layouts/intercom'
     <!-- Mathjax -->
     -if @mathjax_required
       %script{type: 'text/x-mathjax-config'}

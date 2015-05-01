@@ -93,7 +93,7 @@ describe User do
   it { should validate_uniqueness_of(:email) }
 
   it { should validate_presence_of(:first_name) }
-  it { should ensure_length_of(:first_name).is_at_least(2).is_at_most(20) }
+  it { should validate_length_of(:first_name).is_at_least(2).is_at_most(20) }
 
   it { should validate_presence_of(:last_name) }
 
@@ -148,6 +148,7 @@ describe User do
 
   # instance methods
   it { should respond_to(:admin?) }
+  it { should respond_to(:assign_anonymous_logs_to_user) }
   it { should respond_to(:change_the_password) }
   it { should respond_to(:content_manager?) }
   it { should respond_to(:corporate_customer?) }

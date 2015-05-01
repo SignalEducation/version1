@@ -52,14 +52,15 @@ describe Subscription do
   it { should validate_presence_of(:subscription_plan_id) }
   it { should validate_numericality_of(:subscription_plan_id) }
 
-  it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES) }
+  it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES).on(:update) }
 
-  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
+  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE]).on(:update) }
 
   # callbacks
-  it { should callback(:create_on_stripe_platform).before(:validation).on(:create) }
+  it { should callback(:create_on_stripe_platform).after(:create) }
   it { should callback(:create_a_subscription_transaction).after(:create) }
-  it { should callback(:update_on_stripe_platform).before(:validation).on(:update) }
+  it { should callback(:update_on_stripe_platform).after(:update) }
+  it { should callback(:send_update_event_to_mixpanel).after(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

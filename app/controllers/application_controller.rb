@@ -110,26 +110,28 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_is_of_type
 
-  def paywall_checkpoint
+  def paywall_checkpoint(cme_position, is_a_jumbo_quiz)
+    number_of_free_cmes_allowed = -1
     allowed     = {course_content: {view_all: true, reason: nil},
                    forum: {read: true, write: true},
                    blog: {comment: true} }
     not_allowed = {course_content: {view_all: false, reason: ''},
                    forum: {read: true, write: false},
                    blog: {comment: false} }
-    if current_user.nil?
-      @paywall = not_allowed
-      @paywall[:course_content][:reason] = 'not_logged_in'
+    if current_user.nil? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
+      result = not_allowed
+      result[:course_content][:reason] = 'not_logged_in'
     elsif !current_user.user_group.subscription_required_to_see_content
-      @paywall = allowed
+      result = allowed
     elsif %w(trialing active canceled-pending).include?(current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
-      @paywall = allowed
+      result = allowed
     else
-      @paywall = not_allowed
-      @paywall[:course_content][:reason] = 'account_' + (current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
+      result = not_allowed
+      result[:course_content][:reason] = 'account_' + (current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
     end
-    @paywall
+    result
   end
+  helper_method :paywall_checkpoint
 
   #### Locale
 

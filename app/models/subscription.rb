@@ -31,7 +31,7 @@ class Subscription < ActiveRecord::Base
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
 
   # relationships
-  belongs_to :user
+  belongs_to :user, inverse_of: :subscriptions
   belongs_to :corporate_customer
   has_many :invoices
   has_many :invoice_line_items
@@ -46,14 +46,14 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subscription_plan_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :next_renewal_date, presence: true
-  validates :current_status, inclusion: {in: STATUSES}
-  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}
+  validates :next_renewal_date, presence: true, on: :update
+  validates :current_status, inclusion: {in: STATUSES}, on: :update
+  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, on: :update
 
   # callbacks
-  before_validation :create_on_stripe_platform, on: :create
-  before_validation :update_on_stripe_platform, on: :update
+  after_create :create_on_stripe_platform
   after_create :create_a_subscription_transaction
+  after_update :update_on_stripe_platform
   after_update :send_update_event_to_mixpanel
 
   # scopes
@@ -327,12 +327,12 @@ class Subscription < ActiveRecord::Base
     end
 
     if stripe_customer && stripe_subscription
-      self.stripe_guid = stripe_subscription.id
-      self.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-      self.livemode = stripe_subscription[:plan][:livemode]
-      self.current_status = stripe_subscription.status
-      self.stripe_customer_id ||= stripe_customer.id
-      self.stripe_customer_data = stripe_customer.to_hash.deep_dup
+      self.update_columns(stripe_guid: stripe_subscription.id,
+            next_renewal_date: Time.at(stripe_subscription.current_period_end),
+            livemode: stripe_subscription[:plan][:livemode],
+            current_status: stripe_subscription.status,
+            stripe_customer_id: stripe_customer.id,
+            stripe_customer_data: stripe_customer.to_hash.deep_dup)
 
       if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
         errors.add(:base, I18n.t('models.general.live_mode_error'))
@@ -346,7 +346,8 @@ class Subscription < ActiveRecord::Base
 
   rescue => e
     errors.add(:credit_card, e.message)
-    return false
+    Rails.logger.debug 'DEBUG: ++++++++ about to raise AR::Rollback'
+    raise ActiveRecord::Rollback
   end
 
   def create_a_subscription_transaction
