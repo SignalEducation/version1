@@ -34,7 +34,7 @@
     =render partial: 'layouts/mixpanel_head_tag'
 
   %body.no-top-margin
-    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     =body_sanitizer(@delivered_page.body_content)
     -if @delivered_page.show_standard_footer
