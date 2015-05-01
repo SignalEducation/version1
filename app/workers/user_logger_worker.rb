@@ -13,8 +13,6 @@ class UserLoggerWorker
               latest_session_landing_page, post_sign_up_redirect_url,
               marketing_token_id, marketing_token_cookie_issued_at)
     the_user = User.find_by_id(user_id)
-    token_id = marketing_token_id
-    cookie_issued_at = marketing_token_cookie_issued_at
     log = UserActivityLog.new(
             user_id: the_user.try(:id),
             session_guid: session_guid,
@@ -30,8 +28,8 @@ class UserLoggerWorker
             first_session_landing_page: first_session_landing_page,
             latest_session_landing_page: latest_session_landing_page,
             post_sign_up_redirect_url: post_sign_up_redirect_url,
-            marketing_token_id: token_id,
-            marketing_token_cookie_issued_at: cookie_issued_at
+            marketing_token_id: marketing_token_id,
+            marketing_token_cookie_issued_at: marketing_token_cookie_issued_at
     )
     if log.save
       true
