@@ -6,8 +6,9 @@ describe MarketingTokensController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for marketing_token_1
-  let!(:marketing_token_1) { FactoryGirl.create(:marketing_token) }
-  let!(:marketing_token_2) { FactoryGirl.create(:marketing_token) }
+  let!(:marketing_category) { FactoryGirl.create(:marketing_category, name: "Social Networks") }
+  let!(:marketing_token_1) { FactoryGirl.create(:marketing_token, marketing_category_id: marketing_category.id) }
+  let!(:marketing_token_2) { FactoryGirl.create(:marketing_token, marketing_category_id: marketing_category.id) }
   let!(:direct_token) { FactoryGirl.create(:marketing_token, code: 'direct') } # required by application_controller
   let!(:seo_token) { FactoryGirl.create(:marketing_token, code: 'seo') } # required by application_controller
   let!(:valid_params) { FactoryGirl.attributes_for(:marketing_token) }
@@ -64,6 +65,26 @@ describe MarketingTokensController, type: :controller do
       end
     end
 
+    describe "POST 'preview_csv'" do
+      it 'should redirect to sign_in' do
+        post :preview_csv, {}
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should redirect to sign_in' do
+        post :import_csv, {}
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should redirect to sign_in' do
+        get :preview_csv
+        expect_bounce_as_not_signed_in
+      end
+    end
   end
 
   context 'Logged in as a individual_student_user: ' do
@@ -118,6 +139,27 @@ describe MarketingTokensController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
         delete :destroy, id: marketing_token_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
         expect_bounce_as_not_allowed
       end
     end
@@ -180,6 +222,27 @@ describe MarketingTokensController, type: :controller do
       end
     end
 
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
+        expect_bounce_as_not_allowed
+      end
+    end
+
   end
 
   context 'Logged in as a corporate_student_user: ' do
@@ -234,6 +297,27 @@ describe MarketingTokensController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
         delete :destroy, id: marketing_token_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
         expect_bounce_as_not_allowed
       end
     end
@@ -296,6 +380,27 @@ describe MarketingTokensController, type: :controller do
       end
     end
 
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
+        expect_bounce_as_not_allowed
+      end
+    end
+
   end
 
   context 'Logged in as a blogger_user: ' do
@@ -350,6 +455,27 @@ describe MarketingTokensController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
         delete :destroy, id: marketing_token_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
         expect_bounce_as_not_allowed
       end
     end
@@ -412,6 +538,27 @@ describe MarketingTokensController, type: :controller do
       end
     end
 
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
+        expect_bounce_as_not_allowed
+      end
+    end
+
   end
 
   context 'Logged in as a content_manager_user: ' do
@@ -466,6 +613,27 @@ describe MarketingTokensController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
         delete :destroy, id: marketing_token_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'preview_csv'" do
+      it 'should bounce as not allowed' do
+        post :preview_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      it 'should bounce as not allowed' do
+        post :import_csv, {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should bounce as not allowed' do
+        get :preview_csv
         expect_bounce_as_not_allowed
       end
     end
@@ -581,6 +749,49 @@ describe MarketingTokensController, type: :controller do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: marketing_token_2.id
         expect_delete_success_with_model('marketing_token', marketing_tokens_url)
+      end
+    end
+
+    describe "POST 'preview_csv'" do
+      before(:each) do
+        @csv_file = Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/files/marketing_tokens.csv", 'text/csv')
+      end
+
+      it 'should redirect to index page if file is not uploaded' do
+        post :preview_csv
+        expect(response).to redirect_to(marketing_tokens_url)
+      end
+
+      it 'should render preview_csv if file is uploaded' do
+        post :preview_csv, upload: @csv_file
+        expect(response.status).to eq(200)
+        expect(assigns(:csv_data)).to be_instance_of(Array)
+        expect(assigns(:csv_data).length).to eq(3)
+        expect(response).to render_template(:preview_csv)
+      end
+    end
+
+    describe "POST 'import_csv'" do
+      let!(:marketing_category) { FactoryGirl.create(:marketing_category, name: "Social Networks") }
+
+      it 'should redirect to index page if data are missing' do
+        post :import_csv, {}
+        expect(response).to redirect_to(marketing_tokens_url)
+      end
+
+      it 'should respond OK to valid CSV data' do
+        post :import_csv, {csvdata: {
+                             "0"=>{"code"=>"hard_token_001", "category"=>"Social Networks", "flag"=>"false"},
+                             "1"=>{"code"=>"soft_token_001", "category"=>"Social Networks", "flag"=>"false"}
+                           }}
+        expect_import_csv_success_with_model("marketing_tokens", 2)
+      end
+    end
+
+    describe "GET 'download_csv'" do
+      it 'should respond OK' do
+        get :download_csv
+        expect(response.status).to eq(200)
       end
     end
 

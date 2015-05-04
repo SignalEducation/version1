@@ -53,11 +53,19 @@ class MarketingTokensController < ApplicationController
   end
 
   def preview_csv
-    @csv_data, @has_errors = MarketingToken.parse_csv(params[:upload].read) if params[:upload] && params[:upload].respond_to?(:read)
+    if params[:upload] && params[:upload].respond_to?(:read)
+      @csv_data, @has_errors = MarketingToken.parse_csv(params[:upload].read)
+    else
+      redirect_to marketing_tokens_url
+    end
   end
 
   def import_csv
-    @tokens = MarketingToken.bulk_create(params[:csvdata])
+    if params[:csvdata]
+      @marketing_tokens = MarketingToken.bulk_create(params[:csvdata])
+    else
+      redirect_to marketing_tokens_url
+    end
   end
 
   def download_csv
