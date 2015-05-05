@@ -33,7 +33,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
-gem 'stripe', git: 'https://github.com/stripe/stripe-ruby'
+gem 'stripe', '=1.16.0' #, git: 'https://github.com/stripe/stripe-ruby'
 # support for Stripe.com payment processing
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
