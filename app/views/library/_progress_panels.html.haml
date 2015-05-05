@@ -1,33 +1,45 @@
 .row
   %hr/
-  -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
+  -if @hierarchy_item.class == ExamLevel
     .col-sm-10.col-sm-offset-1
-      .panel.panel-list
-        -#if child.class == CourseModule
-          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs panel-text' do
-            .col-xs-10.a-tag
-              =child.name
-            .col-xs-2.progress-circle.pull-right
-              %p.text-center
-                ='15%'
-          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 panel-text visible-xs' do
+      .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
+        -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child, counter|
+          .panel.library-bar
+            .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
+              %h3{ aria: {expand: true, controls: "collapse_#{counter}"} }
+                =child.name
+            .panel-collapse.collapse{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
+              -if child.class == ExamSection
+                .list-group
+                  -child.children.all_in_order.all_active.each do |grandchild|
+                    %h4=grandchild.name
+                    -grandchild.children.all_in_order.all_active.each do |greatgrandchild|
+                      =link_to course_special_link(greatgrandchild), class: 'list-group-item' do
+                        %p=greatgrandchild.name
+              -else
+                .list-group
+                  -child.children.all_in_order.all_active.each do |grandchild|
+                    =link_to course_special_link(grandchild), class: 'list-group-item' do
+                      %p=grandchild.name
+  -else
+    -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
+      .col-sm-10.col-sm-offset-1
+        .panel.panel-list
+          =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
             =child.name
-        -#else
-        =link_to library_special_link(child), class: 'panel-body panel-title col-sm-12 hidden-xs' do
-          =child.name
-          .pull-right
-            -if child.class == CourseModule
-              -#.badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
-              -if child.active_children.all_videos.count > 0
-                =pluralize(child.active_children.all_videos.count, t('views.library.show.video'))
+            .pull-right
+              -if child.class == CourseModule
+                -#.badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+                -if child.active_children.all_videos.count > 0
+                  =pluralize(child.active_children.all_videos.count, t('views.library.show.video'))
 
-              -if child.active_children.all_videos.count > 0 && child.active_children.all_quizzes.count > 0
-                \|
-              -if child.active_children.all_quizzes.count > 0
-                =pluralize(child.active_children.all_quizzes.count, t('views.library.show.quiz'))
-            -else
-              .glyphicon.glyphicon-menu-right
+                -if child.active_children.all_videos.count > 0 && child.active_children.all_quizzes.count > 0
+                  \|
+                -if child.active_children.all_quizzes.count > 0
+                  =pluralize(child.active_children.all_quizzes.count, t('views.library.show.quiz'))
+              -else
+                .glyphicon.glyphicon-menu-right
 
-        =link_to child.name, library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs text-center'
-        -#if child.class == CourseModule
-          .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
+          =link_to child.name, library_special_link(child), class: 'panel-body panel-title col-sm-12 visible-xs text-center'
+          -#if child.class == CourseModule
+            .badge=child.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid).round(0).to_s + '%'
