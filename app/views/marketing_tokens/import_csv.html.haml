@@ -13,7 +13,7 @@
           %th=t('views.marketing_tokens.form.is_seo')
           %th=t('views.marketing_tokens.form.is_direct')
       %tbody
-        -@tokens.each do |token|
+        -@marketing_tokens.each do |token|
           %tr{id: token.id}
             %td=token.code
             %td=token.marketing_category.name
