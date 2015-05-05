@@ -8,8 +8,6 @@ describe MarketingCategoriesController, type: :controller do
   # todo: Try to create children for marketing_category_1
   let!(:marketing_category_1) { FactoryGirl.create(:marketing_category) }
   let!(:marketing_category_2) { FactoryGirl.create(:marketing_category) }
-  let!(:direct_token) { FactoryGirl.create(:marketing_token, code: 'direct') } # required by application_controller
-  let!(:seo_token) { FactoryGirl.create(:marketing_token, code: 'seo') } # required by application_controller
   let!(:marketing_token) { FactoryGirl.create(:marketing_token, marketing_category_id: marketing_category_1.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:marketing_category) }
 
@@ -483,7 +481,7 @@ describe MarketingCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('marketing_categories', 2)
+        expect_index_success_with_model('marketing_categories', 3)
       end
     end
 
@@ -520,7 +518,7 @@ describe MarketingCategoriesController, type: :controller do
       end
 
       it 'should redirect to index page for non-editable category' do
-        system_category = FactoryGirl.create(:marketing_category, name: 'SEO and Direct')
+        system_category = MarketingCategory.where(name: 'SEO and Direct').first
         get :edit, id: system_category.id
         expect(response).to redirect_to(marketing_categories_url)
       end
@@ -558,7 +556,7 @@ describe MarketingCategoriesController, type: :controller do
       end
 
       it 'should not update non-editable category' do
-        system_category = FactoryGirl.create(:marketing_category, name: 'SEO and Direct')
+        system_category = MarketingCategory.where(name: 'SEO and Direct').first
         put :update, id: system_category.id, marketing_category: valid_params
         expect(response).to redirect_to(marketing_categories_url)
         expect(flash[:error]).to eq(I18n.t('controllers.marketing_categories.update.flash.error'))

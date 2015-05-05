@@ -9,8 +9,6 @@ describe MarketingTokensController, type: :controller do
   let!(:marketing_category) { FactoryGirl.create(:marketing_category, name: "Social Networks") }
   let!(:marketing_token_1) { FactoryGirl.create(:marketing_token, marketing_category_id: marketing_category.id) }
   let!(:marketing_token_2) { FactoryGirl.create(:marketing_token, marketing_category_id: marketing_category.id) }
-  let!(:direct_token) { FactoryGirl.create(:marketing_token, code: 'direct') } # required by application_controller
-  let!(:seo_token) { FactoryGirl.create(:marketing_token, code: 'seo') } # required by application_controller
   let!(:valid_params) { FactoryGirl.attributes_for(:marketing_token) }
 
   context 'Not logged in: ' do
@@ -687,9 +685,11 @@ describe MarketingTokensController, type: :controller do
       end
 
       it 'should redirect to index page for non-editable token' do
+        seo_token = MarketingToken.where(code: 'seo').first
         get :edit, id: seo_token.id
         expect(response).to redirect_to(marketing_tokens_url)
 
+        direct_token = MarketingToken.where(code: 'direct').first
         get :edit, id: direct_token.id
         expect(response).to redirect_to(marketing_tokens_url)
       end
@@ -727,10 +727,12 @@ describe MarketingTokensController, type: :controller do
       end
 
       it 'should not update non-editable token' do
+        seo_token = MarketingToken.where(code: 'seo').first
         put :update, id: seo_token.id, marketing_token: valid_params
         expect(response).to redirect_to(marketing_tokens_url)
         expect(flash[:error]).to eq(I18n.t('controllers.marketing_tokens.update.flash.error'))
 
+        direct_token = MarketingToken.where(code: 'direct').first
         put :update, id: direct_token.id, marketing_token: valid_params
         expect(response).to redirect_to(marketing_tokens_url)
         expect(flash[:error]).to eq(I18n.t('controllers.marketing_tokens.update.flash.error'))
@@ -739,9 +741,11 @@ describe MarketingTokensController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR for predefined tokens' do
+        seo_token = MarketingToken.where(code: 'seo').first
         delete :destroy, id: seo_token.id
         expect_delete_error_with_model('marketing_token', marketing_tokens_url)
 
+        direct_token = MarketingToken.where(code: 'direct').first
         delete :destroy, id: direct_token.id
         expect_delete_error_with_model('marketing_token', marketing_tokens_url)
       end
