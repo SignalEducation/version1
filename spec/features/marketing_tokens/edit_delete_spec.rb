@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
-describe 'Delete/Edit marketing tokens', type: :feature do
+describe 'Create/Delete/Edit marketing tokens', type: :feature do
 
   include_context 'users_and_groups_setup'
 
@@ -9,6 +9,18 @@ describe 'Delete/Edit marketing tokens', type: :feature do
 
   before(:each) do
     activate_authlogic
+  end
+
+  scenario "create token as admin", js: true do
+    sign_in_via_sign_in_page(admin_user)
+    visit marketing_tokens_path
+
+    click_link(I18n.t('views.general.new'))
+    fill_in I18n.t('views.marketing_tokens.form.code'), with: "abc fake token"
+    page.find("option", text: "SEO and Direct").click
+
+    click_button(I18n.t("views.general.save"))
+    expect(page).to have_content("abc fake token")
   end
 
   scenario "edit token as admin" do
