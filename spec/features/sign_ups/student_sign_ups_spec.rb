@@ -12,7 +12,7 @@ describe 'The student sign-up process', type: :feature do
   before(:each) do
     activate_authlogic
     visit root_path
-    click_link I18n.t('views.general.sign_up')
+    click_link I18n.t('views.general.start_free_trial')
     expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
   end
 

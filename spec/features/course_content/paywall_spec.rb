@@ -18,9 +18,9 @@ describe 'Course content Vs Paywall', type: :feature do
       click_link('ACA1')
       click_link('Start')
       expect(page).to have_content(course_module_1.name)
-      expect(page).to have_css('.quiz-well')
-      click_link(course_module_element_1_3.name)
-      expect(page).to have_content I18n.t('views.courses.content_denied.not_logged_in.h2')
+      expect(page).to have_css('.no-content-well')
+      # click_link(course_module_element_1_3.name)
+      expect(page).to have_content I18n.t('views.courses.content_denied.panel.need_to_sign_in')
     end
   end
 
@@ -28,7 +28,7 @@ describe 'Course content Vs Paywall', type: :feature do
     before(:each) do
       activate_authlogic
       visit root_path
-      click_link I18n.t('views.general.sign_up')
+      click_link I18n.t('views.general.start_free_trial')
       expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
       student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
       visit library_path

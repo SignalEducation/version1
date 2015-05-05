@@ -63,8 +63,7 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes,
-                  :login_count, :failed_login_count, :last_request_at, :current_login_at, :last_login_at, :current_login_ip, :last_login_ip, :account_activated_at, :account_activation_code, :address, :guid # todo see ticket 277
+                  :subscriptions_attributes
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -89,7 +88,7 @@ class User < ActiveRecord::Base
   has_many :quiz_attempts
   has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
   has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
-  has_many :subscriptions
+  has_many :subscriptions, -> { order(:id) }, inverse_of: :user
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
@@ -111,6 +110,7 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6}, on: :create
   validates_confirmation_of :password, on: :create
+  validates_confirmation_of :password, if: '!password.blank?'
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :user_group_id, presence: true,
@@ -221,6 +221,13 @@ class User < ActiveRecord::Base
     self.user_group.try(:site_admin)
   end
 
+  def assign_anonymous_logs_to_user(session_guid)
+    model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack]
+    model_list.each do |the_model|
+      the_model.assign_user_to_session_guid(self.id, session_guid)
+    end
+  end
+
   def change_the_password(options)
     # options = {current_password: '123123123', password: 'new123',
     #            password_confirmation: 'new123'}
@@ -297,8 +304,7 @@ class User < ActiveRecord::Base
   protected
 
   def add_guid
-    Rails.logger.debug 'DEBUG: User#add_guid - START'
-    self.guid = ApplicationController.generate_random_code(10)
+    self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
