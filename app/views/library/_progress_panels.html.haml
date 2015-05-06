@@ -1,26 +1,46 @@
 .row
   %hr/
   -if @hierarchy_item.class == ExamLevel
-    .col-sm-10.col-sm-offset-1
+    .col-sm-8
       .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
         -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child, counter|
           .panel.library-bar
             .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
-              %h3{ aria: {expand: true, controls: "collapse_#{counter}"} }
-                =child.name
+              .row{ aria: {expand: true, controls: "collapse_#{counter}"} }
+                .col-sm-8
+                  =child.name
+                .col-sm-4
+                  .pull-right=seconds_to_time(child.estimated_time_in_seconds) if !child.class == ExamSection
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
               -if child.class == ExamSection
                 .list-group
                   -child.children.all_in_order.all_active.each do |grandchild|
-                    %h4=grandchild.name
+                    .list-title
+                      .row
+                        .col-sm-8
+                          %p=grandchild.name
+                        .col-sm-4
+                          %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
                     -grandchild.children.all_in_order.all_active.each do |greatgrandchild|
                       =link_to course_special_link(greatgrandchild), class: 'list-group-item' do
-                        %p=greatgrandchild.name
+                        .list-item
+                          .row
+                            .col-sm-8
+                              %p=greatgrandchild.name
+                            .col-sm-4
+                              %p.pull-right=seconds_to_time(greatgrandchild.estimated_time_in_seconds)
               -else
-                .list-group
-                  -child.children.all_in_order.all_active.each do |grandchild|
-                    =link_to course_special_link(grandchild), class: 'list-group-item' do
-                      %p=grandchild.name
+                -child.children.all_in_order.all_active.each do |grandchild|
+                  =link_to course_special_link(grandchild), class: 'list-group-item' do
+                    .row
+                      .col-sm-8
+                        %p=grandchild.name
+                      .col-sm-4
+                        %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
+    .col-sm-4
+      %p='Duration'
+
+
   -else
     -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child|
       .col-sm-10.col-sm-offset-1
