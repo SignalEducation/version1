@@ -2,6 +2,7 @@
   %hr/
   -if @hierarchy_item.class == ExamLevel
     .col-sm-8
+      %p.description-title=t('views.general.table_of_contents')
       .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
         -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child, counter|
           .panel.library-bar
@@ -38,7 +39,10 @@
                       .col-sm-4
                         %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
     .col-sm-4
-      %p='Duration'
+      %p.description-title=t('views.exam_levels.form.description')
+      %p=@hierarchy_item.description
+      %hr/
+      %p=@hierarchy_item.updated_at
 
 
   -else

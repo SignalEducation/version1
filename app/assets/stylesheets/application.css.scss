@@ -817,9 +817,16 @@ header {
   }
 }
 
+.panel-group {
+  margin-top: 14px;
+}
+
 .library-bar {
   background-color: #E2E2E2;
   border-radius: 0 !important;
+  &:hover, &:focus {
+    background-color: darken(#E2E2E2, 5);
+  }
   .list-title {
     margin: 10px 15px 0 15px;
   }
@@ -851,4 +858,9 @@ header {
       }
     }
   }
+}
+
+.description-title {
+  font-size: 18px;
+  text-decoration: underline;
 }
