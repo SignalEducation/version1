@@ -39,6 +39,9 @@
         %td.col-sm-4=t('views.exam_levels.form.name_url')
         %td.col-sm-8=@exam_level.name_url
       %tr
+        %td.col-sm-4=t('views.exam_levels.form.description')
+        %td.col-sm-8=@exam_level.description
+      %tr
         %td.col-sm-4=t('views.exam_levels.form.default_number_of_possible_exam_answers')
         %td.col-sm-8=@exam_level.default_number_of_possible_exam_answers
       %tr
@@ -50,6 +53,9 @@
       %tr
         %td.col-sm-4=t('views.exam_levels.form.best_possible_first_attempt_score')
         %td.col-sm-8=@exam_level.best_possible_first_attempt_score
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.duration')
+        %td.col-sm-8=@exam_level.duration
       %tr
         %td.col-sm-4=t('views.exam_levels.index.exam_sections')
         %td.col-sm-8=tick_or_cross @exam_level.enable_exam_sections

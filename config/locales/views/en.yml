@@ -405,6 +405,9 @@ en:
         name_placeholder: First exam level
         name_url: Name URL
         name_url_placeholder: first-exam-level
+        description: Description
+        description_placeholder: Description for this Exam Level
+        duration: Duration
         is_cpd: 'is CPD?'
         sorting_order: Sorting order
         sorting_order_placeholder: 100

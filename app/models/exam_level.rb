@@ -29,7 +29,7 @@ class ExamLevel < ActiveRecord::Base
   attr_accessible :qualification_id, :name, :name_url, :is_cpd,
                   :sorting_order, :active,
                   :default_number_of_possible_exam_answers,
-                  :enable_exam_sections
+                  :enable_exam_sections, :description
 
   # Constants
 
@@ -61,6 +61,7 @@ class ExamLevel < ActiveRecord::Base
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
   before_save :recalculate_cme_count
+  before_save :recalculate_duration
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -125,6 +126,14 @@ class ExamLevel < ActiveRecord::Base
 
   def recalculate_cme_count
     self.cme_count = self.active_children.sum(:cme_count)
+  end
+
+  def recalculate_duration
+    if self.enable_exam_sections
+      self.duration = self.active_children.sum(:duration)
+    else
+      self.duration = self.active_children.sum(:estimated_time_in_seconds)
+    end
   end
 
 end
