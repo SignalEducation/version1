@@ -17,6 +17,8 @@
 #  cme_count                               :integer          default(0)
 #  seo_description                         :string(255)
 #  seo_no_index                            :boolean          default(FALSE)
+#  description                             :text
+#  duration                                :integer
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -51,6 +53,7 @@ class ExamLevel < ActiveRecord::Base
   validates :sorting_order, presence: true
   validates :default_number_of_possible_exam_answers, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :description, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
