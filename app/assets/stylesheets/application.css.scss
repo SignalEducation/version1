@@ -816,3 +816,17 @@ header {
     margin-bottom: 0;
   }
 }
+
+#re-subscribe-form, #upgrade-subscription-form {
+  .subscription-panel {
+    cursor: pointer;
+    margin-right: 2px;
+    width: 154px;
+    border-radius: 0;
+    background-color: #66d9dc;
+    color: $light-text;
+    &.active {
+      background-color: $ls-green;
+    }
+  }
+}
