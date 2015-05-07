@@ -18,17 +18,17 @@ RSpec.describe OperationalMailer, :type => :mailer do
   end
 
   it 'activate account' do
-    OperationalMailer.activate_account(inactive_individual_student_user).deliver
+    OperationalMailer.activate_account(inactive_individual_student_user).deliver_now
     expect_delivery_to_from_and_subject_success(inactive_individual_student_user.email, 'operational','activate_account')
   end
 
   it 'your password has changed' do
-    OperationalMailer.your_password_has_changed(individual_student_user).deliver
+    OperationalMailer.your_password_has_changed(individual_student_user).deliver_now
     expect_delivery_to_from_and_subject_success(individual_student_user.email, 'operational','your_password_has_changed')
   end
 
   it 'reset your password' do
-    OperationalMailer.reset_your_password(reset_user).deliver
+    OperationalMailer.reset_your_password(reset_user).deliver_now
     expect_delivery_to_from_and_subject_success(reset_user.email, 'operational','reset_your_password')
   end
 

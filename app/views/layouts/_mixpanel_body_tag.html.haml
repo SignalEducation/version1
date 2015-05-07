@@ -33,7 +33,7 @@
     mixpanel_link(".navbar-footer a", "footer link clicked");
 
     // Page Links
-    $("a:not(#navbar a, .navbar-footer a, .call-to-action)").addClass('mixpanel-page-link');
+    $("a:not(#navbar a, .navbar-footer a, .call-to-action, a[data-method='delete'], a[data-method='put'], a[data-method='post'])").addClass('mixpanel-page-link');
     mixpanel_link(".mixpanel-page-link", "page link clicked");
 
     //////// SPECIAL EVENTS

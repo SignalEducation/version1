@@ -62,7 +62,7 @@ def student_sign_up_as(user_first_name, user_second_name, user_email, card_type,
   click_button I18n.t('views.student_sign_ups.form.submit')
   sleep 1
   if expect_sign_up
-    sleep 1
+    sleep 2
     expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
   else
     expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
@@ -105,7 +105,7 @@ def enter_user_details(first_name, last_name, email=nil, country)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  select country.name, from: 'user_country_id'
+  page.execute_script("$('#user_country_id').val(#{country.id}); clearPlans(); showPlans(); return false;")
   temp_password = ApplicationController.generate_random_code(10)
   fill_in('user_password', with: temp_password)
   fill_in('user_password_confirmation', with: temp_password)

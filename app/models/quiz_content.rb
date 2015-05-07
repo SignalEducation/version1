@@ -17,11 +17,13 @@
 #  image_updated_at   :datetime
 #  quiz_solution_id   :integer
 #  flash_card_id      :integer
+#  destroyed_at       :datetime
 #
 
 class QuizContent < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
@@ -59,7 +61,7 @@ class QuizContent < ActiveRecord::Base
   before_validation :check_data_consistency
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :quiz_question_id) }
+  scope :all_in_order, -> { order(:sorting_order, :quiz_question_id).where(destroyed_at: nil) }
   scope :all_images, -> { where(contains_image: true) }
   scope :all_mathjaxes, -> { where(contains_mathjax: true) }
 

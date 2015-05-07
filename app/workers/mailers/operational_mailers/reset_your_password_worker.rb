@@ -6,7 +6,7 @@ class Mailers::OperationalMailers::ResetYourPasswordWorker
   def perform(user_id)
     @user = User.find_by_id(user_id)
     if @user
-      OperationalMailer.reset_your_password(@user).deliver
+      OperationalMailer.reset_your_password(@user).deliver_now
     else
       Rails.logger.error "Mailers::OperationalMailers::ResetYourPasswordWorker could not find user #{user_id}."
     end

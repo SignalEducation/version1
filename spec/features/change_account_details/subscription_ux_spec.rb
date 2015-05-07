@@ -80,7 +80,7 @@ describe 'Subscription UX:', type: :feature do
   scenario 'student_user can un-cancel a canceled-pending subscription', js: :true do
     # sign up as a student
     visit root_path
-    click_link I18n.t('views.general.sign_up')
+    click_link I18n.t('views.general.start_free_trial')
     expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
     student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
 
@@ -111,7 +111,7 @@ describe 'Subscription UX:', type: :feature do
   scenario 'student_user can view invoices', js: true do
     # sign up as a student
     visit root_path
-    click_link I18n.t('views.general.sign_up')
+    click_link I18n.t('views.general.start_free_trial')
     expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
     student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
 
@@ -141,7 +141,7 @@ describe 'Subscription UX:', type: :feature do
   scenario 'user can update card details', js: true do
     # sign up as a student
     visit root_path
-    click_link I18n.t('views.general.sign_up')
+    click_link I18n.t('views.general.start_free_trial')
     expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
     student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
 

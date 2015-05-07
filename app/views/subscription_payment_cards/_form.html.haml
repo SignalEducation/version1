@@ -1,5 +1,5 @@
 %p.payment-errors
-.form-group
+.form-group.form-spacing
   .col-sm-4.col-sm-offset-1
     =text_field_tag :card_number, nil, placeholder: t('views.student_sign_ups.form.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
   .col-sm-2

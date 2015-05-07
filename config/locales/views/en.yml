@@ -46,6 +46,7 @@ en:
       sign_out: Sign out
       sign_up: Sign up
       start: Start
+      start_free_trial: Free Trial
       these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
@@ -144,10 +145,14 @@ en:
         coming_soon: "We don't have any content for this course module right now."
 
       content_denied:
+        panel:
+          need_to_sign_in: You need to be signed in with a Learn Signal account to view this material.
         not_logged_in:
+          sign_up_btn: Sign up for Learn Signal
+          start_free_trial: Start your free trial
           h2: Please Sign In To View This Content
         account_cancelled:
-          h2: Oops! Looks like your account is cancelled. Please re-activate it to continue learning.
+          h2: Oops! Looks like your account is cancelled. Please re-activate it to continue.
           reactivate: 'Re-activate Your Account'
         account_problem:
           h2: Oops! Looks like there is a problem with your account
@@ -800,14 +805,15 @@ en:
 
     student_sign_ups:
       form:
-        retype_it: Retype it
+        retype_it: Confirm Password
         all_you_can_eat_yes: "Unlimited Access"
         all_you_can_eat_no: "Limited Access"
-        free_trial: "Free trial - "
-        days: Days
+        free_trial: " Free Trial"
+        day: " Day"
         credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
         expiry_month_prompt: "Exp Mth"
         expiry_year_prompt: "Exp Year"
+        you_wont_be_charged: Your card won't be charged until the end of your trial period. If you cancel before then, your card won't be charged.
         payment_frequency_in_months:
           a1: Monthly
           a3: Quarterly
@@ -815,15 +821,17 @@ en:
           a12: Yearly
         submit: Sign Up Now
         error_panel_caption: "prevented your Sign-Up from being completed:"
+        secure_server: "Secure server"
+        stripe_com_logo: "Stripe.com logo"
 
       new:
         seo_description: 'Sign up for student access on LearnSignal.com and pay nothing until your free trial period is complete. Commitment free - cancel anytime'
         h1: Start Your Free Trial
         lead: Pay nothing until your trial is complete
         list:
-          one: Get full access.
-          two: You will not be billed during the free trial.
-          three: You can cancel at any time during your free trial. Nothing billed at all.
+          one: Full Access
+          two: Free of Charge
+          three: Cancel Anytime
         h2:
           emailing: Set your messaging preferences
           subscription: Choose your subscription plan

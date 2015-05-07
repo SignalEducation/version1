@@ -13,14 +13,15 @@
 #  upload_content_type      :string(255)
 #  upload_file_size         :integer
 #  upload_updated_at        :datetime
+#  destroyed_at             :datetime
 #
 
 FactoryGirl.define do
   factory :course_module_element_resource do
     course_module_element_id 1
-    name "MyString"
-    description "MyText"
-    web_url "MyString"
+    name 'MyString'
+    description 'MyText'
+    web_url 'https://linkedin.com'
   end
 
 end

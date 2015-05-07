@@ -54,8 +54,12 @@ describe Institution do
   it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:feedback_url) }
+  it { should allow_value('http://linkedin.com').for(:feedback_url) }
+  it { should_not allow_value('www.linkedin.com').for(:feedback_url) }
 
   it { should validate_presence_of(:help_desk_url) }
+  it { should allow_value('http://linkedin.com').for(:help_desk_url) }
+  it { should_not allow_value('www.linkedin.com').for(:help_desk_url) }
 
   it { should validate_presence_of(:subject_area_id) }
   it { should validate_numericality_of(:subject_area_id) }

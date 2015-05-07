@@ -18,7 +18,7 @@ class QuizAttempt < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  serialize :answer_array, Array
+  serialize :answer_array #, Array - seems to break in Rails 4.2.1
 
   # attr-accessible
   attr_accessible :user_id, :quiz_question_id, :quiz_answer_id, :correct,
@@ -52,6 +52,8 @@ class QuizAttempt < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
+  scope :all_correct, -> { where(correct: true) }
+  scope :all_incorrect, -> { where(correct: false) }
 
   # class methods
 

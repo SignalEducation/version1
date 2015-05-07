@@ -74,55 +74,49 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should be bounced as not allowed' do
-        get :show, id: subscription_plan_category_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
@@ -138,54 +132,53 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a corporate_student_user: ' do
@@ -196,54 +189,53 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a corporate_customer_user: ' do
@@ -254,54 +246,53 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a blogger_user: ' do
@@ -312,54 +303,53 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a forum_manager_user: ' do
@@ -370,54 +360,53 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a content_manager_user: ' do
@@ -428,54 +417,53 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :show, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         get :edit, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         post :create, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be bounced as not allowed' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: subscription_plan_category_1.id
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a admin_user: ' do
@@ -498,7 +486,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
         expect_show_success_with_model('subscription_plan_category', subscription_plan_category_1.id)
       end
 
-      # optional - some other object
       it 'should see subscription_plan_category_2' do
         get :show, id: subscription_plan_category_2.id
         expect_show_success_with_model('subscription_plan_category', subscription_plan_category_2.id)
@@ -518,7 +505,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
         expect_edit_success_with_model('subscription_plan_category', subscription_plan_category_1.id)
       end
 
-      # optional
       it 'should respond OK with subscription_plan_category_2' do
         get :edit, id: subscription_plan_category_2.id
         expect_edit_success_with_model('subscription_plan_category', subscription_plan_category_2.id)
@@ -543,7 +529,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
         expect_update_success_with_model('subscription_plan_category', subscription_plan_categories_url)
       end
 
-      # optional
       it 'should respond OK to valid params for subscription_plan_category_2' do
         put :update, id: subscription_plan_category_2.id, subscription_plan_category: valid_params
         expect_update_success_with_model('subscription_plan_category', subscription_plan_categories_url)
@@ -557,7 +542,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
       end
     end
 
-
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subscription_plan_category_1.id
@@ -569,7 +553,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
         expect_delete_success_with_model('subscription_plan_category', subscription_plan_categories_url)
       end
     end
-
   end
 
 end

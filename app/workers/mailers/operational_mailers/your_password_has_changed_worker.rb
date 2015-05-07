@@ -6,7 +6,7 @@ class Mailers::OperationalMailers::YourPasswordHasChangedWorker
   def perform(user_id)
     @user = User.find_by_id(user_id)
     if @user
-      OperationalMailer.your_password_has_changed(@user).deliver
+      OperationalMailer.your_password_has_changed(@user).deliver_now
     else
       Rails.logger.error "Mailers::OperationalMailers::YourPasswordHasChangedWorker could not find user #{user_id}."
     end

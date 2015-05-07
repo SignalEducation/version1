@@ -71,6 +71,7 @@ describe StudentExamTrack do
   it { expect(StudentExamTrack).to respond_to(:for_session_guid) }
   it { expect(StudentExamTrack).to respond_to(:for_unknown_users) }
   it { expect(StudentExamTrack).to respond_to(:with_active_cmes) }
+  it { expect(StudentExamTrack).to respond_to(:all_complete) }
 
   # class methods
   it { expect(StudentExamTrack).to respond_to(:assign_user_to_session_guid) }

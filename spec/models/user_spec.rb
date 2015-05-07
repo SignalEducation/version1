@@ -48,8 +48,7 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  # todo see ticket #277 black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code address guid)
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code address guid)
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -60,6 +59,8 @@ describe User do
 
   # Constants
   it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
+  it { expect(User.const_defined?(:LOCALES)).to eq(true) }
+  it { expect(User.const_defined?(:SORT_OPTIONS)).to eq(true) }
 
   # relationships
   it { should belong_to(:corporate_customer) }
@@ -91,7 +92,7 @@ describe User do
   it { should validate_uniqueness_of(:email) }
 
   it { should validate_presence_of(:first_name) }
-  it { should ensure_length_of(:first_name).is_at_least(2).is_at_most(20) }
+  it { should validate_length_of(:first_name).is_at_least(2).is_at_most(20) }
 
   it { should validate_presence_of(:last_name) }
 
@@ -131,6 +132,10 @@ describe User do
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
+  it { expect(User).to respond_to(:search_for) }
+  it { expect(User).to respond_to(:sort_by_email) }
+  it { expect(User).to respond_to(:sort_by_name) }
+  it { expect(User).to respond_to(:sort_by_recent_registration) }
 
   # class methods
   it { expect(User).to respond_to(:all_admins) }
@@ -138,9 +143,11 @@ describe User do
   it { expect(User).to respond_to(:get_and_activate) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:finish_password_reset_process) }
+  it { expect(User).to respond_to(:sort_by) }
 
   # instance methods
   it { should respond_to(:admin?) }
+  it { should respond_to(:assign_anonymous_logs_to_user) }
   it { should respond_to(:change_the_password) }
   it { should respond_to(:content_manager?) }
   it { should respond_to(:corporate_customer?) }
