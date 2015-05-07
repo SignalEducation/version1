@@ -25,7 +25,7 @@ class StripeDeveloperCallsController < ApplicationController
     @stripe_developer_call.user_id = current_user.id
     # the next line is required to overcome the jamming of the nested hash by strong-params.
     unless params[:stripe_developer_call][:params_received].nil?
-      @stripe_developer_call.params_received = JSON.parse(params[:stripe_developer_call][:params_received])
+      @stripe_developer_call.params_received = params[:stripe_developer_call][:params_received].to_hash
     end
     if @stripe_developer_call.save
       flash[:success] = I18n.t('controllers.stripe_developer_calls.create.flash.success')

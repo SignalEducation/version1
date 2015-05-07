@@ -13,7 +13,7 @@ shared_context 'users_and_groups_setup' do
   let(:site_admin_user_group) { FactoryGirl.create(:site_admin_user_group) }
 
   # users
-  let(:individual_student_user) { FactoryGirl.create(:individual_student_user,
+  let!(:individual_student_user) { FactoryGirl.create(:individual_student_user,
                                 user_group_id: individual_student_user_group.id) }
   let(:inactive_individual_student_user) { FactoryGirl.create(:inactive_individual_student_user,
                                 user_group_id: individual_student_user_group.id) }

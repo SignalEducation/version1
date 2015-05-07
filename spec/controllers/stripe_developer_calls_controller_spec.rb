@@ -10,7 +10,7 @@ describe StripeDeveloperCallsController, type: :controller do
   let!(:stripe_developer_call_2) { FactoryGirl.create(:stripe_developer_call,
                                                       prevent_delete: true) }
   let!(:valid_params) { FactoryGirl.attributes_for(:stripe_developer_call,
-                        params_received: "{\"name\":\"Dan\", \"number\":123}") }
+                        params_received: {name: 'Dan', number: 123}) }
 
   context 'Not logged in: ' do
 
