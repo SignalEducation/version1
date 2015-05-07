@@ -392,3 +392,9 @@ en:
         flash:
           success: Marketing Token has been deleted
           error: Marketing Token was not deleted
+      preview_csv:
+        flash:
+          error: "Sorry, something went wrong with your data (MTC-01)"
+      import_csv:
+        flash:
+          error: "Sorry, something went wrong with your data (MTC-02)"

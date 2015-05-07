@@ -56,6 +56,7 @@ class MarketingTokensController < ApplicationController
     if params[:upload] && params[:upload].respond_to?(:read)
       @csv_data, @has_errors = MarketingToken.parse_csv(params[:upload].read)
     else
+      flash[:error] = t('controllers.marketing_tokens.preview_csv.flash.error')
       redirect_to marketing_tokens_url
     end
   end
@@ -64,6 +65,7 @@ class MarketingTokensController < ApplicationController
     if params[:csvdata]
       @marketing_tokens = MarketingToken.bulk_create(params[:csvdata])
     else
+      flash[:error] = t('controllers.marketing_tokens.import_csv.flash.error')
       redirect_to marketing_tokens_url
     end
   end
