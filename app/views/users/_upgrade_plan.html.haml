@@ -16,8 +16,10 @@
               .row
               -@current_subscription.upgrade_options.each do|plan|
                 .subscription-panel.well.well-sm.text-center{class: "col-sm-#{12 / @current_subscription.upgrade_options.size} #{@current_subscription.subscription_plan_id == plan.id ? 'active' : ''}", id: "subscription-panel-#{plan.id}", data: {plan: plan.id}, onclick: "$('#subscription_subscription_plan_id').val($(this).data('plan') ); if (#{@current_subscription.subscription_plan_id} == $(this).data('plan')) {$('#upgrade-submit').addClass('disabled');} else {$('#upgrade-submit').removeClass('disabled');} $('.subscription-panel').removeClass('active'); $(this).addClass('active');"}
-                  %h4=plan.name
+                  %h4=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                   %p
+                    =plan.name
+                    %br/
                     -plan.description.lines.each do |line|
                       =line
                       %br/

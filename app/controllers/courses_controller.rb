@@ -46,6 +46,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log.element_completed = true
     @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
     @course_module_element = @course_module_element_user_log.course_module_element
+    @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
     @course_module = @course_module_element_user_log.course_module
     @results = true
     unless @course_module_element_user_log.save
@@ -55,7 +56,7 @@ class CoursesController < ApplicationController
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-    elsif @course_module && @course_module_element
+    elsif @course_module && (@course_module_element || @course_module_jumbo_quiz)
       render :show
     else
       redirect_to library_url
@@ -164,13 +165,16 @@ class CoursesController < ApplicationController
       @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
     end
 
-    all_questions = QuizQuestion.where(course_module_element_id: @course_module.course_module_element_ids)
+    @strategy = @course_module_jumbo_quiz.course_module.course_module_elements.all_quizzes.first.course_module_element_quiz.question_selection_strategy
+
+    all_questions = QuizQuestion.where(course_module_element_id: @course_module.course_module_elements.all_active.ids)
     all_easy_ids = all_questions.all_easy.map(&:id)
     all_medium_ids = all_questions.all_medium.map(&:id)
     all_difficult_ids = all_questions.all_difficult.map(&:id)
     @easy_ids = all_easy_ids.sample(@number_of_questions)
     @medium_ids = all_medium_ids.sample(@number_of_questions)
     @difficult_ids = all_difficult_ids.sample(@number_of_questions)
+    @all_ids = @easy_ids + @medium_ids + @difficult_ids
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
     Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0

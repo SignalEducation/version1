@@ -63,8 +63,7 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes,
-                  :login_count, :failed_login_count, :last_request_at, :current_login_at, :last_login_at, :current_login_ip, :last_login_ip, :account_activated_at, :account_activation_code, :address, :guid # todo see ticket 277
+                  :subscriptions_attributes
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
