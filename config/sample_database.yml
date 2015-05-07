@@ -1,0 +1,22 @@
+# This is an example of the content for the database.yml file that
+# each developer and production server should have.
+
+default: &default
+  host: localhost
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+
+development:
+  <<: *default
+  database: db/learnsignal_v3_development
+
+test:
+  <<: *default
+  database: db/learnsignal_v3_test
+
+staging:
+
+production:
+

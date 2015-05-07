@@ -5,6 +5,13 @@ class OperationalMailer < ActionMailer::Base
 
   before_action :set_the_url
 
+  def signup_completed(user) # backgrounded
+    @user = user
+    mail(to: @user.email,
+         subject: I18n.t('mailers.operational.signup_completed.subject_line')
+    )
+  end
+
   def activate_account(user) # backgrounded
     @user = user
     mail(to: @user.email,

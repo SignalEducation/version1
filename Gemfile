@@ -1,17 +1,17 @@
 source 'https://rubygems.org'
 
-ruby '2.1.6'
-gem 'rails', '4.1.8'
+ruby '2.2.2'
+gem 'rails', '4.2.1'
 
 # Core gems - common to all environments
 gem 'rack-attack' # todo: needs to be moved to the production group later
 gem 'airbrake'
-gem 'authlogic'
+gem 'authlogic', '~> 3.4.3'
 gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk' # enables AWS functionality - use with AWS::...
 gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
-gem 'aws-s3' # grants timeout-able URLs
+#gem 'aws-s3' # grants timeout-able URLs
 gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
@@ -24,8 +24,8 @@ gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'mathjax-rails' # maths functions in the UI
+gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
 gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
-gem 'paperclip', '~> 4.2' # for uploading files (works with RemotiPart)
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'remotipart' # enables file upload in forms that work using AJAX
@@ -34,7 +34,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
-gem 'stripe', git: 'https://github.com/stripe/stripe-ruby'
+gem 'stripe', '=1.16.0' #, git: 'https://github.com/stripe/stripe-ruby'
 # support for Stripe.com payment processing
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
