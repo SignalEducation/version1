@@ -26,7 +26,7 @@ class MarketingToken < ActiveRecord::Base
 
   # validation
   validates :code, presence: true, uniqueness: { case_sensitive: false },
-            format: { with: /\w+/ }
+            format: { with: /\A\w+\z/ }
   validates :marketing_category_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
 
