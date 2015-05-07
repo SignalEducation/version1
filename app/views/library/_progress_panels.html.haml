@@ -11,7 +11,7 @@
                 .col-sm-8
                   =child.name
                 .col-sm-4
-                  .pull-right=seconds_to_time(child.estimated_time_in_seconds) if !child.class == ExamSection
+                  .pull-right=seconds_to_time(child.duration)
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
               -if child.class == ExamSection
                 .list-group
@@ -20,8 +20,6 @@
                       .row
                         .col-sm-8
                           %p=grandchild.name
-                        .col-sm-4
-                          %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
                     -grandchild.children.all_in_order.all_active.each do |greatgrandchild|
                       =link_to course_special_link(greatgrandchild), class: 'list-group-item' do
                         .list-item

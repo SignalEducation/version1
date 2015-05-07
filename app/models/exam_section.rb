@@ -46,6 +46,7 @@ class ExamSection < ActiveRecord::Base
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
   before_save :recalculate_cme_count
+  before_save :recalculate_duration
   after_commit :recalculate_parent_cme_count
 
   # scopes
@@ -116,6 +117,10 @@ class ExamSection < ActiveRecord::Base
     if changes && changes[0] != changes[1]
       self.parent.save
     end
+  end
+
+  def recalculate_duration
+    self.duration = self.active_children.sum(:estimated_time_in_seconds)
   end
 
 end
