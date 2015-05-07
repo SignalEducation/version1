@@ -53,7 +53,6 @@ describe MarketingToken do
 
   describe 'check CSV consistency' do
     let!(:category) { FactoryGirl.create(:marketing_category) }
-    let!(:system_token) { FactoryGirl.create(:marketing_token, code: MarketingToken::SYSTEM_TOKEN_CODES.first)}
 
     it 'should set error message for invalid fields count' do
       csv_data, has_errors = MarketingToken.parse_csv('abcd')
