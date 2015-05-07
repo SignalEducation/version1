@@ -26,7 +26,7 @@ describe 'User navigating through the library:', type: :feature do
       expect(page).to have_content course_module_element_1_1.name
       expect(page).to have_content course_module_element_1_2.name
       expect(page).to have_content course_module_element_1_3.name
-      expect(page).to have_content quiz_content_1.text_content
+      # expect(page).to have_content quiz_content_1.text_content
     end
 
     scenario 'when logged in as one of the users', js: true do
@@ -43,7 +43,7 @@ describe 'User navigating through the library:', type: :feature do
         expect(page).to have_content course_module_element_1_1.name
         expect(page).to have_content course_module_element_1_2.name
         expect(page).to have_content course_module_element_1_3.name
-        expect(page).to have_content quiz_content_1.text_content
+        # expect(page).to have_content quiz_content_1.text_content
         sign_out
         print '>'
       end
@@ -68,7 +68,7 @@ describe 'User navigating through the library:', type: :feature do
       click_link course_module_1.name
       expect(page).to have_content course_module_1.name
       expect(page).to have_content course_module_element_1_2.name
-      expect(page).to have_content quiz_content_1.text_content
+      # expect(page).to have_content quiz_content_1.text_content
       click_link '#library-btn'
       expect(page).to have_content maybe_upcase exam_section_1.name
       expect(page).to have_content course_module_1.name
@@ -98,7 +98,7 @@ describe 'User navigating through the library:', type: :feature do
         click_link course_module_1.name
         expect(page).to have_content course_module_1.name
         expect(page).to have_content course_module_element_1_2.name
-        expect(page).to have_content quiz_content_1.text_content
+        # expect(page).to have_content quiz_content_1.text_content
         click_link '#library-btn'
         expect(page).to have_content maybe_upcase exam_section_1.name
         expect(page).to have_content course_module_1.name
@@ -111,7 +111,7 @@ describe 'User navigating through the library:', type: :feature do
         click_link 'Start'
         expect(page).to have_content course_module_1.name
         expect(page).to have_content course_module_element_1_1.name
-        expect(page).to have_content quiz_content_1.text_content
+        # expect(page).to have_content quiz_content_1.text_content
         sign_out
         print '>'
       end

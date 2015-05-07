@@ -42,7 +42,7 @@ class StaticPage < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  serialize :approved_country_ids, Array
+  serialize :approved_country_ids #, Array - has stopped functioning in Rails 4.2.1
 
   # attr-accessible
   attr_accessible :name, :publish_from, :publish_to, :allow_multiples, :public_url,
@@ -133,10 +133,14 @@ class StaticPage < ActiveRecord::Base
   end
 
   def sanitize_country_ids
-    old_list = self.approved_country_ids.dup
-    self.approved_country_ids = []
-    old_list.each do |item|
-      self.approved_country_ids << item.to_i if item.to_i > 0
+    if self.approved_country_ids.blank?
+      self.approved_country_ids = []
+    else
+      old_list = self.approved_country_ids.dup
+      self.approved_country_ids = []
+      old_list.each do |item|
+        self.approved_country_ids << item.to_i if item.to_i > 0
+      end
     end
   end
 
