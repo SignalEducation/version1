@@ -11,7 +11,10 @@
                 .col-sm-8
                   =child.name
                 .col-sm-4
-                  .pull-right=seconds_to_time(child.duration)
+                  -if @hierarchy_item.class == ExamLevel
+                    .pull-right=seconds_to_time(child.duration.to_i)
+                  -else
+                    .pull-right=seconds_to_time(child.estimated_time_in_seconds) if child.class == CourseModule
             .panel-collapse.collapse{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
               -if child.class == ExamSection
                 .list-group
@@ -40,7 +43,11 @@
       %p.description-title=t('views.exam_levels.form.description')
       %p=@hierarchy_item.description
       %hr/
+      %p=t('views.general.updated_at')
       %p=@hierarchy_item.updated_at
+      %hr/
+      %p=t('views.general.duration')
+      %p=seconds_to_time(@hierarchy_item.duration.to_i)
 
 
   -else

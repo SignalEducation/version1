@@ -71,6 +71,7 @@ class CourseModule < ActiveRecord::Base
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
   after_commit :update_parent_cme_count
+  after_commit :update_parent_duration
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
@@ -171,6 +172,13 @@ class CourseModule < ActiveRecord::Base
 
   def calculate_estimated_time
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
+  end
+
+  def update_parent_duration
+    changes = self.previous_changes[:estimated_time_in_seconds] # [prev,new]
+    if changes && changes[0] != changes[1]
+      self.parent.save
+    end
   end
 
   def set_cme_count

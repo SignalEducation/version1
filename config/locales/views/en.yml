@@ -21,6 +21,7 @@ en:
       delete_confirmation: Are you sure?
       details: Details
       drag_to_reorder: Drag to reorder
+      duration: "Duration: "
       edit: Edit
       edit_tooltip: click to edit
       example: Example
@@ -61,6 +62,9 @@ en:
         click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
+      created_at: Created at
+      updated_at: "Last Updated: "
+
 
     locales:
       en: English
