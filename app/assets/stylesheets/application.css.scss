@@ -832,7 +832,9 @@ header {
     cursor: pointer;
   }
   .list-title {
-    margin: 10px 15px 0 15px;
+    p {
+      margin: 8px 0 8px 15px;
+    }
     cursor: initial;
   }
   .list-group {
