@@ -821,18 +821,20 @@ header {
   margin-top: 14px;
 }
 
-.library-bar {
+.panel.library-bar {
   background-color: #E2E2E2;
-  border-radius: 0 !important;
+  border-radius: 0;
   &:hover, &:focus {
     background-color: darken(#E2E2E2, 5);
+    cursor: pointer;
   }
   .list-title {
     margin: 10px 15px 0 15px;
+    cursor: initial;
   }
   .list-group {
     background-color: #d3d3d3;
-    border-radius: 0 !important;
+    border-radius: 0;
     h4 {
       margin-top: 20px;
       margin-bottom: 20px;
@@ -851,6 +853,7 @@ header {
         background-color: darken(#ef5f5f, 5);
         color: #f1f6fd;
         text-decoration: none;
+        cursor: pointer;
       }
       &:active {
         background-color: #ef5f5f;
