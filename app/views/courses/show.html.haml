@@ -5,7 +5,7 @@
 .row
   .col-sm-3.visible-lg.visible-md
     .new-side-nav
-      =link_to library_special_link(@course_module.parent), class: ' btn-lg btn-block text-center btn-ls-default', id: '#library-btn' do
+      =link_to library_special_link(@course_module.parent.parent), class: ' btn-lg btn-block text-center btn-ls-default', id: '#library-btn' do
         .glyphicon.glyphicon-chevron-left
         =t('views.library.show.h1')
       =render partial: 'courses/new_side_nav'

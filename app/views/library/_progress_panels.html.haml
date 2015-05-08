@@ -39,10 +39,12 @@
                         %p=grandchild.name
                       .col-sm-4
                         %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
-    .col-sm-4
-      %p.description-title=t('views.exam_levels.form.description')
+    .col-sm-4.library-info
+      %p.description=t('views.exam_levels.form.description')
       %p=@hierarchy_item.description
-      %hr/
+      %br/
+      %br/
+      %p.description=t('views.general.more_info')
       %p
         =t('views.general.duration')
         =humanize_time(@hierarchy_item.duration.to_i)
@@ -50,6 +52,10 @@
       %p
         =t('views.general.updated_at')
         =humanize_datetime(@hierarchy_item.updated_at)
+      -#%hr/
+      -#%p
+        =t('views.general.author')
+        =@hierarchy_item.first_active_cme.tutor.full_name
 
 
   -else

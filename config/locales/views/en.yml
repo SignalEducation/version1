@@ -11,6 +11,7 @@ en:
       approve: Approve
       approve_tooltip: click to approve
       at_date_time: At
+      author: "Author: "
       back: Back
       by: by
       cancel: Cancel
@@ -29,6 +30,7 @@ en:
       home: Home
       inactive: Inactive
       links: Links
+      more_info: More Info
       missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one
