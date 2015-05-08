@@ -24,7 +24,7 @@ RSpec.describe CoursesController, type: :request do
   # special routes - to courses#show
 
   it 'redirects to /library' do
-    get 'en/courses/abc'
+    get '/en/courses/abc'
     expect(response).to redirect_to('/en/library/abc')
   end
 
@@ -34,7 +34,7 @@ RSpec.describe CoursesController, type: :request do
   end
 
   it 'redirects to /library' do
-    get 'en/courses/abc/def'
+    get '/en/courses/abc/def'
     expect(response).to redirect_to('/en/library/abc/def')
   end
 
@@ -44,7 +44,7 @@ RSpec.describe CoursesController, type: :request do
   end
 
   it 'redirects to /library' do
-    get 'en/courses/abc/def/ghi'
+    get '/en/courses/abc/def/ghi'
     expect(response).to redirect_to('/en/library/abc/def/ghi')
   end
 
@@ -54,7 +54,7 @@ RSpec.describe CoursesController, type: :request do
   end
 
   it 'redirects to /library' do
-    get 'en/courses/abc/def/ghi/jkl'
+    get '/en/courses/abc/def/ghi/jkl'
     expect(response).to redirect_to('/en/library/abc/def/ghi/jkl')
   end
 
@@ -64,7 +64,7 @@ RSpec.describe CoursesController, type: :request do
   end
 
   it 'redirects to /library' do
-    get 'en/courses/abc/def/ghi/jkl/mno'
+    get '/en/courses/abc/def/ghi/jkl/mno'
     expect(response).to redirect_to('/en/library/abc/def/ghi/jkl/mno')
   end
 
