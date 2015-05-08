@@ -14,7 +14,7 @@
 
 FactoryGirl.define do
   factory :marketing_token do
-    sequence(:code) { |n| "MT #{n}" }
+    sequence(:code) { |n| "MT_#{n}" }
     marketing_category_id 1
     is_hard false
     is_direct false
