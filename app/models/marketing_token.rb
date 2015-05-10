@@ -47,16 +47,21 @@ class MarketingToken < ActiveRecord::Base
 
   def self.parse_csv(csv_content)
     csv_data = []
+    used_codes = []
     has_errors = false
     if csv_content.respond_to?(:each_line)
       csv_content.each_line do |line|
         line.strip.split(',').tap do |fields|
           error_msgs = []
           if fields.length == 3
+            error_msgs << I18n.t('models.marketing_tokens.duplicated_token_code') if used_codes.include?(fields[0])
             error_msgs << I18n.t('models.marketing_tokens.invalid_marketing_category_name') if MarketingCategory.where(name: fields[1].strip).count != 1
+
             token = self.where(code: fields[0].strip).first
             error_msgs << I18n.t('models.marketing_tokens.cannot_change_system_token') if token && token.system_defined?
             error_msgs << I18n.t('models.marketing_tokens.invalid_flag_value') unless ['true', 'false'].include?(fields[2].strip)
+
+            used_codes << fields[0]
           else
             error_msgs << I18n.t('models.marketing_tokens.invalid_field_count')
           end
@@ -73,6 +78,7 @@ class MarketingToken < ActiveRecord::Base
 
   def self.bulk_create(tokens_data)
     tokens = []
+    used_codes = []
     if tokens_data.is_a?(Hash)
       self.transaction do
         tokens_data.each do |k,v|
@@ -84,13 +90,14 @@ class MarketingToken < ActiveRecord::Base
 
           token = self.where(code: v['code'], marketing_category_id: category.id).first_or_create
 
-          if !token.valid? || !token.editable?
+          if used_codes.include?(v['code']) || !token.valid? || !token.editable?
             tokens = []
             raise ActiveRecord::Rollback
           end
           token.update_attribute(:is_hard, v['flag'] == 'true')
 
           tokens << token
+          used_codes << token.code
         end
       end
     end

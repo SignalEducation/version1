@@ -86,6 +86,12 @@ describe MarketingToken do
       expect(has_errors).to eq(true)
     end
 
+    it "should set error message if duplicated codes are found" do
+      csv_data, has_errors = MarketingToken.parse_csv("baidu,#{category.name},1\nbing,#{category.name},1\nbaidu,#{category.name},0\n")
+      expect(csv_data.last[:error_messages]).to include(I18n.t('models.marketing_tokens.duplicated_token_code'))
+      expect(has_errors).to eq(true)
+    end
+
     it 'should return array with requested number of tokens data and no error messages' do
       csv_data, has_errors = MarketingToken.parse_csv("aykh001,#{category.name},true\n0002,#{category.name},false")
       expect(csv_data.length).to eq(2)
@@ -112,6 +118,11 @@ describe MarketingToken do
       expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => '   ', 'category' => 'Dummy', 'flag' => 'true'}}))}
         .to change {MarketingToken.count}.by(0)
       expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => nil, 'category' => 'Dummy', 'flag' => 'true'}}))}
+        .to change {MarketingToken.count}.by(0)
+    end
+
+    it 'should not import any token if duplicated tokens are submitted' do
+      expect{MarketingToken.bulk_create(valid_data.merge({'2' => {'code' => 'abyh001', 'category' => category.name, 'flag' => 'true'}}))}
         .to change {MarketingToken.count}.by(0)
     end
 
