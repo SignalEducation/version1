@@ -11,8 +11,14 @@ class CreateMarketingTokens < ActiveRecord::Migration
     end
 
     unless Rails.env.test?
-      MarketingToken.create(code: "seo", marketing_category_id: MarketingCategory.first.id, is_seo: true)
-      MarketingToken.create(code: "direct", marketing_category_id: MarketingCategory.first.id, is_direct: true)
+      MarketingToken.new(code: "seo", marketing_category_id: MarketingCategory.first.id).tap do |seo|
+        seo.is_seo = true
+        seo.save
+      end
+      MarketingToken.create(code: "direct", marketing_category_id: MarketingCategory.first.id).tap do |direct|
+        direct.is_direct = true
+        direct.save
+      end
     end
   end
 
