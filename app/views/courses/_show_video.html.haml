@@ -75,14 +75,14 @@
       var duration = jwplayer().getDuration();
       var position = +(jwplayer().getPosition()).toFixed(2);
       mixpanel.track("Video View End", {
-        'video_name': '#{cme.name}',
-        'course_module': '#{cme.course_module.name}',
-        'exam_section': '#{cme.course_module.exam_section.name}',
-        'course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
-        'video_length': +(duration / 60.0).toFixed(2),
-        'time_viewed': position,
-        'percent_completed': +(position * 100 / duration).toFixed(2),
-        'next_cme': ['#{course_special_link(cme.next_element)}', '#{cme.next_element.type_name}']
+        'Video Name': '#{cme.name}',
+        'Course Module': '#{cme.course_module.name}',
+        'Exam Section': '#{cme.course_module.exam_section.name}',
+        'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
+        'Video Length': +(duration / 60.0).toFixed(2),
+        'Time Viewed': position,
+        'Percent Completed': +(position * 100 / duration).toFixed(2),
+        'Next CME': ['#{course_special_link(cme.next_element)}', '#{cme.next_element.type_name}']
       });
       mixpanel.people.increment("Videos Completed");
       mixpanel.people.increment("Total Time Viewing Videos", position);
@@ -96,11 +96,11 @@
       playsNo += 1;
       if (1 == playsNo) {
         mixpanel.track("Video View Begin", {
-          'video_name': '#{cme.name}',
-          'course_module': '#{cme.course_module.name}',
-          'exam_section': '#{cme.course_module.exam_section.name}',
-          'course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
-          'video_length': +(jwplayer().getDuration() / 60.0).toFixed(2)
+          'Video Name': '#{cme.name}',
+          'Course Module': '#{cme.course_module.name}',
+          'Exam Section': '#{cme.course_module.exam_section.name}',
+          'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
+          'Video Length': +(jwplayer().getDuration() / 60.0).toFixed(2)
         });
         mixpanel.people.increment("Videos Viewed");
       }
