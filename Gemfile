@@ -22,6 +22,7 @@ gem 'intercom-rails', '~> 0.2.27' # communicate with Intercom.io
 gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
+gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
 gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
