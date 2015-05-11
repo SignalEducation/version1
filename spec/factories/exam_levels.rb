@@ -31,6 +31,7 @@ FactoryGirl.define do
     active               false
     default_number_of_possible_exam_answers 4
     enable_exam_sections true
+    description        'Lorem Ipsum'
 
     factory :active_exam_level do
       active                       true

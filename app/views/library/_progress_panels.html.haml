@@ -2,7 +2,7 @@
   %hr/
   -if @hierarchy_item.class == ExamLevel
     .col-sm-8
-      %p.description-title=t('views.general.table_of_contents')
+      %p.table-of-contents=t('views.general.table_of_contents')
       .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
         -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child, counter|
           .panel.library-bar
