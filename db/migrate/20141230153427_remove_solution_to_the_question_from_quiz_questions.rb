@@ -1,10 +1,10 @@
 class RemoveSolutionToTheQuestionFromQuizQuestions < ActiveRecord::Migration
   def up
     print 'Migrating data: '
-    QuizQuestion.where(solution_to_the_question: '').update_all(solution_to_the_question: 'Solution TBC')
-    QuizQuestion.where(solution_to_the_question: nil).update_all(solution_to_the_question: 'Solution TBC')
-    QuizQuestion.all.each do |question|
-      QuizContent.where(quiz_solution_id: question.id).first_or_create!(
+    QuizQuestion.unscoped.where(solution_to_the_question: '').update_all(solution_to_the_question: 'Solution TBC')
+    QuizQuestion.unscoped.where(solution_to_the_question: nil).update_all(solution_to_the_question: 'Solution TBC')
+    QuizQuestion.unscoped.all.each do |question|
+      QuizContent.unscoped.where(quiz_solution_id: question.id).first_or_create!(
               text_content: question.solution_to_the_question,
               sorting_order: 1, content_type: 'text'
       ); print '.'
