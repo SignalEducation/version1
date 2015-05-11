@@ -8,6 +8,9 @@ function addNewFlashQuizQuestion(thing) {
   theClone.find('h3').text('<%= I18n.t('views.course_module_element_quizzes.form.h3.question_new') %>');
   theClone.attr('id', 'new_question_' + timeStamp);
 
+  // just keep the first two quiz answers
+  theClone.find('.quiz_answer').not(':eq(0)').not(':eq(0)').remove();
+
   // Update all the form fields
   var theFieldList = theClone.find('textarea, input, select');
   theFieldList.val('');
@@ -39,37 +42,26 @@ function addFlashQuizAnswer(thing) {
   var theClone = theParent.find('.row.quiz_answer').last().clone();
   theClone.find('.col-sm-1').text(nextLetter(theClone.find('.col-sm-1').text()));
 
+  // rename fields
+  var clonedFields = theClone.find('input, textarea, select');
+  clonedFields.val(null);
+  clonedFields.each(function(index) {
+    var fieldName = clonedFields.eq(index).attr('name').split(']['),
+        fieldId = clonedFields.eq(index).attr('id').split('_');
+    fieldName[7] = timeStamp;
+    fieldId[25] = timeStamp;
+    clonedFields.eq(index).attr('id', fieldId.join('_')).attr('name', fieldName.join(']['));
+  });
+
   // sorting_order hidden field
   var sortingOrderField = theClone.find('.answer-sorting-order').last();
-  var sortingOrderId = sortingOrderField.attr('id').split('_');
-  sortingOrderId[25] = timeStamp;
-  var sortingOrderName = sortingOrderField.attr('name').split('][');
-  sortingOrderName[7] = timeStamp;
-  sortingOrderField.val( parseInt(sortingOrderField.val()) + 5).attr('id', sortingOrderId.join('_')).attr('name', sortingOrderName.join(']['));
+  sortingOrderField.val( parseInt(sortingOrderField.val()) + 5);
 
   // content_type hidden field
-  var contentTypeField = theClone.find('.answer-content-type').last();
-  var contentTypeId = contentTypeField.attr('id').split('_');
-  contentTypeId[25] = timeStamp;
-  var contentTypeName = contentTypeField.attr('name').split('][');
-  contentTypeName[7] = timeStamp;
-  contentTypeField.attr('id', contentTypeId.join('_')).attr('name', contentTypeName.join(']['));
+  theClone.find('.answer-content-type').last().val('text');
 
-  // text_content field
-  var textAreaField = theClone.find('textarea').last();
-  var textAreaId = textAreaField.attr('id').split('_');
-  textAreaId[25] = timeStamp;
-  var textAreaName = textAreaField.attr('name').split('][');
-  textAreaName[7] = timeStamp;
-  textAreaField.val('').attr('id', textAreaId.join('_')).attr('name', textAreaName.join(']['));
-
-  // degree_of_wrongness field
-  var degreeOfWrongnessField = theClone.find('select').last();
-  var degreeOfWrongnessId = degreeOfWrongnessField.attr('id').split('_');
-  degreeOfWrongnessId[25] = timeStamp;
-  var degreeOfWrongnessName = degreeOfWrongnessField.attr('name').split('][');
-  textAreaName[7] = timeStamp;
-  degreeOfWrongnessField.val('').attr('id', degreeOfWrongnessId.join('_')).attr('name', degreeOfWrongnessName.join(']['));
+  // sorting_orderfield
+  theClone.find('.answer-sorting-order').last().val('0');
 
   // add it back in
   theParent.append(theClone);
@@ -77,6 +69,31 @@ function addFlashQuizAnswer(thing) {
 
 $(document).on('click', '.addExtraFlashQuizAnswer', function() {
   addFlashQuizAnswer(this);
+  return false;
+});
+
+function deleteFlashQuizAnswer(thing) {
+  var theQuestion = $(thing).closest('.question'),
+      theAnswer = $(thing).closest('.quiz_answer');
+
+  // ensure there are at least three answers in this question - otherwise, don't delete
+  if (theQuestion.find('.quiz_answer').length > 2) {
+    var confirmation = confirm("<%= I18n.t('views.general.delete_confirmation') %>");
+    if (confirmation) {
+      if (theAnswer.find('.answer-id').val() == '') {
+        theAnswer.remove();
+      } else {
+        theAnswer.find('.answer-destroy').val('1');
+        theAnswer.hide();
+      }
+    }
+  } else {
+    alert("Sorry, you can't delete this answer - there must be at least two answers for each question.");
+  }
+}
+
+$(document).on('click', '.deleteFlashAnswer', function() {
+  deleteFlashQuizAnswer(this);
   return false;
 });
 

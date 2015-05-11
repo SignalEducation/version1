@@ -15,10 +15,10 @@
     var navbar = $('.navbar-footer');
     if (navbar.length > 0) {
       var topOfFooter = navbar.offset().top,
-        heightOfFooter = navbar.height(),
-        bottomOfFooter = topOfFooter + heightOfFooter,
-        viewportHeight = $(window).height(),
-        currentMarginTop = parseInt(navbar.css('margin-top'));
+          heightOfFooter = navbar.height(),
+          bottomOfFooter = topOfFooter + heightOfFooter,
+          viewportHeight = $(window).height(),
+          currentMarginTop = parseInt(navbar.css('margin-top'));
 
       if (bottomOfFooter < viewportHeight) {
         var extra = 0,

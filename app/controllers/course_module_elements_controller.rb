@@ -37,7 +37,7 @@ class CourseModuleElementsController < ApplicationController
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i)
+        course_module_id: params[:cm_id].to_i, active: false)
     @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
@@ -105,7 +105,13 @@ class CourseModuleElementsController < ApplicationController
 
   def update
     set_related_cmes
-    if @course_module_element.update_attributes(allowed_params)
+    Rails.logger.debug "STARTING...."
+    @course_module_element.assign_attributes(allowed_params)
+    Rails.logger.debug "CONTINUING..."
+    @course_module_element.valid?
+    Rails.logger.debug "DEBUG: course_module_elements_controller#update about to save. Errors:#{@course_module_element.errors.inspect}."
+
+    if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
         redirect_to edit_course_module_element_url(@course_module_element.id)
@@ -115,6 +121,7 @@ class CourseModuleElementsController < ApplicationController
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
     else
+      Rails.logger.debug "DEBUG: course_module_elements_controller#update failed. Errors:#{@course_module_element.errors.inspect}."
       render action: :edit
     end
   end
@@ -216,8 +223,8 @@ class CourseModuleElementsController < ApplicationController
         :description,
         :estimated_time_in_seconds,
         :course_module_id,
-        :course_module_element_video_id,
-        :course_module_element_quiz_id,
+        # :course_module_element_video_id,
+        # :course_module_element_quiz_id,
         :sorting_order,
         :forum_topic_id,
         :tutor_id,
@@ -235,14 +242,14 @@ class CourseModuleElementsController < ApplicationController
             :raw_video_file_id,
             :tags,
             :difficulty_level,
-            :estimated_study_time_seconds,
+            # :estimated_study_time_seconds,
             :transcript],
         course_module_element_quiz_attributes: [
             :id,
             :course_module_element_id,
             :number_of_questions,
-            :best_possible_score_retry,
-            :course_module_jumbo_quiz_id,
+            # :best_possible_score_retry,
+            # :course_module_jumbo_quiz_id,
             :question_selection_strategy,
             quiz_questions_attributes: [
                 :id,
@@ -255,15 +262,20 @@ class CourseModuleElementsController < ApplicationController
                     :quiz_answer_id,
                     :quiz_solution_id,
                     :text_content,
-                    :contains_mathjax,
-                    :contains_image,
+                    # :contains_mathjax,
+                    # :contains_image,
+                    :image,
+                    :image_file_name,
+                    :image_content_type,
+                    :image_file_size,
+                    :image_updated_at,
                     :content_type,
                     :sorting_order
                 ],
                 quiz_answers_attributes: [
                     :id,
                     :quiz_question_id,
-                    :correct,
+                    # :correct,
                     :degree_of_wrongness,
                     :wrong_answer_explanation_text,
                     :wrong_answer_video_id,
@@ -273,8 +285,13 @@ class CourseModuleElementsController < ApplicationController
                         :quiz_question_id,
                         :quiz_answer_id,
                         :text_content,
-                        :contains_mathjax,
-                        :contains_image,
+                        # :contains_mathjax,
+                        # :contains_image,
+                        :image,
+                        :image_file_name,
+                        :image_content_type,
+                        :image_file_size,
+                        :image_updated_at,
                         :content_type,
                         :sorting_order]
                 ],
@@ -283,8 +300,13 @@ class CourseModuleElementsController < ApplicationController
                     :quiz_question_id,
                     :quiz_answer_id,
                     :text_content,
-                    :contains_mathjax,
-                    :contains_image,
+                    # :contains_mathjax,
+                    # :contains_image,
+                    :image,
+                    :image_file_name,
+                    :image_content_type,
+                    :image_file_size,
+                    :image_updated_at,
                     :content_type,
                     :sorting_order]
             ]
@@ -313,6 +335,7 @@ class CourseModuleElementsController < ApplicationController
                         :sorting_order,
                         :final_button_label,
                         :content_type,
+                        :_destroy,
                         flash_cards_attributes: [
                                 :id,
                                 :flash_card_stack_id,
@@ -321,8 +344,8 @@ class CourseModuleElementsController < ApplicationController
                                 quiz_contents_attributes: [
                                         :id,
                                         :text_content,
-                                        :contains_mathjax,
-                                        :contains_image,
+                                        #:contains_mathjax,
+                                        #:contains_image,
                                         :sorting_order,
                                         :image,
                                         :image_file_name,
@@ -353,6 +376,7 @@ class CourseModuleElementsController < ApplicationController
                                                 :degree_of_wrongness,
                                                 :wrong_answer_explanation_text,
                                                 :wrong_answer_video_id,
+                                                :_destroy,
                                                 quiz_contents_attributes: [
                                                         :id,
                                                         :quiz_question_id,

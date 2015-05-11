@@ -10,8 +10,8 @@
       =flash_quiz.label :foreground_color, class: 'control-label col-sm-2'
       .col-sm-4
         =flash_quiz.color_field :foreground_color, class: 'form-control flash_quiz_col flash_quiz_field'
-
-  =flash_quiz.fields_for :quiz_questions do |quiz_question|
-    =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: quiz_question, parent: flash_quiz, mode: 'flash'}
+  .quiz-well
+    =flash_quiz.fields_for :quiz_questions do |quiz_question|
+      =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: quiz_question, parent: flash_quiz, mode: 'flash'}
 
   =link_to 'Add a new question', '#', class: 'btn btn-xs btn-info addNewFlashQuizQuestion'

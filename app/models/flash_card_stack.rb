@@ -10,9 +10,13 @@
 #  content_type                             :string(255)
 #  created_at                               :datetime
 #  updated_at                               :datetime
+#  destroyed_at                             :datetime
 #
 
 class FlashCardStack < ActiveRecord::Base
+
+  include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :course_module_element_flash_card_pack_id, :name, :sorting_order, :final_button_label, :content_type, :flash_cards_attributes, :flash_quiz_attributes
@@ -23,7 +27,7 @@ class FlashCardStack < ActiveRecord::Base
   # relationships
   belongs_to :course_module_element_flash_card_pack, inverse_of: :flash_card_stacks
   has_one :flash_quiz, inverse_of: :flash_card_stack
-  has_many :flash_cards, inverse_of: :flash_card_stack
+  has_many :flash_cards, -> { order(:sorting_order) }, inverse_of: :flash_card_stack
   accepts_nested_attributes_for :flash_cards, allow_destroy: true
   accepts_nested_attributes_for :flash_quiz, allow_destroy: true
 
@@ -36,25 +40,24 @@ class FlashCardStack < ActiveRecord::Base
   validates :content_type, presence: true
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :course_module_element_flash_card_pack_id) }
+  scope :all_in_order, -> { order(:course_module_element_flash_card_pack_id, :sorting_order).where(destroyed_at: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    self.flash_cards.empty?
+    true # children are killed automatically via the nested attributes declaration above.
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list << self.flash_quiz if self.flash_quiz
+    the_list += self.flash_cards.to_a
+    the_list
   end
 
   protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
 
 end
