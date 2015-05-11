@@ -69,10 +69,30 @@
     androidhls: 'true'
   });
 
+  var completedDataSent = false;
+  var onCompletedHandler = function() {
+    if (completedDataSent === false) {
+      var duration = jwplayer().getDuration();
+      var position = +(jwplayer().getPosition()).toFixed(2);
+      mixpanel.track("Video View End", {
+        'video_name': '#{cme.name}',
+        'course_module': '#{cme.course_module.name}',
+        'exam_section': '#{cme.course_module.exam_section.name}',
+        'course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
+        'video_length': +(duration / 60.0).toFixed(2),
+        'time_viewed': position,
+        'percent_completed': +(position * 100 / duration).toFixed(2),
+        'next_cme': ['#{course_special_link(cme.next_element)}', '#{cme.next_element.type_name}']
+      });
+      mixpanel.people.increment("Videos Completed");
+      mixpanel.people.increment("Total Time Viewing Videos", position);
+      completedDataSent = true;
+    }
+  };
+
   var playsNo = 0;
   jwplayer().onPlay(function(stateInfo) {
-    console.log("Old state: " + stateInfo.oldstate + "     New state: " + stateInfo.newstate);
-    if (stateInfo.newstate == 'PLAYING111') {
+    if (stateInfo.newstate == 'PLAYING') {
       playsNo += 1;
       if (1 == playsNo) {
         mixpanel.track("Video View Begin", {
@@ -80,11 +100,12 @@
           'course_module': '#{cme.course_module.name}',
           'exam_section': '#{cme.course_module.exam_section.name}',
           'course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
-          'video_length': jwplayer().getDuration() / 60.0
+          'video_length': +(jwplayer().getDuration() / 60.0).toFixed(2)
         });
+        mixpanel.people.increment("Videos Viewed");
       }
     }
   });
 
-  jwplayer().onPause(function(stateInfo) {
-  });
+  window.onbeforeunload = onCompletedHandler;
+  jwplayer().onComplete(onCompletedHandler);
