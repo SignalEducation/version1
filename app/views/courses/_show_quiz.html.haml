@@ -67,6 +67,20 @@
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
+
+    mixpanel.track("Quiz Question Taken", {
+      'Question ID': questionId,
+      'Question Score': isCorrect,
+      'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
+      'Course Module': '#{@course_module.try(:name) || ""}',
+      'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
+      'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}'
+    });
+    mixpanel.people.increment("Questions Taken");
+    if (true === isCorrect) {
+      mixpanel.people.increment("Correctly Answered Questions");
+    }
+
     if (currentQuestion < numberOfQuestions) {
       if (selectionStrategy == 'progressive') {
         if (isCorrect == true && difficultyLevel == 'easy') {
