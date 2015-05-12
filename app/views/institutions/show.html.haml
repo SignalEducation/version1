@@ -46,6 +46,12 @@
         %td.col-sm-8
           =link_to @institution.help_desk_url, @institution.help_desk_url, target: '_blank'
       %tr
+        %td.col-sm-4=t('views.institutions.form.seo_description')
+        %td.col-sm-8=@institution.seo_description
+      %tr
+        %td.col-sm-4=t('views.institutions.form.seo_no_index')
+        %td.col-sm-8=tick_or_cross @institution.seo_no_index
+      %tr
         %td.col-sm-4=t('views.institutions.form.active')
         %td.col-sm-8=tick_or_cross(@institution.active)
       %tr

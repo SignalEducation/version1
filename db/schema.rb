@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150430125741) do
+ActiveRecord::Schema.define(version: 20150506132918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "corporate_customers", force: true do |t|
+  create_table "corporate_customers", force: :cascade do |t|
     t.string   "organisation_name"
     t.text     "address"
     t.integer  "country_id"
@@ -29,7 +29,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "countries", force: true do |t|
+  add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
+  add_index "corporate_customers", ["owner_id"], name: "index_corporate_customers_on_owner_id", using: :btree
+  add_index "corporate_customers", ["stripe_customer_guid"], name: "index_corporate_customers_on_stripe_customer_guid", using: :btree
+
+  create_table "countries", force: :cascade do |t|
     t.string   "name"
     t.string   "iso_code"
     t.string   "country_tld"
@@ -41,7 +45,23 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "continent"
   end
 
-  create_table "course_module_element_quizzes", force: true do |t|
+  add_index "countries", ["currency_id"], name: "index_countries_on_currency_id", using: :btree
+  add_index "countries", ["in_the_eu"], name: "index_countries_on_in_the_eu", using: :btree
+  add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
+  add_index "countries", ["sorting_order"], name: "index_countries_on_sorting_order", using: :btree
+
+  create_table "course_module_element_flash_card_packs", force: :cascade do |t|
+    t.integer  "course_module_element_id"
+    t.string   "background_color"
+    t.string   "foreground_color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "destroyed_at"
+  end
+
+  add_index "course_module_element_flash_card_packs", ["course_module_element_id"], name: "cme_flash_card_pack_cme_id", using: :btree
+
+  create_table "course_module_element_quizzes", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.integer  "number_of_questions"
     t.string   "question_selection_strategy"
@@ -53,7 +73,10 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "destroyed_at"
   end
 
-  create_table "course_module_element_resources", force: true do |t|
+  add_index "course_module_element_quizzes", ["course_module_element_id"], name: "cme_quiz_cme_id", using: :btree
+  add_index "course_module_element_quizzes", ["course_module_jumbo_quiz_id"], name: "cme_quiz_cme_jumbo_quiz_id", using: :btree
+
+  create_table "course_module_element_resources", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.string   "name"
     t.text     "description"
@@ -67,7 +90,9 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "destroyed_at"
   end
 
-  create_table "course_module_element_user_logs", force: true do |t|
+  add_index "course_module_element_resources", ["course_module_element_id"], name: "cme_resources_cme_id", using: :btree
+
+  create_table "course_module_element_user_logs", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.integer  "user_id"
     t.string   "session_guid"
@@ -86,7 +111,12 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.boolean  "is_jumbo_quiz",               default: false, null: false
   end
 
-  create_table "course_module_element_videos", force: true do |t|
+  add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
+  add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree
+  add_index "course_module_element_user_logs", ["course_module_id"], name: "index_course_module_element_user_logs_on_course_module_id", using: :btree
+  add_index "course_module_element_user_logs", ["user_id"], name: "index_course_module_element_user_logs_on_user_id", using: :btree
+
+  create_table "course_module_element_videos", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.integer  "raw_video_file_id"
     t.string   "tags"
@@ -98,7 +128,10 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "destroyed_at"
   end
 
-  create_table "course_module_elements", force: true do |t|
+  add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree
+  add_index "course_module_element_videos", ["raw_video_file_id"], name: "index_course_module_element_videos_on_raw_video_file_id", using: :btree
+
+  create_table "course_module_elements", force: :cascade do |t|
     t.string   "name"
     t.string   "name_url"
     t.text     "description"
@@ -114,10 +147,20 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.boolean  "is_video",                  default: false, null: false
     t.boolean  "is_quiz",                   default: false, null: false
     t.boolean  "active",                    default: true,  null: false
+    t.boolean  "is_cme_flash_card_pack",    default: false, null: false
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
   end
 
-  create_table "course_module_jumbo_quizzes", force: true do |t|
+  add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
+  add_index "course_module_elements", ["forum_topic_id"], name: "index_course_module_elements_on_forum_topic_id", using: :btree
+  add_index "course_module_elements", ["name_url"], name: "index_course_module_elements_on_name_url", using: :btree
+  add_index "course_module_elements", ["related_quiz_id"], name: "index_course_module_elements_on_related_quiz_id", using: :btree
+  add_index "course_module_elements", ["related_video_id"], name: "index_course_module_elements_on_related_video_id", using: :btree
+  add_index "course_module_elements", ["tutor_id"], name: "index_course_module_elements_on_tutor_id", using: :btree
+
+  create_table "course_module_jumbo_quizzes", force: :cascade do |t|
     t.integer  "course_module_id"
     t.string   "name"
     t.integer  "minimum_question_count_per_quiz"
@@ -131,7 +174,9 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "destroyed_at"
   end
 
-  create_table "course_modules", force: true do |t|
+  add_index "course_module_jumbo_quizzes", ["course_module_id"], name: "index_course_module_jumbo_quizzes_on_course_module_id", using: :btree
+
+  create_table "course_modules", force: :cascade do |t|
     t.integer  "institution_id"
     t.integer  "qualification_id"
     t.integer  "exam_level_id"
@@ -146,10 +191,20 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "cme_count",                 default: 0
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
   end
 
-  create_table "currencies", force: true do |t|
+  add_index "course_modules", ["exam_level_id"], name: "index_course_modules_on_exam_level_id", using: :btree
+  add_index "course_modules", ["exam_section_id"], name: "index_course_modules_on_exam_section_id", using: :btree
+  add_index "course_modules", ["institution_id"], name: "index_course_modules_on_institution_id", using: :btree
+  add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
+  add_index "course_modules", ["qualification_id"], name: "index_course_modules_on_qualification_id", using: :btree
+  add_index "course_modules", ["sorting_order"], name: "index_course_modules_on_sorting_order", using: :btree
+  add_index "course_modules", ["tutor_id"], name: "index_course_modules_on_tutor_id", using: :btree
+
+  create_table "currencies", force: :cascade do |t|
     t.string   "iso_code"
     t.string   "name"
     t.string   "leading_symbol"
@@ -160,7 +215,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "exam_levels", force: true do |t|
+  add_index "currencies", ["active"], name: "index_currencies_on_active", using: :btree
+  add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
+  add_index "currencies", ["sorting_order"], name: "index_currencies_on_sorting_order", using: :btree
+
+  create_table "exam_levels", force: :cascade do |t|
     t.integer  "qualification_id"
     t.string   "name"
     t.string   "name_url"
@@ -173,9 +232,15 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.integer  "default_number_of_possible_exam_answers", default: 4
     t.boolean  "enable_exam_sections",                    default: true,  null: false
     t.integer  "cme_count",                               default: 0
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",                            default: false
+    t.text     "description"
+    t.integer  "duration"
   end
 
-  create_table "exam_sections", force: true do |t|
+  add_index "exam_levels", ["qualification_id"], name: "index_exam_levels_on_qualification_id", using: :btree
+
+  create_table "exam_sections", force: :cascade do |t|
     t.string   "name"
     t.string   "name_url"
     t.integer  "exam_level_id"
@@ -185,9 +250,51 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "cme_count",                         default: 0
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",                      default: false
+    t.integer  "duration"
   end
 
-  create_table "forum_post_concerns", force: true do |t|
+  add_index "exam_sections", ["exam_level_id"], name: "index_exam_sections_on_exam_level_id", using: :btree
+  add_index "exam_sections", ["name_url"], name: "index_exam_sections_on_name_url", using: :btree
+  add_index "exam_sections", ["sorting_order"], name: "index_exam_sections_on_sorting_order", using: :btree
+
+  create_table "flash_card_stacks", force: :cascade do |t|
+    t.integer  "course_module_element_flash_card_pack_id"
+    t.string   "name"
+    t.integer  "sorting_order"
+    t.string   "final_button_label"
+    t.string   "content_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "destroyed_at"
+  end
+
+  add_index "flash_card_stacks", ["course_module_element_flash_card_pack_id"], name: "flash_card_stacks_cme_flash_card_pack_id", using: :btree
+
+  create_table "flash_cards", force: :cascade do |t|
+    t.integer  "flash_card_stack_id"
+    t.integer  "sorting_order"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "destroyed_at"
+  end
+
+  add_index "flash_cards", ["flash_card_stack_id"], name: "index_flash_cards_on_flash_card_stack_id", using: :btree
+  add_index "flash_cards", ["sorting_order"], name: "index_flash_cards_on_sorting_order", using: :btree
+
+  create_table "flash_quizzes", force: :cascade do |t|
+    t.integer  "flash_card_stack_id"
+    t.string   "background_color"
+    t.string   "foreground_color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "destroyed_at"
+  end
+
+  add_index "flash_quizzes", ["flash_card_stack_id"], name: "index_flash_quizzes_on_flash_card_stack_id", using: :btree
+
+  create_table "forum_post_concerns", force: :cascade do |t|
     t.integer  "forum_post_id"
     t.integer  "user_id"
     t.string   "reason"
@@ -196,7 +303,10 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "forum_posts", force: true do |t|
+  add_index "forum_post_concerns", ["forum_post_id"], name: "index_forum_post_concerns_on_forum_post_id", using: :btree
+  add_index "forum_post_concerns", ["user_id"], name: "index_forum_post_concerns_on_user_id", using: :btree
+
+  create_table "forum_posts", force: :cascade do |t|
     t.integer  "user_id"
     t.text     "content"
     t.integer  "forum_topic_id"
@@ -206,14 +316,21 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "forum_topic_users", force: true do |t|
+  add_index "forum_posts", ["forum_topic_id"], name: "index_forum_posts_on_forum_topic_id", using: :btree
+  add_index "forum_posts", ["response_to_forum_post_id"], name: "index_forum_posts_on_response_to_forum_post_id", using: :btree
+  add_index "forum_posts", ["user_id"], name: "index_forum_posts_on_user_id", using: :btree
+
+  create_table "forum_topic_users", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "forum_topic_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "forum_topics", force: true do |t|
+  add_index "forum_topic_users", ["forum_topic_id"], name: "index_forum_topic_users_on_forum_topic_id", using: :btree
+  add_index "forum_topic_users", ["user_id"], name: "index_forum_topic_users_on_user_id", using: :btree
+
+  create_table "forum_topics", force: :cascade do |t|
     t.integer  "forum_topic_id"
     t.integer  "course_module_element_id"
     t.string   "heading"
@@ -227,7 +344,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.integer  "created_by"
   end
 
-  create_table "import_trackers", force: true do |t|
+  add_index "forum_topics", ["course_module_element_id"], name: "index_forum_topics_on_course_module_element_id", using: :btree
+  add_index "forum_topics", ["forum_topic_id"], name: "index_forum_topics_on_forum_topic_id", using: :btree
+  add_index "forum_topics", ["reviewed_by"], name: "index_forum_topics_on_reviewed_by", using: :btree
+
+  create_table "import_trackers", force: :cascade do |t|
     t.string   "old_model_name"
     t.integer  "old_model_id"
     t.string   "new_model_name"
@@ -238,7 +359,13 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "institution_users", force: true do |t|
+  add_index "import_trackers", ["imported_at"], name: "index_import_trackers_on_imported_at", using: :btree
+  add_index "import_trackers", ["new_model_id"], name: "index_import_trackers_on_new_model_id", using: :btree
+  add_index "import_trackers", ["new_model_name"], name: "index_import_trackers_on_new_model_name", using: :btree
+  add_index "import_trackers", ["old_model_id"], name: "index_import_trackers_on_old_model_id", using: :btree
+  add_index "import_trackers", ["old_model_name"], name: "index_import_trackers_on_old_model_name", using: :btree
+
+  create_table "institution_users", force: :cascade do |t|
     t.integer  "institution_id"
     t.integer  "user_id"
     t.string   "student_registration_number"
@@ -250,7 +377,10 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "membership_number"
   end
 
-  create_table "institutions", force: true do |t|
+  add_index "institution_users", ["institution_id"], name: "index_institution_users_on_institution_id", using: :btree
+  add_index "institution_users", ["user_id"], name: "index_institution_users_on_user_id", using: :btree
+
+  create_table "institutions", force: :cascade do |t|
     t.string   "name"
     t.string   "short_name"
     t.string   "name_url"
@@ -263,9 +393,14 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "background_colour_code"
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",           default: false
   end
 
-  create_table "invoice_line_items", force: true do |t|
+  add_index "institutions", ["name_url"], name: "index_institutions_on_name_url", using: :btree
+  add_index "institutions", ["sorting_order"], name: "index_institutions_on_sorting_order", using: :btree
+
+  create_table "invoice_line_items", force: :cascade do |t|
     t.integer  "invoice_id"
     t.decimal  "amount"
     t.integer  "currency_id"
@@ -279,7 +414,14 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "invoices", force: true do |t|
+  add_index "invoice_line_items", ["currency_id"], name: "index_invoice_line_items_on_currency_id", using: :btree
+  add_index "invoice_line_items", ["invoice_id"], name: "index_invoice_line_items_on_invoice_id", using: :btree
+  add_index "invoice_line_items", ["period_end_at"], name: "index_invoice_line_items_on_period_end_at", using: :btree
+  add_index "invoice_line_items", ["period_start_at"], name: "index_invoice_line_items_on_period_start_at", using: :btree
+  add_index "invoice_line_items", ["subscription_id"], name: "index_invoice_line_items_on_subscription_id", using: :btree
+  add_index "invoice_line_items", ["subscription_plan_id"], name: "index_invoice_line_items_on_subscription_plan_id", using: :btree
+
+  create_table "invoices", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "corporate_customer_id"
     t.integer  "subscription_transaction_id"
@@ -312,7 +454,14 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.text     "original_stripe_data"
   end
 
-  create_table "ip_addresses", force: true do |t|
+  add_index "invoices", ["corporate_customer_id"], name: "index_invoices_on_corporate_customer_id", using: :btree
+  add_index "invoices", ["currency_id"], name: "index_invoices_on_currency_id", using: :btree
+  add_index "invoices", ["subscription_id"], name: "index_invoices_on_subscription_id", using: :btree
+  add_index "invoices", ["subscription_transaction_id"], name: "index_invoices_on_subscription_transaction_id", using: :btree
+  add_index "invoices", ["user_id"], name: "index_invoices_on_user_id", using: :btree
+  add_index "invoices", ["vat_rate_id"], name: "index_invoices_on_vat_rate_id", using: :btree
+
+  create_table "ip_addresses", force: :cascade do |t|
     t.string   "ip_address"
     t.float    "latitude"
     t.float    "longitude"
@@ -322,13 +471,18 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "marketing_categories", force: true do |t|
+  add_index "ip_addresses", ["country_id"], name: "index_ip_addresses_on_country_id", using: :btree
+  add_index "ip_addresses", ["ip_address"], name: "index_ip_addresses_on_ip_address", using: :btree
+  add_index "ip_addresses", ["latitude"], name: "index_ip_addresses_on_latitude", using: :btree
+  add_index "ip_addresses", ["longitude"], name: "index_ip_addresses_on_longitude", using: :btree
+
+  create_table "marketing_categories", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "marketing_tokens", force: true do |t|
+  create_table "marketing_tokens", force: :cascade do |t|
     t.string   "code"
     t.integer  "marketing_category_id"
     t.boolean  "is_hard",               default: false, null: false
@@ -338,7 +492,9 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "qualifications", force: true do |t|
+  add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
+
+  create_table "qualifications", force: :cascade do |t|
     t.integer  "institution_id"
     t.string   "name"
     t.string   "name_url"
@@ -347,9 +503,15 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.integer  "cpd_hours_required_per_year"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",                default: false
   end
 
-  create_table "quiz_answers", force: true do |t|
+  add_index "qualifications", ["institution_id"], name: "index_qualifications_on_institution_id", using: :btree
+  add_index "qualifications", ["name_url"], name: "index_qualifications_on_name_url", using: :btree
+  add_index "qualifications", ["sorting_order"], name: "index_qualifications_on_sorting_order", using: :btree
+
+  create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
     t.boolean  "correct",                       default: false, null: false
     t.string   "degree_of_wrongness"
@@ -360,7 +522,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "destroyed_at"
   end
 
-  create_table "quiz_attempts", force: true do |t|
+  add_index "quiz_answers", ["degree_of_wrongness"], name: "index_quiz_answers_on_degree_of_wrongness", using: :btree
+  add_index "quiz_answers", ["quiz_question_id"], name: "index_quiz_answers_on_quiz_question_id", using: :btree
+  add_index "quiz_answers", ["wrong_answer_video_id"], name: "index_quiz_answers_on_wrong_answer_video_id", using: :btree
+
+  create_table "quiz_attempts", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
@@ -372,7 +538,12 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "answer_array"
   end
 
-  create_table "quiz_contents", force: true do |t|
+  add_index "quiz_attempts", ["course_module_element_user_log_id"], name: "index_quiz_attempts_on_course_module_element_user_log_id", using: :btree
+  add_index "quiz_attempts", ["quiz_answer_id"], name: "index_quiz_attempts_on_quiz_answer_id", using: :btree
+  add_index "quiz_attempts", ["quiz_question_id"], name: "index_quiz_attempts_on_quiz_question_id", using: :btree
+  add_index "quiz_attempts", ["user_id"], name: "index_quiz_attempts_on_user_id", using: :btree
+
+  create_table "quiz_contents", force: :cascade do |t|
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
@@ -386,20 +557,29 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "quiz_solution_id"
+    t.integer  "flash_card_id"
     t.datetime "destroyed_at"
   end
 
-  create_table "quiz_questions", force: true do |t|
+  add_index "quiz_contents", ["quiz_answer_id"], name: "index_quiz_contents_on_quiz_answer_id", using: :btree
+  add_index "quiz_contents", ["quiz_question_id"], name: "index_quiz_contents_on_quiz_question_id", using: :btree
+
+  create_table "quiz_questions", force: :cascade do |t|
     t.integer  "course_module_element_quiz_id"
     t.integer  "course_module_element_id"
     t.string   "difficulty_level"
     t.text     "hints"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "flash_quiz_id"
     t.datetime "destroyed_at"
   end
 
-  create_table "raw_video_files", force: true do |t|
+  add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree
+  add_index "quiz_questions", ["course_module_element_quiz_id"], name: "index_quiz_questions_on_course_module_element_quiz_id", using: :btree
+  add_index "quiz_questions", ["difficulty_level"], name: "index_quiz_questions_on_difficulty_level", using: :btree
+
+  create_table "raw_video_files", force: :cascade do |t|
     t.string   "file_name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -413,7 +593,9 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "guid_prefix"
   end
 
-  create_table "static_page_uploads", force: true do |t|
+  add_index "raw_video_files", ["file_name"], name: "index_raw_video_files_on_file_name", using: :btree
+
+  create_table "static_page_uploads", force: :cascade do |t|
     t.string   "description"
     t.integer  "static_page_id"
     t.datetime "created_at"
@@ -424,7 +606,9 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "upload_updated_at"
   end
 
-  create_table "static_pages", force: true do |t|
+  add_index "static_page_uploads", ["static_page_id"], name: "index_static_page_uploads_on_static_page_id", using: :btree
+
+  create_table "static_pages", force: :cascade do |t|
     t.string   "name"
     t.datetime "publish_from"
     t.datetime "publish_to"
@@ -457,7 +641,9 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "student_sign_up_sub_head"
   end
 
-  create_table "stripe_api_events", force: true do |t|
+  add_index "static_pages", ["public_url"], name: "index_static_pages_on_public_url", using: :btree
+
+  create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"
     t.string   "api_version"
     t.text     "payload"
@@ -469,7 +655,13 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "stripe_developer_calls", force: true do |t|
+  add_index "stripe_api_events", ["api_version"], name: "index_stripe_api_events_on_api_version", using: :btree
+  add_index "stripe_api_events", ["error"], name: "index_stripe_api_events_on_error", using: :btree
+  add_index "stripe_api_events", ["guid"], name: "index_stripe_api_events_on_guid", using: :btree
+  add_index "stripe_api_events", ["processed"], name: "index_stripe_api_events_on_processed", using: :btree
+  add_index "stripe_api_events", ["processed_at"], name: "index_stripe_api_events_on_processed_at", using: :btree
+
+  create_table "stripe_developer_calls", force: :cascade do |t|
     t.integer  "user_id"
     t.text     "params_received"
     t.boolean  "prevent_delete",  default: false
@@ -477,7 +669,10 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "student_exam_tracks", force: true do |t|
+  add_index "stripe_developer_calls", ["prevent_delete"], name: "index_stripe_developer_calls_on_prevent_delete", using: :btree
+  add_index "stripe_developer_calls", ["user_id"], name: "index_stripe_developer_calls_on_user_id", using: :btree
+
+  create_table "student_exam_tracks", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "exam_level_id"
     t.integer  "exam_section_id"
@@ -492,16 +687,28 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.integer  "count_of_cmes_completed",         default: 0
   end
 
-  create_table "subject_areas", force: true do |t|
+  add_index "student_exam_tracks", ["exam_level_id"], name: "index_student_exam_tracks_on_exam_level_id", using: :btree
+  add_index "student_exam_tracks", ["exam_schedule_id"], name: "index_student_exam_tracks_on_exam_schedule_id", using: :btree
+  add_index "student_exam_tracks", ["exam_section_id"], name: "index_student_exam_tracks_on_exam_section_id", using: :btree
+  add_index "student_exam_tracks", ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id", using: :btree
+  add_index "student_exam_tracks", ["user_id"], name: "index_student_exam_tracks_on_user_id", using: :btree
+
+  create_table "subject_areas", force: :cascade do |t|
     t.string   "name"
     t.string   "name_url"
     t.integer  "sorting_order"
-    t.boolean  "active",        default: false, null: false
+    t.boolean  "active",          default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "seo_description"
+    t.boolean  "seo_no_index",    default: false
   end
 
-  create_table "subscription_payment_cards", force: true do |t|
+  add_index "subject_areas", ["name"], name: "index_subject_areas_on_name", using: :btree
+  add_index "subject_areas", ["name_url"], name: "index_subject_areas_on_name_url", using: :btree
+  add_index "subject_areas", ["sorting_order"], name: "index_subject_areas_on_sorting_order", using: :btree
+
+  create_table "subscription_payment_cards", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "stripe_card_guid"
     t.string   "status"
@@ -531,7 +738,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "address_country"
   end
 
-  create_table "subscription_plan_categories", force: true do |t|
+  add_index "subscription_payment_cards", ["account_country_id"], name: "index_subscription_payment_cards_on_account_country_id", using: :btree
+  add_index "subscription_payment_cards", ["stripe_card_guid"], name: "index_subscription_payment_cards_on_stripe_card_guid", using: :btree
+  add_index "subscription_payment_cards", ["user_id"], name: "index_subscription_payment_cards_on_user_id", using: :btree
+
+  create_table "subscription_plan_categories", force: :cascade do |t|
     t.string   "name"
     t.datetime "available_from"
     t.datetime "available_to"
@@ -540,7 +751,12 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "subscription_plans", force: true do |t|
+  add_index "subscription_plan_categories", ["available_from"], name: "index_subscription_plan_categories_on_available_from", using: :btree
+  add_index "subscription_plan_categories", ["available_to"], name: "index_subscription_plan_categories_on_available_to", using: :btree
+  add_index "subscription_plan_categories", ["guid"], name: "index_subscription_plan_categories_on_guid", using: :btree
+  add_index "subscription_plan_categories", ["name"], name: "index_subscription_plan_categories_on_name", using: :btree
+
+  create_table "subscription_plans", force: :cascade do |t|
     t.boolean  "available_to_students",         default: false, null: false
     t.boolean  "available_to_corporates",       default: false, null: false
     t.boolean  "all_you_can_eat",               default: true,  null: false
@@ -558,7 +774,14 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.boolean  "livemode",                      default: false
   end
 
-  create_table "subscription_transactions", force: true do |t|
+  add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree
+  add_index "subscription_plans", ["available_to"], name: "index_subscription_plans_on_available_to", using: :btree
+  add_index "subscription_plans", ["available_to_corporates"], name: "index_subscription_plans_on_available_to_corporates", using: :btree
+  add_index "subscription_plans", ["available_to_students"], name: "index_subscription_plans_on_available_to_students", using: :btree
+  add_index "subscription_plans", ["currency_id"], name: "index_subscription_plans_on_currency_id", using: :btree
+  add_index "subscription_plans", ["payment_frequency_in_months"], name: "index_subscription_plans_on_payment_frequency_in_months", using: :btree
+
+  create_table "subscription_transactions", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "subscription_id"
     t.string   "stripe_transaction_guid"
@@ -573,7 +796,15 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.integer  "subscription_payment_card_id"
   end
 
-  create_table "subscriptions", force: true do |t|
+  add_index "subscription_transactions", ["alarm"], name: "index_subscription_transactions_on_alarm", using: :btree
+  add_index "subscription_transactions", ["currency_id"], name: "index_subscription_transactions_on_currency_id", using: :btree
+  add_index "subscription_transactions", ["live_mode"], name: "index_subscription_transactions_on_live_mode", using: :btree
+  add_index "subscription_transactions", ["stripe_transaction_guid"], name: "index_subscription_transactions_on_stripe_transaction_guid", using: :btree
+  add_index "subscription_transactions", ["subscription_id"], name: "index_subscription_transactions_on_subscription_id", using: :btree
+  add_index "subscription_transactions", ["transaction_type"], name: "index_subscription_transactions_on_transaction_type", using: :btree
+  add_index "subscription_transactions", ["user_id"], name: "index_subscription_transactions_on_user_id", using: :btree
+
+  create_table "subscriptions", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "corporate_customer_id"
     t.integer  "subscription_plan_id"
@@ -588,7 +819,13 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.boolean  "livemode",              default: false
   end
 
-  create_table "system_defaults", force: true do |t|
+  add_index "subscriptions", ["corporate_customer_id"], name: "index_subscriptions_on_corporate_customer_id", using: :btree
+  add_index "subscriptions", ["current_status"], name: "index_subscriptions_on_current_status", using: :btree
+  add_index "subscriptions", ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date", using: :btree
+  add_index "subscriptions", ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id", using: :btree
+  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+
+  create_table "system_defaults", force: :cascade do |t|
     t.integer  "individual_student_user_group_id"
     t.integer  "corporate_student_user_group_id"
     t.integer  "corporate_customer_user_group_id"
@@ -596,7 +833,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "user_activity_logs", force: true do |t|
+  add_index "system_defaults", ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id", using: :btree
+  add_index "system_defaults", ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id", using: :btree
+  add_index "system_defaults", ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id", using: :btree
+
+  create_table "user_activity_logs", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "session_guid"
     t.boolean  "signed_in",                        default: false, null: false
@@ -624,7 +865,14 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "marketing_token_cookie_issued_at"
   end
 
-  create_table "user_exam_levels", force: true do |t|
+  add_index "user_activity_logs", ["action_name"], name: "index_user_activity_logs_on_action_name", using: :btree
+  add_index "user_activity_logs", ["alert_level"], name: "index_user_activity_logs_on_alert_level", using: :btree
+  add_index "user_activity_logs", ["controller_name"], name: "index_user_activity_logs_on_controller_name", using: :btree
+  add_index "user_activity_logs", ["original_uri"], name: "index_user_activity_logs_on_original_uri", using: :btree
+  add_index "user_activity_logs", ["session_guid"], name: "index_user_activity_logs_on_session_guid", using: :btree
+  add_index "user_activity_logs", ["user_id"], name: "index_user_activity_logs_on_user_id", using: :btree
+
+  create_table "user_exam_levels", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "exam_level_id"
     t.integer  "exam_schedule_id"
@@ -632,7 +880,11 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "user_groups", force: true do |t|
+  add_index "user_exam_levels", ["exam_level_id"], name: "index_user_exam_levels_on_exam_level_id", using: :btree
+  add_index "user_exam_levels", ["exam_schedule_id"], name: "index_user_exam_levels_on_exam_schedule_id", using: :btree
+  add_index "user_exam_levels", ["user_id"], name: "index_user_exam_levels_on_user_id", using: :btree
+
+  create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.boolean  "individual_student",                   default: false, null: false
@@ -649,7 +901,7 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "user_likes", force: true do |t|
+  create_table "user_likes", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "likeable_type"
     t.integer  "likeable_id"
@@ -657,7 +909,10 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "user_notifications", force: true do |t|
+  add_index "user_likes", ["likeable_id"], name: "index_user_likes_on_likeable_id", using: :btree
+  add_index "user_likes", ["user_id"], name: "index_user_likes_on_user_id", using: :btree
+
+  create_table "user_notifications", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "subject_line"
     t.text     "content"
@@ -675,7 +930,14 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "users", force: true do |t|
+  add_index "user_notifications", ["blog_post_id"], name: "index_user_notifications_on_blog_post_id", using: :btree
+  add_index "user_notifications", ["forum_post_id"], name: "index_user_notifications_on_forum_post_id", using: :btree
+  add_index "user_notifications", ["forum_topic_id"], name: "index_user_notifications_on_forum_topic_id", using: :btree
+  add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
+  add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
+  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
+  create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "first_name"
     t.string   "last_name"
@@ -716,7 +978,17 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.string   "guid"
   end
 
-  create_table "vat_codes", force: true do |t|
+  add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
+  add_index "users", ["corporate_customer_id"], name: "index_users_on_corporate_customer_id", using: :btree
+  add_index "users", ["corporate_customer_user_group_id"], name: "index_users_on_corporate_customer_user_group_id", using: :btree
+  add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", using: :btree
+  add_index "users", ["password_reset_token"], name: "index_users_on_password_reset_token", using: :btree
+  add_index "users", ["persistence_token"], name: "index_users_on_persistence_token", using: :btree
+  add_index "users", ["stripe_customer_id"], name: "index_users_on_stripe_customer_id", using: :btree
+  add_index "users", ["user_group_id"], name: "index_users_on_user_group_id", using: :btree
+
+  create_table "vat_codes", force: :cascade do |t|
     t.integer  "country_id"
     t.string   "name"
     t.string   "label"
@@ -725,12 +997,16 @@ ActiveRecord::Schema.define(version: 20150430125741) do
     t.datetime "updated_at"
   end
 
-  create_table "vat_rates", force: true do |t|
+  add_index "vat_codes", ["country_id"], name: "index_vat_codes_on_country_id", using: :btree
+
+  create_table "vat_rates", force: :cascade do |t|
     t.integer  "vat_code_id"
     t.float    "percentage_rate"
     t.date     "effective_from"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
 
 end

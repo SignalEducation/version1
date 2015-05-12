@@ -1,6 +1,7 @@
 class LibraryController < ApplicationController
 
   def show
+
     @subject_areas = SubjectArea.all_active.all_in_order
     @subject_area = @institution = @qualification = @exam_level = @exam_section = nil
     @subject_area = @subject_areas.where(name_url: params[:subject_area_name_url].to_s).first || @subject_areas.first
@@ -18,7 +19,18 @@ class LibraryController < ApplicationController
     end
     @hierarchy_item = @exam_section || @exam_level || @qualification || @institution || @subject_area
 
-    #@total_cmes = @hierarchy_item.children.first.cme_count
+    # SEO Titles
+    if @hierarchy_item == @exam_section
+      seo_title_maker("#{@institution.short_name} - #{@exam_level.name} - #{@exam_section.name}", @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    elsif @hierarchy_item == @exam_level
+      seo_title_maker("#{@institution.short_name} - #{@exam_level.name}", @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    elsif @hierarchy_item == @qualification
+      seo_title_maker("#{@institution.short_name} - #{@qualification.name}", @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    elsif @hierarchy_item == @institution
+      seo_title_maker(@institution.short_name, @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    elsif @hierarchy_item == @subject_area
+      seo_title_maker('Library', @hierarchy_item.seo_description, @hierarchy_item.seo_no_index)
+    end
 
     @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
     @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete <= ?', 100)

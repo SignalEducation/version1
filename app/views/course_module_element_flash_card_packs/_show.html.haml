@@ -1,0 +1,56 @@
+.row
+  .col-sm-12
+    %h1=cme.name
+
+-cme.course_module_element_flash_card_pack.flash_card_stacks.each_with_index do |stack, stack_counter|
+
+  .flash-card-stack.hide{data: {id: stack.id, content_type: stack.content_type}}
+    -if stack.content_type == 'Cards'
+      .well.well-sm{style: "background-color: #{cme.course_module_element_flash_card_pack.background_color}; color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
+        -stack.flash_cards.each_with_index do |card, card_counter|
+          .flash-card.hide
+            =render partial: 'course_module_element_flash_card_packs/show_stack_heading', locals: {the_title: stack.name, the_color: cme.course_module_element_flash_card_pack.foreground_color, show_back_btn: (stack_counter > 0 || card_counter > 0), stack_type: 'cards'}
+
+            .row.text-center
+              .col-sm-10.col-sm-offset-1
+                -card.quiz_contents.each do |content|
+                  .flash-card-content
+                    -if content.content_type == 'text' || content.content_type == 'mathjax'
+                      %p=content.text_content
+                    -else
+                      =image_tag content.image.url, class: 'img-responsive'
+                -if card.id == stack.flash_cards.last.id
+                  =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: ((cme.course_module_element_flash_card_pack.flash_card_stacks.size - 1) == stack_counter), next_cme_url: course_special_link(cme.next_element), the_label: stack.final_button_label, stack_type: 'cards'}
+
+                -else
+                  =link_to '#', class: 'next-card-button' do
+                    .h2{style: "color: #{cme.course_module_element_flash_card_pack.foreground_color};"}
+                      %span.glyphicon.glyphicon-circle-arrow-down
+
+    -elsif stack.content_type == 'Quiz'
+      .well.well-sm{style: "background-color: #{stack.flash_quiz.background_color}; color: #{stack.flash_quiz.foreground_color};"}
+        -stack.flash_quiz.quiz_questions.each_with_index do |question, question_counter|
+          .quiz_question.text-center{class: question_counter == 0 ? '' : 'hide'}
+
+            =render partial: 'course_module_element_flash_card_packs/show_stack_heading', locals: {the_title: stack.name, the_color: stack.flash_quiz.foreground_color,show_back_btn: (stack_counter > 0 || question_counter > 0), stack_type: 'quiz'}
+
+            %h3=question.quiz_contents.first.text_content
+            -question.quiz_answers.each do |answer|
+              .row
+                .col-sm-4.col-sm-offset-4
+                  =link_to answer.quiz_contents.first.text_content, '#', class: 'btn btn-block btn-default h3 next-question-button', data: {correct: (answer.degree_of_wrongness == 'correct')}
+
+        .quiz_results.text-center.hide
+          =render partial: 'course_module_element_flash_card_packs/show_stack_heading', locals: {the_title: stack.name, the_color: stack.flash_quiz.foreground_color, show_back_btn: true, stack_type: 'quiz'}
+          .row
+            .col-sm-12
+              %h3 Results
+          .row.h1
+            .col-sm-6.col-sm-offset-3.text-center
+              %p
+                %span.final-score 0
+                out of
+                =stack.flash_quiz.quiz_questions.count
+          .row
+            .col-sm-8.col-sm-offset-2
+              =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: ((cme.course_module_element_flash_card_pack.flash_card_stacks.size - 1) == stack_counter), next_cme_url: course_special_link(cme.next_element), the_label: stack.final_button_label}

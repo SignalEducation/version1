@@ -27,7 +27,7 @@ class InvoicesController < ApplicationController
     end
     @currencies = Currency.all_active.all_in_order
     # todo VAT processing disabled: @vat_rates = VatRate.all_in_order
-    seo_title_maker(@invoice.try(:id).to_s)
+    seo_title_maker(@invoice.try(:id).to_s, '', true)
   end
 
   def bounce_to_profile

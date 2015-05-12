@@ -66,7 +66,7 @@ class QuizQuestionsController < ApplicationController
     else
       @cme_videos = CourseModuleElement.where(course_module_id: @quiz_question.course_module_element_quiz.course_module_element.course_module_id).all_videos.all_in_order
     end
-    seo_title_maker(@quiz_question.try(:id).to_s)
+    seo_title_maker("Quiz Questions #{@quiz_question.try(:id)}", '', true)
   end
 
   def allowed_params

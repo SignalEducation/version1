@@ -60,24 +60,15 @@ describe 'User navigating through the library:', type: :feature do
       expect(page).to have_content institution_1.description
       click_link institution_1.short_name
       expect(page).to have_content maybe_upcase exam_level_1.name
-      expect(page).to have_content exam_section_1.name
-      click_link exam_section_1.name
+      within('.panel-group') do
+        expect(page).to have_content exam_section_1.name
+        find('.panel-heading').click
+      end
       expect(page).to have_content maybe_upcase exam_section_1.name
       expect(page).to have_content course_module_1.name
-      expect(page).to have_css('.progress-bar')
-      click_link course_module_1.name
-      expect(page).to have_content course_module_1.name
+      expect(page).to have_content course_module_element_1_1.name
       expect(page).to have_content course_module_element_1_2.name
-      # expect(page).to have_content quiz_content_1.text_content
-      click_link '#library-btn'
-      expect(page).to have_content maybe_upcase exam_section_1.name
-      expect(page).to have_content course_module_1.name
-      click_link '#back-btn'
-      #The back btn skips a exam_section_1 show should the library show do this as well ?
-      #expect(page).to have_content maybe_upcase exam_level_1.name
-      #expect(page).to have_content exam_section_1.name
-      expect(page).to have_content maybe_upcase institution_1.short_name
-      expect(page).to have_content institution_1.description
+      # Add more here
     end
 
     scenario 'when logged in as one of the users', js: true do
@@ -90,28 +81,15 @@ describe 'User navigating through the library:', type: :feature do
         expect(page).to have_content institution_1.description
         click_link institution_1.short_name
         expect(page).to have_content maybe_upcase exam_level_1.name
-        expect(page).to have_content exam_section_1.name
-        click_link exam_section_1.name
+        within('.panel-group') do
+          expect(page).to have_content exam_section_1.name
+          find('.panel-heading').click
+        end
         expect(page).to have_content maybe_upcase exam_section_1.name
-        expect(page).to have_content course_module_1.name
-        expect(page).to have_css('.progress-bar')
-        click_link course_module_1.name
-        expect(page).to have_content course_module_1.name
-        expect(page).to have_content course_module_element_1_2.name
-        # expect(page).to have_content quiz_content_1.text_content
-        click_link '#library-btn'
-        expect(page).to have_content maybe_upcase exam_section_1.name
-        expect(page).to have_content course_module_1.name
-        click_link '#back-btn'
-        expect(page).to have_content maybe_upcase institution_1.short_name
-        expect(page).to have_content institution_1.description
-        click_link institution_1.short_name
-        expect(page).to have_content maybe_upcase exam_level_1.name
-        expect(page).to have_content exam_section_1.name
-        click_link 'Start'
         expect(page).to have_content course_module_1.name
         expect(page).to have_content course_module_element_1_1.name
-        # expect(page).to have_content quiz_content_1.text_content
+        expect(page).to have_content course_module_element_1_2.name
+        # Add more here
         sign_out
         print '>'
       end

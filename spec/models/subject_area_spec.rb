@@ -43,6 +43,8 @@ describe SubjectArea do
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
 
+  it { should validate_presence_of(:seo_description) }
+
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:sanitize_name_url).before(:save) }
