@@ -106,7 +106,7 @@ class RawVideoFile < ActiveRecord::Base
       wip = RawVideoFile.where(transcode_result: 'in-progress')
       if wip.count >= 0
         # open a connection to AWS
-        sqs_connection = AWS::SQS::Client.new(
+        sqs_connection = Aws::SQS::Client.new(
                 access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
                 secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY'],
                 region: 'eu-west-1')
