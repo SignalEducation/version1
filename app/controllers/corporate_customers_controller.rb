@@ -57,7 +57,7 @@ class CorporateCustomersController < ApplicationController
     end
     @countries = Country.all_in_order
     @owners = User.all_in_order
-    seo_title_maker(@corporate_customer.try(:organisation_name))
+    seo_title_maker(@corporate_customer.try(:organisation_name) || 'Corporate Customers', '', true)
   end
 
   def allowed_params

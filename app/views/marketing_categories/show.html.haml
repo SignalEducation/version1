@@ -1,0 +1,17 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.marketing_categories.show.h1')
+        \#
+        =@marketing_category.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.marketing_categories.form.name')
+        %td.col-sm-8=@marketing_category.name
+    %p
+      =link_to t('views.general.back'), marketing_categories_url
+      |
+      =link_to t('views.general.edit'), edit_marketing_category_url(id: @marketing_category.id), title: t('views.general.edit_tooltip')

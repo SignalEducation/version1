@@ -1,0 +1,27 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.marketing_tokens.preview_csv.h1')
+.row
+  =form_tag(import_csv_marketing_tokens_path, authenticity_token: true, id: 'import_csv_marketing_tokens_form', role: 'form', class: 'form-horizontal') do
+    .col-sm-12
+      %table.table.table-striped.table-bordered
+        %thead
+          %tr
+            %th=t('views.marketing_tokens.preview_csv.code')
+            %th=t('views.marketing_tokens.preview_csv.marketing_category')
+            %th=t('views.marketing_tokens.preview_csv.is_hard')
+            %th=t('views.marketing_tokens.preview_csv.errors')
+        %tbody
+          -@csv_data.each_with_index do |csd, idx|
+            %tr{id: "csvdata-#{idx}", class: csd[:error_messages].empty? ? 'success' : 'danger'}
+              %td=text_field_tag "csvdata[#{idx}][code]", csd[:values][0], readonly: "readonly"
+              %td=text_field_tag "csvdata[#{idx}][category]", csd[:values][1], readonly: "readonly"
+              %td=text_field_tag "csvdata[#{idx}][flag]", csd[:values][2], readonly: "readonly"
+              %td=csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
+
+      .row
+        .col-sm-12
+          -unless @has_errors
+            =submit_tag t('views.marketing_tokens.preview_csv.submit'), class: 'btn btn-success'
+          =link_to t('views.general.cancel'), marketing_tokens_url, class: 'btn btn-success'

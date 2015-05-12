@@ -1,0 +1,38 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.marketing_tokens.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @marketing_tokens, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.marketing_tokens.form.code')
+          %th=t('views.marketing_tokens.form.marketing_category_id')
+          %th=t('views.marketing_tokens.form.is_hard')
+          %th=t('views.marketing_tokens.form.is_seo')
+          %th=t('views.marketing_tokens.form.is_direct')
+          %th
+      %tbody
+        -@marketing_tokens.each do |marketing_token|
+          %tr{id: marketing_token.id}
+            %td=link_to(marketing_token.code, marketing_token, title: t('views.general.view_tooltip'))
+            %td=link_to(marketing_token.marketing_category.name, marketing_token, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(marketing_token.is_hard), marketing_token, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(marketing_token.is_seo), marketing_token, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(marketing_token.is_direct), marketing_token, title: t('views.general.view_tooltip'))
+            %td
+              -if marketing_token.editable?
+                =link_to t('views.general.edit'), edit_marketing_token_url(marketing_token), class: 'btn btn-info btn-xs'
+              -if marketing_token.destroyable?
+                =link_to t('views.general.delete'), marketing_token, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_marketing_token_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    =link_to t('views.marketing_tokens.index.csv_upload'), '#', data: {toggle: 'modal', target: '#new-upload-modal'}, class: 'btn btn-success'
+    =link_to t('views.marketing_tokens.index.csv_download'), download_csv_marketing_tokens_url, class: 'btn btn-info'
+    .pull-right=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
+
+=render partial: 'csv_file_upload'

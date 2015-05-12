@@ -55,7 +55,6 @@ describe VatCodesController, type: :controller do
       end
     end
 
-
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
@@ -73,84 +72,50 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -165,84 +130,51 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -257,83 +189,51 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: vat_code_1.id
         expect_bounce_as_not_allowed
       end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
-        expect_bounce_as_not_allowed      end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -348,84 +248,51 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -440,84 +307,51 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -532,84 +366,51 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
+      it 'should bounce as not allowed' do
         get :edit, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -624,84 +425,43 @@ describe VatCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see vat_code_1' do
+      it 'should bounce as not allowed' do
         get :show, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see vat_code_2' do
-        get :show, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
-      it 'should respond OK with vat_code_1' do
-        get :edit, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with vat_code_2' do
-        get :edit, id: vat_code_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should bounce as not allowed' do
         post :create, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for vat_code_1' do
+      it 'should bounce as not allowed' do
         put :update, id: vat_code_1.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for vat_code_2' do
-        put :update, id: vat_code_2.id, vat_code: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: vat_code_1.id, vat_code: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should bounce as not allowed' do
         delete :destroy, id: vat_code_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: vat_code_2.id
         expect_bounce_as_not_allowed
       end
     end

@@ -10,7 +10,8 @@ class UserLoggerWorker
   def perform(job_guid, user_id, session_guid, req_filtered_path,
               the_controller_name, the_action_name, req_parameters,
               remote_ip, the_user_agent, first_session_landing_page,
-              latest_session_landing_page, post_sign_up_redirect_url)
+              latest_session_landing_page, post_sign_up_redirect_url,
+              marketing_token_id, marketing_token_cookie_issued_at)
     the_user = User.find_by_id(user_id)
     log = UserActivityLog.new(
             user_id: the_user.try(:id),
@@ -26,7 +27,9 @@ class UserLoggerWorker
             guid: job_guid,
             first_session_landing_page: first_session_landing_page,
             latest_session_landing_page: latest_session_landing_page,
-            post_sign_up_redirect_url: post_sign_up_redirect_url
+            post_sign_up_redirect_url: post_sign_up_redirect_url,
+            marketing_token_id: marketing_token_id,
+            marketing_token_cookie_issued_at: marketing_token_cookie_issued_at
     )
     if log.save
       true

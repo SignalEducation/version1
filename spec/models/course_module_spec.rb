@@ -79,7 +79,7 @@ describe CourseModule do
   it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:set_cme_count).before(:save) }
-  it { should callback(:update_parent_cme_count).after(:commit) }
+  it { should callback(:update_parent).after(:commit) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -105,6 +105,5 @@ describe CourseModule do
   it { should respond_to(:previous_module) }
   it { should respond_to(:previous_module_id) }
   it { should respond_to(:recalculate_estimated_time) }
-
 
 end

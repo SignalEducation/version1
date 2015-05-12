@@ -1,0 +1,29 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.marketing_tokens.show.h1')
+        \#
+        =@marketing_token.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.marketing_tokens.form.code')
+        %td.col-sm-8=@marketing_token.code
+      %tr
+        %td.col-sm-4=t('views.marketing_tokens.form.marketing_category_id')
+        %td.col-sm-8=@marketing_token.marketing_category.name
+      %tr
+        %td.col-sm-4=t('views.marketing_tokens.form.is_hard')
+        %td.col-sm-8=tick_or_cross(@marketing_token.is_hard)
+      %tr
+        %td.col-sm-4=t('views.marketing_tokens.form.is_seo')
+        %td.col-sm-8=tick_or_cross(@marketing_token.is_seo)
+      %tr
+        %td.col-sm-4=t('views.marketing_tokens.form.is_direct')
+        %td.col-sm-8=tick_or_cross(@marketing_token.is_direct)
+    %p
+      =link_to t('views.general.back'), marketing_tokens_url
+      |
+      =link_to t('views.general.edit'), edit_marketing_token_url(id: @marketing_token.id), title: t('views.general.edit_tooltip')

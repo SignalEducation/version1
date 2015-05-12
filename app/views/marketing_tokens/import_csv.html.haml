@@ -1,0 +1,26 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.marketing_tokens.index.h1')
+.row
+  .col-sm-12
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.marketing_tokens.form.code')
+          %th=t('views.marketing_tokens.form.marketing_category_id')
+          %th=t('views.marketing_tokens.form.is_hard')
+          %th=t('views.marketing_tokens.form.is_seo')
+          %th=t('views.marketing_tokens.form.is_direct')
+      %tbody
+        -@marketing_tokens.each do |token|
+          %tr{id: token.id}
+            %td=token.code
+            %td=token.marketing_category.name
+            %td=tick_or_cross(token.is_hard)
+            %td=tick_or_cross(token.is_seo)
+            %td=tick_or_cross(token.is_direct)
+
+.row
+  .col-sm-12
+    =link_to '&larr; '.html_safe + t('views.marketing_tokens.index.h1'), marketing_tokens_url

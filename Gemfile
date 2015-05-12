@@ -23,6 +23,7 @@ gem 'intercom-rails', '~> 0.2.27' # communicate with Intercom.io
 gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
+gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
 gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
@@ -49,18 +50,18 @@ group :development do
   gem 'better_errors' # gives more useful error report in the browser
   gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
-  gem 'pry-byebug' # halts code so you can experiment with it
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
 end
 
 group :development, :test do
-  gem 'rspec-rails' # our core testing environment
-  gem 'factory_girl_rails' # FactoryGirl generates fake objects
+  gem 'pry-byebug' # halts code so you can experiment with it
   gem 'capybara' # Runs tests in a browser
-  gem 'selenium-webdriver', '>=2.45.0'
   gem 'capybara-webkit'
+  gem 'factory_girl_rails' # FactoryGirl generates fake objects
   gem 'poltergeist'
+  gem 'rspec-rails' # our core testing environment
+  gem 'selenium-webdriver', '>=2.45.0'
   gem 'thin' # new web server
 end
 

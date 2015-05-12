@@ -17,6 +17,8 @@
 #  cme_count                               :integer          default(0)
 #  seo_description                         :string(255)
 #  seo_no_index                            :boolean          default(FALSE)
+#  description                             :text
+#  duration                                :integer
 #
 
 FactoryGirl.define do
@@ -29,6 +31,9 @@ FactoryGirl.define do
     active               false
     default_number_of_possible_exam_answers 4
     enable_exam_sections true
+    description          'Lorem Ipsum'
+    seo_description      'Lorem ipsum'
+    seo_no_index         false
 
     factory :active_exam_level do
       active                       true

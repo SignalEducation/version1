@@ -142,6 +142,15 @@ def expect_error_bounce(destination_url)
   expect(response).to redirect_to(destination_url)
 end
 
+def expect_import_csv_success_with_model(model_name, record_count)
+  expect(flash[:success]).to be_nil
+  expect(flash[:error]).to be_nil
+  expect(response.status).to eq(200)
+  expect(response).to render_template(:import_csv)
+  expect(assigns(model_name.to_sym).first.class.name).to eq(model_name.classify)
+  expect(assigns(model_name.to_sym).count).to eq(record_count)
+end
+
 ######
 ## mailers
 ##

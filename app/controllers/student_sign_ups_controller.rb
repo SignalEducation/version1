@@ -81,6 +81,7 @@ class StudentSignUpsController < ApplicationController
           h1: static_page.try(:student_sign_up_h1),
           sub_head: static_page.try(:student_sign_up_sub_head)
     }
+    seo_title_maker('Sign up', I18n.t('views.student_sign_ups.new.seo_description'), false)
   end
 
 end

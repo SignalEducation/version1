@@ -17,6 +17,8 @@
 #  cme_count                               :integer          default(0)
 #  seo_description                         :string(255)
 #  seo_no_index                            :boolean          default(FALSE)
+#  description                             :text
+#  duration                                :integer
 #
 
 require 'rails_helper'
@@ -61,11 +63,16 @@ describe ExamLevel do
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
   it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
+  it { should validate_presence_of(:description) }
+
+  it { should validate_presence_of(:seo_description) }
+
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_best_possible_score).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:recalculate_cme_count).before(:save) }
+  it { should callback(:recalculate_duration).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

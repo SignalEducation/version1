@@ -37,16 +37,20 @@ class CourseModuleElement < ActiveRecord::Base
                   :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
-                  :course_module_element_resources_attributes
+                  :course_module_element_resources_attributes,
+                  :seo_description, :seo_no_index,
+                  :course_module_element_flash_card_pack_attributes,
+                  :is_cme_flash_card_pack
 
   # Constants
 
   # relationships
   belongs_to :course_module
-  has_one :course_module_element_video
+  has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
+  has_one :course_module_element_video
   belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
@@ -58,6 +62,7 @@ class CourseModuleElement < ActiveRecord::Base
            foreign_key: :latest_course_module_element_id
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
+  accepts_nested_attributes_for :course_module_element_flash_card_pack
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video, update_only: true
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }

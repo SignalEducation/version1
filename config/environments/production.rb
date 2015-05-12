@@ -104,3 +104,10 @@ Rails.application.configure do
 
   config.exceptions_app = self.routes
 end
+
+# Required by LogEntries
+Rails.logger = Le.new('3101cfa2-8352-43bb-8465-ca043de116b1', # production
+                      debug: true, # logs debug-level events to LE
+                      ssl: true, # encrypt our log transmissions
+                      local: true # keep local logs as well
+)

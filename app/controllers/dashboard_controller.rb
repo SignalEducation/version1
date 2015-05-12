@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController
 
   def index
-    seo_title_maker('personalised to you')
+    seo_title_maker('Dashboard - Personalised to you', "Track your progress as you study using LearnSignal's personalised dashboard", false)
     @dashboard_type = []
     if current_user.nil? || current_user.individual_student? || current_user.admin?
       @dashboard_type << 'individual_student'

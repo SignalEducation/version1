@@ -1,0 +1,230 @@
+// FLASH QUIZ CONTENT STUFF
+
+// Adding Quiz Content Blocks
+function addFlashCardQuizContent(theThing) {
+  var theTime = (new Date).getTime().toString(),
+      me = $(theThing);
+
+  // renumber the sorting-orders for every qc in the current card (held inside a <td>).
+  me.parent().parent().parent().find('.quiz_content').each(function(counter) {
+    $(this).find('.qc-sorting-order').val(counter * 10);
+  });
+  var theClone = me.parent().parent().clone(); // .quiz_content
+  var position = me.parent().parent().parent().children().index(me.parent().parent());
+
+  // image stuff
+  var theImage = theClone.find('.quiz_content_image');
+  theImage.find('.thumbnail').html("<img alt='Missing' src='/assets/images/missing.png'>");
+  var theFileField = theImage.find('.file_field');
+  var theFileFieldNameArray = theFileField.attr('id').split('_');
+  theFileField.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_image');
+  theFileField.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][image]');
+  theClone.find('.quiz_content_image').addClass('hide');
+
+  // text area
+  var textArea = theClone.find('textarea');
+  textArea.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_text_content');
+  textArea.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][text_content]');
+  textArea.val('');
+  theClone.find('.quiz_content_text').removeClass('hide');
+
+  // destroy
+  var destroy = theClone.find('.flash-card-qc-destroy');
+  destroy.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '__destroy');
+  destroy.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][_destroy]');
+
+  // the_id
+  var the_id = theClone.find('.the_id');
+  the_id.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_'  + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_id');
+  the_id.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][id]');
+  the_id.val('');
+
+  // sorting_order field
+  var sortOrder = theClone.find('.qc-sorting-order');
+  sortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + theFileFieldNameArray[14] + '_flash_cards_attributes_' + theFileFieldNameArray[18] + '_quiz_contents_attributes_' + theTime + '_sorting_order');
+  sortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + theFileFieldNameArray[14] + '][flash_cards_attributes][' + theFileFieldNameArray[18] + '][quiz_contents_attributes][' + theTime + '][sorting_order]');
+  sortOrder.val( parseInt(sortOrder.val()) + 5);
+
+  // radio button stuff
+  theClone.find('.content_type_radios').each(function(counter){
+    var temp_array = theClone.find('.content_type_radios').eq(counter).attr('id').split('_');
+    var temp_array2 = theClone.find('.content_type_radios').eq(counter).attr('name').split('][');
+    temp_array[14] = theFileFieldNameArray[14];
+    temp_array[18] = theFileFieldNameArray[18];
+    temp_array[22] = theTime;
+    temp_array2[2] = theFileFieldNameArray[14];
+    temp_array2[4] = theFileFieldNameArray[18];
+    temp_array2[6] = theTime;
+    theClone.find('.content_type_radios').eq(counter).attr('id', temp_array.join('_'));
+    theClone.find('.content_type_radio_labels').eq(counter).attr('for', temp_array.join('_'));
+    theClone.find('.content_type_radios').eq(counter).attr('name', temp_array2.join(']['));
+  });
+
+  theClone.find('.content_type_radios').prop('checked', false);
+  theClone.find('.content_type_radios').eq(0).prop('checked', true);
+
+  // attach to the page
+  me.parent().parent().parent().find('.quiz_content:nth-child(' + (position + 1) + ')').after(theClone);
+}
+
+$(document).on('click', '.addFlashCardQuizContent', function() {
+  addFlashCardQuizContent($(this));
+  return false;
+});
+
+// Add a new flash card
+function addNewFlashCard(theThing) {
+  var me = $(theThing);
+  var theClone = me.closest('.panel-body').find('tr').first().clone(),
+      theTime = (new Date).getTime();
+  var theFileField = theClone.find('.file_field').first();
+  var theFileFieldNameArray = theFileField.attr('id').split('_');
+  var stackId = theFileFieldNameArray[14];
+
+  // the <tr>'s ID
+  theClone.attr('id', theTime); // of the new <tr>
+  theClone.find('h4').text('<%= I18n.t('views.flash_cards.form.new_card') %>');
+
+  // card-sorting-order
+  var cardSortOrder = theClone.find('.card-sorting-order');
+  cardSortOrder.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + stackId + '_flash_cards_attributes_' + theTime + '_sorting_order');
+  cardSortOrder.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + stackId + '][flash_cards_attributes][' + theTime + '][sorting_order]');
+  cardSortOrder.val( parseInt(cardSortOrder.val()) + 5);
+
+  // card-destroy
+  var flashCardDestroy = theClone.find('.flash-card-destroy');
+  flashCardDestroy.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + stackId + '_flash_cards_attributes_' + theTime + '__destroy');
+  flashCardDestroy.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + stackId + '][flash_cards_attributes][' + theTime + '][_destroy]');
+  flashCardDestroy.val('false');
+
+  // card-ID
+  var flashCardId = theClone.find('.card_id');
+  flashCardId.attr('id', 'course_module_element_course_module_element_flash_card_pack_attributes_flash_card_stacks_attributes_' + stackId + '_flash_cards_attributes_' + theTime + '_id');
+  flashCardId.attr('name', 'course_module_element[course_module_element_flash_card_pack_attributes][flash_card_stacks_attributes][' + stackId + '][flash_cards_attributes][' + theTime + '][_id]');
+  flashCardId.val(null);
+
+  // the quiz contents
+  theClone.find('.quiz_content').not(':first').remove();
+  var firstQcFormFields = theClone.find('.quiz_content').first().find('input, textarea, label');
+  firstQcFormFields.each(function(index2) {
+    var thisOne = firstQcFormFields.eq(index2);
+    var thisOneId, thisOneName;
+    if (thisOne.prop('tagName') == 'LABEL') {
+      thisOneId = thisOne.attr('for').split('_');
+    } else {
+      thisOneId = thisOne.attr('id').split('_');
+      thisOneName = thisOne.attr('name').split('][');
+      thisOneName[2] = stackId;
+      thisOneName[4] = theTime;
+      thisOneName[6] = 0;
+    }
+    thisOneId[14] = stackId;
+    thisOneId[18] = theTime;
+    thisOneId[22] = 0;
+    if (thisOne.prop('tagName') == 'LABEL') {
+      thisOne.attr('for', thisOneId.join('_'));
+    } else {
+      thisOne.attr('id', thisOneId.join('_'));
+      thisOne.attr('name', thisOneName.join(']['));
+    }
+  });
+
+  // image stuff
+  var theImage = theClone.find('.quiz_content_image');
+  theImage.find('.thumbnail').html("<img alt='Missing' src='/assets/images/missing.png'>");
+  theClone.find('.quiz_content_image').addClass('hide');
+
+  // text area
+  var textArea = theClone.find('textarea');
+  textArea.val('');
+  theClone.find('.quiz_content_text').removeClass('hide');
+
+  // destroy
+  var qcDestroy = theClone.find('.flash-card-qc-destroy');
+  qcDestroy.val('false');
+
+  // the_id
+  var the_id = theClone.find('.the_id');
+  the_id.val('');
+
+  // sorting_order field
+  var sortOrder = theClone.find('.qc-sorting-order');
+  sortOrder.val('0');
+
+  // radio button stuff
+  theClone.find('.content_type_radios').prop('checked', false);
+  theClone.find('.content_type_radios').eq(0).prop('checked', true);
+
+  me.closest('.panel-body').find('tbody').append(theClone);
+}
+
+$(document).on('click', '.addNewFlashCard', function() {
+  addNewFlashCard($(this));
+  return false;
+});
+
+
+function removeFlashCard(theThing) {
+  var me = $(theThing);
+  var theTrTag = me.parent().parent();
+
+  if (theTrTag.parent().find('tr').length == 1) {
+    alert('Sorry, you cannot delete the last Flash Card');
+  } else if (theTrTag.find('.quiz_content').length > 1) {
+    alert('Sorry, you cannot delete a card that still has contents');
+  } else if (confirm('Are you sure?')) {
+    if (parseInt(theTrTag.attr('id')) > 1000000000) {
+      theTrTag.remove();
+    } else {
+      theTrTag.hide();
+      theTrTag.find('.flash-card-destroy').val('1');
+      var theQuizContents = theTrTag.find('.quiz_contents');
+      theQuizContents.each(function(counter) {
+        if (theQuizContents.eq(counter).find('.the_id').val() == '') {
+          theQuizContents.eq(counter).remove();
+        } else {
+          theQuizContents.eq(counter).find('.flash-card-qc-destroy').val('1');
+        }
+      })
+    }
+  }
+}
+
+$(document).on('click', '.removeFlashCard', function() {
+    removeFlashCard(this);
+    return false;
+});
+
+
+// Radio Buttons
+function monitorRadioButtons(theButton) {
+  $(theButton).parent().parent().find('.quiz_content_image').toggleClass('hide');
+  $(theButton).parent().parent().find('.quiz_content_text').toggleClass('hide');
+}
+
+$(document).on('change', '.content_type_radios', function() {
+  monitorRadioButtons(this);
+  return false;
+});
+
+// Removing Quiz Content Blocks
+function removeFlashCardQuizContent(theThing) {
+  var me = $(theThing);
+  if (me.parent().parent().parent().find('.quiz_content').length == 1 ) {
+    alert('Sorry, you cannot delete the last text block');
+  } else {
+    if (confirm('Are you sure?')) {
+      if (parseInt(me.parent().parent().find('.the_id').val()) > 0 ) {
+        me.parent().parent().hide();
+        me.parent().parent().find('.flash-card-qc-destroy').val('1')
+      } else {
+        me.parent().parent().remove();
+      }
+    }
+  }
+}
+
+$(document).on('click', '.removeFlashCardQuizContent', function() {
+  removeFlashCardQuizContent(this);
+  return false;
+});
