@@ -36,6 +36,7 @@ describe IpAddress do
   # validation
   it { should validate_presence_of(:ip_address) }
   it { should validate_uniqueness_of(:ip_address) }
+  it { should ensure_length_of(:ip_address).is_at_most(255) }
 
   it { should validate_presence_of(:latitude) }
   it { should validate_numericality_of(:latitude) }

@@ -37,8 +37,10 @@ describe CourseModuleElementFlashCardPack do
   xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:background_color) }
+  it { should ensure_length_of(:background_color).is_at_most(255) }
 
   it { should validate_presence_of(:foreground_color) }
+  it { should ensure_length_of(:foreground_color).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

@@ -30,8 +30,8 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :background_color, presence: true
-  validates :foreground_color, presence: true
+  validates :background_color, presence: true, length: {maximum: 255}
+  validates :foreground_color, presence: true, length: {maximum: 255}
 
   # callbacks
 

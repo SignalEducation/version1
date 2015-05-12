@@ -41,10 +41,13 @@ describe Country do
   # validation
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
+  it { should ensure_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:iso_code) }
+  it { should ensure_length_of(:iso_code).is_at_most(255) }
 
   it { should validate_presence_of(:country_tld) }
+  it { should ensure_length_of(:country_tld).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
@@ -53,6 +56,8 @@ describe Country do
   it { should validate_numericality_of(:currency_id) }
 
   it { should validate_inclusion_of(:continent).in_array(Country::CONTINENTS) }
+  it { should ensure_length_of(:continent).is_at_most(255) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

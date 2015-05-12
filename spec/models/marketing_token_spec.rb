@@ -36,6 +36,7 @@ describe MarketingToken do
   # validation
   it { should validate_presence_of(:code) }
   it { should validate_uniqueness_of(:code).case_insensitive }
+  it { should ensure_length_of(:code).is_at_most(255) }
 
   it { should validate_presence_of(:marketing_category_id) }
   it { should validate_numericality_of(:marketing_category_id) }

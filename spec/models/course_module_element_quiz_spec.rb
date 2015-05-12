@@ -47,6 +47,7 @@ describe CourseModuleElementQuiz do
   it { should_not validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
 
   it { should validate_inclusion_of(:question_selection_strategy).in_array(CourseModuleElementQuiz::STRATEGIES) }
+  it { should ensure_length_of(:question_selection_strategy).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

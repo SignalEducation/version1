@@ -44,8 +44,10 @@ describe CourseModuleElementVideo do
   #it { should validate_uniqueness_of(:raw_video_file_id) }
 
   it { should validate_presence_of(:tags) }
+  it { should ensure_length_of(:tags).is_at_most(255) }
 
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES) }
+  it { should ensure_length_of(:difficulty_level).is_at_most(255) }
 
   it { should validate_presence_of(:transcript) }
 

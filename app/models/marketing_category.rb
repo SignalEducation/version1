@@ -19,7 +19,7 @@ class MarketingCategory < ActiveRecord::Base
   has_many :marketing_tokens
 
   # validation
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 255}
   validates :name, format: { without: /,+/ }
 
   # callbacks

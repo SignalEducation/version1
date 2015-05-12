@@ -42,7 +42,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   validates :number_of_questions, presence: true, numericality:
             {greater_than_or_equal_to: 3, less_than_or_equal_to: 30,
              only_integer: true}, on: :update
-  validates :question_selection_strategy, inclusion: {in: STRATEGIES}
+  validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
   # callbacks
   before_save :set_jumbo_quiz_id

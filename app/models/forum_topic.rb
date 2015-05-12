@@ -43,7 +43,7 @@ class ForumTopic < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :heading, presence: true
+  validates :heading, presence: true, length: {maximum: 255}
   validates :description, presence: true
   validates :publish_from, presence: true
   validates :created_by, presence: true,

@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20150506132918) do
     t.integer  "currency_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "continent"
+    nameweb_urlt.string   "continent"
   end
 
   add_index "countries", ["currency_id"], name: "index_countries_on_currency_id", using: :btree
