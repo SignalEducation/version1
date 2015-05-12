@@ -6,6 +6,7 @@
         =f.hidden_field :course_module_id
         =f.hidden_field :is_quiz
         =f.hidden_field :is_video
+        =f.hidden_field :is_cme_flash_card_pack
         =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
         .col-sm-6
           .form-group
@@ -21,6 +22,16 @@
             .col-sm-8
               =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 6
           .form-group
+            =f.label :seo_description, t('views.course_module_elements.form.seo_description'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.text_area :seo_description, placeholder: t('views.course_module_elements.form.seo_description_placeholder'), class: 'form-control', rows: 6
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :seo_no_index
+                  =t('views.course_modules.form.seo_no_index')
+          .form-group
             =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
@@ -28,18 +39,29 @@
             =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :active
-                  =t('views.course_modules.form.active')
+          -if f.object.is_cme_flash_card_pack
+            .form-group
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :active, disabled: (f.object.id.nil?)
+                    =t('views.course_modules.form.active')
+          -else
+            .form-group
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    =t('views.course_modules.form.active')
         -if @course_module_element.course_module_element_video
           .col-sm-6
             =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
         -elsif @course_module_element.course_module_element_quiz
           .col-sm-6
             =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+        -elsif @course_module_element.course_module_element_flash_card_pack
+          .col-sm-6
+            =render partial: 'course_module_element_flash_card_packs/fields_for', locals: {f: f}
 
   -if @course_module_element.course_module_element_quiz
     %h3=t('views.course_module_elements.form.questions')
@@ -92,7 +114,8 @@
                       Upload a replacement if you wish
                   =cme_resource.file_field :upload, class: 'form-control'
 
-
+  -elsif @course_module_element.course_module_element_flash_card_pack
+    =render partial: 'course_module_element_flash_card_packs/form', locals: {f: f}
 
 
   %p

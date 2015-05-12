@@ -156,6 +156,7 @@ class ApplicationController < ActionController::Base
     cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
     @mathjax_required = false # default
+    @show_mixpanel = (Rails.env.staging? || Rails.env.production?) && (!current_user || current_user.try(:individual_student?))
   end
 
   def reset_latest_session_landing_url
@@ -316,8 +317,12 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
-  def seo_title_maker(last_element)
-    @seo_title = "LearnSignal – #{controller_name.humanize.titleize}" + (last_element ? ' - ' + last_element : ' - ' + action_name.gsub('index','list').gsub('create','new').titleize)
+  def seo_title_maker(last_element, seo_description, seo_no_index)
+    @seo_title = last_element ?
+            "LearnSignal – #{last_element.to_s.truncate(46)}" :
+            'LearnSignal'
+    @seo_description = seo_description
+    @seo_no_index = seo_no_index
   end
 
 end

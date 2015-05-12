@@ -57,7 +57,7 @@ describe ExamSection do
   it { should callback(:calculate_best_possible_score).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:recalculate_cme_count).before(:save) }
-  it { should callback(:recalculate_parent_cme_count).after(:commit) }
+  it { should callback(:recalculate_parent).after(:commit) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes

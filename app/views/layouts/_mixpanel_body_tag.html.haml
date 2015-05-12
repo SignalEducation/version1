@@ -1,4 +1,4 @@
--unless Rails.env.test? || current_user.try(:admin?)
+-if @show_mixpanel
   :javascript
 
     // Mixpanel body tag

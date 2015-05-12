@@ -48,6 +48,12 @@
         %td.col-sm-4=t('views.exam_levels.form.is_cpd')
         %td.col-sm-8=tick_or_cross @exam_level.is_cpd
       %tr
+        %td.col-sm-4=t('views.exam_levels.form.seo_description')
+        %td.col-sm-8=@exam_level.seo_description
+      %tr
+        %td.col-sm-4=t('views.exam_levels.form.seo_no_index')
+        %td.col-sm-8=tick_or_cross @exam_level.seo_no_index
+      %tr
         %td.col-sm-4=t('views.exam_levels.form.active')
         %td.col-sm-8=tick_or_cross @exam_level.active
       %tr

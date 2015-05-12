@@ -29,7 +29,8 @@ class ExamLevel < ActiveRecord::Base
   attr_accessible :qualification_id, :name, :name_url, :is_cpd,
                   :sorting_order, :active,
                   :default_number_of_possible_exam_answers,
-                  :enable_exam_sections, :description
+                  :enable_exam_sections, :description,
+                  :seo_description, :seo_no_index, :duration
 
   # Constants
 
@@ -54,6 +55,7 @@ class ExamLevel < ActiveRecord::Base
   validates :default_number_of_possible_exam_answers, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
+  validates :seo_description, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

@@ -22,6 +22,8 @@ FactoryGirl.define do
     sequence(:name_url)   {|n| "qualification-#{n}"}
     sequence(:sorting_order) {|n| n * 10}
     cpd_hours_required_per_year 1
+    seo_description       'Lorem ipsum'
+    seo_no_index           false
 
     factory :active_qualification do
       active              true

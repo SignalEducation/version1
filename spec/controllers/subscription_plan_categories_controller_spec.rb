@@ -121,7 +121,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
         expect_bounce_as_not_allowed
       end
     end
-
   end
 
   context 'Logged in as a tutor_user: ' do

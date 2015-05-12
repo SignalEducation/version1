@@ -1,0 +1,138 @@
+var flashQuizResponseTracker = [];
+window.targetFlashCardStackHeight = 0;
+
+function setTargetHeight() {
+  var stack = $('.flash-card-stack .well').first();
+  if (stack.length > 0) {
+    window.targetFlashCardStackHeight = parseInt($(window).height() - stack.offset().top - 75);
+  }
+}
+
+function resizeFlashCardStacks() {
+  $('.flash-card-stack .well').css('min-height', targetFlashCardStackHeight);
+}
+
+function showRelativeStack(direction) {
+  // direction should be a +1 or -1
+  var allStacks = $('.flash-card-stack');
+  var currentStack = allStacks.not('.hide').first();
+  if (currentStack.length > 0) {
+    var positionInList = allStacks.index(currentStack);
+    if ((positionInList < (allStacks.length - 1) && direction > 0) || (positionInList > 0 && direction < 0)) {
+      allStacks.eq(positionInList + direction).hide().removeClass('hide').fadeIn(750);
+      currentStack.fadeOut(250, function() {
+        currentStack.addClass('hide').show();
+        currentStack.find('.flash-card').addClass('hide').show();
+        currentStack.find('.flash-card:first').removeClass('hide');
+      });
+      if (allStacks.eq(positionInList + direction).data('content-type') == 'Cards') {
+        allStacks.eq(positionInList + direction).find('.flash-card').first().hide().removeClass('hide').fadeIn(500);
+      }
+    }
+  } else {
+    allStacks.first().hide().removeClass('hide').fadeIn(500);
+    allStacks.first().find('.flash-card:first').removeClass('hide');
+  }
+  resizeFlashCardStacks();
+}
+
+function showNextStack() {
+  showRelativeStack(+1);
+  return false;
+}
+
+function showPreviousStack() {
+  showRelativeStack(-1);
+  return false;
+}
+
+function showRelativeQuestion(direction, thisAnswer) {
+  var thisQuestion = thisAnswer.closest('.quiz_question');
+  var thisStack = thisQuestion.closest('.flash-card-stack');
+  var currentPosition = thisStack.find('.quiz_question').index(thisQuestion);
+  var thisStackId = parseInt(thisStack.data('id'));
+
+  thisAnswer.removeClass('btn-default');
+  thisQuestion.find('a').prop('disabled', true);
+  if (currentPosition == 0) {
+    // reset the counter for this flash quiz
+    flashQuizResponseTracker[thisStackId] = 0;
+  }
+  if (thisAnswer.data('correct') == true) {
+    thisAnswer.addClass('btn-success');
+    flashQuizResponseTracker[thisStackId] += 1
+  } else {
+    thisAnswer.addClass('btn-danger');
+  }
+  setTimeout(function() {
+    thisQuestion.fadeOut(500, function() {
+      thisQuestion.addClass('hide');
+      thisStack.find('.quiz_question').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(350);
+      thisQuestion.find('a').prop('disabled', true);
+      if (currentPosition == (thisStack.find('.quiz_question').length - 1)) {
+        thisStack.find('.quiz_results').hide().removeClass('hide').fadeIn(500);
+        thisStack.find('.final-score').text(flashQuizResponseTracker[thisStackId]);
+      }
+    });
+  },500);
+}
+
+function showNextQuestion() {
+  showRelativeQuestion(+1, $(this));
+  return false
+}
+
+function showPreviousQuestion() {
+  showRelativeQuestion(-1, $(this));
+  return false;
+}
+
+function showRelativeCard(direction, thisButton) {
+  var thisCard = thisButton.closest('.flash-card');
+  var thisStack = thisCard.closest('.flash-card-stack');
+  var currentPosition = thisStack.find('.flash-card').index(thisCard);
+  var thisStackId = parseInt(thisStack.data('id'));
+
+  thisCard.fadeOut(500, function() {
+    if (currentPosition == 0 && direction < 0) {
+      showPreviousStack();
+    } else {
+      thisStack.find('.flash-card').eq(currentPosition + direction).hide().removeClass('hide').fadeIn(250);
+      thisCard.addClass('hide').show();
+    }
+  })
+}
+
+function showNextCard() {
+  showRelativeCard(+1, $(this));
+  return false;
+}
+
+function showPreviousCard() {
+  showRelativeCard(-1, $(this));
+  return false;
+}
+
+function restartQuiz() {
+  var theButton = $(this);
+  var theQuiz = theButton.closest('.flash-card-stack');
+  theQuiz.find('.next-question-button').removeClass('btn-success').removeClass('btn-danger').addClass('btn-default').prop('disabled', false);
+  theQuiz.find('.quiz_question').addClass('hide').show();
+  theQuiz.find('.quiz_results').addClass('hide').show();
+  theQuiz.find('.quiz_question:first').hide().removeClass('hide').fadeIn(350);
+  flashQuizResponseTracker[parseInt(theQuiz.data('id'))] = 0;
+  return false;
+}
+
+$(document).on('ready', function() {
+  showNextStack();
+  setTargetHeight();
+  resizeFlashCardStacks();
+  $(document).on('click', '.previous-stack-button', showPreviousStack);
+  $(document).on('click', '.next-stack-button', showNextStack);
+  $(document).on('click', '.previous-card-button', showPreviousCard);
+  $(document).on('click', '.next-card-button', showNextCard);
+  $(document).on('click', '.next-question-button', showNextQuestion);
+  $(document).on('click', '.previous-question-button', showPreviousQuestion);
+  $(document).on('click', '.restart-quiz-button', restartQuiz);
+});

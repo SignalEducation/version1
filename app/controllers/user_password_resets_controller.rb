@@ -1,6 +1,7 @@
 class UserPasswordResetsController < ApplicationController
 
   before_action :logged_out_required
+  before_action :get_variables
 
   def new
   end
@@ -35,5 +36,11 @@ class UserPasswordResetsController < ApplicationController
       flash[:error] = I18n.t('controllers.user_password_resets.update.flash.error')
     end
     redirect_to root_url
+  end
+
+  protected
+
+  def get_variables
+    seo_title_maker('Reset your password', '', true)
   end
 end

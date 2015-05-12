@@ -106,5 +106,4 @@ describe CourseModule do
   it { should respond_to(:previous_module_id) }
   it { should respond_to(:recalculate_estimated_time) }
 
-
 end

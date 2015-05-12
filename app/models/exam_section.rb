@@ -22,7 +22,8 @@ class ExamSection < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order
+  attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
+                  :seo_description, :seo_no_index, :duration
 
   # Constants
 
@@ -47,8 +48,7 @@ class ExamSection < ActiveRecord::Base
   before_save :sanitize_name_url
   before_save :recalculate_cme_count
   before_save :recalculate_duration
-  after_commit :recalculate_parent_cme_count
-  after_commit :recalculate_parent_duration
+  after_commit :recalculate_parent
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -113,9 +113,10 @@ class ExamSection < ActiveRecord::Base
     true
   end
 
-  def recalculate_parent_cme_count
-    changes = self.previous_changes[:cme_count] # [prev,new]
-    if changes && changes[0] != changes[1]
+  def recalculate_parent
+    changes_1 = self.previous_changes[:cme_count] # [prev,new]
+    changes_2 = self.previous_changes[:duration] # [prev,new]
+    if (changes_1 && changes_1[0] != changes_1[1]) && (changes_2 && changes_2[0] != changes_2[1])
       self.parent.save
     end
   end
@@ -123,13 +124,5 @@ class ExamSection < ActiveRecord::Base
   def recalculate_duration
     self.duration = self.active_children.sum(:estimated_time_in_seconds)
   end
-
-  def recalculate_parent_duration
-    changes = self.previous_changes[:duration] # [prev,new]
-    if changes && changes[0] != changes[1]
-      self.parent.save
-    end
-  end
-
 
 end

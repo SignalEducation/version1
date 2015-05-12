@@ -66,11 +66,10 @@ class ExamSectionsController < ApplicationController
       @exam_section = ExamSection.where(id: params[:id]).first
     end
     @exam_levels = ExamLevel.all_with_exam_sections_enabled.all_in_order
-    seo_title_maker(@exam_section.try(:name))
   end
 
   def allowed_params
-    params.require(:exam_section).permit(:name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score)
+    params.require(:exam_section).permit(:name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score, :seo_description, :seo_no_index)
   end
 
 end

@@ -6,7 +6,7 @@
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
-    %title
+    %title<
       -if @delivered_page
         =@delivered_page.seo_title
       -elsif @seo_title
@@ -37,7 +37,7 @@
       %script{type: 'text/javascript', src: 'https://jwpsrv.com/library/w07RSqLlEeOssyIACi0I_Q.js'}
 
     =csrf_meta_tags
-    -if Rails.env.production?
+    -if Rails.env.production? && (!current_user || current_user.try(:individual_student?))
       =render partial: 'layouts/google_analytics'
     -if @delivered_page
       =head_sanitizer(@delivered_page.head_content)
@@ -46,12 +46,16 @@
       -if @delivered_page.mark_as_noindex
         %meta{name: 'robots', content: 'noindex'}
       %meta{name: 'description', content: @delivered_page.seo_description}
+    -elsif @seo_description
+      %meta{name: 'description', content: @seo_description}
+    -if @seo_no_index
+      %meta{name: 'robots', content: 'noindex'}
 
     =render partial: 'layouts/favicon'
     =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
-    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'courses'
       =render partial: 'layouts/special_navbar'

@@ -37,7 +37,7 @@ class CourseModuleElementsController < ApplicationController
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i)
+        course_module_id: params[:cm_id].to_i, active: false)
     @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
@@ -45,6 +45,9 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.is_video = true
     elsif params[:type] == 'quiz'
       spawn_quiz_children
+    elsif params[:type] == 'flash_cards'
+      @course_module_element.is_cme_flash_card_pack = true
+      create_empty_cme_flash_card_pack
     end
     set_related_cmes
   end
@@ -52,8 +55,22 @@ class CourseModuleElementsController < ApplicationController
   def edit
     if @course_module_element.is_quiz
       @course_module_element.course_module_element_quiz.add_an_empty_question
-    else
+    elsif @course_module_element.is_video
       @course_module_element.course_module_element_resources.build
+    elsif @course_module_element.is_cme_flash_card_pack
+      # edit_empty_cme_flash_card_pack
+      if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
+        # @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
+        # @quiz_question = @flash_quiz.quiz_questions.build
+        # @quiz_question.quiz_contents.build(sorting_order: 0)
+
+
+      else
+        # flash_card = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
+        # flash_card.quiz_contents.build(sorting_order: 0)
+
+      end
+
     end
     set_related_cmes
   end
@@ -88,7 +105,13 @@ class CourseModuleElementsController < ApplicationController
 
   def update
     set_related_cmes
-    if @course_module_element.update_attributes(allowed_params)
+    Rails.logger.debug "STARTING...."
+    @course_module_element.assign_attributes(allowed_params)
+    Rails.logger.debug "CONTINUING..."
+    @course_module_element.valid?
+    Rails.logger.debug "DEBUG: course_module_elements_controller#update about to save. Errors:#{@course_module_element.errors.inspect}."
+
+    if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
         redirect_to edit_course_module_element_url(@course_module_element.id)
@@ -98,6 +121,7 @@ class CourseModuleElementsController < ApplicationController
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
     else
+      Rails.logger.debug "DEBUG: course_module_elements_controller#update failed. Errors:#{@course_module_element.errors.inspect}."
       render action: :edit
     end
   end
@@ -121,6 +145,42 @@ class CourseModuleElementsController < ApplicationController
 
   protected
 
+  def create_empty_cme_flash_card_pack
+    @course_module_element.build_course_module_element_flash_card_pack
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards', sorting_order: 0)
+
+    # flash cards
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build(sorting_order: 0)
+
+    # flash quiz
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz(background_color: '#333333', foreground_color: '#eeeeee')
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.build
+    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.first.quiz_contents.build(sorting_order: 0)
+    2.times do |counter|
+      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_answers.build
+      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: counter)
+    end
+  end
+
+  def edit_empty_cme_flash_card_pack
+    if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
+
+      # flash quiz
+      @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
+      @quiz_question = @flash_quiz.quiz_questions.build
+      @quiz_question.quiz_contents.build(sorting_order: 0)
+      2.times do |counter|
+        @qa = @quiz_question.quiz_answers.build
+        @qa.quiz_contents.build(sorting_order: counter)
+      end
+    elsif @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Quiz'
+      # build a flash card
+      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
+      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build(sorting_order: 0)
+    end
+  end
+
   def get_variables
     if params[:id].to_i > 0
       @course_module_element = CourseModuleElement.where(id: params[:id]).first
@@ -133,7 +193,6 @@ class CourseModuleElementsController < ApplicationController
       @raw_video_files = RawVideoFile.all_in_order
     #end
     @letters = ('A'..'Z').to_a
-    seo_title_maker(@course_module_element.try(:name))
     @mathjax_required = true
   end
 
@@ -145,15 +204,27 @@ class CourseModuleElementsController < ApplicationController
     end
   end
 
-  def allowed_params
+  def allowed_params # todo
+    if params[:course_module_element][:is_cme_flash_card_pack] == 't' || params[:course_module_element][:is_cme_flash_card_pack] == 'true'
+      params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes].keys.each do |index|
+        if params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Cards'
+          params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s].delete(:flash_quiz_attributes)
+        elsif params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Quiz'
+          params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s].delete(:flash_cards_attributes)
+        end
+      end
+    end
+
+    Rails.logger.debug "DEBUG: Revised params: #{params.inspect}."
+
     params.require(:course_module_element).permit(
         :name,
         :name_url,
         :description,
         :estimated_time_in_seconds,
         :course_module_id,
-        :course_module_element_video_id,
-        :course_module_element_quiz_id,
+        # :course_module_element_video_id,
+        # :course_module_element_quiz_id,
         :sorting_order,
         :forum_topic_id,
         :tutor_id,
@@ -162,20 +233,23 @@ class CourseModuleElementsController < ApplicationController
         :related_video_id,
         :is_video,
         :is_quiz,
+        :seo_description,
+        :seo_no_index,
+        :is_cme_flash_card_pack,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
             :raw_video_file_id,
             :tags,
             :difficulty_level,
-            :estimated_study_time_seconds,
+            # :estimated_study_time_seconds,
             :transcript],
         course_module_element_quiz_attributes: [
             :id,
             :course_module_element_id,
             :number_of_questions,
-            :best_possible_score_retry,
-            :course_module_jumbo_quiz_id,
+            # :best_possible_score_retry,
+            # :course_module_jumbo_quiz_id,
             :question_selection_strategy,
             quiz_questions_attributes: [
                 :id,
@@ -188,15 +262,20 @@ class CourseModuleElementsController < ApplicationController
                     :quiz_answer_id,
                     :quiz_solution_id,
                     :text_content,
-                    :contains_mathjax,
-                    :contains_image,
+                    # :contains_mathjax,
+                    # :contains_image,
+                    :image,
+                    :image_file_name,
+                    :image_content_type,
+                    :image_file_size,
+                    :image_updated_at,
                     :content_type,
                     :sorting_order
                 ],
                 quiz_answers_attributes: [
                     :id,
                     :quiz_question_id,
-                    :correct,
+                    # :correct,
                     :degree_of_wrongness,
                     :wrong_answer_explanation_text,
                     :wrong_answer_video_id,
@@ -206,8 +285,13 @@ class CourseModuleElementsController < ApplicationController
                         :quiz_question_id,
                         :quiz_answer_id,
                         :text_content,
-                        :contains_mathjax,
-                        :contains_image,
+                        # :contains_mathjax,
+                        # :contains_image,
+                        :image,
+                        :image_file_name,
+                        :image_content_type,
+                        :image_file_size,
+                        :image_updated_at,
                         :content_type,
                         :sorting_order]
                 ],
@@ -216,8 +300,13 @@ class CourseModuleElementsController < ApplicationController
                     :quiz_question_id,
                     :quiz_answer_id,
                     :text_content,
-                    :contains_mathjax,
-                    :contains_image,
+                    # :contains_mathjax,
+                    # :contains_image,
+                    :image,
+                    :image_file_name,
+                    :image_content_type,
+                    :image_file_size,
+                    :image_updated_at,
                     :content_type,
                     :sorting_order]
             ]
@@ -233,6 +322,87 @@ class CourseModuleElementsController < ApplicationController
                 :upload_content_type,
                 :upload_file_size,
                 :upload_updated_at
+        ],
+        course_module_element_flash_card_pack_attributes: [
+                :id,
+                :course_module_element_id,
+                :background_color,
+                :foreground_color,
+                flash_card_stacks_attributes: [
+                        :id,
+                        :course_module_element_flash_card_pack_id,
+                        :name,
+                        :sorting_order,
+                        :final_button_label,
+                        :content_type,
+                        :_destroy,
+                        flash_cards_attributes: [
+                                :id,
+                                :flash_card_stack_id,
+                                :sorting_order,
+                                :_destroy,
+                                quiz_contents_attributes: [
+                                        :id,
+                                        :text_content,
+                                        #:contains_mathjax,
+                                        #:contains_image,
+                                        :sorting_order,
+                                        :image,
+                                        :image_file_name,
+                                        :image_content_type,
+                                        :image_file_size,
+                                        :image_updated_at,
+                                        :flash_card_id,
+                                        :content_type,
+                                        :_destroy
+                                ]
+                        ],
+                        flash_quiz_attributes: [
+                                :id,
+                                :flash_card_stack_id,
+                                :background_color,
+                                :foreground_color,
+                                quiz_questions_attributes: [
+                                        :id,
+                                        :flash_quiz_id,
+                                        :course_module_element_quiz_id,
+                                        :difficulty_level,
+                                        :hints,
+                                        :_destroy,
+                                        quiz_answers_attributes: [
+                                                :id,
+                                                :quiz_question_id,
+                                                :correct,
+                                                :degree_of_wrongness,
+                                                :wrong_answer_explanation_text,
+                                                :wrong_answer_video_id,
+                                                :_destroy,
+                                                quiz_contents_attributes: [
+                                                        :id,
+                                                        :quiz_question_id,
+                                                        :quiz_answer_id,
+                                                        :text_content,
+                                                        :contains_mathjax,
+                                                        :contains_image,
+                                                        :content_type,
+                                                        :sorting_order,
+                                                        :_destroy
+                                                ]
+                                        ],
+                                        quiz_contents_attributes: [
+                                                :id,
+                                                :quiz_question_id,
+                                                :quiz_answer_id,
+                                                :text_content,
+                                                :contains_mathjax,
+                                                :contains_image,
+                                                :content_type,
+                                                :sorting_order,
+                                                :_destroy
+                                        ]
+                                ]
+                        ]
+                ]
         ]
     )
   end

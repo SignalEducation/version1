@@ -70,7 +70,7 @@ class StaticPagesController < ApplicationController
     if params[:first_element].to_s == '' && current_user
       redirect_to dashboard_url
     elsif params[:first_element].to_s == '500-page'
-      render 'public/500.html', layout: nil, status: 500
+      render file: 'public/500.html', layout: nil, status: 500
     else
       first_element = '/' + params[:first_element].to_s
       @delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
@@ -110,7 +110,7 @@ class StaticPagesController < ApplicationController
     else
       @static_page_uploads = StaticPageUpload.orphans.all_in_order
     end
-    seo_title_maker(@static_page.try(:name))
+    seo_title_maker(@static_page.try(:name) || 'Static Pages', '', true)
     @countries = Country.all_in_order
     @samples = sample_code
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order

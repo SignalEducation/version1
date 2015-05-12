@@ -22,13 +22,14 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes
+                  :quiz_solutions_attributes, :flash_quiz_id
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
+  belongs_to :flash_quiz, inverse_of: :quiz_questions
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
@@ -40,7 +41,7 @@ class QuizQuestion < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_solutions, allow_destroy: true
 
   # validation
-  validates :course_module_element_quiz_id, presence: true,
+  validates :course_module_element_quiz_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
@@ -49,10 +50,10 @@ class QuizQuestion < ActiveRecord::Base
   # todo validate :at_least_one_answer_is_correct
 
   # callbacks
-  before_save :set_course_module_element
+  before_validation :set_course_module_element
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_quiz_id).where(destroyed_at: nil) }
+  scope :all_in_order, -> { order(:course_module_element_quiz_id) }
   scope :all_easy, -> { where(difficulty_level: 'easy') }
   scope :all_medium, -> { where(difficulty_level: 'medium') }
   scope :all_difficult, -> { where(difficulty_level: 'difficult') }
@@ -63,7 +64,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def complex_question?
     answer_ids = self.quiz_answer_ids
-    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil).count > 4
+    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil, flash_card_id: nil).count > 4
   end
 
   def destroyable?
@@ -92,7 +93,7 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def set_course_module_element
-    self.course_module_element_id = self.course_module_element_quiz.course_module_element_id
+    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id) || self.flash_quiz.try(:flash_card_stack).try(:course_module_element_flash_card_pack).try(:course_module_element_id)
     true
   end
 

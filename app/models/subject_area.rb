@@ -18,7 +18,7 @@ class SubjectArea < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active
+  attr_accessible :name, :name_url, :sorting_order, :active, :seo_description, :seo_no_index
 
   # Constants
 
@@ -29,9 +29,10 @@ class SubjectArea < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true
   validates :sorting_order, presence: true, numericality: true
+  validates :seo_description, presence: true
 
   # callbacks
-  before_validation { squish_fields(:name, :name_url) }
+  before_validation { squish_fields(:name, :name_url, :seo_description) }
   before_create :set_sorting_order
   before_save :sanitize_name_url
 

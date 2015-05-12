@@ -64,9 +64,9 @@ en:
         click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
+        coming_soon: Coming Soon
       created_at: Created at
       updated_at: "Last Updated: "
-
 
     locales:
       en: English
@@ -206,6 +206,9 @@ en:
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
         active: "Active?"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Course Module
@@ -248,9 +251,13 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_flash_card_pack: New Flash Card Pack
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Course Module Element
@@ -269,6 +276,13 @@ en:
         previous_step: Previous
         preview: Preview
         continue: Continue
+
+    course_module_element_flash_card_packs:
+      form:
+        background_color: Background colour
+        background_color_placeholder: '222222'
+        foreground_color: Foreground colour
+        foreground_color_placeholder: 'eeeeee'
 
     course_module_element_quizzes:
       form:
@@ -425,6 +439,9 @@ en:
         default_number_of_possible_exam_answers_placeholder: 4
         default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
         enable_exam_sections: "Enable exam sections?"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Exam Levels
@@ -453,6 +470,9 @@ en:
         sorting_order_placeholder: 100
         best_possible_first_attempt_score: Best-possible first attempt score
         best_possible_first_attempt_score_placeholder: 100
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Exam Sections
@@ -465,6 +485,21 @@ en:
 
       new:
         h1: New Exam Section
+
+    flash_cards:
+      form:
+        new_card: New card
+
+    flash_card_packs:
+      form:
+        name: Name
+        name_placeholder: Public title of this stack
+        final_button_label: Button label
+        final_button_label_placeholder: "Label for the 'next' button"
+
+    flash_quizzes:
+      form:
+        add_extra_answer: 'Add an extra answer'
 
     institutions:
       form:
@@ -486,6 +521,9 @@ en:
         active: Active
         background_colour_code: Background colour code
         background_colour_code_placeholder: 'FFEE99 (no need for #)'
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Institution
@@ -608,6 +646,9 @@ en:
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Qualifications
@@ -639,6 +680,7 @@ en:
           question: Ask the question
           solution: Enter the solution
           answer: Fill in the answer here
+          flash_cards_text: Enter the Text Here
 
     quiz_questions:
       form:
@@ -792,6 +834,7 @@ en:
         stripe_com_logo: "Stripe.com logo"
 
       new:
+        seo_description: 'Sign up for student access on LearnSignal.com and pay nothing until your free trial period is complete. Commitment free - cancel anytime'
         h1: Start Your Free Trial
         lead: Pay nothing until your trial is complete
         list:
@@ -831,6 +874,9 @@ en:
         name_placeholder: Human resources
         name_url: Name URL
         name_url_placeholder: "human-resources"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         active: Active
