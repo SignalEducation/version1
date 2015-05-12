@@ -4,7 +4,6 @@ ruby '2.2.2'
 gem 'rails', '4.2.1'
 
 # Core gems - common to all environments
-gem 'rack-attack' # todo: needs to be moved to the production group later
 gem 'airbrake'
 gem 'authlogic', '~> 3.4.3'
 gem 'scrypt' # S-Crypt for Authlogic
@@ -29,6 +28,7 @@ gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
 gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
+gem 'rack-attack'
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
@@ -89,7 +89,6 @@ group :staging, :production do
 end
 
 group :production do
-  gem 'rack-attack'
 end
 
 #############################################

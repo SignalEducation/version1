@@ -136,5 +136,6 @@ end
 Rack::Attack.whitelist('allow from localhost') do |req|
   # Requests are allowed if the return value is truthy
   '127.0.0.1' == req.ip ||
-  '109.79.44.36' == req.ip # current Vodafone base station 31AD external IP
+  '93.107.187.217' == req.ip || # Vodafone base station 31AD's fixed external IP
+  '93.107.187.215' == req.ip    # Vodafone base station 8D17's fixed external IP
 end
