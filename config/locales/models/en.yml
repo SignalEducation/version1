@@ -46,3 +46,4 @@ en:
       invalid_marketing_category_name: "Invalid marketing category name."
       cannot_change_system_token: "System defined token cannot be changed."
       invalid_flag_value: "Invalid flag value. Must be true or false."
+      duplicated_token_code: "Duplicated token code."
