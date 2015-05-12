@@ -116,7 +116,7 @@ class ExamSection < ActiveRecord::Base
   def recalculate_parent
     changes_1 = self.previous_changes[:cme_count] # [prev,new]
     changes_2 = self.previous_changes[:duration] # [prev,new]
-    if (changes_1 && changes_1[0] != changes_1[1]) && (changes_2 && changes_2[0] != changes_2[1])
+    if (changes_1 && changes_1[0] != changes_1[1]) || (changes_2 && changes_2[0] != changes_2[1])
       self.parent.save
     end
   end
