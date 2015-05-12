@@ -81,6 +81,10 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
     self.course_module
   end
 
+  def type_name
+    "Jumbo Quiz"
+  end
+
   protected
 
   def calculate_best_possible_scores

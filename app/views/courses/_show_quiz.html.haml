@@ -96,4 +96,16 @@
 
   $(document).on('ready page:load', function() {
     askQuestion(1); // 1 is the first question
-  })
+    var questionsNo = #{@number_of_questions || 0};
+    mixpanel.track("Quiz View Begin", {
+      'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
+      'Course Module': '#{@course_module.try(:name) || ""}',
+      'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
+      'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}',
+      'Quiz Length': questionsNo,
+      'Next CME': ['#{course_special_link(@course_module_element.try(:next_element))}', '#{@course_module_element.try(:next_element).try(:type_name)}']
+    });
+    mixpanel.people.increment("Quizes Viewed");
+    mixpanel.people.increment("Questions Opened", questionsNo);
+  });
+
