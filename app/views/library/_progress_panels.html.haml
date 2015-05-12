@@ -9,6 +9,7 @@
             .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
               .row{ aria: {expand: true, controls: "collapse_#{counter}"} }
                 .col-sm-8
+                  .glyphicon.glyphicon-chevron-right
                   =child.name
                 .col-sm-4
                   -if child.class == ExamSection
