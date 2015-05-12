@@ -58,7 +58,7 @@ class SubscriptionPlansController < ApplicationController
     end
     @currencies = Currency.all_active.all_in_order
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
-    seo_title_maker(@subscription_plan.try(:id).to_s)
+    seo_title_maker(@subscription_plan.try(:id).to_s, '', true)
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
   end
 

@@ -1,0 +1,7 @@
+-# render this using:
+  =render partial: 'course_module_element_flash_card_packs/show_stack_footer', locals: {last_stack: true, next_cme_url: some_link_url, the_label: 'Next'}
+
+-if last_stack
+  %p=link_to the_label, next_cme_url, class: 'btn btn-lg btn-default end-of-stack'
+-else
+  %p=link_to the_label, '#', class: 'btn btn-lg btn-default next-stack-button end-of-stack'

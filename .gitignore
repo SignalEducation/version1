@@ -41,3 +41,6 @@ config/secrets.yml
 
 # used by SimpleCov
 coverage
+
+# Emacs tags file
+TAGS

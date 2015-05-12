@@ -49,18 +49,18 @@ group :development do
   gem 'better_errors' # gives more useful error report in the browser
   gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
-  gem 'pry-byebug' # halts code so you can experiment with it
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
 end
 
 group :development, :test do
-  gem 'rspec-rails' # our core testing environment
-  gem 'factory_girl_rails' # FactoryGirl generates fake objects
+  gem 'pry-byebug' # halts code so you can experiment with it
   gem 'capybara' # Runs tests in a browser
-  gem 'selenium-webdriver', '>=2.45.0'
   gem 'capybara-webkit'
+  gem 'factory_girl_rails' # FactoryGirl generates fake objects
   gem 'poltergeist'
+  gem 'rspec-rails' # our core testing environment
+  gem 'selenium-webdriver', '>=2.45.0'
   gem 'thin' # new web server
 end
 

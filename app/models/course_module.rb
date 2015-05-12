@@ -31,7 +31,7 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :active, :cme_count
+                  :active, :cme_count, :seo_description, :seo_no_index
 
   # Constants
 
@@ -70,7 +70,7 @@ class CourseModule < ActiveRecord::Base
   before_save :set_cme_count
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
-  after_commit :update_parent_cme_count
+  after_commit :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
@@ -186,12 +186,15 @@ class CourseModule < ActiveRecord::Base
     self.institution_id = self.qualification.try(:institution_id)
   end
 
-  def update_parent_cme_count
-    changes = self.previous_changes[:cme_count] # [prev,new]
-    if changes && changes[0] != changes[1]
+  def update_parent
+    changes_1 = self.previous_changes[:estimated_time_in_seconds] # [prev,new]
+    changes_2 = self.previous_changes[:cme_count] # [prev,new]
+    if (changes_1 && changes_1[0] != changes_1[1]) || (changes_2 && changes_2[0] != changes_2[1])
       self.parent.save
-      self.student_exam_tracks.each do |set|
-        set.recalculate_completeness # todo - move this to a worker
+      if changes_2 && changes_2[0] != changes_2[1]
+        self.student_exam_tracks.each do |set|
+          set.recalculate_completeness # todo - move this to a worker
+        end
       end
     end
   end

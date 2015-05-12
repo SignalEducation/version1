@@ -1,0 +1,23 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@marketing_token, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @marketing_token, message: nil}
+        .form-group
+          =f.label :code, t('views.marketing_tokens.form.code'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :code, placeholder: t('views.marketing_tokens.form.code_placeholder'), class: 'form-control', disabled: !@marketing_token.new_record?
+        .form-group
+          =f.label :marketing_category_id, t('views.marketing_tokens.form.marketing_category_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :marketing_category_id, @marketing_categories, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :is_hard
+                =t('views.marketing_tokens.form.is_hard')
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), marketing_tokens_path

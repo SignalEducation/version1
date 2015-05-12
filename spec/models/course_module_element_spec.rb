@@ -43,6 +43,7 @@ describe CourseModuleElement do
 
   # relationships
   it { should belong_to(:course_module) }
+  it { should have_one(:course_module_element_flash_card_pack)}
   it { should have_one(:course_module_element_quiz) }
   it { should have_many(:course_module_element_resources)}
   it { should have_many(:course_module_element_user_logs) }

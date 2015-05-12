@@ -2,30 +2,32 @@
 #
 # Table name: user_activity_logs
 #
-#  id                          :integer          not null, primary key
-#  user_id                     :integer
-#  session_guid                :string(255)
-#  signed_in                   :boolean          default(FALSE), not null
-#  original_uri                :text
-#  controller_name             :string(255)
-#  action_name                 :string(255)
-#  params                      :text
-#  alert_level                 :integer          default(0)
-#  created_at                  :datetime
-#  updated_at                  :datetime
-#  ip_address                  :string(255)
-#  browser                     :string(255)
-#  operating_system            :string(255)
-#  phone                       :boolean          default(FALSE), not null
-#  tablet                      :boolean          default(FALSE), not null
-#  computer                    :boolean          default(FALSE), not null
-#  guid                        :string(255)
-#  ip_address_id               :integer
-#  browser_version             :string(255)
-#  raw_user_agent              :string(255)
-#  first_session_landing_page  :text
-#  latest_session_landing_page :text
-#  post_sign_up_redirect_url   :string(255)
+#  id                               :integer          not null, primary key
+#  user_id                          :integer
+#  session_guid                     :string(255)
+#  signed_in                        :boolean          default(FALSE), not null
+#  original_uri                     :text
+#  controller_name                  :string(255)
+#  action_name                      :string(255)
+#  params                           :text
+#  alert_level                      :integer          default(0)
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  ip_address                       :string(255)
+#  browser                          :string(255)
+#  operating_system                 :string(255)
+#  phone                            :boolean          default(FALSE), not null
+#  tablet                           :boolean          default(FALSE), not null
+#  computer                         :boolean          default(FALSE), not null
+#  guid                             :string(255)
+#  ip_address_id                    :integer
+#  browser_version                  :string(255)
+#  raw_user_agent                   :string(255)
+#  first_session_landing_page       :text
+#  latest_session_landing_page      :text
+#  post_sign_up_redirect_url        :string(255)
+#  marketing_token_id               :integer
+#  marketing_token_cookie_issued_at :datetime
 #
 
 require 'rails_helper'
@@ -48,6 +50,7 @@ describe UserActivityLog do
   # relationships
   it { should belong_to(:tracked_ip_address) }
   it { should belong_to(:user) }
+  it { should belong_to(:marketing_token) }
 
   # validation
   it { should_not validate_presence_of(:user_id) }
@@ -70,6 +73,8 @@ describe UserActivityLog do
   it { should validate_uniqueness_of(:guid) }
 
   # callbacks
+  it { should callback(:process_user_agent).before(:validation) }
+  it { should callback(:track_ip_address).before(:validation) }
   it { should callback(:add_to_rails_logger).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 

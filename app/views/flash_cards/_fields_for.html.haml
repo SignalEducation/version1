@@ -1,0 +1,45 @@
+%table.table.table-bordered.table-sorted
+  %tbody
+    =stack.fields_for :flash_cards do |card|
+      %tr{id: card.object.id || Time.now.to_i}
+        %td.col-sm-11
+          =card.hidden_field :id, class: 'card_id card_field'
+          =card.hidden_field :sorting_order, class: 'card-sorting-order card_field'
+          =card.hidden_field :_destroy, value: false, class: 'flash-card-destroy card_field'
+          %h4
+            -if card.object.id.to_i > 0
+              ="Card ##{card.object.id}"
+            -else
+              =t('views.flash_cards.form.new_card')
+          =card.fields_for :quiz_contents do |qc|
+            .quiz_content
+              =qc.hidden_field :_destroy, value: false, class: 'flash-card-qc-destroy card_qc_field'
+              =qc.hidden_field :id, class: 'the_id card_qc_field'
+              =qc.hidden_field :sorting_order, class: 'qc-sorting-order card_qc_field'
+              =#qc.hidden_field :flash_card_id, class: 'qc-flash-card-id card_field'
+              .quiz_content_image{class: qc.object.content_type == 'image' ? '' : 'hide'}
+                =image_tag qc.object.image.url, class: 'thumbnail img-responsive col-xs-12'
+                %br/
+                =qc.object.image_file_name
+                =number_to_human_size(qc.object.image_file_size)
+                =qc.file_field :image, class: 'well col-xs-12 file_field card_qc_field'
+              .quiz_content_text{class: qc.object.content_type == 'text' ? '' : 'hide'}
+                =qc.text_area :text_content, placeholder: t('views.quiz_contents.form.placeholder_for.flash_cards_text'), class: 'form-control card_qc_field', rows: 2
+              .btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
+                =link_to '#', class: 'btn btn-default addFlashCardQuizContent', id: 'plus-btn' do
+                  %span.glyphicon.glyphicon-plus
+                =link_to '#', class: 'btn btn-default removeFlashCardQuizContent', id: 'minus-btn' do
+                  %span.glyphicon.glyphicon-minus
+              .pull-right.text-right
+                -QuizContent::CONTENT_TYPES[0, 2].each do |t|
+                  =qc.radio_button :content_type, t, class: 'content_type_radios  card_qc_field'
+                  =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+
+        %td.text-right.col-sm-1
+          .glyphicon.glyphicon-sort{title: t('views.general.tooltips.coming_soon')}
+          =link_to 'Delete Card', '#', class: 'btn btn-danger btn-xs removeFlashCard', id: 'delete-card'
+
+
+.row
+  .col-sm-12
+    =link_to 'Add a new Flash Card', '#', class: 'btn btn-info btn-sm addNewFlashCard'

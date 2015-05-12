@@ -1,11 +1,6 @@
-class Api::StripeDevController < ApplicationController
+class Api::StripeDevController < Api::BaseController
 
   protect_from_forgery except: :create
-
-  # application_controller stuff that we don't want here...
-  skip_before_action :set_locale
-  skip_before_action :set_session_stuff
-  skip_before_action :log_user_activity
 
   def create
     if params[:id]

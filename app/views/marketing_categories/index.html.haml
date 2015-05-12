@@ -1,0 +1,28 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.marketing_categories.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @marketing_categories, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.marketing_categories.form.name')
+          %th=t('views.marketing_tokens.index.h1')
+          %th
+      %tbody
+        -@marketing_categories.each do |marketing_category|
+          %tr{id: marketing_category.id}
+            %td=link_to marketing_category.name, marketing_category
+            %td=marketing_category.marketing_tokens.count
+            %td
+              - if marketing_category.editable?
+                =link_to t('views.general.edit'), edit_marketing_category_url(marketing_category), class: 'btn btn-info btn-xs'
+              -if marketing_category.destroyable?
+                =link_to t('views.general.delete'), marketing_category, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_marketing_category_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    .pull-right=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url, class: 'link'

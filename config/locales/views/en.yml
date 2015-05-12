@@ -11,6 +11,7 @@ en:
       approve: Approve
       approve_tooltip: click to approve
       at_date_time: At
+      author: "Author: "
       back: Back
       by: by
       cancel: Cancel
@@ -21,6 +22,7 @@ en:
       delete_confirmation: Are you sure?
       details: Details
       drag_to_reorder: Drag to reorder
+      duration: "Duration: "
       edit: Edit
       edit_tooltip: click to edit
       example: Example
@@ -28,6 +30,7 @@ en:
       home: Home
       inactive: Inactive
       links: Links
+      more_info: More Info
       missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one
@@ -47,6 +50,7 @@ en:
       sign_up: Sign up
       start: Start
       start_free_trial: Free Trial
+      table_of_contents: Table of Contents
       these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
@@ -60,6 +64,9 @@ en:
         click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
+        coming_soon: Coming Soon
+      created_at: Created at
+      updated_at: "Last Updated: "
 
     locales:
       en: English
@@ -199,6 +206,9 @@ en:
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
         active: "Active?"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Course Module
@@ -241,9 +251,13 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_flash_card_pack: New Flash Card Pack
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Course Module Element
@@ -262,6 +276,13 @@ en:
         previous_step: Previous
         preview: Preview
         continue: Continue
+
+    course_module_element_flash_card_packs:
+      form:
+        background_color: Background colour
+        background_color_placeholder: '222222'
+        foreground_color: Foreground colour
+        foreground_color_placeholder: 'eeeeee'
 
     course_module_element_quizzes:
       form:
@@ -405,6 +426,9 @@ en:
         name_placeholder: First exam level
         name_url: Name URL
         name_url_placeholder: first-exam-level
+        description: Description
+        description_placeholder: Description for this Exam Level
+        duration: Duration
         is_cpd: 'is CPD?'
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -415,6 +439,9 @@ en:
         default_number_of_possible_exam_answers_placeholder: 4
         default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
         enable_exam_sections: "Enable exam sections?"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Exam Levels
@@ -443,6 +470,9 @@ en:
         sorting_order_placeholder: 100
         best_possible_first_attempt_score: Best-possible first attempt score
         best_possible_first_attempt_score_placeholder: 100
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Exam Sections
@@ -455,6 +485,21 @@ en:
 
       new:
         h1: New Exam Section
+
+    flash_cards:
+      form:
+        new_card: New card
+
+    flash_card_packs:
+      form:
+        name: Name
+        name_placeholder: Public title of this stack
+        final_button_label: Button label
+        final_button_label_placeholder: "Label for the 'next' button"
+
+    flash_quizzes:
+      form:
+        add_extra_answer: 'Add an extra answer'
 
     institutions:
       form:
@@ -476,6 +521,9 @@ en:
         active: Active
         background_colour_code: Background colour code
         background_colour_code_placeholder: 'FFEE99 (no need for #)'
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       edit:
         h1: Edit Institution
@@ -598,6 +646,9 @@ en:
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
 
       index:
         h1: Qualifications
@@ -629,6 +680,7 @@ en:
           question: Ask the question
           solution: Enter the solution
           answer: Fill in the answer here
+          flash_cards_text: Enter the Text Here
 
     quiz_questions:
       form:
@@ -782,6 +834,7 @@ en:
         stripe_com_logo: "Stripe.com logo"
 
       new:
+        seo_description: 'Sign up for student access on LearnSignal.com and pay nothing until your free trial period is complete. Commitment free - cancel anytime'
         h1: Start Your Free Trial
         lead: Pay nothing until your trial is complete
         list:
@@ -821,6 +874,9 @@ en:
         name_placeholder: Human resources
         name_url: Name URL
         name_url_placeholder: "human-resources"
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         active: Active
@@ -1158,3 +1214,55 @@ en:
         percentage_rate_placeholder: "12.5"
         effective_from: Effective from
         effective_from_placeholder: "2014-12-31"
+
+    marketing_categories:
+      form:
+        name: Name
+        name_placeholder: Marketing Category Name
+
+      index:
+        h1: Marketing Categories
+
+      show:
+        h1: Marketing Category
+
+      edit:
+        h1: Edit Marketing Category
+
+      new:
+        h1: New Marketing Category
+
+    marketing_tokens:
+      form:
+        code: Code
+        is_hard: Hard
+        is_seo: SEO
+        is_direct: Direct
+        code_placeholder: Token Code
+        marketing_category_id: Category
+
+      index:
+        h1: Marketing Tokens
+        csv_upload: CSV Upload
+        csv_download: Download CSV
+
+      show:
+        h1: Marketing Token
+
+      edit:
+        h1: Edit Marketing Token
+
+      new:
+        h1: New Marketing Token
+
+      modal:
+        h1: Upload CSV File
+        file: File
+
+      preview_csv:
+        h1: CSV Data Preview
+        code: Code
+        is_hard: Hard Token
+        marketing_category: Category
+        errors: Errors
+        submit: Submit

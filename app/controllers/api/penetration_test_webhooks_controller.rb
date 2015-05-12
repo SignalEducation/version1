@@ -1,4 +1,4 @@
-class Api::PenetrationTestWebhooksController < ApplicationController
+class Api::PenetrationTestWebhooksController < Api::BaseController
 
   before_action :ensure_staging_or_dev
 

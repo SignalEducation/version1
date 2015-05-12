@@ -1,0 +1,13 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@marketing_category, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @marketing_category, message: nil}
+        .form-group
+          =f.label :name, t('views.marketing_categories.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.marketing_categories.form.name_placeholder'), class: 'form-control'
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), marketing_categories_path

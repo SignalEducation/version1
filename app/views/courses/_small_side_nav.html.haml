@@ -7,9 +7,10 @@
   .panel.panel-default
     .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseOne'}
       %h4.panel-title.text-center
-        %a{aria: {expanded: false, controls: 'collapseOne'}}
-          =@course_module.name
-          .glyphicon.glyphicon-chevron-down
+        .row
+          %p{aria: {expanded: false, controls: 'collapseOne'}}
+            =@course_module.name
+            .glyphicon.glyphicon-chevron-down
     .panel-collapse.collapse{id: 'collapseOne', class: '', role: 'tabpanel', aria: {labelledby: 'headingOne'}}
       .list-group
         -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|

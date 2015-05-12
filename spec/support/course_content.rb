@@ -17,7 +17,8 @@ shared_context 'course_content' do
 
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
                            qualification_id: qualification_1.id,
-                           exam_section_id: exam_section_1.id) }
+                           exam_section_id: exam_section_1.id,
+                           tutor_id: tutor_user.id) }
   let!(:course_module_element_1_1) { FactoryGirl.create(:cme_quiz,
                            course_module_id: course_module_1.id) }
   let!(:course_module_element_1_2) { FactoryGirl.create(:cme_video,
@@ -45,7 +46,8 @@ shared_context 'course_content' do
 
   let!(:course_module_2) { FactoryGirl.create(:active_course_module,
                            qualification_id: qualification_2.id,
-                           exam_level_id: exam_level_2.id) }
+                           exam_level_id: exam_level_2.id,
+                           tutor_id: tutor_user.id) }
   let!(:course_module_element_2_1) { FactoryGirl.create(:cme_quiz,
                            course_module_id: course_module_2.id) }
   let!(:course_module_element_quiz_2_2_1) { FactoryGirl.create(:course_module_element_quiz,

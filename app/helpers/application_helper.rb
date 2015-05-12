@@ -83,6 +83,18 @@ module ApplicationHelper
     end
   end
 
+  def humanize_time(seconds)  # Used in the library UI
+    if seconds > 3600
+      Time.at(seconds).utc.strftime('%Hh %Mm')
+    else
+      Time.at(seconds).utc.strftime('%Mm %Ss')
+    end
+  end
+
+  def humanize_datetime(date)  # Used in the library UI
+    date.utc.strftime('%d %b %y')
+  end
+
 end
 
 class DanFormBuilder < ActionView::Helpers::FormBuilder

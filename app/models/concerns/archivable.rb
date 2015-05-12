@@ -4,7 +4,7 @@
 # Add the following into the model:
 # def destroyable_children
 #   the_list = []
-#   self.related_things.to_a + self.other_things.to_a
+#   the_list += self.related_things.to_a + self.other_things.to_a
 #   the_list << self.has_one_thing if self.has_one_thing
 #   the_list
 # end
@@ -15,7 +15,9 @@ module Archivable
   extend ActiveSupport::Concern
 
   included do
-    scope :all_destroyed, -> { where.not(destroyed_at: nil) }
+    scope :all_destroyed, -> { unscoped.where.not(destroyed_at: nil) }
+    scope :all_live, -> { where(destroyed_at: nil) }
+    default_scope{all_live}
   end
 
   def destroy
