@@ -48,6 +48,7 @@ class ExamSection < ActiveRecord::Base
   before_save :recalculate_cme_count
   before_save :recalculate_duration
   after_commit :recalculate_parent_cme_count
+  after_commit :recalculate_parent_duration
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -122,5 +123,13 @@ class ExamSection < ActiveRecord::Base
   def recalculate_duration
     self.duration = self.active_children.sum(:estimated_time_in_seconds)
   end
+
+  def recalculate_parent_duration
+    changes = self.previous_changes[:duration] # [prev,new]
+    if changes && changes[0] != changes[1]
+      self.parent.save
+    end
+  end
+
 
 end

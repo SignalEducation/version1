@@ -61,3 +61,10 @@ Rails.application.configure do
       }
   }
 end
+
+# Required by LogEntries
+Rails.logger = Le.new('d494abe7-91a6-4062-aacf-39a9544a69bc', # dev
+                      debug: true, # logs debug-level events to LE
+                      ssl: true, # encrypt our log transmissions
+                      local: true # keep local logs as well
+)

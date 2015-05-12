@@ -11,6 +11,7 @@ en:
       approve: Approve
       approve_tooltip: click to approve
       at_date_time: At
+      author: "Author: "
       back: Back
       by: by
       cancel: Cancel
@@ -21,6 +22,7 @@ en:
       delete_confirmation: Are you sure?
       details: Details
       drag_to_reorder: Drag to reorder
+      duration: "Duration: "
       edit: Edit
       edit_tooltip: click to edit
       example: Example
@@ -28,6 +30,7 @@ en:
       home: Home
       inactive: Inactive
       links: Links
+      more_info: More Info
       missing_data_error: Sorry, some data is missing
       new: New
       new_tooltip: click to add a new one
@@ -61,6 +64,9 @@ en:
         click_to_refresh: click to refresh
         click_to_search: click to search
         click_to_view: click to view
+      created_at: Created at
+      updated_at: "Last Updated: "
+
 
     locales:
       en: English

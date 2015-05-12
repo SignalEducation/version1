@@ -264,8 +264,7 @@ class ApplicationController < ActionController::Base
       library_url(the_thing.exam_level.qualification.institution.subject_area.name_url,
                   the_thing.exam_level.qualification.institution.name_url,
                   the_thing.exam_level.qualification.name_url,
-                  the_thing.exam_level.name_url,
-                  the_thing.name_url
+                  the_thing.exam_level.name_url
       )
     elsif the_thing.class == ExamLevel
       library_url(the_thing.qualification.institution.subject_area.name_url,

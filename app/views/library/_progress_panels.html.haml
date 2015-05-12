@@ -2,32 +2,36 @@
   %hr/
   -if @hierarchy_item.class == ExamLevel
     .col-sm-8
-      %p.description-title=t('views.general.table_of_contents')
+      %p.table-of-contents=t('views.general.table_of_contents')
       .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
         -@hierarchy_item.children.all_active.all_in_order.each_with_index do |child, counter|
           .panel.library-bar
             .panel-heading#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
               .row{ aria: {expand: true, controls: "collapse_#{counter}"} }
                 .col-sm-8
+                  .glyphicon.glyphicon-chevron-right
                   =child.name
                 .col-sm-4
-                  .pull-right=seconds_to_time(child.duration)
-            .panel-collapse.collapse{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
+                  -if child.class == ExamSection
+                    .pull-right=seconds_to_time(child.duration.to_i)
+                  -elsif child.class == CourseModule
+                    .pull-right=seconds_to_time(child.estimated_time_in_seconds)
+
+            .panel-collapse.collapse.list-group{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
               -if child.class == ExamSection
-                .list-group
-                  -child.children.all_in_order.all_active.each do |grandchild|
-                    .list-title
-                      .row
-                        .col-sm-8
-                          %p=grandchild.name
-                    -grandchild.children.all_in_order.all_active.each do |greatgrandchild|
-                      =link_to course_special_link(greatgrandchild), class: 'list-group-item' do
-                        .list-item
-                          .row
-                            .col-sm-8
-                              %p=greatgrandchild.name
-                            .col-sm-4
-                              %p.pull-right=seconds_to_time(greatgrandchild.estimated_time_in_seconds)
+                -child.children.all_in_order.all_active.each do |grandchild|
+                  .list-title
+                    .row
+                      .col-sm-8
+                        %p=grandchild.name
+                  -grandchild.children.all_in_order.all_active.each do |greatgrandchild|
+                    =link_to course_special_link(greatgrandchild), class: 'library-items list-group-item' do
+                      .list-item
+                        .row
+                          .col-sm-8
+                            %p=greatgrandchild.name
+                          .col-sm-4
+                            %p.pull-right=seconds_to_time(greatgrandchild.estimated_time_in_seconds)
               -else
                 -child.children.all_in_order.all_active.each do |grandchild|
                   =link_to course_special_link(grandchild), class: 'list-group-item' do
@@ -36,11 +40,23 @@
                         %p=grandchild.name
                       .col-sm-4
                         %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
-    .col-sm-4
-      %p.description-title=t('views.exam_levels.form.description')
+    .col-sm-4.library-info
+      %p.description=t('views.exam_levels.form.description')
       %p=@hierarchy_item.description
+      %br/
+      %br/
+      %p.description=t('views.general.more_info')
+      %p
+        =t('views.general.duration')
+        =humanize_time(@hierarchy_item.duration.to_i)
       %hr/
-      %p=@hierarchy_item.updated_at
+      %p
+        =t('views.general.updated_at')
+        =humanize_datetime(@hierarchy_item.updated_at)
+      -#%hr/
+      -#%p
+        =t('views.general.author')
+        =@hierarchy_item.first_active_cme.tutor.full_name
 
 
   -else
