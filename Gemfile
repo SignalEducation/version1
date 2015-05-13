@@ -14,6 +14,8 @@ gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
+gem 'capistrano', '~> 3.4.0'
+gem 'capistrano-passenger'
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'figaro' # management of ENV vars
 gem 'geocoder' # a public API for geo-locating IP addresses
@@ -49,6 +51,7 @@ group :development do
   gem 'better_errors' # gives more useful error report in the browser
   gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
+  gem 'capistrano-rails', '~> 1.1.1'
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
 end
