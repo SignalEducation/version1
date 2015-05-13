@@ -78,12 +78,12 @@
       mixpanel.track("Video View End", {
         'Video Name': '#{cme.name}',
         'Course Module': '#{cme.course_module.name}',
-        'Exam Section': '#{cme.course_module.exam_section.name}',
-        'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
+        'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
+        'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
         'Video Length': +(duration / 60.0).toFixed(2),
         'Time Viewed': position,
         'Percent Completed': +(position * 100 / duration).toFixed(2),
-        'Next CME': ['#{course_special_link(cme.try(:next_element))}', '#{cme.try(:next_element).try(:type_name)}']
+        'Next CME': ['#{course_special_link(cme.try(:next_element)) || ''}', '#{cme.try(:next_element).try(:type_name) || ''}']
       });
       mixpanel.people.increment("Videos Completed");
       mixpanel.people.increment("Total Time Viewing Videos", position);
@@ -100,8 +100,8 @@
         mixpanel.track("Video View Begin", {
           'Video Name': '#{cme.name}',
           'Course Module': '#{cme.course_module.name}',
-          'Exam Section': '#{cme.course_module.exam_section.name}',
-          'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_section.exam_level.name}',
+          'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
+          'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
           'Video Length': +(jwplayer().getDuration() / 60.0).toFixed(2)
         });
         mixpanel.people.increment("Videos Viewed");
