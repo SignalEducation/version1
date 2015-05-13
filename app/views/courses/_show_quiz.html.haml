@@ -68,17 +68,20 @@
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
     $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
 
-    mixpanel.track("Quiz Question Taken", {
-      'Question ID': questionId,
-      'Question Score': isCorrect,
-      'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
-      'Course Module': '#{@course_module.try(:name) || ""}',
-      'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
-      'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}'
-    });
-    mixpanel.people.increment("Questions Taken");
-    if (true === isCorrect) {
-      mixpanel.people.increment("Correctly Answered Questions");
+    // Avoid error in development mode where Mixpanel is turned off
+    if (typeof mixpanel !== 'undefined') {
+      mixpanel.track("Quiz Question Taken", {
+        'Question ID': questionId,
+        'Question Score': isCorrect,
+        'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
+        'Course Module': '#{@course_module.try(:name) || ""}',
+        'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
+        'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}'
+      });
+      mixpanel.people.increment("Questions Taken");
+      if (true === isCorrect) {
+        mixpanel.people.increment("Correctly Answered Questions");
+      }
     }
 
     if (currentQuestion < numberOfQuestions) {
@@ -111,34 +114,40 @@
   var quizStartTime = new Date();
   $(document).on('ready page:load', function() {
     askQuestion(1); // 1 is the first question
-    var questionsNo = #{@number_of_questions || 0};
-    mixpanel.track("Quiz View Begin", {
-      'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
-      'Course Module': '#{@course_module.try(:name) || ""}',
-      'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
-      'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}',
-      'Quiz Length': questionsNo,
-      'Next CME': ['#{course_special_link(@course_module_element.try(:next_element))}', '#{@course_module_element.try(:next_element).try(:type_name)}']
-    });
-    mixpanel.people.increment("Quizes Viewed");
-    mixpanel.people.increment("Questions Opened", questionsNo);
+    // Avoid error in development mode where Mixpanel is turned off
+    if (typeof mixpanel !== 'undefined') {
+      var questionsNo = #{@number_of_questions || 0};
+      mixpanel.track("Quiz View Begin", {
+        'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
+        'Course Module': '#{@course_module.try(:name) || ""}',
+        'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
+        'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}',
+        'Quiz Length': questionsNo,
+        'Next CME': ['#{course_special_link(@course_module_element.try(:next_element))}', '#{@course_module_element.try(:next_element).try(:type_name)}']
+      });
+      mixpanel.people.increment("Quizes Viewed");
+      mixpanel.people.increment("Questions Opened", questionsNo);
+    }
   });
 
   window.onbeforeunload = function() {
-    var timeViewed = new Date() - quizStartTime;
-    var questionsNo = #{@number_of_questions || 0};
-    mixpanel.track("Quiz View End", {
-      'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
-      'Course Module': '#{@course_module.try(:name) || ""}',
-      'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
-      'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}',
-      'Quiz Length': questionsNo,
-      'Time Viewed': timeViewed,
-      'Quiz Questions Completed': currentQuestion,
-      'Quiz Score': +((currentQuestion / numberOfQuestions * 100).toFixed(2)),
-      'Next CME': ['#{course_special_link(@course_module_element.try(:next_element))}', '#{@course_module_element.try(:next_element).try(:type_name)}']
-    });
-    mixpanel.people.increment("Quizzes Completed");
-    mixpanel.people.increment("Total Time Viewing Quizzes", timeViewed);
-    mixpanel.people.increment("Total Quiz Questions Completed", currentQuestion);
+    // Avoid error in development mode where Mixpanel is turned off
+    if (typeof mixpanel !== 'undefined') {
+      var timeViewed = +(((new Date() - quizStartTime) / 1000).toFixed(2));
+      var questionsNo = #{@number_of_questions || 0};
+      mixpanel.track("Quiz View End", {
+        'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
+        'Course Module': '#{@course_module.try(:name) || ""}',
+        'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
+        'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:exam_level).try(:name)}',
+        'Quiz Length': questionsNo,
+        'Time Viewed': timeViewed,
+        'Quiz Questions Completed': currentQuestion,
+        'Quiz Score': +((currentQuestion / numberOfQuestions * 100).toFixed(2)),
+        'Next CME': ['#{course_special_link(@course_module_element.try(:next_element))}', '#{@course_module_element.try(:next_element).try(:type_name)}']
+      });
+      mixpanel.people.increment("Quizzes Completed");
+      mixpanel.people.increment("Total Time Viewing Quizzes", timeViewed);
+      mixpanel.people.increment("Total Quiz Questions Completed", currentQuestion);
+    }
   };

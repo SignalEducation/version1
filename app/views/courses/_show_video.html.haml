@@ -71,7 +71,8 @@
 
   var completedDataSent = false;
   var onCompletedHandler = function() {
-    if (completedDataSent === false) {
+    // Avoid error in development mode where Mixpanel is turned off
+    if (typeof mixpanel !== 'undefined' && completedDataSent === false) {
       var duration = jwplayer().getDuration();
       var position = +(jwplayer().getPosition()).toFixed(2);
       mixpanel.track("Video View End", {
@@ -94,7 +95,8 @@
   jwplayer().onPlay(function(stateInfo) {
     if (stateInfo.newstate == 'PLAYING') {
       playsNo += 1;
-      if (1 == playsNo) {
+      // Avoid error in development mode where Mixpanel is turned off
+      if (typeof mixpanel !== 'undefined' && 1 == playsNo) {
         mixpanel.track("Video View Begin", {
           'Video Name': '#{cme.name}',
           'Course Module': '#{cme.course_module.name}',
