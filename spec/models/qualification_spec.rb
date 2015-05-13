@@ -42,17 +42,17 @@ describe Qualification do
   it { should validate_numericality_of(:institution_id) }
 
   it { should validate_presence_of(:name) }
-  it { should ensure_length_of(:name).is_at_most(255) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
-  it { should ensure_length_of(:name_url).is_at_most(255) }
+  it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
 
   it { should validate_presence_of(:cpd_hours_required_per_year) }
 
   it { should validate_presence_of(:seo_description) }
-  it { should ensure_length_of(:seo_description).is_at_most(255) }
+  it { should validate_length_of(:seo_description).is_at_most(255) }
 
 
   # callbacks

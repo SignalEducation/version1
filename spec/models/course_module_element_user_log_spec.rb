@@ -57,7 +57,7 @@ describe CourseModuleElementUserLog do
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:session_guid) }
-  it { should ensure_length_of(:session_guid).is_at_most(255) }
+  it { should validate_length_of(:session_guid).is_at_most(255) }
 
   it { should validate_presence_of(:time_taken_in_seconds) }
 

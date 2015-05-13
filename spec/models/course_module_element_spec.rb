@@ -59,11 +59,11 @@ describe CourseModuleElement do
   # validation
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
-  it { should ensure_length_of(:name).is_at_most(255) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
   it { should validate_uniqueness_of(:name_url) }
-  it { should ensure_length_of(:name_url).is_at_most(255) }
+  it { should validate_length_of(:name_url).is_at_most(255) }
 
   # it { should validate_presence_of(:description) }
 
@@ -88,7 +88,7 @@ describe CourseModuleElement do
   it { should_not validate_presence_of(:related_video_id) }
   it { should validate_numericality_of(:related_video_id) }
 
-  it { should ensure_length_of(:seo_description).is_at_most(255) }
+  it { should validate_length_of(:seo_description).is_at_most(255) }
 
   # callbacks
   it { should callback(:sanitize_name_url).before(:save) }

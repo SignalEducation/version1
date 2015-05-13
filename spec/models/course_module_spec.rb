@@ -64,18 +64,18 @@ describe CourseModule do
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name).scoped_to([:exam_section_id, :exam_level_id]) }
-  it { should ensure_length_of(:name).is_at_most(255) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
   it { should validate_uniqueness_of(:name_url).scoped_to([:exam_section_id, :exam_level_id]) }
-  it { should ensure_length_of(:name_url).is_at_most(255) }
+  it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:sorting_order) }
 
-  it { should ensure_length_of(:seo_description).is_at_most(255) }
+  it { should validate_length_of(:seo_description).is_at_most(255) }
 
   # callbacks
   it { should callback(:unify_hierarchy_ids).before(:validation) }
