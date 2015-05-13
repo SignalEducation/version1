@@ -37,8 +37,10 @@ describe StripeApiEvent do
   # validation
   it { should validate_presence_of(:guid) }
   it { should validate_uniqueness_of(:guid) }
+  it { should validate_length_of(:guid).is_at_most(255) }
 
   it { should validate_inclusion_of(:api_version).in_array(StripeApiEvent::KNOWN_API_VERSIONS) }
+  it { should validate_length_of(:api_version).is_at_most(255) }
 
   # callbacks
   it { should callback(:set_default_values).before(:validation).on(:create) }

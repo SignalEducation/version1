@@ -43,8 +43,11 @@ describe SubscriptionPlan do
   it { should have_many(:subscriptions) }
   it { should belong_to(:subscription_plan_category) }
 
-   it { should validate_presence_of(:name) }
-   it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
+  # validations
+  it { should validate_presence_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
+
+  it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
 
   it { should validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
@@ -63,6 +66,8 @@ describe SubscriptionPlan do
 
   it { should_not validate_presence_of(:subscription_plan_category_id) }
   it { should validate_numericality_of(:subscription_plan_category_id) }
+
+  it { should validate_length_of(:stripe_guid).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

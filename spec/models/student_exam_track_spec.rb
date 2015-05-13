@@ -59,6 +59,7 @@ describe StudentExamTrack do
   it { should validate_numericality_of(:exam_schedule_id) }
 
   it { should validate_presence_of(:session_guid) }
+  it { should validate_length_of(:session_guid).is_at_most(255) }
 
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }

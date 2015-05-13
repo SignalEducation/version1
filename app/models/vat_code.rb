@@ -29,8 +29,9 @@ class VatCode < ActiveRecord::Base
   # validation
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
-  validates :label, presence: true
+  validates :name, presence: true, length: { maximum: 255 }
+  validates :label, presence: true, length: { maximum: 255 }
+  validates_length_of :wiki_url, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :label, :wiki_url) }

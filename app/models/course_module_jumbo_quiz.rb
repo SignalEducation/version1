@@ -37,7 +37,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true, length: {maximum: 255}
-  validates :name_url, presence: true, length: {maximum: 255}
+  validates :name_url, presence: true, length: { maximum: 255 }
   validates :minimum_question_count_per_quiz, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :maximum_question_count_per_quiz, presence: true,

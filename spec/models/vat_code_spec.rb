@@ -37,8 +37,12 @@ describe VatCode do
   it { should validate_numericality_of(:country_id) }
 
   it { should validate_presence_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:label) }
+  it { should validate_length_of(:label).is_at_most(255) }
+
+  it { should validate_length_of(:wiki_url).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

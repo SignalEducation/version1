@@ -46,7 +46,6 @@ describe CourseModuleJumboQuiz do
   it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
-  it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:minimum_question_count_per_quiz) }
   it { should validate_numericality_of(:minimum_question_count_per_quiz) }
