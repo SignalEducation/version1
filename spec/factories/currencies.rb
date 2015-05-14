@@ -20,6 +20,7 @@ FactoryGirl.define do
     leading_symbol            '£'
     trailing_symbol           'p'
     sequence(:sorting_order)  { |n| n * 100 }
+    active                    true
 
     factory :active_currency do
       active                  true
@@ -34,6 +35,7 @@ FactoryGirl.define do
       name                    'Euro'
       iso_code                'EUR'
       leading_symbol          '€'
+      trailing_symbol         'c'
     end
 
     factory :usd do
@@ -41,6 +43,7 @@ FactoryGirl.define do
       name                    'US Dollar'
       iso_code                'USD'
       leading_symbol          '$'
+      trailing_symbol         'c'
     end
 
     factory :gbp do

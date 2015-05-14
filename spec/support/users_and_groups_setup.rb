@@ -2,8 +2,8 @@ require 'rails_helper'
 
 shared_context 'users_and_groups_setup' do
 
-  let!(:currency) { FactoryGirl.create(:currency)}
-  let!(:country) { FactoryGirl.create(:country, currency_id: currency.id) }
+  let!(:currency) { FactoryGirl.create(:euro)}
+  let!(:country) { FactoryGirl.create(:ireland, currency_id: currency.id) }
 
   # user groups
   let!(:individual_student_user_group) { FactoryGirl.create(:individual_student_user_group) }
