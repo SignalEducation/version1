@@ -278,6 +278,19 @@ en:
           success: Subscription Plan Category has been deleted
           error: Subscription Plan Category was not deleted
 
+    tutor_applications:
+      create:
+        flash:
+          success: Thank you, your application has been successfully submitted.
+      update:
+        flash:
+          success: Tutor Application details have been updated successfully
+      destroy:
+        flash:
+          success: Tutor Application has been deleted
+          error: Tutor Application was not deleted
+
+
     users:
       create:
         flash:

@@ -956,6 +956,33 @@ en:
       show:
         h1: Subscrption Plan Category
 
+    tutor_applications:
+      form:
+        first_name: First Name
+        first_name_placeholder: Name
+        last_name: Last Name
+        last_name_placeholder: Name
+        email: Email
+        email_placeholder: tutor@example.com
+        info: Where can we learn more about you (Twitter, Linked In, Website)
+        info_placeholder: asdf
+        description: What would you like to teach? Please give us a short description.
+        description_placeholder: asdf
+
+
+      index:
+        h1: Tutor Applications
+
+      show:
+        h1: Tutor Application
+
+      edit:
+        h1: Edit Tutor Application
+
+      new:
+        h1: Tutor Application
+
+
     users:
       form:
         email: Email

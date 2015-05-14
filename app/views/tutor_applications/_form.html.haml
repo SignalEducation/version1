@@ -1,29 +1,63 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@tutor_application, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
-        .form-group
-          =f.label :first_name, t('views.tutor_applications.form.first_name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :first_name, placeholder: t('views.tutor_applications.form.first_name_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :last_name, t('views.tutor_applications.form.last_name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :last_name, placeholder: t('views.tutor_applications.form.last_name_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :email, t('views.tutor_applications.form.email'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :email, placeholder: t('views.tutor_applications.form.email_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :info, t('views.tutor_applications.form.info'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :info, placeholder: t('views.tutor_applications.form.info_placeholder'), rows: 4, class: 'form-control'
-        .form-group
-          =f.label :description, t('views.tutor_applications.form.description'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :description, placeholder: t('views.tutor_applications.form.description_placeholder'), rows: 4, class: 'form-control'
+.header
+  .container
+    .col-md-12
+      %h1='Teach'
+      %p='Create prestigious financial training, earn roylalties, sharing your passion.'
 
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), tutor_applications_path
+.content
+  .container-fluid
+    .side-nav--info-pages.col-sm-3
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          %a{ href: '/about', title: 'About' }
+            ='About'
+        %li
+          %a{ href: '/jobs', title: 'Jobs' }
+            ='Jobs'
+        %li
+          =link_to 'Teach', new_tutor_application_path
+        %li
+          %a{ href: '/terms_of_use', title: 'About' }
+            ='Terms of Use'
+    .main
+      .sheet
+        .section
+          %h3='Are you:'
+          %ul
+            %li='An expert in an area in finance? Have you got some insights you know others would value?'
+            %li='Passionate about teaching others? Experienced in taking the leaders position?'
+            %l='Involved in the community surrounding your skillset?'
+          %h3='Lets build a course that can:'
+          %ul
+            %li='Provide someone with a useful skill or insight that will help them be better at their job.'
+            %li='Teach students about popular topics in the industry that are likely to drive attention to your course.'
+          %h3='Already full of ideas? Lets get started!'
+          %ul
+            %li="Submit the course ideas that you'd be interested in covering. Then we'll get take it from there! We'll get in touch with you to kick off the conversation and start the path to an amazing course in finance! We cant wait to hear from you!"
+
+
+        .form-container
+          =form_for(@tutor_application, html: {role: 'form'}) do |f|
+            =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
+
+            .form-group.f-name
+              =f.label :first_name, t('views.tutor_applications.form.first_name')
+              =f.text_field :first_name, class: 'form-control', autofocus: true
+
+            .form-group.l-name
+              =f.label :last_name, t('views.tutor_applications.form.last_name')
+              =f.text_field :last_name, class: 'form-control'
+
+            .form-group.email
+              =f.label :email, t('views.tutor_applications.form.email')
+              =f.text_field :email, class: 'form-control'
+
+            .form-group.about-you
+              =f.label :info, t('views.tutor_applications.form.info')
+              =f.text_area :info, rows: 4, class: 'form-control'
+
+            .form-group.teach
+              =f.label :description, t('views.tutor_applications.form.description')
+              =f.text_area :description, rows: 4, class: 'form-control'
+
+            =f.submit 'Submit', class: 'btn btn-ls-default'
