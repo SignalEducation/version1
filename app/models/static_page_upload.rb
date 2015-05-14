@@ -29,9 +29,11 @@ class StaticPageUpload < ActiveRecord::Base
   has_attached_file :upload, default_url: '/assets/images/missing.png'
 
   # validation
-  validates :description, presence: true
+  validates :description, presence: true, length: { maximum: 255 }
   validates :static_page_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates_length_of :upload_file_name, maximum: 255, allow_blank: true
+  validates_length_of :upload_content_type, maximum: 255, allow_blank: true
   validates_attachment_content_type :upload,
             content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document)
 

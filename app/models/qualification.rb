@@ -32,11 +32,11 @@ class Qualification < ActiveRecord::Base
   # validation
   validates :institution_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
-  validates :name_url, presence: true, uniqueness: true
+  validates :name, presence: true, length: {maximum: 255}
+  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :sorting_order, presence: true
   validates :cpd_hours_required_per_year, presence: true
-  validates :seo_description, presence: true
+  validates :seo_description, presence: true, length: {maximum: 255}
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

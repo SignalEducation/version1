@@ -28,8 +28,8 @@ class StripeApiEvent < ActiveRecord::Base
   # relationships
 
   # validation
-  validates :guid, presence: true, uniqueness: true
-  validates :api_version, inclusion: {in: KNOWN_API_VERSIONS}
+  validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :api_version, inclusion: {in: KNOWN_API_VERSIONS}, length: { maximum: 255 }
   validates :payload, presence: true
 
   # callbacks

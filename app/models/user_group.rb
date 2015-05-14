@@ -36,7 +36,7 @@ class UserGroup < ActiveRecord::Base
   has_many :users
 
   # validation
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 255}
   validates :description, presence: true
 
   # callbacks

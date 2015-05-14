@@ -42,6 +42,10 @@ describe InstitutionUser do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
+  it { should validate_length_of(:student_registration_number).is_at_most(255) }
+  it { should validate_length_of(:membership_number).is_at_most(255) }
+  it { should validate_length_of(:exam_number).is_at_most(255) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

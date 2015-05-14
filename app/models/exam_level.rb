@@ -48,14 +48,14 @@ class ExamLevel < ActiveRecord::Base
   validates :qualification_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true,
-            uniqueness: {scope: :qualification_id}
+            uniqueness: {scope: :qualification_id}, length: {maximum: 255}
   validates :name_url, presence: true,
-            uniqueness: {scope: :qualification_id}
+            uniqueness: {scope: :qualification_id}, length: {maximum: 255}
   validates :sorting_order, presence: true
   validates :default_number_of_possible_exam_answers, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
-  validates :seo_description, presence: true
+  validates :seo_description, presence: true, length: {maximum: 255}
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

@@ -31,7 +31,12 @@
                           .col-sm-8
                             %p=greatgrandchild.name
                           .col-sm-4
-                            %p.pull-right=seconds_to_time(greatgrandchild.estimated_time_in_seconds)
+                            -if greatgrandchild.is_video
+                              %p.pull-right=seconds_to_time(greatgrandchild.estimated_time_in_seconds)
+                            -elsif greatgrandchild.is_quiz
+                              %p.pull-right=greatgrandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                            -else
+                              %p.pull-right='Flash Card'
               -else
                 -child.children.all_in_order.all_active.each do |grandchild|
                   =link_to course_special_link(grandchild), class: 'list-group-item' do

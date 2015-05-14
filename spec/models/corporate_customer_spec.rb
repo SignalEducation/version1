@@ -44,6 +44,7 @@ describe CorporateCustomer do
 
   # validation
   it { should validate_presence_of(:organisation_name) }
+  it { should validate_length_of(:organisation_name).is_at_most(255) }
 
   it { should validate_presence_of(:address) }
 
@@ -52,6 +53,7 @@ describe CorporateCustomer do
 
   it { should validate_presence_of(:owner_id) }
   it { should validate_numericality_of(:owner_id) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

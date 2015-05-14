@@ -45,28 +45,36 @@ describe Institution do
   # validation
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:short_name) }
   it { should validate_uniqueness_of(:short_name) }
+  it { should validate_length_of(:short_name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
+  it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:feedback_url) }
   it { should allow_value('http://linkedin.com').for(:feedback_url) }
   it { should_not allow_value('www.linkedin.com').for(:feedback_url) }
+  it { should validate_length_of(:feedback_url).is_at_most(255) }
 
   it { should validate_presence_of(:help_desk_url) }
   it { should allow_value('http://linkedin.com').for(:help_desk_url) }
   it { should_not allow_value('www.linkedin.com').for(:help_desk_url) }
+  it { should validate_length_of(:help_desk_url).is_at_most(255) }
 
   it { should validate_presence_of(:subject_area_id) }
   it { should validate_numericality_of(:subject_area_id) }
 
   it { should validate_presence_of(:seo_description) }
+  it { should validate_length_of(:seo_description).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
+
+  it { should validate_length_of(:background_colour_code).is_at_most(255) }
 
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }

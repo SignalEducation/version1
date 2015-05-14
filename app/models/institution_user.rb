@@ -33,6 +33,9 @@ class InstitutionUser < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validate :require_student_id_if_student
+  validates_length_of :exam_number, maximum: 255, allow_blank: true
+  validates_length_of :membership_number, maximum: 255, allow_blank: true
+  validates_length_of :student_registration_number, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:student_registration_number, :exam_number, :membership_number) }
