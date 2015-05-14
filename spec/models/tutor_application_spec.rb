@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: tutor_applications
+#
+#  id          :integer          not null, primary key
+#  first_name  :string
+#  last_name   :string
+#  email       :string
+#  info        :text
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 require 'rails_helper'
 
 describe TutorApplication do
@@ -19,10 +33,13 @@ describe TutorApplication do
 
   # validation
   it { should validate_presence_of(:first_name) }
+  it { should validate_length_of(:first_name).is_at_most(255)}
 
   it { should validate_presence_of(:last_name) }
+  it { should validate_length_of(:last_name).is_at_most(255)}
 
   it { should validate_presence_of(:email) }
+  it { should validate_length_of(:email).is_at_most(255)}
 
   it { should validate_presence_of(:info) }
 
@@ -38,7 +55,5 @@ describe TutorApplication do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

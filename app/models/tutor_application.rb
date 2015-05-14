@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: tutor_applications
+#
+#  id          :integer          not null, primary key
+#  first_name  :string
+#  last_name   :string
+#  email       :string
+#  info        :text
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class TutorApplication < ActiveRecord::Base
 
   # attr-accessible
@@ -8,9 +22,9 @@ class TutorApplication < ActiveRecord::Base
   # relationships
 
   # validation
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :email, presence: true
+  validates :first_name, presence: true, length: { maximum: 255 }
+  validates :last_name, presence: true, length: { maximum: 255 }
+  validates :email, presence: true, length: { maximum: 255 }
   validates :info, presence: true
   validates :description, presence: true
 
@@ -24,7 +38,7 @@ class TutorApplication < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   protected
