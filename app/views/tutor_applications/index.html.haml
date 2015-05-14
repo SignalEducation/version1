@@ -1,0 +1,36 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.tutor_applications.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @tutor_applications, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.tutor_applications.form.first_name')
+          %th=t('views.tutor_applications.form.last_name')
+          %th=t('views.tutor_applications.form.email')
+          %th=t('views.tutor_applications.form.info')
+          %th=t('views.tutor_applications.form.description')
+          %th
+          %th
+      %tbody
+        -@tutor_applications.each do |tutor_application|
+          %tr{id: tutor_application.id}
+            %td=link_to(tutor_application.first_name, tutor_application, title: t('views.general.view_tooltip'))
+            %td=link_to(tutor_application.last_name, tutor_application, title: t('views.general.view_tooltip'))
+            %td=link_to(tutor_application.email, tutor_application, title: t('views.general.view_tooltip'))
+            %td=link_to(tutor_application.info, tutor_application, title: t('views.general.view_tooltip'))
+            %td=link_to(tutor_application.description, tutor_application, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), tutor_application
+              =link_to t('views.general.edit'), edit_tutor_application_url(tutor_application), class: 'btn btn-info btn-xs'
+              -if tutor_application.destroyable?
+                =link_to t('views.general.delete'), tutor_application, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_tutor_application_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

@@ -1,0 +1,29 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@tutor_application, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
+        .form-group
+          =f.label :first_name, t('views.tutor_applications.form.first_name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :first_name, placeholder: t('views.tutor_applications.form.first_name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :last_name, t('views.tutor_applications.form.last_name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :last_name, placeholder: t('views.tutor_applications.form.last_name_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :email, t('views.tutor_applications.form.email'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :email, placeholder: t('views.tutor_applications.form.email_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :info, t('views.tutor_applications.form.info'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :info, placeholder: t('views.tutor_applications.form.info_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          =f.label :description, t('views.tutor_applications.form.description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :description, placeholder: t('views.tutor_applications.form.description_placeholder'), rows: 4, class: 'form-control'
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), tutor_applications_path
