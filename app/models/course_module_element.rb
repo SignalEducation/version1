@@ -165,6 +165,16 @@ class CourseModuleElement < ActiveRecord::Base
     self.course_module.try(:recalculate_estimated_time)
   end
 
+  def type_name
+    if is_quiz
+      "Quiz"
+    elsif is_video
+      "Video"
+    else
+      "Unknown"
+    end
+  end
+
   protected
 
   def self.nested_resource_is_blank?(attributes)
