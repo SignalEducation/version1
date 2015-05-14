@@ -74,9 +74,11 @@ class StaticPage < ActiveRecord::Base
   validates :created_by, presence: true
   validates :updated_by, presence: true, on: :update
   validates :menu_label, presence: true,
-            if: 'add_to_navbar == true || add_to_footer == true', length: { maximum: 255 }
+            if: 'add_to_navbar == true || add_to_footer == true'
+  validates :menu_label, length: { maximum: 255 }
   validates :tooltip_text, presence: true,
             if: 'add_to_navbar == true || add_to_footer == true', length: { maximum: 255 }
+  validates :tooltip_text, length: { maximum: 255 }
   validates :language, presence: true, length: { maximum: 255 }
   validates :seo_title, presence: true, length: { maximum: 255 }
   validates :seo_description, presence: true, length: { maximum: 255 }
