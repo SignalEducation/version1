@@ -26,7 +26,7 @@ class UserLike < ActiveRecord::Base
   # validation
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :likeable_type, presence: true
+  validates :likeable_type, presence: true, length: { maximum: 255 }
   validates :likeable_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
 

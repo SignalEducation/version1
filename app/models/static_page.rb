@@ -66,21 +66,27 @@ class StaticPage < ActiveRecord::Base
   accepts_nested_attributes_for :static_page_uploads
 
   # validation
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 255 }
   validates :publish_from, presence: true
-  validates :public_url, presence: true, uniqueness: true, if: 'allow_multiples == false'
+  validates :public_url, presence: true, length: { maximum: 255 }
+  validates :public_url, uniqueness: true, if: 'allow_multiples == false'
   validates :body_content, presence: true
   validates :created_by, presence: true
   validates :updated_by, presence: true, on: :update
   validates :menu_label, presence: true,
             if: 'add_to_navbar == true || add_to_footer == true'
+  validates :menu_label, length: { maximum: 255 }
   validates :tooltip_text, presence: true,
-            if: 'add_to_navbar == true || add_to_footer == true'
-  validates :language, presence: true
-  validates :seo_title, presence: true
-  validates :seo_description, presence: true
+            if: 'add_to_navbar == true || add_to_footer == true', length: { maximum: 255 }
+  validates :tooltip_text, length: { maximum: 255 }
+  validates :language, presence: true, length: { maximum: 255 }
+  validates :seo_title, presence: true, length: { maximum: 255 }
+  validates :seo_description, presence: true, length: { maximum: 255 }
   validates :subscription_plan_category_id, allow_blank: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates_length_of :post_sign_up_redirect_url, maximum: 255, allow_blank: true
+  validates_length_of :student_sign_up_h1, maximum: 255, allow_blank: true
+  validates_length_of :student_sign_up_sub_head, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :public_url, :menu_label, :tooltip_text, :seo_title, :seo_description, :post_sign_up_redirect_url) }

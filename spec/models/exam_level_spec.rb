@@ -54,9 +54,11 @@ describe ExamLevel do
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name).scoped_to(:qualification_id) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
   it { should validate_uniqueness_of(:name_url).scoped_to(:qualification_id) }
+  it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
 
@@ -66,6 +68,7 @@ describe ExamLevel do
   it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:seo_description) }
+  it { should validate_length_of(:seo_description).is_at_most(255) }
 
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }

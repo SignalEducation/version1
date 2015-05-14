@@ -56,6 +56,9 @@ describe Subscription do
 
   it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE]).on(:update) }
 
+  it { should validate_length_of(:stripe_guid).is_at_most(255) }
+  it { should validate_length_of(:stripe_customer_id).is_at_most(255) }
+
   # callbacks
   it { should callback(:create_on_stripe_platform).after(:create) }
   it { should callback(:create_a_subscription_transaction).after(:create) }

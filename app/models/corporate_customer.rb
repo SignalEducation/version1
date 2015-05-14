@@ -37,7 +37,7 @@ class CorporateCustomer < ActiveRecord::Base
   has_many :subscriptions
 
   # validation
-  validates :organisation_name, presence: true
+  validates :organisation_name, presence: true, length: {maximum: 255}
   validates :address, presence: true
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}

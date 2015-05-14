@@ -42,13 +42,17 @@ describe Currency do
   # validation
   it { should validate_presence_of(:iso_code) }
   it { should validate_uniqueness_of(:iso_code) }
+  it { should validate_length_of(:iso_code).is_at_most(255) }
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:leading_symbol) }
+  it { should validate_length_of(:leading_symbol).is_at_most(255) }
 
   it { should validate_presence_of(:trailing_symbol) }
+  it { should validate_length_of(:trailing_symbol).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }

@@ -79,6 +79,11 @@ class Invoice < ActiveRecord::Base
   validates :vat_rate_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}
+  validates_length_of :stripe_guid, maximum: 255, allow_blank: true
+  validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true
+  validates_length_of :charge_guid, maximum: 255, allow_blank: true
+  validates_length_of :object_type, maximum: 255, allow_blank: true
+  validates_length_of :subscription_guid, maximum: 255, allow_blank: true
 
   # callbacks
 

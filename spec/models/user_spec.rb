@@ -90,14 +90,17 @@ describe User do
   # validation
   it { should validate_presence_of(:email) }
   it { should validate_uniqueness_of(:email) }
+  it { should validate_length_of(:email).is_at_least(7).is_at_most(40) }
 
   it { should validate_presence_of(:first_name) }
   it { should validate_length_of(:first_name).is_at_least(2).is_at_most(20) }
 
   it { should validate_presence_of(:last_name) }
+  it { should validate_length_of(:last_name).is_at_least(2).is_at_most(30) }
 
   it { should validate_presence_of(:password).on(:create) }
   it { should validate_confirmation_of(:password).on(:create) }
+  it { should validate_length_of(:password).is_at_least(6).is_at_most(255) }
 
   it { should validate_presence_of(:country_id) }
   it { should validate_numericality_of(:country_id) }
@@ -112,16 +115,22 @@ describe User do
   it { should validate_numericality_of(:corporate_customer_user_group_id) }
 
   it { should validate_inclusion_of(:operational_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
+  it { should validate_length_of(:operational_email_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:study_plan_notifications_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
+  it { should validate_length_of(:study_plan_notifications_email_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:falling_behind_email_alert_frequency).in_array(User::EMAIL_FREQUENCIES) }
+  it { should validate_length_of(:falling_behind_email_alert_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:marketing_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
+  it { should validate_length_of(:marketing_email_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:blog_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
+  it { should validate_length_of(:blog_notification_email_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:forum_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
+  it { should validate_length_of(:forum_notification_email_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
 

@@ -49,6 +49,9 @@ class Subscription < ActiveRecord::Base
   validates :next_renewal_date, presence: true, on: :update
   validates :current_status, inclusion: {in: STATUSES}, on: :update
   validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, on: :update
+  validates_length_of :stripe_guid, maximum: 255, allow_blank: true
+  validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
+
 
   # callbacks
   after_create :create_on_stripe_platform

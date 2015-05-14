@@ -31,6 +31,7 @@ describe MarketingCategory do
   # validation
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
   describe 'invalid category name' do
     it 'should mark invalid names with comma' do
       mc = MarketingCategory.create(name: 'Name, with comma')

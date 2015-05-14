@@ -37,7 +37,7 @@ class RawVideoFile < ActiveRecord::Base
   has_many :course_module_element_videos
 
   # validation
-  validates :file_name, presence: true
+  validates :file_name, presence: true, length: { maximum: 255 }
 
   # callbacks
   before_create :production_set_guid_prefix

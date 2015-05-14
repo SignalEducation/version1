@@ -45,8 +45,8 @@ class SubscriptionTransaction < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subscription_payment_card_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_transaction_guid, presence: true, uniqueness: true
-  validates :transaction_type, inclusion: {in: TRANSACTION_TYPES}
+  validates :stripe_transaction_guid, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :transaction_type, inclusion: {in: TRANSACTION_TYPES}, length: { maximum: 255 }
   validates :amount, presence: true, numericality: true
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}

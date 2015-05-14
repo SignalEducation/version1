@@ -49,8 +49,10 @@ describe SubscriptionTransaction do
   it { should validate_numericality_of(:subscription_id) }
 
   it { should validate_presence_of(:stripe_transaction_guid) }
+  it { should validate_length_of(:stripe_transaction_guid).is_at_most(255) }
 
   it { should validate_inclusion_of(:transaction_type).in_array(SubscriptionTransaction::TRANSACTION_TYPES) }
+  it { should validate_length_of(:transaction_type).is_at_most(255) }
 
   it { should validate_presence_of(:amount) }
   it { should validate_numericality_of(:amount) }

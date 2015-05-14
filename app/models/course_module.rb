@@ -56,12 +56,13 @@ class CourseModule < ActiveRecord::Base
   validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true,
-            uniqueness: {scope: [:exam_section_id, :exam_level_id]}
+            uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
   validates :name_url, presence: true,
-            uniqueness: {scope: [:exam_section_id, :exam_level_id]}
+            uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
+  validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }

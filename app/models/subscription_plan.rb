@@ -42,7 +42,7 @@ class SubscriptionPlan < ActiveRecord::Base
   belongs_to :subscription_plan_category
 
   # validation
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 255 }
   validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -57,6 +57,7 @@ class SubscriptionPlan < ActiveRecord::Base
   validates :subscription_plan_category_id, allow_blank: true,
             numericality: {greater_than_or_equal_to: 0}
   validate  :one_of_customer_types_checked
+  validates_length_of :stripe_guid, maximum: 255, allow_blank: true
 
   # callbacks
   before_create :create_on_stripe_platform

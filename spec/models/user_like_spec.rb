@@ -36,6 +36,7 @@ describe UserLike do
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:likeable_type) }
+  it { should validate_length_of(:likeable_type).is_at_most(255) }
 
   it { should validate_presence_of(:likeable_id) }
   it { should validate_numericality_of(:likeable_id) }

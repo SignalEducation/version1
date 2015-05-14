@@ -25,7 +25,7 @@ class SubscriptionPlanCategory < ActiveRecord::Base
   has_many :subscription_plans
 
   # validation
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :available_from, presence: true
   validates :available_to, presence: true
   validates :guid, presence: true

@@ -108,7 +108,7 @@ class User < ActiveRecord::Base
 
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
-  validates :password, presence: true, length: {minimum: 6}, on: :create
+  validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
   validates :country_id, presence: true,
@@ -120,17 +120,17 @@ class User < ActiveRecord::Base
   validates :corporate_customer_user_group_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :operational_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}
+            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :study_plan_notifications_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}
+            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :falling_behind_email_alert_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}
+            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :marketing_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}
+            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :blog_notification_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}
+            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :forum_notification_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}
+            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :locale, inclusion: {in: LOCALES}
 
   # callbacks

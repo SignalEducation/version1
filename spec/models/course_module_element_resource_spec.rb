@@ -41,12 +41,14 @@ describe CourseModuleElementResource do
   it { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:description) }
 
   it { should allow_value('http://linkedin.com/').for(:web_url) }
   it { should_not allow_value('www.linkedin.com/').for(:web_url) }
   it { should_not allow_value('linkedin.com/').for(:web_url) }
+  it { should validate_length_of(:web_url).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

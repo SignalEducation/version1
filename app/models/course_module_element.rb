@@ -68,8 +68,8 @@ class CourseModuleElement < ActiveRecord::Base
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }
 
   # validation
-  validates :name, presence: true, uniqueness: true
-  validates :name_url, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   # validates :description, presence: true
   validates :estimated_time_in_seconds, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
@@ -85,6 +85,7 @@ class CourseModuleElement < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :related_video_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
@@ -163,6 +164,16 @@ class CourseModuleElement < ActiveRecord::Base
 
   def update_the_module_total_time
     self.course_module.try(:recalculate_estimated_time)
+  end
+
+  def type_name
+    if is_quiz
+      "Quiz"
+    elsif is_video
+      "Video"
+    else
+      "Unknown"
+    end
   end
 
   protected

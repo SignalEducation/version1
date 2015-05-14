@@ -57,20 +57,28 @@ describe UserActivityLog do
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:session_guid) }
+  it { should validate_length_of(:session_guid).is_at_most(255) }
 
   it { should validate_presence_of(:original_uri) }
 
   it { should validate_presence_of(:controller_name) }
+  it { should validate_length_of(:controller_name).is_at_most(255) }
 
   it { should validate_presence_of(:action_name) }
+  it { should validate_length_of(:action_name).is_at_most(255) }
 
   it { should validate_presence_of(:ip_address) }
+  it { should validate_length_of(:ip_address).is_at_most(255) }
+
+  it { should validate_length_of(:raw_user_agent).is_at_most(255) }
+  it { should validate_length_of(:post_sign_up_redirect_url).is_at_most(255) }
 
   # it { should validate_presence_of(:alert_level) }
   # it { should validate_numericality_of(:alert_level) }
 
   it { should validate_presence_of(:guid) }
   it { should validate_uniqueness_of(:guid) }
+  it { should validate_length_of(:guid).is_at_most(255) }
 
   # callbacks
   it { should callback(:process_user_agent).before(:validation) }

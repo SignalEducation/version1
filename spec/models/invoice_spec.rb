@@ -86,6 +86,13 @@ describe Invoice do
 
   it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
 
+  it { should validate_length_of(:stripe_guid).is_at_most(255) }
+  it { should validate_length_of(:stripe_customer_guid).is_at_most(255) }
+  it { should validate_length_of(:object_type).is_at_most(255) }
+  it { should validate_length_of(:charge_guid).is_at_most(255) }
+  it { should validate_length_of(:subscription_guid).is_at_most(255) }
+
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
