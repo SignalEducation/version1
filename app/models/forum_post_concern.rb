@@ -29,7 +29,7 @@ class ForumPostConcern < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :reason, presence: true
+  validates :reason, presence: true, length: {maximum: 255}
 
   # callbacks
 

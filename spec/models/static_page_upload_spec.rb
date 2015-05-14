@@ -35,9 +35,13 @@ describe StaticPageUpload do
 
   # validation
   it { should validate_presence_of(:description) }
+  it { should validate_length_of(:description).is_at_most(255) }
 
   it { should_not validate_presence_of(:static_page_id) }
   it { should validate_numericality_of(:static_page_id) }
+
+  it { should validate_length_of(:upload_file_name).is_at_most(255) }
+  it { should validate_length_of(:upload_content_type).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

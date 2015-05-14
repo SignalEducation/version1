@@ -43,9 +43,9 @@ class UserNotification < ActiveRecord::Base
   # validation
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_line, presence: true
+  validates :subject_line, presence: true, length: { maximum: 255 }
   validates :content, presence: true
-  validates :message_type, inclusion: {in: MESSAGE_TYPES}
+  validates :message_type, inclusion: {in: MESSAGE_TYPES}, length: { maximum: 255 }
   validates :forum_topic_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :forum_post_id, allow_nil: true,

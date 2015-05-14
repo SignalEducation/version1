@@ -45,7 +45,7 @@ class QuizQuestion < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}
+  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: { maximum: 255}
   validates :hints, allow_nil: true, length: {maximum: 65535}
   # todo validate :at_least_one_answer_is_correct
 

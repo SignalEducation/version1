@@ -60,14 +60,30 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # validation
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_card_guid, presence: true
-  validates :status, inclusion: {in: STATUSES}
-  validates :brand, presence: true
-  validates :last_4, presence: true
+  validates :stripe_card_guid, presence: true, length: { maximum: 255 }
+  validates :status, inclusion: {in: STATUSES}, length: { maximum: 255 }
+  validates :brand, presence: true, length: { maximum: 255 }
+  validates :last_4, presence: true, length: { maximum: 255 }
   validates :expiry_month, presence: true
   validates :expiry_year, presence: true
   validates :account_country_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates_length_of :address_line1, maximum: 255, allow_blank: true
+  validates_length_of :account_country, maximum: 255, allow_blank: true
+  validates_length_of :stripe_object_name, maximum: 255, allow_blank: true
+  validates_length_of :funding, maximum: 255, allow_blank: true
+  validates_length_of :cardholder_name, maximum: 255, allow_blank: true
+  validates_length_of :fingerprint, maximum: 255, allow_blank: true
+  validates_length_of :cvc_checked, maximum: 255, allow_blank: true
+  validates_length_of :address_line1_check, maximum: 255, allow_blank: true
+  validates_length_of :address_zip_check, maximum: 255, allow_blank: true
+  validates_length_of :dynamic_last4, maximum: 255, allow_blank: true
+  validates_length_of :customer_guid, maximum: 255, allow_blank: true
+  validates_length_of :address_line2, maximum: 255, allow_blank: true
+  validates_length_of :address_city, maximum: 255, allow_blank: true
+  validates_length_of :address_state, maximum: 255, allow_blank: true
+  validates_length_of :address_zip, maximum: 255, allow_blank: true
+  validates_length_of :address_country, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation :create_on_stripe_using_token, on: :create, if: :stripe_token

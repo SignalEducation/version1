@@ -32,10 +32,10 @@ class Currency < ActiveRecord::Base
   has_many :subscription_transactions
 
   # validation
-  validates :iso_code, presence: true, uniqueness: true
-  validates :name, presence: true, uniqueness: true
-  validates :leading_symbol, presence: true
-  validates :trailing_symbol, presence: true
+  validates :iso_code, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :leading_symbol, presence: true, length: {maximum: 255}
+  validates :trailing_symbol, presence: true, length: {maximum: 255}
   validates :sorting_order, presence: true, numericality: true
 
   # callbacks

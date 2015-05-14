@@ -38,18 +38,19 @@ class Institution < ActiveRecord::Base
   belongs_to :subject_area
 
   # validation
-  validates :name, presence: true, uniqueness: true
-  validates :short_name, presence: true, uniqueness: true
-  validates :name_url, presence: true
+  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :short_name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name_url, presence: true, length: {maximum: 255}
   validates :description, presence: true
   validates :feedback_url, presence: true,
-            format: {with: URI::regexp(%w(http https)) }
+            format: {with: URI::regexp(%w(http https)) }, length: {maximum: 255}
   validates :help_desk_url, presence: true,
-            format: {with: URI::regexp(%w(http https)) }
+            format: {with: URI::regexp(%w(http https)) }, length: {maximum: 255}
   validates :subject_area_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :seo_description, presence: true
+  validates :seo_description, presence: true, length: {maximum: 255}
   validates :sorting_order, presence: true
+  validates_length_of :background_colour_code, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :short_name, :name_url, :description, :feedback_url, :help_desk_url) }

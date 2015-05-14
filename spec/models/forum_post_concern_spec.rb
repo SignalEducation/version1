@@ -40,6 +40,7 @@ describe ForumPostConcern do
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:reason) }
+  it { should validate_length_of(:reason).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

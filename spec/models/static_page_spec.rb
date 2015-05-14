@@ -60,11 +60,13 @@ describe StaticPage do
 
   # validation
   it { should validate_presence_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:publish_from) }
 
   it { should validate_presence_of(:public_url) }
   it { should validate_uniqueness_of(:public_url) }
+  it { should validate_length_of(:public_url).is_at_most(255) }
 
   it { should validate_presence_of(:body_content) }
 
@@ -77,7 +79,9 @@ describe StaticPage do
       allow(subject).to receive(:add_to_navbar).and_return(true)
     end
     it { should validate_presence_of(:menu_label) }
+    it { should validate_length_of(:menu_label).is_at_most(255) }
     it { should validate_presence_of(:tooltip_text) }
+    it { should validate_length_of(:tooltip_text).is_at_most(255) }
   end
 
   describe 'menu labels and tooltip are required when it appears in the navbar' do
@@ -92,13 +96,20 @@ describe StaticPage do
   it { should_not validate_presence_of(:tooltip_text) }
 
   it { should validate_presence_of(:language) }
+  it { should validate_length_of(:language).is_at_most(255) }
 
   it { should validate_presence_of(:seo_title) }
+  it { should validate_length_of(:seo_title).is_at_most(255) }
 
   it { should validate_presence_of(:seo_description) }
+  it { should validate_length_of(:seo_description).is_at_most(255) }
 
   it { should_not validate_presence_of(:subscription_plan_category_id) }
   it { should validate_numericality_of(:subscription_plan_category_id) }
+
+  it { should validate_length_of(:post_sign_up_redirect_url).is_at_most(255) }
+  it { should validate_length_of(:student_sign_up_h1).is_at_most(255) }
+  it { should validate_length_of(:student_sign_up_sub_head).is_at_most(255) }
 
   # callbacks
   it { should callback(:sanitize_public_url).before(:save) }

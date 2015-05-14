@@ -40,6 +40,7 @@ describe RawVideoFile do
 
   # validation
   it { should validate_presence_of(:file_name) }
+  it { should validate_length_of(:file_name).is_at_most(255) }
 
   # callbacks
   it { should callback(:production_set_guid_prefix).before(:create) }

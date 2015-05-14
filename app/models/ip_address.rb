@@ -33,7 +33,7 @@ class IpAddress < ActiveRecord::Base
   has_many :user_activity_logs
 
   # validation
-  validates :ip_address, presence: true, uniqueness: true
+  validates :ip_address, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :latitude, presence: true, numericality: true
   validates :longitude, presence: true, numericality: true
   validates :country_id, presence: true,

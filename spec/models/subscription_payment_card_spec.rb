@@ -60,12 +60,16 @@ describe SubscriptionPaymentCard do
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:stripe_card_guid) }
+  it { should validate_length_of(:stripe_card_guid).is_at_most(255) }
 
   it { should validate_inclusion_of(:status).in_array(SubscriptionPaymentCard::STATUSES) }
+  it { should validate_length_of(:status).is_at_most(255) }
 
   it { should validate_presence_of(:brand) }
+  it { should validate_length_of(:brand).is_at_most(255) }
 
   it { should validate_presence_of(:last_4) }
+  it { should validate_length_of(:last_4).is_at_most(255) }
 
   it { should validate_presence_of(:expiry_month) }
 
@@ -73,6 +77,23 @@ describe SubscriptionPaymentCard do
 
   it { should_not validate_presence_of(:account_country_id) }
   it { should validate_numericality_of(:account_country_id) }
+
+  it { should validate_length_of(:address_line1).is_at_most(255) }
+  it { should validate_length_of(:account_country).is_at_most(255) }
+  it { should validate_length_of(:stripe_object_name).is_at_most(255) }
+  it { should validate_length_of(:funding).is_at_most(255) }
+  it { should validate_length_of(:cardholder_name).is_at_most(255) }
+  it { should validate_length_of(:fingerprint).is_at_most(255) }
+  it { should validate_length_of(:cvc_checked).is_at_most(255) }
+  it { should validate_length_of(:address_line1_check).is_at_most(255) }
+  it { should validate_length_of(:address_zip_check).is_at_most(255) }
+  it { should validate_length_of(:dynamic_last4).is_at_most(255) }
+  it { should validate_length_of(:customer_guid).is_at_most(255) }
+  it { should validate_length_of(:address_line2).is_at_most(255) }
+  it { should validate_length_of(:address_city).is_at_most(255) }
+  it { should validate_length_of(:address_state).is_at_most(255) }
+  it { should validate_length_of(:address_zip).is_at_most(255) }
+  it { should validate_length_of(:address_country).is_at_most(255) }
 
   # callbacks
   it { should callback(:create_on_stripe_using_token).before(:validation).on(:create).if(:stripe_token) }

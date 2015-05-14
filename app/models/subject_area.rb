@@ -26,10 +26,10 @@ class SubjectArea < ActiveRecord::Base
   has_many :institutions
 
   # validation
-  validates :name, presence: true, uniqueness: true
-  validates :name_url, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :name_url, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :sorting_order, presence: true, numericality: true
-  validates :seo_description, presence: true
+  validates :seo_description, presence: true, length: { maximum: 255 }
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :seo_description) }
