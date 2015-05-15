@@ -15,50 +15,35 @@ describe TutorApplicationsController, type: :controller do
     describe "GET 'index'" do
       it 'should redirect to sign_in' do
         get :index
-        expect_bounce_as_not_signed_in
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should redirect to sign_in' do
         get :show, id: 1
-        expect_bounce_as_not_signed_in
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should redirect to sign_in' do
         get :new
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should redirect to sign_in' do
-        get :edit, id: 1
-        expect_bounce_as_not_signed_in
+        expect_new_success_with_model('tutor_application')
       end
     end
 
     describe "POST 'create'" do
       it 'should redirect to sign_in' do
         post :create, user: valid_params
-        expect_bounce_as_not_signed_in
+        expect_create_success_with_model('tutor_application', new_tutor_application_url)
       end
     end
-
-    describe "PUT 'update/1'" do
-      it 'should redirect to sign_in' do
-        put :update, id: 1, user: valid_params
-        expect_bounce_as_not_signed_in
-      end
-    end
-
 
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
-        expect_bounce_as_not_signed_in
+        expect_create_success_with_model('tutor_application', :new)
       end
     end
 

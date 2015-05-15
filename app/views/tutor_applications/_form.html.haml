@@ -6,6 +6,8 @@
 
 .content
   .container-fluid
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
     .side-nav--info-pages.col-sm-3
       %ul.nav.nav-pills.nav-stacked
         %li
