@@ -59,8 +59,6 @@
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'tutor_applications'
       =render partial: 'layouts/tutor_navbar'
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/footer'
     -elsif controller_name == 'courses'

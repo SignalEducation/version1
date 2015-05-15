@@ -1,11 +1,12 @@
 .container
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
   .row
     .col-sm-12
       .page-header
         %h1
           =t('views.tutor_applications.show.h1')
-          \#
-          =@tutor_application.id
   .row
     .col-sm-12
       %table.table.table-bordered
@@ -27,5 +28,3 @@
       -if current_user && current_user.admin?
         %p
           =link_to t('views.general.back'), tutor_applications_url
-          |
-          =link_to t('views.general.edit'), edit_tutor_application_url(id: @tutor_application.id), title: t('views.general.edit_tooltip')

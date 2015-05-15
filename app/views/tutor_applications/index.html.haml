@@ -1,4 +1,6 @@
 .container
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
   .row
     .col-sm-12
       .page-header
@@ -25,7 +27,5 @@
               %td=link_to(tutor_application.info, tutor_application, title: t('views.general.view_tooltip'))
               %td=link_to(tutor_application.description, tutor_application, title: t('views.general.view_tooltip'))
               %td
-                -#=link_to t('views.general.view'), tutor_application
-                =link_to t('views.general.edit'), edit_tutor_application_url(tutor_application), class: 'btn btn-info btn-xs'
                 -if tutor_application.destroyable?
                   =link_to t('views.general.delete'), tutor_application, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'

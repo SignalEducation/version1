@@ -17,9 +17,6 @@ class TutorApplicationsController < ApplicationController
     @tutor_application = TutorApplication.new
   end
 
-  def edit
-  end
-
   def create
     @tutor_application = TutorApplication.new(allowed_params)
     if @tutor_application.save
