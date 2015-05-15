@@ -916,23 +916,28 @@ header {
   text-decoration: underline;
 }
 
+.navbar.navbar-static-transparent {
+  border-bottom-width: 0px;
+}
+
 
 .tutor-form {
 
   .header {
     background-color: #eb4242;
+    color: #FFFFFF;
+    h1 {
+      font-weight: 700;
+      font-size: 4em;
+      p {
+        text-shadow: none;
+        text-align: left;
+        color: #f7b5b5;
+        font-weight: 300;
+      }
+    }
     height: 8%;
     padding: 1% 0;
-  }
-  .header .h1, .header p {
-    text-shadow: none;
-    text-align: left;
-  }
-  .header .h1 {
-    font-weight: 700; }
-  .header .a, .header .p {
-    color: #f7b5b5;
-    font-weight: 300;
   }
 
   .content {
@@ -940,9 +945,6 @@ header {
     background-color: #f9f9f9;
   }
 
-  .navbar {
-    margin-bottom: 0px;
-  }
 
   /* Medium Devices, Desktops = 992px*/
   @media only screen and (min-width: 775px) {
@@ -998,63 +1000,11 @@ header {
   .sheet {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
     background-color: #fff;
-    padding-bottom: 2em;
     margin-bottom: 6em;
     border-radius: 3px;
     width: 75%;
     float: left;
     padding: 3em 6em 3em 6em;
-  }
-  .sheet ul {
-    font-size: 1.6em;
-  }
-  .sheet .panel-heading {
-    background-color: #f9f9f9;
-  }
-  .sheet .panel-heading .panel-title {
-    font-size: 10px;
-  }
-  .sheet .panel-heading .panel-title a {
-    font-size: 2em;
-  }
-  .sheet .panel-body h4 {
-    color: #797979;
-  }
-  .sheet .panel-body ul li {
-    font-size: 1.6em;
-  }
-  .sheet .content-container {
-    width: 90%;
-    margin: 0 auto;
-  }
-  .sheet .member-container {
-    border-radius: 4px;
-    height: auto;
-    width: auto;
-    text-align: center;
-    margin-top: 1em;
-  }
-  .sheet .member-container h4 {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  .sheet .member-container h5 {
-    font-weight: 300;
-    color: #797979;
-  }
-  .sheet .member-container .head-shot {
-    width: 65%;
-    margin: auto;
-  }
-  .sheet .member-container .head-shot img {
-    border-radius: 100px;
-    border: 3px solid rgba(176, 176, 176, 0.4);
-  }
-  .sheet .pad-top {
-    padding-top: 2em;
-  }
-  .sheet h3.team {
-    margin-top: 2em;
   }
 
   @media only screen and (max-width: 1024px) {
