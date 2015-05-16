@@ -5,7 +5,7 @@ RSpec.describe 'tutor_applications/new', type: :view do
     @tutor_application = FactoryGirl.build(:tutor_application)
   end
 
-  it 'renders edit tutor_application form' do
+  xit 'renders edit tutor_application form' do
     render
     assert_select 'form[action=?][method=?]', tutor_applications_path, 'post' do
       assert_select 'input#tutor_application_first_name[name=?]', 'tutor_application[first_name]'

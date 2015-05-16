@@ -1,7 +1,7 @@
 class TutorApplicationsController < ApplicationController
 
-  before_action :logged_in_required, except: [:new, :create, :edit]
-  before_action except: [:new, :create, :edit] do
+  before_action :logged_in_required, except: [:new, :create]
+  before_action except: [:new, :create] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -35,7 +35,7 @@ class TutorApplicationsController < ApplicationController
       flash[:success] = I18n.t('controllers.tutor_applications.update.flash.success')
       redirect_to tutor_applications_url
     else
-      render action: edit
+      render action: :edit
     end
   end
 

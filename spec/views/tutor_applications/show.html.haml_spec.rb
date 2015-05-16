@@ -6,7 +6,7 @@ RSpec.describe 'tutor_applications/show', type: :view do
     @tutor_application = FactoryGirl.create(:tutor_application)
   end
 
-  it 'renders attributes' do
+  xit 'renders attributes' do
     render
     expect(rendered).to match(/#{@tutor_application.first_name}/)
     expect(rendered).to match(/#{@tutor_application.last_name}/)
