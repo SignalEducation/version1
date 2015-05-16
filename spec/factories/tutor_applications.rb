@@ -14,11 +14,11 @@
 
 FactoryGirl.define do
   factory :tutor_application do
-    first_name 'MyString'
-    last_name 'MyString'
-    email 'abc@example.com'
-    info 'MyText'
-    description 'MyText'
+    first_name         'MyString'
+    last_name          'MyString'
+    email              'user@example.com'
+    info               'My Text'
+    description        'My lovely horse running through a field.'
   end
 
 end

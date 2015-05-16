@@ -1,7 +1,7 @@
 class TutorApplicationsController < ApplicationController
 
-  before_action :logged_in_required, except: [:new, :create]
-  before_action except: [:new, :create] do
+  before_action :logged_in_required, except: [:new, :create, :edit]
+  before_action except: [:new, :create, :edit] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -17,6 +17,9 @@ class TutorApplicationsController < ApplicationController
     @tutor_application = TutorApplication.new
   end
 
+  def edit
+  end
+
   def create
     @tutor_application = TutorApplication.new(allowed_params)
     if @tutor_application.save
@@ -24,6 +27,15 @@ class TutorApplicationsController < ApplicationController
       redirect_to action: :new
     else
       render action: :new
+    end
+  end
+
+  def update
+    if @tutor_application.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.tutor_applications.update.flash.success')
+      redirect_to tutor_applications_url
+    else
+      render action: edit
     end
   end
 

@@ -15,35 +15,39 @@ describe TutorApplicationsController, type: :controller do
     describe "GET 'index'" do
       it 'should redirect to sign_in' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'show/1'" do
       it 'should redirect to sign_in' do
         get :show, id: 1
-        expect_bounce_as_not_allowed
+        expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'new'" do
-      it 'should redirect to sign_in' do
+      it 'should return success with new' do
         get :new
         expect_new_success_with_model('tutor_application')
       end
     end
 
     describe "POST 'create'" do
-      it 'should redirect to sign_in' do
-        post :create, user: valid_params
-        expect_create_success_with_model('tutor_application', new_tutor_application_url)
+      it 'should return create success and redirect new again' do
+        post :create, tutor_application: valid_params
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.tutor_applications.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_tutor_application_url)
+        expect(assigns(('tutor_application').to_sym).class.name).to eq(('tutor_application').classify)
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
-        expect_create_success_with_model('tutor_application', :new)
+        expect_bounce_as_not_signed_in
       end
     end
 
@@ -57,22 +61,22 @@ describe TutorApplicationsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should bounce as not allowed' do
         get :index
-        expect_index_success_with_model('tutor_applications', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see tutor_application_1' do
         get :show, id: tutor_application_1.id
-        expect_show_success_with_model('tutor_application', tutor_application_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see tutor_application_2' do
         get :show, id: tutor_application_2.id
-        expect_show_success_with_model('tutor_application', tutor_application_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -83,23 +87,14 @@ describe TutorApplicationsController, type: :controller do
       end
     end
 
-    describe "GET 'edit/1'" do
-      it 'should respond OK with tutor_application_1' do
-        get :edit, id: tutor_application_1.id
-        expect_edit_success_with_model('tutor_application', tutor_application_1.id)
-      end
-
-      # optional
-      it 'should respond OK with tutor_application_2' do
-        get :edit, id: tutor_application_2.id
-        expect_edit_success_with_model('tutor_application', tutor_application_2.id)
-      end
-    end
-
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, tutor_application: valid_params
-        expect_create_success_with_model('tutor_application', tutor_applications_url)
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.tutor_applications.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_tutor_application_url)
+        expect(assigns(('tutor_application').to_sym).class.name).to eq(('tutor_application').classify)
       end
 
       it 'should report error for invalid params' do
