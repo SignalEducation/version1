@@ -4,8 +4,8 @@
 #
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
-#  background_color         :string(255)
-#  foreground_color         :string(255)
+#  background_color         :string
+#  foreground_color         :string
 #  created_at               :datetime
 #  updated_at               :datetime
 #  destroyed_at             :datetime

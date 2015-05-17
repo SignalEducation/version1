@@ -11,7 +11,7 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  score                             :integer          default(0)
-#  answer_array                      :string(255)
+#  answer_array                      :string
 #
 
 FactoryGirl.define do

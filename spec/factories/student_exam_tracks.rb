@@ -10,7 +10,7 @@
 #  exam_schedule_id                :integer
 #  created_at                      :datetime
 #  updated_at                      :datetime
-#  session_guid                    :string(255)
+#  session_guid                    :string
 #  course_module_id                :integer
 #  jumbo_quiz_taken                :boolean          default(FALSE)
 #  percentage_complete             :float            default(0.0)

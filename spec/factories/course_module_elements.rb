@@ -3,8 +3,8 @@
 # Table name: course_module_elements
 #
 #  id                        :integer          not null, primary key
-#  name                      :string(255)
-#  name_url                  :string(255)
+#  name                      :string
+#  name_url                  :string
 #  description               :text
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
@@ -19,7 +19,7 @@
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
 #  is_cme_flash_card_pack    :boolean          default(FALSE), not null
-#  seo_description           :string(255)
+#  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
 #
