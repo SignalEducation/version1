@@ -102,7 +102,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   puts ' DONE'
   print 'Subject Areas: '
   SubjectArea.where(id: 1).first_or_create!(name: 'Finance', name_url: 'finance',
-                        sorting_order: 100, active: true); print '.'
+                        sorting_order: 100, active: true, seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'); print '.'
 
   puts ' DONE'
   print 'Institutions: '
@@ -112,7 +112,8 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
           feedback_url: 'http://example.com/feedback',
           help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: false
+          subject_area_id: 1, sorting_order: 1, active: false,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
   Institution.where(id: 2).first_or_create(
           name: 'CFA Institute',
@@ -120,7 +121,8 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
           feedback_url: 'http://example.com/feedback',
           help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: true
+          subject_area_id: 1, sorting_order: 1, active: true,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
 
   puts ' DONE'
@@ -128,11 +130,13 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   Qualification.where(id: 1).first_or_create(
           institution_id: 2, name: 'CFA Professional',
           name_url: 'cfa-professional', sorting_order: 1, active: true,
-          cpd_hours_required_per_year: 0
+          cpd_hours_required_per_year: 0,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
   Qualification.where(id: 2).first_or_create(
-          institution_id: 2, name: 'Claritas', name_url: 'claritas',
-          sorting_order: 1, active: true, cpd_hours_required_per_year: 0
+          institution_id: 1, name: 'Claritas', name_url: 'claritas',
+          sorting_order: 1, active: true, cpd_hours_required_per_year: 0,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
 
   puts ' DONE'
