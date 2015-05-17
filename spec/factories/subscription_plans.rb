@@ -11,11 +11,11 @@
 #  price                         :decimal(, )
 #  available_from                :date
 #  available_to                  :date
-#  stripe_guid                   :string(255)
+#  stripe_guid                   :string
 #  trial_period_in_days          :integer          default(0)
 #  created_at                    :datetime
 #  updated_at                    :datetime
-#  name                          :string(255)
+#  name                          :string
 #  subscription_plan_category_id :integer
 #  livemode                      :boolean          default(FALSE)
 #

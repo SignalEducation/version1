@@ -4,13 +4,13 @@
 #
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
-#  name                     :string(255)
+#  name                     :string
 #  description              :text
-#  web_url                  :string(255)
+#  web_url                  :string
 #  created_at               :datetime
 #  updated_at               :datetime
-#  upload_file_name         :string(255)
-#  upload_content_type      :string(255)
+#  upload_file_name         :string
+#  upload_content_type      :string
 #  upload_file_size         :integer
 #  upload_updated_at        :datetime
 #  destroyed_at             :datetime

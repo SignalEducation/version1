@@ -3,12 +3,12 @@
 # Table name: static_page_uploads
 #
 #  id                  :integer          not null, primary key
-#  description         :string(255)
+#  description         :string
 #  static_page_id      :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  upload_file_name    :string(255)
-#  upload_content_type :string(255)
+#  upload_file_name    :string
+#  upload_content_type :string
 #  upload_file_size    :integer
 #  upload_updated_at   :datetime
 #

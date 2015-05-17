@@ -4,8 +4,8 @@
 #
 #  id                                      :integer          not null, primary key
 #  qualification_id                        :integer
-#  name                                    :string(255)
-#  name_url                                :string(255)
+#  name                                    :string
+#  name_url                                :string
 #  is_cpd                                  :boolean          default(FALSE), not null
 #  sorting_order                           :integer
 #  active                                  :boolean          default(FALSE), not null
@@ -15,7 +15,7 @@
 #  default_number_of_possible_exam_answers :integer          default(4)
 #  enable_exam_sections                    :boolean          default(TRUE), not null
 #  cme_count                               :integer          default(0)
-#  seo_description                         :string(255)
+#  seo_description                         :string
 #  seo_no_index                            :boolean          default(FALSE)
 #  description                             :text
 #  duration                                :integer

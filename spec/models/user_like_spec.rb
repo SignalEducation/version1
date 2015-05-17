@@ -4,7 +4,7 @@
 #
 #  id            :integer          not null, primary key
 #  user_id       :integer
-#  likeable_type :string(255)
+#  likeable_type :string
 #  likeable_id   :integer
 #  created_at    :datetime
 #  updated_at    :datetime

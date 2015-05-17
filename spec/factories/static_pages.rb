@@ -3,11 +3,11 @@
 # Table name: static_pages
 #
 #  id                            :integer          not null, primary key
-#  name                          :string(255)
+#  name                          :string
 #  publish_from                  :datetime
 #  publish_to                    :datetime
 #  allow_multiples               :boolean          default(FALSE), not null
-#  public_url                    :string(255)
+#  public_url                    :string
 #  use_standard_page_template    :boolean          default(FALSE), not null
 #  head_content                  :text
 #  body_content                  :text
@@ -15,13 +15,13 @@
 #  updated_by                    :integer
 #  add_to_navbar                 :boolean          default(FALSE), not null
 #  add_to_footer                 :boolean          default(FALSE), not null
-#  menu_label                    :string(255)
-#  tooltip_text                  :string(255)
-#  language                      :string(255)
+#  menu_label                    :string
+#  tooltip_text                  :string
+#  language                      :string
 #  mark_as_noindex               :boolean          default(FALSE), not null
 #  mark_as_nofollow              :boolean          default(FALSE), not null
-#  seo_title                     :string(255)
-#  seo_description               :string(255)
+#  seo_title                     :string
+#  seo_description               :string
 #  approved_country_ids          :text
 #  default_page_for_this_url     :boolean          default(FALSE), not null
 #  make_this_page_sticky         :boolean          default(FALSE), not null
@@ -29,10 +29,10 @@
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  show_standard_footer          :boolean          default(TRUE)
-#  post_sign_up_redirect_url     :string(255)
+#  post_sign_up_redirect_url     :string
 #  subscription_plan_category_id :integer
-#  student_sign_up_h1            :string(255)
-#  student_sign_up_sub_head      :string(255)
+#  student_sign_up_h1            :string
+#  student_sign_up_sub_head      :string
 #
 
 FactoryGirl.define do
