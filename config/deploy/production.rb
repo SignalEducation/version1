@@ -6,8 +6,8 @@
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
-#server 'productiontemplate.learnsignal.com', user: 'ec2-user', roles: %w{app web},
-server 'production3.learnsignal.com', user: 'ec2-user', roles: %w{app web},
+#server 'productiontemplate.learnsignal.com', user: 'ec2-user', roles: %w{app web db},
+server 'production3.learnsignal.com', user: 'ec2-user', roles: %w{app web db},
        ssh_options: {keys: %w(~/.ssh/production3-eu-key.pem),
                      auth_methods: %w(publickey)}
 
