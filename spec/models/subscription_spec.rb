@@ -6,13 +6,13 @@
 #  user_id               :integer
 #  corporate_customer_id :integer
 #  subscription_plan_id  :integer
-#  stripe_guid           :string(255)
+#  stripe_guid           :string
 #  next_renewal_date     :date
 #  complimentary         :boolean          default(FALSE), not null
-#  current_status        :string(255)
+#  current_status        :string
 #  created_at            :datetime
 #  updated_at            :datetime
-#  stripe_customer_id    :string(255)
+#  stripe_customer_id    :string
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
 #

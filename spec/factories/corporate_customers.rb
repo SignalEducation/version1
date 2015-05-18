@@ -3,13 +3,13 @@
 # Table name: corporate_customers
 #
 #  id                   :integer          not null, primary key
-#  organisation_name    :string(255)
+#  organisation_name    :string
 #  address              :text
 #  country_id           :integer
 #  payments_by_card     :boolean          default(FALSE), not null
 #  is_university        :boolean          default(FALSE), not null
 #  owner_id             :integer
-#  stripe_customer_guid :string(255)
+#  stripe_customer_guid :string
 #  can_restrict_content :boolean          default(FALSE), not null
 #  created_at           :datetime
 #  updated_at           :datetime

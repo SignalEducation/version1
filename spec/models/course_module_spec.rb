@@ -7,8 +7,8 @@
 #  qualification_id          :integer
 #  exam_level_id             :integer
 #  exam_section_id           :integer
-#  name                      :string(255)
-#  name_url                  :string(255)
+#  name                      :string
+#  name_url                  :string
 #  description               :text
 #  tutor_id                  :integer
 #  sorting_order             :integer
@@ -17,7 +17,7 @@
 #  created_at                :datetime
 #  updated_at                :datetime
 #  cme_count                 :integer          default(0)
-#  seo_description           :string(255)
+#  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
 #

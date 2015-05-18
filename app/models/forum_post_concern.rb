@@ -5,7 +5,7 @@
 #  id            :integer          not null, primary key
 #  forum_post_id :integer
 #  user_id       :integer
-#  reason        :string(255)
+#  reason        :string
 #  live          :boolean          default(TRUE), not null
 #  created_at    :datetime
 #  updated_at    :datetime

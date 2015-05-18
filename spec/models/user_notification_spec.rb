@@ -4,13 +4,13 @@
 #
 #  id             :integer          not null, primary key
 #  user_id        :integer
-#  subject_line   :string(255)
+#  subject_line   :string
 #  content        :text
 #  email_required :boolean          default(FALSE), not null
 #  email_sent_at  :datetime
 #  unread         :boolean          default(TRUE), not null
 #  destroyed_at   :datetime
-#  message_type   :string(255)
+#  message_type   :string
 #  forum_topic_id :integer
 #  forum_post_id  :integer
 #  tutor_id       :integer

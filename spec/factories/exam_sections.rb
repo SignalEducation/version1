@@ -3,8 +3,8 @@
 # Table name: exam_sections
 #
 #  id                                :integer          not null, primary key
-#  name                              :string(255)
-#  name_url                          :string(255)
+#  name                              :string
+#  name_url                          :string
 #  exam_level_id                     :integer
 #  active                            :boolean          default(FALSE), not null
 #  sorting_order                     :integer
@@ -12,7 +12,7 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  cme_count                         :integer          default(0)
-#  seo_description                   :string(255)
+#  seo_description                   :string
 #  seo_no_index                      :boolean          default(FALSE)
 #  duration                          :integer
 #

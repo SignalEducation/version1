@@ -3,7 +3,7 @@
 # Table name: marketing_tokens
 #
 #  id                    :integer          not null, primary key
-#  code                  :string(255)
+#  code                  :string
 #  marketing_category_id :integer
 #  is_hard               :boolean          default(FALSE), not null
 #  is_direct             :boolean          default(FALSE), not null

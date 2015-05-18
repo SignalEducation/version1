@@ -3,13 +3,13 @@
 # Table name: stripe_api_events
 #
 #  id            :integer          not null, primary key
-#  guid          :string(255)
-#  api_version   :string(255)
+#  guid          :string
+#  api_version   :string
 #  payload       :text
 #  processed     :boolean          default(FALSE), not null
 #  processed_at  :datetime
 #  error         :boolean          default(FALSE), not null
-#  error_message :string(255)
+#  error_message :string
 #  created_at    :datetime
 #  updated_at    :datetime
 #
