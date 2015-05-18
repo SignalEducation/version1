@@ -5,8 +5,10 @@
 
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
+#server 'stagingtemplate.learnsignal.com', user: 'ec2-user', roles: %w{app web},
 server 'staging3.learnsignal.com', user: 'ec2-user', roles: %w{app web},
-       ssh_options: {keys: %w(~/.ssh/staging3-eu-key.pem), auth_methods: %w(publickey)}
+       ssh_options: {keys: %w(~/.ssh/staging3-eu-key.pem),
+                     auth_methods: %w(publickey)}
 
 
 
