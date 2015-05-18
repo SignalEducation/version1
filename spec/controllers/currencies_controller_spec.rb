@@ -6,8 +6,8 @@ describe CurrenciesController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for currency_1
-  let!(:currency_1) { FactoryGirl.create(:currency) }
-  let!(:currency_2) { FactoryGirl.create(:currency) }
+  let!(:currency_1) { currency }
+  let!(:currency_2) { FactoryGirl.create(:usd) }
   let!(:valid_params) { FactoryGirl.attributes_for(:currency) }
 
   context 'Not logged in: ' do
@@ -563,16 +563,9 @@ describe CurrenciesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be ERROR as children exist or currency is active' do
         delete :destroy, id: currency_1.id
-        expect_delete_success_with_model('currency', currencies_url)
-        # todo replace the line above with the line below when currencies have children
-        # todo expect_delete_error_with_model('currency', currencies_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: currency_2.id
-        expect_delete_success_with_model('currency', currencies_url)
+        expect_delete_error_with_model('currency', currencies_url)
       end
     end
 

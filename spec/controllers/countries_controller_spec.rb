@@ -6,7 +6,7 @@ describe CountriesController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for country_1
-  let!(:country_1) { FactoryGirl.create(:ireland) }
+  let!(:country_1) { country }
   let!(:some_user) { FactoryGirl.create(:individual_student_user,
                                         country_id: country_1.id)}
   let!(:country_2) { FactoryGirl.create(:usa) }
