@@ -138,5 +138,7 @@ Rack::Attack.whitelist('allow from localhost') do |req|
   '127.0.0.1' == req.ip ||
   '93.107.187.217' == req.ip || # Vodafone base station 31AD's fixed external IP
   '93.107.187.215' == req.ip || # Vodafone base station 8D17's fixed external IP
+  '54.154.194.123' == req.ip || # Staging LoadBalancer
+  '54.171.70.58' == req.ip || # Production LoadBalancer
   '54.243.185.88'  == req.ip    # TinfoilSecurity.com
 end
