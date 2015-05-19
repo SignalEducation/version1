@@ -313,6 +313,9 @@ class User < ActiveRecord::Base
   end
 
   def create_on_mixpanel
+    # Sending this request before we perform alias might be dangerous cause
+    # it will mess up data on Mixpanel so we skip it since we will anyway
+    # write this values immediatelly after we sign in user after sign up.
     return if self.login_count < 1
 
     plan_name = self.subscriptions.first ?
