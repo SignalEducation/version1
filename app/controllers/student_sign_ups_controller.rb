@@ -30,7 +30,8 @@ class StudentSignUpsController < ApplicationController
     if @user.valid? && @user.save
       MixpanelUserSignUpWorker.perform_async(
         @user.id,
-        I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{@user.subscriptions.first.subscription_plan.payment_frequency_in_months}")
+        I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{@user.subscriptions.first.subscription_plan.payment_frequency_in_months}"),
+        request.remote_ip
       )
       @user = User.get_and_activate(@user.account_activation_code)
       UserSession.create(@user)
