@@ -309,9 +309,15 @@ class User < ActiveRecord::Base
   end
 
   def create_on_mixpanel
-    plan_name = self.subscriptions.first ?
-            self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
-            'none'
+    plan_name = 'none'
+    if self.subscriptions.last
+      if ['canceled', 'canceled-pending'].include?(self.subscriptions.last.current_status)
+        plan_name = 'Cancelled'
+      else
+        plan_name = self.subscriptions.last.subscription_plan.description.strip.gsub("\r\n",', ')
+      end
+    end
+
     MixpanelUserUpdateWorker.perform_async(
           self.id, self.first_name, self.last_name, self.email,
           self.user_group.try(:name),

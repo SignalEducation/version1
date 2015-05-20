@@ -197,6 +197,7 @@ class Subscription < ActiveRecord::Base
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
       self.update_attribute(:current_status, 'active')
+      MixpanelSubscriptionCancelWorker.perform_async(self.id)
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
