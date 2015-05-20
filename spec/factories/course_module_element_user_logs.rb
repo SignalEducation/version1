@@ -5,7 +5,7 @@
 #  id                          :integer          not null, primary key
 #  course_module_element_id    :integer
 #  user_id                     :integer
-#  session_guid                :string(255)
+#  session_guid                :string
 #  element_completed           :boolean          default(FALSE), not null
 #  time_taken_in_seconds       :integer
 #  quiz_score_actual           :integer

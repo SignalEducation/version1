@@ -4,32 +4,32 @@
 #
 #  id                  :integer          not null, primary key
 #  user_id             :integer
-#  stripe_card_guid    :string(255)
-#  status              :string(255)
-#  brand               :string(255)
-#  last_4              :string(255)
+#  stripe_card_guid    :string
+#  status              :string
+#  brand               :string
+#  last_4              :string
 #  expiry_month        :integer
 #  expiry_year         :integer
-#  address_line1       :string(255)
-#  account_country     :string(255)
+#  address_line1       :string
+#  account_country     :string
 #  account_country_id  :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  stripe_object_name  :string(255)
-#  funding             :string(255)
-#  cardholder_name     :string(255)
-#  fingerprint         :string(255)
-#  cvc_checked         :string(255)
-#  address_line1_check :string(255)
-#  address_zip_check   :string(255)
-#  dynamic_last4       :string(255)
-#  customer_guid       :string(255)
+#  stripe_object_name  :string
+#  funding             :string
+#  cardholder_name     :string
+#  fingerprint         :string
+#  cvc_checked         :string
+#  address_line1_check :string
+#  address_zip_check   :string
+#  dynamic_last4       :string
+#  customer_guid       :string
 #  is_default_card     :boolean          default(FALSE)
-#  address_line2       :string(255)
-#  address_city        :string(255)
-#  address_state       :string(255)
-#  address_zip         :string(255)
-#  address_country     :string(255)
+#  address_line2       :string
+#  address_city        :string
+#  address_state       :string
+#  address_zip         :string
+#  address_country     :string
 #
 
 class SubscriptionPaymentCard < ActiveRecord::Base

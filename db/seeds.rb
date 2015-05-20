@@ -102,25 +102,27 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   puts ' DONE'
   print 'Subject Areas: '
   SubjectArea.where(id: 1).first_or_create!(name: 'Finance', name_url: 'finance',
-                        sorting_order: 100, active: true); print '.'
+                        sorting_order: 100, active: true, seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque la aspernatur aut odit aut fugit'); print '.'
 
   puts ' DONE'
   print 'Institutions: '
   Institution.where(id: 1).first_or_create(
           name: 'Association of Certified Chartered Accountants',
           short_name: 'ACCA', name_url: 'acca',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmoore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex eproident.',
           feedback_url: 'http://example.com/feedback',
           help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: false
+          subject_area_id: 1, sorting_order: 1, active: false,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sim quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
   Institution.where(id: 2).first_or_create(
           name: 'CFA Institute',
           short_name: 'CFA', name_url: 'cfa-institute',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore mag eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
           feedback_url: 'http://example.com/feedback',
           help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: true
+          subject_area_id: 1, sorting_order: 1, active: true,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, . Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
 
   puts ' DONE'
@@ -128,11 +130,13 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   Qualification.where(id: 1).first_or_create(
           institution_id: 2, name: 'CFA Professional',
           name_url: 'cfa-professional', sorting_order: 1, active: true,
-          cpd_hours_required_per_year: 0
+          cpd_hours_required_per_year: 0,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit dolor sit amet, consectetur, adipisci velit'
   ); print '.'
   Qualification.where(id: 2).first_or_create(
-          institution_id: 2, name: 'Claritas', name_url: 'claritas',
-          sorting_order: 1, active: true, cpd_hours_required_per_year: 0
+          institution_id: 1, name: 'Claritas', name_url: 'claritas',
+          sorting_order: 1, active: true, cpd_hours_required_per_year: 0,
+          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam  nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
 
   puts ' DONE'
@@ -176,108 +180,6 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           name: 'Derivatives', name_url: 'derivatives',
           exam_level_id: 1, active: true, sorting_order: 0
   ); print '.'
-
-  puts ' DONE'
-  print 'Users: '
-
-  unless Rails.env.production?
-    generic_default_values = {
-            password: '123123123', password_confirmation: '123123123',
-            country_id: 1,
-            operational_email_frequency: 'daily',
-            study_plan_notifications_email_frequency: 'daily',
-            falling_behind_email_alert_frequency: 'daily',
-            marketing_email_frequency: 'daily',
-            blog_notification_email_frequency: 'daily',
-            forum_notification_email_frequency: 'daily',
-            locale: 'en'
-    }
-    User.where(id: 1).first_or_create!(generic_default_values.merge({
-            email: 'individual.student@example.com',
-            first_name: 'Individual',
-            last_name: 'Student',
-            user_group_id: 1
-    })); print '.'
-
-    User.where(id: 2).first_or_create!(generic_default_values.merge({
-            email: 'corporate.student@example.com',
-            first_name: 'Corporate',
-            last_name: 'Student',
-            user_group_id: 2, corporate_customer_id: 1
-    })); print '.'
-
-    User.where(id: 3).first_or_create!(generic_default_values.merge({
-            email: 'corporate.customer@example.com',
-            first_name: 'Corporate',
-            last_name: 'CustomerUser',
-            user_group_id: 3, corporate_customer_id: 1
-    })); print '.'
-
-    User.where(id: 4).first_or_create!(generic_default_values.merge({
-            email: 'tutor@example.com',
-            first_name: 'Doctor',
-            last_name: 'Tutor',
-            user_group_id: 4
-    })); print '.'
-
-    User.where(id: 5).first_or_create!(generic_default_values.merge({
-            email: 'blogger@example.com',
-            first_name: 'Blogger',
-            last_name: 'Writer',
-            user_group_id: 5
-    })); print '.'
-
-    User.where(id: 6).first_or_create!(generic_default_values.merge({
-            email: 'forum.manager@example.com',
-            first_name: 'Forum',
-            last_name: 'Manager',
-            user_group_id: 6
-    })); print '.'
-
-    User.where(id: 7).first_or_create!(generic_default_values.merge({
-            email: 'content.manager@example.com',
-            first_name: 'Content',
-            last_name: 'Manager',
-            user_group_id: 7
-    })); print '.'
-
-    User.where(id: 8).first_or_create!(generic_default_values.merge({
-            email: 'site.admin@example.com',
-            first_name: 'Site',
-            last_name: 'Admin',
-            user_group_id: 8
-    })); print '.'
-
-    User.where(id: (1..8).to_a).update_all(active: true, account_activated_at: Time.now, account_activation_code: nil)
-  end
-
-  puts ' DONE'
-  print 'Currencies: '
-
-  Currency.where(id: 1).first_or_create(
-          iso_code: 'EUR', name: 'Euro',
-          leading_symbol: '€', trailing_symbol: 'c',
-          active: true, sorting_order: 100); print '.'
-  Currency.where(id: 2).first_or_create(
-          iso_code: 'GBP', name: 'Pounds Sterling',
-          leading_symbol: '£', trailing_symbol: 'p',
-          active: true, sorting_order: 200); print '.'
-  Currency.where(id: 3).first_or_create(
-          iso_code: 'USD', name: 'US Dollar',
-          leading_symbol: '$', trailing_symbol: 'c',
-          active: true, sorting_order: 300); print '.'
-  Currency.where(id: 4).first_or_create(
-          iso_code: 'CAD', name: 'Canadian Dollar',
-          leading_symbol: '$', trailing_symbol: 'c',
-          active: false, sorting_order: 400); print '.'
-  Currency.where(id: 5).first_or_create(
-          iso_code: 'HKD', name: 'Hong Kong Dollar',
-          leading_symbol: '$', trailing_symbol: 'c',
-          active: false, sorting_order: 500); print '.'
-  Currency.where(id: 6).first_or_create(
-          iso_code: 'SGD', name: 'Singapore Dollar',
-          leading_symbol: '$', trailing_symbol: 'c',
-          active: false, sorting_order: 600); print '.'
 
   puts ' DONE'
   print 'Countries: '
@@ -565,13 +467,116 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   Country.all_in_eu.each_with_index do |country, counter|
     country.update_attributes!(sorting_order: (counter * 10) + 100,
-                              currency_id: 1, continent: 'Europe')
+                               currency_id: 1, continent: 'Europe')
     print '.'
   end
   Country.find_by_name('Ireland').update_attributes(sorting_order: 10)
   Country.find_by_name('United Kingdom').update_attributes(sorting_order: 20, currency_id: 2)
   Country.find_by_name('United States').update_attributes(sorting_order: 30)
   Country.find_by_name('Canada').update_attributes(sorting_order: 40)
+
+  puts ' DONE'
+
+  print 'Users: '
+
+  unless Rails.env.production?
+    generic_default_values = {
+            password: '123123123', password_confirmation: '123123123',
+            country_id: 1,
+            operational_email_frequency: 'daily',
+            study_plan_notifications_email_frequency: 'daily',
+            falling_behind_email_alert_frequency: 'daily',
+            marketing_email_frequency: 'daily',
+            blog_notification_email_frequency: 'daily',
+            forum_notification_email_frequency: 'daily',
+            locale: 'en'
+    }
+    User.where(id: 1).first_or_create!(generic_default_values.merge({
+            email: 'individual.student@example.com',
+            first_name: 'Individual',
+            last_name: 'Student',
+            user_group_id: 1
+    })); print '.'
+
+    User.where(id: 2).first_or_create!(generic_default_values.merge({
+            email: 'corporate.student@example.com',
+            first_name: 'Corporate',
+            last_name: 'Student',
+            user_group_id: 2, corporate_customer_id: 1
+    })); print '.'
+
+    User.where(id: 3).first_or_create!(generic_default_values.merge({
+            email: 'corporate.customer@example.com',
+            first_name: 'Corporate',
+            last_name: 'CustomerUser',
+            user_group_id: 3, corporate_customer_id: 1
+    })); print '.'
+
+    User.where(id: 4).first_or_create!(generic_default_values.merge({
+            email: 'tutor@example.com',
+            first_name: 'Doctor',
+            last_name: 'Tutor',
+            user_group_id: 4
+    })); print '.'
+
+    User.where(id: 5).first_or_create!(generic_default_values.merge({
+            email: 'blogger@example.com',
+            first_name: 'Blogger',
+            last_name: 'Writer',
+            user_group_id: 5
+    })); print '.'
+
+    User.where(id: 6).first_or_create!(generic_default_values.merge({
+            email: 'forum.manager@example.com',
+            first_name: 'Forum',
+            last_name: 'Manager',
+            user_group_id: 6
+    })); print '.'
+
+    User.where(id: 7).first_or_create!(generic_default_values.merge({
+            email: 'content.manager@example.com',
+            first_name: 'Content',
+            last_name: 'Manager',
+            user_group_id: 7
+    })); print '.'
+
+    User.where(id: 8).first_or_create!(generic_default_values.merge({
+            email: 'site.admin@example.com',
+            first_name: 'Site',
+            last_name: 'Admin',
+            user_group_id: 8
+    })); print '.'
+
+    User.where(id: (1..8).to_a).update_all(active: true, account_activated_at: Time.now, account_activation_code: nil)
+  end
+
+  puts ' DONE'
+  print 'Currencies: '
+
+  Currency.where(id: 1).first_or_create(
+          iso_code: 'EUR', name: 'Euro',
+          leading_symbol: '€', trailing_symbol: 'c',
+          active: true, sorting_order: 100); print '.'
+  Currency.where(id: 2).first_or_create(
+          iso_code: 'GBP', name: 'Pounds Sterling',
+          leading_symbol: '£', trailing_symbol: 'p',
+          active: true, sorting_order: 200); print '.'
+  Currency.where(id: 3).first_or_create(
+          iso_code: 'USD', name: 'US Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: true, sorting_order: 300); print '.'
+  Currency.where(id: 4).first_or_create(
+          iso_code: 'CAD', name: 'Canadian Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: false, sorting_order: 400); print '.'
+  Currency.where(id: 5).first_or_create(
+          iso_code: 'HKD', name: 'Hong Kong Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: false, sorting_order: 500); print '.'
+  Currency.where(id: 6).first_or_create(
+          iso_code: 'SGD', name: 'Singapore Dollar',
+          leading_symbol: '$', trailing_symbol: 'c',
+          active: false, sorting_order: 600); print '.'
 
   puts ' DONE'
 
@@ -645,9 +650,9 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   if Rails.env.development?
     puts 'Building simple framework'
     # SubjectArea.create!(id: 1, name: 'Finance', name_url: 'finance', sorting_order: 1, active: true)
-    Institution.where(id: 1).first_or_create!(name: 'CFA', short_name: 'CFA', name_url: 'cfa', description: 'Lorem ipsum', feedback_url: 'http://example.com/', help_desk_url: 'http://example.com/', subject_area_id: 1, sorting_order: 1, active: true)
-    Qualification.where(id: 1).first_or_create!(institution_id: 1, name: 'CFA Professional', name_url: 'cfa-professional', sorting_order: 1, active: true, cpd_hours_required_per_year: 10)
-    ExamLevel.where(id: 1).first_or_create!(qualification_id: 1, name: 'Level 1', name_url: 'level-1', is_cpd: false, sorting_order: 1, active: false, best_possible_first_attempt_score: 0.0, default_number_of_possible_exam_answers: 3, enable_exam_sections: true)
+    #Institution.where(id: 1).first_or_create!(name: 'CFA', short_name: 'CFA', name_url: 'cfa', description: 'Lorem ipsum', feedback_url: 'http://example.com/', help_desk_url: 'http://example.com/', subject_area_id: 1, sorting_order: 1, active: true)
+    #Qualification.where(id: 1).first_or_create!(institution_id: 1, name: 'CFA Professional', name_url: 'cfa-professional', sorting_order: 1, active: true, cpd_hours_required_per_year: 10)
+    #ExamLevel.where(id: 1).first_or_create!(qualification_id: 1, name: 'Level 1', name_url: 'level-1', is_cpd: false, sorting_order: 1, active: false, best_possible_first_attempt_score: 0.0, default_number_of_possible_exam_answers: 3, enable_exam_sections: true)
 
     StaticPage.where(id: 1).first_or_create!(name: 'Default landing page', publish_from: '2015-02-10 10:02:00', publish_to: nil, allow_multiples: false, public_url: '/', use_standard_page_template: true, head_content: '', body_content: "<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"col-sm-12 text-center\">\r\n      <h1>Welcome to Learn Signal</h1>\r\n    </div>\r\n  </div>\r\n</div>", created_by: 8, updated_by: 8, add_to_navbar: false, add_to_footer: false, menu_label: '', tooltip_text: '', language: 'en', mark_as_noindex: false, mark_as_nofollow: false, seo_title: 'Hello', seo_description: 'Learnsignal', approved_country_ids: [], default_page_for_this_url: false, make_this_page_sticky: false, logged_in_required: false, show_standard_footer: true)
 

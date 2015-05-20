@@ -5,7 +5,7 @@
 #  id                       :integer          not null, primary key
 #  forum_topic_id           :integer
 #  course_module_element_id :integer
-#  heading                  :string(255)
+#  heading                  :string
 #  description              :text
 #  active                   :boolean          default(TRUE), not null
 #  publish_from             :datetime

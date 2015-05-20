@@ -3,44 +3,44 @@
 # Table name: users
 #
 #  id                                       :integer          not null, primary key
-#  email                                    :string(255)
-#  first_name                               :string(255)
-#  last_name                                :string(255)
+#  email                                    :string
+#  first_name                               :string
+#  last_name                                :string
 #  address                                  :text
 #  country_id                               :integer
 #  crypted_password                         :string(128)      default(""), not null
 #  password_salt                            :string(128)      default(""), not null
-#  persistence_token                        :string(255)
+#  persistence_token                        :string
 #  perishable_token                         :string(128)
-#  single_access_token                      :string(255)
+#  single_access_token                      :string
 #  login_count                              :integer          default(0)
 #  failed_login_count                       :integer          default(0)
 #  last_request_at                          :datetime
 #  current_login_at                         :datetime
 #  last_login_at                            :datetime
-#  current_login_ip                         :string(255)
-#  last_login_ip                            :string(255)
-#  account_activation_code                  :string(255)
+#  current_login_ip                         :string
+#  last_login_ip                            :string
+#  account_activation_code                  :string
 #  account_activated_at                     :datetime
 #  active                                   :boolean          default(FALSE), not null
 #  user_group_id                            :integer
 #  password_reset_requested_at              :datetime
-#  password_reset_token                     :string(255)
+#  password_reset_token                     :string
 #  password_reset_at                        :datetime
-#  stripe_customer_id                       :string(255)
+#  stripe_customer_id                       :string
 #  corporate_customer_id                    :integer
 #  corporate_customer_user_group_id         :integer
-#  operational_email_frequency              :string(255)
-#  study_plan_notifications_email_frequency :string(255)
-#  falling_behind_email_alert_frequency     :string(255)
-#  marketing_email_frequency                :string(255)
+#  operational_email_frequency              :string
+#  study_plan_notifications_email_frequency :string
+#  falling_behind_email_alert_frequency     :string
+#  marketing_email_frequency                :string
 #  marketing_email_permission_given_at      :datetime
-#  blog_notification_email_frequency        :string(255)
-#  forum_notification_email_frequency       :string(255)
+#  blog_notification_email_frequency        :string
+#  forum_notification_email_frequency       :string
 #  created_at                               :datetime
 #  updated_at                               :datetime
-#  locale                                   :string(255)
-#  guid                                     :string(255)
+#  locale                                   :string
+#  guid                                     :string
 #
 
 class User < ActiveRecord::Base
@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
-  after_create :set_stripe_customer_id
+  after_create :set_stripe_customer_id, :alias_on_mixpanel
   after_save :create_on_mixpanel, if: '!Rails.env.test?'
 
   # scopes
@@ -301,6 +301,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:tutor)
   end
 
+  def set_original_mixpanel_alias_id(mixpanel_alias_id)
+    @mixpanel_alias_id = mixpanel_alias_id
+  end
+
   protected
 
   def add_guid
@@ -309,14 +313,19 @@ class User < ActiveRecord::Base
   end
 
   def create_on_mixpanel
+    # Sending this request before we perform alias might be dangerous cause
+    # it will mess up data on Mixpanel so we skip it since we will anyway
+    # write this values immediatelly after we sign in user after sign up.
+    return if self.login_count < 1
+
     plan_name = self.subscriptions.first ?
-            self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
-            'none'
+                  self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
+                  'none'
     MixpanelUserUpdateWorker.perform_async(
-          self.id, self.first_name, self.last_name, self.email,
-          self.user_group.try(:name),
-          plan_name,
-          self.guid, self.country.iso_code
+      self.id, self.first_name, self.last_name, self.email,
+      self.user_group.try(:name),
+      plan_name,
+      self.guid, self.country.iso_code
     )
   end
 
@@ -340,4 +349,14 @@ class User < ActiveRecord::Base
     Rails.logger.debug "DEBUG: User#set_stripe_customer_id - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
+  def alias_on_mixpanel
+    return unless @mixpanel_alias_id
+    tracker = Mixpanel::Tracker.new(ENV['mixpanel_key'])
+    tracker.alias(self.id, @mixpanel_alias_id)
+    # Alias is synchronous call and, as suggested by Mixpanel support team, we should
+    # wait after calling alias with other calls to Mixpanel that will use new user id.
+    # Since this model calls Mixpanel on each change in order to prevent data mess onblur
+    # Mixpanel side we are waiting 1 second here before we go on.
+    sleep(1)
+  end
 end

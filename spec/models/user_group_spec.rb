@@ -3,7 +3,7 @@
 # Table name: user_groups
 #
 #  id                                   :integer          not null, primary key
-#  name                                 :string(255)
+#  name                                 :string
 #  description                          :text
 #  individual_student                   :boolean          default(FALSE), not null
 #  corporate_student                    :boolean          default(FALSE), not null

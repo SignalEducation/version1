@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150506132918) do
+ActiveRecord::Schema.define(version: 20150514094454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -836,6 +836,18 @@ ActiveRecord::Schema.define(version: 20150506132918) do
   add_index "system_defaults", ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id", using: :btree
   add_index "system_defaults", ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id", using: :btree
   add_index "system_defaults", ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id", using: :btree
+
+  create_table "tutor_applications", force: :cascade do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.text     "info"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "tutor_applications", ["email"], name: "index_tutor_applications_on_email", using: :btree
 
   create_table "user_activity_logs", force: :cascade do |t|
     t.integer  "user_id"

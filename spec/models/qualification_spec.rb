@@ -4,14 +4,14 @@
 #
 #  id                          :integer          not null, primary key
 #  institution_id              :integer
-#  name                        :string(255)
-#  name_url                    :string(255)
+#  name                        :string
+#  name_url                    :string
 #  sorting_order               :integer
 #  active                      :boolean          default(FALSE), not null
 #  cpd_hours_required_per_year :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
-#  seo_description             :string(255)
+#  seo_description             :string
 #  seo_no_index                :boolean          default(FALSE)
 #
 

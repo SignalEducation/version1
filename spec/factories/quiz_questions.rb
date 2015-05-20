@@ -5,7 +5,7 @@
 #  id                            :integer          not null, primary key
 #  course_module_element_quiz_id :integer
 #  course_module_element_id      :integer
-#  difficulty_level              :string(255)
+#  difficulty_level              :string
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime

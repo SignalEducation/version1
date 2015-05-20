@@ -5,8 +5,8 @@
 #  id                           :integer          not null, primary key
 #  user_id                      :integer
 #  subscription_id              :integer
-#  stripe_transaction_guid      :string(255)
-#  transaction_type             :string(255)
+#  stripe_transaction_guid      :string
+#  transaction_type             :string
 #  amount                       :decimal(, )
 #  currency_id                  :integer
 #  alarm                        :boolean          default(FALSE), not null

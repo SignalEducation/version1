@@ -3,19 +3,19 @@
 # Table name: institutions
 #
 #  id                     :integer          not null, primary key
-#  name                   :string(255)
-#  short_name             :string(255)
-#  name_url               :string(255)
+#  name                   :string
+#  short_name             :string
+#  name_url               :string
 #  description            :text
-#  feedback_url           :string(255)
-#  help_desk_url          :string(255)
+#  feedback_url           :string
+#  help_desk_url          :string
 #  subject_area_id        :integer
 #  sorting_order          :integer
 #  active                 :boolean          default(FALSE), not null
 #  created_at             :datetime
 #  updated_at             :datetime
-#  background_colour_code :string(255)
-#  seo_description        :string(255)
+#  background_colour_code :string
+#  seo_description        :string
 #  seo_no_index           :boolean          default(FALSE)
 #
 

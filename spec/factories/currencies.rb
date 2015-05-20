@@ -3,10 +3,10 @@
 # Table name: currencies
 #
 #  id              :integer          not null, primary key
-#  iso_code        :string(255)
-#  name            :string(255)
-#  leading_symbol  :string(255)
-#  trailing_symbol :string(255)
+#  iso_code        :string
+#  name            :string
+#  leading_symbol  :string
+#  trailing_symbol :string
 #  active          :boolean          default(FALSE), not null
 #  sorting_order   :integer
 #  created_at      :datetime
@@ -20,6 +20,7 @@ FactoryGirl.define do
     leading_symbol            '£'
     trailing_symbol           'p'
     sequence(:sorting_order)  { |n| n * 100 }
+    active                    true
 
     factory :active_currency do
       active                  true
@@ -34,6 +35,7 @@ FactoryGirl.define do
       name                    'Euro'
       iso_code                'EUR'
       leading_symbol          '€'
+      trailing_symbol         'c'
     end
 
     factory :usd do
@@ -41,6 +43,7 @@ FactoryGirl.define do
       name                    'US Dollar'
       iso_code                'USD'
       leading_symbol          '$'
+      trailing_symbol         'c'
     end
 
     factory :gbp do

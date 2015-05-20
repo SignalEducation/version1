@@ -4,10 +4,10 @@
 #
 #  id                                       :integer          not null, primary key
 #  course_module_element_flash_card_pack_id :integer
-#  name                                     :string(255)
+#  name                                     :string
 #  sorting_order                            :integer
-#  final_button_label                       :string(255)
-#  content_type                             :string(255)
+#  final_button_label                       :string
+#  content_type                             :string
 #  created_at                               :datetime
 #  updated_at                               :datetime
 #  destroyed_at                             :datetime

@@ -57,7 +57,11 @@
   %body{ontouchstart: ''}
     -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
-    -if controller_name == 'courses'
+    -if controller_name == 'tutor_applications'
+      =render partial: 'layouts/tutor_navbar'
+      =yield
+      =render partial: 'layouts/footer'
+    -elsif controller_name == 'courses'
       =render partial: 'layouts/special_navbar'
       .container-fluid
         -if flash[:success] || flash[:error] || flash[:warning]

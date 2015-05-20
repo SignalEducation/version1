@@ -5,8 +5,8 @@
 #  id                           :integer          not null, primary key
 #  course_module_element_id     :integer
 #  raw_video_file_id            :integer
-#  tags                         :string(255)
-#  difficulty_level             :string(255)
+#  tags                         :string
+#  difficulty_level             :string
 #  estimated_study_time_seconds :integer
 #  transcript                   :text
 #  created_at                   :datetime

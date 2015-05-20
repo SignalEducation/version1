@@ -5,13 +5,13 @@
 #  id                          :integer          not null, primary key
 #  institution_id              :integer
 #  user_id                     :integer
-#  student_registration_number :string(255)
+#  student_registration_number :string
 #  student                     :boolean          default(FALSE), not null
 #  qualified                   :boolean          default(FALSE), not null
 #  created_at                  :datetime
 #  updated_at                  :datetime
-#  exam_number                 :string(255)
-#  membership_number           :string(255)
+#  exam_number                 :string
+#  membership_number           :string
 #
 
 FactoryGirl.define do

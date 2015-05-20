@@ -3,44 +3,44 @@
 # Table name: users
 #
 #  id                                       :integer          not null, primary key
-#  email                                    :string(255)
-#  first_name                               :string(255)
-#  last_name                                :string(255)
+#  email                                    :string
+#  first_name                               :string
+#  last_name                                :string
 #  address                                  :text
 #  country_id                               :integer
 #  crypted_password                         :string(128)      default(""), not null
 #  password_salt                            :string(128)      default(""), not null
-#  persistence_token                        :string(255)
+#  persistence_token                        :string
 #  perishable_token                         :string(128)
-#  single_access_token                      :string(255)
+#  single_access_token                      :string
 #  login_count                              :integer          default(0)
 #  failed_login_count                       :integer          default(0)
 #  last_request_at                          :datetime
 #  current_login_at                         :datetime
 #  last_login_at                            :datetime
-#  current_login_ip                         :string(255)
-#  last_login_ip                            :string(255)
-#  account_activation_code                  :string(255)
+#  current_login_ip                         :string
+#  last_login_ip                            :string
+#  account_activation_code                  :string
 #  account_activated_at                     :datetime
 #  active                                   :boolean          default(FALSE), not null
 #  user_group_id                            :integer
 #  password_reset_requested_at              :datetime
-#  password_reset_token                     :string(255)
+#  password_reset_token                     :string
 #  password_reset_at                        :datetime
-#  stripe_customer_id                       :string(255)
+#  stripe_customer_id                       :string
 #  corporate_customer_id                    :integer
 #  corporate_customer_user_group_id         :integer
-#  operational_email_frequency              :string(255)
-#  study_plan_notifications_email_frequency :string(255)
-#  falling_behind_email_alert_frequency     :string(255)
-#  marketing_email_frequency                :string(255)
+#  operational_email_frequency              :string
+#  study_plan_notifications_email_frequency :string
+#  falling_behind_email_alert_frequency     :string
+#  marketing_email_frequency                :string
 #  marketing_email_permission_given_at      :datetime
-#  blog_notification_email_frequency        :string(255)
-#  forum_notification_email_frequency       :string(255)
+#  blog_notification_email_frequency        :string
+#  forum_notification_email_frequency       :string
 #  created_at                               :datetime
 #  updated_at                               :datetime
-#  locale                                   :string(255)
-#  guid                                     :string(255)
+#  locale                                   :string
+#  guid                                     :string
 #
 
 require 'rails_helper'

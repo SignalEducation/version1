@@ -3,9 +3,9 @@
 # Table name: import_trackers
 #
 #  id             :integer          not null, primary key
-#  old_model_name :string(255)
+#  old_model_name :string
 #  old_model_id   :integer
-#  new_model_name :string(255)
+#  new_model_name :string
 #  new_model_id   :integer
 #  imported_at    :datetime
 #  original_data  :text

@@ -5,7 +5,7 @@
 #  id                                :integer          not null, primary key
 #  course_module_element_id          :integer
 #  number_of_questions               :integer
-#  question_selection_strategy       :string(255)
+#  question_selection_strategy       :string
 #  best_possible_score_first_attempt :integer
 #  best_possible_score_retry         :integer
 #  course_module_jumbo_quiz_id       :integer
