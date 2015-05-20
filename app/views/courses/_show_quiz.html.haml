@@ -80,6 +80,7 @@
       });
       mixpanel.people.increment("Questions Taken");
       if (true === isCorrect) {
+        ++numberOfCorrectAnswers;
         mixpanel.people.increment("Correctly Answered Questions");
       }
     }
@@ -112,6 +113,7 @@
   }
 
   var quizStartTime = new Date();
+  var numberOfCorrectAnswers = 0;
   $(document).on('ready page:load', function() {
     askQuestion(1); // 1 is the first question
     // Avoid error in development mode where Mixpanel is turned off
@@ -143,7 +145,7 @@
         'Quiz Length': questionsNo,
         'Time Viewed': timeViewed,
         'Quiz Questions Completed': currentQuestion,
-        'Quiz Score': +((currentQuestion / numberOfQuestions * 100).toFixed(2)),
+        'Quiz Score': +((numberOfCorrectAnswers / numberOfQuestions * 100).toFixed(2)),
         'Next CME': ['#{course_special_link(@course_module_element.try(:next_element)) || ''}', '#{@course_module_element.try(:next_element).try(:type_name) || ''}']
       });
       mixpanel.people.increment("Quizzes Completed");
