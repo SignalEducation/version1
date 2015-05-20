@@ -171,7 +171,7 @@ class CoursesController < ApplicationController
 
     @strategy = @course_module_jumbo_quiz.course_module.course_module_elements.all_quizzes.first.course_module_element_quiz.question_selection_strategy
 
-    all_questions = QuizQuestion.where(course_module_element_id: @course_module.course_module_elements.all_active.ids)
+    all_questions = QuizQuestion.where(course_module_element_id: @course_module.course_module_elements.all.ids)
     all_easy_ids = all_questions.all_easy.map(&:id)
     all_medium_ids = all_questions.all_medium.map(&:id)
     all_difficult_ids = all_questions.all_difficult.map(&:id)

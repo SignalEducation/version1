@@ -313,14 +313,15 @@ class User < ActiveRecord::Base
   end
 
   def create_on_mixpanel
-    # Sending this request before we perform alias might be dangerous cause
-    # it will mess up data on Mixpanel so we skip it since we will anyway
-    # write this values immediatelly after we sign in user after sign up.
-    return if self.login_count < 1
+    plan_name = 'none'
+    if self.subscriptions.last
+      if ['canceled', 'canceled-pending'].include?(self.subscriptions.last.current_status)
+        plan_name = 'Cancelled'
+      else
+        plan_name = self.subscriptions.last.subscription_plan.description.strip.gsub("\r\n",', ')
+      end
+    end
 
-    plan_name = self.subscriptions.first ?
-                  self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
-                  'none'
     MixpanelUserUpdateWorker.perform_async(
       self.id, self.first_name, self.last_name, self.email,
       self.user_group.try(:name),
