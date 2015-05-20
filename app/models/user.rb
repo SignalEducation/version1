@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
-  after_create :set_stripe_customer_id
+  after_create :set_stripe_customer_id, :alias_on_mixpanel
   after_save :create_on_mixpanel, if: '!Rails.env.test?'
 
   # scopes
@@ -301,6 +301,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:tutor)
   end
 
+  def set_original_mixpanel_alias_id(mixpanel_alias_id)
+    @mixpanel_alias_id = mixpanel_alias_id
+  end
+
   protected
 
   def add_guid
@@ -309,14 +313,19 @@ class User < ActiveRecord::Base
   end
 
   def create_on_mixpanel
+    # Sending this request before we perform alias might be dangerous cause
+    # it will mess up data on Mixpanel so we skip it since we will anyway
+    # write this values immediatelly after we sign in user after sign up.
+    return if self.login_count < 1
+
     plan_name = self.subscriptions.first ?
-            self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
-            'none'
+                  self.subscriptions.first.subscription_plan.description.strip.gsub("\r\n",', ') :
+                  'none'
     MixpanelUserUpdateWorker.perform_async(
-          self.id, self.first_name, self.last_name, self.email,
-          self.user_group.try(:name),
-          plan_name,
-          self.guid, self.country.iso_code
+      self.id, self.first_name, self.last_name, self.email,
+      self.user_group.try(:name),
+      plan_name,
+      self.guid, self.country.iso_code
     )
   end
 
@@ -340,4 +349,14 @@ class User < ActiveRecord::Base
     Rails.logger.debug "DEBUG: User#set_stripe_customer_id - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
+  def alias_on_mixpanel
+    return unless @mixpanel_alias_id
+    tracker = Mixpanel::Tracker.new(ENV['mixpanel_key'])
+    tracker.alias(self.id, @mixpanel_alias_id)
+    # Alias is synchronous call and, as suggested by Mixpanel support team, we should
+    # wait after calling alias with other calls to Mixpanel that will use new user id.
+    # Since this model calls Mixpanel on each change in order to prevent data mess onblur
+    # Mixpanel side we are waiting 1 second here before we go on.
+    sleep(1)
+  end
 end

@@ -27,7 +27,9 @@ class StudentSignUpsController < ApplicationController
   def create
     @user = User.new(allowed_params)
     @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+    @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
     if @user.valid? && @user.save
+      clear_mixpanel_initial_id
       MixpanelUserSignUpWorker.perform_async(
         @user.id,
         I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{@user.subscriptions.first.subscription_plan.payment_frequency_in_months}")

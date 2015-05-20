@@ -2,7 +2,7 @@
   :javascript
 
     // Mixpanel body tag
-    #{current_user ? "mixpanel.identify(#{current_user.id});" : ''}
+    #{current_user ? "mixpanel.identify(#{current_user.id});" : "mixpanel.identify('#{mixpanel_initial_id}')"}
 
     function mixpanel_link(cssTag, name) {
       mixpanel.track_links(cssTag, name, function(event) {
@@ -40,4 +40,3 @@
 
     // Call to action clicked
     mixpanel_link(".call-to-action", "CTA clicked");
-
