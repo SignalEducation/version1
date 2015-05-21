@@ -1,4 +1,25 @@
-%h1#tutor-accordion=t('views.user_groups.form.tutor')
+%br/
+%h1=current_user.full_name.to_s + ' ' +  t('views.dashboard.tutor.title')
+%br/
+%hr/
+
+.row
+  .col-sm-4
+    %h3='Overall Video Views'
+    .well.well-sm
+      =@total_views
+  .col-sm-4
+    %h3='Total Views'
+    .well.well-sm
+  .col-sm-4
+    %h3='Total Views'
+    .well.well-sm
+
+
+
+
+
+
 
 .row
   .col-sm-12
