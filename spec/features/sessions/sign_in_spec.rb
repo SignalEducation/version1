@@ -174,9 +174,6 @@ describe 'The sign in process.', type: :feature do
         click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Welcome back!'
-      within('#tutor-accordion') do
-        expect(page).to have_content maybe_upcase I18n.t('views.user_groups.form.tutor')
-      end
       expect(page).to have_content maybe_upcase I18n.t('views.general.tools')
       click_link(I18n.t('views.general.tools'))
       expect(page).to have_content maybe_upcase I18n.t('views.layouts.navigation.course_content')
