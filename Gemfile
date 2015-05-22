@@ -61,6 +61,7 @@ end
 
 group :development, :test do
   gem 'pry-byebug' # halts code so you can experiment with it
+  gem 'hirb'
   gem 'capybara' # Runs tests in a browser
   gem 'capybara-webkit'
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
@@ -117,4 +118,3 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-

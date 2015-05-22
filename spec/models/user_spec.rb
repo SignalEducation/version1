@@ -86,6 +86,8 @@ describe User do
   it { should belong_to(:user_group) }
   it { should have_many(:user_likes) }
   it { should have_many(:user_notifications) }
+  it { should have_one(:referral_code) }
+  it { should belong_to(:referred_by) }
 
   # validation
   it { should validate_presence_of(:email) }
