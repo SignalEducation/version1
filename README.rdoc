@@ -2,6 +2,17 @@
 
 This README documents the necessary steps to install the SignalEducation/version1 codebase.
 
+1. Install Postgres database, downloading the app is recommended from http://postgresapp.com/.
+
+2. Install Ruby 2.2.2 with rvm and rails 4.2.1, see http://installrails.com/ for basic installation details
+
+3. On https://github.com/SignalEducation/version1 Fork the repository to your github account.
+
+4. Ensure SSH Keys are set up and clone the fork
+
+
+
+-
 1. You will recieve an invite to join the Signal Education Organization.
 
 2. On the version1 repo page, you need to click Fork in the top right of the page, this will fork the repository to your personal GitHub account.
