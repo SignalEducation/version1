@@ -2,29 +2,28 @@
   .row
     .col-sm-6.col-sm-offset-3
       .well.well-sm.dashboard-well
-        -if @latest_set.jumbo_quiz_taken
+        -if @latest_set.latest_course_module_element
           .text-center
-          %h1=@latest_level_or_section.name
-          .row
-            .col-sm-10.col-sm-offset-1
-              =render partial: 'shared/static_progress_bar', locals: {percent: @latest_set.percentage_complete, value_now: @latest_set.count_of_cmes_completed, value_max: @latest_set.elements_total}
-          =link_to t('views.course_module_elements.show.continue'), course_special_link(@latest_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
-          .row
-            .col-sm-12
-              %br/
-              =link_to t('views.dashboard.individual_student.overview'), library_special_link(@latest_set.latest_course_module_element.parent.parent)
-
+            %h1=@latest_level_or_section.name
+            .row
+              .col-sm-10.col-sm-offset-1
+                =render partial: 'shared/static_progress_bar', locals: {percent: @latest_set.percentage_complete, value_now: @latest_set.elements_complete, value_max: @latest_set.elements_total}
+            =link_to t('views.course_module_elements.show.continue'), course_special_link(@latest_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
+            .row
+              .col-sm-12
+                %br/
+                =link_to t('views.dashboard.individual_student.overview'), library_special_link(@latest_set.latest_course_module_element.parent.parent)
         -else
           .text-center
             %h1=@latest_level_or_section.name
             .row
               .col-sm-10.col-sm-offset-1
                 =render partial: 'shared/static_progress_bar', locals: {percent: @latest_set.percentage_complete, value_now: @latest_set.count_of_cmes_completed, value_max: @latest_set.elements_total}
-            =link_to t('views.course_module_elements.show.continue'), course_special_link(@latest_set.latest_course_module_element.next_element), class: 'btn btn-success btn-lg btn-ls-default'
-            .row
-              .col-sm-12
-                %br/
-                =link_to t('views.dashboard.individual_student.overview'), library_special_link(@latest_set.latest_course_module_element.parent.parent)
+            =link_to t('views.course_module_elements.show.continue'), course_special_link(@latest_set.course_module.first_active_cme), class: 'btn btn-success btn-lg btn-ls-default'
+
+
+
+
 
   %hr/
   .row

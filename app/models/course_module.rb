@@ -83,7 +83,7 @@ class CourseModule < ActiveRecord::Base
 
   # instance methods
   def array_of_sibling_ids
-    self.parent.course_modules.all_in_order.map(&:id)
+    self.parent.course_modules.all_active.all_in_order.map(&:id)
   end
 
   def active_children

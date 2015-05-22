@@ -19,7 +19,10 @@
       -if @hierarchy_item.class == ExamLevel || @hierarchy_item.class == ExamSection
         .text-center
         -if @hierarchy_item.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
-          =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.latest_course_module_element.next_element), class: 'btn btn-lg btn-ls-default'
+          -if first_set.course_module.next_module
+            =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.course_module.next_module), class: 'btn btn-lg btn-ls-default'
+          -else
+            =link_to t('views.course_module_elements.show.continue'), course_special_link(first_set.course_module.active_children.first), class: 'btn btn-lg btn-ls-default'
         -else
           =link_to t('views.general.start'), course_special_link(@hierarchy_item.course_modules.all_active.all_in_order.first), class: 'btn btn-lg btn-ls-default'
 
