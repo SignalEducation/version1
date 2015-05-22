@@ -1,6 +1,12 @@
--if @dashboard_type.length > 1
-  %br/
-  .row
+-if current_user
+  -if current_user.individual_student?
+    =render partial: 'dashboard/individual_student'
+  -elsif current_user.content_manager?
+    =render partial: 'dashboard/content_manager'
+  -elsif current_user.tutor?
+    =render partial: 'dashboard/tutor'
+  -elsif current_user.admin?
+    %br/
     .panel-group#accordion{role: 'tablist', aria: {multiselectable: true}}
       -@dashboard_type.each_with_index do |dashboard_type, counter|
         .panel.panel-default
@@ -11,6 +17,5 @@
           .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 1 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
             .panel-body
               =render partial: "#{dashboard_type}"
-
--elsif @dashboard_type.count == 1
-  =render partial: "dashboard/#{@dashboard_type.first}"
+-else
+  =render partial: 'dashboard/individual_student'

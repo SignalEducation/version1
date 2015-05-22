@@ -29,7 +29,7 @@
             =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
               %p
                 %span.glyphicon.glyphicon-ok-sign
-                @course_module.course_module_jumbo_quiz.name
+                =@course_module.course_module_jumbo_quiz.name
           -else
             =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
               %p

@@ -37,6 +37,14 @@
                               %p.pull-right=greatgrandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else
                               %p.pull-right='Flash Card'
+                  -if grandchild.course_module_jumbo_quiz
+                    =link_to course_special_link(grandchild.course_module_jumbo_quiz), class: 'library-items list-group-item' do
+                      .list-item
+                        .row
+                          .col-sm-8
+                            %p=grandchild.course_module_jumbo_quiz.name
+                          .col-sm-4
+                            %p.pull-right=grandchild.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
               -else
                 -child.children.all_in_order.all_active.each do |grandchild|
                   =link_to course_special_link(grandchild), class: 'list-group-item' do
@@ -44,7 +52,12 @@
                       .col-sm-8
                         %p=grandchild.name
                       .col-sm-4
-                        %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
+                        -if grandchild.is_video
+                          %p.pull-right=seconds_to_time(grandchild.estimated_time_in_seconds)
+                        -elsif grandchild.is_quiz
+                          %p.pull-right=grandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                        -else
+                          %p.pull-right='Flash Card'
     .col-sm-4.library-info
       %p.description=t('views.exam_levels.form.description')
       %p=@hierarchy_item.description
@@ -58,6 +71,7 @@
       %p
         =t('views.general.updated_at')
         =humanize_datetime(@hierarchy_item.updated_at)
+      -# Need to add tutor_id to the exam_level model
       -#%hr/
       -#%p
         =t('views.general.author')
