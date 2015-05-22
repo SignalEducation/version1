@@ -6,16 +6,6 @@
   -elsif current_user.tutor?
     =render partial: 'dashboard/tutor'
   -elsif current_user.admin?
-    %br/
-    .panel-group#accordion{role: 'tablist', aria: {multiselectable: true}}
-      -@dashboard_type.each_with_index do |dashboard_type, counter|
-        .panel.panel-default
-          .panel-heading#headingOne{role: 'tab'}
-            %h4.panel-title
-              %a{data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}", aria: {expanded: true, controls: "collapse_#{counter}"}}
-                =dashboard_type.humanize
-          .panel-collapse.collapse{id: "collapse_#{counter}", class: (counter == 1 ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
-            .panel-body
-              =render partial: "#{dashboard_type}"
--else
-  =render partial: 'dashboard/individual_student'
+    =render partial: 'dashboard/admin'
+  -else
+    =render partial: 'dashboard/individual_student'
