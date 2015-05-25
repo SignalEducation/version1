@@ -1,9 +1,9 @@
-require 'rails_helper'
+require 'support/users_and_groups_setup'
 
 describe ReferralCode do
+  include_context 'users_and_groups_setup'
 
-  let!(:tutor) { FactoryGirl.create(:tutor_user) }
-  subject { FactoryGirl.create(:referral_code) }
+  subject { FactoryGirl.create(:referral_code, user_id: tutor_user.id) }
 
   # attr-accessible
   black_list = %w(id code created_at updated_at)
@@ -39,4 +39,17 @@ describe ReferralCode do
   # instance methods
   it { should respond_to(:destroyable?) }
 
+  describe "user groups" do
+    it "should create valid referral code for students, corporate students and tutors" do
+      [individual_student_user, corporate_student_user, tutor_user].each do |allowed_user|
+        expect(allowed_user.create_referral_code).to be_valid
+      end
+    end
+
+    it "should not create valid referral code for not allowed types of users" do
+      [content_manager_user, blogger_user, corporate_customer_user, forum_manager_user, admin_user].each do |not_allowed_user|
+        expect(not_allowed_user.create_referral_code).not_to be_valid
+      end
+    end
+  end
 end

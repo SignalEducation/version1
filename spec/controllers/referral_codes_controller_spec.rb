@@ -5,13 +5,8 @@ describe ReferralCodesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for referral_code_1
-  let!(:tutor) { FactoryGirl.create(:tutor_user) }
-  let!(:individual_student) { FactoryGirl.create(:individual_student_user) }
-  let!(:corporate_student) { FactoryGirl.create(:corporate_student_user) }
+  let!(:tutor) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id ) }
   let!(:tutor_referral_code) { FactoryGirl.create(:referral_code, user_id: tutor.id) }
-  let!(:individual_student_referral_code) { FactoryGirl.create(:referral_code, user_id: individual_student.id) }
-  let!(:corporate_student_referral_code) { FactoryGirl.create(:referral_code, user_id: corporate_student.id) }
 
   context 'Not logged in: ' do
 
@@ -99,7 +94,8 @@ describe ReferralCodesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
-        delete :destroy, id: individual_student_referral_code.id
+        ref_code = individual_student_user.create_referral_code
+        delete :destroy, id: ref_code.id
         expect_bounce_as_not_allowed
       end
     end
@@ -129,7 +125,7 @@ describe ReferralCodesController, type: :controller do
 
       # optional - some other object
       it 'should not see other user referral code' do
-        get :show, id: individual_student_referral_code.id
+        get :show, id: tutor_referral_code.id
         expect_error_bounce(profile_url)
       end
     end
@@ -190,7 +186,7 @@ describe ReferralCodesController, type: :controller do
 
       # optional - some other object
       it 'should not see other user referral code' do
-        get :show, id: individual_student_referral_code.id
+        get :show, id: tutor_referral_code.id
         expect_error_bounce(profile_url)
       end
     end
@@ -221,7 +217,7 @@ describe ReferralCodesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
-        delete :destroy, id: corporate_student_referral_code.id
+        delete :destroy, id: tutor_referral_code.id
         expect_bounce_as_not_allowed
       end
     end
@@ -406,7 +402,7 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('referral_codes', 3)
+        expect_index_success_with_model('referral_codes', 1)
       end
     end
 
@@ -432,14 +428,14 @@ describe ReferralCodesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        individual_student.update_attribute(:referral_code_id, tutor_referral_code.id)
+        individual_student_user = FactoryGirl.create(:individual_student_user)
+        individual_student_user.update_attribute(:referral_code_id, tutor_referral_code.id)
         delete :destroy, id: tutor_referral_code.id
         expect_delete_error_with_model('referral_code', referral_codes_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        individual_student.update_attribute(:referral_code_id, nil)
-        delete :destroy, id: individual_student_referral_code.id
+        delete :destroy, id: tutor_referral_code.id
         expect_delete_success_with_model('referral_code', referral_codes_url)
       end
     end

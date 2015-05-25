@@ -49,6 +49,9 @@ class ReferralCode < ActiveRecord::Base
     return unless self.code.blank?
 
     usr = User.find(self.user_id)
+    return false if usr.nil?
+    return false unless usr.individual_student? || usr.corporate_student? || usr.tutor?
+
     if usr
       new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}")[0..6]
       while ReferralCode.where(code: new_code).count > 0
