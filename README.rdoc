@@ -1,6 +1,6 @@
 == README
 
-= This section documents the necessary steps to install the SignalEducation/version1 codebase.
+This section documents the necessary steps to install the SignalEducation/version1 codebase.
 
 1. Install Postgres database, downloading the app is recommended from http://postgresapp.com/.
 
