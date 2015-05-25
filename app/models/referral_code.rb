@@ -7,7 +7,6 @@ class ReferralCode < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  has_many :referred_users, class_name: 'User', foreign_key: :referral_code_id
 
   # validation
   validates :user_id, presence: true,

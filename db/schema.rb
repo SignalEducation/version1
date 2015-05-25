@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150521090054) do
+ActiveRecord::Schema.define(version: 20150525121112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -801,10 +801,7 @@ ActiveRecord::Schema.define(version: 20150521090054) do
     t.datetime "updated_at"
     t.string   "locale",                                   limit: 255
     t.string   "guid",                                     limit: 255
-    t.integer  "referral_code_id"
   end
-
-  add_index "users", ["referral_code_id"], name: "index_users_on_referral_code_id", using: :btree
 
   create_table "vat_codes", force: :cascade do |t|
     t.integer  "country_id"

@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes, :referral_code_id
+                  :subscriptions_attributes
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -98,7 +98,6 @@ class User < ActiveRecord::Base
   has_many :user_likes
   has_many :user_notifications
   has_one :referral_code, foreign_key: :user_id
-  belongs_to :referred_by, class_name: "ReferralCode", foreign_key: :referral_code_id
 
   accepts_nested_attributes_for :subscriptions
 

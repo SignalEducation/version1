@@ -17,7 +17,6 @@ describe ReferralCode do
 
   # relationships
   it { should belong_to(:user) }
-  it { should have_many(:referred_users) }
 
   # validation
   it { should validate_presence_of(:user_id) }
