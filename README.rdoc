@@ -39,6 +39,8 @@
 
 16. Exit the rails console and run 'rake video:find_new'.
 
+17. Run the seeds file again with 'rake db:seed'.
+
 
 
 = Daily Start Up
@@ -50,3 +52,11 @@
 3. And finally start the Server with 'rails s'.
 
 4. In a web browser go to localhost:3000 to see the app.
+
+5. Log in credentials
+
+    - Admin User: site.admin@example.com
+    - Tutor User: tutor@example.com
+    - Individual User: individual.student@example.com  (No subscription attached to this user, therefore is restricted by the paywall. It is recommended that you sign up a new user to simulate the actual student experience.)
+
+6. When testing the Sign Up process use any fake details you wish but you must use Stripe's test card number '4242 4242 4242 4242', any three/four digit number will work for the CVV and you must give valid dates for Expiry fields.
