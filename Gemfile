@@ -62,6 +62,7 @@ end
 group :development, :test do
   gem 'pry-byebug' # halts code so you can experiment with it
   gem 'hirb'
+  gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser
   gem 'capybara-webkit'
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
