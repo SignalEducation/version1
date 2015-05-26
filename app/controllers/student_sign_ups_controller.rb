@@ -35,6 +35,16 @@ class StudentSignUpsController < ApplicationController
         I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{@user.subscriptions.first.subscription_plan.payment_frequency_in_months}"),
         request.remote_ip
       )
+
+      if cookies.encrypted[:referral_data]
+        code, referrer_url = cookies.encrypted[:referral_data].split(';')
+        if code
+          referral_code = ReferralCode.find_by_code(code)
+          @user.create_referred_signup(referral_code_id: referral_code.id, referrer_url: referrer_url) if referral_code
+          cookies.delete(:referral_data)
+        end
+      end
+
       @user = User.get_and_activate(@user.account_activation_code)
       UserSession.create(@user)
       @user.assign_anonymous_logs_to_user(current_session_guid)
