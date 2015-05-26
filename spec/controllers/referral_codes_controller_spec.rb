@@ -429,7 +429,7 @@ describe ReferralCodesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         individual_student_user = FactoryGirl.create(:individual_student_user)
-        individual_student_user.update_attribute(:referral_code_id, tutor_referral_code.id)
+        individual_student_user.create_referred_signup(referral_code_id: tutor_referral_code.id)
         delete :destroy, id: tutor_referral_code.id
         expect_delete_error_with_model('referral_code', referral_codes_url)
       end

@@ -7,6 +7,7 @@ class ReferralCode < ActiveRecord::Base
 
   # relationships
   belongs_to :user
+  has_many :referred_signups
 
   # validation
   validates :user_id, presence: true,
@@ -26,7 +27,7 @@ class ReferralCode < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    referred_users.empty?
+    referred_signups.empty?
   end
 
   protected

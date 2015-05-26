@@ -98,6 +98,7 @@ class User < ActiveRecord::Base
   has_many :user_likes
   has_many :user_notifications
   has_one :referral_code, foreign_key: :user_id
+  has_one :referred_signup
 
   accepts_nested_attributes_for :subscriptions
 
