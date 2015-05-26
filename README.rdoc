@@ -1,35 +1,62 @@
 == README
 
-This README documents the necessary steps to install the SignalEducation/version1 codebase.
+This section documents the necessary steps to install the SignalEducation/version1 codebase.
 
-1. You will recieve an invite to join the Signal Education Organization.
+1. Install Postgres database, downloading the app is recommended from http://postgresapp.com/.
 
-2. On the version1 repo page, you need to click Fork in the top right of the page, this will fork the repository to your personal GitHub account.
+2. Install Ruby 2.2.2 with rvm and rails 4.2.1, see http://installrails.com/ for basic installation details
 
-3. In your Fork of the repo copy the SSH clone URL and use it to create a git remote on your machine, this will aloow you to push and pull your own branches. And then create pull requests to the central repos
+3. Install Redis, on Mac homebrew is recommended (brew install redis).
+
+4. On github.com/SignalEducation/version1, Fork the repository to your github account.
+
+5. Ensure SSH Keys are set up and clone the fork.
+
+6. Set up a second git remote to the SignalEducation/version1 master branch which you should 'git pull' from.
+
+7. In terminal navigate to top of the app and bundle install.
+
+8. In config folder create a new file called 'database.yml' and copy the content from the sample_database.yml file into the new file.
+
+9. In config folder create a new file called 'application.yml' and copy the content from the sample_application.yml file into the new file. You will be sent a file, by James, with the correct keys for each key pair in this file.
+
+10. Run the following commands to create a local db for the project:
+
+    - rake db:create RAILS_ENV=development
+    - rake db:create RAILS_ENV=test
+    - rake db:migrate RAILS_ENV=development
+    - rake db:migrate RAILS_ENV=test
+
+11. In new terminal tab start the Redis DB by running 'redis-server /usr/local/etc/redis.conf'.
+
+12. In another terminal tab start sidekiq by running 'sidekiq'.
+
+13. In another terminal tab start your local server with 'rails server'.
+
+14. In another terminal tab load the seeds file with 'rake db:seed'.
+
+15. Enter a rails console with 'rails c', and run "load 'tmp/course_content_data.rb'" command. This command requires you to have the course_content_data.rb file in your tmp folder. It will be sent to you by James.
+
+16. Exit the rails console and run 'rake video:find_new'.
+
+17. Run the seeds file again with 'rake db:seed'.
 
 
-* Ruby version: 2.2.2
 
-* Rails version: 4.2.1
+= Daily Start Up
 
-* System dependencies
+1. In a terminal start the Redis database with 'redis-server /usr/local/etc/redis.conf'.
 
-* Configuration
+2. In a new terminal window start Sidekiq with 'sidekiq'.
 
-* Database creation
-  $ rake db:create
+3. And finally start the Server with 'rails s'.
 
-* Database initialization
+4. In a web browser go to localhost:3000 to see the app.
 
-* How to run the test suite
+5. Log in credentials
 
-* Services (job queues, cache servers, search engines, etc.)
+    - Admin User: site.admin@example.com
+    - Tutor User: tutor@example.com
+    - Individual User: individual.student@example.com  (No subscription attached to this user, therefore is restricted by the paywall. It is recommended that you sign up a new user to simulate the actual student experience.)
 
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+6. When testing the Sign Up process use any fake details you wish but you must use Stripe's test card number '4242 4242 4242 4242', any three/four digit number will work for the CVV and you must give valid dates for Expiry fields.

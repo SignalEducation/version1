@@ -9,3 +9,15 @@
     =render partial: 'dashboard/tutor'
   -else
     =render partial: 'dashboard/individual_student'
+
+
+-else
+  .row
+    .col-sm-12
+      .page-header
+        %h1=t('views.dashboard.index.h1')
+  .row
+    .col-sm-12
+      .well
+        =t('views.dashboard.individual_student.no_content_right_now')
+      =link_to t('views.library.show.h1'), library_url, class: 'btn btn-ls-default btn-lg'

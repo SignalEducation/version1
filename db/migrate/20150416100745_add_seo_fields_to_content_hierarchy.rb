@@ -14,7 +14,7 @@ class AddSeoFieldsToContentHierarchy < ActiveRecord::Migration
     add_column :course_modules, :seo_no_index, :boolean, default: false
     add_column :course_module_elements, :seo_description, :string
     add_column :course_module_elements, :seo_no_index, :boolean, default: false
-    if Rails.env.staging? || Rails.env.development?
+    if Rails.env.staging?
       SubjectArea.update_all(seo_description: 'SEO Description goes here')
       Institution.update_all(seo_description: 'SEO Description goes here')
       Qualification.update_all(seo_description: 'SEO Description goes here')
