@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: referral_codes
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  code       :string(7)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class ReferralCode < ActiveRecord::Base
 
   # attr-accessible

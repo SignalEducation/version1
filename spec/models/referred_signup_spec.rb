@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: referred_signups
+#
+#  id               :integer          not null, primary key
+#  referral_code_id :integer
+#  user_id          :integer
+#  referrer_url     :string(2048)
+#  subscription_id  :integer
+#  maturing_on      :datetime
+#  payed_at         :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'rails_helper'
 
 describe ReferredSignup do
