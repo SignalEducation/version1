@@ -1,0 +1,38 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.question_banks.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @question_banks, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.question_banks.form.user_id')
+          %th=t('views.question_banks.form.exam_level_id')
+          %th=t('views.question_banks.form.number_of_questions')
+          %th=t('views.question_banks.form.easy_questions')
+          %th=t('views.question_banks.form.medium_questions')
+          %th=t('views.question_banks.form.hard_questions')
+          %th
+          %th
+      %tbody
+        -@question_banks.each do |question_bank|
+          %tr{id: question_bank.id}
+            %td=link_to(question_bank.user.name, question_bank, title: t('views.general.view_tooltip'))
+            %td=link_to(question_bank.exam_level.name, question_bank, title: t('views.general.view_tooltip'))
+            %td=link_to(question_bank.number_of_questions, question_bank, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(question_bank.easy_questions), question_bank, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(question_bank.medium_questions), question_bank, title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(question_bank.hard_questions), question_bank, title: t('views.general.view_tooltip'))
+            %td
+              -#=link_to t('views.general.view'), question_bank
+              =link_to t('views.general.edit'), edit_question_bank_url(question_bank), class: 'btn btn-info btn-xs'
+              -if question_bank.destroyable?
+                =link_to t('views.general.delete'), question_bank, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+            %td
+              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_question_bank_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

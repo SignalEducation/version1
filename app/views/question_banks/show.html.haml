@@ -1,0 +1,32 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.question_banks.show.h1')
+        \#
+        =@question_bank.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.question_banks.form.user_id')
+        %td.col-sm-8=@question_bank.user.name
+      %tr
+        %td.col-sm-4=t('views.question_banks.form.exam_level_id')
+        %td.col-sm-8=@question_bank.exam_level.name
+      %tr
+        %td.col-sm-4=t('views.question_banks.form.number_of_questions')
+        %td.col-sm-8=@question_bank.number_of_questions
+      %tr
+        %td.col-sm-4=t('views.question_banks.form.easy_questions')
+        %td.col-sm-8=tick_or_cross(@question_bank.easy_questions)
+      %tr
+        %td.col-sm-4=t('views.question_banks.form.medium_questions')
+        %td.col-sm-8=tick_or_cross(@question_bank.medium_questions)
+      %tr
+        %td.col-sm-4=t('views.question_banks.form.hard_questions')
+        %td.col-sm-8=tick_or_cross(@question_bank.hard_questions)
+    %p
+      =link_to t('views.general.back'), question_banks_url
+      |
+      =link_to t('views.general.edit'), edit_question_bank_url(id: @question_bank.id), title: t('views.general.edit_tooltip')

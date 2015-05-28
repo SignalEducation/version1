@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528104936) do
+ActiveRecord::Schema.define(version: 20150528120809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -510,6 +510,20 @@ ActiveRecord::Schema.define(version: 20150528104936) do
   add_index "qualifications", ["institution_id"], name: "index_qualifications_on_institution_id", using: :btree
   add_index "qualifications", ["name_url"], name: "index_qualifications_on_name_url", using: :btree
   add_index "qualifications", ["sorting_order"], name: "index_qualifications_on_sorting_order", using: :btree
+
+  create_table "question_banks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exam_level_id"
+    t.integer  "number_of_questions"
+    t.boolean  "easy_questions",      default: false, null: false
+    t.boolean  "medium_questions",    default: false, null: false
+    t.boolean  "hard_questions",      default: false, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "question_banks", ["exam_level_id"], name: "index_question_banks_on_exam_level_id", using: :btree
+  add_index "question_banks", ["user_id"], name: "index_question_banks_on_user_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"

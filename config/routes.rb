@@ -108,6 +108,7 @@ Rails.application.routes.draw do
     end
     get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
     resources :student_sign_ups, only: [:show, :new, :create]
+    resources :question_banks
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]

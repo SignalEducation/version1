@@ -23,7 +23,7 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :flash_quiz_id
+                  :quiz_solutions_attributes, :flash_quiz_id, :exam_level_id
 
   # Constants
 
