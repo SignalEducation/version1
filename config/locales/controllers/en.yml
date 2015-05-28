@@ -180,7 +180,7 @@ en:
     question_banks:
       create:
         flash:
-          success: Questions Bank has been created successfully
+          error: Questions Bank was created
       destroy:
         flash:
           success: Questions Bank has been deleted

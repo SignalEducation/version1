@@ -669,9 +669,9 @@ en:
         easy_questions: Include Easy Questions
         medium_questions: Include Normal Questions
         hard_questions: Include Difficult Questions
+        save: Create
       new:
         h1: Create Custom Quiz
-
 
     quiz_answer:
       form:

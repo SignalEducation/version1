@@ -10,11 +10,13 @@ class QuestionBanksController < ApplicationController
   def create
     @question_bank = QuestionBank.new(allowed_params)
     @question_bank.user_id = current_user.id
+    @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
+    @question_bank.exam_level_id = @exam_level.id
     if @question_bank.save
-      flash[:success] = I18n.t('controllers.question_banks.create.flash.success')
-      redirect_to question_banks_url
+      redirect_to course_special_link(@question_bank)
     else
-      render action: :new
+      flash[:success] = I18n.t('controllers.question_banks.create.flash.error')
+      redirect_to library_special_link(@exam_level)
     end
   end
 
@@ -24,7 +26,7 @@ class QuestionBanksController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.question_banks.destroy.flash.error')
     end
-    redirect_to question_banks_url
+    redirect_to library_special_link(@question_bank.exam_level)
   end
 
   protected

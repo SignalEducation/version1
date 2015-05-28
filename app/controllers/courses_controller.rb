@@ -8,6 +8,7 @@ class CoursesController < ApplicationController
     institution = Institution.find_by(name_url: params[:institution_name_url])
     qualification = Qualification.find_by_name_url(params[:qualification_name_url])
     exam_level = qualification.exam_levels.find_by(name_url: params[:exam_level_name_url])
+    @question_bank = QuestionBank.find_by(params[:id])
     @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
     if @course_module
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
@@ -18,6 +19,10 @@ class CoursesController < ApplicationController
     end
 
     if @course_module_element.nil? && @course_module.nil?
+      if @question_bank
+        set_up_question_bank
+      end
+
       # The URL is out of date or wrong.
       @exam_section = params[:exam_section_name_url] == 'all' ?
             nil :
@@ -182,6 +187,22 @@ class CoursesController < ApplicationController
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
     Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
+  end
+
+  def set_up_question_bank
+    @number_of_questions = @question_bank.number_of_questions
+
+    @strategy = 'random'
+
+    all_questions = QuizQuestion.where(exam_level_id: @question_bank.exam_level_id)
+    all_easy_ids = all_questions.all_easy.map(&:id)
+    all_medium_ids = all_questions.all_medium.map(&:id)
+    all_difficult_ids = all_questions.all_difficult.map(&:id)
+    @easy_ids = all_easy_ids.sample(@number_of_questions)
+    @medium_ids = all_medium_ids.sample(@number_of_questions)
+    @difficult_ids = all_difficult_ids.sample(@number_of_questions)
+    @all_ids = @easy_ids + @medium_ids + @difficult_ids
+    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
   end
 
 end

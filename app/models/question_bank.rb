@@ -15,6 +15,8 @@
 
 class QuestionBank < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :user_id, :exam_level_id, :number_of_questions, :easy_questions, :medium_questions, :hard_questions
 

@@ -41,6 +41,7 @@ class ExamLevel < ActiveRecord::Base
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
   belongs_to :qualification
+  has_many :question_banks
   has_many :student_exam_tracks
   has_many :user_exam_level
 
