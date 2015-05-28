@@ -11,6 +11,7 @@
 #  updated_at                    :datetime
 #  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
+#  exam_level_id                 :integer
 #
 
 class QuizQuestion < ActiveRecord::Base
