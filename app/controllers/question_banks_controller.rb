@@ -1,23 +1,10 @@
 class QuestionBanksController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
-    ensure_user_is_of_type(['admin'])
-  end
   before_action :get_variables
-
-  def index
-    @question_banks = QuestionBank.paginate(per_page: 50, page: params[:page]).all_in_order
-  end
-
-  def show
-  end
 
   def new
     @question_bank = QuestionBank.new
-  end
-
-  def edit
   end
 
   def create
@@ -30,16 +17,6 @@ class QuestionBanksController < ApplicationController
       render action: :new
     end
   end
-
-  def update
-    if @question_bank.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.question_banks.update.flash.success')
-      redirect_to question_banks_url
-    else
-      render action: :edit
-    end
-  end
-
 
   def destroy
     if @question_bank.destroy

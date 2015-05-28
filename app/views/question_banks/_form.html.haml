@@ -4,13 +4,9 @@
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @question_bank, message: nil}
         .form-group
-          =f.label :exam_level_id, t('views.question_banks.form.exam_level_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :exam_level_id, @exam_levels, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
           =f.label :number_of_questions, t('views.question_banks.form.number_of_questions'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :number_of_questions, placeholder: t('views.question_banks.form.number_of_questions_placeholder'), class: 'form-control'
+            =f.text_field :number_of_questions, class: 'form-control'
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox

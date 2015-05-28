@@ -177,6 +177,15 @@ en:
           success: Qualification has been deleted
           error: Qualification was not deleted
 
+    question_banks:
+      create:
+        flash:
+          success: Questions Bank has been created successfully
+      destroy:
+        flash:
+          success: Questions Bank has been deleted
+          error: Questions Bank was not deleted
+
     student_sign_ups:
       create:
         flash:
