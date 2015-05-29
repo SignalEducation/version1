@@ -1073,8 +1073,21 @@ header {
   left: 20px;
 }
 
-.referral-header, .referral-footer {
+.referral-header {
   border: none;
+}
+
+.referral-footer {
+  border: none;
+  padding-top: 0px;
+}
+
+.referral-footer-p {
+  font-weight: bold;
+}
+
+.referral-dialog-body {
+  margin-top: -25px;
 }
 
 .referral-title {
