@@ -633,6 +633,7 @@ en:
         exam_section: Exam Section
         course_module: Course Module
         course_module_element: Step
+        new_question_bank: Create a Custom Quiz
 
     qualifications:
       form:

@@ -19,7 +19,7 @@ class CoursesController < ApplicationController
 
     if @course_module_element.nil? && @course_module.nil?
 
-      @question_bank = QuestionBank.find_by(params[:id])
+      @question_bank = QuestionBank.find_by_id(params[:course_module_name_url])
       set_up_question_bank
 
       # The URL is out of date or wrong.
@@ -189,6 +189,17 @@ class CoursesController < ApplicationController
   end
 
   def set_up_question_bank
+
+    @course_module_element_user_log = CourseModuleElementUserLog.new(
+        session_guid: current_session_guid,
+        course_module_id: nil,
+        course_module_element_id: nil,
+        course_module_jumbo_quiz_id: nil,
+        question_bank_id: @question_bank.id,
+        is_jumbo_quiz: false,
+        user_id: current_user.try(:id)
+    )
+
     @number_of_questions = @question_bank.number_of_questions
 
     @strategy = 'random'
@@ -197,11 +208,23 @@ class CoursesController < ApplicationController
     all_easy_ids = all_questions.all_easy.map(&:id)
     all_medium_ids = all_questions.all_medium.map(&:id)
     all_difficult_ids = all_questions.all_difficult.map(&:id)
-    @easy_ids = all_easy_ids.sample(@number_of_questions)
-    @medium_ids = all_medium_ids.sample(@number_of_questions)
-    @difficult_ids = all_difficult_ids.sample(@number_of_questions)
+
+    if @question_bank.easy_questions
+      @easy_ids = all_easy_ids
+    end
+
+    if @question_bank.medium_questions
+      @medium_ids = all_medium_ids
+    end
+
+    if @question_bank.hard_questions
+      @difficult_ids = all_difficult_ids
+    end
+
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
-    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+
+    @all_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+    @quiz_questions = @all_questions.sample(@number_of_questions)
   end
 
 end

@@ -30,6 +30,8 @@
       -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
   -elsif @course_module_jumbo_quiz
     =render partial: 'courses/show_quiz'
+  -elsif @question_bank
+    =render partial: 'courses/show_quiz'
   -elsif @course_module
     .well
       %h3=t('views.general.coming_soon')
