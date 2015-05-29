@@ -38,9 +38,6 @@ class QuestionBank < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
-  scope :all_easy, -> { where(easy_questions: true, medium_questions: false, hard_questions: false)}
-  scope :all_medium, -> { where(easy_questions: false, medium_questions: true, hard_questions: false)}
-  scope :all_hard, -> { where(easy_questions: false, medium_questions: false, hard_questions: true)}
 
   # class methods
 

@@ -211,20 +211,26 @@ class CoursesController < ApplicationController
 
     if @question_bank.easy_questions
       @easy_ids = all_easy_ids
+    else
+      @easy_ids = []
     end
 
     if @question_bank.medium_questions
       @medium_ids = all_medium_ids
+    else
+      @medium_ids = []
     end
 
     if @question_bank.hard_questions
       @difficult_ids = all_difficult_ids
+    else
+      @difficult_ids = []
     end
 
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
 
     @all_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
-    @quiz_questions = @all_questions.sample(@number_of_questions)
+    @quiz_questions = @all_questions#.sample(@number_of_questions)
   end
 
 end
