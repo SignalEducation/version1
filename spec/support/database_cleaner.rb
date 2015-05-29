@@ -24,7 +24,12 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
+    begin
+      DatabaseCleaner.clean
+    rescue Exception => e
+      sleep 1
+      DatabaseCleaner.clean
+    end
   end
 
 end
