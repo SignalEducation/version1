@@ -1,8 +1,8 @@
--if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz
+-if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz || @question_bank
   .row
     .col-sm-12
       %h1.courses-title
-        =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name)
+        =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
   .row
     .col-sm-12
       .progress

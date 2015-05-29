@@ -55,11 +55,15 @@ Rails.application.routes.draw do
     get 'personal_sign_up_complete/:id', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
+
+    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/question_bank/:id', to: 'courses#show', as: :question_bank
+
     get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
     get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+
     get 'library/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
+
     post 'library/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/question_banks/new', to: 'question_banks#create', as: :new_question_bank
-    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/question_bank/:id', to: 'courses#show', as: :question_bank
 
     get 'courses/:subject_area_name_url',
         to: redirect('/%{locale}/library/%{subject_area_name_url}')
@@ -111,7 +115,7 @@ Rails.application.routes.draw do
     end
     get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
     resources :student_sign_ups, only: [:show, :new, :create]
-    #resources :question_banks, only: [:new, :create]
+    resources :question_banks, only: [:new, :create]
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]

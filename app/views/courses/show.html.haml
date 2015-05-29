@@ -1,35 +1,36 @@
-%br/
-.row
-  .col-sm-12.visible-xs.visible-sm{style: 'bottom: 5px'}
-    =render partial: 'courses/small_side_nav'
-.row
-  .col-sm-3.visible-lg.visible-md
-    .new-side-nav
-      =link_to library_special_link(@course_module.parent), class: ' btn-lg btn-block text-center btn-ls-default', id: '#library-btn' do
-        .glyphicon.glyphicon-chevron-left
-        =t('views.library.show.h1')
-      =render partial: 'courses/new_side_nav'
+-if @course_module
+  %br/
+  .row
+    .col-sm-12.visible-xs.visible-sm{style: 'bottom: 5px'}
+      =render partial: 'courses/small_side_nav'
+  .row
+    .col-sm-3.visible-lg.visible-md
+      .new-side-nav
+        =link_to library_special_link(@course_module.parent), class: ' btn-lg btn-block text-center btn-ls-default', id: '#library-btn' do
+          .glyphicon.glyphicon-chevron-left
+          =t('views.library.show.h1')
+        =render partial: 'courses/new_side_nav'
 
-  .col-md-9.col-sm-12.col-md-offset-3.content-area
-    -if defined?(@results)
-      =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-    -elsif @course_module_element && paywall_checkpoint(@course_module_element.my_position_among_siblings, false)[:course_content][:view_all] == false
-      =render partial: 'courses/content_denied'
-    -elsif @course_module_jumbo_quiz && paywall_checkpoint(0, true)[:course_content][:view_all] == false
-      =render partial: 'courses/content_denied'
-    -elsif @course_module_element && @course_module_element.active
-      -if @course_module_element.try(:is_video)
-        =render partial: 'courses/show_video', locals: {cme: @course_module_element}
-      -elsif @course_module_element.try(:is_quiz)
-        =render partial: 'courses/show_quiz'
-      -elsif @course_module_element.try(:is_cme_flash_card_pack)
-        =render partial: 'course_module_element_flash_card_packs/show', locals: {cme: @course_module_element}
-      -else
-        %h2 Course module element - type unknown
-        -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
-    -elsif @course_module_jumbo_quiz
+.col-md-9.col-sm-12.col-md-offset-3.content-area
+  -if defined?(@results)
+    =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+  -elsif @course_module_element && paywall_checkpoint(@course_module_element.my_position_among_siblings, false)[:course_content][:view_all] == false
+    =render partial: 'courses/content_denied'
+  -elsif @course_module_jumbo_quiz && paywall_checkpoint(0, true)[:course_content][:view_all] == false
+    =render partial: 'courses/content_denied'
+  -elsif @course_module_element && @course_module_element.active
+    -if @course_module_element.try(:is_video)
+      =render partial: 'courses/show_video', locals: {cme: @course_module_element}
+    -elsif @course_module_element.try(:is_quiz)
       =render partial: 'courses/show_quiz'
-    -elsif @course_module
-      .well
-        %h3=t('views.general.coming_soon')
-        %p=t('views.courses.show.coming_soon')
+    -elsif @course_module_element.try(:is_cme_flash_card_pack)
+      =render partial: 'course_module_element_flash_card_packs/show', locals: {cme: @course_module_element}
+    -else
+      %h2 Course module element - type unknown
+      -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
+  -elsif @course_module_jumbo_quiz
+    =render partial: 'courses/show_quiz'
+  -elsif @course_module
+    .well
+      %h3=t('views.general.coming_soon')
+      %p=t('views.courses.show.coming_soon')
