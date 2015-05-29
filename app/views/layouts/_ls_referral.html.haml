@@ -1,0 +1,70 @@
+%a.refer-a-friend-dialog-toggle.btn.btn-info{href: '#', data: {toggle: 'modal', target: '#refer-a-friend-dialog'}}Refer a friend!
+.modal.fade#refer-a-friend-dialog{tabindex: -1, role: 'dialog', aria: {labelledby: 'uploadModalLabel', hidden: true} }
+  .modal-dialog
+    .modal-content
+      .modal-header.referral-header
+        %button{type: 'button', class: 'close', data: {dismiss: 'modal'}}
+          %span{aria: {hidden: true}} &times
+          %span{class: 'sr-only'}=t('views.general.close')
+        %h2.modal-title.referral-title#uploadmodallabel=t('views.referral_codes.modal.h1')
+
+      .modal-body
+        %div.center-block.text-center.referral-info=t('views.referral_codes.modal.info1')
+        %div.center-block.text-center.referral-info=t('views.referral_codes.modal.info2')
+        .form-group
+          =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
+            .row
+              .col-sm-8
+                =text_field_tag :code, current_user.referral_code ? referral_code_sharing_url(current_user.referral_code) : '', class: 'form-control', readonly: true
+              .col-sm-4
+                - if current_user.referral_code
+                  %a.btn.btn-block.btn-social.referral-btn-email.referral-social{id: 'copy-referral-code-lnk',
+                                                                                 'data-clipboard-target' => 'code',
+                                                                                 'data-clipboard-text' => '',
+                                                                                 :title => I18n.t('views.referral_codes.modal.copy_button_title')}
+                    %i.fa.fa-clipboard
+                    =t('views.referral_codes.modal.copy')
+                - else
+                  %a.btn.btn-block.btn-social.referral-btn-email.referral-social{id: 'get-referral-code-lnk'}
+                    %i.fa.fa-link
+                    =t('views.referral_codes.modal.get_code')
+
+      .modal-footer.referral-footer
+        .row
+          .col-sm-4
+            %a.btn.btn-block.btn-social.referral-btn-email.referral-social{id: 'email-code-lnk'}
+              %i.fa.fa-envelope
+              =t('views.referral_codes.modal.email')
+          .col-sm-4
+            %a.btn.btn-block.btn-social.btn-facebook.referral-social.referral-btn-facebook{id: 'facebook-code-lnk'}
+              %i.fa.fa-facebook
+              =t('views.referral_codes.modal.share')
+          .col-sm-4
+            %a.btn.btn-block.btn-social.btn-twitter.referral-social.referral-btn-twitter{id: 'twitter-code-lnk'}
+              %i.fa.fa-twitter
+              =t('views.referral_codes.modal.tweet')
+
+:javascript
+
+  $(document).ready(function() {
+    var codeCopy = new ZeroClipboard($("#copy-referral-code-lnk"));
+
+    $('#referral-code-form').on("ajax:success", function(e, data, status, xhr) {
+      $('#code').val(data.url);
+      var children = $('#get-referral-code-lnk').children();
+      children.first().removeClass('fa-link').addClass('fa-clipboard')
+      $('#get-referral-code-lnk').text('Copy');
+      $('#get-referral-code-lnk').append(children);
+      $('#get-referral-code-lnk').attr('id', 'copy-referral-code-lnk')
+                                 .attr('data-clipboard-target', 'code')
+                                 .attr('data-clipboard-text', '')
+                                 .attr('title', "#{I18n.t('views.referral_codes.modal.copy_button_title')}")
+      codeCopy = new ZeroClipboard($("#copy-referral-code-lnk"));
+    });
+  });
+
+  $('#get-referral-code-lnk').on('click', function(event) {
+    if ($(this).children().first().hasClass('fa-link')) {
+      $('#referral-code-form').submit();
+    }
+  });

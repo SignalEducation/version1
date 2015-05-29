@@ -1,4 +1,5 @@
 class ReferralCodesController < ApplicationController
+  include ApplicationHelper
 
   before_action :logged_in_required
   before_action only: [:index, :destroy] do
@@ -33,8 +34,7 @@ class ReferralCodesController < ApplicationController
           render json: { message: I18n.t('controllers.referral_codes.create.flash.error') }, status: 422
         else
           referral_code = current_user.create_referral_code
-          referral_url = "#{library_url}/?ref_code=#{referral_code.code}"
-          render json: { code: referral_code.code, url: referral_url }
+          render json: { url: referral_code_sharing_url(referral_code) }.to_json
         end
       }
     end
