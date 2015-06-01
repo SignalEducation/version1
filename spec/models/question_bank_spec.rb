@@ -41,16 +41,12 @@ describe QuestionBank do
   it { should validate_presence_of(:exam_level_id) }
   it { should validate_numericality_of(:exam_level_id) }
 
-  it { should validate_presence_of(:number_of_questions) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(QuestionBank).to respond_to(:all_in_order) }
-  it { expect(QuestionBank).to respond_to(:all_easy) }
-  it { expect(QuestionBank).to respond_to(:all_medium) }
-  it { expect(QuestionBank).to respond_to(:all_hard) }
 
   # class methods
 

@@ -4,27 +4,17 @@
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @question_bank, message: nil}
         .form-group
-          =f.label :number_of_questions, t('views.question_banks.form.number_of_questions'), class: 'control-label col-sm-4'
+          =f.label :easy_questions, t('views.question_banks.form.easy_questions'), class: 'control-label col-sm-4'
           .col-sm-8
-            =f.text_field :number_of_questions, class: 'form-control'
+            =f.select :easy_questions, options_for_select([3, 5, 10, 15, 20, 25, 30], 20), {}, {class: 'form-control'}
         .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :easy_questions
-                =t('views.question_banks.form.easy_questions')
+          =f.label :medium_questions, t('views.question_banks.form.medium_questions'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.select :medium_questions, options_for_select([3, 5, 10, 15, 20, 25, 30], 20), {}, {class: 'form-control'}
         .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :medium_questions
-                =t('views.question_banks.form.medium_questions')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :hard_questions
-                =t('views.question_banks.form.hard_questions')
+          =f.label :hard_questions, t('views.question_banks.form.hard_questions'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.select :hard_questions, options_for_select([3, 5, 10, 15, 20, 25, 30], 20), {}, {class: 'form-control'}
 
       =f.submit t('views.question_banks.form.save'), class: 'btn btn-ls-default'
       =t('views.general.or')

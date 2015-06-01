@@ -18,9 +18,10 @@ class QuestionBank < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :user_id, :exam_level_id, :number_of_questions, :easy_questions, :medium_questions, :hard_questions
+  attr_accessible :user_id, :exam_level_id, :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy
 
   # Constants
+  STRATEGIES = %w(random progressive)
 
   # relationships
   belongs_to :user
@@ -31,7 +32,7 @@ class QuestionBank < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :number_of_questions, presence: true
+  validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
   # callbacks
   before_destroy :check_dependencies
@@ -44,6 +45,10 @@ class QuestionBank < ActiveRecord::Base
   # instance methods
   def destroyable?
     true
+  end
+
+  def number_of_questions
+    (self.easy_questions + self.medium_questions + self.hard_questions).to_i
   end
 
   protected

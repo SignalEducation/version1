@@ -201,36 +201,20 @@ class CoursesController < ApplicationController
     )
 
     @number_of_questions = @question_bank.number_of_questions
-
-    @strategy = 'random'
-
+    @number_of_easy_questions = @question_bank.easy_questions
+    @number_of_medium_questions = @question_bank.medium_questions
+    @number_of_hard_questions = @question_bank.hard_questions
+    @strategy = @question_bank.question_selection_strategy
     all_questions = QuizQuestion.where(exam_level_id: @question_bank.exam_level_id)
     all_easy_ids = all_questions.all_easy.map(&:id)
     all_medium_ids = all_questions.all_medium.map(&:id)
     all_difficult_ids = all_questions.all_difficult.map(&:id)
-
-    if @question_bank.easy_questions
-      @easy_ids = all_easy_ids
-    else
-      @easy_ids = []
-    end
-
-    if @question_bank.medium_questions
-      @medium_ids = all_medium_ids
-    else
-      @medium_ids = []
-    end
-
-    if @question_bank.hard_questions
-      @difficult_ids = all_difficult_ids
-    else
-      @difficult_ids = []
-    end
-
+    @easy_ids = all_easy_ids.sample(@number_of_easy_questions)
+    @medium_ids = all_medium_ids.sample(@number_of_medium_questions)
+    @difficult_ids = all_difficult_ids.sample(@number_of_hard_questions)
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
+    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
 
-    @all_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
-    @quiz_questions = @all_questions#.sample(@number_of_questions)
   end
 
 end

@@ -12,6 +12,7 @@ class QuestionBanksController < ApplicationController
     @question_bank.user_id = current_user.id
     @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
     @question_bank.exam_level_id = @exam_level.id
+    @question_bank.question_selection_strategy = 'random'
     if @question_bank.save
       redirect_to course_special_link(@question_bank)
     else
@@ -40,7 +41,7 @@ class QuestionBanksController < ApplicationController
   end
 
   def allowed_params
-    params.require(:question_bank).permit(:user_id, :exam_level_id, :number_of_questions, :easy_questions, :medium_questions, :hard_questions)
+    params.require(:question_bank).permit(:user_id, :exam_level_id, :easy_questions, :medium_questions, :hard_questions)
   end
 
 end
