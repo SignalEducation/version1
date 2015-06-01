@@ -2,15 +2,15 @@
 #
 # Table name: question_banks
 #
-#  id                  :integer          not null, primary key
-#  user_id             :integer
-#  exam_level_id       :integer
-#  number_of_questions :integer
-#  easy_questions      :boolean          default(FALSE), not null
-#  medium_questions    :boolean          default(FALSE), not null
-#  hard_questions      :boolean          default(FALSE), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
+#  id                          :integer          not null, primary key
+#  user_id                     :integer
+#  exam_level_id               :integer
+#  easy_questions              :integer
+#  medium_questions            :integer
+#  hard_questions              :integer
+#  question_selection_strategy :string
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
 #
 
 require 'rails_helper'

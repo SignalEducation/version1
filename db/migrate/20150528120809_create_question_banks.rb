@@ -3,10 +3,10 @@ class CreateQuestionBanks < ActiveRecord::Migration
     create_table :question_banks do |t|
       t.integer :user_id, index: true
       t.integer :exam_level_id, index: true
-      t.integer :number_of_questions
-      t.boolean :easy_questions, default: false, null: false
-      t.boolean :medium_questions, default: false, null: false
-      t.boolean :hard_questions, default: false, null: false
+      t.integer :easy_questions, index: true
+      t.integer :medium_questions, index: true
+      t.integer :hard_questions, index: true
+      t.string :question_selection_strategy
 
       t.timestamps null: false
     end

@@ -514,15 +514,18 @@ ActiveRecord::Schema.define(version: 20150528120809) do
   create_table "question_banks", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "exam_level_id"
-    t.integer  "number_of_questions"
-    t.boolean  "easy_questions",      default: false, null: false
-    t.boolean  "medium_questions",    default: false, null: false
-    t.boolean  "hard_questions",      default: false, null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.integer  "easy_questions"
+    t.integer  "medium_questions"
+    t.integer  "hard_questions"
+    t.string   "question_selection_strategy"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
+  add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
   add_index "question_banks", ["exam_level_id"], name: "index_question_banks_on_exam_level_id", using: :btree
+  add_index "question_banks", ["hard_questions"], name: "index_question_banks_on_hard_questions", using: :btree
+  add_index "question_banks", ["medium_questions"], name: "index_question_banks_on_medium_questions", using: :btree
   add_index "question_banks", ["user_id"], name: "index_question_banks_on_user_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
