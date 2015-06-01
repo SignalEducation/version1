@@ -43,4 +43,35 @@ describe 'Referral codes modal dialog', type: :feature do
     end
   end
 
+  describe 'view social sharing content' do
+    scenario 'toggle email content visibility', js: true do
+      tutor_user.create_referral_code
+      sign_in_via_sign_in_page(tutor_user)
+      click_link('Refer a friend!')
+      find('#email-code-lnk').click()
+      expect(page).to have_selector('#referral-email-content')
+      find('#email-code-lnk').click()
+      expect(page).not_to have_selector('#referral-email-content')
+    end
+
+    scenario 'toggle facebook content visibility', js: true do
+      tutor_user.create_referral_code
+      sign_in_via_sign_in_page(tutor_user)
+      click_link('Refer a friend!')
+      find('#facebook-code-lnk').click()
+      expect(page).to have_selector('#referral-facebook-content')
+      find('#facebook-code-lnk').click()
+      expect(page).not_to have_selector('#referral-facebook-content')
+    end
+
+    scenario 'toggle twitter content visibility', js: true do
+      tutor_user.create_referral_code
+      sign_in_via_sign_in_page(tutor_user)
+      click_link('Refer a friend!')
+      find('#twitter-code-lnk').click()
+      expect(page).to have_selector('#referral-twitter-content')
+      find('#twitter-code-lnk').click()
+      expect(page).not_to have_selector('#referral-twitter-content')
+    end
+  end
 end

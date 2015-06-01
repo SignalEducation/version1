@@ -74,13 +74,12 @@ describe ReferralCodesController, type: :controller do
         expect(response).to redirect_to(root_url)
       end
 
-      it 'should report OK for Ajax request' do
+      it 'should respond with referral sharing URL for Ajax request' do
         xhr :post, :create
         expect(response.headers['Content-Type']).to include("text/javascript")
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json['code']).to eq(ReferralCode.last.code)
-        expect(json['url']).to include(ReferralCode.last.code)
+        expect(json['url']).to end_with(ReferralCode.last.code)
       end
 
       it 'should report error for Ajax request if student already has referral code' do
@@ -136,13 +135,12 @@ describe ReferralCodesController, type: :controller do
         expect(response).to redirect_to(root_url)
       end
 
-      it 'should report OK for Ajax request' do
+      it 'should respond with referral sharing URL for Ajax request' do
         xhr :post, :create
         expect(response.headers['Content-Type']).to include("text/javascript")
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json['code']).to eq(ReferralCode.last.code)
-        expect(json['url']).to include(ReferralCode.last.code)
+        expect(json['url']).to end_with(ReferralCode.last.code)
       end
 
       it 'should report error for Ajax request if student already has referral code' do
@@ -197,13 +195,12 @@ describe ReferralCodesController, type: :controller do
         expect(response).to redirect_to(root_url)
       end
 
-      it 'should report OK for Ajax request' do
+      it 'should respond with referral sharing URL for Ajax request' do
         xhr :post, :create
         expect(response.headers['Content-Type']).to include("text/javascript")
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
-        expect(json['code']).to eq(ReferralCode.last.code)
-        expect(json['url']).to include(ReferralCode.last.code)
+        expect(json['url']).to end_with(ReferralCode.last.code)
       end
 
       it 'should report error for Ajax request if student already has referral code' do
