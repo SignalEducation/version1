@@ -26,6 +26,7 @@ class QuestionBank < ActiveRecord::Base
   # relationships
   belongs_to :user
   belongs_to :exam_level
+  has_many :course_module_element_user_logs
 
   # validation
   validates :user_id, presence: true,

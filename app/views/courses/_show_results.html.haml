@@ -2,7 +2,8 @@
   .col-sm-12
     %h1.no-top-gap
       =t('views.courses.show_results.h1')
-      =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name)
+      =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || 'Custom Quiz'
+
 
 %div{role: 'tabpanel'}
 

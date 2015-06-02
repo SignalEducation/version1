@@ -51,10 +51,12 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
     @course_module_element_user_log.session_guid = current_session_guid
+    @course_module_element_user_log.question_bank_id = current_user.question_banks.last.id
     @course_module_element_user_log.element_completed = true
     @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
     @course_module_element = @course_module_element_user_log.course_module_element
     @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
+    @question_bank = @course_module_element_user_log.question_bank
     @course_module = @course_module_element_user_log.course_module
     @results = true
     unless @course_module_element_user_log.save
@@ -64,7 +66,7 @@ class CoursesController < ApplicationController
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-    elsif @course_module && (@course_module_element || @course_module_jumbo_quiz)
+    elsif @question_bank || (@course_module && (@course_module_element || @course_module_jumbo_quiz))
       render :show
     else
       redirect_to library_url
@@ -78,6 +80,7 @@ class CoursesController < ApplicationController
             :course_module_id,
             :course_module_element_id,
             :course_module_jumbo_quiz_id,
+            :question_bank_id,
             :user_id,
             #:session_guid,
             #:element_completed,
@@ -194,12 +197,10 @@ class CoursesController < ApplicationController
         session_guid: current_session_guid,
         course_module_id: nil,
         course_module_element_id: nil,
-        course_module_jumbo_quiz_id: nil,
         question_bank_id: @question_bank.id,
-        is_jumbo_quiz: false,
+        is_question_bank: true,
         user_id: current_user.try(:id)
     )
-
     @number_of_questions = @question_bank.number_of_questions
     @number_of_easy_questions = @question_bank.easy_questions
     @number_of_medium_questions = @question_bank.medium_questions

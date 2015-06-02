@@ -86,6 +86,7 @@ class User < ActiveRecord::Base
   has_many :institution_users
   has_many :invoices
   has_many :quiz_attempts
+  has_many :question_banks
   has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
   has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :subscriptions, -> { order(:id) }, inverse_of: :user
