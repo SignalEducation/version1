@@ -205,6 +205,11 @@ class CoursesController < ApplicationController
     @number_of_easy_questions = @question_bank.easy_questions
     @number_of_medium_questions = @question_bank.medium_questions
     @number_of_hard_questions = @question_bank.hard_questions
+
+    @number_of_questions.times do
+      @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+    end
+
     @strategy = @question_bank.question_selection_strategy
     all_questions = QuizQuestion.where(exam_level_id: @question_bank.exam_level_id)
     all_easy_ids = all_questions.all_easy.map(&:id)
@@ -215,6 +220,7 @@ class CoursesController < ApplicationController
     @difficult_ids = all_difficult_ids.sample(@number_of_hard_questions)
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+    @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
 
   end
 
