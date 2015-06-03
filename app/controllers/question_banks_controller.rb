@@ -5,6 +5,13 @@ class QuestionBanksController < ApplicationController
 
   def new
     @question_bank = QuestionBank.new
+    @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
+    max_easy_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'easy').count
+    @easy_array = Array(0..max_easy_questions)
+    max_medium_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'medium').count
+    @medium_array = Array(0..max_medium_questions)
+    max_hard_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'difficult').count
+    @hard_array = Array(0..max_hard_questions)
   end
 
   def create
@@ -16,8 +23,7 @@ class QuestionBanksController < ApplicationController
     if @question_bank.save
       redirect_to course_special_link(@question_bank)
     else
-      flash[:success] = I18n.t('controllers.question_banks.create.flash.error')
-      redirect_to library_special_link(@exam_level)
+      render action: :new
     end
   end
 

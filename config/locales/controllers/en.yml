@@ -180,11 +180,12 @@ en:
     question_banks:
       create:
         flash:
-          error: Questions Bank was created
+          error: Questions Bank was not created
       destroy:
         flash:
           success: Questions Bank has been deleted
           error: Questions Bank was not deleted
+      at_least_one_question_set: You must assign a value for at least one set of questions
 
     student_sign_ups:
       create:

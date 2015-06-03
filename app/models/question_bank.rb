@@ -34,6 +34,7 @@ class QuestionBank < ActiveRecord::Base
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
+  validate :at_least_one_question_set
 
   # callbacks
   before_destroy :check_dependencies
@@ -58,6 +59,12 @@ class QuestionBank < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def at_least_one_question_set
+    if number_of_questions < 1
+      errors.add(:base, I18n.t('controllers.question_banks.at_least_one_question_set'))
     end
   end
 
