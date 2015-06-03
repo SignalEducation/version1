@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20150602115257) do
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
-    t.boolean  "is_question_bank",            default: true,  null: false
+    t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
   end
 
