@@ -5,7 +5,7 @@ class QuestionBanksController < ApplicationController
 
   def new
     @question_bank = QuestionBank.new
-    @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
+    @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url].to_s).first
     max_easy_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'easy').count
     @easy_array = Array(0..max_easy_questions)
     max_medium_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'medium').count

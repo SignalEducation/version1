@@ -50,7 +50,7 @@ class QuestionBank < ActiveRecord::Base
   end
 
   def number_of_questions
-    (self.easy_questions + self.medium_questions + self.hard_questions).to_i
+    ([self.easy_questions].compact + [self.medium_questions].compact + [self.hard_questions].compact).sum
   end
 
   protected

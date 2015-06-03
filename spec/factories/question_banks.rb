@@ -17,10 +17,10 @@ FactoryGirl.define do
   factory :question_bank do
     user_id 1
     exam_level_id 1
-    number_of_questions 1
-    easy_questions false
-    medium_questions false
-    hard_questions false
+    easy_questions 1
+    medium_questions 1
+    hard_questions 1
+    question_selection_strategy 'random'
   end
 
 end

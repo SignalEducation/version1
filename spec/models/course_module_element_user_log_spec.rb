@@ -71,7 +71,7 @@ describe CourseModuleElementUserLog do
     it { should validate_presence_of(:quiz_score_potential).on(:update) }
   end
 
-  it { should validate_presence_of(:course_module_id) }
+  it { should_not validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
 
   it { should_not validate_presence_of(:corporate_customer_id) }

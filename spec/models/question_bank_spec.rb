@@ -28,11 +28,12 @@ describe QuestionBank do
   end
 
   # Constants
-  #it { expect(QuestionBank.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(QuestionBank.const_defined?(:STRATEGIES)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
   it { should belong_to(:exam_level) }
+  it { should have_many(:course_module_element_user_logs) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -52,5 +53,6 @@ describe QuestionBank do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:number_of_questions) }
 
 end
