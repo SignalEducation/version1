@@ -130,7 +130,9 @@ class CoursesController < ApplicationController
             course_module_id: @course_module_element.course_module_id,
             corporate_customer_id: nil,
             course_module_jumbo_quiz_id: nil,
-            is_jumbo_quiz: false
+            is_jumbo_quiz: false,
+            question_bank_id: nil,
+            is_question_bank: false
     )
   end
 

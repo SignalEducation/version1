@@ -87,6 +87,14 @@
     .col-sm-4.text-right
       =link_to 'Next Module', course_special_link(@course_module.next_module), class: 'btn btn-info btn-sm'
 
+-if @course_module_element_user_log.is_question_bank
+  %hr/
+  .row
+    .col-sm-4.text-right
+      =link_to 'Restart Quiz', course_special_link(@question_bank), class: 'btn btn-ls-default'
+    .col-sm-4.text-right
+      =link_to 'Return to Library', library_special_link(@question_bank.exam_level), class: 'btn btn-ls-default'
+
 
 -if @course_module_element
   .cme-nav
