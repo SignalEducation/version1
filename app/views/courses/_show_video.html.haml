@@ -70,11 +70,25 @@
   });
 
   var completedDataSent = false;
+  var timeWatchedDataSent = false;
+  var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+
   var onCompletedHandler = function() {
+    var duration = jwplayer().getDuration();
+    var position = +(jwplayer().getPosition()).toFixed(2);
+    // Prevent sending same data twice when video is ended and page unloaded.
+    if (false === timeWatchedDataSent) {
+      $.ajax({
+        url: '#{video_watched_data_courses_path}',
+        dataType: 'json',
+        data: JSON.stringify({'videoLogId': videoCmeUserLog, 'position': position, 'duration': duration}),
+        method: 'PATCH',
+        contentType: "application/json; charset=utf-8"
+      });
+      timeWatchedDataSent = true;
+    }
     // Avoid error in development mode where Mixpanel is turned off
     if (typeof mixpanel !== 'undefined' && completedDataSent === false) {
-      var duration = jwplayer().getDuration();
-      var position = +(jwplayer().getPosition()).toFixed(2);
       mixpanel.track("Video View End", {
         'Video Name': '#{cme.name}',
         'Course Module': '#{cme.course_module.name}',
@@ -94,6 +108,9 @@
   var playsNo = 0;
   jwplayer().onPlay(function(stateInfo) {
     if (stateInfo.newstate == 'PLAYING') {
+      // If user has clicked on play again after video is ended
+      // we have to send data again.
+      timeWatchedDataSent = false;
       playsNo += 1;
       // Avoid error in development mode where Mixpanel is turned off
       if (typeof mixpanel !== 'undefined' && 1 == playsNo) {

@@ -8,7 +8,7 @@
           %th=t('views.course_modules.index.h1')
           %th=t('views.course_module_elements.form.active')
           %th=t('views.dashboard.tutor.course_module_element_quizzes')
-          %th=t('views.dashboard.tutor.course_module_element_videos')
+          %th="#{t('views.dashboard.tutor.course_module_element_videos')} / #{t('views.dashboard.tutor.total_time_watched')}"
           %th=t('views.dashboard.tutor.total_course_module_elements')
           %th=t('views.library.show.jumbo_quiz')
       %tbody
@@ -17,6 +17,11 @@
             %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
             %td=tick_or_cross(course_modules.active?)
             %td=course_modules.course_module_element_quizzes.count
-            %td=course_modules.course_module_element_videos.count
+            - if course_modules.course_module_element_videos.count > 0
+              %td= "%d (%02d:%02d:%02d)" % [course_modules.course_module_element_videos.count,
+              course_modules.total_time_watched_videos[:hours], course_modules.total_time_watched_videos[:minutes],
+              course_modules.total_time_watched_videos[:seconds]]
+            - else
+              %td= course_modules.course_module_element_videos.count
             %td=course_modules.course_module_elements.count
             %td=tick_or_cross(course_modules.course_module_jumbo_quiz)
