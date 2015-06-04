@@ -9,7 +9,7 @@ RSpec.describe 'question_banks/new', type: :view do
     @question_bank = FactoryGirl.build(:question_bank)
   end
 
-  it 'renders edit question_bank form' do
+  xit 'renders edit question_bank form' do
     render
     assert_select 'form[action=?][method=?]', question_banks_path, 'post' do
       assert_select 'select#question_bank_user_id[name=?]', 'question_bank[user_id]'

@@ -1,9 +1,11 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 describe QuestionBanksController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
 
   # todo: Try to create children for question_bank_1
   let!(:question_bank_1) { FactoryGirl.create(:question_bank) }
@@ -44,19 +46,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+                      exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -64,7 +69,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -79,19 +86,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -99,7 +109,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -114,19 +126,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -134,7 +149,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -149,19 +166,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -169,7 +189,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -184,19 +206,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -204,7 +229,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -219,19 +246,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -239,7 +269,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -254,19 +286,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -274,7 +309,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
@@ -289,19 +326,22 @@ describe QuestionBanksController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, exam_level_name_url: exam_level_1.name_url
         expect_new_success_with_model('question_bank')
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', question_banks_url)
+        post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''}
+        post :create, question_bank: {valid_params.keys.first => ''},
+             exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
     end
@@ -309,7 +349,9 @@ describe QuestionBanksController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', question_banks_url)
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(assigns('question_bank'.to_sym).class.name).to eq('question_bank'.classify)
       end
     end
 
