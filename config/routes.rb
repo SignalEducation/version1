@@ -72,8 +72,9 @@ Rails.application.routes.draw do
     # general resources
     resources :corporate_customers
     resources :countries, concerns: :supports_reordering
-    resources :courses, only: [:create]
-    #resources :courses, only: [:show, :create]
+    resources :courses, only: [:create] do
+      match :video_watched_data, on: :collection, via: [:put, :patch]
+    end
     resources :course_modules, concerns: :supports_reordering
     get 'course_modules/:qualification_url', to: 'course_modules#show',
         as: :course_modules_for_qualification
