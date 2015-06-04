@@ -19,6 +19,7 @@
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
 #  is_jumbo_quiz               :boolean          default(FALSE), not null
+#  seconds_watched             :integer          default(0)
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -31,7 +32,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :quiz_score_actual, :quiz_score_potential,
                   :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
                   :corporate_customer_id, :course_module_jumbo_quiz_id,
-                  :quiz_attempts_attributes
+                  :quiz_attempts_attributes, :seconds_watched
 
   # Constants
 

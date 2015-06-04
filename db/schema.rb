@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150514094454) do
+ActiveRecord::Schema.define(version: 20150602112246) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 20150514094454) do
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
+    t.integer  "seconds_watched",             default: 0
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree

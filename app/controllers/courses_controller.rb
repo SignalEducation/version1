@@ -37,7 +37,7 @@ class CoursesController < ApplicationController
       elsif @course_module_jumbo_quiz
         set_up_jumbo_quiz
       elsif @course_module_element.try(:is_video)
-        create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+        @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
       end
     end
     @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
@@ -64,6 +64,20 @@ class CoursesController < ApplicationController
       render :show
     else
       redirect_to library_url
+    end
+  end
+
+  def video_watched_data
+    respond_to do |format|
+      format.json {
+        video_cme_user_log = CourseModuleElementUserLog.find_by_id(params[:course][:videoLogId])
+        if video_cme_user_log
+          video_cme_user_log.seconds_watched += params[:course][:position]
+          video_cme_user_log.element_completed = video_cme_user_log.seconds_watched >= params[:course][:duration].to_i
+          video_cme_user_log.save
+        end
+        render json: {}, status: :ok
+      }
     end
   end
 
@@ -114,7 +128,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
             session_guid: current_session_guid,
-            element_completed: true, # Todo: Change to false when user tracking JS is in place
+            element_completed: false,
             time_taken_in_seconds: 0,
             quiz_score_actual: nil,
             quiz_score_potential: nil,
