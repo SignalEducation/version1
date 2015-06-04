@@ -112,7 +112,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmoore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex eproident.',
           feedback_url: 'http://example.com/feedback',
           help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: false,
+          subject_area_id: 1, sorting_order: 1, active: true,                          background_colour_code: '37ba8e',
           seo_description: 'Sed ut perspiciatis unde omnis iste natus error sim quia dolor sit amet, consectetur, adipisci velit'
   ); print '.'
   Institution.where(id: 2).first_or_create(

@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 20150602115257) do
     t.boolean  "is_jumbo_quiz",               default: false, null: false
     t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
+    t.integer  "seconds_watched",             default: 0
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree

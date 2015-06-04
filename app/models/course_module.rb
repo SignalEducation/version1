@@ -168,6 +168,11 @@ class CourseModule < ActiveRecord::Base
     self.save
   end
 
+  def total_time_watched_videos
+    total_seconds = CourseModuleElementUserLog.where(course_module_id: self.id).sum(:seconds_watched)
+    @time_watched ||= { hours: total_seconds / 3600, minutes: (total_seconds / 60) % 60, seconds: total_seconds % 60 }
+  end
+
   protected
 
   def calculate_estimated_time

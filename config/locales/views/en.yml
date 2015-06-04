@@ -398,6 +398,7 @@ en:
         total_course_module_elements: Total Course Modules Elements
         course_module_element_videos: Number of Videos
         course_module_element_quizzes: Number of Quizzes
+        total_time_watched: Total Time Watched
 
       admin:
         user_data: User Data
