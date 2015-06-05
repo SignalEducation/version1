@@ -19,6 +19,8 @@
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
 #  is_jumbo_quiz               :boolean          default(FALSE), not null
+#  is_question_bank            :boolean          default(FALSE), not null
+#  question_bank_id            :integer
 #  seconds_watched             :integer          default(0)
 #
 
@@ -32,7 +34,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :quiz_score_actual, :quiz_score_potential,
                   :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
                   :corporate_customer_id, :course_module_jumbo_quiz_id,
-                  :quiz_attempts_attributes, :seconds_watched
+                  :quiz_attempts_attributes, :seconds_watched, :is_question_bank,
+                  :question_bank_id
 
   # Constants
 
@@ -41,6 +44,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module
   belongs_to :course_module_element
   belongs_to :course_module_jumbo_quiz
+  belongs_to :question_bank
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   belongs_to :user
   accepts_nested_attributes_for :quiz_attempts
@@ -54,7 +58,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true, length: {maximum: 255}
   validates :time_taken_in_seconds, presence: true
-  validates :course_module_id, presence: true,
+  validates :course_module_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :question_bank_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :corporate_customer_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -124,7 +130,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   protected
 
   def calculate_score
-    if self.is_quiz || self.is_jumbo_quiz
+    if self.is_quiz || self.is_jumbo_quiz || self.is_question_bank
       self.quiz_score_actual = self.quiz_attempts.sum(:score)
       if self.is_quiz
         self.quiz_score_potential = self.recent_attempts.count == 0 ?
@@ -134,24 +140,30 @@ class CourseModuleElementUserLog < ActiveRecord::Base
         self.quiz_score_potential = self.recent_attempts.count == 0 ?
             self.course_module_jumbo_quiz.best_possible_score_first_attempt :
             self.course_module_jumbo_quiz.best_possible_score_retry
+      elsif self.is_question_bank
+        self.quiz_score_potential = self.question_bank.number_of_questions
       end
       self.save(callbacks: false, validate: false)
     end
   end
 
   def create_or_update_student_exam_track
-    set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-    set.exam_level_id ||= self.course_module.exam_level_id
-    set.exam_section_id ||= self.course_module.exam_section_id
-    set.latest_course_module_element_id = self.course_module_element_id
-    set.jumbo_quiz_taken = true if self.is_jumbo_quiz
-    set.save!
-    set.recalculate_completeness
+    unless self.is_question_bank
+      set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
+      set.exam_level_id ||= self.course_module.exam_level_id
+      set.exam_section_id ||= self.course_module.exam_section_id
+      set.latest_course_module_element_id = self.course_module_element_id
+      set.jumbo_quiz_taken = true if self.is_jumbo_quiz
+      set.save!
+      set.recalculate_completeness
+    end
   end
 
   def set_booleans
     if self.course_module_jumbo_quiz
       self.is_jumbo_quiz = true
+    elsif self.question_bank
+      self.is_question_bank = true
     elsif self.course_module_element.course_module_element_quiz
       self.is_quiz = true
     else
@@ -168,7 +180,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def update_student_exam_track
-    self.student_exam_track.try(:recalculate_completeness)
+    unless self.is_question_bank
+      self.student_exam_track.try(:recalculate_completeness)
+    end
   end
 
 end

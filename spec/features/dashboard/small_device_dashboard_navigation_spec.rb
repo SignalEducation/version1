@@ -98,7 +98,6 @@ describe 'User navigating through the dashboard:', type: :feature do
       end
       expect(page).to have_content exam_section_1.name
       expect(page).to have_css('.progress')
-      within('.progress-bar'){ expect(page).to have_content('2 / 3') }
       expect(page).to have_css('.panel')
       click_link 'Continue'
       expect(page).to have_content course_module_element_1_3.name

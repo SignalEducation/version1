@@ -1,14 +1,15 @@
-%br/
-.row
-  .col-sm-12.visible-xs.visible-sm{style: 'bottom: 5px'}
-    =render partial: 'courses/small_side_nav'
-.row
-  .col-sm-3.visible-lg.visible-md
-    .new-side-nav
-      =link_to library_special_link(@course_module.parent), class: ' btn-lg btn-block text-center btn-ls-default', id: '#library-btn' do
-        .glyphicon.glyphicon-chevron-left
-        =t('views.library.show.h1')
-      =render partial: 'courses/new_side_nav'
+-if @course_module
+  %br/
+  .row
+    .col-sm-12.visible-xs.visible-sm{style: 'bottom: 5px'}
+      =render partial: 'courses/small_side_nav'
+  .row
+    .col-sm-3.visible-lg.visible-md
+      .new-side-nav
+        =link_to library_special_link(@course_module.parent), class: ' btn-lg btn-block text-center btn-ls-default', id: '#library-btn' do
+          .glyphicon.glyphicon-chevron-left
+          =t('views.library.show.h1')
+        =render partial: 'courses/new_side_nav'
 
   .col-md-9.col-sm-12.col-md-offset-3.content-area
     -if defined?(@results)
@@ -33,3 +34,17 @@
       .well
         %h3=t('views.general.coming_soon')
         %p=t('views.courses.show.coming_soon')
+
+-else
+  %br/
+  .row
+    .col-sm-10.col-sm-offset-1.content-area
+      -if defined?(@results)
+        =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+      -elsif @question_bank && paywall_checkpoint(0, true)[:course_content][:view_all] == false
+        =render partial: 'courses/content_denied'
+      -elsif @question_bank
+        =render partial: 'courses/show_quiz'
+      -else
+        %h2 Course module element - type unknown
+        -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."

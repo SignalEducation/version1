@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602112246) do
+ActiveRecord::Schema.define(version: 20150602115257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,8 @@ ActiveRecord::Schema.define(version: 20150602112246) do
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
     t.integer  "seconds_watched",             default: 0
+    t.boolean  "is_question_bank",            default: false, null: false
+    t.integer  "question_bank_id"
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
@@ -512,6 +514,23 @@ ActiveRecord::Schema.define(version: 20150602112246) do
   add_index "qualifications", ["name_url"], name: "index_qualifications_on_name_url", using: :btree
   add_index "qualifications", ["sorting_order"], name: "index_qualifications_on_sorting_order", using: :btree
 
+  create_table "question_banks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exam_level_id"
+    t.integer  "easy_questions"
+    t.integer  "medium_questions"
+    t.integer  "hard_questions"
+    t.string   "question_selection_strategy"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
+  add_index "question_banks", ["exam_level_id"], name: "index_question_banks_on_exam_level_id", using: :btree
+  add_index "question_banks", ["hard_questions"], name: "index_question_banks_on_hard_questions", using: :btree
+  add_index "question_banks", ["medium_questions"], name: "index_question_banks_on_medium_questions", using: :btree
+  add_index "question_banks", ["user_id"], name: "index_question_banks_on_user_id", using: :btree
+
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
     t.boolean  "correct",                       default: false, null: false
@@ -574,6 +593,7 @@ ActiveRecord::Schema.define(version: 20150602112246) do
     t.datetime "updated_at"
     t.integer  "flash_quiz_id"
     t.datetime "destroyed_at"
+    t.integer  "exam_level_id"
   end
 
   add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree

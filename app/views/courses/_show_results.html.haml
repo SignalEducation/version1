@@ -2,7 +2,8 @@
   .col-sm-12
     %h1.no-top-gap
       =t('views.courses.show_results.h1')
-      =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name)
+      =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || 'Custom Quiz'
+
 
 %div{role: 'tabpanel'}
 
@@ -85,6 +86,14 @@
         =link_to t('views.general.edit'), course_module_special_link(@course_module_element_user_log.course_module), class: 'btn btn-warning btn-sm'
     .col-sm-4.text-right
       =link_to 'Next Module', course_special_link(@course_module.next_module), class: 'btn btn-info btn-sm'
+
+-if @course_module_element_user_log.is_question_bank
+  %hr/
+  .row
+    .col-sm-4.text-right
+      =link_to 'Restart Quiz', course_special_link(@question_bank), class: 'btn btn-ls-default'
+    .col-sm-4.text-right
+      =link_to 'Return to Library', library_special_link(@question_bank.exam_level), class: 'btn btn-ls-default'
 
 
 -if @course_module_element

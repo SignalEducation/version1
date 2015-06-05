@@ -18,17 +18,21 @@ class CoursesController < ApplicationController
     end
 
     if @course_module_element.nil? && @course_module.nil?
+
+      @question_bank = QuestionBank.find_by_id(params[:course_module_name_url])
+      set_up_question_bank
+
       # The URL is out of date or wrong.
-      @exam_section = params[:exam_section_name_url] == 'all' ?
-            nil :
-            ExamSection.find_by(name_url: params[:exam_section_name_url])
-      @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
-      @qualification = Qualification.find_by(name_url: params[:qualification_name_url])
-      @institution = Institution.find_by(name_url: params[:institution_name_url])
-      @subject_area = SubjectArea.find_by(name_url: params[:subject_area_name_url])
-      flash[:warning] = t('controllers.courses.show.warning')
-      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
+      #@exam_section = params[:exam_section_name_url] == 'all' ?
+            #nil :
+            #ExamSection.find_by(name_url: params[:exam_section_name_url])
+      #@exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
+      #@qualification = Qualification.find_by(name_url: params[:qualification_name_url])
+      #@institution = Institution.find_by(name_url: params[:institution_name_url])
+      #@subject_area = SubjectArea.find_by(name_url: params[:subject_area_name_url])
+      #flash[:warning] = t('controllers.courses.show.warning')
+      #Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+      #redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
     else
       # The URL worked out Okay
       reset_post_sign_up_redirect_path(library_special_link(@course_module.exam_level)) unless current_user
@@ -51,6 +55,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
     @course_module_element = @course_module_element_user_log.course_module_element
     @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
+    @question_bank = @course_module_element_user_log.question_bank
     @course_module = @course_module_element_user_log.course_module
     @results = true
     unless @course_module_element_user_log.save
@@ -60,7 +65,7 @@ class CoursesController < ApplicationController
     end
     if params[:demo_mode] == 'yes'
       redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-    elsif @course_module && (@course_module_element || @course_module_jumbo_quiz)
+    elsif @question_bank || (@course_module && (@course_module_element || @course_module_jumbo_quiz))
       render :show
     else
       redirect_to library_url
@@ -88,6 +93,7 @@ class CoursesController < ApplicationController
             :course_module_id,
             :course_module_element_id,
             :course_module_jumbo_quiz_id,
+            :question_bank_id,
             :user_id,
             #:session_guid,
             #:element_completed,
@@ -137,7 +143,9 @@ class CoursesController < ApplicationController
             course_module_id: @course_module_element.course_module_id,
             corporate_customer_id: nil,
             course_module_jumbo_quiz_id: nil,
-            is_jumbo_quiz: false
+            is_jumbo_quiz: false,
+            question_bank_id: nil,
+            is_question_bank: false
     )
   end
 
@@ -196,6 +204,39 @@ class CoursesController < ApplicationController
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
     Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
+  end
+
+  def set_up_question_bank
+
+    @course_module_element_user_log = CourseModuleElementUserLog.new(
+        session_guid: current_session_guid,
+        course_module_id: nil,
+        course_module_element_id: nil,
+        question_bank_id: @question_bank.id,
+        is_question_bank: true,
+        user_id: current_user.try(:id)
+    )
+    @number_of_questions = @question_bank.number_of_questions
+    @number_of_easy_questions = @question_bank.easy_questions.to_i
+    @number_of_medium_questions = @question_bank.medium_questions.to_i
+    @number_of_hard_questions = @question_bank.hard_questions.to_i
+
+    @number_of_questions.times do
+      @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
+    end
+
+    @strategy = @question_bank.question_selection_strategy
+    all_questions = QuizQuestion.where(exam_level_id: @question_bank.exam_level_id)
+    all_easy_ids = all_questions.all_easy.map(&:id)
+    all_medium_ids = all_questions.all_medium.map(&:id)
+    all_difficult_ids = all_questions.all_difficult.map(&:id)
+    @easy_ids = all_easy_ids.sample(@number_of_easy_questions)
+    @medium_ids = all_medium_ids.sample(@number_of_medium_questions)
+    @difficult_ids = all_difficult_ids.sample(@number_of_hard_questions)
+    @all_ids = @easy_ids + @medium_ids + @difficult_ids
+    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+    @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
+
   end
 
 end

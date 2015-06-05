@@ -76,6 +76,8 @@
       -#%p
         =t('views.general.author')
         =@hierarchy_item.first_active_cme.tutor.full_name
+      %hr/
+      =link_to t('views.library.show.new_question_bank'), new_question_bank_path, class: 'btn btn-ls-default'
 
 
   -else

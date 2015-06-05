@@ -177,6 +177,16 @@ en:
           success: Qualification has been deleted
           error: Qualification was not deleted
 
+    question_banks:
+      create:
+        flash:
+          error: Please ensure that a value is set for at least one group of questions.
+      destroy:
+        flash:
+          success: Questions Bank has been deleted
+          error: Questions Bank was not deleted
+      at_least_one_question_set: You must assign a value for at least one set of questions
+
     student_sign_ups:
       create:
         flash:

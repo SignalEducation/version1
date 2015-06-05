@@ -19,6 +19,8 @@
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
 #  is_jumbo_quiz               :boolean          default(FALSE), not null
+#  is_question_bank            :boolean          default(FALSE), not null
+#  question_bank_id            :integer
 #  seconds_watched             :integer          default(0)
 #
 

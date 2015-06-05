@@ -11,6 +11,7 @@
 #  updated_at                    :datetime
 #  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
+#  exam_level_id                 :integer
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -22,7 +23,7 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :flash_quiz_id
+                  :quiz_solutions_attributes, :flash_quiz_id, :exam_level_id
 
   # Constants
 
@@ -51,6 +52,8 @@ class QuizQuestion < ActiveRecord::Base
 
   # callbacks
   before_validation :set_course_module_element
+  before_save :set_exam_level_id
+  before_update :set_exam_level_id
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_quiz_id) }
@@ -95,6 +98,10 @@ class QuizQuestion < ActiveRecord::Base
   def set_course_module_element
     self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id) || self.flash_quiz.try(:flash_card_stack).try(:course_module_element_flash_card_pack).try(:course_module_element_id)
     true
+  end
+
+  def set_exam_level_id
+    self.exam_level_id = self.course_module_element.parent.exam_level_id
   end
 
 end
