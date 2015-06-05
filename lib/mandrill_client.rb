@@ -1,0 +1,185 @@
+require 'mandrill'
+
+class MandrillClient
+  def initialize(user)
+    @user = user
+  end
+
+  def send_verification_email(verification_url)
+    msg = message_stub.merge({"subject" => "Subscription Verification"})
+    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
+    send('email-verification', msg)
+  end
+
+  def send_welcome_email(trial_length, library_url)
+    msg = message_stub({"subject" => "Welcome to Learn Signal"})
+    msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
+    msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
+    send('welcome-email', msg)
+  end
+
+  def send_subscription_error_email(trial_length)
+    msg = message_stub.merge({"subject" => "There's been an error with your subscription"})
+    msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
+    send('subscription-error', msg)
+  end
+
+  def send_trial_converted_email(username, subscription_type, currency, ammount_charged)
+    msg = message_stub.merge({"subject" => ""})
+    msg["global_merge_vars"] << { "name" => "USERNAME", "content" => username }
+    msg["global_merge_vars"] << { "name" => "SUBSCRIPTIONTYPE", "content" => subscription_type }
+    msg["global_merge_vars"] << { "name" => "CURRENCY", "content" => currency }
+    msg["global_merge_vars"] << { "name" => "AMMOUNTCHARGED", "content" => ammount_charged }
+    send('trial-converted', msg)
+  end
+
+  def send_free_trial_cancelled_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Free Trial Cancelled"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send('free-trial-cancelled', msg)
+  end
+
+  def send_account_suspended_email
+    msg = message_stub.merge({"subject" => "Account Suspended"})
+    send('account-suspended', msg)
+  end
+
+  def send_card_payment_failed_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Payment Failed"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send('card-payment-failed', msg)
+  end
+
+  def send_account_reactivated_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send('account-reactivated', msg)
+  end
+
+  def send_password_reset_email(password_reset_url)
+    msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
+    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
+    send('password-reset', msg)
+  end
+
+  def send_study_streak_email(continue_url)
+    msg = message_stub.merge({"subject" => "9 Day Study Streak"})
+    msg["global_merge_vars"] << { "name" => "CONTINUEURL", "content" => continue_url }
+    send('study-streak', msg)
+  end
+
+  def send_we_havent_seen_you_in_a_while_email(n_days_since_last_seen, subscribed_course,
+                                               cme_one, cme_one_url, cme_one_n_videos, cme_one_n_quizzes,
+                                               cme_two, cme_two_url, cme_two_n_videos, cme_two_n_quizzes,
+                                               cme_three, cme_three_url, cme_three_n_videos, cme_three_n_quizzes)
+    msg = message_stub.merge({"subject" => "We havent seen you in a while!"})
+    msg["global_merge_vars"] << { "name" => "N_DAYS_SINCE_LAST_SEEN", "content" => n_days_since_last_seen }
+    msg["global_merge_vars"] << { "name" => "SUBSCRIBED_COURSE", "content" => subscribed_course }
+    msg["global_merge_vars"] << { "name" => "CME_ONE", "content" => cme_one }
+    msg["global_merge_vars"] << { "name" => "CME_ONE_URL", "content" => cme_one_url }
+    msg["global_merge_vars"] << { "name" => "CME_ONE_N_VIDEOS", "content" => cme_one_n_videos }
+    msg["global_merge_vars"] << { "name" => "CME_ONE_N_QUIZZES", "content" => cme_one_n_quizzes }
+    msg["global_merge_vars"] << { "name" => "CME_TWO", "content" => cme_two }
+    msg["global_merge_vars"] << { "name" => "CME_TWO_URL", "content" => cme_two_url }
+    msg["global_merge_vars"] << { "name" => "CME_TWO_N_VIDEOS", "content" => cme_two_n_videos }
+    msg["global_merge_vars"] << { "name" => "CME_TWO_N_QUIZZES", "content" => cme_two_n_quizzes }
+    msg["global_merge_vars"] << { "name" => "CME_THREE", "content" => cme_three }
+    msg["global_merge_vars"] << { "name" => "CME_THREE_URL", "content" => cme_three_url }
+    msg["global_merge_vars"] << { "name" => "CME_THREE_N_VIDEOS", "content" => cme_three_n_videos }
+    msg["global_merge_vars"] << { "name" => "CME_THREE_N_QUIZZES", "content" => cme_three_n_quizzes }
+    send('we-havent-seen-you-in-a-while', msg)
+  end
+
+  def send_congrats_on_finishing_the_course_learn_again_email(course_name, course_survey_url,
+                                                              course_1, course_1_url, course_1_author, course_1_description,
+                                                              course_2, course_2_url, course_2_author, course_2_description,
+                                                              course_3, course_3_url, course_3_author, course_3_description,
+                                                              course_4, course_4_url, course_4_author, course_4_description)
+    msg = message_stub.merge({"subject" => "Congratulations on completing the #{course_name} course! Why not keep on learning?"})
+    msg["global_merge_vars"] << { "name" => "COURSE_SURVEY_URL", "content" => course_survey_url }
+    msg["global_merge_vars"] << { "name" => "COURSE_1", "content" => course_1 }
+    msg["global_merge_vars"] << { "name" => "COURSE_1_URL", "content" => course_1_url }
+    msg["global_merge_vars"] << { "name" => "COURSE_1_AUTHOR", "content" => course_1_author }
+    msg["global_merge_vars"] << { "name" => "COURSE_1_DESCRIPTION", "content" => course_1_description }
+    msg["global_merge_vars"] << { "name" => "COURSE_2", "content" => course_2 }
+    msg["global_merge_vars"] << { "name" => "COURSE_2_URL", "content" => course_2_url }
+    msg["global_merge_vars"] << { "name" => "COURSE_2_AUTHOR", "content" => course_2_author }
+    msg["global_merge_vars"] << { "name" => "COURSE_2_DESCRIPTION", "content" => course_2_description }
+    msg["global_merge_vars"] << { "name" => "COURSE_3", "content" => course_3 }
+    msg["global_merge_vars"] << { "name" => "COURSE_3_URL", "content" => course_3_url }
+    msg["global_merge_vars"] << { "name" => "COURSE_3_AUTHOR", "content" => course_3_author }
+    msg["global_merge_vars"] << { "name" => "COURSE_3_DESCRIPTION", "content" => course_3_description }
+    msg["global_merge_vars"] << { "name" => "COURSE_4", "content" => course_4 }
+    msg["global_merge_vars"] << { "name" => "COURSE_4_URL", "content" => course_4_url }
+    msg["global_merge_vars"] << { "name" => "COURSE_4_AUTHOR", "content" => course_4_author }
+    msg["global_merge_vars"] << { "name" => "COURSE_4_DESCRIPTION", "content" => course_4_description }
+    send('congrats-on-finishing-the-course-learn-again', msg)
+  end
+
+  private
+
+  def send(template_slug, msg)
+    @mandrill ||= Mandrill::API.new ENV['learnsignal_mandrill_api_key']
+    @mandrill.messages.send_template template_slug, nil, msg, false, nil, nil
+  end
+
+  def message_stub
+    {
+      "html" => nil,
+      "text" => nil,
+      "subject" => nil,
+      "from_email" => "do-not-reply@learnsignal.com",
+      "from_name" => "Philip Meagher",
+      "to" => [{
+                 "email" => @user.email,
+                 "type" => "to",
+                 "name" => @uesr.full_name
+               }],
+      "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
+      "important" => false,
+      "track_opens" => nil,
+      "track_clicks" => nil,
+      "auto_text" => nil,
+      "auto_html" => nil,
+      "inline_css" => nil,
+      "url_strip_qs" => nil,
+      "preserve_recipients" => nil,
+      "view_content_link" => nil,
+      "bcc_address" => nil, #"message.bcc_address@example.com",
+      "tracking_domain" => nil,
+      "signing_domain" => nil,
+      "return_path_domain" => nil,
+      "merge" => true,
+      "merge_language" => "mailchimp",
+      "global_merge_vars" => [
+        { "name" => "FNAME", "content" => @user.first_name },
+        { "name" => "LNAME", "content" => @user.last_name },
+        { "name" => "COMPANY", "content" => "Signal Education" },
+        { "name" => "COMPANYURL", "content" => "http://learnsignal.com" }
+      ],
+      "merge_vars" => [
+        # { "rcpt" => "some.email@example.com",
+        #   "vars" => [{
+        #                "FNAME" => "First Name",
+        #                "COMPANY" => "Signal Education",
+        #                "COMPANYURL" => "http://learnsignal.com"
+        #              }],
+        # }
+      ],
+      "tags" => [],
+      "subaccount" => nil,
+      "google_analytics_domains" => [],
+      "google_analytics_campaign" => nil,
+      "metadata" => {},
+      "recipient_metadata" => [
+        # { "rcpt" => "recipient.email@example.com", "values" => { "user_id" => 123456 } }
+      ],
+      "attachments" => [
+        # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
+      ],
+      "images" => [
+        # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
+      ],
+    }
+  end
+end
