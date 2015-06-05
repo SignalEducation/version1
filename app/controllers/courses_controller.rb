@@ -217,9 +217,9 @@ class CoursesController < ApplicationController
         user_id: current_user.try(:id)
     )
     @number_of_questions = @question_bank.number_of_questions
-    @number_of_easy_questions = @question_bank.easy_questions
-    @number_of_medium_questions = @question_bank.medium_questions
-    @number_of_hard_questions = @question_bank.hard_questions
+    @number_of_easy_questions = @question_bank.easy_questions.to_i
+    @number_of_medium_questions = @question_bank.medium_questions.to_i
+    @number_of_hard_questions = @question_bank.hard_questions.to_i
 
     @number_of_questions.times do
       @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))

@@ -60,7 +60,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
                       exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -100,7 +100,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -140,7 +140,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -180,7 +180,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -220,7 +220,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -260,7 +260,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -300,7 +300,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end
@@ -340,7 +340,7 @@ describe QuestionBanksController, type: :controller do
       end
 
       it 'should report error for invalid params' do
-        post :create, question_bank: {valid_params.keys.first => ''},
+        post :new, question_bank: {valid_params.keys.first => ''},
              exam_level_name_url: exam_level_1.name_url
         expect_create_error_with_model('question_bank')
       end

@@ -6,34 +6,38 @@ class QuestionBanksController < ApplicationController
   def new
     @question_bank = QuestionBank.new
     @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url].to_s).first
+    n = 5
     max_easy_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'easy').count
-    @easy_array = Array(0..max_easy_questions)
+    easy_array = Array(1..max_easy_questions)
+    @easy_array = (1.. easy_array.length).select{ |x| x%n == n-1 }.map { |y| easy_array[y] }
     max_medium_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'medium').count
-    @medium_array = Array(0..max_medium_questions)
+    medium_array = Array(1..max_medium_questions)
+    @medium_array = (1.. medium_array.length).select{ |x| x%n == n-1 }.map { |y| medium_array[y] }
     max_hard_questions = QuizQuestion.where(exam_level_id: @exam_level.id).where(difficulty_level: 'difficult').count
-    @hard_array = Array(0..max_hard_questions)
+    hard_array = Array(1..max_hard_questions)
+    @hard_array = (1.. hard_array.length).select{ |x| x%n == n-1 }.map { |y| hard_array[y] }
   end
 
   def create
     @question_bank = QuestionBank.new(allowed_params)
     @question_bank.user_id = current_user.id
-    @exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
-    @question_bank.exam_level_id = @exam_level.id
+    exam_level = ExamLevel.where(name_url: params[:exam_level_name_url]).first
+    @question_bank.exam_level_id = exam_level.id
     @question_bank.question_selection_strategy = 'random'
     if @question_bank.save
       redirect_to course_special_link(@question_bank)
     else
-      render action: :new
+      flash[:error] = I18n.t('controllers.question_banks.create.flash.error')
+      redirect_to new_question_bank_path
     end
   end
 
   def destroy
     if @question_bank.destroy
-      flash[:success] = I18n.t('controllers.question_banks.destroy.flash.success')
+      redirect_to library_special_link(@question_bank.exam_level)
     else
-      flash[:error] = I18n.t('controllers.question_banks.destroy.flash.error')
+      redirect_to library_special_link(@question_bank.exam_level.qualification)
     end
-    redirect_to library_special_link(@question_bank.exam_level)
   end
 
   protected

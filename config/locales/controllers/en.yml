@@ -180,7 +180,7 @@ en:
     question_banks:
       create:
         flash:
-          error: Questions Bank was not created
+          error: Please ensure that a value is set for at least one group of questions.
       destroy:
         flash:
           success: Questions Bank has been deleted
