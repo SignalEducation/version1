@@ -8,7 +8,7 @@ class MandrillClient
   def send_verification_email(verification_url)
     msg = message_stub.merge({"subject" => "Subscription Verification"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send('email-verification', msg)
+    send_template('email-verification', msg)
   end
 
   def send_welcome_email(trial_length, library_url)
@@ -16,13 +16,13 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
     msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
     msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
-    send('welcome-email', msg)
+    send_template('welcome-email', msg)
   end
 
   def send_subscription_error_email(trial_length)
     msg = message_stub.merge({"subject" => "There's been an error with your subscription"})
     msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
-    send('subscription-error', msg)
+    send_template('subscription-error', msg)
   end
 
   def send_trial_converted_email(username, subscription_type, currency, ammount_charged)
@@ -32,42 +32,42 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "SUBSCRIPTIONTYPE", "content" => subscription_type }
     msg["global_merge_vars"] << { "name" => "CURRENCY", "content" => currency }
     msg["global_merge_vars"] << { "name" => "AMOUNTCHARGED", "content" => ammount_charged }
-    send('trial-converted', msg)
+    send_template('trial-converted', msg)
   end
 
   def send_free_trial_cancelled_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Free Trial Cancelled"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send('free-trial-cancelled', msg)
+    send_template('free-trial-cancelled', msg)
   end
 
   def send_account_suspended_email
     msg = message_stub.merge({"subject" => "Account Suspended"})
-    send('account-suspended', msg)
+    send_template('account-suspended', msg)
   end
 
   def send_card_payment_failed_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Payment Failed"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send('card-payment-failed', msg)
+    send_template('card-payment-failed', msg)
   end
 
   def send_account_reactivated_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send('account-reactivated', msg)
+    send_template('account-reactivated', msg)
   end
 
   def send_password_reset_email(password_reset_url)
     msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send('password-reset', msg)
+    send_template('password-reset', msg)
   end
 
   def send_study_streak_email(continue_url)
     msg = message_stub.merge({"subject" => "9 Day Study Streak"})
     msg["global_merge_vars"] << { "name" => "CONTINUEURL", "content" => continue_url }
-    send('study-streak', msg)
+    send_template('study-streak', msg)
   end
 
   def send_we_havent_seen_you_in_a_while_email(n_days_since_last_seen, subscribed_course,
@@ -89,7 +89,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "CME_THREE_URL", "content" => cme_three_url }
     msg["global_merge_vars"] << { "name" => "CME_THREE_N_VIDEOS", "content" => cme_three_n_videos }
     msg["global_merge_vars"] << { "name" => "CME_THREE_N_QUIZZES", "content" => cme_three_n_quizzes }
-    send('we-havent-seen-you-in-a-while', msg)
+    send_template('we-havent-seen-you-in-a-while', msg)
   end
 
   def send_congrats_on_finishing_the_course_learn_again_email(course_name, course_survey_url,
@@ -116,12 +116,12 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "COURSE_4_URL", "content" => course_4_url }
     msg["global_merge_vars"] << { "name" => "COURSE_4_AUTHOR", "content" => course_4_author }
     msg["global_merge_vars"] << { "name" => "COURSE_4_DESCRIPTION", "content" => course_4_description }
-    send('congrats-on-finishing-the-course-learn-again', msg)
+    send_template('congrats-on-finishing-the-course-learn-again', msg)
   end
 
   private
 
-  def send(template_slug, msg)
+  def send_template(template_slug, msg)
     @mandrill ||= Mandrill::API.new ENV['learnsignal_mandrill_api_key']
     @mandrill.messages.send_template template_slug, nil, msg, false, nil, nil
   end
