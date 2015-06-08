@@ -12,8 +12,9 @@ class MandrillClient
   end
 
   def send_welcome_email(trial_length, library_url)
-    msg = message_stub({"subject" => "Welcome to Learn Signal"})
+    msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
     msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
+    msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
     msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
     send('welcome-email', msg)
   end
@@ -25,11 +26,12 @@ class MandrillClient
   end
 
   def send_trial_converted_email(username, subscription_type, currency, ammount_charged)
-    msg = message_stub.merge({"subject" => ""})
+    msg = message_stub.merge({"subject" => "Woohoo! Your trial is converted!"})
     msg["global_merge_vars"] << { "name" => "USERNAME", "content" => username }
+    msg["global_merge_vars"] << { "name" => "USEREMAIL", "content" => @user.email }
     msg["global_merge_vars"] << { "name" => "SUBSCRIPTIONTYPE", "content" => subscription_type }
     msg["global_merge_vars"] << { "name" => "CURRENCY", "content" => currency }
-    msg["global_merge_vars"] << { "name" => "AMMOUNTCHARGED", "content" => ammount_charged }
+    msg["global_merge_vars"] << { "name" => "AMOUNTCHARGED", "content" => ammount_charged }
     send('trial-converted', msg)
   end
 
@@ -96,6 +98,7 @@ class MandrillClient
                                                               course_3, course_3_url, course_3_author, course_3_description,
                                                               course_4, course_4_url, course_4_author, course_4_description)
     msg = message_stub.merge({"subject" => "Congratulations on completing the #{course_name} course! Why not keep on learning?"})
+    msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
     msg["global_merge_vars"] << { "name" => "COURSE_SURVEY_URL", "content" => course_survey_url }
     msg["global_merge_vars"] << { "name" => "COURSE_1", "content" => course_1 }
     msg["global_merge_vars"] << { "name" => "COURSE_1_URL", "content" => course_1_url }
@@ -133,7 +136,7 @@ class MandrillClient
       "to" => [{
                  "email" => @user.email,
                  "type" => "to",
-                 "name" => @uesr.full_name
+                 "name" => @user.full_name
                }],
       "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
       "important" => false,
