@@ -147,7 +147,7 @@ en:
           success: Home Page has been created successfully
       update:
         flash:
-          success: NameOHome PagefThing details have been updated successfully
+          success: Home Page details have been updated successfully
 
     institutions:
       create:

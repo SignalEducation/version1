@@ -7,6 +7,10 @@ class HomePagesController < ApplicationController
   before_action :get_variables
 
   def show
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+    if @home_page
+      cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+    end
   end
 
   def new

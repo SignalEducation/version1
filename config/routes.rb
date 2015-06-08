@@ -139,7 +139,7 @@ Rails.application.routes.draw do
 
     # home page
     root 'static_pages#deliver_page'
-    resources :home_pages
+    resources :home_pages, except: [:index, :destroy]
 
     # Catch-all
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'
