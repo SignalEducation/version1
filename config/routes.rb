@@ -138,7 +138,7 @@ Rails.application.routes.draw do
     end
 
     # home page
-    root 'static_pages#deliver_page'
+    root 'home_pages#show'
     resources :home_pages, except: [:index, :destroy]
 
     # Catch-all

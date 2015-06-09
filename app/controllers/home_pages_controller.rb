@@ -7,10 +7,18 @@ class HomePagesController < ApplicationController
   before_action :get_variables
 
   def show
-    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-    if @home_page
-      cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+    if params[:first_element].to_s == '' && current_user
+      redirect_to dashboard_url
+    elsif params[:first_element].to_s == '500-page'
+      render file: 'public/500.html', layout: nil, status: 500
+    else
+      first_element = '/' + params[:first_element].to_s
+      @home_page = HomePage.where(public_url: first_element).first
+      if @home_page
+        cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+      end
     end
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
   end
 
   def new
