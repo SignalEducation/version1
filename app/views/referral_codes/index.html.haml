@@ -1,0 +1,29 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.referral_codes.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @referral_codes, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.referral_codes.index.code')
+          %th
+            =t('views.referral_codes.index.name')
+            %br
+            =t('views.referral_codes.index.email')
+          %th=t('views.referral_codes.index.referred_no')
+          %th
+      %tbody
+        -@referral_codes.each do |referral_code|
+          %tr{id: referral_code.id}
+            %td= referral_code.code
+            %td
+              = referral_code.user.full_name
+              %br
+              = referral_code.user.email
+            %td= referral_code.referred_signups.count
+            %td
+              -if referral_code.destroyable?
+                =link_to t('views.general.delete'), referral_code, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'

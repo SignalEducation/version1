@@ -47,3 +47,6 @@ en:
       cannot_change_system_token: "System defined token cannot be changed."
       invalid_flag_value: "Invalid flag value. Must be true or false."
       duplicated_token_code: "Duplicated token code."
+
+    referred_signups:
+      user_can_be_referred_only_once: "Can be referred only once"

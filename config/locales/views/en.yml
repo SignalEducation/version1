@@ -1306,3 +1306,21 @@ en:
         marketing_category: Category
         errors: Errors
         submit: Submit
+
+    referral_codes:
+      index:
+        h1: Referral Codes
+        code: Code
+        name: Name
+        email: Email
+        referred_no: Referred no.
+
+      modal:
+        h1: Get $25
+        info1: Every time that someone you refer Signs Up for an account on LearnSignal we put $25 into your account.
+        info2: Share the link below.
+        copy: Copy
+        email: Email
+        share: Share
+        tweet: Tweet
+        copy_button_title: Click me to copy to clipboard

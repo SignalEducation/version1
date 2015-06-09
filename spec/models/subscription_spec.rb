@@ -41,6 +41,7 @@ describe Subscription do
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
   it { should have_many(:subscription_transactions) }
+  it { should have_one(:referred_signup) }
 
   # validation
   it { should validate_presence_of(:user_id).on(:update) }

@@ -421,3 +421,15 @@ en:
       import_csv:
         flash:
           error: "Sorry, something went wrong with your data (MTC-02)"
+
+    referral_codes:
+      create:
+        flash:
+          error: Referral code already exist
+      show:
+        flash:
+          error: Referral code does not exist
+      destroy:
+        flash:
+          success: Referral code has been deleted
+          error: Referral code was not deleted

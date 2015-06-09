@@ -43,6 +43,8 @@ gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in p
 gem 'utf8-cleaner' # removes illegal characters from inbound requests
 gem 'will_paginate' # manage long web pages
 gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
+gem 'font-awesome-rails' # Font Awesome with lot of useful icons
+gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
 
 # Environment-specific gems
 
@@ -61,6 +63,8 @@ end
 
 group :development, :test do
   gem 'pry-byebug' # halts code so you can experiment with it
+  gem 'hirb'
+  gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser
   gem 'capybara-webkit'
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
@@ -117,4 +121,3 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-

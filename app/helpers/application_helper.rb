@@ -95,6 +95,9 @@ module ApplicationHelper
     date.utc.strftime('%d %b %y')
   end
 
+  def referral_code_sharing_url(referral_code)
+    "#{library_url}/?ref_code=#{referral_code.code}"
+  end
 end
 
 class DanFormBuilder < ActionView::Helpers::FormBuilder
@@ -121,4 +124,3 @@ class DanFormBuilder < ActionView::Helpers::FormBuilder
   end
 
 end
-
