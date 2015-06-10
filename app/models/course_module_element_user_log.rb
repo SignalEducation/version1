@@ -88,6 +88,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :videos, -> { where(is_video: true) }
   scope :jumbo_quizzes, -> { where(is_jumbo_quiz: true) }
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
+  scope :this_month, -> { where(:created_at => Time.now.beginning_of_month..Time.now.end_of_month) }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)

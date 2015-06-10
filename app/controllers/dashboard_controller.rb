@@ -21,10 +21,12 @@ class DashboardController < ApplicationController
     end
 
     if @dashboard_type.include?('tutor')
-      @exam_levels = ExamLevel.all_active.where(tutor_id: current_user.id)
-      @course_modules = CourseModule.where(tutor_id: current_user.id)
-      #@total_user_logs = CourseModuleElementUserLog.where(course_module_element_id: @course_modules.id)
-      #@total_views = sum(@total_user_logs)
+      @exam_levels = ExamLevel.all_in_order.all_active.where(tutor_id: current_user.id)
+      @course_modules = CourseModule.where(tutor_id: current_user.id).where(exam_level_id: @exam_levels)
+      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
+      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
+      @total_seconds = @cmeuls.sum(:seconds_watched)
+      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
     end
 
     if @dashboard_type.include?('content_manager')
