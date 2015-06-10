@@ -136,6 +136,7 @@ Rails.application.routes.draw do
       post :import_csv, on: :collection, action: :import_csv
       get :download_csv, on: :collection, action: :download_csv
     end
+    resources :referral_codes, except: [:new, :edit, :update]
 
     # home page
     root 'static_pages#deliver_page'

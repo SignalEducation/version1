@@ -9,13 +9,16 @@ RSpec.configure do |config|
 
     if (MarketingCategory.where(name: "SEO and Direct").count == 0)
       @marketing_category = FactoryGirl.create(:marketing_category, name: "SEO and Direct")
-      FactoryGirl.create(:marketing_token, code: 'seo', marketing_category_id: @marketing_category.id)
-      FactoryGirl.create(:marketing_token, code: 'direct', marketing_category_id: @marketing_category.id)
+
+      if (MarketingToken.where(code: ['seo', 'direct']).count == 0)
+        FactoryGirl.create(:marketing_token, code: 'seo', marketing_category_id: @marketing_category.id)
+        FactoryGirl.create(:marketing_token, code: 'direct', marketing_category_id: @marketing_category.id)
+      end
     end
   end
 
   config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.strategy = :truncation, {except: %w[marketing_tokens]}
     FactoryGirl.reload
   end
 
@@ -24,7 +27,12 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
+    begin
+      DatabaseCleaner.clean
+    rescue Exception => e
+      sleep 1
+      DatabaseCleaner.clean
+    end
   end
 
 end
