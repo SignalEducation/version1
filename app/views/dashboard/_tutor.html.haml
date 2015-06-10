@@ -1,7 +1,8 @@
 %br/
-
+%h1=t('views.dashboard.tutor.title') + ': ' + current_user.try(:full_name)
+%br/
 .row
-  .col-sm-12
+  .col-sm-8
     %table.table.table-striped.table-bordered
       %thead
         %tr
@@ -25,3 +26,6 @@
               %td= course_modules.course_module_element_videos.count
             %td=course_modules.course_module_elements.count
             %td=tick_or_cross(course_modules.course_module_jumbo_quiz)
+
+  .col-sm-4
+

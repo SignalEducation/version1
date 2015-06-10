@@ -66,7 +66,9 @@ class ExamLevelsController < ApplicationController
     if params[:id].to_i > 0
       @exam_level = ExamLevel.where(id: params[:id]).first
     end
+    @institutions = Institution.all_in_order
     @qualifications = Qualification.all_in_order
+    @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params

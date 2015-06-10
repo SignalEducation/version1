@@ -19,6 +19,7 @@
 #  seo_no_index                            :boolean          default(FALSE)
 #  description                             :text
 #  duration                                :integer
+#  tutor_id                                :integer
 #
 
 require 'rails_helper'
@@ -69,6 +70,9 @@ describe ExamLevel do
 
   it { should validate_presence_of(:seo_description) }
   it { should validate_length_of(:seo_description).is_at_most(255) }
+
+  it { should_not validate_presence_of(:tutor_id) }
+  it { should validate_numericality_of(:tutor_id) }
 
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }

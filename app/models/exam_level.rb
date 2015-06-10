@@ -19,6 +19,7 @@
 #  seo_no_index                            :boolean          default(FALSE)
 #  description                             :text
 #  duration                                :integer
+#  tutor_id                                :integer
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -30,7 +31,8 @@ class ExamLevel < ActiveRecord::Base
                   :sorting_order, :active,
                   :default_number_of_possible_exam_answers,
                   :enable_exam_sections, :description,
-                  :seo_description, :seo_no_index, :duration
+                  :seo_description, :seo_no_index, :duration,
+                  :tutor_id
 
   # Constants
 
@@ -44,6 +46,7 @@ class ExamLevel < ActiveRecord::Base
   has_many :question_banks
   has_many :student_exam_tracks
   has_many :user_exam_level
+  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
   validates :qualification_id, presence: true,
@@ -57,6 +60,7 @@ class ExamLevel < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
   validates :seo_description, presence: true, length: {maximum: 255}
+  validates :tutor_id, allow_nil: true, numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

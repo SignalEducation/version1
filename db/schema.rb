@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602115257) do
+ActiveRecord::Schema.define(version: 20150610100702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,9 +109,9 @@ ActiveRecord::Schema.define(version: 20150602115257) do
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
-    t.integer  "seconds_watched",             default: 0
     t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
+    t.integer  "seconds_watched",             default: 0
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(version: 20150602115257) do
     t.boolean  "seo_no_index",                            default: false
     t.text     "description"
     t.integer  "duration"
+    t.integer  "tutor_id"
   end
 
   add_index "exam_levels", ["qualification_id"], name: "index_exam_levels_on_qualification_id", using: :btree
@@ -350,6 +351,18 @@ ActiveRecord::Schema.define(version: 20150602115257) do
   add_index "forum_topics", ["course_module_element_id"], name: "index_forum_topics_on_course_module_element_id", using: :btree
   add_index "forum_topics", ["forum_topic_id"], name: "index_forum_topics_on_forum_topic_id", using: :btree
   add_index "forum_topics", ["reviewed_by"], name: "index_forum_topics_on_reviewed_by", using: :btree
+
+  create_table "home_pages", force: :cascade do |t|
+    t.string   "seo_title"
+    t.string   "seo_description"
+    t.integer  "subscription_plan_category_id"
+    t.string   "public_url"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
+  add_index "home_pages", ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id", using: :btree
 
   create_table "import_trackers", force: :cascade do |t|
     t.string   "old_model_name"
@@ -615,6 +628,30 @@ ActiveRecord::Schema.define(version: 20150602115257) do
   end
 
   add_index "raw_video_files", ["file_name"], name: "index_raw_video_files_on_file_name", using: :btree
+
+  create_table "referral_codes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "code",       limit: 7
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "referral_codes", ["user_id"], name: "index_referral_codes_on_user_id", using: :btree
+
+  create_table "referred_signups", force: :cascade do |t|
+    t.integer  "referral_code_id"
+    t.integer  "user_id"
+    t.string   "referrer_url",     limit: 2048
+    t.integer  "subscription_id"
+    t.datetime "maturing_on"
+    t.datetime "payed_at"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "referred_signups", ["referral_code_id"], name: "index_referred_signups_on_referral_code_id", using: :btree
+  add_index "referred_signups", ["subscription_id"], name: "index_referred_signups_on_subscription_id", using: :btree
+  add_index "referred_signups", ["user_id"], name: "index_referred_signups_on_user_id", using: :btree
 
   create_table "static_page_uploads", force: :cascade do |t|
     t.string   "description"
