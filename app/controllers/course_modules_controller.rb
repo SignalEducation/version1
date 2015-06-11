@@ -24,7 +24,7 @@ class CourseModulesController < ApplicationController
         if current_user.admin? || current_user.content_manager?
           @exam_levels = @qualification.exam_levels
         else
-          @exam_levels = @qualification.exam_levels.where(tutor_id: current_user.id)
+          @exam_levels = @qualification.exam_levels.where(tutor_id: current_user.id) && @qualification.exam_levels.where(tutor_id: nil)
         end
         @exam_level = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first || @qualification.exam_levels.first
         @exam_level_id = @exam_level.try(:id)

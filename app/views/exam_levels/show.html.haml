@@ -41,6 +41,9 @@
         %td.col-sm-4=t('views.exam_levels.form.name_url')
         %td.col-sm-8=@exam_level.name_url
       %tr
+        %td.col-sm-4=t('views.user_groups.form.tutor')
+        %td.col-sm-8=@exam_level.tutor.try(:full_name)
+      %tr
         %td.col-sm-4=t('views.exam_levels.form.description')
         %td.col-sm-8=@exam_level.description
       %tr
