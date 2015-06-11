@@ -17,14 +17,16 @@
             -@exam_level.exam_sections.each do |exam_section|
               =link_to exam_section.name, exam_section
               %br/
-            =link_to t('views.general.new'), new_exam_section_url(exam_level_id: @exam_level.id), class: 'btn btn-xs btn-success'
+            -if @exam_level.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+              =link_to t('views.general.new'), new_exam_section_url(exam_level_id: @exam_level.id), class: 'btn btn-xs btn-success'
       %tr
         %td.col-sm-4=t('views.course_modules.index.h1')
         %td.col-sm-8
           -@exam_level.course_modules.each do |course_module|
             =link_to course_module.name, course_modules_for_qualification_exam_level_exam_section_and_name_url(qualification_url: course_module.qualification.name_url, exam_level_url: course_module.exam_level.name_url, exam_section_url: course_module.exam_section.try(:name_url) || 'all', course_module_url: course_module.name_url)
             %br/
-          =link_to t('views.general.new'), new_course_module_url(exam_level_url: @exam_level.name_url), class: 'btn btn-xs btn-success'
+          -if @exam_level.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+            =link_to t('views.general.new'), new_course_module_url(exam_level_url: @exam_level.name_url), class: 'btn btn-xs btn-success'
   .col-sm-6
     %table.table.table-bordered
       %h3
@@ -68,5 +70,6 @@
 
   %p
     =link_to sanitize('&larr; ' + t('views.exam_levels.index.h1')), exam_levels_url
-    |
-    =link_to t('views.general.edit'), edit_exam_level_url(id: @exam_level.id), title: t('views.general.edit_tooltip')
+    -if @exam_level.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+      |
+      =link_to t('views.general.edit'), edit_exam_level_url(id: @exam_level.id), title: t('views.general.edit_tooltip')

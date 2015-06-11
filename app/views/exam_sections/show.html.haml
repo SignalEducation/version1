@@ -15,7 +15,8 @@
           -@exam_section.course_modules.all_in_order.each do |course_module|
             =link_to course_module.name, course_module_special_link(course_module)
             %br/
-          =link_to t('views.general.new'), new_course_module_url(exam_section_url: @exam_section.name_url), class: 'btn btn-success btn-xs'
+          -if @exam_section.parent.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+            =link_to t('views.general.new'), new_course_module_url(exam_section_url: @exam_section.name_url), class: 'btn btn-success btn-xs'
   .col-sm-6
     %table.table.table-bordered
       %h3
@@ -50,5 +51,6 @@
 
   %p
     =link_to sanitize('&larr; ' + t('views.exam_sections.index.h1')), exam_sections_url
-    |
-    =link_to t('views.general.edit'), edit_exam_section_url(id: @exam_section.id), title: t('views.general.edit_tooltip')
+    -if @exam_section.parent.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+      |
+      =link_to t('views.general.edit'), edit_exam_section_url(id: @exam_section.id), title: t('views.general.edit_tooltip')

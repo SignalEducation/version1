@@ -1,10 +1,11 @@
 =form_tag course_modules_url, method: :get do
-  .form-group
-    =select_tag :qualification_url, options_for_select(Qualification.all_in_order.map {|q| [q.name, q.name_url]}, @qualification.name_url), class: 'form-control', onchange: 'this.form.submit(); return false;'
+  -if current_user.admin? || current_user.content_manager?
+    .form-group
+      =select_tag :qualification_url, options_for_select(Qualification.all_in_order.map {|q| [q.name, q.name_url]}, @qualification.name_url), class: 'form-control', onchange: 'this.form.submit(); return false;'
 
 
 .panel-group#accordion{role: 'tablist', aria: {multiselectable: true }}
-  -@qualification.exam_levels.all_in_order.each_with_index do |exam_level, counter|
+  -@exam_levels.all_in_order.each_with_index do |exam_level, counter|
     .panel.panel-default
       .panel-heading#headingOne{role: 'tab' }
         %h4.panel-title

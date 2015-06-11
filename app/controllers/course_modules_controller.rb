@@ -21,6 +21,11 @@ class CourseModulesController < ApplicationController
     if params[:qualification_url]
       @qualification = Qualification.with_url(params[:qualification_url]).first
       if @qualification
+        if current_user.admin? || current_user.content_manager?
+          @exam_levels = @qualification.exam_levels
+        else
+          @exam_levels = @qualification.exam_levels.where(tutor_id: current_user.id)
+        end
         @exam_level = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first || @qualification.exam_levels.first
         @exam_level_id = @exam_level.try(:id)
         if params[:course_module_url]
