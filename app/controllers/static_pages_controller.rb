@@ -2,7 +2,7 @@ class StaticPagesController < ApplicationController
 
   before_action :logged_in_required, except: :deliver_page
   before_action except: :deliver_page do
-    ensure_user_is_of_type(['admin', 'content_manager'])
+    ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: :deliver_page
 

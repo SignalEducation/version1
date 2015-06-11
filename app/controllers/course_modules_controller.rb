@@ -2,7 +2,7 @@ class CourseModulesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['tutor','admin'])
+    ensure_user_is_of_type(['tutor','admin', 'content_manager'])
   end
   before_action :get_variables, except: :show
 
@@ -23,15 +23,22 @@ class CourseModulesController < ApplicationController
       if @qualification
         if current_user.admin? || current_user.content_manager?
           @exam_levels = @qualification.exam_levels
+          @exam_level = @exam_levels.where(name_url: params[:exam_level_url]).first || @exam_levels.first
+          @exam_level_id = @exam_level.try(:id)
+          if params[:course_module_url]
+            @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
+          else
+            @course_module = @exam_level.course_modules.all_in_order.first
+          end
         else
-          @exam_levels = @qualification.exam_levels.where(tutor_id: current_user.id) && @qualification.exam_levels.where(tutor_id: nil)
-        end
-        @exam_level = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first || @qualification.exam_levels.first
-        @exam_level_id = @exam_level.try(:id)
-        if params[:course_module_url]
-          @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
-        else
-          @course_module = @exam_level.course_modules.all_in_order.first
+          @exam_levels = ExamLevel.where(tutor_id: current_user.id)
+          @exam_level = @exam_levels.where(name_url: params[:exam_level_url]).first || @exam_levels.first
+          @exam_level_id = @exam_level.try(:id)
+          if params[:course_module_url]
+            @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
+          else
+            @course_module = @exam_level.course_modules.all_in_order.first
+          end
         end
       else
         flash[:error] = I18n.t('controllers.course_modules.show.cant_find')

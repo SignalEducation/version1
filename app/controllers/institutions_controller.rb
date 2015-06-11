@@ -5,7 +5,7 @@ class InstitutionsController < ApplicationController
     ensure_user_is_of_type(['admin'])
   end
   before_action only: [:index, :show] do
-    ensure_user_is_of_type(['admin', 'tutor'])
+    ensure_user_is_of_type(['admin', 'tutor', 'content_manager'])
   end
   before_action :get_variables
 
