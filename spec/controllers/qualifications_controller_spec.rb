@@ -617,84 +617,86 @@ describe QualificationsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('qualifications', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
+      it 'should see qualification_1' do
+        get :show, id: qualification_1.id
+        expect_show_success_with_model('qualification', qualification_1.id)
       end
 
       # optional - some other object
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
+      it 'should see qualification_2' do
+        get :show, id: qualification_2.id
+        expect_show_success_with_model('qualification', qualification_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_new_success_with_model('qualification')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK with qualification_1' do
+        get :edit, id: qualification_1.id
+        expect_edit_success_with_model('qualification', qualification_1.id)
       end
 
       # optional
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK with qualification_2' do
+        get :edit, id: qualification_2.id
+        expect_edit_success_with_model('qualification', qualification_2.id)
       end
     end
 
     describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
+      it 'should report OK for valid params' do
         post :create, qualification: valid_params
-        expect_bounce_as_not_allowed
+        expect_create_success_with_model('qualification', filtered_qualifications_url(institution.name_url))
       end
 
-      it 'should respond ERROR not permitted' do
+      it 'should report error for invalid params' do
         post :create, qualification: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
+        expect_create_error_with_model('qualification')
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, qualification: valid_params
-        expect_bounce_as_not_allowed
+      it 'should respond OK to valid params for qualification_1' do
+        put :update, id: qualification_1.id, qualification: valid_params
+        expect_update_success_with_model('qualification', filtered_qualifications_url(institution.name_url))
       end
 
       # optional
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, qualification: valid_params
-        expect_bounce_as_not_allowed
+      it 'should respond OK to valid params for qualification_2' do
+        put :update, id: qualification_2.id, qualification: valid_params
+        expect_update_success_with_model('qualification', filtered_qualifications_url(institution.name_url))
+        expect(assigns(:qualification).id).to eq(qualification_2.id)
       end
 
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, qualification: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
+      it 'should reject invalid params' do
+        put :update, id: qualification_1.id, qualification: {valid_params.keys.first => ''}
+        expect_update_error_with_model('qualification')
+        expect(assigns(:qualification).id).to eq(qualification_1.id)
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: qualification_1.id
+        expect_delete_error_with_model('qualification', qualifications_url)
       end
 
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: qualification_2.id
+        expect_delete_success_with_model('qualification', qualifications_url)
       end
     end
 

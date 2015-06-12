@@ -40,7 +40,7 @@
                 =link_to t('views.general.edit'), edit_exam_level_url(exam_level), class: 'btn btn-info btn-xs'
               -if exam_level.destroyable?
                 =link_to t('views.general.delete'), exam_level, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
-            -if exam_level.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+            -if current_user.admin? || current_user.content_manager?
               %td
                 %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 

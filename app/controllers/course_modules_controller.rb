@@ -31,8 +31,11 @@ class CourseModulesController < ApplicationController
             @course_module = @exam_level.course_modules.all_in_order.first
           end
         else
-          @exam_levels = ExamLevel.where(tutor_id: current_user.id)
-          @exam_level = @exam_levels.where(name_url: params[:exam_level_url]).first || @exam_levels.first
+          assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
+          non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
+          exam_levels = assigned_levels + non_assigned_levels
+          @exam_levels = exam_levels.uniq
+          @exam_level = ExamLevel.where(name_url: params[:exam_level_url]).first || @exam_levels.first
           @exam_level_id = @exam_level.try(:id)
           if params[:course_module_url]
             @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
@@ -120,7 +123,14 @@ class CourseModulesController < ApplicationController
     end
     @institutions = Institution.all_in_order
     @qualifications = Qualification.all_in_order
-    @exam_levels = ExamLevel.all_in_order
+    if current_user.admin? || current_user.content_manager?
+      @exam_levels = ExamLevel.all_in_order
+    elsif current_user.tutor?
+      assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
+      non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
+      exam_levels = assigned_levels + non_assigned_levels
+      @exam_levels = exam_levels.uniq
+    end
     @exam_sections = ExamSection.all_in_order
     @tutors = User.all_tutors.all_in_order
   end

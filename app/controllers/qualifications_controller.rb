@@ -5,7 +5,7 @@ class QualificationsController < ApplicationController
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action only: [:index, :show] do
-    ensure_user_is_of_type(['tutor'])
+    ensure_user_is_of_type(['tutor', 'content_manager'])
   end
   before_action :get_variables
 
