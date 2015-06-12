@@ -22,7 +22,7 @@ class CourseModulesController < ApplicationController
       @qualification = Qualification.with_url(params[:qualification_url]).first
       if @qualification
         if current_user.admin? || current_user.content_manager?
-          @exam_levels = @qualification.exam_levels
+          @exam_levels = @qualification.exam_levels.all_in_order
           @exam_level = @exam_levels.where(name_url: params[:exam_level_url]).first || @exam_levels.first
           @exam_level_id = @exam_level.try(:id)
           if params[:course_module_url]
@@ -35,7 +35,7 @@ class CourseModulesController < ApplicationController
           non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
           exam_levels = assigned_levels + non_assigned_levels
           @exam_levels = exam_levels.uniq
-          @exam_level = ExamLevel.where(name_url: params[:exam_level_url]).first || @exam_levels.first
+          @exam_level = @exam_levels.first
           @exam_level_id = @exam_level.try(:id)
           if params[:course_module_url]
             @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
