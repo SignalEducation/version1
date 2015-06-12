@@ -1,0 +1,61 @@
+{
+  "created": 1326853478,
+  "livemode": false,
+  "id": "evt_00000000000000",
+  "type": "customer.subscription.updated",
+  "object": "event",
+  "request": null,
+  "pending_webhooks": 1,
+  "api_version": "2015-02-18",
+  "data": {
+    "object": {
+      "id": "sub_00000000000000",
+      "plan": {
+        "interval": "month",
+        "name": "LearnSignal Personal",
+        "created": 1427284587,
+        "amount": 999,
+        "currency": "eur",
+        "id": "development-41O2JywQSud5BJguzDfw_00000000000000",
+        "object": "plan",
+        "livemode": false,
+        "interval_count": 1,
+        "trial_period_days": 7,
+        "metadata": {},
+        "statement_descriptor": "LearnSignal"
+      },
+      "object": "subscription",
+      "start": 1433927962,
+      "status": "trialing",
+      "customer": "cus_00000000000000",
+      "cancel_at_period_end": false,
+      "current_period_start": 1433927962,
+      "current_period_end": 1434532762,
+      "ended_at": null,
+      "trial_start": 1433927962,
+      "trial_end": 1434532762,
+      "canceled_at": null,
+      "quantity": 1,
+      "application_fee_percent": null,
+      "discount": null,
+      "tax_percent": null,
+      "metadata": {}
+    },
+    "previous_attributes": {
+      "plan": {
+        "interval": "month",
+        "name": "Old plan",
+        "created": 1427284587,
+        "amount": 999,
+        "currency": "eur",
+        "id": "OLD_PLAN_ID",
+        "object": "plan",
+        "livemode": false,
+        "interval_count": 1,
+        "trial_period_days": 7,
+        "metadata": {},
+        "statement_descriptor": "LearnSignal"
+      }
+    }
+  }
+}
