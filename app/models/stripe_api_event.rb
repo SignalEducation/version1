@@ -50,31 +50,45 @@ class StripeApiEvent < ActiveRecord::Base
 
   def disseminate_payload
     if self.payload && self.payload.class == Hash && self.payload[:type]
+      Rails.logger.debug "DEBUG: Processing Stripe event #{payload[:type]}"
       unless Invoice::STRIPE_LIVE_MODE == payload[:livemode]
         Rails.logger.error "ERROR: StripeAPIEvent#disseminate_payload: LiveMode of message incompatible with Rails.env. StripeMode:#{Invoice::STRIPE_LIVE_MODE}. Rails.env.#{Rails.env} -v- payload:#{payload}."
         self.update_attributes(processed: false, error: true, error_message: 'Livemode incorrect', callbacks: false, validation: false)
       else
-        item_saved = nil
         case self.payload[:type]
         when 'invoice.created'
-          item_saved = Invoice.build_from_stripe_data(self.payload[:data][:object])
+          invoice = Invoice.build_from_stripe_data(self.payload[:data][:object])
+          if invoice && invoice.errors.count == 0
+            Rails.logger.debug "DEBUG: Invoice #{invoice.id} created"
+            set_default_values
+          else
+            set_process_error (invoice ? invoice.errors.full_messages.inspect : "error creating invoice")
+          end
         when 'invoice.payment_failed'
-
+          # We have to send mail 'Subscription Error' here
         when 'customer.subscription.updated'
-
+          subscription = Subscription.find_by_stripe_guid(payload[:data][:object][:id])
+          if subscription && subscription.current_status == 'trialing' &&
+             payload[:data][:object][:status] == 'active' &&
+             # this check is probably not necessary but let's double check
+             # that subscription is changed from trialing to active
+             payload[:data][:previous_attributes][:status] == 'trialing'
+            if subscription.update_attribute(:current_status, 'active')
+              Rails.logger.debug "DEBUG: Subscription #{subscription.id} updated"
+              if subscription.referred_signup
+                subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now)
+                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup}"
+              end
+              set_default_values
+            else
+              set_process_error subscription.errors.full_messages.join("\n")
+            end
+            # We have to sent mail 'Trial Converted' here
+          end
         else
           self.update_attribute(:error_message, 'Unknown event type')
         end # of case statement
 
-        if item_saved.errors.count == 0
-          self.processed = true
-          self.error = false
-          self.error_message = nil
-        else
-          self.processed = false
-          self.error_message = item_saved.errors.full_messages.inspect
-          self.error = true
-        end
         self.save
       end
       true
@@ -111,9 +125,15 @@ class StripeApiEvent < ActiveRecord::Base
 
   def set_default_values
     self.processed = false
-    self.processed_at = Proc.new{Time.now}.call
+    self.processed_at = Time.now
     self.error = false
     self.error_message = nil
   end
 
+  def set_process_error(error_message)
+    Rails.logger.debug "DEBUG: Stripe event processing error: #{error_message}"
+    self.processed = false
+    self.error_message = error_message
+    self.error = true
+  end
 end

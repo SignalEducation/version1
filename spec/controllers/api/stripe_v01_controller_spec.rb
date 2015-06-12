@@ -7,6 +7,8 @@ describe Api::StripeV01Controller, type: :controller do
 
   let!(:usd) { FactoryGirl.create(:usd) }
   let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
+  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
   let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
   let!(:subscription_plan_q) { FactoryGirl.create(:student_subscription_plan_q) }
   let!(:subscription_plan_y) { FactoryGirl.create(:student_subscription_plan_y) }
@@ -17,12 +19,20 @@ describe Api::StripeV01Controller, type: :controller do
   let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id,
                           subscription_plan_id: subscription_plan_m.id,
                           stripe_token: card_token_1.id) }
+  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: referred_student.id,
+                                             subscription_plan_id: subscription_plan_m.id,
+                                             current_status: 'trialing',
+                                             stripe_token: card_token_2.id) }
+  let!(:referred_signup) { FactoryGirl.create(:referred_signup,
+                                              referral_code_id: referral_code.id,
+                                              subscription_id: subscription_2.id) }
 
   let!(:invoice_created_event) {
     StripeMock.mock_webhook_event('invoice.created',
                                   subscription: subscription_1.stripe_guid,
                                   customer: student.stripe_customer_id) }
-  let(:invoice_updated) { StripeMock.mock_webhook_event('invoice.updated').to_hash }
+  let!(:invoice_updated) { StripeMock.mock_webhook_event('invoice.updated') }
+  let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
 
   describe "POST 'create'" do
     describe 'preliminary functionality: ' do
@@ -54,14 +64,21 @@ describe Api::StripeV01Controller, type: :controller do
           expect(InvoiceLineItem.count).to eq(invoice_created_event.data.object.lines.data.length)
         end
 
-        it 'payment_failed' do
-
+        xit 'payment_failed' do
+          # We have to test here whether mail 'Subscription Error' has been sent over Mandrill
         end
       end
 
-      describe 'cards.' do
-        xit 'create' do
+      describe 'customer.subscription' do
+        before(:each) do
+          subscription_2.update_attribute(:stripe_guid, customer_subscription_updated_event.data.object.id)
+        end
 
+        it 'updated' do
+          post :create, customer_subscription_updated_event.to_json
+          expect(subscription_2.reload.current_status).to eq('active')
+          expect((40.days.from_now - referred_signup.reload.maturing_on).to_i.abs).to be < 1.day.seconds
+          # We have to test here whether mail 'Trial Converted' has been sent over Mandrill
         end
       end
     end
