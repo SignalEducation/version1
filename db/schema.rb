@@ -628,6 +628,30 @@ ActiveRecord::Schema.define(version: 20150608121356) do
 
   add_index "raw_video_files", ["file_name"], name: "index_raw_video_files_on_file_name", using: :btree
 
+  create_table "referral_codes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "code",       limit: 7
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "referral_codes", ["user_id"], name: "index_referral_codes_on_user_id", using: :btree
+
+  create_table "referred_signups", force: :cascade do |t|
+    t.integer  "referral_code_id"
+    t.integer  "user_id"
+    t.string   "referrer_url",     limit: 2048
+    t.integer  "subscription_id"
+    t.datetime "maturing_on"
+    t.datetime "payed_at"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "referred_signups", ["referral_code_id"], name: "index_referred_signups_on_referral_code_id", using: :btree
+  add_index "referred_signups", ["subscription_id"], name: "index_referred_signups_on_subscription_id", using: :btree
+  add_index "referred_signups", ["user_id"], name: "index_referred_signups_on_user_id", using: :btree
+
   create_table "static_page_uploads", force: :cascade do |t|
     t.string   "description"
     t.integer  "static_page_id"

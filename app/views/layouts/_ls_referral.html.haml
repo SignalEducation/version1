@@ -1,0 +1,98 @@
+%a.refer-a-friend-dialog-toggle.btn.btn-ls-default{href: '#', id: 'refer-a-friend-lnk', data: {toggle: 'modal', target: '#refer-a-friend-dialog'}}Refer a friend!
+.modal.fade#refer-a-friend-dialog{tabindex: -1, role: 'dialog', aria: {labelledby: 'uploadModalLabel', hidden: true} }
+  .modal-dialog
+    .modal-content
+      .modal-header.referral-header
+        %button{type: 'button', class: 'close', data: {dismiss: 'modal'}}
+          %span{aria: {hidden: true}} &times
+          %span{class: 'sr-only'}=t('views.general.close')
+        %h2.modal-title.referral-title#uploadmodallabel=t('views.referral_codes.modal.h1')
+
+      .modal-body.referral-dialog-body
+        %div.center-block.text-center.referral-info=t('views.referral_codes.modal.info1')
+        %div.center-block.text-center.referral-info=t('views.referral_codes.modal.info2')
+        .form-group
+          =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
+            .row
+              .col-sm-8
+                =text_field_tag :code, current_user.referral_code ? referral_code_sharing_url(current_user.referral_code) : '', class: 'form-control', readonly: true
+              .col-sm-4
+                %a.btn.btn-block.btn-social.referral-btn-email.referral-social{id: 'copy-referral-code-lnk',
+                                                                               'data-clipboard-target' => 'code',
+                                                                               'data-clipboard-text' => '',
+                                                                               :title => I18n.t('views.referral_codes.modal.copy_button_title')}
+                  %i.fa.fa-clipboard
+                  =t('views.referral_codes.modal.copy')
+
+        .row
+          .col-sm-4
+            %a.btn.btn-block.btn-social.referral-btn-email.referral-social{id: 'email-code-lnk'}
+              %i.fa.fa-envelope
+              =t('views.referral_codes.modal.email')
+          .col-sm-4
+            %a.btn.btn-block.btn-social.btn-facebook.referral-social.referral-btn-facebook{id: 'facebook-code-lnk'}
+              %i.fa.fa-facebook
+              =t('views.referral_codes.modal.share')
+          .col-sm-4
+            %a.btn.btn-block.btn-social.btn-twitter.referral-social.referral-btn-twitter{id: 'twitter-code-lnk'}
+              %i.fa.fa-twitter
+              =t('views.referral_codes.modal.tweet')
+      .modal-footer.referral-footer
+        .row
+          %p.col-sm-12.text-center.referral-footer-p LearnSignal, a better way to learn
+        .row
+          %textarea.col-sm-offset-1.col-sm-10.referral-social-content{readonly: true, rows: 5, id: 'referral-email-content'}
+            :preserve
+              On Learn Signal you can study for your professional finance exams, with a growing bank of study material. Access is just £25 per month. (__url_placeholder__)
+
+          %textarea.col-sm-offset-1.col-sm-10.referral-social-content{readonly: true, rows: 5, id: 'referral-facebook-content'}
+            :preserve
+              Study for your professional exams for a small monthly fee! (__url_placeholder__)
+
+          %textarea.col-sm-offset-1.col-sm-10.referral-social-content{readonly: true, rows: 5, id: 'referral-twitter-content'}
+            :preserve
+              Access to a library of financial training material @learnsignal, get started today! (__url_placeholder__)
+
+:javascript
+
+  $(document).ready(function() {
+    var codeCopy = new ZeroClipboard($("#copy-referral-code-lnk"));
+    var setReferralUrls = function(url) {
+      $('#referral-email-content').val($('#referral-email-content').val().replace("__url_placeholder__", url));
+      $('#referral-facebook-content').val($('#referral-facebook-content').val().replace("__url_placeholder__", url));
+      $('#referral-twitter-content').val($('#referral-twitter-content').val().replace("__url_placeholder__", url));
+    };
+
+    if ($('#code').val() !== '') {
+      setReferralUrls($('#code').val());
+    }
+
+    $('#referral-code-form').on("ajax:success", function(e, data, status, xhr) {
+      $('#code').val(data.url);
+      setReferralUrls(data.url);
+    });
+
+    $('#email-code-lnk').on('click', function(event) {
+      $('#referral-facebook-content').hide();
+      $('#referral-twitter-content').hide();
+      $('#referral-email-content').toggle().focus().select();
+    });
+
+    $('#facebook-code-lnk').on('click', function(event) {
+      $('#referral-email-content').hide();
+      $('#referral-twitter-content').hide();
+      $('#referral-facebook-content').toggle().focus().select();
+    });
+
+    $('#twitter-code-lnk').on('click', function(event) {
+      $('#referral-email-content').hide();
+      $('#referral-facebook-content').hide();
+      $('#referral-twitter-content').toggle().focus().select();
+    });
+  });
+
+  $('#refer-a-friend-lnk').on('click', function(event) {
+    if ($('#code').val() === '') {
+      $('#referral-code-form').submit();
+    }
+  });

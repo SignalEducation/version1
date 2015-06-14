@@ -57,6 +57,8 @@ $ls-green: #21CE99;
 // Load Bootstrap 3
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import "font-awesome";
+@import "bootstrap-social";
 
 // Further customisation
 
@@ -1063,4 +1065,71 @@ header {
     box-shadow: none;
   }
 
+}
+
+.refer-a-friend-dialog-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+}
+
+.referral-header {
+  border: none;
+}
+
+.referral-footer {
+  border: none;
+  padding-top: 0px;
+}
+
+.referral-footer-p {
+  font-weight: bold;
+}
+
+.referral-dialog-body {
+  margin-top: -25px;
+}
+
+.referral-title {
+  text-align: center;
+  color: #2D68D8;
+}
+
+.referral-info {
+  margin-bottom: 10px;
+}
+
+.referral-code-input {
+  height: 34px;
+}
+
+.referral-btn-email {
+  @include btn-social(#2A2C2E);
+  > :first-child {
+    top: -1;
+    font-size: 1em;
+    background-color: #616566;
+  }
+}
+
+.referral-btn-facebook {
+  @include btn-social(#1B2E66);
+  > :first-child {
+    top: 0;
+    font-size: 1.4em;
+    background-color: #3C4F7F;
+  }
+}
+
+.referral-btn-twitter {
+  @include btn-social(#3984C9);
+  > :first-child {
+    top: 0;
+    font-size: 1.4em;
+    background-color: #5899D3;
+  }
+}
+
+.referral-social-content {
+  display: none;
 }

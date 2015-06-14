@@ -37,6 +37,7 @@ class Subscription < ActiveRecord::Base
   has_many :invoice_line_items
   belongs_to :subscription_plan
   has_many :subscription_transactions
+  has_one :referred_signup
 
   # validation
   validates :user_id, presence: true, on: :update
