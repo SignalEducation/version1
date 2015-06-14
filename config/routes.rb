@@ -105,6 +105,9 @@ Rails.application.routes.draw do
       post :filter, on: :collection, action: :index
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
+    get 'acca', to: 'home_pages#acca', as: :acca
+    get 'cfa', to: 'home_pages#cfa', as: :cfa
+    resources :home_pages, except: [:destroy, :show]
     resources :institutions, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
@@ -140,7 +143,6 @@ Rails.application.routes.draw do
 
     # home page
     root 'home_pages#show'
-    resources :home_pages, except: [:index, :destroy]
 
     # Catch-all
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'

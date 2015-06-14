@@ -513,14 +513,17 @@ en:
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
 
+      index:
+        h1: Landing Pages
+
       show:
         h1: Home Page
 
       edit:
-        h1: Edit Home Page
+        h1: Edit Landing Page
 
       new:
-        h1: New Home Page
+        h1: New Landing Page
 
 
     institutions:

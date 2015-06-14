@@ -1,5 +1,11 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.home_pages.edit.h1')
-=render partial: 'form'
+=render partial: 'layouts/navbar'
+.container
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  .row
+    .col-sm-12
+      .page-header
+        %h1=t('views.home_pages.edit.h1')
+  =render partial: 'form'
+
+=render partial: 'layouts/footer'

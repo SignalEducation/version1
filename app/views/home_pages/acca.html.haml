@@ -1,0 +1,20 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        ='ACCA'
+.row
+  .col-sm-12
+    .col-sm-3
+      =link_to root_url, class: 'navbar-brand navbar-logo', id: '#navbar-logo' do
+        =image_tag 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/LS_Only_Logo.png', alt: t('views.layouts.navigation.learn_signal'), class: 'img img-responsive'
+
+    .col-sm-3
+      .btn.btn-ls-default
+        =link_to t('views.dashboard.index.h1'), dashboard_url
+    .col-sm-3
+      .btn.btn-ls-default
+        =link_to t('views.library.show.h1'), library_url
+    .col-sm-3
+      =link_to t('views.general.sign_in'), sign_in_url, class: 'navbar-link'
+      =link_to t('views.general.start_free_trial'), student_sign_up_url, class: 'btn free_trial'

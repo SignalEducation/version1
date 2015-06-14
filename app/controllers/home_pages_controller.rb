@@ -1,24 +1,13 @@
 class HomePagesController < ApplicationController
 
-  before_action :logged_in_required, except: [:show]
-  before_action except: [:show] do
+  before_action :logged_in_required, except: [:show, :acca, :cfa]
+  before_action except: [:show, :acca, :cfa] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
 
-  def show
-    if params[:first_element].to_s == '' && current_user
-      redirect_to dashboard_url
-    elsif params[:first_element].to_s == '500-page'
-      render file: 'public/500.html', layout: nil, status: 500
-    else
-      first_element = '/' + params[:first_element].to_s
-      @home_page = HomePage.where(public_url: first_element).first
-      if @home_page
-        cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
-      end
-    end
-    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+  def index
+    @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
   def new
@@ -45,6 +34,28 @@ class HomePagesController < ApplicationController
     else
       render action: :edit
     end
+  end
+
+  def acca
+      first_element = '/acca' + params[:first_element].to_s
+      @home_page = HomePage.where(public_url: first_element).first
+      if @home_page
+        cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+        seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+      else
+        redirect_to action: :show
+      end
+  end
+
+  def cfa
+      first_element = 'cfa' + params[:first_element].to_s
+      @home_page = HomePage.where(public_url: first_element).first
+      if @home_page
+        cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+        seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+      else
+        redirect_to action: :show
+      end
   end
 
   protected

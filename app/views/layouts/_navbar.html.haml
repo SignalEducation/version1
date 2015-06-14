@@ -21,6 +21,8 @@
           =link_to t('views.library.show.h1'), library_url
       %ul.nav.navbar-nav.navbar-right
         -if current_user
+          -if current_user.admin?
+            %li=link_to t('views.home_pages.index.h1'), home_pages_url
           -if current_user.admin? || current_user.tutor?
             %li.dropdown
               %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
