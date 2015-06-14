@@ -105,9 +105,9 @@ Rails.application.routes.draw do
       post :filter, on: :collection, action: :index
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
-    get 'acca', to: 'home_pages#acca', as: :acca
-    get 'cfa', to: 'home_pages#cfa', as: :cfa
-    resources :home_pages, except: [:destroy, :show]
+    get 'acca', to: 'home_pages#show', first_element: 'acca'
+    get 'cfa', to: 'home_pages#show', first_element: 'cfa'
+    resources :home_pages, except: [:destroy]
     resources :institutions, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
