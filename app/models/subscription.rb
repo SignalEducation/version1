@@ -132,7 +132,7 @@ class Subscription < ActiveRecord::Base
   end
 
   # instance methods
-  def cancel
+  def cancel(profile_url = nil)
     # call stripe and cancel the subscription
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
@@ -142,6 +142,7 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'canceled'
         self.update_attribute(:current_status, 'canceled')
         self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
+        MandrillWorker.perform_async(self.user_id, "send_free_trial_cancelled_email", profile_url)
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel a 'trialing' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
