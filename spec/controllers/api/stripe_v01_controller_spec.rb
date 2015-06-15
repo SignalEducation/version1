@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'mandrill_client'
 
 describe Api::StripeV01Controller, type: :controller do
 
@@ -31,7 +32,10 @@ describe Api::StripeV01Controller, type: :controller do
     StripeMock.mock_webhook_event('invoice.created',
                                   subscription: subscription_1.stripe_guid,
                                   customer: student.stripe_customer_id) }
-  let!(:invoice_updated) { StripeMock.mock_webhook_event('invoice.updated') }
+  let!(:invoice_payment_failed_event) {
+    StripeMock.mock_webhook_event('invoice.payment_failed',
+                                  subscription: subscription_1.stripe_guid,
+                                  customer: student.stripe_customer_id) }
   let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
 
   describe "POST 'create'" do
@@ -64,8 +68,12 @@ describe Api::StripeV01Controller, type: :controller do
           expect(InvoiceLineItem.count).to eq(invoice_created_event.data.object.lines.data.length)
         end
 
-        xit 'payment_failed' do
-          # We have to test here whether mail 'Subscription Error' has been sent over Mandrill
+        it 'payment_failed' do
+          mc = double
+          expect(mc).to receive(:send_card_payment_failed_email).with(profile_url)
+          expect(MandrillClient).to receive(:new).and_return(mc)
+          post :create, invoice_payment_failed_event.to_json
+          expect(StripeApiEvent.count).to eq(1)
         end
       end
 

@@ -15,11 +15,15 @@
 #
 
 class StripeApiEvent < ActiveRecord::Base
+  # Since we shouldn't access routes in models and we need profile URL
+  # for sending email through Mandrill we are defining non-DB attribute
+  # here which will use value passed by Stripe API controller.
+  attr_accessor :profile_url
 
   serialize :payload, Hash
 
   # attr-accessible
-  attr_accessible :guid, :api_version
+  attr_accessible :guid, :api_version, :profile_url
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
@@ -65,7 +69,12 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error (invoice ? invoice.errors.full_messages.inspect : "error creating invoice")
           end
         when 'invoice.payment_failed'
-          # We have to send mail 'Subscription Error' here
+          user = User.find_by_stripe_customer_id(payload[:data][:object][:customer])
+          if user
+            MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.profile_url)
+          else
+            Rails.logger.error "ERROR: User with Stripe id #{payload[:data][:object][:customer]} does not exist."
+          end
         when 'customer.subscription.updated'
           subscription = Subscription.find_by_stripe_guid(payload[:data][:object][:id])
           if subscription && subscription.current_status == 'trialing' &&

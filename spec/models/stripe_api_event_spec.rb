@@ -27,6 +27,7 @@ describe StripeApiEvent do
       it { should allow_mass_assignment_of(column_name.to_sym) }
     end
   end
+  it { should allow_mass_assignment_of(:profile_url) }
 
   # Constants
   it { expect(StripeApiEvent.const_defined?(:KNOWN_API_VERSIONS)).to eq(true) }
