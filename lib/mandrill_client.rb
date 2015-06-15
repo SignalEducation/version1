@@ -15,7 +15,6 @@ class MandrillClient
     msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
     msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
     msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
-    msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
     send_template('welcome-email', msg)
   end
 
@@ -131,8 +130,8 @@ class MandrillClient
       "html" => nil,
       "text" => nil,
       "subject" => nil,
-      "from_email" => "do-not-reply@learnsignal.com",
-      "from_name" => "Philip Meagher",
+      "from_email" => "team@learnsignal.com",
+      "from_name" => "Learn Signal",
       "to" => [{
                  "email" => @user.email,
                  "type" => "to",
