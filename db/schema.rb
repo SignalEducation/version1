@@ -109,9 +109,9 @@ ActiveRecord::Schema.define(version: 20150610100702) do
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
+    t.integer  "seconds_watched",             default: 0
     t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
-    t.integer  "seconds_watched",             default: 0
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
@@ -351,18 +351,6 @@ ActiveRecord::Schema.define(version: 20150610100702) do
   add_index "forum_topics", ["course_module_element_id"], name: "index_forum_topics_on_course_module_element_id", using: :btree
   add_index "forum_topics", ["forum_topic_id"], name: "index_forum_topics_on_forum_topic_id", using: :btree
   add_index "forum_topics", ["reviewed_by"], name: "index_forum_topics_on_reviewed_by", using: :btree
-
-  create_table "home_pages", force: :cascade do |t|
-    t.string   "seo_title"
-    t.string   "seo_description"
-    t.integer  "subscription_plan_category_id"
-    t.string   "public_url"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
-  add_index "home_pages", ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id", using: :btree
 
   create_table "import_trackers", force: :cascade do |t|
     t.string   "old_model_name"

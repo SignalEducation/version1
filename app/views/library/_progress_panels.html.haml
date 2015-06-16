@@ -71,12 +71,12 @@
       %p
         =t('views.general.updated_at')
         =humanize_datetime(@hierarchy_item.updated_at)
-      -# Need to add tutor_id to the exam_level model
-      -#%hr/
-      -#%p
-        =t('views.general.author')
-        =@hierarchy_item.first_active_cme.tutor.full_name
-      %hr/
+      -if @hierarchy_item.tutor_id
+        %hr/
+        %p
+          =t('views.general.author')
+          =@hierarchy_item.tutor.full_name
+        %hr/
       =link_to t('views.library.show.new_question_bank'), new_question_bank_path, class: 'btn btn-ls-default'
 
 
