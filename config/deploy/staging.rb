@@ -15,6 +15,7 @@ server 'staging10.learnsignal.com', user: 'ec2-user',
                      auth_methods: %w(publickey)}
 
 role :app, ['ec2-user@staging10.learnsignal.com']
+role :web, 'ec2-user@staging10.learnsignal.com'
 role :db, 'ec2-user@staging10.learnsignal.com'
 
 # role-based syntax
