@@ -53,7 +53,7 @@ describe Api::StripeV01Controller, type: :controller do
     end
 
     describe 'dealing with payload data:' do
-      describe 'invoice' do
+      describe 'invoice with valid data' do
         before(:each) do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
           subscription_plan_m.stripe_guid = invoice_created_event.data.object.lines.data[0].plan.id
@@ -63,7 +63,13 @@ describe Api::StripeV01Controller, type: :controller do
 
         it 'created' do
           post :create, invoice_created_event.to_json
+
           expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+
           expect(Invoice.count).to eq(1)
           expect(InvoiceLineItem.count).to eq(invoice_created_event.data.object.lines.data.length)
         end
@@ -72,8 +78,78 @@ describe Api::StripeV01Controller, type: :controller do
           mc = double
           expect(mc).to receive(:send_card_payment_failed_email).with(profile_url)
           expect(MandrillClient).to receive(:new).and_return(mc)
+
           post :create, invoice_payment_failed_event.to_json
+
           expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+        end
+      end
+
+      describe 'invoice with invalid data' do
+        before(:each) do
+          SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
+        end
+
+        it 'should not process invoice.created event if user with given GUID does not exist' do
+          evt = StripeMock.mock_webhook_event('invoice.created',
+                                        subscription: subscription_1.stripe_guid)
+          expect {
+            post :create, evt.to_json
+          }.not_to change { Invoice.count }
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Error creating invoice")
+        end
+
+        it 'should not process invoice.created event if subscription with given GUID does not exist' do
+          evt = StripeMock.mock_webhook_event('invoice.created',
+                                        customer: student.stripe_customer_id)
+          expect {
+            post :create, evt.to_json
+          }.not_to change { Invoice.count }
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Error creating invoice")
+        end
+
+        it 'should not process invoice.created event if subscription plan from invoice line item with given GUID does not exist' do
+          post :create, invoice_created_event.to_json
+
+          # Following test should pass because transaction is rolled back. However,
+          # it seems that database_cleaner messes up transactions and our transaction
+          # in Invoice.build_from_stripe_data is not rolled back. That's why we skip
+          # this test here (in normal mode it should work).
+          # expect(Invoice.count).to eq(0)
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Error creating invoice")
+        end
+
+        it 'payment_failed' do
+          evt = StripeMock.mock_webhook_event('invoice.payment_failed',
+                                          subscription: subscription_1.stripe_guid)
+
+          expect(MandrillClient).not_to receive(:new)
+
+          post :create, evt.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("User with given Stripe ID does not exist")
         end
       end
 
@@ -83,10 +159,67 @@ describe Api::StripeV01Controller, type: :controller do
         end
 
         it 'updated' do
+          mc = double
+          expect(mc).to receive(:send_trial_converted_email).with(
+                          subscription_2.subscription_plan.name + " - " + I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription_2.subscription_plan.payment_frequency_in_months}"),
+                          subscription_2.subscription_plan.currency.iso_code,
+                          subscription_2.subscription_plan.price)
+          expect(MandrillClient).to receive(:new).and_return(mc)
           post :create, customer_subscription_updated_event.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+
           expect(subscription_2.reload.current_status).to eq('active')
           expect((40.days.from_now - referred_signup.reload.maturing_on).to_i.abs).to be < 1.day.seconds
-          # We have to test here whether mail 'Trial Converted' has been sent over Mandrill
+        end
+      end
+
+      describe 'customer.subscription with invalid data' do
+
+        it 'updated with unknown subscription GUID' do
+          expect(MandrillClient).not_to receive(:new)
+          post :create, customer_subscription_updated_event.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Unknown subscription or unexpected subscription status states")
+
+          expect(subscription_2.reload.current_status).to eq('trialing')
+        end
+
+        it 'updated with trialing status' do
+          evt = StripeMock.mock_webhook_event("customer.subscription.updated", status: 'trialing')
+          subscription_2.update_attribute(:stripe_guid, evt.data.object.id)
+
+          expect(MandrillClient).not_to receive(:new)
+          post :create, evt.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Unknown subscription or unexpected subscription status states")
+
+          expect(subscription_2.reload.current_status).to eq('trialing')
+        end
+
+        it 'updated subscription which is not in trialing status' do
+          subscription_2.update_attributes(stripe_guid: customer_subscription_updated_event.data.object.id, current_status: 'active')
+
+          expect(MandrillClient).not_to receive(:new)
+          post :create, customer_subscription_updated_event.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Unknown subscription or unexpected subscription status states")
         end
       end
     end
