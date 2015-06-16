@@ -30,12 +30,8 @@ class DashboardController < ApplicationController
     end
 
     if @dashboard_type.include?('content_manager')
-      @static_pages = StaticPage.all_in_order
-      @edited_recently = @static_pages.where('updated_at > ?', Proc.new{Time.now - 3.days}.call)
-      @recently_published = @static_pages.where('publish_from > ?', Time.now - 3.days)
-      @publishes_soon = @static_pages.where('publish_from > ? AND publish_from < ?', Proc.new{Time.now}.call, Proc.new{Time.now + 3.days}.call)
-      @recently_expired = @static_pages.where('publish_to IS NOT NULL AND publish_to < ? AND publish_to > ?', Proc.new{Time.now}.call, Proc.new{Time.now - 3.days}.call)
-      @expires_soon = @static_pages.where('publish_to > ? AND publish_to < ?', Proc.new{Time.now}.call, Proc.new{Time.now + 3.days}.call)
+      @exam_levels = ExamLevel.all_in_order
+      @course_modules = CourseModule.all_in_order.where(exam_level_id: @exam_levels)
     end
 
     if @dashboard_type.include?('admin')
