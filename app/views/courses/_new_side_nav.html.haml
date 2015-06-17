@@ -18,7 +18,7 @@
                 .glyphicon.glyphicon-record
               =course_module_element.name
 
-      -if @course_module.course_module_jumbo_quiz
+      -if @course_module.course_module_jumbo_quiz && @course_module.course_module_jumbo_quiz.active
         .jumbo-quiz
           -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
             .list-group-item
