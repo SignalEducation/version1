@@ -36,22 +36,14 @@ class DashboardController < ApplicationController
 
     if @dashboard_type.include?('admin')
       @all_users = User.all
-      @active_users = @all_users.where(active: true)
+      @qualifications = Qualification.all
       @new_users = @all_users.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_user_groups = UserGroup.all
-      @new_user_groups = @all_user_groups.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_subject_areas = SubjectArea.all
-      @active_subject_areas = @all_subject_areas.where(active: true)
-      @new_subject_areas = @all_subject_areas.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_institutions = Institution.all
-      @active_institutions = @all_institutions.where(active: true)
-      @new_institutions = @all_institutions.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_qualifications = Qualification.all
-      @active_qualifications = @all_qualifications.where(active: true)
-      @new_qualifications = @all_qualifications.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_exam_levels = ExamLevel.all
-      @active_exam_levels = @all_exam_levels.where(active: true)
-      @new_exam_levels = @all_exam_levels.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
+      @exam_levels = ExamLevel.all_in_order
+      @course_modules = CourseModule.all_in_order.where(exam_level_id: @exam_levels)
+      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
+      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
+      @total_seconds = @cmeuls.sum(:seconds_watched)
+      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
     end
 
   end
