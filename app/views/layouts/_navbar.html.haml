@@ -1,4 +1,4 @@
-.navbar.navbar-inverse.navbar-fixed-top#navbar{role:'navigation'}
+.navbar.navbar-inverse.navbar-fixed-top#navbar{role:'navigation', style: 'border-bottom: 0;'}
   .container
     .navbar-header
       %button.navbar-toggle.collapsed{type: 'button', data: {toggle: 'collapse', target: '.navbar-collapse'}}
@@ -39,6 +39,17 @@
                   %li.divider
                     %li.dropdown-header=t('views.layouts.navigation.content_management')
                     %li=link_to t('views.static_pages.index.h1'), static_pages_url
+            %li
+              =link_to user_notifications_url do
+                -if current_user && current_user.user_notifications.unread.count > 0
+                  %span.badge{style: 'background-color: red;'}
+                    %span.glyphicon.glyphicon-envelope
+                    =current_user.user_notifications.unread.count
+                  %span.visible-xs-inline=t('views.users.show.tabs.notifications')
+                -else
+                  %span.glyphicon.glyphicon-envelope
+                  %span.visible-xs-inline=t('views.users.show.tabs.notifications')
+
           -if current_user.content_manager? && !current_user.admin?
             %li.dropdown
               %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
@@ -47,16 +58,6 @@
               %ul.dropdown-menu{role: 'menu'}
                 %li.dropdown-header=t('views.layouts.navigation.content_management')
                 %li=link_to t('views.static_pages.index.h1'), static_pages_url
-          %li
-            = link_to user_notifications_url do
-              -if current_user && current_user.user_notifications.unread.count > 0
-                %span.badge{style: 'background-color: red;'}
-                  %span.glyphicon.glyphicon-envelope
-                  =current_user.user_notifications.unread.count
-                %span.visible-xs-inline=t('views.users.show.tabs.notifications')
-              -else
-                %span.glyphicon.glyphicon-envelope
-                %span.visible-xs-inline=t('views.users.show.tabs.notifications')
 
           %li.dropdown
             %a.dropdown-toggle#navbar-cog{href: '#', data: {toggle: 'dropdown'} }
@@ -71,7 +72,6 @@
                 %li=link_to t('views.user_groups.index.h1'), user_groups_url
                 %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
                 %li=link_to t('views.currencies.index.h1'), currencies_url
-                %li=# todo link_to t('views.vat_codes.index.h1'), vat_codes_url
                 %li=link_to t('views.countries.index.h1'), countries_url
                 %li=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
                 %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
@@ -84,26 +84,6 @@
                 %li=link_to t('views.stripe_developer_calls.index.h1'), stripe_developer_calls_url
                 %li.divider
               %li=link_to t('views.general.sign_out'), sign_out_url
-          -#%li
-            =#link_to '#', onclick: "$('#search_form').toggle({ origin: 'right', effect: 'slide', direction: 'horizontal', scale: 'box' }); return false;" do
-            =link_to '#', onclick: "$('#search_form').toggle('slide', {direction: 'right'}, 500, function() {$('#search_terms').focus();}); return false;" do
-              %span.glyphicon.glyphicon-search
-          -#%li#search_form{style: 'display: none;'}
-            =form_tag '/', role: 'form', class: 'navbar-form navbar-right' do
-              .form-group{style: 'padding-top: 3px;'}
-                =text_field_tag :search_terms, nil, placeholder: t('views.general.search')
-
         -else
-          -#if controller_name == 'user_sessions'
-            %li=link_to t('views.general.sign_in'), sign_in_url, class: 'navbar-link'
-          -#else
-            %li=link_to t('views.general.sign_in'), '#', onclick: "$('#login_form').removeClass('hidden'); $(this).hide(); return false;", id: 'nav-login'
-            %li#login_form.hidden
-              =form_for UserSession.new, html: {role: 'form', class: 'navbar-form navbar-right'} do |f|
-                .form-group{style: 'padding-top: 3px;padding-right: 5px;'}
-                  =f.text_field :email, placeholder: 'john@example.com', autofocus: true
-                  =f.password_field :password, placeholder: 'password', autocomplete: 'off'
-                  =f.submit t('views.general.go'), class: 'btn btn-success btn-sm'
-                  =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, class: 'navbar-link'
           %li=link_to t('views.general.sign_in'), sign_in_url, class: 'navbar-link'
           %li=link_to t('views.general.start_free_trial'), student_sign_up_url, class: 'btn free_trial'
