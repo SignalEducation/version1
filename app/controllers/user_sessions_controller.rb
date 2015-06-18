@@ -21,7 +21,6 @@ class UserSessionsController < ApplicationController
 
   def destroy
     current_user_session.destroy
-    flash[:success] = I18n.t('controllers.user_sessions.destroy.flash.success')
     redirect_to root_url
   end
 
