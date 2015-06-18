@@ -101,7 +101,7 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def set_exam_level_id
-    self.exam_level_id = self.course_module_element_quiz.course_module_element.parent.exam_level_id
+    self.exam_level_id = self.course_module_element_quiz.course_module_element.parent.exam_level_id unless self.flash_quiz_id
   end
 
 end
