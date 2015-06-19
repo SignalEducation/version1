@@ -109,6 +109,6 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   end
 
   def update_course_module
-    self.parent.save
+    self.parent.try(:save)
   end
 end
