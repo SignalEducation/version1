@@ -95,7 +95,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def children_available_count
-    self.children.all_active.count + (self.course_module_jumbo_quiz ? 1 : 0)
+    self.children.all_active.count + (self.course_module_jumbo_quiz.active? ? 1 : 0)
   end
 
   def completed_by_user_or_guid(user_id, session_guid)

@@ -53,6 +53,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   before_save :sanitize_name_url
   before_save :calculate_best_possible_scores
   after_create :update_student_exam_tracks
+  after_update :update_course_module
 
   # scopes
   scope :all_in_order, -> { order(:course_module_id).where(destroyed_at: nil) }
@@ -107,4 +108,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
     true
   end
 
+  def update_course_module
+    self.parent.save
+  end
 end

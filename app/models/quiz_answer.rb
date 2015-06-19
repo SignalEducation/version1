@@ -73,7 +73,7 @@ class QuizAnswer < ActiveRecord::Base
   end
 
   def set_wrong_answer_video_id
-    self.wrong_answer_video_id = self.quiz_question.course_module_element.related_video_id
+    self.wrong_answer_video_id = self.quiz_question.course_module_element.try(:related_video_id)
   end
 
 end
