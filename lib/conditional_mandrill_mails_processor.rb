@@ -19,7 +19,7 @@ class ConditionalMandrillMailsProcessor
       # Pick up all course module ids with given section_id or exam_level_id
       # (if section_id is null).
       course_module_ids = student_exam_track.exam_section_id ?
-                         CourseModule.where(exam_section_id: student_exam_track.exam_section_id).pluck(:id) :
+                            CourseModule.where(exam_section_id: student_exam_track.exam_section_id).pluck(:id) :
                             CourseModule.where(exam_level_id: student_exam_track.exam_level_id).pluck(:id)
       # Now get all element ids wor all course modules so we can extract
       # related course module element user logs.
@@ -35,9 +35,10 @@ class ConditionalMandrillMailsProcessor
         cme_user_logs = CourseModuleElementUserLog
                         .where(user_id: student_id, course_module_element_id: course_module_element_ids)
                         .group_by { |cmeul| cmeul.updated_at.to_date }
-        # Take pair of keys, calculate difference and finally take last DAYS_IN_A_ROW elements
-        # and calculate unique values which must all be 1 (days in a row requirement).
-        log_distances = cme_user_logs.keys.sort.each_cons(2).map { |a, b| (b - a).to_i }[-DAYS_IN_A_ROW..-1]
+        # Take pair of keys, calculate difference and finally take last DAYS_IN_A_ROW - 1 elements
+        # (we are taking paris so we have one less than requested days) and calculate unique values
+        # which must all be 1 (days in a row requirement).
+        log_distances = cme_user_logs.keys.sort.each_cons(2).map { |a, b| (b - a).to_i }[-(DAYS_IN_A_ROW - 1)..-1]
         if log_distances && log_distances.uniq.length == 1 && log_distances.uniq[0] == 1 &&
           cme_user_logs.keys.length >= DAYS_IN_A_ROW &&
           cme_user_logs[last_log_date.to_date]
