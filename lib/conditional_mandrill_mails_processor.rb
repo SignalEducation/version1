@@ -1,4 +1,8 @@
 class ConditionalMandrillMailsProcessor
+  class << self
+    delegate :url_helpers, to: 'Rails.application.routes'
+  end
+
   DAYS_IN_A_ROW = 9
 
   # Sends 'Study Streak' mail to all students that have worked on one ExamLevel
@@ -42,8 +46,14 @@ class ConditionalMandrillMailsProcessor
         if log_distances && log_distances.uniq.length == 1 && log_distances.uniq[0] == 1 &&
           cme_user_logs.keys.length >= DAYS_IN_A_ROW &&
           cme_user_logs[last_log_date.to_date]
-          MandrillWorker.perform_at(student_exam_track.updated_at + 12.hours, student_id, 'send_study_streak_email',
-                                    course_special_link(student_exam_track.latest_course_module_element.next_element))
+          if student_exam_track.latest_course_module_element &&
+             !student_exam_track.latest_course_module_element.next_element.nil?
+            url = url_helpers.edit_course_module_element_url(id: student_exam_track.latest_course_module_element.next_element.id,
+                                                             host: Rails.env.test? ? "www.example.com" : Rails.application.routes.default_url_options[:host])
+            MandrillWorker.perform_at(student_exam_track.updated_at + 12.hours,
+                                      student_id, 'send_study_streak_email',
+                                      url) if url
+          end
         end
       end
     end

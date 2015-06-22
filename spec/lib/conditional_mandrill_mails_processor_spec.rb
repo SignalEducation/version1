@@ -209,5 +209,39 @@ describe ConditionalMandrillMailsProcessor do
         expect(MandrillClient).not_to receive(:new)
       end
     end
+
+    describe "successful mail sending" do
+      it "sends mail if user has accessed exam defined days in a row" do
+        cmes_for_level.each_with_index do |cme, idx|
+          cme.update_attribute(:sorting_order, idx + 1)
+        end
+
+        se_track = FactoryGirl.create(:student_exam_track,
+                                      user_id: student.id,
+                                      exam_level_id: exam_level_no_sections.id,
+                                      exam_section_id: nil,
+                                      course_module_id: cm_for_level.id,
+                                      latest_course_module_element_id: cmes_for_level[0].id,
+                                      session_guid: "abc123fgh",
+                                      percentage_complete: 10)
+
+        1.upto(ConditionalMandrillMailsProcessor::DAYS_IN_A_ROW) do |idx|
+          FactoryGirl.create(:course_module_element_user_log,
+                             course_module_element_id: cmes_for_level[idx - 1].id,
+                             user_id: student.id,
+                             session_guid: "abc123fgh",
+                             course_module_id: cm_for_level.id,
+                             updated_at: idx.days.ago)
+        end
+
+        se_track.update_attribute(:updated_at, 1.day.ago)
+
+        mc = double
+        expect(mc).to receive(:send_study_streak_email)
+        expect(MandrillClient).to receive(:new).and_return(mc)
+
+        ConditionalMandrillMailsProcessor.process_study_streak('yesterday')
+      end
+    end
   end
 end
