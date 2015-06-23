@@ -71,7 +71,7 @@ class ConditionalMandrillMailsProcessor
       if exam_track
         course = exam_track.exam_section_id ? exam_track.exam_section : exam_track.exam_level
         modules = course.course_modules.all_active.all_in_order
-        args = [course.name]
+        args = [DAYS_HAVENT_SEEN, course.name]
         0.upto(2) do |idx|
           if modules[idx]
             args << modules[idx].name
