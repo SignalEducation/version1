@@ -4,6 +4,7 @@ class ConditionalMandrillMailsProcessor
   end
 
   DAYS_IN_A_ROW = 9
+  DAYS_HAVENT_SEEN = 7
 
   # Sends 'Study Streak' mail to all students that have worked on one ExamLevel
   # or ExamSection for 9 days in a row (and haven't finished it yet).
@@ -55,6 +56,36 @@ class ConditionalMandrillMailsProcessor
                                       url) if url
           end
         end
+      end
+    end
+  end
+
+  def self.process_we_havent_seen_you_in_a_while
+    User.where("last_login_at > ? and last_login_at < ?",
+               DAYS_HAVENT_SEEN.days.ago.beginning_of_day,
+               DAYS_HAVENT_SEEN.days.ago.end_of_day).each do |user|
+      exam_track = user.student_exam_tracks
+                   .where("percentage_complete < 100")
+                   .order("updated_at desc")
+                   .first
+      if exam_track
+        course = exam_track.exam_section_id ? exam_track.exam_section : exam_track.exam_level
+        modules = course.course_modules.all_active.all_in_order
+        args = [course.name]
+        0.upto(2) do |idx|
+          if modules[idx]
+            args << modules[idx].name
+            args << modules[idx].course_module_element_videos.count
+            args << modules[idx].course_module_element_quizzes.count
+          else
+            args << ""
+            args << 0
+            args << 0
+          end
+        end
+        MandrillWorker.perform_async(user.id,
+                                     "send_we_havent_seen_you_in_a_while_email",
+                                     *args) if course
       end
     end
   end

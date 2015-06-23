@@ -6,4 +6,9 @@ namespace :mandrill_mail do
     args.with_defaults(start_calculation_from: 'yesterday')
     ConditionalMandrillMailsProcessor.process_study_streak(args.start_calculation_from)
   end
+
+  desc "Sends 'We havent seen you in a while' email to users who haven't logged in for 7 days"
+  task :we_havent_seen_you_in_a_while => :environment do |t|
+    ConditionalMandrillMailsProcessor.process_we_havent_seen_you_in_a_while
+  end
 end

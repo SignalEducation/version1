@@ -69,22 +69,19 @@ class MandrillClient
   end
 
   def send_we_havent_seen_you_in_a_while_email(n_days_since_last_seen, subscribed_course,
-                                               cme_one, cme_one_url, cme_one_n_videos, cme_one_n_quizzes,
-                                               cme_two, cme_two_url, cme_two_n_videos, cme_two_n_quizzes,
-                                               cme_three, cme_three_url, cme_three_n_videos, cme_three_n_quizzes)
+                                               cme_one, cme_one_n_videos, cme_one_n_quizzes,
+                                               cme_two, cme_two_n_videos, cme_two_n_quizzes,
+                                               cme_three, cme_three_n_videos, cme_three_n_quizzes)
     msg = message_stub.merge({"subject" => "We havent seen you in a while!"})
     msg["global_merge_vars"] << { "name" => "N_DAYS_SINCE_LAST_SEEN", "content" => n_days_since_last_seen }
     msg["global_merge_vars"] << { "name" => "SUBSCRIBED_COURSE", "content" => subscribed_course }
     msg["global_merge_vars"] << { "name" => "CME_ONE", "content" => cme_one }
-    msg["global_merge_vars"] << { "name" => "CME_ONE_URL", "content" => cme_one_url }
     msg["global_merge_vars"] << { "name" => "CME_ONE_N_VIDEOS", "content" => cme_one_n_videos }
     msg["global_merge_vars"] << { "name" => "CME_ONE_N_QUIZZES", "content" => cme_one_n_quizzes }
     msg["global_merge_vars"] << { "name" => "CME_TWO", "content" => cme_two }
-    msg["global_merge_vars"] << { "name" => "CME_TWO_URL", "content" => cme_two_url }
     msg["global_merge_vars"] << { "name" => "CME_TWO_N_VIDEOS", "content" => cme_two_n_videos }
     msg["global_merge_vars"] << { "name" => "CME_TWO_N_QUIZZES", "content" => cme_two_n_quizzes }
     msg["global_merge_vars"] << { "name" => "CME_THREE", "content" => cme_three }
-    msg["global_merge_vars"] << { "name" => "CME_THREE_URL", "content" => cme_three_url }
     msg["global_merge_vars"] << { "name" => "CME_THREE_N_VIDEOS", "content" => cme_three_n_videos }
     msg["global_merge_vars"] << { "name" => "CME_THREE_N_QUIZZES", "content" => cme_three_n_quizzes }
     send_template('we-havent-seen-you-in-a-while', msg)
