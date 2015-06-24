@@ -27,9 +27,13 @@ describe 'User navigating through the dashboard:', type: :feature do
     scenario 'not logged-in user', js: true  do
       visit root_path
       within('#navbar') do
-        click_button 'Toggle navigation'
+        find('.nav-toggle').click
+        click_link 'Browse Courses'
       end
-      click_link 'Dashboard'
+      within('#navbar') do
+        click_button 'Toggle navigation'
+        click_link 'Dashboard'
+      end
       expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now')
       within('#navbar') do
         click_button 'Toggle navigation'
@@ -44,11 +48,11 @@ describe 'User navigating through the dashboard:', type: :feature do
       #expect(page).to have_content quiz_content_1.text_content
       #page.all('.quiz-answer-clickable').first.click
       #expect(page).to have_content I18n.t('views.courses.show_results.h1')
-      within('#navbar') do
-        click_link '#navbar-logo'
-        click_button 'Toggle navigation'
-        click_link 'Dashboard'
-      end
+      #within('#navbar') do
+       # click_link '#navbar-logo'
+        #click_button 'Toggle navigation'
+        #click_link 'Dashboard'
+      #end
       #expect(page).to have_content exam_section_1.name
       #expect(page).to have_css('.progress')
       #expect(page).to have_css('.panel')
@@ -62,8 +66,8 @@ describe 'User navigating through the dashboard:', type: :feature do
     scenario 'when logged in as an individual user', js: true do
       visit root_path
       within('#navbar') do
-        click_button 'Toggle navigation'
-        click_link I18n.t('views.general.start_free_trial')
+        find('.nav-toggle').click
+        click_link 'Sign Up'
       end
       expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
       student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)

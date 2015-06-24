@@ -16,7 +16,7 @@ describe 'Admin/Tutor uploading flash card packs:', type: :feature do
 
     scenario 'uploading card and quiz content', js: true  do
       visit root_path
-      click_link I18n.t('views.general.sign_in')
+      click_link 'Sign In'
       within('.well.well-sm') do
         fill_in I18n.t('views.user_sessions.form.email'), with: admin_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: admin_user.password

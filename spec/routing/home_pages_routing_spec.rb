@@ -27,10 +27,5 @@ RSpec.describe HomePagesController, type: :routing do
       expect(put: '/home_pages/1').to route_to('home_pages#update', id: '1')
     end
 
-
-    it 'routes to #destroy' do
-      expect(delete: '/home_pages/1').to route_to('home_pages#destroy', id: '1')
-    end
-
   end
 end

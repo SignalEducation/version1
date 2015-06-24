@@ -33,17 +33,14 @@ describe HomePage do
 
   # validation
   it { should validate_presence_of(:seo_title) }
-  it { should validate_length_of(:seo_title) }.is_at_most(255)
 
   it { should validate_presence_of(:seo_description) }
-  it { should validate_length_of(:seo_description) }.is_at_most(255)
 
 
-  it { should validate_presence_of(:subscription_plan_category_id) }
+  it { should_not validate_presence_of(:subscription_plan_category_id) }
   it { should validate_numericality_of(:subscription_plan_category_id) }
 
   it { should validate_presence_of(:public_url) }
-  it { should validate_length_of(:public_url) }.is_at_most(255)
 
 
   # callbacks

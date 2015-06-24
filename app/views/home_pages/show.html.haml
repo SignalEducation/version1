@@ -1,7 +1,7 @@
 .hero
   .header
     .l-wrap
-      .navbar-main
+      .navbar-main#navbar
         =image_tag('ls-logo-red.svg', class: 'logo')
         %ul.nav-main.nav-collapse
           %li
@@ -22,11 +22,11 @@
     .col-sm-6.l-padding-zero
       =link_to library_special_link(@cfa), class: 'main-course-link link-block link-purple' do
         %span.ico-arrow-right-r
-          =@cfa.short_name
+          =@cfa.try(:short_name)
     .col-sm-6.l-padding-zero
       =link_to library_special_link(@acca), class: 'main-course-link link-block link-red' do
         %span.ico-arrow-right-r
-          =@acca.short_name
+          =@acca.try(:short_name)
 
 .features
   .l-wrap
@@ -84,7 +84,6 @@
                   Risk Analyst Architect
 
 .start-trial
-  %a{:href => "#"}
   =link_to student_sign_up_url do
     .start-trial-wrap
       .l-wrap
