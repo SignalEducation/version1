@@ -1100,6 +1100,7 @@ en:
           subscriptions: Subscriptions
           notifications: Notifications
           admin: Admin
+          referral_code: Referral Code
         upgrade_now: Upgrade Now
         upgrade_subscription_plan: Upgrade Your Subscription
         use_this_card: "Use this card"
@@ -1110,6 +1111,9 @@ en:
         your_plan_expired_on: "Your plan expired on"
         your_plan_will_expire_on: "Your plan will expire on"
         your_subscription: Your Subscription
+        you_dont_have_referral_code: "You don't have referral code"
+        total_number_of_referred_users: Total number of referred users
+        number_of_referred_users_this_month: Number of referred users this month
 
     user_activity_logs:
       form:
