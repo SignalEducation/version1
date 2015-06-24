@@ -44,7 +44,7 @@ describe StripeApiEvent do
 
   # callbacks
   it { should callback(:set_default_values).before(:validation).on(:create) }
-  it { should callback(:get_data_from_stripe).before(:create) }
+  it { should callback(:get_data_from_stripe).before(:validation).on(:create) }
   it { should callback(:disseminate_payload).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
