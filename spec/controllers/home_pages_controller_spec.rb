@@ -6,8 +6,8 @@ describe HomePagesController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for home_page_1
-  let!(:home_page_1) { FactoryGirl.create(:home_page) }
-  let!(:home_page_2) { FactoryGirl.create(:home_page) }
+  let!(:home_page_1) { FactoryGirl.create(:acca_home) }
+  let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
 
   context 'Not logged in: ' do
