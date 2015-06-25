@@ -1340,7 +1340,9 @@ en:
         code: Code
         name: Name
         email: Email
-        referred_no: Referred no.
+        paid_referred_no: Paid referred no.
+        unpaid_referred_no: Unpaid referred no.
+        for_paying_no: For paying no.
 
       modal:
         h1: Get $25
