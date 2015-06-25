@@ -556,6 +556,7 @@ form {
   text-align: center;
   position: relative;
   margin-top: $gutter*3;
+  text-decoration: none;
   @include border-radius(5px);
   @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
   @include breakpoint(md-min) {

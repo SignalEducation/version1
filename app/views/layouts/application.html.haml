@@ -80,7 +80,7 @@
       =render partial: 'layouts/footer'
     =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
-    -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor?)
+    -#if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor?)
       =render partial: 'layouts/ls_referral'
     <!-- Mathjax -->
     -if @mathjax_required
