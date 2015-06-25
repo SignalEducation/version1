@@ -13,7 +13,7 @@
         =@seo_title
       -else
         LearnSignal
-    -if controller_name == 'home_pages'
+    -if controller_name == 'home_pages' && action_name == 'show'
       =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -else
       =stylesheet_link_tag 'old_application', media: 'all'
@@ -70,8 +70,6 @@
           =render partial: 'layouts/flash_messages'
         =yield
     -elsif controller_name == 'home_pages'
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
       =yield
     -else
       =render partial: 'layouts/navbar'

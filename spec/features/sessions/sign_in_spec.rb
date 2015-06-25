@@ -65,7 +65,6 @@ describe 'The sign in process.', type: :feature do
       expect(page).to have_content 'Welcome back!'
       click_link('navbar-cog')
       click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
     end
 
   end
@@ -180,7 +179,6 @@ describe 'The sign in process.', type: :feature do
       expect(page).to_not have_content I18n.t('views.subject_areas.index.h1')
       click_link('navbar-cog')
       click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
     end
 
   end
@@ -238,7 +236,6 @@ describe 'The sign in process.', type: :feature do
       expect(page).to_not have_content I18n.t('views.layouts.navigation.course_content')
       click_link('navbar-cog')
       click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
     end
 
   end
@@ -465,7 +462,6 @@ describe 'The sign in process.', type: :feature do
       expect(page).to have_content I18n.t('views.dashboard.admin.subject_areas')
       click_link('navbar-cog')
       click_link('Sign out')
-      expect(page).to have_content 'You are now logged out '
     end
 
   end

@@ -6,16 +6,17 @@ describe HomePagesController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for home_page_1
-  let!(:home_page_1) { FactoryGirl.create(:acca_home) }
+  let!(:home_page_1) { FactoryGirl.create(:home_page) }
   let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
+  let!(:home_page_3) { FactoryGirl.create(:home) }
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
 
   context 'Not logged in: ' do
 
     describe "GET 'show/1'" do
       it 'should see home_page_1' do
-        get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
+        get :show, id: home_page_3.id
+        expect_show_success_with_model('home_page', home_page_3.id)
       end
     end
 
@@ -59,15 +60,16 @@ describe HomePagesController, type: :controller do
 
     describe "GET 'show/1'" do
 
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
 
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
-      end
     end
 
     describe "GET 'new'" do
@@ -130,15 +132,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 
@@ -202,15 +203,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 
@@ -274,15 +274,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 
@@ -346,15 +345,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 
@@ -418,15 +416,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 
@@ -490,15 +487,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 
@@ -562,15 +558,14 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see home_page_1' do
+      it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
-        expect_show_success_with_model('home_page', home_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see home_page_2' do
-        get :show, id: home_page_2.id
-        expect_show_success_with_model('home_page', home_page_2.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+        expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
+        expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
     end
 

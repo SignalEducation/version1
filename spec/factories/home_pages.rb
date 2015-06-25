@@ -16,7 +16,11 @@ FactoryGirl.define do
     seo_title 'MyString'
     seo_description 'MyString'
     subscription_plan_category_id 1
-    #sequence(:public_url)           { |n| "abc#{n}" }
+    sequence(:public_url)           { |n| "abc#{n}" }
+
+    factory :home do
+      public_url '/'
+    end
 
     factory :acca_home do
       public_url 'acca'
