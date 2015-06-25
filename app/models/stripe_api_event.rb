@@ -89,8 +89,8 @@ class StripeApiEvent < ActiveRecord::Base
             if subscription.update_attribute(:current_status, 'active')
               Rails.logger.debug "DEBUG: Subscription #{subscription.id} updated"
               if subscription.referred_signup
-                subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now)
-                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup}"
+                subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now.utc.beginning_of_day)
+                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
               end
               MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
                                            subscription.subscription_plan.name + " - " +
