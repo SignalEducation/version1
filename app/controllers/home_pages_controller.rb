@@ -24,6 +24,8 @@ class HomePagesController < ApplicationController
         @cfa = Institution.where(short_name: 'CFA').first
         @acca = Institution.where(short_name: 'ACCA').first
         @cfa_level_1 = ExamLevel.where(name: 'Level 1').first
+        @acca_level_1 = ExamLevel.where(name_url: 'f1').first
+        @acca_level_2 = ExamLevel.where(name_url: 'f2').first
         if @home_page.public_url == '/acca'
           render :acca
         elsif @home_page.public_url == '/cfa'
