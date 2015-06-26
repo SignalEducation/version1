@@ -503,6 +503,29 @@ en:
       form:
         add_extra_answer: 'Add an extra answer'
 
+    home_pages:
+      form:
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title Placeholder
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description Placeholder
+        subscription_plan_category_id: Subscription Plan Category
+        public_url: Public URL
+        public_url_placeholder: Public URL Placeholder
+
+      index:
+        h1: Landing Pages
+
+      show:
+        h1: Home Page
+
+      edit:
+        h1: Edit Landing Page
+
+      new:
+        h1: New Landing Page
+
+
     institutions:
       form:
         name: Name
