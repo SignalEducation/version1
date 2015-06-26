@@ -8,16 +8,32 @@
           %li
             =link_to 'Browse Courses', library_url
           %li
-            =link_to 'Sign Up', student_sign_up_url
-          %li
             =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
   .hero-inner
     .l-wrap
-      %p.h5.h-white
-      Welcome to Learn Signal
-      %h1.h1.h-white.h-separator.h-separator-left
-        Become a member and get access to a growing library of professional training courses
-      =link_to 'Start your free trial &rarr;'.html_safe, student_sign_up_url, class: 'btn btn-red'
+      .container-fluid
+        .row
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white
+              Welcome to Learn Signal
+            %h1.h1.h-white.h-separator.h-separator-left
+              Become a member and get access to a growing library of professional training courses
+          .col-sm-6.col-md-4.col-lg-4
+            %form
+              %p.h5.h-white
+                Sign up for your 7-day free trial
+              .form-group
+                %input#inputName.form-control{:placeholder => "Full name", :type => "text"}
+              .form-group
+                %input#inputEmail.form-control{:placeholder => "Email", :type => "email"}
+              .form-group
+                %input#inputPassword.form-control{:placeholder => "Password", :type => "password"}
+              .form-group
+                %a.btn.btn-red{:href => "#"}
+                  Sign up now
+                %span.no-card
+                  No credit card needed
+
 .container-fluid
   .row
     .col-sm-6.l-padding-zero
@@ -89,7 +105,7 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url do
+  =link_to '#' do
     .start-trial-wrap
       .l-wrap
         %p.h4

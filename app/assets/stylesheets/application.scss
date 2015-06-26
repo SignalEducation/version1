@@ -130,6 +130,9 @@ a:focus {
 a:active {
   color: $purple-1;
 }
+blockquote {
+  border-left: 2px solid $red-1;
+}
 h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   position: relative;
   &.h-white {
@@ -191,13 +194,17 @@ h6, .h6 {
     @include font-size(1.6);
   }
 }
-p, .p {
+p, .p, ol, .ol, ul, .ul {
   color: $gray-1;
   margin-bottom: $gutter;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
+}
+hr {
+  border-color: lighten($purple-1, 60%);
+  margin: $gutter*2 0;
 }
 .h-separator {
   padding-bottom: $gutter*1.5;
@@ -268,6 +275,7 @@ p, .p {
   background-size: cover;
   @include breakpoint(md-min) {
     background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
+    background-size: cover;
   }
 }
 .course-cfa {
@@ -276,11 +284,15 @@ p, .p {
   background-size: cover;
   @include breakpoint(md-min) {
     background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") no-repeat;
+    background-size: cover;
   }
 }
 .course-inner {
   text-align: center;
   padding: 10rem 0;
+  &.course-sign-in {
+    text-align: left;
+  }
 }
 .course-intro {
   text-align: center;
@@ -391,7 +403,7 @@ p, .p {
   text-transform: uppercase;
   display: block;
   @include font-size(1.1);
-  @include box-shadow(2px, 0, 0, rgba(#000, .05));
+  //@include box-shadow(2px, 0, 0, rgba(#000, .05));
   @include breakpoint(xs-min) {
     display: inline-block;
   }
@@ -401,29 +413,95 @@ p, .p {
   }
   &:link, &:visited {
     text-decoration: none;
-    color: $white;
+    color: $red-1;
   }
   &:hover {
-    color: $white;
+    color: shade($red-1, 20%);
   }
   &:active {
 
   }
-  &.btn-purple {
-    background: $purple-1;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-  }
   &.btn-red {
     background: $red-1;
+    color: $white;
     &:hover {
       background: shade($red-1, 10%);
-      @include box-shadow(1px, 0, 0, rgba(#000, .1));
     }
     &:active {
       background: ($red-1);
     }
+  }
+  &.btn-purple {
+    background: $purple-1;
+    color: $white;
+    &:hover {
+      background: shade($purple-1, 10%);
+    }
+    &:active {
+      background: ($purple-1);
+    }
+  }
+  &.btn-cyan {
+    background: $cyan-1;
+    color: $white;
+    &:hover {
+      background: shade($cyan-1, 10%);
+    }
+    &:active {
+      background: ($cyan-1);
+    }
+  }
+  &.btn-secondary {
+    color: $red-1;
+    background: transparent;
+    border: 2px solid $white;
+    line-height: 36px;
+    @include box-shadow(0, 0, 0, 0);
+    &:hover, &:active {
+      background: transparent;
+      color: shade($red-1, 20%);
+    }
+    &.btn-red{
+      color: $red-1;
+      border: 2px solid $red-1;
+      &:hover {
+        background: transparent;
+        color: shade($red-1, 20%);
+        border: 2px solid shade($red-1, 20%);
+      }
+    }
+    &.btn-purple {
+      color: $purple-1;
+      border: 2px solid $purple-1;
+      &:hover {
+        background: transparent;
+        color: shade($purple-1, 20%);
+        border: 2px solid shade($purple-1, 20%);
+      }
+    }
+    &.btn-cyan {
+      color: $cyan-1;
+      border: 2px solid $cyan-1;
+      &:hover {
+        background: transparent;
+        color: shade($cyan-1, 20%);
+        border: 2px solid shade($cyan-1, 20%);
+      }
+    }
+  }
+}
+.no-card {
+  height: 40px;
+  line-height: 40px;
+  text-transform: none;
+  padding: 0 $gutter;
+  text-align: center;
+  display: block;
+  @include opacity(0.6);
+  @include font-size(1.1);
+  @include breakpoint(xs-min) {
+    display: inline-block;
+    @include font-size(1.2);
   }
 }
 form {
@@ -616,8 +694,10 @@ form {
   list-style: none;
   padding: 0;
   margin: 0 0 $gutter 0;
+  @include font-size(1.2);
   @include breakpoint(md-min) {
     float: right;
+    @include font-size(1.4);
   }
   & li {
     position: relative;
