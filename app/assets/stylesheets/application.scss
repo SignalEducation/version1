@@ -243,11 +243,11 @@ p, .p {
 
 // 3. modules
 .hero {
-  background: $purple-1 url("hero-bg.jpg") 50% 0 no-repeat;
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") 50% 0 no-repeat;
   color: $white;
   text-transform: uppercase;
   @include breakpoint(md-min) {
-    background: $purple-1 url("hero-bg.jpg") no-repeat;
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") no-repeat;
     background-size: cover;
   }
 }
@@ -263,19 +263,19 @@ p, .p {
   }
 }
 .course-acca {
-  background: $purple-1 url("bg-acca.jpg") 50% 0 no-repeat;
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   @include breakpoint(md-min) {
-    background: $purple-1 url("bg-acca.jpg") no-repeat;
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
   }
 }
 .course-cfa {
-  background: $purple-1 url("bg-cfa.jpg") 50% 0 no-repeat;
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   @include breakpoint(md-min) {
-    background: $purple-1 url("bg-cfa.jpg") no-repeat;
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") no-repeat;
   }
 }
 .course-inner {
@@ -473,8 +473,8 @@ form {
   margin: $gutter*2 auto;
 }
 .testimonials {
-  background: $asphalt-1 url("tools-bg.jpg") repeat-x 50% 0;
-  @include image-2x("tools-bg@2x.jpg", 750px, 220px);
+  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
   &.testimonials-alt {
     background: $white;
   }
@@ -495,7 +495,7 @@ form {
     content: "";
     height: 30px;
     width: 30px;
-    background: url("ico-quote.png") repeat-x 50% 0;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
     background-size: contain;
   }
 }
@@ -541,7 +541,7 @@ form {
   position: relative;
   &:after {
     position: absolute;
-    background: url("ico-arrow-right.png") no-repeat 0 0;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right.png") no-repeat 0 0;
     background-size: contain;
     top: 3px;
     right: 0;
@@ -583,7 +583,7 @@ form {
     width: 30px;
     margin-left: -15px;
     margin-top: -15px;
-    background: url("ico-course.png") repeat-x 50% 0;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
     background-size: contain;
   }
 }
@@ -734,11 +734,11 @@ form {
   right: $gutter;
   top: 21px;
   text-indent: -9999px;
-  background: url("ico-hamburger.png") no-repeat 50% 0;
-  @include image-2x("ico-hamburger@2x.png", 20px, 14px);
+  background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-hamburger.png") no-repeat 50% 0;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-hamburger%402x.png", 20px, 14px);
   &.active {
-    background: url("ico-close.png") no-repeat 50% 0;
-    @include image-2x("ico-close@2x.png", 15px, 15px);
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-close.png") no-repeat 50% 0;
+    @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-close%402x.png", 15px, 15px);
   }
 }
 
