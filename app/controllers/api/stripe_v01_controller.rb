@@ -6,7 +6,9 @@ class Api::StripeV01Controller < Api::BaseController
     raw_json = request.body.read
     event_json = JSON.parse(raw_json) unless raw_json.blank?
     if event_json && StripeApiEvent::KNOWN_PAYLOAD_TYPES.include?(event_json["type"])
-      StripeApiProcessorWorker.perform_async(event_json["id"], Stripe.api_version)
+      StripeApiProcessorWorker.perform_async(event_json["id"],
+                                             Stripe.api_version,
+                                             profile_url)
     end
     render text: nil, status: 204
   rescue => e

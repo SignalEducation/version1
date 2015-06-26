@@ -25,3 +25,6 @@ intercom_app_id: 8-char-code
 
 # MixPanel
 mixpanel_key: mixpanel_api_key_goes_here
+
+# Mandrill
+learnsignal_mandrill_api_key: mandrill_api_key_goes_here

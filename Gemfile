@@ -45,6 +45,7 @@ gem 'will_paginate' # manage long web pages
 gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
 gem 'font-awesome-rails' # Font Awesome with lot of useful icons
 gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
+gem 'mandrill-api' # official Mandrill's gem
 
 # Environment-specific gems
 
