@@ -10,16 +10,30 @@
               =link_to 'Browse Courses', library_url
             %li
               =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-  .course-inner
+  .course-inner.course-sign-in
     .l-wrap
       .container-fluid
         .row
-          .col-md-6.col-md-offset-3
-            %p.h5.h-white.text-center
+          .col-sm-6.col-md-8.col-lg-6
+            %p.h5.h-white
               Practice is key to passing the CFA exams
-            %h1.h1.h-white.h-separator.h-separator-center.text-center
+            %h1.h1.h-white.h-separator.h-separator-left
               Take the quick prep course for the CFA level 1
-            =link_to 'Start your free trial', student_sign_up_url, class: 'btn btn-red'
+          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
+            %form
+              %p.h5.h-white
+                Sign up for your 7-day free trial
+              .form-group
+                %input#inputName.form-control{:placeholder => "Full name", :type => "text"}
+              .form-group
+                %input#inputEmail.form-control{:placeholder => "Email", :type => "email"}
+              .form-group
+                %input#inputPassword.form-control{:placeholder => "Password", :type => "password"}
+              .form-group
+                %a.btn.btn-red{:href => "#"}
+                  Sign up now
+                %span.no-card
+                  No credit card needed
 
 .course-intro
   .l-wrap
@@ -111,7 +125,7 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url do
+  =link_to '#' do
     .start-trial-wrap
       .l-wrap
         .container-fluid
