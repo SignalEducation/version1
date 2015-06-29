@@ -65,7 +65,7 @@ FactoryGirl.define do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
       active                            true
       user_group_id                     1
-      stripe_customer_id                'cu_abc123'
+      sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       corporate_customer_id             nil
       corporate_customer_user_group_id  nil
       account_activation_code           'abc123'

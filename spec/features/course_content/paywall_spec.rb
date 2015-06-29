@@ -28,7 +28,7 @@ describe 'Course content Vs Paywall', type: :feature do
     before(:each) do
       activate_authlogic
       visit root_path
-      click_link I18n.t('views.general.start_free_trial')
+      click_link 'Sign Up'
       expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
       student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
       visit library_path

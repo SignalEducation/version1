@@ -7,7 +7,7 @@ class UserPasswordResetsController < ApplicationController
   end
 
   def create
-    User.start_password_reset_process(params[:email_address].to_s)
+    User.start_password_reset_process(params[:email_address].to_s, root_url)
   end
 
   def edit

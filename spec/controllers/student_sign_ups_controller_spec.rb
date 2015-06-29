@@ -27,6 +27,8 @@ RSpec.describe StudentSignUpsController, type: :controller do
                         }
   }
   let!(:invalid_params) { FactoryGirl.attributes_for(:individual_student_user, email: '') }
+  let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
   context 'Not logged in' do
     describe "GET 'new'" do
@@ -39,10 +41,18 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "POST 'create'" do
       it 'returns http success' do
+        cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
         post :create, user: valid_params
         expect_create_success_with_model('user', personal_sign_up_complete_url(assigns(:user).guid), I18n.t('controllers.student_sign_ups.create.flash.success'))
         expect(Subscription.all.count).to eq(1)
         expect(assigns(:user).subscriptions.count).to eq(1)
+
+        expect(ReferredSignup.count).to eq(1)
+        rs = ReferredSignup.first
+        expect(rs.referral_code_id).to eq(referral_code.id)
+        expect(rs.user_id).to eq(assigns(:user).id)
+        expect(rs.referrer_url).to eq("http://referral.example.com")
+        expect(rs.subscription_id).to eq(assigns(:user).subscriptions.first.id)
       end
 
       it 'returns bad input to the new page' do

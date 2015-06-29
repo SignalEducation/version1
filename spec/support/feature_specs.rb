@@ -26,7 +26,9 @@ end
 
 def sign_in_via_sign_in_page(user)
   visit root_path
-  click_link I18n.t('views.general.sign_in')
+  within('.navbar-main') do
+    click_link 'Sign In'
+  end
   within('.well.well-sm') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password

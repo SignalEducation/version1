@@ -21,6 +21,7 @@ describe 'User navigating through the dashboard:', type: :feature do
 
     scenario 'not logged-in user', js: true  do
       visit root_path
+      click_link 'Browse Courses'
       click_link 'Dashboard'
       expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now')
       within('#navbar') do
@@ -38,6 +39,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       click_link course_module_element_1_2.name
       within('#navbar') do
         click_link '#navbar-logo'
+        click_link 'Browse Courses'
         click_link 'Dashboard'
       end
       #expect(page).to have_content exam_section_1.name
@@ -51,7 +53,7 @@ describe 'User navigating through the dashboard:', type: :feature do
 
     scenario 'when logged in as an individual user', js: true do
       visit root_path
-      click_link I18n.t('views.general.start_free_trial')
+      click_link 'Sign Up'
       expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
       student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
       within('#navbar') do

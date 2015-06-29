@@ -503,6 +503,29 @@ en:
       form:
         add_extra_answer: 'Add an extra answer'
 
+    home_pages:
+      form:
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title Placeholder
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description Placeholder
+        subscription_plan_category_id: Subscription Plan Category
+        public_url: Public URL
+        public_url_placeholder: Public URL Placeholder
+
+      index:
+        h1: Landing Pages
+
+      show:
+        h1: Home Page
+
+      edit:
+        h1: Edit Landing Page
+
+      new:
+        h1: New Landing Page
+
+
     institutions:
       form:
         name: Name
@@ -1077,6 +1100,7 @@ en:
           subscriptions: Subscriptions
           notifications: Notifications
           admin: Admin
+          referral_code: Referral Code
         upgrade_now: Upgrade Now
         upgrade_subscription_plan: Upgrade Your Subscription
         use_this_card: "Use this card"
@@ -1087,6 +1111,9 @@ en:
         your_plan_expired_on: "Your plan expired on"
         your_plan_will_expire_on: "Your plan will expire on"
         your_subscription: Your Subscription
+        you_dont_have_referral_code: "You don't have referral code"
+        total_number_of_referred_users: Total number of referred users
+        number_of_referred_users_this_month: Number of referred users this month
 
     user_activity_logs:
       form:
@@ -1313,7 +1340,9 @@ en:
         code: Code
         name: Name
         email: Email
-        referred_no: Referred no.
+        paid_referred_no: Paid referred no.
+        unpaid_referred_no: Unpaid referred no.
+        for_paying_no: For paying no.
 
       modal:
         h1: Get $25

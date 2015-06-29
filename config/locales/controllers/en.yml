@@ -141,6 +141,14 @@ en:
           success: Exam Section has been deleted
           error: Exam Section was not deleted
 
+    home_pages:
+      create:
+        flash:
+          success: Home Page has been created successfully
+      update:
+        flash:
+          success: Home Page details have been updated successfully
+
     institutions:
       create:
         flash:

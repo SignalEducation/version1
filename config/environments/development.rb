@@ -68,3 +68,5 @@ end
 #                      ssl: true, # encrypt our log transmissions
 #                      local: true # keep local logs as well
 #)
+
+Rails.application.routes.default_url_options = { host: 'localhost:3000' }

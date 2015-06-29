@@ -1,0 +1,110 @@
+.hero
+  .header
+    .l-wrap
+      .navbar-main#navbar
+        =link_to root_url do
+          =image_tag('ls-logo-red.svg', class: 'logo')
+        %ul.nav-main.nav-collapse
+          %li
+            =link_to 'Browse Courses', library_url
+          %li
+            =link_to 'Sign Up', student_sign_up_url
+          %li
+            =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+  .hero-inner
+    .l-wrap
+      %p.h5.h-white
+      Welcome to Learn Signal
+      %h1.h1.h-white.h-separator.h-separator-left
+        Become a member and get access to a growing library of professional training courses
+      =link_to 'Start your free trial &rarr;'.html_safe, student_sign_up_url, class: 'btn btn-red'
+.container-fluid
+  .row
+    .col-sm-6.l-padding-zero
+      =link_to '/cfa', class: 'main-course-link link-block link-purple' do
+        %span.ico-arrow-right-r
+          =@cfa.try(:short_name)
+    .col-sm-6.l-padding-zero
+      =link_to 'acca', class: 'main-course-link link-block link-red' do
+        %span.ico-arrow-right-r
+          =@acca.try(:short_name)
+
+
+
+.features
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center
+              Financial Training, Redefined
+        .row
+          .col-sm-4
+            =image_tag('ico-expert@2x.png', class: 'features-img')
+            %h3.h4
+              Get Expert Insight Into Your Domain
+            %p.p
+              Courses are written by industry experts and designed to giv you specific insight into their area of expertise, helping you to hone your skills as a fiinance professional.
+          .col-sm-4
+            %h3.h4
+              =image_tag('ico-anytime@2x.png', class: 'features-img')
+              Learn Anywhere, Anytime, Any Device
+            %p.p
+              Watch videos and take quizzes from any device on the browser, anywhere, anytime. Your time is precious.
+          .col-sm-4
+            %h3.h4
+              =image_tag('ico-test@2x.png', class: 'features-img')
+              Test Your Skills
+            %p.p
+              Take challenges to make you think and review through difficult topics.
+
+.testimonials
+  .l-wrap
+    .l-section
+      .testimonial
+        .container-fluid
+          .row
+            .col-sm-12
+              %h2.h5.text-center
+                Testimonials
+              %p.h2.text-center.h-separator.h-separator-center
+                What your peers are saying
+          .row
+            .col-sm-6.col-sm-offset-3
+              .testimonial
+                .testimonial-pic-wrap
+                  =image_tag('mike-testimonial-pic.jpg', class: 'testimonial-pic')
+                %p.p
+                  When I signed up for Level I, I had 85 days to put in the 300 hours of studying while working full time. I had just finished my undergrad in Math and even though I had no finance background, I was confident that I could handle the material.
+                %p.p
+                  The challenge would be covering everything and having enough time to do mock exams. Learn Signal was the perfect solution.
+
+                %p.p
+                  The videos were quick, very well presented and contained only the essential information. The tests at the end of each section were helpful at highlighting gaps in my knowledge. I'm not sure I would have finished the material in time and passed the exam had I not used Learn Signal.
+                %p.p
+                  %strong.testimonial-sig
+                    Mike Sinclair
+                  %br/
+                  Risk Analyst Architect
+
+.start-trial
+  =link_to student_sign_up_url do
+    .start-trial-wrap
+      .l-wrap
+        %p.h4
+          Become a member
+        %p.h2
+          Start your 7-day free trial &rarr;
+
+.foot
+  .l-wrap
+    %ul.foot-nav
+      %li
+        =link_to 'Teach', new_tutor_application_url
+      =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
+    %p.foot-copyright
+      &copy; 2014 &mdash; 2015 Learn Signal
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");

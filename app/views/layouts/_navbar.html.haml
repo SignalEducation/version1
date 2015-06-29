@@ -21,6 +21,8 @@
           =link_to t('views.library.show.h1'), library_url
       %ul.nav.navbar-nav.navbar-right
         -if current_user
+          -if current_user.admin?
+            %li=link_to t('views.home_pages.index.h1'), home_pages_url
           -if current_user.admin? || current_user.tutor? || current_user.content_manager?
             %li.dropdown
               %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
@@ -67,6 +69,7 @@
                 %li=link_to t('views.countries.index.h1'), countries_url
                 %li=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
                 %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
+                %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
                 %li.divider
                 %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                 %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
