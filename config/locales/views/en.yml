@@ -1353,3 +1353,17 @@ en:
         share: Share
         tweet: Tweet
         copy_button_title: Click me to copy to clipboard
+
+    referred_signups:
+      index:
+        h1: Referred Signups
+        referrer: Referrer
+        referral_code: Referral Code
+        referrer_url: Referrer URL
+        referred_user: Referred User
+        subscription: Subscription
+        maturing_on: Maturing On
+        payed_at: Payed At
+      edit:
+        h1: Editing Referred Signup
+        payed_at: Payed At

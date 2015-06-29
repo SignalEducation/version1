@@ -1,0 +1,35 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.referred_signups.index.h1')
+
+=render partial: 'shared/filter_panel', locals: {controller_name: 'referred_signups',
+parameters: [{name: :payed, collection: [{value: 0, show: 'Not Payed'}, {value: 1, show: 'Payed'}],
+show_attr: :show, value_attr: :value}]}
+
+.row
+  .col-sm-12
+    =will_paginate @referred_signups, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered.sorted_table{data: {destination: referred_signups_url}}
+      %thead
+        %tr
+          %th=t('views.referred_signups.index.referrer')
+          %th=t('views.referred_signups.index.referral_code')
+          %th=t('views.referred_signups.index.referrer_url')
+          %th=t('views.referred_signups.index.referred_user')
+          %th=t('views.referred_signups.index.subscription')
+          %th=t('views.referred_signups.index.maturing_on')
+          %th=t('views.referred_signups.index.payed_at')
+          %th
+      %tbody
+        -@referred_signups.each do |referred_signup|
+          %tr{id: referred_signup.id}
+            %td= referred_signup.referral_code.user.full_name
+            %td= referred_signup.referral_code.code
+            %td= referred_signup.referrer_url
+            %td= referred_signup.user.full_name
+            %td= referred_signup.subscription.subscription_plan.description.chomp.gsub("\r\n", ", ")
+            %td= referred_signup.maturing_on ? referred_signup.maturing_on.strftime("%Y-%m-%d") : ""
+            %td= referred_signup.payed_at ? referred_signup.payed_at.strftime("%Y-%m-%d") : ""
+            %td
+              = link_to t('views.general.edit'), edit_referred_signup_url(referred_signup), class: 'btn btn-info btn-xs'
