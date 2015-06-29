@@ -139,7 +139,11 @@ Rails.application.routes.draw do
       post :import_csv, on: :collection, action: :import_csv
       get :download_csv, on: :collection, action: :download_csv
     end
-    resources :referral_codes, except: [:new, :show, :edit, :update]
+    resources :referral_codes, except: [:new, :edit, :update]
+    resources :referred_signups, only: [:index, :edit, :update] do
+      post :filter, on: :collection, action: :index
+      get  '/filter/:payed', on: :collection, action: :index, as: :filtered
+    end
 
     # home page
     root 'home_pages#show'
