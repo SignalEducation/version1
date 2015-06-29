@@ -43,6 +43,7 @@ describe ReferredSignup do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
+  it { should validate_presence_of(:subscription_id)}
   it { should validate_numericality_of(:subscription_id) }
 
   # callbacks

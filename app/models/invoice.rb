@@ -92,50 +92,58 @@ class Invoice < ActiveRecord::Base
 
   # class methods
   def self.build_from_stripe_data(stripe_data_hash)
-    user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
-    subscription = Subscription.find_by_stripe_guid(stripe_data_hash[:subscription])
     inv = nil
-    if user && subscription
-      inv = Invoice.new(
-        user_id: user.id,
-        corporate_customer_id: nil,
-        subscription_id: subscription.id,
-        currency_id: Currency.find_by_iso_code(stripe_data_hash[:currency].upcase).id,
-        issued_at: Time.at(stripe_data_hash[:date]),
-        stripe_guid: stripe_data_hash[:id],
-        sub_total: stripe_data_hash[:subtotal].to_i / 100.0,
-        total: stripe_data_hash[:total].to_i / 100.0,
-        total_tax: stripe_data_hash[:tax].to_i / 100.0,
-        stripe_customer_guid: stripe_data_hash[:customer],
-        object_type: stripe_data_hash[:object],
-        payment_attempted: stripe_data_hash[:attempted],
-        payment_closed: stripe_data_hash[:closed],
-        forgiven: stripe_data_hash[:forgiven],
-        paid: stripe_data_hash[:paid],
-        livemode: stripe_data_hash[:livemode],
-        attempt_count: stripe_data_hash[:attempt_count],
-        amount_due: stripe_data_hash[:amount_due],
-        next_payment_attempt_at: (stripe_data_hash[:next_payment_attempt] ? Time.at(stripe_data_hash[:next_payment_attempt]) : nil),
-        webhooks_delivered_at: (stripe_data_hash[:webhooks_delivered_at] ? Time.at(stripe_data_hash[:webhooks_delivered_at]) : nil),
-        charge_guid: stripe_data_hash[:charge],
-        subscription_guid: stripe_data_hash[:subscription],
-        tax_percent: stripe_data_hash[:tax_percent],
-        tax: stripe_data_hash[:tax].to_i / 100.0,
-        original_stripe_data: stripe_data_hash.to_hash,
-        # todo - these need further attention
-        subscription_transaction_id: nil,
-        vat_rate_id: nil,
-        number_of_users: 0
-      )
-      if inv.save
-        stripe_data_hash[:lines][:data].each do |line_item|
-          InvoiceLineItem.build_from_stripe_data(inv.id, line_item, inv.subscription_id)
+    Invoice.transaction do
+      user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
+      subscription = Subscription.find_by_stripe_guid(stripe_data_hash[:subscription])
+      if user && subscription
+        inv = Invoice.new(
+          user_id: user.id,
+          corporate_customer_id: nil,
+          subscription_id: subscription.id,
+          currency_id: Currency.find_by_iso_code(stripe_data_hash[:currency].upcase).id,
+          issued_at: Time.at(stripe_data_hash[:date]),
+          stripe_guid: stripe_data_hash[:id],
+          sub_total: stripe_data_hash[:subtotal].to_i / 100.0,
+          total: stripe_data_hash[:total].to_i / 100.0,
+          total_tax: stripe_data_hash[:tax].to_i / 100.0,
+          stripe_customer_guid: stripe_data_hash[:customer],
+          object_type: stripe_data_hash[:object],
+          payment_attempted: stripe_data_hash[:attempted],
+          payment_closed: stripe_data_hash[:closed],
+          forgiven: stripe_data_hash[:forgiven],
+          paid: stripe_data_hash[:paid],
+          livemode: stripe_data_hash[:livemode],
+          attempt_count: stripe_data_hash[:attempt_count],
+          amount_due: stripe_data_hash[:amount_due],
+          next_payment_attempt_at: (stripe_data_hash[:next_payment_attempt] ? Time.at(stripe_data_hash[:next_payment_attempt]) : nil),
+          webhooks_delivered_at: (stripe_data_hash[:webhooks_delivered_at] ? Time.at(stripe_data_hash[:webhooks_delivered_at]) : nil),
+          charge_guid: stripe_data_hash[:charge],
+          subscription_guid: stripe_data_hash[:subscription],
+          tax_percent: stripe_data_hash[:tax_percent],
+          tax: stripe_data_hash[:tax].to_i / 100.0,
+          original_stripe_data: stripe_data_hash.to_hash,
+          # todo - these need further attention
+          subscription_transaction_id: nil,
+          vat_rate_id: nil,
+          number_of_users: 0
+        )
+        if inv.save
+          begin
+            stripe_data_hash[:lines][:data].each do |line_item|
+              InvoiceLineItem.build_from_stripe_data(inv.id, line_item, inv.subscription_id)
+            end
+          rescue NoMethodError => err
+            Rails.logger.error "ERROR: Invoice with id #{inv.id} should be rolled back due to the error in creating invoice line items."
+            inv = nil
+            raise ActiveRecord::Rollback
+          end
+        else
+          Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
         end
       else
-        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice.  Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
+        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscritpion #{stripe_data_hash[:subscription]} do not exisr."
       end
-    else
-      Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscritpion #{stripe_data_hash[:subscription]} do not exisr."
     end
     inv
   end

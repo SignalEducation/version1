@@ -17,13 +17,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should redirect to sign_in' do
-        get :show, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
     describe "POST 'create'" do
       it 'should redirect to sign_in' do
         post :create
@@ -51,20 +44,6 @@ describe ReferralCodesController, type: :controller do
       it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see own referral code' do
-        ref_code = individual_student_user.create_referral_code
-        get :show, id: ref_code.id
-        expect_show_success_with_model('referral_code', ref_code.id)
-      end
-
-      # optional - some other object
-      it 'should not see other user referral code' do
-        get :show, id: tutor_referral_code.id
-        expect_error_bounce(profile_url)
       end
     end
 
@@ -115,20 +94,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see tutor_referral_code' do
-        ref_code = tutor_user.create_referral_code
-        get :show, id: ref_code.id
-        expect_show_success_with_model('referral_code', ref_code.id)
-      end
-
-      # optional - some other object
-      it 'should not see other user referral code' do
-        get :show, id: tutor_referral_code.id
-        expect_error_bounce(profile_url)
-      end
-    end
-
     describe "POST 'create'" do
       it 'should redirect to root URL for plain HTML request' do
         post :create
@@ -172,20 +137,6 @@ describe ReferralCodesController, type: :controller do
       it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see own referral code' do
-        ref_code = corporate_student_user.create_referral_code
-        get :show, id: ref_code.id
-        expect_show_success_with_model('referral_code', ref_code.id)
-      end
-
-      # optional - some other object
-      it 'should not see other user referral code' do
-        get :show, id: tutor_referral_code.id
-        expect_error_bounce(profile_url)
       end
     end
 
@@ -235,13 +186,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should bounce as not allowed' do
-        get :show, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "POST 'create'" do
       it 'should bounce as not allowed' do
         post :create
@@ -273,13 +217,6 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should bounce as not allowed' do
         get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should bounce as not allowed' do
-        get :show, id: tutor_referral_code.id
         expect_bounce_as_not_allowed
       end
     end
@@ -319,13 +256,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should bounce as not allowed' do
-        get :show, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "POST 'create'" do
       it 'should bounce as not allowed' do
         post :create
@@ -357,13 +287,6 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should bounce as not allowed' do
         get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should bounce as not allowed' do
-        get :show, id: tutor_referral_code.id
         expect_bounce_as_not_allowed
       end
     end
@@ -403,13 +326,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should bounce as not allowed' do
-        get :show, id: tutor_referral_code.id
-        expect_error_bounce(referral_codes_url)
-      end
-    end
-
     describe "POST 'create'" do
       it 'should redirect to root URL for pain HTML request' do
         post :create
@@ -426,7 +342,8 @@ describe ReferralCodesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         individual_student_user = FactoryGirl.create(:individual_student_user)
-        individual_student_user.create_referred_signup(referral_code_id: tutor_referral_code.id)
+        individual_student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
+                                                       subscription_id: 1)
         delete :destroy, id: tutor_referral_code.id
         expect_delete_error_with_model('referral_code', referral_codes_url)
       end

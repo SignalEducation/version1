@@ -15,11 +15,15 @@
 #
 
 class StripeApiEvent < ActiveRecord::Base
+  # Since we shouldn't access routes in models and we need profile URL
+  # for sending email through Mandrill we are defining non-DB attribute
+  # here which will use value passed by Stripe API controller.
+  attr_accessor :profile_url
 
   serialize :payload, Hash
 
   # attr-accessible
-  attr_accessible :guid, :api_version
+  attr_accessible :guid, :api_version, :profile_url
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
@@ -60,12 +64,21 @@ class StripeApiEvent < ActiveRecord::Base
           invoice = Invoice.build_from_stripe_data(self.payload[:data][:object])
           if invoice && invoice.errors.count == 0
             Rails.logger.debug "DEBUG: Invoice #{invoice.id} created"
-            set_default_values
+            self.processed = true
+            self.processed_at = Time.now
           else
-            set_process_error (invoice ? invoice.errors.full_messages.inspect : "error creating invoice")
+            set_process_error (invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
           end
         when 'invoice.payment_failed'
-          # We have to send mail 'Subscription Error' here
+          user = User.find_by_stripe_customer_id(payload[:data][:object][:customer])
+          if user
+            MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.profile_url)
+            self.processed = true
+            self.processed_at = Time.now
+          else
+            Rails.logger.error "ERROR: User with Stripe id #{payload[:data][:object][:customer]} does not exist."
+            set_process_error "User with given Stripe ID does not exist"
+          end
         when 'customer.subscription.updated'
           subscription = Subscription.find_by_stripe_guid(payload[:data][:object][:id])
           if subscription && subscription.current_status == 'trialing' &&
@@ -76,17 +89,24 @@ class StripeApiEvent < ActiveRecord::Base
             if subscription.update_attribute(:current_status, 'active')
               Rails.logger.debug "DEBUG: Subscription #{subscription.id} updated"
               if subscription.referred_signup
-                subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now)
-                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup}"
+                subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now.utc.beginning_of_day)
+                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
               end
-              set_default_values
+              MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
+                                           subscription.subscription_plan.name + " - " +
+                                           I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
+                                           subscription.subscription_plan.currency.iso_code,
+                                           subscription.subscription_plan.price.to_f)
+              self.processed = true
+              self.processed_at = Time.now
             else
               set_process_error subscription.errors.full_messages.join("\n")
             end
-            # We have to sent mail 'Trial Converted' here
+          else
+            set_process_error "Unknown subscription or unexpected subscription status states"
           end
         else
-          self.update_attribute(:error_message, 'Unknown event type')
+          set_process_error "Unknown event type"
         end # of case statement
 
         self.save

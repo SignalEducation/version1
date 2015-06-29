@@ -1,0 +1,796 @@
+// sig: @bojanjanjanin
+// I've based my approach on https://smacss.com and tried to follow http://codeguide.co
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "font-awesome";
+@import "bootstrap-social";
+
+// 0. Settings
+$gutter: 20px;
+$white: #fff;
+$gray-1: #6E6D75;
+$asphalt-1: #EFF3F6;
+$purple-1: #3E3F5B;
+$red-1: #EE5457;
+$cyan-1: #3EB9CE;
+
+$sans-font: "proxima-nova-soft", Arial, sans-serif;
+
+@mixin font-size($sizeValue: 1.6) {
+  font-size: ($sizeValue * 10) + px;
+  font-size: $sizeValue + rem;
+}
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin border-top-radius($radius) {
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+  -webkit-border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin border-right-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin border-bottom-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+  -webkit-border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin border-left-radius($radius) {
+  -webkit-border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+  -webkit-border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
+@mixin breakpoint($point) {
+  @if $point == xs-min {
+    @media (min-width: 360px) { @content; }
+  }
+  @if $point == sm-min {
+    @media (min-width: 768px) { @content; }
+  }
+  @else if $point == md-min {
+    @media (min-width: 992px) { @content; }
+  }
+  @else if $point == lg-min {
+    @media (min-width: 1100px)  { @content; }
+  }
+}
+@mixin image-2x($image, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+  (-o-min-device-pixel-ratio: 2.6/2),
+  (-webkit-min-device-pixel-ratio: 1.3),
+  (min-device-pixel-ratio: 1.3),
+  (min-resolution: 1.3dppx) {
+    background-image: url($image);
+    background-size: $width $height;
+  }
+}
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $left $top $blur $color;
+    -moz-box-shadow:inset $left $top $blur $color;
+    box-shadow:inset $left $top $blur $color;
+  } @else {
+    -webkit-box-shadow: $left $top $blur $color;
+    -moz-box-shadow: $left $top $blur $color;
+    box-shadow: $left $top $blur $color;
+  }
+}
+
+// 1. Base
+html {
+  background: darken($purple-1, 15%);
+}
+body {
+  font-family: $sans-font;
+  background: $white;
+  color: $gray-1;
+  @include breakpoint(md-min) {
+    margin: 0 auto;
+    max-width: 1800px;
+  }
+}
+a {
+  color: $red-1;
+  text-decoration: underline;
+}
+a:hover,
+a:focus {
+  color: shade($cyan-1, 10%);
+  text-decoration: underline;
+}
+a:active {
+  color: $purple-1;
+}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
+  position: relative;
+  &.h-white {
+    color: $white;
+  }
+}
+h1, .h1 {
+  font-weight: normal;
+  color: $purple-1;
+  text-transform: none;
+  font-weight: normal;
+  letter-spacing: 0;
+  margin-bottom: $gutter*3;
+  line-height: 1.3;
+  @include font-size(2.6);
+  @include breakpoint(md-min) {
+    @include font-size(3.6);
+  }
+}
+h2, .h2 {
+  font-weight: normal;
+  color: $purple-1;
+  margin-bottom: $gutter*2;
+  @include font-size(2.6);
+  @include breakpoint(md-min) {
+    @include font-size(3.0);
+  }
+}
+h3, .h3 {
+  font-weight: normal;
+  color: $purple-1;
+  text-transform: none;
+  letter-spacing: 0;
+  @include font-size(2.4);
+}
+h4, .h4 {
+  color: $purple-1;
+  font-weight: bold;
+  @include font-size(1.6);
+  @include breakpoint(md-min) {
+    @include font-size(1.8);
+  }
+}
+h5, .h5 {
+  color: lighten($purple-1, 40%);
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+  line-height: 1.5;
+  @include font-size(1.1);
+  @include breakpoint(md-min) {
+    @include font-size(1.3);
+  }
+}
+h6, .h6 {
+  font-weight: bold;
+  color: $purple-1;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+}
+p, .p {
+  color: $gray-1;
+  margin-bottom: $gutter;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+}
+.h-separator {
+  padding-bottom: $gutter*1.5;
+  &:after {
+    position: absolute;
+    content: "";
+    width: 60px;
+    height: 2px;
+    background: $cyan-1;
+    bottom: 0;
+    @include border-radius(10px);
+  }
+  &.h-separator-left {
+    &:after {
+      left: 0;
+    }
+  }
+  &.h-separator-center {
+    &:after {
+      left: 50%;
+      margin-left: -30px;
+    }
+  }
+}
+
+// 2. Layout
+.l-wrap {
+  //padding: 0 2rem;
+  margin: 0 auto;
+  @include breakpoint(md-min) {
+    max-width: 1200px;
+  }
+}
+.l-section {
+  padding: 5rem 0;
+  @include breakpoint(md-min) {
+    padding: 10rem 0;
+  }
+}
+.l-padding-zero {
+  padding: 0;
+}
+
+// 3. modules
+.hero {
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") 50% 0 no-repeat;
+  color: $white;
+  text-transform: uppercase;
+  @include breakpoint(md-min) {
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") no-repeat;
+    background-size: cover;
+  }
+}
+.hero-inner {
+  padding: 10rem 0 10rem 0;
+  @include breakpoint(md-min) {
+    padding: 20rem 0 25rem 0;
+  }
+  .h1 {
+    @include breakpoint(lg-min) {
+      padding-right: 10%;
+    }
+  }
+}
+.course-acca {
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  @include breakpoint(md-min) {
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
+  }
+}
+.course-cfa {
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  @include breakpoint(md-min) {
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") no-repeat;
+  }
+}
+.course-inner {
+  text-align: center;
+  padding: 10rem 0;
+}
+.course-intro {
+  text-align: center;
+}
+.course-list {
+  background: $asphalt-1;
+}
+.course-list-wrap {
+  margin-top: -$gutter*2;
+  @include breakpoint(md-min) {
+    margin-top: 0;
+  }
+  @include breakpoint(lg-min) {
+    margin-top: 0;
+  }
+}
+.course-group-title {
+  margin-bottom: $gutter*2;
+  @include breakpoint(sm-min) {
+    margin-bottom: 0;
+  }
+  @include breakpoint(md-min) {
+    margin-bottom: $gutter*2;
+  }
+}
+.logo {
+  padding: $gutter 0;
+  float: left;
+  max-width: 125px;
+  @include breakpoint(md-min) {
+    max-width: 165px;
+  }
+}
+.navbar-main {
+  letter-spacing: .2rem;
+  border-bottom: 1px solid rgba($white, .2);
+  text-transform: uppercase;
+  @include clearfix();
+}
+.nav-main {
+  list-style: none;
+  padding: 0;
+  margin: 0 -$gutter;
+  background: $red-1;
+  @include font-size(1.3);
+  @include breakpoint(sm-min) {
+    margin: 15px 0 0 0;
+    background: transparent;
+  }
+  li {
+    display: block;
+    border-top: 1px solid rgba($white, .2);
+    @include breakpoint(sm-min) {
+      display: inline-block;
+      border: 0;
+    }
+  }
+  a {
+    color: #fff;
+    display: block;
+    background: $red-1;
+    text-decoration: none;
+    padding: $gutter/1.5 $gutter/1.5 $gutter/1.5 $gutter;
+    @include breakpoint(sm-min) {
+      display: inline-block;
+      background: transparent;
+      padding: $gutter/3 $gutter/4 $gutter/3 $gutter/4;
+      @include opacity(0.8);
+    }
+    &:hover {
+      @include opacity(1);
+    }
+    &:active, &:hover {
+      background: shade($red-1, 10%);
+      @include breakpoint(sm-min) {
+        background: transparent;
+      }
+    }
+    &.sign-in-link {
+      border: 0;
+      &:hover {
+        @include breakpoint(sm-min) {
+          border-color: $white;
+        }
+      }
+      @include breakpoint(sm-min) {
+        padding: $gutter/4 $gutter/2;
+        border: 1px solid rgba($white, .2);
+        @include border-radius(3px);
+      }
+    }
+  }
+  @include breakpoint(sm-min) {
+    float: right;
+    padding: 0;
+    background: transparent;
+    a {
+      margin: 0 0 0 $gutter/1.5;
+    }
+  }
+}
+.btn {
+  border: 0;
+  padding: 0 $gutter;
+  height: 40px;
+  line-height: 40px;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  display: block;
+  @include font-size(1.1);
+  @include box-shadow(2px, 0, 0, rgba(#000, .05));
+  @include breakpoint(xs-min) {
+    display: inline-block;
+  }
+  @include breakpoint(sm-min) {
+    display: inline-block;
+    @include font-size(1.2);
+  }
+  &:link, &:visited {
+    text-decoration: none;
+    color: $white;
+  }
+  &:hover {
+    color: $white;
+  }
+  &:active {
+
+  }
+  &.btn-purple {
+    background: $purple-1;
+    &:hover {
+      background: shade($purple-1, 10%);
+    }
+  }
+  &.btn-red {
+    background: $red-1;
+    &:hover {
+      background: shade($red-1, 10%);
+      @include box-shadow(1px, 0, 0, rgba(#000, .1));
+    }
+    &:active {
+      background: ($red-1);
+    }
+  }
+}
+form {
+  max-width: 700px;
+}
+.form-control {
+  padding: $gutter/2 $gutter/1.5;
+  height: 40px;
+  border: 1px solid darken($asphalt-1, 10%);
+  @include font-size(1.4);
+  @include box-shadow(2px, 0, 0, rgba(#000, .05));
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+}
+.main-course-link {
+  color: $white;
+  text-align: center;
+  display: block;
+  padding: $gutter*1.5 $gutter;
+  text-decoration: none;
+  @include font-size(2.2);
+  &:hover {
+    color: $white;
+    text-decoration: none;
+  }
+  &.link-purple {
+    background: $purple-1;
+    &:hover {
+      background: shade($purple-1, 10%);
+    }
+  }
+  &.link-red {
+    background: $red-1;
+    &:hover {
+      background: shade($red-1, 10%);
+    }
+  }
+}
+.features {
+  text-align: center;
+  background: $white;
+}
+.features-img {
+  display: block;
+  max-width: 110px;
+  margin: $gutter*2 auto;
+}
+.testimonials {
+  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
+  &.testimonials-alt {
+    background: $white;
+  }
+}
+.testimonial {
+  h1, h2, h3, h4 {
+    text-align: center;
+  }
+}
+.testimonial-pic-wrap {
+  position: relative;
+  max-width: 140px;
+  margin: $gutter*2 auto;
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    height: 30px;
+    width: 30px;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
+    background-size: contain;
+  }
+}
+.testimonial-pic {
+  display: block;
+  max-width: 140px;
+  @include border-radius(100%);
+}
+.testimonial-sig {
+  color: darken($gray-1, 15%);
+}
+.start-trial {
+  & a {
+    text-decoration: none;
+  }
+  & .h5 {
+    margin-bottom: $gutter/2;
+    @include opacity(0.6);
+  }
+  & p {
+    color: $white;
+    margin: 0;
+    &:hover {
+      color: $white;
+    }
+  }
+}
+.start-trial-wrap {
+  padding: $gutter*1.5 0;
+  background: $red-1;
+  @include breakpoint(md-min) {
+    padding: $gutter*3 0;
+  }
+  &:hover {
+    background: shade($red-1, 10%);
+  }
+  &:active {
+    background: $red-1;
+  }
+}
+.ico-arrow-right-r {
+  padding-right: $gutter*2;
+  position: relative;
+  &:after {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right.png") no-repeat 0 0;
+    background-size: contain;
+    top: 3px;
+    right: 0;
+    content: "";
+    height: 19px;
+    width: 19px;
+  }
+}
+.box {
+  display: block;
+  background: $white;
+  text-align: center;
+  position: relative;
+  margin-top: $gutter*3;
+  text-decoration: none;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include breakpoint(md-min) {
+    margin-top: 0;
+  }
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+  }
+  &:hover {
+    .box-label {
+      background: shade($red-1, 10%);
+    }
+  }
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    content: "";
+    height: 30px;
+    width: 30px;
+    margin-left: -15px;
+    margin-top: -15px;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+    background-size: contain;
+  }
+}
+.box-inner {
+  padding: $gutter*2 $gutter/2 $gutter $gutter/2;
+}
+.box-label {
+  background: $red-1;
+  color: $white;
+  padding: $gutter/1.25;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+.foot {
+  background: $purple-1;
+  padding: $gutter*1.5 0 $gutter*2 0;
+  @include clearfix();
+  @include font-size(1.2);
+  @include breakpoint(md-min) {
+    @include font-size(1.4);
+  }
+}
+.foot-nav {
+  color: $white;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $gutter 0;
+  @include breakpoint(md-min) {
+    float: right;
+  }
+  & li {
+    position: relative;
+    display: inline-block;
+    color: lighten($purple-1, 20%);
+    margin-left: $gutter/4;
+    &:before {
+      content: "•";
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+  & li:first-child {
+    margin: 0;
+    &:before {
+      content: "";
+    }
+    & a {
+      margin: 0;
+    }
+  }
+  & a {
+    color: $white;
+    text-decoration: none;
+    margin-left: $gutter/1.5;
+    @include opacity(0.8);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
+.foot-copyright {
+  color: $white;
+  @include opacity(0.8);
+  @include font-size(1.2);
+  @include breakpoint(md-min) {
+    float: left;
+    @include font-size(1.4);
+  }
+}
+
+// 4. Print
+@media print {
+  * {
+    background: #fff;
+    color: #333;
+  }
+  html {
+    font: 100%/1.5 georgia, serif;
+  }
+}
+
+// 5. States
+.is-lg-right {
+  @include breakpoint(sm-min) {
+    float: right;
+  }
+}
+.is-visually-hidden {
+  left: -9999px;
+  position: absolute;
+  top: -9999px;
+}
+.is-text-disabled {
+  color: #999;
+}
+
+// 6. Vendor
+/*! responsive-nav.js 1.0.39 by @viljamis */
+
+.nav-collapse ul {
+  padding: 0;
+  width: 100%;
+  display: block;
+  list-style: none;
+}
+
+.nav-collapse li {
+  //width: 100%;
+  //display: block;
+}
+
+.nav-collapse li a {
+  //display: block;
+}
+
+.js .nav-collapse {
+  clip: rect(0 0 0 0);
+  max-height: 0;
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  zoom: 1;
+}
+
+.nav-collapse.opened {
+  max-height: 9999px;
+}
+
+.nav-toggle {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
+  display: block;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: $gutter;
+  top: 21px;
+  text-indent: -9999px;
+  background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-hamburger.png") no-repeat 50% 0;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-hamburger%402x.png", 20px, 14px);
+  &.active {
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-close.png") no-repeat 50% 0;
+    @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-close%402x.png", 15px, 15px);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .js .nav-collapse {
+    position: relative;
+  }
+  .js .nav-collapse.closed {
+    max-height: none;
+  }
+  .nav-toggle {
+    display: none;
+  }
+}
+
+// 7. Debugging
+
+// * { outline: 1px solid red }
+
+/* 
+@include breakpoint(xs-min) {
+  body {
+    position: relative;
+    &:after {
+      content: "XS";
+      position: fixed;
+      display: block;
+      top: 5px;
+      right: 5px;
+      font-size: 8px;
+    }
+  }
+}
+@include breakpoint(sm-min) {
+  body {
+    &:after {
+      content: "SM";
+    }
+  }
+}
+@include breakpoint(md-min) {
+  body {
+    &:after {
+      content: "MD";
+    }
+  }
+}
+@include breakpoint(lg-min) {
+  body {
+    &:after {
+      content: "LG";
+    }
+  }
+}
+*/

@@ -31,7 +31,8 @@ class ReferredSignup < ActiveRecord::Base
             uniqueness: { scope: :user_id, message: I18n.t('models.referred_signups.user_can_be_referred_only_once') }
   validates :user_id, presence: true,
             numericality: { only_integer: true, greater_than: 0 }
-  validates :subscription_id, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  validates :subscription_id, presence: true,
+            numericality: { only_integer: true, greater_than: 0 }
 
   # callbacks
   before_destroy :check_dependencies

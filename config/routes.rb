@@ -105,6 +105,9 @@ Rails.application.routes.draw do
       post :filter, on: :collection, action: :index
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
+    get 'acca', to: 'home_pages#show', first_element: 'acca'
+    get 'cfa', to: 'home_pages#show', first_element: 'cfa'
+    resources :home_pages, except: [:destroy]
     resources :institutions, concerns: :supports_reordering do
       post :filter, on: :collection, action: :index
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
@@ -137,9 +140,13 @@ Rails.application.routes.draw do
       get :download_csv, on: :collection, action: :download_csv
     end
     resources :referral_codes, except: [:new, :edit, :update]
+    resources :referred_signups, only: [:index, :edit, :update] do
+      post :filter, on: :collection, action: :index
+      get  '/filter/:payed', on: :collection, action: :index, as: :filtered
+    end
 
     # home page
-    root 'static_pages#deliver_page'
+    root 'home_pages#show'
 
     # Catch-all
     get '404', to: 'static_pages#deliver_page', first_element: '404-page'

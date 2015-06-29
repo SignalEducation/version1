@@ -40,7 +40,7 @@ class SubscriptionsController < ApplicationController
 
   def destroy
     if @subscription
-      if @subscription.cancel
+      if @subscription.cancel(profile_url)
         MixpanelSubscriptionCancelWorker.perform_async(@subscription.id)
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else

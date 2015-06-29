@@ -1,0 +1,35 @@
+=render partial: 'layouts/navbar'
+.container
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
+  .row
+    .col-sm-12
+      .page-header
+        %h1=t('views.home_pages.index.h1')
+  .row
+    .col-sm-12
+      =will_paginate @home_pages, renderer: BootstrapPagination::Rails
+      %table.table.table-striped.table-bordered
+        %thead
+          %tr
+            %th=t('views.home_pages.form.seo_title')
+            %th=t('views.home_pages.form.seo_description')
+            %th=t('views.home_pages.form.subscription_plan_category_id')
+            %th=t('views.home_pages.form.public_url')
+            %th
+        %tbody
+          -@home_pages.each do |home_page|
+            %tr{id: home_page.id}
+              %td=home_page.seo_title
+              %td=home_page.seo_description
+              %td=home_page.subscription_plan_category.try(:name)
+              %td=home_page.public_url
+              %td
+                =link_to t('views.general.edit'), edit_home_page_url(home_page), class: 'btn btn-info btn-xs'
+
+  .row
+    .col-sm-12
+      =link_to t('views.general.new'), new_home_page_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+
+=render partial: 'layouts/footer'

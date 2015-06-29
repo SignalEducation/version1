@@ -13,6 +13,9 @@
 
       %ul.nav.navbar-nav.visible-xs.pull-right
         %li=link_to 'Teach', new_tutor_application_url
+        -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor?)
+          %li
+            %a.refer-a-friend-lnk{href: '#', data: {toggle: 'modal', target: '#refer-a-friend-dialog'}}Refer a friend!
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
 
       %ul.nav.navbar-text.hidden-xs.pull-left
@@ -28,4 +31,7 @@
               %img{src: '//cdn.mxpnl.com/site_media/images/partner/badge_light.png', alt: 'Mobile Analytics'}
       %ul.nav.navbar-nav.hidden-xs.pull-right
         %li=link_to 'Teach', new_tutor_application_url
+        -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor?)
+          %li
+            %a.refer-a-friend-lnk{href: '#', data: {toggle: 'modal', target: '#refer-a-friend-dialog'}}Refer a friend!
         =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}

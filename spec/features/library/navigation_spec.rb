@@ -17,6 +17,7 @@ describe 'User navigating through the library:', type: :feature do
 
     scenario 'not logged-in user', js: true  do
       visit root_path
+      click_link 'Browse Courses'
       click_link 'Library'
       expect(page).to have_content maybe_upcase institution_1.short_name
       expect(page).to have_content institution_1.description
@@ -55,6 +56,7 @@ describe 'User navigating through the library:', type: :feature do
 
     scenario 'not logged-in user', js: true  do
       visit root_path
+      click_link 'Browse Courses'
       click_link 'Library'
       expect(page).to have_content maybe_upcase institution_1.short_name
       expect(page).to have_content institution_1.description

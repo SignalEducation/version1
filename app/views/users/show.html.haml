@@ -11,6 +11,8 @@
         %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
       %li{role: 'presentation'}
         %a{href: '#notifications', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.notifications')
+      %li{role: 'presentation'}
+        %a{href: '#referral-code', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.referral_code')
       -if @current_subscription
         %li{role: 'presentation'}
           %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
@@ -43,6 +45,25 @@
               =f.submit t('views.general.save'), class: 'btn btn-ls-default'
               -if @user.id == current_user.id
                 =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
+
+        .tab-pane.fade#referral-code{role: 'tabpanel'}
+          .rows
+            .col-sm-8.col-sm-offset-2
+              -if current_user.referral_code.nil?
+                %h2=t('views.users.show.you_dont_have_referral_code')
+              -else
+                %h2="#{t('views.users.show.tabs.referral_code')}: #{current_user.referral_code.code}"
+                .well.well-sm
+                  .row
+                    .col-sm-10
+                      %p=t('views.users.show.total_number_of_referred_users')
+                    .col-sm-2
+                      %p.pull-right=current_user.referral_code.referred_signups.count
+                  .row
+                    .col-sm-10
+                      %p=t('views.users.show.number_of_referred_users_this_month')
+                    .col-sm-2
+                      %p.pull-right=current_user.referral_code.referred_signups.where("created_at >= ? and created_at <= ?", Time.now.beginning_of_month, Time.now.end_of_month).count
 
         -if @current_subscription
           .tab-pane.fade#subscriptions{role: 'tabpanel'}
@@ -241,4 +262,3 @@
   =render partial: 'subscription_payment_cards/modal'
 
 =render partial: 'shared/activate_tab'
-
