@@ -5,23 +5,12 @@ class ReferralCodesController < ApplicationController
   before_action only: [:index, :destroy] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action only: [:show, :create] do
+  before_action only: [:create] do
     ensure_user_is_of_type(['individual_student', 'corporate_student', 'tutor'])
   end
 
   def index
     @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).all_in_order
-  end
-
-  def show
-    @referral_code = ReferralCode.where(id: params[:id], user_id: current_user.id).first
-    if current_user.admin?
-      flash[:error] = I18n.t('controllers.referral_codes.show.flash.error')
-      redirect_to(referral_codes_url)
-    elsif @referral_code.nil?
-      flash[:error] = I18n.t('controllers.referral_codes.show.flash.error')
-      redirect_to(profile_url)
-    end
   end
 
   def create

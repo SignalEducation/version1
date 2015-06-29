@@ -40,7 +40,9 @@ class StudentSignUpsController < ApplicationController
         code, referrer_url = cookies.encrypted[:referral_data].split(';')
         if code
           referral_code = ReferralCode.find_by_code(code)
-          @user.create_referred_signup(referral_code_id: referral_code.id, referrer_url: referrer_url) if referral_code
+          @user.create_referred_signup(referral_code_id: referral_code.id,
+                                       subscription_id: @user.subscriptions.first.id,
+                                       referrer_url: referrer_url) if referral_code
           cookies.delete(:referral_data)
         end
       end

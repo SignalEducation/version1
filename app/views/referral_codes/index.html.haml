@@ -13,7 +13,9 @@
             =t('views.referral_codes.index.name')
             %br
             =t('views.referral_codes.index.email')
-          %th=t('views.referral_codes.index.referred_no')
+          %th=t('views.referral_codes.index.paid_referred_no')
+          %th=t('views.referral_codes.index.unpaid_referred_no')
+          %th=t('views.referral_codes.index.for_paying_no')
           %th
       %tbody
         -@referral_codes.each do |referral_code|
@@ -23,7 +25,9 @@
               = referral_code.user.full_name
               %br
               = referral_code.user.email
-            %td= referral_code.referred_signups.count
+            %td= referral_code.payed_referred_signups.count
+            %td= referral_code.unpayed_referred_signups.count
+            %td= referral_code.referred_signups_ready_for_paying.count
             %td
               -if referral_code.destroyable?
                 =link_to t('views.general.delete'), referral_code, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
