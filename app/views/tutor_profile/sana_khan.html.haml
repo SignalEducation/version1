@@ -1,0 +1,94 @@
+.header.header-dark{:role => "banner"}
+  .l-wrap
+    .container-fluid
+      %nav.navbar-main.navbar-small{:role => "navigation"}
+        =link_to root_url do
+          =image_tag('ls-logo-red.svg', class: 'logo')
+        %ul.nav-main.nav-collapse
+          %li
+            =link_to 'Browse Courses', library_url
+          %li
+            =link_to 'Sign Up', student_sign_up_url
+          %li
+            =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+.ls
+  .l-wrap
+    .l-section-small
+      .container-fluid
+        .profile-single
+          .row
+            .col-md-6.col-md-offset-3
+              %h1.h1.h-separator.h-separator-center.text-center
+                Sana Khan
+          .row
+            .col-sm-12.col-md-6.col-md-offset-3
+
+              =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sana-k.jpg', class: 'profile-pic profile-pic-big', alt: 'Sana Khan')
+              .profile-text
+                %p
+                  Sana Khan is an experienced lawyer (qualified Barrister-at-Law) and lecturer in law. Her practice as a barrister included advising a wide range of public and private organisations. She has presented papers both nationally and internationally on the developments of governance standards throughout a number of industries. She lectures in a variety of subject matters including corporate governance, anti-money laundering, data protection and CSR. Currently working as a Legal Counsel with First Names Group, Sana holds the statutory roles of Compliance Officer, Deputy Money Laundering Reporting Officer, and Data Protection Officer. Working with law firms and large international companies, she has gained industry knowledge and insight into legal practice, fiduciary services, corporate governance, corporate social responsibility, risk, compliance and data protection from national and international perspectives.
+.l-asphalt
+  .l-wrap
+    .l-section-small
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h2.h2.h-separator.h-separator-center.text-center
+              More lecturer profiles
+        .row
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "profile-dave-odonoghue.html"}
+              .box-inner
+                %img.profile-pic{:alt => "Dave O’Donoghue", :src => "assets/img/dave-d.jpg"}
+                %h3.h4.box-title
+                  Dave O’Donoghue
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "profile-liam-doran.html"}
+              .box-inner
+                %img.profile-pic{:alt => "Liam Doran", :src => "assets/img/liam-d.jpg"}
+                %h3.h4.box-title
+                  Liam Doran
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "profile-chris-ahlstrand.html"}
+              .box-inner
+                %img.profile-pic{:alt => "Chris Ahlstrand", :src => "assets/img/chris-a.jpg"}
+                %h3.h4.box-title
+                  Chris Ahlstrand
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "profile-john-owens.html"}
+              .box-inner
+                %img.profile-pic{:alt => "John Owens", :src => "assets/img/john-o.jpg"}
+                %h3.h4.box-title
+                  John Owens
+        .row.l-margin-bottom-big
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "#"}
+              .box-inner
+                %img.profile-pic{:alt => "Tim Briden", :src => "assets/img/profile-pic-placeholder.jpg"}
+                %h3.h4.box-title
+                  Tim Briden
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "#"}
+              .box-inner
+                %img.profile-pic{:alt => "David Kiely", :src => "assets/img/profile-pic-placeholder.jpg"}
+                %h3.h4.box-title
+                  David Kiely
+
+.foot
+  .l-wrap
+    .container-fluid
+      %ul.foot-nav
+        %li
+          %a{:href => "#"}
+            About Us
+        %li
+          %a{:href => "#"}
+            Jobs
+        %li
+          %a{:href => "#"}
+            Terms & Conditions
+      %p.foot-copyright
+        &copy; 2014 &mdash; 2015 Learn Signal
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");

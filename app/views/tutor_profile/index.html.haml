@@ -1,0 +1,84 @@
+.header.header-dark{:role => "banner"}
+  .l-wrap
+    .container-fluid
+      %nav.navbar-main.navbar-small{:role => "navigation"}
+        =link_to root_url do
+          =image_tag('ls-logo-red.svg', class: 'logo')
+        %ul.nav-main.nav-collapse
+          %li
+            =link_to 'Browse Courses', library_url
+          %li
+            =link_to 'Sign Up', student_sign_up_url
+          %li
+            =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+.l-asphalt.is-bg-white-to-asphalt
+  .l-wrap
+    .l-section-small
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-separator.h-separator-center.text-center
+              Lecturer profiles
+        .row
+          .col-sm-6.col-md-3.col-lg-3
+            =link_to tutor_profile_dave_o_donoghue_url, class: 'box box-profile' do
+              .box-inner
+                =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/dave-d.jpg', class: 'profile-pic', alt: 'Dave O’Donoghue')
+                %h3.h4.box-title
+                  Dave O’Donoghue
+          .col-sm-6.col-md-3.col-lg-3
+            =link_to tutor_profile_liam_doran_url, class: 'box box-profile' do
+              .box-inner
+                =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/liam-d.jpg', class: 'profile-pic', alt: 'Liam Doran')
+                %h3.h4.box-title
+                  Liam Doran
+          .col-sm-6.col-md-3.col-lg-3
+            =link_to tutor_profile_john_owens_url, class: 'box box-profile' do
+              .box-inner
+                =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/john-o.jpg', class: 'profile-pic', alt: 'John Owens')
+                %h3.h4.box-title
+                  John Owens
+          .col-sm-6.col-md-3.col-lg-3
+            =link_to tutor_profile_chris_ahlstrand_url, class: 'box box-profile' do
+              .box-inner
+                =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/chris-a.jpg', class: 'profile-pic', alt: 'Chris Ahlstrand')
+                %h3.h4.box-title
+                  Chris Ahlstrand
+        .row.l-margin-bottom-big
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "#"}
+              .box-inner
+                %img.profile-pic{:alt => "Tim Briden", :src => "assets/img/profile-pic-placeholder.jpg"}
+                %h3.h4.box-title
+                  Tim Briden
+          .col-sm-6.col-md-3.col-lg-3
+            =link_to tutor_profile_sana_khan_url, class: 'box box-profile' do
+              .box-inner
+                =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sana-k.jpg', class: 'profile-pic', alt: 'Sana Khan')
+                %h3.h4.box-title
+                  Sana Khan
+          .col-sm-6.col-md-3.col-lg-3
+            %a.box.box-profile{:href => "#"}
+              .box-inner
+                %img.profile-pic{:alt => "David Kiely", :src => "assets/img/profile-pic-placeholder.jpg"}
+                %h3.h4.box-title
+                  David Kiely
+
+.foot
+  .l-wrap
+    .container-fluid
+      %ul.foot-nav
+        %li
+          %a{:href => "#"}
+            About Us
+        %li
+          %a{:href => "#"}
+            Jobs
+        %li
+          %a{:href => "#"}
+            Terms & Conditions
+      %p.foot-copyright
+        &copy; 2014 &mdash; 2015 Learn Signal
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");
