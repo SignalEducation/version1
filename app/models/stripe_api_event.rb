@@ -57,7 +57,8 @@ class StripeApiEvent < ActiveRecord::Base
       Rails.logger.debug "DEBUG: Processing Stripe event #{payload[:type]}"
       unless Invoice::STRIPE_LIVE_MODE == payload[:livemode]
         Rails.logger.error "ERROR: StripeAPIEvent#disseminate_payload: LiveMode of message incompatible with Rails.env. StripeMode:#{Invoice::STRIPE_LIVE_MODE}. Rails.env.#{Rails.env} -v- payload:#{payload}."
-        self.update_attributes(processed: false, error: true, error_message: 'Livemode incorrect', callbacks: false, validation: false)
+        set_process_error("Livemode incorrect")
+        self.save
       else
         case self.payload[:type]
         when 'invoice.created'
@@ -70,7 +71,7 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error (invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
           end
         when 'invoice.payment_failed'
-          user = User.find_by_stripe_customer_id(payload[:data][:object][:customer])
+          user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           if user
             MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.profile_url)
             self.processed = true
@@ -80,24 +81,33 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error "User with given Stripe ID does not exist"
           end
         when 'customer.subscription.updated'
-          subscription = Subscription.find_by_stripe_guid(payload[:data][:object][:id])
-          if subscription && subscription.current_status == 'trialing' && payload[:data][:object][:status] == 'active'
-            if subscription.update_attribute(:current_status, 'active')
+          subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
+          if subscription
+            previous_status = subscription.current_status
+            # Update some attributes no matter what is curent subscription status.
+            subscription.current_status = self.payload[:data][:object][:status]
+            subscription.next_renewal_date = Time.at(self.payload[:data][:object][:current_period_end].to_i)
+            if subscription.save
               Rails.logger.debug "DEBUG: Subscription #{subscription.id} updated"
-              if subscription.referred_signup
-                subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now.utc.beginning_of_day)
-                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
-              end
+              # If this is first payment for this subscription (user is converting from
+              # trial to active subscription) then we have to check referred signups and
+              # check if we have to send notification e-mail to the user.
+              if previous_status == 'trialing' && self.payload[:data][:object][:status] == 'active'
+                if subscription.referred_signup
+                  subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now.utc.beginning_of_day)
+                  Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
+                end
 
-              # This is first time when user is charged and his subscription
-              # status is changed from trialing to active so we have to
-              # send him an email
-              if payload[:data][:previous_attributes][:status] == 'trialing'
-                MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
-                                             subscription.subscription_plan.name + " - " +
-                                             I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
-                                             subscription.subscription_plan.currency.iso_code,
-                                             subscription.subscription_plan.price.to_f)
+                # This is first time when user is charged and his subscription
+                # status is changed from trialing to active so we have to
+                # send him an email
+                if self.payload[:data][:previous_attributes][:status] == 'trialing'
+                  MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
+                                               subscription.subscription_plan.name + " - " +
+                                               I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
+                                               subscription.subscription_plan.currency.iso_code,
+                                               subscription.subscription_plan.price.to_f)
+                end
               end
               self.processed = true
               self.processed_at = Time.now
