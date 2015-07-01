@@ -27,7 +27,7 @@ RSpec.describe OperationalMailer, :type => :mailer do
     expect_delivery_to_from_and_subject_success(individual_student_user.email, 'operational','your_password_has_changed')
   end
 
-  it 'reset your password' do
+  xit 'reset your password' do
     OperationalMailer.reset_your_password(reset_user).deliver_now
     expect_delivery_to_from_and_subject_success(reset_user.email, 'operational','reset_your_password')
   end

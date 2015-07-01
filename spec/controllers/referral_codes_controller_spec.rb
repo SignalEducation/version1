@@ -7,6 +7,8 @@ describe ReferralCodesController, type: :controller do
 
   let!(:tutor) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id ) }
   let!(:tutor_referral_code) { FactoryGirl.create(:referral_code, user_id: tutor.id) }
+  let!(:blogger) { FactoryGirl.create(:blogger_user, user_group_id: blogger_user_group.id ) }
+  let!(:blogger_referral_code) { FactoryGirl.create(:referral_code, user_id: blogger.id) }
 
   context 'Not logged in: ' do
 
@@ -222,13 +224,31 @@ describe ReferralCodesController, type: :controller do
     end
 
     describe "POST 'create'" do
-      it 'should bounce as not allowed' do
+      it 'should redirect to root URL for plain HTML request' do
         post :create
-        expect_bounce_as_not_allowed
+        expect(response).to redirect_to(root_url)
       end
 
+      it 'should respond with referral sharing URL for Ajax request' do
+        xhr :post, :create
+        expect(response.headers['Content-Type']).to include("text/javascript")
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json['url']).to end_with(ReferralCode.last.code)
+      end
+
+      it 'should report error for Ajax request if student already has referral code' do
+        blogger_user.create_referral_code
+        xhr :post, :create
+        expect(response.status).to eq(422)
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq(I18n.t('controllers.referral_codes.create.flash.error'))
+      end
+    end
+
+    describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
-        post :create
+        delete :destroy, id: tutor_referral_code.id
         expect_bounce_as_not_allowed
       end
     end
@@ -322,7 +342,7 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('referral_codes', 1)
+        expect_index_success_with_model('referral_codes', 2)
       end
     end
 
