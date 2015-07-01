@@ -81,22 +81,24 @@ class StripeApiEvent < ActiveRecord::Base
           end
         when 'customer.subscription.updated'
           subscription = Subscription.find_by_stripe_guid(payload[:data][:object][:id])
-          if subscription && subscription.current_status == 'trialing' &&
-             payload[:data][:object][:status] == 'active' &&
-             # this check is probably not necessary but let's double check
-             # that subscription is changed from trialing to active
-             payload[:data][:previous_attributes][:status] == 'trialing'
+          if subscription && subscription.current_status == 'trialing' && payload[:data][:object][:status] == 'active'
             if subscription.update_attribute(:current_status, 'active')
               Rails.logger.debug "DEBUG: Subscription #{subscription.id} updated"
               if subscription.referred_signup
                 subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now.utc.beginning_of_day)
                 Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
               end
-              MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
-                                           subscription.subscription_plan.name + " - " +
-                                           I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
-                                           subscription.subscription_plan.currency.iso_code,
-                                           subscription.subscription_plan.price.to_f)
+
+              # This is first time when user is charged and his subscription
+              # status is changed from trialing to active so we have to
+              # send him an email
+              if payload[:data][:previous_attributes][:status] == 'trialing'
+                MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
+                                             subscription.subscription_plan.name + " - " +
+                                             I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
+                                             subscription.subscription_plan.currency.iso_code,
+                                             subscription.subscription_plan.price.to_f)
+              end
               self.processed = true
               self.processed_at = Time.now
             else
