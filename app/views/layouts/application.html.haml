@@ -71,6 +71,7 @@
         =yield
     -elsif (controller_name == 'home_pages') || (controller_name == 'tutor_profile')
       =yield
+      =render partial: 'layouts/new_footer'
     -else
       =render partial: 'layouts/navbar'
       .container

@@ -20,15 +20,6 @@
             %h1.h1.h-separator.h-separator-center.text-center
               Lecturer profiles
         =render partial: 'tutors'
-.foot
-  .l-wrap
-    .container-fluid
-      %ul.foot-nav
-        %li
-          =link_to 'Teach', new_tutor_application_url
-        =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
-      %p.foot-copyright
-        &copy; 2014 &mdash; 2015 Learn Signal
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
