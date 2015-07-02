@@ -8,10 +8,6 @@ RSpec.describe QualificationsController, type: :routing do
     end
 
     it 'routes to #index' do
-      expect(post: '/qualifications/filter').to route_to('qualifications#index')
-    end
-
-    it 'routes to #index' do
       expect(get: '/qualifications/filter/123').to route_to('qualifications#index', institution_url: '123')
     end
 

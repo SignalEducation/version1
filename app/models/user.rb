@@ -247,6 +247,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def blogger?
+    self.user_group.try(:blogger)
+  end
+
   def content_manager?
     self.user_group.try(:content_manager)
   end
