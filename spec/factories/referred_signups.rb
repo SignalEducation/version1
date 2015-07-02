@@ -20,5 +20,6 @@ FactoryGirl.define do
     referrer_url "http://example.com/referral"
     maturing_on nil
     payed_at "2015-05-25 14:11:12"
+    sequence(:subscription_id)       {|n| "#{n}"}
   end
 end
