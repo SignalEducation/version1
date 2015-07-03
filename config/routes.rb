@@ -42,7 +42,6 @@ Rails.application.routes.draw do
         as: :user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
-    get 'sign_up', to: 'student_sign_ups#new', as: :sign_up
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'profile', to: 'users#show', as: :profile
@@ -106,6 +105,7 @@ Rails.application.routes.draw do
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
     resources :home_pages, except: [:destroy]
+    post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     resources :institutions, concerns: :supports_reordering do
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
     end
@@ -113,8 +113,6 @@ Rails.application.routes.draw do
     resources :qualifications, concerns: :supports_reordering do
       get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
     end
-    get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
-    resources :student_sign_ups, only: [:show, :new, :create]
     resources :question_banks, only: [:new, :create, :destroy]
     resources :quiz_questions, except: [:index]
     resources :static_pages

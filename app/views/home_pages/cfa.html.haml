@@ -20,20 +20,7 @@
             %h1.h1.h-white.h-separator.h-separator-left
               Take the quick prep course for the CFA level 1
           .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
-            %form
-              %p.h5.h-white
-                Sign up for your 7-day free trial
-              .form-group
-                %input#inputName.form-control{:placeholder => "Full name", :type => "text"}
-              .form-group
-                %input#inputEmail.form-control{:placeholder => "Email", :type => "email"}
-              .form-group
-                %input#inputPassword.form-control{:placeholder => "Password", :type => "password"}
-              .form-group
-                %a.btn.btn-red{:href => "#"}
-                  Sign up now
-                %span.no-card
-                  No credit card needed
+            =render partial: 'sign_up_form'
 
 .course-intro
   .l-wrap

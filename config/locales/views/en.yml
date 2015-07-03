@@ -525,6 +525,12 @@ en:
       new:
         h1: New Landing Page
 
+      sign_up_form:
+        confirm_password: Confirm Password
+        submit: Sign up now
+        sign_up_for_free_trial: Sign up for your 7-day free trial
+        no_credit_card_needed: No credit card needed
+        error_panel_caption: "prevented your Sign-Up from being completed:"
 
     institutions:
       form:

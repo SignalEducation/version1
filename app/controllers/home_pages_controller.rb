@@ -1,10 +1,10 @@
 class HomePagesController < ApplicationController
 
-  before_action :logged_in_required, except: [:show]
-  before_action except: [:show] do
+  before_action :logged_in_required, except: [:show, :student_sign_up]
+  before_action except: [:show, :student_sign_up] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: [:student_sign_up]
 
   def index
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
@@ -18,6 +18,14 @@ class HomePagesController < ApplicationController
     else
       first_element = '/' + params[:first_element].to_s
       @home_page = HomePage.where(public_url: first_element).first
+      @user = User.new
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end if session[:sign_up_errors]
+      session.delete(:sign_up_errors)
+      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+      # @user.subscriptions.build(subscription_plan_id: SubscriptionPlan.where(price: 0.0).pluck(:id).first)
+
       if @home_page
         seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
         cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
@@ -61,6 +69,46 @@ class HomePagesController < ApplicationController
     end
   end
 
+  def student_sign_up
+    subscription_plan = SubscriptionPlan.where(price: 0.0).first
+    if subscription_plan
+      # "subscriptions_attributes"=>{"0"=>{"subscription_plan_id"=>"2", "stripe_token"=>"tok_6X6IEsaJNXoXNx"}}
+      @user = User.new(student_allowed_params.merge({
+                                                      "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
+                                                    }))
+      @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+      @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
+      if @user.valid? && @user.save
+        clear_mixpanel_initial_id
+        MixpanelUserSignUpWorker.perform_async(
+          @user.id,
+          request.remote_ip
+        )
+
+        if cookies.encrypted[:referral_data]
+          code, referrer_url = cookies.encrypted[:referral_data].split(';')
+          if code
+            referral_code = ReferralCode.find_by_code(code)
+            @user.create_referred_signup(referral_code_id: referral_code.id,
+                                         subscription_id: @user.subscriptions.first.id,
+                                         referrer_url: referrer_url) if referral_code
+            cookies.delete(:referral_data)
+          end
+        end
+
+        @user.assign_anonymous_logs_to_user(current_session_guid)
+        redirect_to personal_sign_up_complete_url(@user.guid)
+      else
+        session[:sign_up_errors] = @user.errors unless @user.errors.empty?
+        redirect_to request.referrer
+      end
+    else
+      session[:sign_up_errors] = {} if session[:sign_up_errors].nil?
+      session[:sign_up_errors][:subscription] = ["undefined default value"] if subscription_plan.nil?
+      redirect_to request.referrer
+    end
+  end
+
   protected
 
   def get_variables
@@ -74,4 +122,11 @@ class HomePagesController < ApplicationController
     params.require(:home_page).permit(:seo_title, :seo_description, :subscription_plan_category_id, :public_url)
   end
 
+  def student_allowed_params
+    params.require(:user).permit(
+          :email, :first_name, :last_name,
+          :country_id, :locale,
+          :password, :password_confirmation,
+    )
+  end
 end
