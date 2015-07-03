@@ -13,7 +13,7 @@
         =@seo_title
       -else
         LearnSignal
-    -if controller_name == 'home_pages' && action_name == 'show'
+    -if (controller_name == 'home_pages' && action_name == 'show') || (controller_name == 'tutor_profile')
       =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -else
       =stylesheet_link_tag 'old_application', media: 'all'
@@ -69,8 +69,9 @@
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
-    -elsif controller_name == 'home_pages'
+    -elsif (controller_name == 'home_pages') || (controller_name == 'tutor_profile')
       =yield
+      =render partial: 'layouts/new_footer'
     -else
       =render partial: 'layouts/navbar'
       .container

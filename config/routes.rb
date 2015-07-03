@@ -126,6 +126,12 @@ Rails.application.routes.draw do
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :tutor_applications
+    get 'tutor_profile/index'
+    get 'tutor_profile/chris_ahlstrand'
+    get 'tutor_profile/dave_o_donoghue'
+    get 'tutor_profile/liam_doran'
+    get 'tutor_profile/john_owens'
+    get 'tutor_profile/sana_khan'
     resources :user_activity_logs
     resources :user_notifications
     resources :vat_codes
