@@ -1127,3 +1127,10 @@ header {
 .referral-social-content {
   display: none;
 }
+
+#referral-link {
+  a:hover {
+    text-decoration: underline;
+
+  }
+}

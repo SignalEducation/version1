@@ -1,31 +1,33 @@
 .hero
-  .header
+  .header{:role => "banner"}
     .l-wrap
-      .navbar-main#navbar
-        =link_to root_url do
-          =image_tag('ls-logo-red.svg', class: 'logo')
-        %ul.nav-main.nav-collapse
-          %li
-            =link_to 'Browse Courses', library_url
-          %li
-            =link_to 'Sign Up', student_sign_up_url
-          %li
-            =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-  .hero-inner
+      .container-fluid
+        .navbar-main#navbar{:role => "navigation"}
+          =link_to root_url do
+            =image_tag('ls-logo-red.svg', class: 'logo')
+          %ul.nav-main.nav-collapse
+            %li
+              =link_to 'Browse Courses', library_url
+            %li
+              =link_to 'Sign Up', student_sign_up_url
+            %li
+              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+  .hero-inner#sign-up
     .l-wrap
-      %p.h5.h-white
-      Welcome to Learn Signal
-      %h1.h1.h-white.h-separator.h-separator-left
-        Become a member and get access to a growing library of professional training courses
-      =link_to 'Start your free trial &rarr;'.html_safe, student_sign_up_url, class: 'btn btn-red'
+      .container-fluid
+        %p.h5.h-white
+        Welcome to Learn Signal
+        %h1.h1.h-white.h-separator.h-separator-left
+          Become a member and get access to a growing library of professional training courses
+        =link_to 'Start your free trial &rarr;'.html_safe, student_sign_up_url, class: 'btn btn-red'
 .container-fluid
   .row
     .col-sm-6.l-padding-zero
-      =link_to '/cfa', class: 'main-course-link link-block link-purple' do
+      =link_to '/cfa', class: 'main-course-link link-purple' do
         %span.ico-arrow-right-r
           =@cfa.try(:short_name)
     .col-sm-6.l-padding-zero
-      =link_to 'acca', class: 'main-course-link link-block link-red' do
+      =link_to 'acca', class: 'main-course-link link-red' do
         %span.ico-arrow-right-r
           =@acca.try(:short_name)
 
@@ -89,22 +91,15 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url do
+  =link_to student_sign_up_url, class: 'link-block' do
     .start-trial-wrap
       .l-wrap
-        %p.h4
-          Become a member
-        %p.h2
-          Start your 7-day free trial &rarr;
-
-.foot
-  .l-wrap
-    %ul.foot-nav
-      %li
-        =link_to 'Teach', new_tutor_application_url
-      =render partial: 'layouts/custom_nav_links', locals: {link_type: 'footer'}
-    %p.foot-copyright
-      &copy; 2014 &mdash; 2015 Learn Signal
+        .container-fluid
+          %p.h5
+            Become a member
+          %p.h2
+            %span.ico-arrow-right-r
+              Start your 7-day free trial
 
 :javascript
     var nav = responsiveNav(".nav-collapse");

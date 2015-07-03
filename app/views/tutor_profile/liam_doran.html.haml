@@ -1,0 +1,54 @@
+.header.header-dark{:role => "banner"}
+  .l-wrap
+    .container-fluid
+      %nav.navbar-main.navbar-small{:role => "navigation"}
+        =link_to root_url do
+          =image_tag('ls-logo-red.svg', class: 'logo')
+        %ul.nav-main.nav-collapse
+          -if current_user
+            %li
+              =link_to 'Dashboard', dashboard_url
+            %li
+              =link_to 'Library', library_url
+            %li
+              =link_to 'Account', profile_url
+          -else
+            %li
+              =link_to 'Browse Courses', library_url
+            %li
+              =link_to 'Sign Up', student_sign_up_url
+            %li
+              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+.ls
+  .l-wrap
+    .l-section-small
+      .container-fluid
+        .profile-single
+          .row
+            .col-md-6.col-md-offset-3
+              %h1.h1.h-separator.h-separator-center.text-center
+                Liam Doran
+              %h4.text-center.l-margin-bottom-big
+                FCCA, MBS (Finance)
+          .row
+            .col-sm-12.col-md-6.col-md-offset-3
+
+              =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/liam-d.jpg', class: 'profile-pic profile-pic-big', alt: 'Liam Doran')
+              .profile-text
+                %p
+                  Liam is the Joint Head of the Accountancy School at Independent Colleges. He was previously a senior lecturer with Griffith College specialising in the areas of Financial Accounting and Financial Management for ACCA, CPA, CIMA and ACA. He is an immensely confident and popular lecturer.
+                %p
+                  ACCA Subjects – P2 and P4.
+
+.l-asphalt
+  .l-wrap
+    .l-section-small
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h2.h2.h-separator.h-separator-center.text-center
+              More lecturer profiles
+        =render partial: 'tutors'
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");
