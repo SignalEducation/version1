@@ -98,23 +98,19 @@ Rails.application.routes.draw do
     resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
     resources :exam_levels, concerns: :supports_reordering do
-      post :filter, on: :collection, action: :index
       get  '/filter/:qualification_url', on: :collection, action: :index, as: :filtered
     end
     resources :exam_sections, concerns: :supports_reordering do
-      post :filter, on: :collection, action: :index
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
     resources :home_pages, except: [:destroy]
     resources :institutions, concerns: :supports_reordering do
-      post :filter, on: :collection, action: :index
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
     end
     resources :invoices, only: [:index, :show]
     resources :qualifications, concerns: :supports_reordering do
-      post :filter, on: :collection, action: :index
       get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
     end
     get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
@@ -141,7 +137,6 @@ Rails.application.routes.draw do
     end
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
-      post :filter, on: :collection, action: :index
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
 
