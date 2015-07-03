@@ -56,7 +56,7 @@
     =render partial: 'layouts/favicon'
     =render partial: '/layouts/mixpanel_head_tag'
 
-  %body
+  %body{ontouchstart: ''}
     -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'tutor_applications'
