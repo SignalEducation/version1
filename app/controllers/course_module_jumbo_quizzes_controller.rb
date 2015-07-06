@@ -42,7 +42,7 @@ class CourseModuleJumboQuizzesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module_jumbo_quiz).permit(:course_module_id, :name, :name_url, :minimum_question_count_per_quiz, :maximum_question_count_per_quiz, :total_number_of_questions)
+    params.require(:course_module_jumbo_quiz).permit(:course_module_id, :name, :name_url, :minimum_question_count_per_quiz, :maximum_question_count_per_quiz, :total_number_of_questions, :active)
   end
 
 end

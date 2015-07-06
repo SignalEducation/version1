@@ -14,6 +14,7 @@
 #  best_possible_score_first_attempt :integer          default(0)
 #  best_possible_score_retry         :integer          default(0)
 #  destroyed_at                      :datetime
+#  active                            :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do
@@ -24,6 +25,7 @@ FactoryGirl.define do
     minimum_question_count_per_quiz 1
     maximum_question_count_per_quiz 1
     total_number_of_questions 1
+    active true
   end
 
 end

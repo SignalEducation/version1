@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(version: 20150617150924) do
     t.integer  "best_possible_score_first_attempt", default: 0
     t.integer  "best_possible_score_retry",         default: 0
     t.datetime "destroyed_at"
+    t.boolean  "active",                            default: false, null: false
   end
 
   add_index "course_module_jumbo_quizzes", ["course_module_id"], name: "index_course_module_jumbo_quizzes_on_course_module_id", using: :btree

@@ -60,7 +60,7 @@
     -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'tutor_applications'
-      =render partial: 'layouts/tutor_navbar'
+      =render partial: 'layouts/navbar'
       =yield
       =render partial: 'layouts/footer'
     -elsif controller_name == 'courses'

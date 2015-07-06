@@ -14,6 +14,7 @@
 #  best_possible_score_first_attempt :integer          default(0)
 #  best_possible_score_retry         :integer          default(0)
 #  destroyed_at                      :datetime
+#  active                            :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'

@@ -11,7 +11,7 @@ class CoursesController < ApplicationController
     @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
     if @course_module
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url]
+      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
       @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
       seo_title_maker("#{institution.short_name} - #{exam_level.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
