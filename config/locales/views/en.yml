@@ -855,60 +855,9 @@ en:
         h1: Stripe Developer Call
 
     student_sign_ups:
-      form:
-        retype_it: Confirm Password
-        all_you_can_eat_yes: "Unlimited Access"
-        all_you_can_eat_no: "Limited Access"
-        free_trial: " Free Trial"
-        day: " Day"
-        credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
-        expiry_month_prompt: "Exp Mth"
-        expiry_year_prompt: "Exp Year"
-        you_wont_be_charged: Your card won't be charged until the end of your trial period. If you cancel before then, your card won't be charged.
-        payment_frequency_in_months:
-          a1: Monthly
-          a3: Quarterly
-          a6: Half-yearly
-          a12: Yearly
-        submit: Sign Up Now
-        error_panel_caption: "prevented your Sign-Up from being completed:"
-        secure_server: "Secure server"
-        stripe_com_logo: "Stripe.com logo"
-
-      new:
-        seo_description: 'Sign up for student access on LearnSignal.com and pay nothing until your free trial period is complete. Commitment free - cancel anytime'
-        h1: Start Your Free Trial
-        lead: Pay nothing until your trial is complete
-        list:
-          one: Full Access
-          two: Free of Charge
-          three: Cancel Anytime
-        h2:
-          emailing: Set your messaging preferences
-          subscription: Choose your subscription plan
-          subscription_text: Choose a subscription by clicking it
-          payment: Enter your payment details
-
       show:
         h1: "Thanks for joining us!"
-        sub-head: "We think you're going to love learning with us!"
-        h2: "Your subscription details"
-        day: day
-        email_address: "help@learnsignal.com"
-        email_subject: I just signed up and I need some help
-        every: every
-        expires: expires
-        free_trial_period: "Free trial period"
-        if_you_have_any_questions: "If you have any questions about your subscription,"
-        lets_get_started: "Let's Get Started"
-        month: month
-        please_get_in_touch: 'please get in touch'
-        price: Price
-        to: to
-        your_card_details: "Your card details"
-        your_chosen_plan: "Your chosen plan"
-        your_first_payment_will_be_on: "Your first payment will be on"
-        your_next_payment_will_be_on: "Your next payment will be on"
+        sub-head: "E-mail with activation link has been sent. Please check your inbox and click on the link to activate your LearnSignal account."
 
     subject_areas:
       form:

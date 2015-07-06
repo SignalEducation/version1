@@ -72,11 +72,11 @@ class HomePagesController < ApplicationController
   def student_sign_up
     subscription_plan = SubscriptionPlan.where(price: 0.0).first
     if subscription_plan
-      # "subscriptions_attributes"=>{"0"=>{"subscription_plan_id"=>"2", "stripe_token"=>"tok_6X6IEsaJNXoXNx"}}
       @user = User.new(student_allowed_params.merge({
                                                       "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
                                                     }))
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+      @user.account_activation_code = SecureRandom.hex(10)
       @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
       if @user.valid? && @user.save
         clear_mixpanel_initial_id
@@ -84,6 +84,10 @@ class HomePagesController < ApplicationController
           @user.id,
           request.remote_ip
         )
+
+        MandrillWorker.perform_async(@user.id,
+                                    'send_verification_email',
+                                    user_activation_url(activation_code: @user.account_activation_code))
 
         if cookies.encrypted[:referral_data]
           code, referrer_url = cookies.encrypted[:referral_data].split(';')
@@ -97,7 +101,7 @@ class HomePagesController < ApplicationController
         end
 
         @user.assign_anonymous_logs_to_user(current_session_guid)
-        redirect_to personal_sign_up_complete_url(@user.guid)
+        redirect_to personal_sign_up_complete_url
       else
         session[:sign_up_errors] = @user.errors unless @user.errors.empty?
         redirect_to request.referrer
