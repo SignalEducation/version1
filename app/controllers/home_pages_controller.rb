@@ -70,46 +70,59 @@ class HomePagesController < ApplicationController
   end
 
   def student_sign_up
-    subscription_plan = SubscriptionPlan.where(price: 0.0).first
-    if subscription_plan
-      @user = User.new(student_allowed_params.merge({
-                                                      "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
-                                                    }))
-      @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-      @user.account_activation_code = SecureRandom.hex(10)
-      @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
-      if @user.valid? && @user.save
-        clear_mixpanel_initial_id
-        MixpanelUserSignUpWorker.perform_async(
-          @user.id,
-          request.remote_ip
-        )
+    if current_user
+      redirect_to dashboard_url
+    else
+      subscription_plan = SubscriptionPlan.where(price: 0.0).first
+      if subscription_plan
+        @user = User.new(student_allowed_params.merge({
+                                                        "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
+                                                      }))
+        @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+        @user.account_activation_code = SecureRandom.hex(10)
+        @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
+        if @user.valid? && @user.save
+          clear_mixpanel_initial_id
+          MixpanelUserSignUpWorker.perform_async(
+            @user.id,
+            request.remote_ip
+          )
 
-        MandrillWorker.perform_async(@user.id,
-                                    'send_verification_email',
-                                    user_activation_url(activation_code: @user.account_activation_code))
+          MandrillWorker.perform_async(@user.id,
+                                       'send_verification_email',
+                                       user_activation_url(activation_code: @user.account_activation_code))
 
-        if cookies.encrypted[:referral_data]
-          code, referrer_url = cookies.encrypted[:referral_data].split(';')
-          if code
-            referral_code = ReferralCode.find_by_code(code)
-            @user.create_referred_signup(referral_code_id: referral_code.id,
-                                         subscription_id: @user.subscriptions.first.id,
-                                         referrer_url: referrer_url) if referral_code
-            cookies.delete(:referral_data)
+          if cookies.encrypted[:referral_data]
+            code, referrer_url = cookies.encrypted[:referral_data].split(';')
+            if code
+              referral_code = ReferralCode.find_by_code(code)
+              @user.create_referred_signup(referral_code_id: referral_code.id,
+                                           subscription_id: @user.subscriptions.first.id,
+                                           referrer_url: referrer_url) if referral_code
+              cookies.delete(:referral_data)
+            end
           end
-        end
 
-        @user.assign_anonymous_logs_to_user(current_session_guid)
-        redirect_to personal_sign_up_complete_url
+          @user.assign_anonymous_logs_to_user(current_session_guid)
+          flash[:success] = I18n.t('controllers.home_pages.student_sign_up.flash.success')
+          redirect_to personal_sign_up_complete_url
+        else
+          # This is the way to restore model errors after redirect. In referrer method
+          # (which in our case can be one of three static pages - root, cfa or acca) we
+          # are restoring errors to the @user. Otherwise our redirect would destroy errors
+          # and sign-up form would not display them properly.
+          session[:sign_up_errors] = @user.errors unless @user.errors.empty?
+          redirect_to request.referrer
+        end
       else
-        session[:sign_up_errors] = @user.errors unless @user.errors.empty?
+        # This is the way to restore model errors after redirect. In referrer method
+        # (which in our case can be one of three static pages - root, cfa or acca) we
+        # are restoring errors to the @user. Otherwise our redirect would destroy errors
+        # and sign-up form would not display them properly.
+        session[:sign_up_errors] = {} if session[:sign_up_errors].nil?
+        session[:sign_up_errors][:subscription] = ["undefined default value"] if subscription_plan.nil?
         redirect_to request.referrer
       end
-    else
-      session[:sign_up_errors] = {} if session[:sign_up_errors].nil?
-      session[:sign_up_errors][:subscription] = ["undefined default value"] if subscription_plan.nil?
-      redirect_to request.referrer
     end
   end
 
