@@ -14,6 +14,7 @@
 #  best_possible_score_first_attempt :integer          default(0)
 #  best_possible_score_retry         :integer          default(0)
 #  destroyed_at                      :datetime
+#  active                            :boolean          default(FALSE), not null
 #
 
 class CourseModuleJumboQuiz < ActiveRecord::Base
@@ -24,7 +25,9 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_id, :name, :name_url,
                   :minimum_question_count_per_quiz,
-                  :maximum_question_count_per_quiz, :total_number_of_questions
+                  :maximum_question_count_per_quiz,
+                  :total_number_of_questions,
+                  :active
 
   # Constants
 
@@ -50,9 +53,11 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   before_save :sanitize_name_url
   before_save :calculate_best_possible_scores
   after_create :update_student_exam_tracks
+  after_update :update_course_module
 
   # scopes
   scope :all_in_order, -> { order(:course_module_id).where(destroyed_at: nil) }
+  scope :all_active, -> { where(active: true, destroyed_at: nil) }
 
   # class methods
 
@@ -103,4 +108,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
     true
   end
 
+  def update_course_module
+    self.parent.try(:save)
+  end
 end

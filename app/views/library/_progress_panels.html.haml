@@ -37,7 +37,7 @@
                               %p.pull-right=greatgrandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else
                               %p.pull-right='Flash Card'
-                  -if grandchild.course_module_jumbo_quiz
+                  -if grandchild.course_module_jumbo_quiz && grandchild.course_module_jumbo_quiz.active
                     =link_to course_special_link(grandchild.course_module_jumbo_quiz), class: 'library-items list-group-item' do
                       .list-item
                         .row

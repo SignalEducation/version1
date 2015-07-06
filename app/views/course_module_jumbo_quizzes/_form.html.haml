@@ -28,6 +28,13 @@
           =jumbo_quiz.label :total_number_of_questions, t('views.course_module_jumbo_quiz.form.total_number_of_questions'), class: 'control-label col-sm-4'
           .col-sm-8
             =jumbo_quiz.select :total_number_of_questions, options_for_select([5, 10, 15, 20, 25, 30], 20), {include_blank: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =jumbo_quiz.check_box :active
+                =t('views.exam_levels.form.active')
+
       %p
         =jumbo_quiz.submit t('views.general.save'), class: 'btn btn-success'
         =t('views.general.or')

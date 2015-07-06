@@ -291,7 +291,6 @@ describe 'The sign in process.', type: :feature do
     #  expect(page).to have_content 'Welcome back!'
     #  click_link('navbar-cog')
     #  click_link('Sign out')
-    #  expect(page).to have_content 'You are now logged out '
     #end
 
   end
@@ -347,7 +346,6 @@ describe 'The sign in process.', type: :feature do
     #  expect(page).to have_content 'Welcome back!'
     #  click_link('navbar-cog')
     #  click_link('Sign out')
-    #  expect(page).to have_content 'You are now logged out '
     #end
 
   end
@@ -403,7 +401,6 @@ describe 'The sign in process.', type: :feature do
     #  expect(page).to have_content 'Welcome back!'
     #  click_link('navbar-cog')
     #  click_link('Sign out')
-    #  expect(page).to have_content 'You are now logged out '
     #end
 
   end

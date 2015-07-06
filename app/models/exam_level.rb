@@ -19,6 +19,7 @@
 #  seo_no_index                            :boolean          default(FALSE)
 #  description                             :text
 #  duration                                :integer
+#  tutor_id                                :integer
 #
 
 class ExamLevel < ActiveRecord::Base
