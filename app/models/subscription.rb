@@ -309,11 +309,13 @@ class Subscription < ActiveRecord::Base
     self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
-      stripe_customer = Stripe::Customer.create(
-        plan: self.subscription_plan.try(:stripe_guid),
-        email: self.user.try(:email)
-      )
-      stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
+      if @stripe_token || self.user.subscriptions.reload.count == 1
+        stripe_customer = Stripe::Customer.create(
+          plan: self.subscription_plan.try(:stripe_guid),
+          email: self.user.try(:email)
+        )
+        stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
+      end
     elsif self.stripe_guid.blank?
       #### Existing customer that is reactivating
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
