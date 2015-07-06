@@ -176,8 +176,16 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def default?
+    self.subscription_plan.price == 0.0
+  end
+
   def destroyable?
-    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
+    self.invoices.empty? &&
+      self.invoice_line_items.empty? &&
+      self.subscription_transactions.empty? &&
+      self.livemode == Invoice::STRIPE_LIVE_MODE &&
+      self.referred_signup.nil?
   end
 
   def stripe_token=(t) # setter method
