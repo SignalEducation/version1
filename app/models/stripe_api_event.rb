@@ -82,7 +82,7 @@ class StripeApiEvent < ActiveRecord::Base
           end
         when 'customer.subscription.updated'
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription && !subscription.default?
+          if subscription && !subscription.free_trial?
             previous_status = subscription.current_status
             # Update some attributes no matter what is curent subscription status.
             subscription.current_status = self.payload[:data][:object][:status]

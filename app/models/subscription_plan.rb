@@ -115,6 +115,10 @@ class SubscriptionPlan < ActiveRecord::Base
     self.subscriptions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
   end
 
+  def free_trial?
+    self.price == 0.0
+  end
+
   protected
 
   def available_to_in_the_future

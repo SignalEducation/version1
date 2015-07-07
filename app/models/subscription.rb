@@ -176,8 +176,8 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def default?
-    self.subscription_plan.price == 0.0
+  def free_trial?
+    self.subscription_plan.free_trial?
   end
 
   def destroyable?

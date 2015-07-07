@@ -92,5 +92,6 @@ describe SubscriptionPlan do
   it { should respond_to(:description) }
   it { should respond_to(:description_without_trial) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:free_trial?) }
 
 end
