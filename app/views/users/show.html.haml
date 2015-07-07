@@ -114,7 +114,7 @@
                           =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-success'
                         -else
                           %h3=t('views.users.show.upgrade_subscription_plan')
-                          -if @current_subscription.upgrade_options.count > 1
+                          -if @current_subscription.upgrade_options.count > 0
                             %p
                               =link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-info', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
                               %br/
