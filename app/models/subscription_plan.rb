@@ -101,14 +101,14 @@ class SubscriptionPlan < ActiveRecord::Base
   def description
     self.description_without_trial + "\r\n" +
             (self.trial_period_in_days > 0 ?
-                (self.trial_period_in_days).to_s + (I18n.t('views.student_sign_ups.form.day') + I18n.t('views.student_sign_ups.form.free_trial')) +
+                (self.trial_period_in_days).to_s + (I18n.t('views.general.day') + I18n.t('views.general.free_trial')) +
                      "\r\n" : '')
   end
 
   def description_without_trial
     self.currency.format_number(self.price) + "\r\n" + (self.all_you_can_eat ?
-                                              I18n.t('views.student_sign_ups.form.all_you_can_eat_yes') :
-                                              I18n.t('views.student_sign_ups.form.all_you_can_eat_no') )
+                                              I18n.t('views.general.all_you_can_eat_yes') :
+                                              I18n.t('views.general.all_you_can_eat_no') )
   end
 
   def destroyable?

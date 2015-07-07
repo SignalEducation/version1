@@ -67,6 +67,18 @@ en:
         coming_soon: Coming Soon
       created_at: Created at
       updated_at: "Last Updated: "
+      credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
+      expiry_month_prompt: "Exp Mth"
+      expiry_year_prompt: "Exp Year"
+      payment_frequency_in_months:
+        a1: Monthly
+        a3: Quarterly
+        a6: Half-yearly
+        a12: Yearly
+      day: " Day"
+      free_trial: " Free Trial"
+      all_you_can_eat_yes: "Unlimited Access"
+      submit: Sign Up Now
 
     locales:
       en: English

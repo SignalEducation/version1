@@ -161,7 +161,7 @@ describe Api::StripeV01Controller, type: :controller do
         it 'updated' do
           mc = double
           expect(mc).to receive(:send_trial_converted_email).with(
-                          subscription_2.subscription_plan.name + " - " + I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription_2.subscription_plan.payment_frequency_in_months}"),
+                          subscription_2.subscription_plan.name + " - " + I18n.t("views.general.payment_frequency_in_months.a#{subscription_2.subscription_plan.payment_frequency_in_months}"),
                           subscription_2.subscription_plan.currency.iso_code,
                           subscription_2.subscription_plan.price)
           expect(MandrillClient).to receive(:new).and_return(mc)

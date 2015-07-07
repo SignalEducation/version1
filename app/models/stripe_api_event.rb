@@ -104,7 +104,7 @@ class StripeApiEvent < ActiveRecord::Base
                 if self.payload[:data][:previous_attributes][:status] == 'trialing'
                   MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
                                                subscription.subscription_plan.name + " - " +
-                                               I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
+                                               I18n.t("views.general.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
                                                subscription.subscription_plan.currency.iso_code,
                                                subscription.subscription_plan.price.to_f)
                 end
