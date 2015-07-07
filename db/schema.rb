@@ -240,7 +240,6 @@ ActiveRecord::Schema.define(version: 20150701111329) do
     t.boolean  "seo_no_index",                            default: false
     t.text     "description"
     t.integer  "duration"
-    t.integer  "tutor_id"
   end
 
   add_index "exam_levels", ["qualification_id"], name: "index_exam_levels_on_qualification_id", using: :btree
