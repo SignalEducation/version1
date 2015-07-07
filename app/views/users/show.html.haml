@@ -13,7 +13,7 @@
         %a{href: '#notifications', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.notifications')
       %li{role: 'presentation'}
         %a{href: '#referral-code', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.referral_code')
-      -if @current_subscription
+      -if @current_subscription && !@current_subscription.default?
         %li{role: 'presentation'}
           %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
       -if current_user.admin?
@@ -84,7 +84,7 @@
                           .glyphicon.glyphicon-refresh
                           Refresh
 
-                -if @current_subscription
+                -if @current_subscription && !@current_subscription.default?
                   .well.well-sm
                     .row
                       .col-sm-8
