@@ -485,6 +485,16 @@ hr {
       background: ($red-1);
     }
   }
+  &.btn-red {
+    background: $red-1;
+    color: $white;
+    &:hover {
+      background: shade($red-1, 10%);
+    }
+    &:active {
+      background: ($red-1);
+    }
+  }
   &.btn-purple {
     background: $purple-1;
     color: $white;
@@ -714,6 +724,8 @@ form {
   }
 }
 a.box {
+  text-decoration: none;
+
   &:link {
     text-decoration: none;
   }

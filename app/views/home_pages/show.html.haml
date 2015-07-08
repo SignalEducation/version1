@@ -1,8 +1,8 @@
 .hero
-  .header{:role => "banner"}
+  .header{role: 'banner'}
     .l-wrap
       .container-fluid
-        .navbar-main#navbar{:role => "navigation"}
+        .navbar-main#navbar{role: 'navigation'}
           =link_to root_url do
             =image_tag('ls-logo-red.svg', class: 'logo')
           %ul.nav-main.nav-collapse
@@ -93,7 +93,7 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url, class: 'link-block' do
+  %a.link-block{href: '#sign-up'}
     .start-trial-wrap
       .l-wrap
         .container-fluid
@@ -105,3 +105,19 @@
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });

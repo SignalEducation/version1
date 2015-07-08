@@ -10,7 +10,7 @@
               =link_to 'Browse Courses', library_url
             %li
               =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-  .course-inner.course-sign-in
+  .course-inner.course-sign-up#sign-up
     .l-wrap
       .container-fluid
         .row
@@ -55,7 +55,7 @@
         .course-list-wrap
           .row
             .col-sm-6.col-md-4
-              =link_to library_special_link(@cfa_level_1), class: 'box' do
+              =link_to library_special_link(@cfa_level_1), class: 'box box-course' do
                 .box-inner
                   %h3.h4.box-title
                     CFA Level 1
@@ -64,7 +64,7 @@
                 .box-label
                   7-day free trial
             .col-sm-6.col-md-4
-              %a.box
+              %a.box.box-course
                 .box-inner
                   %h3.h4.box-title.is-text-disabled
                     CFA Level 2
@@ -73,7 +73,7 @@
                 .box-label
                   Get early access
             .col-sm-6.col-md-4
-              %a.box
+              %a.box.box-course
                 .box-inner
                   %h3.h4.box-title.is-text-disabled
                     CFA Level 2
@@ -112,7 +112,7 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to '#' do
+  %a.link-block{href: '#sign-up'}
     .start-trial-wrap
       .l-wrap
         .container-fluid
@@ -124,3 +124,19 @@
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });

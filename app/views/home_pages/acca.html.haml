@@ -1,8 +1,8 @@
 .course-acca
-  .header{:role => "banner"}
+  .header{role: 'banner'}
     .l-wrap
       .container-fluid
-        %nav.navbar-main{:role => "navigation"}
+        %nav.navbar-main{role: 'navigation'}
           =link_to root_url do
             =image_tag('ls-logo-red.svg', class: 'logo')
           %ul.nav-main.nav-collapse
@@ -10,7 +10,7 @@
               =link_to 'Browse Courses', library_url
             %li
               =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-  .course-inner.course-sign-in
+  .course-inner.course-sign-up#sign-up
     .l-wrap
       .container-fluid
         .row
@@ -29,8 +29,8 @@
         .row
           .col-sm-12
             %h2.h5
-              The most consise and advanced study material all in one place
-            %h3.h2.h-center.h-separator.h-separator-center
+              The most concise and advanced study material all in one place
+            %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big
               Revision courses to help you pass
         .row
           .col-sm-4
@@ -56,7 +56,7 @@
           .col-sm-12
             %h2.h5.text-center
               Only £25 per month
-            %h3.h2.text-center.h-separator.h-separator-center
+            %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
               Access all Available Courses
 
             %h4.h3.course-group-title.text-center
@@ -112,14 +112,31 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to '#' do
+  %a.link-block{href: '#sign-up'}
     .start-trial-wrap
       .l-wrap
         .container-fluid
           %p.h5
             Become a member
           %p.h2
-            Start your 7-day free trial &rarr;
+            %span.ico-arrow-right-r
+              Start your 7-day free trial &rarr;
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });
