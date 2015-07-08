@@ -53,7 +53,7 @@
               =link_to '(' + r.upload_file_name + ')', r.upload.url, target: '_blank'
               %br/
               .text-muted=r.description
--if @demo_mode = true
+-if controller_name == 'course_module_elements'
 
   :javascript
 
