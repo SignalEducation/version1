@@ -17,6 +17,10 @@
           .col-sm-8
             =f.text_field :name_url, placeholder: t('views.exam_levels.form.name_url_placeholder'), class: 'form-control'
         .form-group
+          =f.label :tutor_id, t('views.course_modules.form.tutor_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        .form-group
           =f.label :description, t('views.exam_levels.form.description'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_area :description, placeholder: t('views.exam_levels.form.description_placeholder'), rows: 4, class: 'form-control'

@@ -1,79 +1,31 @@
--if @edited_recently.count > 0
-  %h3=t('views.dashboard.content_manager.edited_in_last_3_days')
-  %table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th=t('views.static_pages.form.name')
-        %th=t('views.static_pages.form.public_url')
-        %th
-    %tbody
-      -@edited_recently.each do |static_page|
-        %tr{id: static_page.id}
-          %td=link_to(static_page.name, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to(static_page.public_url, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to t('views.static_pages.index.preview'), static_page_url(static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'
-
--if @recently_published.count > 0
-  %h3=t('views.dashboard.content_manager.published_in_last_3_days')
-  %table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th=t('views.static_pages.form.name')
-        %th=t('views.static_pages.form.public_url')
-        %th
-    %tbody
-      -@recently_published.each do |static_page|
-        %tr{id: static_page.id}
-          %td=link_to(static_page.name, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to(static_page.public_url, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to t('views.static_pages.index.preview'), static_page_url(static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'
-
--if @publishes_soon.count > 0
-  %h3=t('views.dashboard.content_manager.publishes_in_next_3_days')
-  %table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th=t('views.static_pages.form.name')
-        %th=t('views.static_pages.form.public_url')
-        %th
-    %tbody
-      -@publishes_soon.each do |static_page|
-        %tr{id: static_page.id}
-          %td=link_to(static_page.name, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to(static_page.public_url, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to t('views.static_pages.index.preview'), static_page_url(static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'
-
--if @recently_expired.count > 0
-  %h3=t('views.dashboard.content_manager.expired_in_last_3_days')
-  %table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th=t('views.static_pages.form.name')
-        %th=t('views.static_pages.form.public_url')
-        %th
-    %tbody
-      -@recently_expired.each do |static_page|
-        %tr{id: static_page.id}
-          %td=link_to(static_page.name, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to(static_page.public_url, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to t('views.static_pages.index.preview'), static_page_url(static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'
-
--if @expires_soon.count > 0
-  %h3=t('views.dashboard.content_manager.expires_in_next_3_days')
-  %table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th=t('views.static_pages.form.name')
-        %th=t('views.static_pages.form.public_url')
-        %th
-    %tbody
-      -@expires_soon.each do |static_page|
-        %tr{id: static_page.id}
-          %td=link_to(static_page.name, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to(static_page.public_url, static_page, title: t('views.general.view_tooltip'))
-          %td=link_to t('views.static_pages.index.preview'), static_page_url(static_page.id, preview: 'yes'), class: 'btn btn-info btn-xs', target: '_blank'
-
-
+%br/
+%h1=t('views.dashboard.tutor.title') + ': ' + current_user.try(:full_name)
+%br/
 .row
   .col-sm-12
-    =link_to t('views.dashboard.content_manager.see_all_static_pages'), static_pages_url, class: 'btn btn-success'
+    -@exam_levels.each do |el|
+      %h4=el.name + ': ' + el.tutor.full_name if el.tutor
+
+      %table.table.table-striped.table-bordered
+        %thead
+          %tr
+            %th=t('views.course_modules.index.h1')
+            %th=t('views.course_module_elements.form.active')
+            %th=t('views.dashboard.tutor.course_module_element_quizzes')
+            %th="#{t('views.dashboard.tutor.course_module_element_videos')} / #{t('views.dashboard.tutor.total_time_watched')}"
+            %th=t('views.dashboard.tutor.total_course_module_elements')
+            %th=t('views.library.show.jumbo_quiz')
+        %tbody
+          -@course_modules.where(exam_level_id: el.id).each do |course_modules|
+            %tr{id: course_modules.id}
+              %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
+              %td=tick_or_cross(course_modules.active?)
+              %td=course_modules.course_module_element_quizzes.count
+              - if course_modules.course_module_element_videos.count > 0
+                %td= "%d (%02d:%02d:%02d)" % [course_modules.course_module_element_videos.count,
+                course_modules.total_time_watched_videos[:hours], course_modules.total_time_watched_videos[:minutes],
+                course_modules.total_time_watched_videos[:seconds]]
+              - else
+                %td= course_modules.course_module_element_videos.count
+              %td=course_modules.course_module_elements.count
+              %td=tick_or_cross(course_modules.course_module_jumbo_quiz)

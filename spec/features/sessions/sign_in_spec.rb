@@ -232,8 +232,7 @@ describe 'The sign in process.', type: :feature do
       end
       expect(page).to have_content 'Welcome back!'
       click_link(I18n.t('views.general.tools'))
-      expect(page).to have_content I18n.t('views.static_pages.index.h1')
-      expect(page).to_not have_content I18n.t('views.layouts.navigation.course_content')
+      expect(page).to have_content 'Dashboard'
       click_link('navbar-cog')
       click_link('Sign out')
     end
@@ -453,7 +452,7 @@ describe 'The sign in process.', type: :feature do
         click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Welcome back!'
-      expect(page).to have_content I18n.t('views.general.admin')
+      expect(page).to have_content 'Dashboard: '
       expect(page).to have_content I18n.t('views.general.tools')
       click_link(I18n.t('views.general.tools'))
       expect(page).to have_content I18n.t('views.dashboard.admin.subject_areas')

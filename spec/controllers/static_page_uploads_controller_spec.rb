@@ -148,16 +148,12 @@ RSpec.describe StaticPageUploadsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, static_page_upload: valid_params
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template (:show)
-        expect(assigns('static_page_upload'.to_sym).class.name).to eq('static_page_upload'.classify)
-
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, static_page_upload: {valid_params.keys.first => ''}
-        expect(response.status).to eq(422)
+        expect_bounce_as_not_allowed
       end
     end
   end

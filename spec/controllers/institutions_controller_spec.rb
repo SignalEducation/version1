@@ -432,51 +432,93 @@ describe InstitutionsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('institutions', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
+      it 'should see institution_1' do
+        get :show, id: institution_1.id
+        expect_show_success_with_model('institution', institution_1.id)
+      end
+
+      # optional - some other object
+      it 'should see institution_2' do
+        get :show, id: institution_2.id
+        expect_show_success_with_model('institution', institution_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
+      it 'should respond OK' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_new_success_with_model('institution')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK with institution_1' do
+        get :edit, id: institution_1.id
+        expect_edit_success_with_model('institution', institution_1.id)
+      end
+
+      # optional
+      it 'should respond OK with institution_2' do
+        get :edit, id: institution_2.id
+        expect_edit_success_with_model('institution', institution_2.id)
       end
     end
 
     describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
+      it 'should report OK for valid params' do
         post :create, institution: valid_params
-        expect_bounce_as_not_allowed
+        expect_create_success_with_model('institution', filtered_institutions_url(subject_area.name_url))
+      end
+
+      it 'should report error for invalid params' do
+        post :create, institution: {valid_params.keys.first => ''}
+        expect_create_error_with_model('institution')
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, institution: valid_params
-        expect_bounce_as_not_allowed
+      it 'should respond OK to valid params for institution_1' do
+        put :update, id: institution_1.id, institution: valid_params
+        expect_update_success_with_model('institution', filtered_institutions_url(subject_area.name_url))
+      end
+
+      # optional
+      it 'should respond OK to valid params for institution_2' do
+        put :update, id: institution_2.id, institution: valid_params
+        expect_update_success_with_model('institution', filtered_institutions_url(subject_area.name_url))
+        expect(assigns(:institution).id).to eq(institution_2.id)
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: institution_1.id, institution: {valid_params.keys.first => ''}
+        expect_update_error_with_model('institution')
+        expect(assigns(:institution).id).to eq(institution_1.id)
+      end
+    end
+
+    describe "POST 'reorder'" do
+      it 'should be OK with valid array' do
+        post :reorder, array_of_ids: [institution_2.id, institution_1.id]
+        expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: institution_1.id
+        expect_delete_error_with_model('institution', institutions_url)
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: institution_2.id
+        expect_delete_success_with_model('institution', institutions_url)
       end
     end
 

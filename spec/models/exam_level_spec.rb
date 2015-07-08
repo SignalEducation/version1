@@ -71,6 +71,9 @@ describe ExamLevel do
   it { should validate_presence_of(:seo_description) }
   it { should validate_length_of(:seo_description).is_at_most(255) }
 
+  it { should_not validate_presence_of(:tutor_id) }
+  it { should validate_numericality_of(:tutor_id) }
+
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_best_possible_score).before(:save) }

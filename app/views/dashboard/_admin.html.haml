@@ -1,51 +1,42 @@
-%h1#admin-accordion=t('views.general.admin')
-
+%br/
+%h1=t('views.dashboard.tutor.title') + ': ' + current_user.try(:full_name)
+%br/
 .row
-  .col-sm-12
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.dashboard.admin.user_data')
-          %th=t('views.dashboard.admin.total_number_of_items')
-          %th=t('views.dashboard.admin.active')
-          %th=t('views.dashboard.admin.new_items_in_last_7_days')
-      %tbody
-        %tr
-          %td=link_to t('views.dashboard.admin.users'), users_url
-          %td=@all_users.count
-          %td=@active_users.count
-          %td=@new_users.count
-        %tr
-          %td=link_to t('views.dashboard.admin.user_groups'), user_groups_url
-          %td=@all_user_groups.count
-          %td
-          %td=@new_user_groups.count
+  .col-sm-8
+    -@exam_levels.each_with_index do |el|
+      .col-sm-12
+        -if el.tutor
+          %h3=el.name + ': ' + el.tutor.full_name
+        -else
+          %h3=el.name + ': ' + 'No Tutor Assigned'
+        %table.table.table-striped.table-bordered
+          %thead
+            %tr
+              %th=t('views.course_modules.index.h1')
+              %th=t('views.course_module_elements.form.active')
+              %th=t('views.dashboard.tutor.course_module_element_quizzes')
+              %th="#{t('views.dashboard.tutor.course_module_element_videos')} / #{t('views.dashboard.tutor.total_time_watched')}"
+              %th=t('views.dashboard.tutor.total_course_module_elements')
+              %th=t('views.library.show.jumbo_quiz')
+          %tbody
+            -@course_modules.where(exam_level_id: el.id).each do |course_modules|
+              %tr{id: course_modules.id}
+                %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
+                %td=tick_or_cross(course_modules.active?)
+                %td=course_modules.course_module_element_quizzes.count
+                -if course_modules.course_module_element_videos.count > 0
+                  %td= "%d (%02d:%02d:%02d)" % [course_modules.course_module_element_videos.count,
+                  course_modules.total_time_watched_videos[:hours], course_modules.total_time_watched_videos[:minutes],
+                  course_modules.total_time_watched_videos[:seconds]]
+                -else
+                  %td= course_modules.course_module_element_videos.count
+                %td=course_modules.course_module_elements.count
+                %td=tick_or_cross(course_modules.course_module_jumbo_quiz)
 
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.dashboard.admin.course_content_data')
-          %th=t('views.dashboard.admin.total_number_of_items')
-          %th=t('views.dashboard.admin.active')
-          %th=t('views.dashboard.admin.new_items_in_last_7_days')
-      %tbody
-        %tr
-          %td=link_to t('views.dashboard.admin.subject_areas'), subject_areas_url
-          %td=@all_subject_areas.count
-          %td=@active_subject_areas.count
-          %td=@new_subject_areas.count
-        %tr
-          %td=link_to t('views.dashboard.admin.institutions'), institutions_url
-          %td=@all_institutions.count
-          %td=@active_institutions.count
-          %td=@new_institutions.count
-        %tr
-          %td=link_to t('views.dashboard.admin.qualifications'), qualifications_url
-          %td=@all_qualifications.count
-          %td=@active_qualifications.count
-          %td=@new_qualifications.count
-        %tr
-          %td=link_to t('views.dashboard.admin.exam_levels'), exam_levels_url
-          %td=@all_exam_levels.count
-          %td=@active_exam_levels.count
-          %td=@new_exam_levels.count
+  %br/
+  %br/
+  .col-sm-4
+    %p='Total Video View Time: ' + humanize_time(@total_seconds).to_s
+    %p='Total Video View Time this month: ' + humanize_time(@monthly_total_seconds).to_s
+    %hr/
+    =link_to t('views.referral_codes.index.h1'), referral_codes_url, class: 'btn btn-ls-default'

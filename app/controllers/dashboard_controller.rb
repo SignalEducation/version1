@@ -21,39 +21,29 @@ class DashboardController < ApplicationController
     end
 
     if @dashboard_type.include?('tutor')
-      #@exam_levels = ExamLevel.where(tutor_id: current_user.id)
-      @course_modules = CourseModule.where(tutor_id: current_user.id)
-      #@total_user_logs = CourseModuleElementUserLog.where(course_module_element_id: @course_modules.id)
-      #@total_views = sum(@total_user_logs)
+      @exam_levels = ExamLevel.all_in_order.all_active.where(tutor_id: current_user.id)
+      @course_modules = CourseModule.where(tutor_id: current_user.id).where(exam_level_id: @exam_levels)
+      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
+      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
+      @total_seconds = @cmeuls.sum(:seconds_watched)
+      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
     end
 
     if @dashboard_type.include?('content_manager')
-      @static_pages = StaticPage.all_in_order
-      @edited_recently = @static_pages.where('updated_at > ?', Proc.new{Time.now - 3.days}.call)
-      @recently_published = @static_pages.where('publish_from > ?', Time.now - 3.days)
-      @publishes_soon = @static_pages.where('publish_from > ? AND publish_from < ?', Proc.new{Time.now}.call, Proc.new{Time.now + 3.days}.call)
-      @recently_expired = @static_pages.where('publish_to IS NOT NULL AND publish_to < ? AND publish_to > ?', Proc.new{Time.now}.call, Proc.new{Time.now - 3.days}.call)
-      @expires_soon = @static_pages.where('publish_to > ? AND publish_to < ?', Proc.new{Time.now}.call, Proc.new{Time.now + 3.days}.call)
+      @exam_levels = ExamLevel.all_in_order
+      @course_modules = CourseModule.all_in_order.where(exam_level_id: @exam_levels)
     end
 
     if @dashboard_type.include?('admin')
       @all_users = User.all
-      @active_users = @all_users.where(active: true)
+      @qualifications = Qualification.all
       @new_users = @all_users.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_user_groups = UserGroup.all
-      @new_user_groups = @all_user_groups.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_subject_areas = SubjectArea.all
-      @active_subject_areas = @all_subject_areas.where(active: true)
-      @new_subject_areas = @all_subject_areas.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_institutions = Institution.all
-      @active_institutions = @all_institutions.where(active: true)
-      @new_institutions = @all_institutions.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_qualifications = Qualification.all
-      @active_qualifications = @all_qualifications.where(active: true)
-      @new_qualifications = @all_qualifications.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_exam_levels = ExamLevel.all
-      @active_exam_levels = @all_exam_levels.where(active: true)
-      @new_exam_levels = @all_exam_levels.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
+      @exam_levels = ExamLevel.all_in_order
+      @course_modules = CourseModule.all_in_order.where(exam_level_id: @exam_levels)
+      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
+      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
+      @total_seconds = @cmeuls.sum(:seconds_watched)
+      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
     end
 
   end
