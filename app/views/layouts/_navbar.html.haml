@@ -52,15 +52,6 @@
                   %span.glyphicon.glyphicon-envelope
                   %span.visible-xs-inline=t('views.users.show.tabs.notifications')
 
-          -if current_user.content_manager? && !current_user.admin?
-            %li.dropdown
-              %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
-                =t('views.general.tools')
-                %span.caret
-              %ul.dropdown-menu{role: 'menu'}
-                %li.dropdown-header=t('views.layouts.navigation.content_management')
-                %li=link_to t('views.static_pages.index.h1'), static_pages_url
-
           %li.dropdown
             %a.dropdown-toggle#navbar-cog{href: '#', data: {toggle: 'dropdown'} }
               %span.glyphicon.glyphicon-cog
