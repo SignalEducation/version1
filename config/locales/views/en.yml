@@ -1081,6 +1081,14 @@ en:
         you_dont_have_referral_code: "You don't have a referral code."
         total_number_of_referred_users: Total number of referred users
         number_of_referred_users_this_month: Number of referred users this month
+      upgrade_subscription:
+        error_panel_caption: "prevented your subscription upgrade from being completed"
+        stripe_com_logo: "Stripe.com logo"
+        secure_server: "Secure server"
+        upgrade_subscription: Upgrade Subscription
+        h2:
+          subscription: Choose your subscription plan
+          payment: Enter your payment details
 
     user_activity_logs:
       form:

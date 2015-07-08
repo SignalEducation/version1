@@ -37,7 +37,11 @@ Rails.application.routes.draw do
     get '500' => redirect('500-page')
 
     # users and authentication
-    resources :users
+    resources :users do
+      get 'new_paid_subscription', to: 'users#new_paid_subscription', as: :new_paid_subscription
+      patch 'upgrade_from_free_trial', to: 'users#upgrade_from_free_trial', as: :upgrade_from_free_trial
+    end
+
     get 'user_activate/:activation_code', to: 'user_activations#update',
         as: :user_activation
     resources :user_groups

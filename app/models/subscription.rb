@@ -148,11 +148,16 @@ class Subscription < ActiveRecord::Base
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     else
-      response = stripe_subscription.delete(at_period_end: true).to_hash
+      response = self.free_trial? ?
+                   stripe_subscription.delete.to_hash :
+                   stripe_subscription.delete(at_period_end: true).to_hash
       if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:current_status, 'canceled-pending')
         SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
         Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
+      elsif response[:status] == 'canceled' && response[:cancel_at_period_end] == false
+        self.update_attribute(:current_status, response[:status])
+        Rails.logger.info "INFO: Free subscription ##{self.id} has benn canceled"
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))

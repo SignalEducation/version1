@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required
-  before_action except: [:show, :edit, :update, :change_password] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -89,6 +89,30 @@ class UsersController < ApplicationController
     end
     if current_user.admin?
       redirect_to users_url
+    else
+      redirect_to profile_url
+    end
+  end
+
+  def new_paid_subscription
+    redirect_to profile_url if current_user.subscriptions.count > 1
+    @user = current_user
+    @subscription_plans = SubscriptionPlan
+                          .includes(:currency)
+                          .for_students
+                          .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+                          .all_active
+                          .all_in_order
+  end
+
+  def upgrade_from_free_trial
+    if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial? &&
+       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"]
+      current_user.subscriptions[0].cancel
+      subscription_params = params[:user][:subscriptions_attributes]["0"]
+      current_user.subscriptions.create(subscription_plan_id: subscription_params["subscription_plan_id"],
+                                        stripe_token: subscription_params["stripe_token"])
+      redirect_to dashboard_url
     else
       redirect_to profile_url
     end

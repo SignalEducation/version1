@@ -1,0 +1,81 @@
+#upgrade-subscription
+  =form_for @user, url: user_upgrade_from_free_trial_url(@user.id), html: {class: 'form-horizontal', role: 'form'} do |f|
+    =f.hidden_field :country_id, value: @user.country_id
+    .row
+      .sign-up-form
+        .col-sm-10.col-sm-offset-1
+          .well.sign-up-well.text-center
+
+            .text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
+
+            %h2.text-center{style: 'margin-bottom: 18px'}
+              =t('views.users.upgrade_subscription.h2.subscription')
+            .row
+              -@subscription_plans.each do |plan|
+                .col-sm-4.currency.subscription-outer-panel{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", onclick: 'choosePlan(this); return false;', data: {plan_id: plan.id}}
+                  .panel.subscription-panel{class: plan.id == @user.subscriptions.first.subscription_plan_id ? 'active' : ''}
+                    .panel-heading
+                      %p.text-center=t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                    .panel-body.text-center
+                      %h2.no-top-gap=plan.currency.format_number(plan.price)
+                      -plan.description.lines[1..2].each do |line|
+                        %p=line
+
+            =f.fields_for :subscriptions do |sub|
+              =sub.hidden_field :subscription_plan_id
+              =sub.hidden_field :stripe_token
+
+          .well.sign-up-well
+            %h2.text-center{style: 'margin-bottom: 18px'}
+              =t('views.users.upgrade_subscription.h2.payment')
+            %hr/
+
+            =render partial: 'subscription_payment_cards/form', locals: {f: f}
+            .row
+              .col-sm-6.col-sm-offset-3.text-center
+                .col-sm-6
+                  =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
+                .col-sm-6
+                  %p{style: 'padding-top: 4px;'}
+                    .glyphicon.glyphicon-lock
+                    =t('views.users.upgrade_subscription.secure_server')
+
+
+      .row
+        .col-sm-2.col-sm-offset-5.text-center
+          =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-lg btn-ls-default sign-up-btn'
+
+
+:javascript
+
+  var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
+
+  function clearPlans() {
+    $('.subscription-panel').removeClass('active');
+  }
+
+  function choosePlan(theThing) {
+    clearPlans();
+    $(theThing).find('.subscription-panel').addClass('active');
+    $('#user_subscriptions_attributes_0_subscription_plan_id').val($(theThing).attr('data-plan-id'));
+  }
+
+  function showPlans() {
+    var country_id = $('#user_country_id').val();
+    var currency = 'EUR';
+    $('.currency').addClass('hide');
+    for (var i = 0; i < countries.length; i++) {
+      if (countries[i][0] == country_id) {
+        currency = countries[i][1];
+      }
+    }
+    $('.' + currency).removeClass('hide');
+    $('#user_subscriptions_attributes_0_subscription_plan_id').val(
+      $('.' + currency).find('.active').first().parent().attr('data-plan-id')
+    );
+  }
+
+  $(document).on('ready', function() {
+    showPlans();
+  })

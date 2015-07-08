@@ -76,9 +76,9 @@ class SubscriptionPlan < ActiveRecord::Base
   def self.generally_available_or_for_category_guid(the_guid)
     plan_category = SubscriptionPlanCategory.active_with_guid(the_guid).first
     if plan_category
-      where(subscription_plan_category_id: plan_category.id)
+      where(subscription_plan_category_id: plan_category.id).where('price > 0.0')
     else
-      generally_available
+      generally_available.where('price > 0.0')
     end
   end
 
