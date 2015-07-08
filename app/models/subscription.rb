@@ -337,7 +337,7 @@ class Subscription < ActiveRecord::Base
     self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
-      if @stripe_token || self.user.subscriptions.reload.count == 1
+      if @stripe_token || self.free_trial?
         stripe_customer = Stripe::Customer.create(
           plan: self.subscription_plan.try(:stripe_guid),
           email: self.user.try(:email)
