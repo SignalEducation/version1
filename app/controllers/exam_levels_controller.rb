@@ -2,7 +2,7 @@ class ExamLevelsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin', 'tutor'])
+    ensure_user_is_of_type(['admin', 'tutor', 'content_manager'])
   end
   before_action :get_variables
 
@@ -66,11 +66,13 @@ class ExamLevelsController < ApplicationController
     if params[:id].to_i > 0
       @exam_level = ExamLevel.where(id: params[:id]).first
     end
+    @institutions = Institution.all_in_order
     @qualifications = Qualification.all_in_order
+    @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
-    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections, :description, :seo_description, :seo_no_index)
+    params.require(:exam_level).permit(:qualification_id, :name, :name_url, :is_cpd, :sorting_order, :active, :default_number_of_possible_exam_answers, :enable_exam_sections, :description, :seo_description, :seo_no_index, :tutor_id)
   end
 
 end

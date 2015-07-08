@@ -2,7 +2,7 @@ class CourseModulesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['tutor','admin'])
+    ensure_user_is_of_type(['tutor','admin', 'content_manager'])
   end
   before_action :get_variables, except: :show
 
@@ -21,12 +21,27 @@ class CourseModulesController < ApplicationController
     if params[:qualification_url]
       @qualification = Qualification.with_url(params[:qualification_url]).first
       if @qualification
-        @exam_level = @qualification.exam_levels.where(name_url: params[:exam_level_url]).first || @qualification.exam_levels.first
-        @exam_level_id = @exam_level.try(:id)
-        if params[:course_module_url]
-          @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
+        if current_user.admin? || current_user.content_manager?
+          @exam_levels = @qualification.exam_levels.all_in_order
+          @exam_level = @exam_levels.where(name_url: params[:exam_level_url]).first || @exam_levels.first
+          @exam_level_id = @exam_level.try(:id)
+          if params[:course_module_url]
+            @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
+          else
+            @course_module = @exam_level.course_modules.all_in_order.first
+          end
         else
-          @course_module = @exam_level.course_modules.all_in_order.first
+          assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
+          non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
+          exam_levels = assigned_levels + non_assigned_levels
+          @exam_levels = exam_levels.uniq
+          @exam_level = @exam_levels.first
+          @exam_level_id = @exam_level.try(:id)
+          if params[:course_module_url]
+            @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
+          else
+            @course_module = @exam_level.course_modules.all_in_order.first
+          end
         end
       else
         flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
@@ -108,7 +123,14 @@ class CourseModulesController < ApplicationController
     end
     @institutions = Institution.all_in_order
     @qualifications = Qualification.all_in_order
-    @exam_levels = ExamLevel.all_in_order
+    if current_user.admin? || current_user.content_manager?
+      @exam_levels = ExamLevel.all_in_order
+    elsif current_user.tutor?
+      assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
+      non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
+      exam_levels = assigned_levels + non_assigned_levels
+      @exam_levels = exam_levels.uniq
+    end
     @exam_sections = ExamSection.all_in_order
     @tutors = User.all_tutors.all_in_order
   end

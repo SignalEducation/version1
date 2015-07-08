@@ -2,7 +2,7 @@ class TutorApplicationsController < ApplicationController
 
   before_action :logged_in_required, except: [:new, :create]
   before_action except: [:new, :create] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action :get_variables
 

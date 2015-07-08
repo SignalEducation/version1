@@ -36,11 +36,13 @@
             %td=link_to(tick_or_cross(exam_level.active), exam_level, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(exam_level.enable_exam_sections), exam_level, title: t('views.general.view_tooltip'))
             %td
-              =link_to t('views.general.edit'), edit_exam_level_url(exam_level), class: 'btn btn-info btn-xs'
+              -if exam_level.tutor_id == current_user.id || current_user.admin? || current_user.content_manager?
+                =link_to t('views.general.edit'), edit_exam_level_url(exam_level), class: 'btn btn-info btn-xs'
               -if exam_level.destroyable?
                 =link_to t('views.general.delete'), exam_level, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
-            %td
-              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+            -if current_user.admin? || current_user.content_manager?
+              %td
+                %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 .row
   .col-sm-12

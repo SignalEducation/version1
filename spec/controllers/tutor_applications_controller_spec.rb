@@ -535,16 +535,22 @@ describe TutorApplicationsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should reject as not allowed' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('tutor_applications', 2)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should reject as not allowed' do
+      it 'should see tutor_application_1' do
         get :show, id: tutor_application_1.id
-        expect_bounce_as_not_allowed
+        expect_show_success_with_model('tutor_application', tutor_application_1.id)
+      end
+
+      # optional - some other object
+      it 'should see tutor_application_2' do
+        get :show, id: tutor_application_2.id
+        expect_show_success_with_model('tutor_application', tutor_application_2.id)
       end
     end
 
@@ -556,9 +562,15 @@ describe TutorApplicationsController, type: :controller do
     end
 
     describe "GET 'edit/1'" do
-      it 'should reject as not allowed' do
+      it 'should respond OK with tutor_application_1' do
         get :edit, id: tutor_application_1.id
-        expect_bounce_as_not_allowed
+        expect_edit_success_with_model('tutor_application', tutor_application_1.id)
+      end
+
+      # optional
+      it 'should respond OK with tutor_application_2' do
+        get :edit, id: tutor_application_2.id
+        expect_edit_success_with_model('tutor_application', tutor_application_2.id)
       end
     end
 
@@ -579,27 +591,30 @@ describe TutorApplicationsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should reject as not allowed' do
+      it 'should respond OK to valid params for tutor_application_1' do
         put :update, id: tutor_application_1.id, tutor_application: valid_params
-        expect_bounce_as_not_allowed
+        expect_update_success_with_model('tutor_application', tutor_applications_url)
+      end
+
+      # optional
+      it 'should respond OK to valid params for tutor_application_2' do
+        put :update, id: tutor_application_2.id, tutor_application: valid_params
+        expect_update_success_with_model('tutor_application', tutor_applications_url)
+        expect(assigns(:tutor_application).id).to eq(tutor_application_2.id)
       end
 
       it 'should reject invalid params' do
         put :update, id: tutor_application_1.id, tutor_application: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
+        expect_update_error_with_model('tutor_application')
+        expect(assigns(:tutor_application).id).to eq(tutor_application_1.id)
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should reject as not allowed' do
-        delete :destroy, id: tutor_application_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject as not allowed' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: tutor_application_2.id
-        expect_bounce_as_not_allowed
+        expect_delete_success_with_model('tutor_application', tutor_applications_url)
       end
     end
 
