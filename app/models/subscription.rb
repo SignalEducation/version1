@@ -185,6 +185,10 @@ class Subscription < ActiveRecord::Base
     self.subscription_plan.free_trial?
   end
 
+  def free_trial_expired?
+    (Time.now - self.created_at).to_i.abs / 1.day > ENV["free_trial_days"].to_i
+  end
+
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&

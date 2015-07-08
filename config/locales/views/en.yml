@@ -178,6 +178,9 @@ en:
         other:
           h2: Oops! Something has gone wrong.
           p: We have been notified, and will investigate it immediately.
+        free_trial_expired:
+          h2: Oops! Looks like your free trial period has expired. Please upgrade your subscription.
+          upgrade_subscription: Upgrade Subsscription
 
       show_results:
         h1: 'Results:'

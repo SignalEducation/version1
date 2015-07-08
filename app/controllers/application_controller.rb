@@ -119,16 +119,20 @@ class ApplicationController < ActionController::Base
     not_allowed = {course_content: {view_all: false, reason: ''},
                    forum: {read: true, write: false},
                    blog: {comment: false} }
+    subscription_in_charge = current_user.subscriptions.all_in_order.last unless current_user.nil?
     if current_user.nil? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
     elsif !current_user.user_group.subscription_required_to_see_content
       result = allowed
-    elsif %w(trialing active canceled-pending).include?(current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
+    elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
+      result = not_allowed
+      result[:course_content][:reason] = "free_trial_expired"
+    elsif %w(trialing active canceled-pending).include?(subscription_in_charge.try(:current_status) || 'canceled')
       result = allowed
     else
       result = not_allowed
-      result[:course_content][:reason] = 'account_' + (current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
+      result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
     end
     result
   end
