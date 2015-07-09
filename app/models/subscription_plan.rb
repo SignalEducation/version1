@@ -122,7 +122,10 @@ class SubscriptionPlan < ActiveRecord::Base
   protected
 
   def available_to_in_the_future
-    unless self.available_to && self.available_to.to_date > Proc.new{Time.now.gmtime.to_date}.call
+    # On creating subscription plan available_to must be in the future. Later we can
+    # make subscription plan inactive only by setting this value to some date in the
+    # past so we must allow setting such dates.
+    if self.id.nil? && self.available_to && self.available_to.to_date <= Time.now.gmtime.to_date
       errors.add(:available_to, I18n.t('models.subscription_plans.must_be_in_the_future'))
     end
   end
