@@ -343,6 +343,7 @@ class Subscription < ActiveRecord::Base
       #### New customer
       if @stripe_token || self.free_trial?
         stripe_customer = Stripe::Customer.create(
+          card: @stripe_token,
           plan: self.subscription_plan.try(:stripe_guid),
           email: self.user.try(:email)
         )
