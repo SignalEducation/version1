@@ -202,9 +202,9 @@ describe Api::StripeV01Controller, type: :controller do
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown subscription or unexpected subscription status states")
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
 
           expect(subscription_2.reload.current_status).to eq('trialing')
         end
