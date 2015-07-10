@@ -24,13 +24,10 @@ class MandrillClient
     send_template('subscription-error', msg)
   end
 
-  def send_trial_converted_email(subscription_type, currency, ammount_charged)
-    msg = message_stub.merge({"subject" => "Woohoo! Your trial is converted!"})
-    msg["global_merge_vars"] << { "name" => "USEREMAIL", "content" => @user.email }
-    msg["global_merge_vars"] << { "name" => "SUBSCRIPTIONTYPE", "content" => subscription_type }
-    msg["global_merge_vars"] << { "name" => "CURRENCY", "content" => currency }
-    msg["global_merge_vars"] << { "name" => "AMOUNTCHARGED", "content" => ammount_charged }
-    send_template('trial-converted', msg)
+  def send_free_trial_ended_email(account_activation_url)
+    msg = message_stub.merge({"subject" => ":( You're free trial with learn signal has just ended"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTACTIVATIONURL", "content" => account_activation_url }
+    send_template('free-trial-ended', msg)
   end
 
   def send_free_trial_cancelled_email(account_settings_url)
