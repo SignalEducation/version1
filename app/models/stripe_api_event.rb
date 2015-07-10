@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_failed customer.subscription.updated)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_failed customer.subscription.created customer.subscription.updated)
 
   # relationships
 
@@ -82,40 +82,38 @@ class StripeApiEvent < ActiveRecord::Base
           end
         when 'customer.subscription.updated'
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription && !subscription.free_trial?
-            previous_status = subscription.current_status
-            # Update some attributes no matter what is curent subscription status.
-            subscription.current_status = self.payload[:data][:object][:status]
-            subscription.next_renewal_date = Time.at(self.payload[:data][:object][:current_period_end].to_i)
-            if subscription.save
-              Rails.logger.debug "DEBUG: Subscription #{subscription.id} updated"
-              # If this is first payment for this subscription (user is converting from
-              # trial to active subscription) then we have to check referred signups and
-              # check if we have to send notification e-mail to the user.
-              if previous_status == 'trialing' && self.payload[:data][:object][:status] == 'active'
-                if subscription.referred_signup
-                  subscription.referred_signup.update_attribute(:maturing_on, 40.days.from_now.utc.beginning_of_day)
-                  Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
-                end
-
-                # This is first time when user is charged and his subscription
-                # status is changed from trialing to active so we have to
-                # send him an email
-                if self.payload[:data][:previous_attributes][:status] == 'trialing'
-                  MandrillWorker.perform_async(subscription.user_id, "send_trial_converted_email",
-                                               subscription.subscription_plan.name + " - " +
-                                               I18n.t("views.general.payment_frequency_in_months.a#{subscription.subscription_plan.payment_frequency_in_months}"),
-                                               subscription.subscription_plan.currency.iso_code,
-                                               subscription.subscription_plan.price.to_f)
-                end
+          if subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
+                                            current_status: self.payload[:data][:object][:status])
+            self.processed = true
+            self.processed_at = Time.now
+          else
+            set_process_error("Error updating subscription #{subscription.id} with Stripe ID #{self.payload[:data][:object][:id]}")
+          end
+        when 'customer.subscription.created'
+          subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
+          if subscription
+            user_subscriptions = subscription.user.subscriptions.all_in_order
+            if user_subscriptions.count == 2 &&
+               user_subscriptions.first.free_trial? &&
+               user_subscriptions.first.current_status == 'canceled'
+              # If this is first subscriptiona after user's free trial subscription
+              # we have to check referred signups. Since referred signups are related
+              # to original, free trial, subscription we will redirect it to new
+              # subscription. This will enable us to double check (if needed) maturong on
+              # value since we can compare it with subscription's created_at value.
+              if user_subscriptions.first.referred_signup
+                user_subscriptions.first.referred_signup.update_attributes(maturing_on: 40.days.from_now.utc.beginning_of_day,
+                                                                           subscription_id: subscription.id)
+                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
               end
+
               self.processed = true
               self.processed_at = Time.now
             else
-              set_process_error subscription.errors.full_messages.join("\n")
+              set_process_error "Subscription with Stripe ID created #{self.payload[:data][:object][:id]} but it is not the first one after free trial."
             end
           else
-            set_process_error "Unknown subscription or unexpected subscription status states"
+            set_process_error "Unknown subscription with Stripe ID #{self.payload[:data][:object][:id]}"
           end
         else
           set_process_error "Unknown event type"
@@ -163,7 +161,7 @@ class StripeApiEvent < ActiveRecord::Base
   end
 
   def set_process_error(error_message)
-    Rails.logger.debug "DEBUG: Stripe event processing error: #{error_message}"
+    Rails.logger.error "DEBUG: Stripe event processing error: #{error_message}"
     self.processed = false
     self.error_message = error_message
     self.error = true
