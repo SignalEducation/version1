@@ -67,6 +67,7 @@ en:
         coming_soon: Coming Soon
       created_at: Created at
       updated_at: "Last Updated: "
+      user_name: "Hi, "
 
     locales:
       en: English
@@ -1073,7 +1074,7 @@ en:
         h1: Create Account
 
       show:
-        h1: Account Details
+        h1: Account
         add_new_card: "Add New Card"
         change_your_password:
           link: Change your password
