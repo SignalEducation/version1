@@ -1,0 +1,60 @@
+.course-upcoming
+  .header{role: 'banner'}
+    .l-wrap
+      .container-fluid
+        %nav.navbar.navbar-default.navbar-transparent
+          .navbar-header
+            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            =link_to root_url do
+              =image_tag('ls-logo-red.svg', class: 'logo')
+          #myNavbar.collapse.navbar-collapse
+            %ul.nav.navbar-nav.navbar-right
+              %li
+                =link_to 'Browse Courses', library_url
+              %li
+                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+  .course-inner
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom-big
+              =@course.name
+            %form
+              .row
+                .form-group.col-lg-8
+                  %input#inputEmail.form-control{:placeholder => "Enter your email address", :type => "text"}
+                .form-group.col-lg-4
+                  %a.btn.btn-red.col-xs-12{:href => "#"}
+                    Subscribe
+.l-asphalt
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-sm-12.col-md-8
+            %ul.course-topics-list
+              -if @course.children.count > 0
+                -@course.children.all_active.all_in_order.each do |child|
+                  %li
+                    .box-item.upcoming
+                      =child.name
+
+          .col-sm-12.col-md-4
+            %h3
+              =t('views.exam_levels.form.description')
+            %p
+              -if @course.try(:description)
+                =@course.try(:description)
+              -else
+                =@course.parent.try(:description)
+            %h3.l-margin-top-big
+              =t('views.general.author')
+            %p
+              -if @course.tutor
+                =@course.tutor.try(:name)
+              -else
+                ='Learn Signal'

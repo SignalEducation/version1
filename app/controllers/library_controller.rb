@@ -14,6 +14,11 @@ class LibraryController < ApplicationController
     else
       @course = @exam_section
     end
+    if @course.live
+       render 'live_course'
+    else
+      render 'preview_course'
+    end
 
   end
 
