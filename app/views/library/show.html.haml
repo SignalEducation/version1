@@ -13,9 +13,10 @@
         .row
           .col-sm-12.col-md-8
             %ul.course-topics-list
-              -@course.children.all_active.all_in_order.each_with_index do |child, counter|
+              -@course.children.all_active.all_in_order.each_with_index do |child|
                 %li
-                  %a.box-item{:href => "#"}
+
+                  =link_to course_special_link(child.first_active_cme), class: 'box-item' do
                     .box-topic-item
                       =child.name
                     .time
@@ -44,4 +45,12 @@
               %li
                 =t('views.general.updated_at')
                 =humanize_datetime(@course.updated_at)
+              %li
+                =t('views.general.author')
+                -if @course.try(:tutor_id)
+                  =@course.try(:tutor)
+                -else
+                  ='Learn Signal'
             =#link_to t('views.library.show.new_question_bank'), new_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
+
+  =render partial: 'layouts/new_footer'
