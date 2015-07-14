@@ -1,7 +1,7 @@
 class LibraryController < ApplicationController
 
   def index
-    @exam_levels = ExamLevel.all_active.all_in_order
+    @exam_levels = ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
     @exam_sections = ExamSection.all_active.all_in_order
     @levels_and_sections = @exam_levels + @exam_sections
   end
