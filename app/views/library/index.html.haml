@@ -1,0 +1,13 @@
+%br/
+%h1='Course Library'
+%hr/
+%br/
+.row
+  .col-sm-12
+    -@levels_and_sections.each do |e|
+      .col-sm-3
+        =link_to library_special_link(e) do
+          .panel.panel-default
+            .panel-body
+              =e.name
+              =e.inspect

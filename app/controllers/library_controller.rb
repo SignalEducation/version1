@@ -1,6 +1,23 @@
 class LibraryController < ApplicationController
 
+  def index
+    @exam_levels = ExamLevel.all_active.all_in_order
+    @exam_sections = ExamSection.all_active.all_in_order
+    @levels_and_sections = @exam_levels + @exam_sections
+  end
+
   def show
+    @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url].to_s).first
+    @exam_section = ExamSection.where(name_url: params[:exam_section_name_url].to_s).first
+    if @exam_section.nil?
+      @course = @exam_level
+    else
+      @course = @exam_section
+    end
+
+  end
+
+  def old_show
 
     @subject_areas = SubjectArea.all_active.all_in_order
     @subject_area = @institution = @qualification = @exam_level = @exam_section = nil

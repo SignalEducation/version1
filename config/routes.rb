@@ -58,7 +58,7 @@ Rails.application.routes.draw do
 
     get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/question_bank/:id', to: 'courses#show', as: :question_bank
 
-    get 'library(/:subject_area_name_url(/:institution_name_url(/:qualification_name_url(/:exam_level_name_url(/:exam_section_name_url)))))', to: 'library#show', as: :library
+
     get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
 
     get 'library/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
@@ -110,6 +110,10 @@ Rails.application.routes.draw do
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
     end
     resources :invoices, only: [:index, :show]
+    get 'library/:exam_level_name_url(/:exam_section_name_url)', to: 'library#show', as: :library_course
+    get 'library', to: 'library#index', as: :library
+
+    #get 'library/:exam_level_name_url', to: 'library#show'
     resources :qualifications, concerns: :supports_reordering do
       get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
     end
