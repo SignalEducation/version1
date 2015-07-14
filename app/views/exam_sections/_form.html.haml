@@ -32,6 +32,12 @@
               %label
                 =f.check_box :active
                 =t('views.exam_sections.form.active')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :live
+                =t('views.exam_sections.form.live')
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')
       =link_to t('views.general.cancel'), exam_sections_path

@@ -15,6 +15,8 @@
 #  seo_description                   :string
 #  seo_no_index                      :boolean          default(FALSE)
 #  duration                          :integer
+#  live                              :boolean          default(FALSE), not null
+#  tutor_id                          :integer
 #
 
 FactoryGirl.define do
@@ -25,6 +27,7 @@ FactoryGirl.define do
     sequence(:sorting_order) {|n| n * 10}
     seo_description       'Lorem ipsum'
     seo_no_index           false
+    live                   false
 
     factory :active_exam_section do
       active              true

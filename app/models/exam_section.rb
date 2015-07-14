@@ -15,6 +15,8 @@
 #  seo_description                   :string
 #  seo_no_index                      :boolean          default(FALSE)
 #  duration                          :integer
+#  live                              :boolean          default(FALSE), not null
+#  tutor_id                          :integer
 #
 
 class ExamSection < ActiveRecord::Base
@@ -23,7 +25,7 @@ class ExamSection < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
-                  :seo_description, :seo_no_index, :duration
+                  :seo_description, :seo_no_index, :duration, :live, :tutor_id
 
   # Constants
 
@@ -33,6 +35,7 @@ class ExamSection < ActiveRecord::Base
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :student_exam_tracks
+  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
   validates :name, presence: true, length: {maximum: 255}
@@ -53,6 +56,8 @@ class ExamSection < ActiveRecord::Base
 
   # scopes
   scope :all_active, -> { where(active: true) }
+  scope :all_live, -> { where(live: true) }
+  scope :all_not_live, -> { where(active: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 

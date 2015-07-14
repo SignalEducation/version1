@@ -62,6 +62,9 @@
         %td.col-sm-4=t('views.exam_levels.form.active')
         %td.col-sm-8=tick_or_cross @exam_level.active
       %tr
+        %td.col-sm-4=t('views.exam_levels.form.live')
+        %td.col-sm-8=tick_or_cross @exam_level.live?
+      %tr
         %td.col-sm-4=t('views.exam_levels.form.best_possible_first_attempt_score')
         %td.col-sm-8=@exam_level.best_possible_first_attempt_score
       %tr

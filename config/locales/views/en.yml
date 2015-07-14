@@ -436,6 +436,7 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         active: 'Active?'
+        live: Live Mode
         best_possible_first_attempt_score: 'Best-possible first attempt score'
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
@@ -469,6 +470,7 @@ en:
         exam_level_id: Exam level
         category_id: Category
         active: Active
+        live: Live Mode
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         best_possible_first_attempt_score: Best-possible first attempt score

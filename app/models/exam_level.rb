@@ -20,6 +20,7 @@
 #  description                             :text
 #  duration                                :integer
 #  tutor_id                                :integer
+#  live                                    :boolean          default(FALSE), not null
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -32,7 +33,7 @@ class ExamLevel < ActiveRecord::Base
                   :default_number_of_possible_exam_answers,
                   :enable_exam_sections, :description,
                   :seo_description, :seo_no_index, :duration,
-                  :tutor_id
+                  :tutor_id, :live
 
   # Constants
 
@@ -72,6 +73,8 @@ class ExamLevel < ActiveRecord::Base
 
   # scopes
   scope :all_active, -> { where(active: true) }
+  scope :all_live, -> { where(live: true) }
+  scope :all_not_live, -> { where(live: false) }
   scope :all_in_order, -> { order(:qualification_id, :sorting_order) }
   scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 

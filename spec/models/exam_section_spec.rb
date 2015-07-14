@@ -15,6 +15,8 @@
 #  seo_description                   :string
 #  seo_no_index                      :boolean          default(FALSE)
 #  duration                          :integer
+#  live                              :boolean          default(FALSE), not null
+#  tutor_id                          :integer
 #
 
 require 'rails_helper'

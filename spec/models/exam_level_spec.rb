@@ -20,6 +20,7 @@
 #  description                             :text
 #  duration                                :integer
 #  tutor_id                                :integer
+#  live                                    :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
