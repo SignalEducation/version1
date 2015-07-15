@@ -1,0 +1,115 @@
+.header{role: 'banner'}
+  .l-wrap
+    .container-fluid
+      %nav.navbar.navbar-default.navbar-transparent
+        .navbar-header
+          %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          =link_to root_url do
+            =image_tag('ls-logo-red.svg', class: 'logo')
+        #myNavbar.collapse.navbar-collapse
+          %ul.nav.navbar-nav.navbar-right
+            -if current_user
+              %li
+                =link_to 'Dashboard', dashboard_url
+              %li
+                =link_to 'Library', library_url
+
+              -#Admin Dropdown
+              -if current_user.admin?
+                %li.dropdown
+                  %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                    Admin
+                    -#Todo when user notifications are reactivated
+                    -#%span.user-notification
+                      1
+                    %span.caret
+                  %ul#menu.dropdown-menu
+                    %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
+                    %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
+                    %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
+                    %li.divider
+                    %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
+                    %li=link_to t('views.stripe_developer_calls.index.h1'), stripe_developer_calls_url
+                    %li=link_to t('views.home_pages.index.h1'), home_pages_url
+                    -if current_user.content_manager?
+                      %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
+                      %li=link_to t('views.institutions.index.h1'), institutions_url
+                      %li=link_to t('views.qualifications.index.h1'), qualifications_url
+                      %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
+                      %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
+                      %li=link_to t('views.course_modules.index.h1'), course_modules_url
+                      %li.divider
+                    -elsif current_user.tutor?
+                      %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
+                      %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
+                      %li=link_to t('views.course_modules.index.h1'), course_modules_url
+
+                -#Content Manager Dropdown
+              -elsif current_user.content_manager?
+                %li.dropdown
+                  %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                    Manager
+                    -#Todo when user notifications are reactivated
+                    -#%span.user-notification
+                      1
+                    %span.caret
+                  %ul#menu.dropdown-menu
+                    %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
+                    %li=link_to t('views.institutions.index.h1'), institutions_url
+                    %li=link_to t('views.qualifications.index.h1'), qualifications_url
+                    %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
+                    %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
+                    %li=link_to t('views.course_modules.index.h1'), course_modules_url
+
+                -#Tutpr Dropdown
+              -elsif current_user.tutor?
+                %li.dropdown
+                  %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                    Manager
+                    -#Todo when user notifications are reactivated
+                    -#%span.user-notification
+                      1
+                    %span.caret
+                  %ul#menu.dropdown-menu
+                    %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
+                    %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
+                    %li=link_to t('views.course_modules.index.h1'), course_modules_url
+
+                -#Student Dropdown
+              %li.dropdown
+                %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                  =t('views.general.user_name') + current_user.first_name.to_s
+                  -#Todo when user notifications are reactivated
+                  -#%span.user-notification
+                    1
+                  %span.caret
+                %ul#menu.dropdown-menu
+                  -if current_user.admin?
+                    %li=link_to t('views.users.index.h1'), users_url
+                    %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url
+                    %li=link_to t('views.user_groups.index.h1'), user_groups_url
+                    %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
+                    %li=link_to t('views.currencies.index.h1'), currencies_url
+                    %li=link_to t('views.countries.index.h1'), countries_url
+                    %li=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
+                    %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
+                    %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
+                    %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
+                    %li.divider
+                  %li
+                    %li=link_to t('views.users.show.h1'), profile_url
+                  %li
+                    =link_to t('views.general.sign_out'), sign_out_url
+
+            -else
+              %li
+                =link_to 'Dashboard', dashboard_url
+              %li
+                =link_to 'Library', library_url
+              %li
+                =link_to 'Sign Up', student_sign_up_url
+              %li
+                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}

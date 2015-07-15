@@ -73,7 +73,7 @@
       =yield
       =render partial: 'layouts/new_footer'
     -elsif controller_name == 'library'
-      -if (@course.try(:live)) || action_name == 'index'
+      -if @course.try(:live)
         .margin-top
       -else
         .no-margin-top
