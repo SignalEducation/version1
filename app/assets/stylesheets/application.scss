@@ -25,6 +25,12 @@ $sans-font: "proxima-nova-soft", Arial, sans-serif;
 // 1. Base
 html {
   background: darken($purple-1, 15%);
+  .margin-top {
+    margin-top: 65px;
+  }
+  .no-margin-top {
+    margin-top: 0;
+  }
 }
 body {
   font-family: $sans-font;
