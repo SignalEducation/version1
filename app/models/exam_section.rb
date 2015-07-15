@@ -18,6 +18,7 @@
 #  live                              :boolean          default(FALSE), not null
 #  tutor_id                          :integer
 #  short_description                 :text
+#  description                       :text
 #
 
 class ExamSection < ActiveRecord::Base
@@ -27,7 +28,7 @@ class ExamSection < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
                   :seo_description, :seo_no_index, :duration, :live, :tutor_id,
-                  :short_description
+                  :short_description, :description
 
   # Constants
 

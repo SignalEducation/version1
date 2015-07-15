@@ -431,6 +431,8 @@ en:
         name_url_placeholder: first-exam-level
         description: Description
         description_placeholder: Description for this Exam Level
+        short_description: Short Description
+        short_description_placeholder: This appears only on landing page for this course
         duration: Duration
         is_cpd: 'is CPD?'
         sorting_order: Sorting order
@@ -477,6 +479,10 @@ en:
         best_possible_first_attempt_score_placeholder: 100
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
+        short_description: Short description
+        short_description_placeholder: Description that will appear on library landing page for this course
+        description: Description
+        description_placeholder: Description text of the course
         seo_no_index: "SEO no-index flag"
 
       index:

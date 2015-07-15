@@ -21,6 +21,10 @@
           .col-sm-8
             =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         .form-group
+          =f.label :short_description, t('views.exam_levels.form.short_description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :short_description, placeholder: t('views.exam_levels.form.short_description_placeholder'), rows: 4, class: 'form-control'
+        .form-group
           =f.label :description, t('views.exam_levels.form.description'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_area :description, placeholder: t('views.exam_levels.form.description_placeholder'), rows: 4, class: 'form-control'

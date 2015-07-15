@@ -34,11 +34,7 @@
           %h3
             Description
           %p
-            -#Todo undo this once ExamSection has a description field
-            -if @course.class == ExamLevel
-              =@course.try(:description)
-            -else
-              =@course.parent.try(:description)
+            =@course.try(:description)
           %h3.l-margin-top-big
             More info
           %ul.lined-list

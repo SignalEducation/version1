@@ -69,7 +69,7 @@ class ExamSectionsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_section).permit(:name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score, :seo_description, :seo_no_index, :live, :tutor_id)
+    params.require(:exam_section).permit(:name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score, :seo_description, :seo_no_index, :live, :tutor_id, :description, :short_description)
   end
 
 end
