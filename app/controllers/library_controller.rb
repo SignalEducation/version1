@@ -1,9 +1,27 @@
 class LibraryController < ApplicationController
 
+  #def index
+#  #  @exam_levels = ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
+  #  @exam_sections = ExamSection.all_active.all_in_order
+  #  @courses = @exam_levels + @exam_sections
+
+  #  if params[:search]
+  #    @filtered_levels = ExamLevel.search(params[:search]).all_in_order.where(enable_exam_sections: false )
+  #    @filtered_sections = ExamSection.search(params[:search]).all_in_order
+  #    @courses = @filtered_sections + @filtered_levels
+  #  else
+  #    @non_filtered_levels = ExamLevel.all_in_order.where(enable_exam_sections: false )
+  #    @non_filtered_sections = ExamSection.all_in_order
+  #    @courses = @non_filtered_levels + @non_filtered_sections
+  #  end
+  #end
+
   def index
     @exam_levels = ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
     @exam_sections = ExamSection.all_active.all_in_order
-    @levels_and_sections = @exam_levels + @exam_sections
+    @levels = @exam_levels.search(params[:search])
+    @sections = @exam_sections.search(params[:search])
+    @courses = @levels + @sections
   end
 
   def show

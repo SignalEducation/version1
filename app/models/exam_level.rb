@@ -84,6 +84,14 @@ class ExamLevel < ActiveRecord::Base
     where(name_url: the_name_url).first
   end
 
+  def self.search(search)
+    if search
+      where('name ILIKE ?', "%#{search}%")
+    else
+      ExamLevel.all_active.where(enable_exam_sections: false )
+    end
+  end
+
   # instance methods
   def active_children
     self.children.all_active.all_in_order

@@ -65,6 +65,13 @@ class ExamSection < ActiveRecord::Base
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
+  def self.search(search)
+    if search
+      where('name ILIKE ?', "%#{search}%")
+    else
+      ExamSection.all_active
+    end
+  end
 
   # instance methods
   def active_children

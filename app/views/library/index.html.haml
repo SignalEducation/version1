@@ -11,28 +11,33 @@
               .row
                 .col-sm-12
                   .input-group
-                    %input.form-control{:placeholder => "Search our library", :type => "text"}
+                    =form_tag(library_url, method: :get, id: 'search-form') do
+                      =text_field_tag :search, params[:search], placeholder: 'Search our library', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'
                       %span.input-group-btn
-                        %button.btn.btn-red{:type => "button"} Search
+                        =submit_tag 'Search', class: 'btn btn-red', name: nil
 
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .course-list-wrap
-        .row
-          -@levels_and_sections.each do |course|
-            .col-sm-6.col-md-4
-              =link_to library_special_link(course), class: 'box box-course' do
-                .box-inner
-                  %h3.h4.box-title
-                    =course.name
-                  %p.box-desc
-                    =course.parent.name
-                .box-label
-                  -if current_user
-                    Continue
-                  -else
-                    Start
+      -if @courses.present?
+        .course-list-wrap
+          .row
+            -@courses.each do |course|
+              .col-sm-6.col-md-4
+                =link_to library_special_link(course), class: 'box box-course' do
+                  .box-inner
+                    %h3.h4.box-title
+                      =course.name
+                    %p.box-desc
+                      =course.parent.name
+                  .box-label
+                    -if current_user
+                      Continue
+                    -else
+                      Start
+
+      -else
+        ="Sorry there are no courses containing the terms #{params[:search]}"
 
 =render partial: 'layouts/new_footer'
 
