@@ -21,6 +21,7 @@
 #  duration                                :integer
 #  tutor_id                                :integer
 #  live                                    :boolean          default(FALSE), not null
+#  short_description                       :text
 #
 
 FactoryGirl.define do
@@ -37,6 +38,7 @@ FactoryGirl.define do
     seo_description      'Lorem ipsum'
     seo_no_index         false
     live                 false
+    short_description    'Short Blurb'
 
     factory :active_exam_level do
       active                       true

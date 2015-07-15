@@ -21,6 +21,7 @@
 #  duration                                :integer
 #  tutor_id                                :integer
 #  live                                    :boolean          default(FALSE), not null
+#  short_description                       :text
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -33,7 +34,7 @@ class ExamLevel < ActiveRecord::Base
                   :default_number_of_possible_exam_answers,
                   :enable_exam_sections, :description,
                   :seo_description, :seo_no_index, :duration,
-                  :tutor_id, :live
+                  :tutor_id, :live, :short_description
 
   # Constants
 
