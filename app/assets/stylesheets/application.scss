@@ -1,17 +1,16 @@
-// sig: @bojanjanjanin
-// I've based my approach on https://smacss.com and tried to follow http://codeguide.co
-
+// 0. Settings
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome";
 @import "bootstrap-social";
+@import "mixins.scss";
 
-// 0. Settings
 $gutter: 20px;
 $white: #fff;
 $gray-1: #6E6D75;
 $asphalt-1: #EFF3F6;
 $purple-1: #3E3F5B;
+$purple-2: #363651;
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -19,14 +18,11 @@ $green-1: #D0F6BD;
 
 $sans-font: "proxima-nova-soft", Arial, sans-serif;
 
-@import "mixins.scss";
-@import "nav.scss";
-
 // 1. Base
 html {
   background: darken($purple-1, 15%);
   .margin-top {
-    margin-top: 65px;
+    margin-top: 64px;
   }
   .no-margin-top {
     margin-top: 0;
@@ -87,7 +83,7 @@ h1, .h1 {
 h2, .h2 {
   font-weight: normal;
   color: $purple-1;
-  //  margin-bottom: $gutter*2;
+  line-height: 1.2;
   @include font-size(2.6);
   @include breakpoint(md-min) {
     @include font-size(3.0);
@@ -184,6 +180,22 @@ hr {
     width: 16px;
   }
 }
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
 
 // 2. Layout
 .l-wrap {
@@ -202,7 +214,7 @@ hr {
   }
 }
 .l-section-small {
-  padding: 1.5rem 0;
+  padding: 3rem 0;
   @include breakpoint(md-min) {
     padding: 4rem 0;
   }
@@ -210,14 +222,8 @@ hr {
 .l-padding-zero {
   padding: 0;
 }
-.l-padding-top-xl { // if header is fixes, this is required on the next element
+.l-padding-top-xl { // if header is fixed, this is required on the next element
   padding-top: $gutter*3;
-}
-.l-asphalt {
-  background: $asphalt-1;
-}
-.l-purple {
-  background: $purple-1;
 }
 .l-margin-bottom {
   margin-bottom: $gutter;
@@ -233,78 +239,13 @@ hr {
 }
 
 // 3. modules
-.hero {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") 50% 0 no-repeat;
-  color: $white;
-  text-transform: uppercase;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.hero-inner {
-  padding: 10rem 0 10rem 0;
-  @include breakpoint(md-min) {
-    padding: 20rem 0 25rem 0;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.course-acca {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.course-upcoming {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-upcoming.jpg") 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-upcoming.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.course-cfa {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.header-sign-up {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-sign-up.jpg") 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-sign-up.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.course-inner {
-  text-align: center;
-  padding: 10rem 0;
-  &.course-sign-up {
-    text-align: left;
-  }
-}
-.course-intro {
-  text-align: center;
-}
-.course-list {
-  background: $asphalt-1;
-}
-.course-list-wrap {
 
-}
+@import "nav.scss";
+@import "btn.scss";
+@import "hero.scss";
+@import "foot.scss";
+@import "testimonials.scss";
+
 .course-group-title {
   margin-bottom: $gutter*2;
   @include breakpoint(sm-min) {
@@ -317,134 +258,14 @@ hr {
 .logo {
   padding: $gutter 0;
   float: left;
-  max-width: 125px;
+  max-width: 119px;
   @include breakpoint(sm-min) {
     max-width: 159px;
   }
 }
-.header {
-  &.header-dark {
-    background: $purple-1;
-    & .navbar-small {
-      border-bottom: 0 !important;
-    }
-  }
-  &.header-fixed {
-    position: fixed;
-    width: 100%;
-    z-index: 100;
-  }
-}
-.btn {
-  border: 0;
-  padding: 0 $gutter;
-  height: 40px;
-  line-height: 40px;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  display: block;
-  @include font-size(1.1);
-  //@include box-shadow(2px, 0, 0, rgba(#000, .05));
-  @include transition(background-color .2s ease);
-  @include breakpoint(xs-min) {
-    display: inline-block;
-  }
-  @include breakpoint(sm-min) {
-    display: inline-block;
-    @include font-size(1.2);
-  }
-  &:link, &:visited {
-    text-decoration: none;
-    color: $red-1;
-  }
-  &:hover {
-    color: shade($red-1, 20%);
-  }
-  &:active {
-    @include box-shadow(0, 0, 0, 0);
-  }
-  &.btn-red {
-    background: $red-1;
-    color: $white;
-    &:hover {
-      background: shade($red-1, 10%);
-    }
-    &:active {
-      background: ($red-1);
-    }
-  }
-  &.btn-purple {
-    background: $purple-1;
-    color: $white;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-    &:active {
-      background: ($purple-1);
-    }
-  }
-  &.btn-cyan {
-    background: $cyan-1;
-    color: $white;
-    &:hover {
-      background: shade($cyan-1, 10%);
-    }
-    &:active {
-      background: ($cyan-1);
-    }
-  }
-  &.btn-secondary {
-    color: $red-1;
-    background: transparent;
-    border: 1px solid $white;
-    line-height: 38px;
-    @include box-shadow(0, 0, 0, 0);
-    &:hover, &:active {
-      background: transparent;
-      color: shade($red-1, 20%);
-    }
-    &.btn-red{
-      color: $red-1;
-      border: 1px solid $red-1;
-      &:hover {
-        background: transparent;
-        color: shade($red-1, 20%);
-        border: 1px solid shade($red-1, 20%);
-      }
-    }
-    &.btn-purple {
-      color: $purple-1;
-      border: 1px solid $purple-1;
-      &:hover {
-        background: transparent;
-        color: shade($purple-1, 20%);
-        border: 1px solid shade($purple-1, 20%);
-      }
-    }
-    &.btn-cyan {
-      color: $cyan-1;
-      border: 1px solid $cyan-1;
-      &:hover {
-        background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
-      }
-    }
-  }
-}
-a.link-block {
-  display: block;
-  @include transition(background-color .2s ease);
-  &:link, &:visited {
-    background: $red-1;
-  }
-  &:hover {
-    background: shade($red-1, 10%);
-  }
-  &:active {
-    background: $red-1;
-  }
-}
+
+
+
 .no-card {
   height: 40px;
   line-height: 40px;
@@ -482,8 +303,6 @@ label, .label {
   border: 1px solid darken($asphalt-1, 10%);
   @include font-size(1.4);
   @include box-shadow(2px, 0, 0, rgba(#000, .05));
-  //@include box-shadow(0, 0, 6px, darken($asphalt-1, 15%));
-  //@include box-shadow(0, 0, 6px, rgba(#000, .15));
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
@@ -494,31 +313,7 @@ label, .label {
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
 }
-.main-course-link {
-  color: $white;
-  text-align: center;
-  display: block;
-  padding: $gutter*1.5 $gutter;
-  text-decoration: none;
-  @include transition(background-color .2s ease);
-  @include font-size(2.2);
-  &:hover {
-    color: $white;
-    text-decoration: none;
-  }
-  &.link-purple {
-    background: $purple-1;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-  }
-  &.link-red {
-    background: $red-1;
-    &:hover {
-      background: shade($red-1, 10%);
-    }
-  }
-}
+
 .features {
   text-align: center;
   background: $white;
@@ -527,41 +322,6 @@ label, .label {
   display: block;
   max-width: 110px;
   margin: $gutter*2 auto;
-}
-.testimonials {
-  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
-  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
-  &.testimonials-alt {
-    background: $white;
-  }
-}
-.testimonial {
-  h1, h2, h3, h4 {
-    text-align: center;
-  }
-}
-.testimonial-pic-wrap {
-  position: relative;
-  max-width: 140px;
-  margin: $gutter*2 auto;
-  &:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    height: 30px;
-    width: 30px;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
-    background-size: contain;
-  }
-}
-.testimonial-pic {
-  display: block;
-  max-width: 140px;
-  @include border-radius(100%);
-}
-.testimonial-sig {
-  color: darken($gray-1, 15%);
 }
 .profile-single {
   padding-bottom: $gutter*2;
@@ -594,15 +354,8 @@ label, .label {
     }
   }
 }
-.start-trial-wrap {
-  padding: $gutter*1.5 0;
-  background: transparent;
-  @include breakpoint(md-min) {
-    padding: $gutter*3 0;
-  }
-}
 .ico-arrow-right-r {
-  padding-right: $gutter*2;
+  padding-right: $gutter*1.5;
   position: relative;
   &:after {
     position: absolute;
@@ -622,7 +375,8 @@ a.box {
   }
   &:hover, &:active {
     text-decoration: none;
-    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
   }
   &:hover {
     .box-title {
@@ -646,7 +400,9 @@ a.box {
     margin: $gutter*.5 0 $gutter 0;
   }
   &.box-course {
+    text-decoration: none;
     text-align: center;
+    margin-top: $gutter*1.5;
     &:after {
       position: absolute;
       top: 0;
@@ -665,7 +421,11 @@ a.box {
   }
 }
 .box-title {
-  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
 }
 .box-inner {
   padding: $gutter*2 $gutter/2;
@@ -676,7 +436,7 @@ a.box {
 .box-label {
   background: $red-1;
   color: $white;
-  padding: $gutter/1.25;
+  padding: $gutter/1.45;
   letter-spacing: .2rem;
   text-transform: uppercase;
   @include transition(background-color .2s ease);
@@ -810,6 +570,10 @@ a.box-item {
 }
 .plan-title, .plan-price {
   color: $white;
+  margin: 0;
+}
+.plan-price {
+  margin: 0 0 $gutter/2 0;
 }
 .plan-text {
   color: $white;
@@ -829,66 +593,6 @@ a.box-item {
     background: rgba(#000, 0.1);
   }
 }
-.foot {
-  background: $purple-1;
-  padding: $gutter*1.5 0 $gutter*2 0;
-  @include clearfix();
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    @include font-size(1.4);
-  }
-}
-.foot-nav {
-  color: $white;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 $gutter 0;
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: right;
-    @include font-size(1.4);
-  }
-  & li {
-    position: relative;
-    display: inline-block;
-    color: lighten($purple-1, 20%);
-    margin-left: $gutter/4;
-    &:before {
-      content: "•";
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  }
-  & li:first-child {
-    margin: 0;
-    &:before {
-      content: "";
-    }
-    & a {
-      margin: 0;
-    }
-  }
-  & a {
-    color: $white;
-    text-decoration: none;
-    margin-left: $gutter/1.5;
-    @include opacity(0.8);
-    &:hover {
-      @include opacity(1);
-    }
-  }
-}
-.foot-copyright {
-  color: $white;
-  @include opacity(0.8);
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: left;
-    @include font-size(1.4);
-  }
-}
-
 // 4. Print
 @media print {
   * {
@@ -986,40 +690,40 @@ a.box-item {
 
 // * { outline: 1px solid red }
 
-//
-//@include breakpoint(xs-min) {
-  //body {
-    //position: relative;
-    //&:after {
-      //content: "XS";
-      //position: fixed;
-      //z-index: 10000;
-      //display: block;
-      //top: 5px;
-      //right: 5px;
-      //font-size: 8px;
-    //}
-  //}
-//}
-//@include breakpoint(sm-min) {
-  //body {
-    //&:after {
-      //content: "SM";
-    //}
-  //}
-//}
-//@include breakpoint(md-min) {
-  //body {
-    //&:after {
-      //content: "MD";
-    //}
-  //}
-//}
-//@include breakpoint(lg-min) {
-  //body {
-    //&:after {
-      //content: "LG";
-    //}
-  //}
-//}
-//
+/*
+@include breakpoint(xs-min) {
+  body {
+    position: relative;
+    &:after {
+      content: "XS";
+      position: fixed;
+      z-index: 10000;
+      display: block;
+      top: 5px;
+      right: 5px;
+      font-size: 8px;
+    }
+  }
+}
+@include breakpoint(sm-min) {
+  body {
+    &:after {
+      content: "SM";
+    }
+  }
+}
+@include breakpoint(md-min) {
+  body {
+    &:after {
+      content: "MD";
+    }
+  }
+}
+@include breakpoint(lg-min) {
+  body {
+    &:after {
+      content: "LG";
+    }
+  }
+}
+*/

@@ -1,3 +1,14 @@
+.header {
+  &.header-dark {
+    background: $purple-1;
+  }
+  &.header-fixed { // unused
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+  }
+}
+
 .navbar {
   min-height: auto;
   margin: 0;
@@ -14,7 +25,6 @@
 .navbar-collapse {
   padding: 0;
   border: 0;
-  background: $purple-1;
   @include box-shadow(0, 0, 0, 0);
   @include breakpoint(sm-min) {
     background: transparent;
@@ -25,12 +35,9 @@
   text-transform: uppercase;
   letter-spacing: .2rem;
   text-decoration: none;
-  //border-bottom: 1px solid rgba(#fff, 0.2);
   @include font-size(1.3);
   &:hover, &:active {
     color: rgba($white, 1);
-    background-color: rgba(#000, 0.2);
-    //border-bottom: 1px solid rgba(#fff, 0.2);
   }
   @include breakpoint(sm-min) {
     margin: 0;
@@ -40,9 +47,12 @@
     }
   }
   &.sign-in-link {
-    @include breakpoint(md-min) {
+    @include breakpoint(sm-min) {
       @include border-radius(3px);
       border: 1px solid rgba($white, 0.2);
+      &:hover {
+        border: 1px solid rgba($white, 0.5);
+      }
     }
   }
 }
@@ -57,7 +67,6 @@
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: $white;
-  background-color: rgba(#000, 0.2);
 }
 .navbar-nav > li > a {
   padding: 0 $gutter;
@@ -66,13 +75,11 @@
   line-height: 40px;
   border-top: 1px solid rgba($white, 0.2);
   @include breakpoint(sm-min) {
-    //padding: 0 $gutter/1.5;
     border: 0;
     line-height: 1.5;
   }
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-  background-color: rgba(#000, 0.2);
   background-color: transparent;
   color: $white;
 }
@@ -105,12 +112,12 @@
   @include font-size(1.1);
 }
 .dropdown-menu {
-  background: $purple-1;
   border: 1px solid shade($purple-1, 20%);
   padding: 0;
   @include box-shadow(0, 0, 5px, rgba(#000, .3));
   @include breakpoint(md-min) {
     padding: $gutter/2 0;
+    background: $purple-1;
   }
 }
 .dropdown-menu > li {
@@ -124,30 +131,24 @@
   text-transform: none;
   letter-spacing: 0;
   margin-top: -1px;
-  //border-top: 1px solid tint($purple-1, 10%);
-  //border-top: 1px solid rgba($white, 0.2);
   border-top: 1px solid tint($purple-1, 10%);
-  //border-bottom: 1px solid rgba($white, 0.2);
   border-bottom: 1px solid tint($purple-1, 10%);
   color: $white;
   text-decoration: none;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
+    &:hover {
+      background: $purple-2;
+    }
   }
-  &:hover {
-    //color: $white;
 
-  }
 }
 .navbar-default .navbar-nav .open .dropdown-menu>li>a {
   color: $white;
 }
 .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
   color: $white;
-  //background-color: shade($purple-1, 20%);
-  //background-color: transparent;
-  background-color: shade($purple-1, 10%);
 }
 .navbar-nav .open .dropdown-menu>li>a {
   line-height: 30px;
@@ -167,7 +168,4 @@
     margin: 0;
     border: 0;
   }
-}
-.navbar-main {
-
 }

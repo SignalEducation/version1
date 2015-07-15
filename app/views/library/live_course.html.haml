@@ -1,58 +1,59 @@
 =render partial: 'layouts/new_navbar'
 
-.l-asphalt.is-bg-white-to-asphalt.ls-padding-top-xl
+.l-section-small.is-bg-asphalt.is-bg-white-to-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-12.text-center
+          %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
+            =@course.name
+          =link_to course_special_link(@course.first_active_cme) do
+            .btn.btn-red
+              Start course
 
-  .l-section-small
-    .l-wrap
-      .container-fluid
-        .row
-          .col-md-12.text-center
-            %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
-              =@course.name
-            =link_to course_special_link(@course.first_active_cme) do
-              .btn.btn-red.l-margin-bottom-big
-                Start course
-        .row
-          .col-sm-12.col-md-8
-            %ul.course-topics-list
-              -@course.children.all_active.all_in_order.each_with_index do |child|
-                %li
-
-                  =link_to course_special_link(child.first_active_cme), class: 'box-item' do
-                    .box-topic-item
-                      =child.name
-                    .time
-                      -if child.class == ExamSection
-                        =seconds_to_time(child.duration.to_i)
-                      -elsif child.class == CourseModule
-                        =seconds_to_time(child.estimated_time_in_seconds)
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-sm-12.col-md-8
+          %ul.course-topics-list
+            -@course.children.all_active.all_in_order.each_with_index do |child|
+              %li
+                =link_to course_special_link(child.first_active_cme), class: 'box-item' do
+                  .box-topic-item
+                    =child.name
+                  .time
+                    -if child.class == ExamSection
+                      =seconds_to_time(child.duration.to_i)
+                    -elsif child.class == CourseModule
+                      =seconds_to_time(child.estimated_time_in_seconds)
 
 
 
-          .col-sm-12.col-md-4
-            %h3
-              Description
-            %p
-              -#Todo undo this once ExamSection has a description field
-              -if @course.class == ExamLevel
-                =@course.try(:description)
+        .col-sm-12.col-md-4
+          %h3
+            Description
+          %p
+            -#Todo undo this once ExamSection has a description field
+            -if @course.class == ExamLevel
+              =@course.try(:description)
+            -else
+              =@course.parent.try(:description)
+          %h3.l-margin-top-big
+            More info
+          %ul.lined-list
+            %li
+              =t('views.general.duration')
+              =humanize_time(@course.duration.to_i)
+            %li
+              =t('views.general.updated_at')
+              =humanize_datetime(@course.updated_at)
+            %li
+              =t('views.general.author')
+              -if @course.try(:tutor_id)
+                =@course.try(:tutor)
               -else
-                =@course.parent.try(:description)
-            %h3.l-margin-top-big
-              More info
-            %ul.lined-list
-              %li
-                =t('views.general.duration')
-                =humanize_time(@course.duration.to_i)
-              %li
-                =t('views.general.updated_at')
-                =humanize_datetime(@course.updated_at)
-              %li
-                =t('views.general.author')
-                -if @course.try(:tutor_id)
-                  =@course.try(:tutor)
-                -else
-                  ='Learn Signal'
-            =#link_to t('views.library.show.new_question_bank'), new_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
+                ='Learn Signal'
+          =#link_to t('views.library.show.new_question_bank'), new_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
 
   =render partial: 'layouts/new_footer'
