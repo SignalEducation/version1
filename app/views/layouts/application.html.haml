@@ -60,16 +60,20 @@
     -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'tutor_applications'
-      =render partial: 'layouts/navbar'
+      =render partial: 'layouts/new_navbar'
       =yield
-      =render partial: 'layouts/footer'
+      =render partial: 'layouts/new_footer'
     -elsif controller_name == 'courses'
-      =render partial: 'layouts/special_navbar'
+      =render partial: 'layouts/new_navbar'
       .container-fluid
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
-    -elsif (controller_name == 'home_pages') || (controller_name == 'tutor_profile')
+    -elsif controller_name == 'home_pages'
+      =yield
+      =render partial: 'layouts/new_footer'
+    -elsif controller_name == 'tutor_profile'
+      =render partial: 'layouts/new_navbar'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif controller_name == 'library'
@@ -79,12 +83,12 @@
         .no-margin-top
       =yield
     -else
-      =render partial: 'layouts/navbar'
+      =render partial: 'layouts/new_navbar'
       .container
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         =yield
-      =render partial: 'layouts/footer'
+      =render partial: 'layouts/new_footer'
     =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
     -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
@@ -102,3 +106,7 @@
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
 
     =render partial: 'layouts/mixpanel_body_tag'
+
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");
