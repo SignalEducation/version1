@@ -67,7 +67,7 @@ class ExamSection < ActiveRecord::Base
   # class methods
   def self.search(search)
     if search
-      where('name ILIKE ?', "%#{search}%")
+      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       ExamSection.all_active
     end

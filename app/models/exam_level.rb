@@ -86,7 +86,7 @@ class ExamLevel < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name ILIKE ?', "%#{search}%")
+      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       ExamLevel.all_active.where(enable_exam_sections: false )
     end

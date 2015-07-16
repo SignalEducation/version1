@@ -29,10 +29,14 @@
                     %h3.h4.box-title
                       =course.name
                     %p.box-desc
-                      =course.parent.name
+                      -if course.short_description
+                        =course.try(:short_description).to_s.truncate(30)
+                      -else
+                        = course.parent.try(:name)
+                  -#Todo make this change depending on if user has started it(SET)
                   .box-label
                     -if current_user
-                      Continue
+                      Start
                     -else
                       Start
 
