@@ -1,4 +1,5 @@
 # coding: utf-8
+require 'mailchimp'
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -16,6 +17,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :use_basic_auth_for_staging
+  before_action :setup_mcapi
 
   def use_basic_auth_for_staging
     if Rails.env.staging? && !request.original_fullpath.include?('/api/')
@@ -351,6 +353,11 @@ class ApplicationController < ActionController::Base
             'LearnSignal'
     @seo_description = seo_description
     @seo_no_index = seo_no_index
+  end
+
+  def setup_mcapi
+    @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
+    #@list_id = '67bedd6265'
   end
 
 end

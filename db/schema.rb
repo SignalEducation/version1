@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150715134802) do
+ActiveRecord::Schema.define(version: 20150716160511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -243,6 +243,7 @@ ActiveRecord::Schema.define(version: 20150715134802) do
     t.integer  "tutor_id"
     t.boolean  "live",                                    default: false, null: false
     t.text     "short_description"
+    t.string   "mailchimp_list_id"
   end
 
   add_index "exam_levels", ["qualification_id"], name: "index_exam_levels_on_qualification_id", using: :btree
@@ -264,6 +265,7 @@ ActiveRecord::Schema.define(version: 20150715134802) do
     t.integer  "tutor_id"
     t.text     "short_description"
     t.text     "description"
+    t.string   "mailchimp_list_id"
   end
 
   add_index "exam_sections", ["exam_level_id"], name: "index_exam_sections_on_exam_level_id", using: :btree

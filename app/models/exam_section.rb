@@ -19,6 +19,7 @@
 #  tutor_id                          :integer
 #  short_description                 :text
 #  description                       :text
+#  mailchimp_list_id                 :string
 #
 
 class ExamSection < ActiveRecord::Base
@@ -28,7 +29,7 @@ class ExamSection < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
                   :seo_description, :seo_no_index, :duration, :live, :tutor_id,
-                  :short_description, :description
+                  :short_description, :description, :mailchimp_list_id
 
   # Constants
 
@@ -45,6 +46,7 @@ class ExamSection < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :mailchimp_list_id, presence: true, uniqueness: true, length: {maximum: 255}
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 

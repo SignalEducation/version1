@@ -110,6 +110,9 @@ Rails.application.routes.draw do
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
     end
     resources :invoices, only: [:index, :show]
+
+    post '/subscribe', to: 'library#subscribe'
+
     get 'library/:exam_level_name_url(/:exam_section_name_url)', to: 'library#show', as: :library_course
     get 'library', to: 'library#index', as: :library
 

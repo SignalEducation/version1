@@ -38,6 +38,10 @@
           .col-sm-8
             =f.text_area :seo_description, placeholder: t('views.exam_levels.form.seo_description_placeholder'), rows: 4, class: 'form-control'
         .form-group
+          =f.label :mailchimp_list_id, t('views.exam_levels.form.mailchimp_list_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :mailchimp_list_id, placeholder: t('views.exam_levels.form.mailchimp_list_id_placeholder'), class: 'form-control'
+        .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label

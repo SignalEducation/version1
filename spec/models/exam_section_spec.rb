@@ -19,6 +19,7 @@
 #  tutor_id                          :integer
 #  short_description                 :text
 #  description                       :text
+#  mailchimp_list_id                 :string
 #
 
 require 'rails_helper'

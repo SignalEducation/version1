@@ -447,6 +447,8 @@ en:
         enable_exam_sections: "Enable exam sections?"
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
+        mailchimp_list_id: Mailchimp List ID
+        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
         seo_no_index: "SEO no-index flag"
 
       index:
@@ -481,6 +483,8 @@ en:
         seo_description_placeholder: Description text that Google will show in search results
         short_description: Short description
         short_description_placeholder: Description that will appear on library landing page for this course
+        mailchimp_list_id: Mailchimp List ID
+        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
         description: Description
         description_placeholder: Description text of the course
         seo_no_index: "SEO no-index flag"

@@ -22,6 +22,7 @@
 #  tutor_id                                :integer
 #  live                                    :boolean          default(FALSE), not null
 #  short_description                       :text
+#  mailchimp_list_id                       :string
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -34,7 +35,8 @@ class ExamLevel < ActiveRecord::Base
                   :default_number_of_possible_exam_answers,
                   :enable_exam_sections, :description,
                   :seo_description, :seo_no_index, :duration,
-                  :tutor_id, :live, :short_description
+                  :tutor_id, :live, :short_description,
+                  :mailchimp_list_id
 
   # Constants
 
@@ -53,6 +55,7 @@ class ExamLevel < ActiveRecord::Base
   # validation
   validates :qualification_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :mailchimp_list_id, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name, presence: true,
             uniqueness: {scope: :qualification_id}, length: {maximum: 255}
   validates :name_url, presence: true,

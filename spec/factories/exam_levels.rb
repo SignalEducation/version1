@@ -22,6 +22,7 @@
 #  tutor_id                                :integer
 #  live                                    :boolean          default(FALSE), not null
 #  short_description                       :text
+#  mailchimp_list_id                       :string
 #
 
 FactoryGirl.define do
