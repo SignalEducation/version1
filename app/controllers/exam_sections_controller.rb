@@ -66,6 +66,7 @@ class ExamSectionsController < ApplicationController
       @exam_section = ExamSection.where(id: params[:id]).first
     end
     @exam_levels = ExamLevel.all_with_exam_sections_enabled.all_in_order
+    @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
