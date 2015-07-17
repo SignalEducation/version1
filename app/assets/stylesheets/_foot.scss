@@ -54,6 +54,7 @@
 }
 .foot-copyright {
   color: $white;
+  margin-top: $gutter;
   @include opacity(0.8);
   @include font-size(1.2);
   @include breakpoint(md-min) {

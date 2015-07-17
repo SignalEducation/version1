@@ -32,6 +32,7 @@ FactoryGirl.define do
     seo_no_index           false
     live                   false
     short_description      'Short Blurb'
+    sequence(:mailchimp_list_id)       {|n| "dfgsdfg#{n}"}
 
     factory :active_exam_section do
       active              true

@@ -6,11 +6,10 @@
         .row
           .col-md-6.col-md-offset-3
             %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
-              =@course.name
+              =@course.try(:name)
             %p.h5.h-white.text-center.l-margin-bottom-big.h-separator
               =@course.try(:short_description)
             #response
-
             =form_tag('/subscribe', method: "post", id: 'mailchimpform', remote: "true") do
               .form-horizontal
                 .row
@@ -33,7 +32,7 @@
                   -@course.children.all_active.all_in_order.each do |child|
                     %li
                       .box-item.upcoming
-                        =child.name
+                        =child.try(:name)
 
             .col-sm-12.col-md-4
               %h3

@@ -6,7 +6,7 @@
       .row
         .col-md-12.text-center
           %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
-            =@course.name
+            =@course.try(:name)
           =link_to course_special_link(@course.first_active_cme) do
             .btn.btn-red
               Start course
@@ -22,7 +22,7 @@
                 %li#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
                   .box-item{ aria: {expand: true, controls: "collapse_#{counter}"} }
                     .box-topic-item
-                      =child.name
+                      =child.try(:name)
                     .time
                       =seconds_to_time(child.estimated_time_in_seconds)
                 .panel-collapse.collapse.list-group{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
@@ -64,7 +64,7 @@
           %ul.lined-list
             %li
               =t('views.general.duration')
-              =humanize_time(@course.duration.to_i)
+              =humanize_time(@course.try(:duration).to_i)
             %li
               =t('views.general.updated_at')
               =humanize_datetime(@course.updated_at)
