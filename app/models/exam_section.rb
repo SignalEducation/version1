@@ -46,7 +46,7 @@ class ExamSection < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :mailchimp_list_id, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :mailchimp_list_id, presence: true, length: {maximum: 255}
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
