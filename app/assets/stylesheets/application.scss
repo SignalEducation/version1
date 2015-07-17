@@ -39,7 +39,7 @@ body {
 }
 a {
   color: $red-1;
-  text-decoration: underline;
+  //text-decoration: underline;
   @include transition(background-color .2s ease);
   @include transition(color .2s ease);
   @include transition(border .2s ease);
@@ -467,8 +467,6 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  display: block;
-  position: relative;
   color: $purple-1;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
