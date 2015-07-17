@@ -71,7 +71,7 @@ class ExamSection < ActiveRecord::Base
     if search
       where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
-      ExamSection.all_active
+      ExamSection.all_active.all_in_order
     end
   end
 

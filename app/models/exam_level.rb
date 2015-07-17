@@ -91,7 +91,7 @@ class ExamLevel < ActiveRecord::Base
     if search
       where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
-      ExamLevel.all_active.where(enable_exam_sections: false )
+      ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
     end
   end
 
