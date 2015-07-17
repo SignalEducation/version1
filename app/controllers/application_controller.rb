@@ -357,7 +357,6 @@ class ApplicationController < ActionController::Base
 
   def setup_mcapi
     @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
-    #@list_id = '67bedd6265'
   end
 
 end
