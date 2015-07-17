@@ -1,34 +1,30 @@
-.ls
+.l-section
   .l-wrap
-    .l-section-small
-      .container-fluid
-        .profile-single
-          .row
-            .col-md-6.col-md-offset-3
-              %h1.h1.h-separator.h-separator-center.text-center
-                Chris Ahlstrand
-          .row
-            .col-sm-12.col-md-6.col-md-offset-3
-
-              =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/chris-a.jpg', class: 'profile-pic profile-pic-big', alt: 'Chris Ahlstrand')
-              .profile-text
-                %p
-                  Chris Ahlstrand has 14 years of professional financial services experience. In addition to his contributions at Learn Signal, Chris currently works as a research analyst for Chimera Research Group, an independent equity research firm that is dedicated to providing actionable investment and trading ideas backed by fundamental research for listed companies in the biotech and pharmaceutical industries. He also maintains a trading blog at
-                  = succeed "." do
-                    %a{:href => "http://ahlstrac.wordpress.com"}ahlstrac.wordpress.com
-                  Prior to this, he worked at Channel Capital Group, owner of the hedge fund database
-                  = succeed "," do
-                    %a{:href => "http://ahlstrac.wordpress.com"}Hedgefund.net
-                  where he sold a marketing platform to emerging hedge funds. He started his career at Dealogic, a software and analytics provider to investment banks, where he worked as an M&A analyst and as a sales rep. He is a CFA candidate, having passed all three levels of the CFA exam. He graduated from the University of Colorado in Boulder with a BA in Economics and Anthropology and currently resides in New Jersey with his wife and two children.
-.l-asphalt
-  .l-wrap
-    .l-section-small
-      .container-fluid
+    .container-fluid
+      .profile-single
         .row
           .col-md-6.col-md-offset-3
-            %h2.h2.h-separator.h-separator-center.text-center
-              More lecturer profiles
-        =render partial: 'tutors'
+            %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+              Chris Ahlstrand
+        .row
+          .col-sm-12.col-md-6.col-md-offset-3
 
-:javascript
-    var nav = responsiveNav(".nav-collapse");
+            =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/chris-a.jpg', class: 'profile-pic profile-pic-big', alt: 'Chris Ahlstrand')
+            .profile-text
+              %p
+                Chris Ahlstrand has 14 years of professional financial services experience. In addition to his contributions at Learn Signal, Chris currently works as a research analyst for Chimera Research Group, an independent equity research firm that is dedicated to providing actionable investment and trading ideas backed by fundamental research for listed companies in the biotech and pharmaceutical industries. He also maintains a trading blog at
+                = succeed "." do
+                  %a{:href => "http://ahlstrac.wordpress.com"}ahlstrac.wordpress.com
+                Prior to this, he worked at Channel Capital Group, owner of the hedge fund database
+                = succeed "," do
+                  %a{:href => "http://ahlstrac.wordpress.com"}Hedgefund.net
+                where he sold a marketing platform to emerging hedge funds. He started his career at Dealogic, a software and analytics provider to investment banks, where he worked as an M&A analyst and as a sales rep. He is a CFA candidate, having passed all three levels of the CFA exam. He graduated from the University of Colorado in Boulder with a BA in Economics and Anthropology and currently resides in New Jersey with his wife and two children.
+
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-6.col-md-offset-3
+          %h2.h2.h-separator.h-separator-center.text-center.l-margin-bottom-big
+            More lecturer profiles
+      =render partial: 'tutors'

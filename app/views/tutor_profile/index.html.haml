@@ -1,9 +1,12 @@
-.l-section-small.is-bg-asphalt
+.l-section-small.is-bg-asphalt.is-bg-white-to-asphalt
   .l-wrap
     .container-fluid
       .row
-        .col-sm-12
-          %h1.l-margin-bottom-big
+        .col-md-6.col-md-offset-3
+          %h1.h1.h-separator.h-separator-center.text-center
             Lecturer profiles
-        =render partial: 'tutors'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      =render partial: 'tutors'
 

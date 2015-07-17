@@ -1,60 +1,34 @@
-.header.header-dark{:role => "banner"}
+.l-section
   .l-wrap
     .container-fluid
-      %nav.navbar-main.navbar-small{:role => "navigation"}
-        =link_to root_url do
-          =image_tag('ls-logo-red.svg', class: 'logo')
-        %ul.nav-main.nav-collapse
-          -if current_user
-            %li
-              =link_to 'Dashboard', dashboard_url
-            %li
-              =link_to 'Library', library_url
-            %li
-              =link_to 'Account', profile_url
-          -else
-            %li
-              =link_to 'Browse Courses', library_url
-            %li
-              =link_to 'Sign Up', student_sign_up_url
-            %li
-              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-.ls
-  .l-wrap
-    .l-section-small
-      .container-fluid
-        .profile-single
-          .row
-            .col-md-6.col-md-offset-3
-              %h1.h1.h-separator.h-separator-center.text-center
-                Dave O’Donoghue
-              %h4.text-center.l-margin-bottom-big
-                FCCA, MSc, DipIFR
-          .row
-            .col-sm-12.col-md-6.col-md-offset-3
-
-              =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/dave-d.jpg', class: 'profile-pic profile-pic-big', alt: 'Dave O’Donoghue')
-              .profile-text
-                %p
-                  Dave is the Managing Director of
-                  %a{href: "http://accountancyschool.ie/", target: "_blank"} AccountancySchool.ie
-                  where he lecturers at all levels of Auditing and Financial Reporting. Dave is currently a member of ACCA Ireland committee and he is also a Director of Chartered Grind School which prepares students to sit the exams of ACA Ireland. He spent a number of years working in Industry and Practice before he moved into full time education. Dave has been lecturing to professional accountancy students since 1996 and is recognised as being at the forefront of lecturing to Professional Accountancy students in Ireland. He has earned an exceptional reputation with accountancy students for his diligence and commitment to assisting them in passing their ACCA exams.
-                %p
-                  He has lectured students placed first in the World in F7 and a number who were placed 2nd in F7 and F8. He has had numerous students who have been placed at national and international levels in F7, F8 and P7.
-                %p
-                  Dave is a Fellow of ACCA and holds a Masters in Accountancy. He was previously the Course Director of Professional Accountancy at Griffith College.
-                %p
-                  ACCA subjects in Dublin: P7, F7 and F8
-
-.l-asphalt
-  .l-wrap
-    .l-section-small
-      .container-fluid
+      .profile-single
         .row
           .col-md-6.col-md-offset-3
-            %h2.h2.h-separator.h-separator-center.text-center
-              More lecturer profiles
-        =render partial: 'tutors'
+            %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+              Dave O’Donoghue
+            %h4.text-center.l-margin-bottom-big
+              FCCA, MSc, DipIFR
+        .row
+          .col-sm-12.col-md-6.col-md-offset-3
 
-:javascript
-    var nav = responsiveNav(".nav-collapse");
+            =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/dave-d.jpg', class: 'profile-pic profile-pic-big', alt: 'Dave O’Donoghue')
+            .profile-text
+              %p
+                Dave is the Managing Director of
+                %a{href: "http://accountancyschool.ie/", target: "_blank"} AccountancySchool.ie
+                where he lecturers at all levels of Auditing and Financial Reporting. Dave is currently a member of ACCA Ireland committee and he is also a Director of Chartered Grind School which prepares students to sit the exams of ACA Ireland. He spent a number of years working in Industry and Practice before he moved into full time education. Dave has been lecturing to professional accountancy students since 1996 and is recognised as being at the forefront of lecturing to Professional Accountancy students in Ireland. He has earned an exceptional reputation with accountancy students for his diligence and commitment to assisting them in passing their ACCA exams.
+              %p
+                He has lectured students placed first in the World in F7 and a number who were placed 2nd in F7 and F8. He has had numerous students who have been placed at national and international levels in F7, F8 and P7.
+              %p
+                Dave is a Fellow of ACCA and holds a Masters in Accountancy. He was previously the Course Director of Professional Accountancy at Griffith College.
+              %p
+                ACCA subjects in Dublin: P7, F7 and F8
+
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-6.col-md-offset-3
+          %h2.h2.h-separator.h-separator-center.text-center.l-margin-bottom-big
+            More lecturer profiles
+      =render partial: 'tutors'
