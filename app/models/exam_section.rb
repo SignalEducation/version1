@@ -15,6 +15,11 @@
 #  seo_description                   :string
 #  seo_no_index                      :boolean          default(FALSE)
 #  duration                          :integer
+#  live                              :boolean          default(FALSE), not null
+#  tutor_id                          :integer
+#  short_description                 :text
+#  description                       :text
+#  mailchimp_list_id                 :string
 #
 
 class ExamSection < ActiveRecord::Base
@@ -23,7 +28,8 @@ class ExamSection < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
-                  :seo_description, :seo_no_index, :duration
+                  :seo_description, :seo_no_index, :duration, :live, :tutor_id,
+                  :short_description, :description, :mailchimp_list_id
 
   # Constants
 
@@ -33,12 +39,14 @@ class ExamSection < ActiveRecord::Base
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :student_exam_tracks
+  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
   validates :name, presence: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :exam_level_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :mailchimp_list_id, presence: true, uniqueness: true, length: {maximum: 255}
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
@@ -53,10 +61,19 @@ class ExamSection < ActiveRecord::Base
 
   # scopes
   scope :all_active, -> { where(active: true) }
+  scope :all_live, -> { where(live: true) }
+  scope :all_not_live, -> { where(active: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
   # class methods
+  def self.search(search)
+    if search
+      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+    else
+      ExamSection.all_active
+    end
+  end
 
   # instance methods
   def active_children

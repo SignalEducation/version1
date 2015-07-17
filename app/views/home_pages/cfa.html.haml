@@ -1,85 +1,93 @@
-.course-cfa
-  .header{:role => "banner"}
+.hero-cfa
+  .header{role: 'banner'}
     .l-wrap
       .container-fluid
-        %nav.navbar-main{:role => "navigation"}
-          =link_to root_url do
-            =image_tag('ls-logo-red.svg', class: 'logo')
-          %ul.nav-main.nav-collapse
-            %li
-              =link_to 'Browse Courses', library_url
-            %li
-              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-  .course-inner
+        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
+          .navbar-header
+            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            =link_to root_url do
+              =image_tag('ls-logo-red.svg', class: 'logo')
+          #myNavbar.collapse.navbar-collapse
+            %ul.nav.navbar-nav.navbar-right
+              %li
+                =link_to 'Browse Courses', library_url
+              %li
+                =link_to 'Sign Up', student_sign_up_url
+              %li
+                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+
+  .l-section
     .l-wrap
       .container-fluid
         .row
-          .col-md-6.col-md-offset-3
-            %p.h5.h-white.text-center
+          .col-md-6.col-md-offset-3.text-center
+            %p.h5.h-white
               Practice is key to passing the CFA exams
-            %h1.h1.h-white.h-separator.h-separator-center.text-center
+            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom-big
               Take the quick prep course for the CFA level 1
             =link_to 'Start your free trial', student_sign_up_url, class: 'btn btn-red'
 
-.course-intro
+.l-section
   .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h5
-              Work through our extensive question bank with summary videos to fill in the gaps
-            %h3.h2.h-center.h-separator.h-separator-center
-              Qbank of 1500 exam quality questions with solutions
-        .row
-          .col-sm-4
-            %h3.h4
-              Practice
-            %p.p
-              Prepare with 1500 exam standard questions and worked solutions.
-          .col-sm-4
-            %h3.h4
-              Learn
-            %p.p
-              Over 140 summary videos to understand the difficult topics.
-          .col-sm-4
-            %h3.h4
-              Support
-            %p.p
-              Get help from our team of dedicated tutors whenever you get stuck.
-.course-list
+    .container-fluid
+      .row
+        .col-sm-12
+          %h2.h5.text-center
+            Work through our extensive question bank with summary videos to fill in the gaps
+          %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
+            Qbank of 1500 exam quality questions with solutions
+      .row
+        .col-sm-4
+          %h3.h4.text-center
+            Practice
+          %p.p.text-center
+            Prepare with 1500 exam standard questions and worked solutions.
+        .col-sm-4
+          %h3.h4.text-center
+            Learn
+          %p.p.text-center
+            Over 140 summary videos to understand the difficult topics.
+        .col-sm-4
+          %h3.h4.text-center
+            Support
+          %p.p.text-center
+            Get help from our team of dedicated tutors whenever you get stuck.
+
+.l-section.is-bg-asphalt
   .l-wrap
-    .l-section
-      .container-fluid
-        .course-list-wrap
-          .row
-            .col-sm-6.col-md-4
-              =link_to library_special_link(@cfa_level_1), class: 'box' do
-                .box-inner
-                  %h3.h4.box-title
-                    CFA Level 1
-                  %p.box-desc
-                    £25/Month
-                .box-label
-                  7-day free trial
-            .col-sm-6.col-md-4
-              %a.box
-                .box-inner
-                  %h3.h4.box-title.is-text-disabled
-                    CFA Level 2
-                  %p.box-desc
-                    Coming soon...
-                .box-label
-                  Get early access
-            .col-sm-6.col-md-4
-              %a.box
-                .box-inner
-                  %h3.h4.box-title.is-text-disabled
-                    CFA Level 2
-                  %p.box-desc
-                    Coming soon...
-                .box-label
-                  Get early access
+    .container-fluid
+      .course-list-wrap
+        .row
+          .col-sm-6.col-md-4
+            =link_to library_special_link(@cfa_level_1), class: 'box box-course' do
+              .box-inner
+                %h3.h4.box-title
+                  CFA Level 1
+                %p.box-desc
+                  £25/Month
+              .box-label
+                7-day free trial
+          .col-sm-6.col-md-4
+            %a.box.box-course
+              .box-inner
+                %h3.h4.box-title.is-text-disabled
+                  CFA Level 2
+                %p.box-desc
+                  Coming soon...
+              .box-label
+                Get early access
+          .col-sm-6.col-md-4
+            %a.box.box-course
+              .box-inner
+                %h3.h4.box-title.is-text-disabled
+                  CFA Level 2
+                %p.box-desc
+                  Coming soon...
+              .box-label
+                Get early access
 
 .testimonials.testimonials-alt
   .l-wrap
@@ -111,15 +119,13 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url do
-    .start-trial-wrap
-      .l-wrap
+  =link_to student_sign_up_url, class: 'btn-block btn-block-red' do
+    .l-wrap
+      .l-section-small
         .container-fluid
-          %p.h5
-            Become a member
-          %p.h2
-            Start your 7-day free trial &rarr;
-
-
-:javascript
-    var nav = responsiveNav(".nav-collapse");
+          .col-sm-12
+            %p.h5.text-center
+              Become a member
+            %p.h2.text-center
+              Start your 7-day free trial
+              %span.ico-arrow-right-r

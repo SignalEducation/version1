@@ -1,4 +1,5 @@
 # coding: utf-8
+require 'mailchimp'
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -16,6 +17,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :use_basic_auth_for_staging
+  before_action :setup_mcapi
 
   def use_basic_auth_for_staging
     if Rails.env.staging? && !request.original_fullpath.include?('/api/')
@@ -291,55 +293,18 @@ class ApplicationController < ActionController::Base
   helper_method :course_module_special_link
 
   # customer-facing
-  def library_special_link(the_thing, direction='forwards')
+  def library_special_link(the_thing)
     the_thing = the_thing
-    if direction == 'forwards'
 
-      until the_thing.try(:active_children).try(:count) != 1 || (the_thing.class == CourseModuleElement || the_thing.class == CourseModule || the_thing.class == ExamLevel || the_thing.class == ExamSection)
-        if the_thing.active_children.count == 1 &&
-                       (the_thing.active_children.first.class == SubjectArea ||
-                        the_thing.active_children.first.class == Institution ||
-                        the_thing.active_children.first.class == Qualification ||
-                        the_thing.active_children.first.class == ExamLevel ||
-                        the_thing.active_children.first.class == ExamSection)
-          the_thing = the_thing.active_children.first
-        end
-      end
-
-    else
-
-      until the_thing.class == SubjectArea || the_thing.try(:active_children).try(:count).to_i > 1
-        if the_thing.try(:active_children).try(:count).to_i == 1
-          the_thing = the_thing.parent
-        end
-      end
-    end
-
-    if the_thing.class == CourseModule || the_thing.class == CourseModuleElement
-      course_special_link(the_thing)
-    elsif the_thing.class == ExamSection
-      library_url(the_thing.exam_level.qualification.institution.subject_area.name_url,
-                  the_thing.exam_level.qualification.institution.name_url,
-                  the_thing.exam_level.qualification.name_url,
-                  the_thing.exam_level.name_url
+    if the_thing.class == ExamSection
+      library_course_url(
+                  the_thing.exam_level.name_url,
+                  the_thing.name_url
       )
     elsif the_thing.class == ExamLevel
-      library_url(the_thing.qualification.institution.subject_area.name_url,
-                  the_thing.qualification.institution.name_url,
-                  the_thing.qualification.name_url,
+      library_course_url(
                   the_thing.name_url
       )
-    elsif the_thing.class == Qualification
-      library_url(the_thing.institution.subject_area.name_url,
-                  the_thing.institution.name_url,
-                  the_thing.name_url
-      )
-    elsif the_thing.class == Institution
-      library_url(the_thing.subject_area.name_url,
-                  the_thing.name_url
-      )
-    elsif the_thing.class == SubjectArea
-      library_url(the_thing.name_url)
     else
       library_url
     end
@@ -377,7 +342,7 @@ class ApplicationController < ActionController::Base
       )
     else
       # shouldn't be here - re-route to /library/bla-bla
-      library_special_link(the_thing, direction)
+      library_special_link(the_thing)
     end
   end
   helper_method :course_special_link
@@ -388,6 +353,10 @@ class ApplicationController < ActionController::Base
             'LearnSignal'
     @seo_description = seo_description
     @seo_no_index = seo_no_index
+  end
+
+  def setup_mcapi
+    @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
   end
 
 end

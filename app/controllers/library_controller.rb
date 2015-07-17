@@ -1,6 +1,82 @@
 class LibraryController < ApplicationController
 
+  def index
+    @exam_levels = ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
+    @exam_sections = ExamSection.all_active.all_in_order
+    @levels = @exam_levels.search(params[:search])
+    @sections = @exam_sections.search(params[:search])
+    @courses = @levels + @sections
+  end
+
   def show
+    @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url].to_s).first
+    @exam_section = ExamSection.where(name_url: params[:exam_section_name_url].to_s).first
+    if @exam_section.nil?
+      @course = @exam_level
+    else
+      @course = @exam_section
+    end
+    if @course.live
+       render 'live_course'
+    else
+      render 'preview_course'
+    end
+
+  end
+
+  def subscribe
+    email = params[:email][:address]
+    list_id = params[:list_id]
+
+    if !email.blank?
+
+      begin
+
+        @mc.lists.subscribe(list_id, {'email' => email})
+
+        respond_to do |format|
+          format.json{render :json => {:message => "Success! Check your email to confirm your subscription."}}
+        end
+
+      rescue Mailchimp::ListAlreadySubscribedError
+
+        respond_to do |format|
+          format.json{render :json => {:message => "#{email} is already subscribed to the list"}}
+        end
+
+      rescue Mailchimp::ListDoesNotExistError
+
+        respond_to do |format|
+          format.json{render :json => {:message => "The list could not be found."}}
+        end
+
+      rescue Mailchimp::Error => ex
+
+        if ex.message
+
+          respond_to do |format|
+            format.json{render :json => {:message => "There is an error. Please enter valid email id."}}
+          end
+
+        else
+
+          respond_to do |format|
+            format.json{render :json => {:message => "An unknown error occurred."}}
+          end
+        end
+
+      end
+
+    else
+
+      respond_to do |format|
+        format.json{render :json => {:message => "Email Address Cannot be blank. Please enter valid email id."}}
+      end
+
+    end
+  end
+
+  def old_show
 
     @subject_areas = SubjectArea.all_active.all_in_order
     @subject_area = @institution = @qualification = @exam_level = @exam_section = nil

@@ -1,0 +1,140 @@
+.btn {
+  @include font-size(1.1);
+  @include transition(background-color .2s ease);
+
+  @include breakpoint(xs-min) {
+    display: inline-block;
+  }
+
+  @include breakpoint(sm-min) {
+    display: inline-block;
+    @include font-size(1.2);
+  }
+
+  display: block;
+  height: 40px;
+  padding: 0 $gutter;
+  line-height: 40px;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  border: 0;
+
+  &:link, &:visited {
+    text-decoration: none;
+    color: $red-1;
+  }
+  &:hover {
+    color: shade($red-1, 20%);
+  }
+  &:active {
+    @include box-shadow(0, 0, 0, 0);
+  }
+  &.btn-red {
+    background: $red-1;
+    color: $white;
+    &:hover {
+      background: shade($red-1, 10%);
+    }
+    &:active {
+      background: ($red-1);
+    }
+  }
+  &.btn-purple {
+    background: $purple-1;
+    color: $white;
+    &:hover {
+      background: shade($purple-1, 10%);
+    }
+    &:active {
+      background: ($purple-1);
+    }
+  }
+  &.btn-cyan {
+    background: $cyan-1;
+    color: $white;
+    &:hover {
+      background: shade($cyan-1, 10%);
+    }
+    &:active {
+      background: ($cyan-1);
+    }
+  }
+  &.btn-secondary {
+    @include box-shadow(0, 0, 0, 0);
+
+    color: $red-1;
+    background: transparent;
+    border: 1px solid $white;
+    line-height: 38px;
+    &:hover, &:active {
+      background: transparent;
+      color: shade($red-1, 20%);
+    }
+    &.btn-red{
+      color: $red-1;
+      border: 1px solid $red-1;
+      &:hover {
+        background: transparent;
+        color: shade($red-1, 20%);
+        border: 1px solid shade($red-1, 20%);
+      }
+    }
+    &.btn-purple {
+      color: $purple-1;
+      border: 1px solid $purple-1;
+      &:hover {
+        background: transparent;
+        color: shade($purple-1, 20%);
+        border: 1px solid shade($purple-1, 20%);
+      }
+    }
+    &.btn-cyan {
+      color: $cyan-1;
+      border: 1px solid $cyan-1;
+      &:hover {
+        background: transparent;
+        color: shade($cyan-1, 20%);
+        border: 1px solid shade($cyan-1, 20%);
+      }
+    }
+  }
+  &.btn-small {
+    line-height: 28px;
+    height: 28px;
+  }
+}
+.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+  margin-left: 0; // for horizontal forms and .input-group
+}
+
+
+a.btn-block {
+  color: $white;
+  display: block;
+  padding: $gutter/1.5 $gutter;
+  text-decoration: none;
+  @include transition(background-color .2s ease);
+  @include font-size(2.2);
+  @include breakpoint(md-min) {
+    padding: $gutter*1.25 $gutter;
+  }
+  &.btn-block-purple {
+    background: $purple-1;
+    &:hover {
+      background: shade($purple-1, 10%);
+    }
+  }
+  &.btn-block-red {
+    background: $red-1;
+    &:hover {
+      background: shade($red-1, 10%);
+    }
+  }
+  &.btn-block-cyan {
+    background: $cyan-1;
+    &:hover {
+      background: shade($cyan-1, 10%);
+    }
+  }
+}
+

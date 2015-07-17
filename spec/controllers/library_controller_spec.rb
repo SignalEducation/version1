@@ -9,9 +9,9 @@ RSpec.describe LibraryController, type: :controller do
   include_context 'course_content'
 
   context 'Not logged in' do
-    describe "GET 'show'" do
+    describe "GET 'index'" do
       it 'returns http success' do
-        get :show
+        get :index
         expect(response).to have_http_status(:success)
       end
     end
