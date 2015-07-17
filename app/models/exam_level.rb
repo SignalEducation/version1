@@ -55,7 +55,7 @@ class ExamLevel < ActiveRecord::Base
   # validation
   validates :qualification_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :mailchimp_list_id, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :mailchimp_list_id, presence: true, length: {maximum: 255}
   validates :name, presence: true,
             uniqueness: {scope: :qualification_id}, length: {maximum: 255}
   validates :name_url, presence: true,
