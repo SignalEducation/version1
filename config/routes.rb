@@ -127,6 +127,7 @@ Rails.application.routes.draw do
     resources :static_pages
     resources :static_page_uploads, only: [:create]
     resources :stripe_developer_calls
+    get 'acca-schedule', to: 'study_schedules#acca_schedule'
     resources :subject_areas, concerns: :supports_reordering
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
