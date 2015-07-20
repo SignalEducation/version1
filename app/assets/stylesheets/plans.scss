@@ -1,0 +1,47 @@
+.plans {
+  margin-top: $gutter*2;
+}
+.plan {
+  text-align: center;
+  color: $white;
+  margin-bottom: $gutter*2;
+  @include border-radius(5px);
+}
+.plan-monthly {
+  background: $cyan-1;
+}
+.plan-quarterly {
+  background: $red-1;
+}
+.plan-yearly {
+  background: $purple-1;
+}
+.plan-header {
+  background: rgba(#000, .05);
+  padding: $gutter/2 $gutter;
+}
+.plan-title, .plan-price {
+  color: $white;
+  margin: 0;
+}
+.plan-price {
+  margin: 0 0 $gutter/2 0;
+}
+.plan-text {
+  color: $white;
+  margin: 0;
+}
+.plan-inner {
+  padding: $gutter*2 $gutter;
+}
+.plan-option {
+  padding: $gutter/2 $gutter;
+  display: block;
+  color: $white;
+  font-weight: normal;
+  border-top: 1px solid rgba($white, .2);
+  @include transition(background-color .2s ease);
+  &:hover {
+    background: rgba(#000, 0.1);
+  }
+}

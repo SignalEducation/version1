@@ -52,6 +52,12 @@ a:focus {
 a:active {
   color: $purple-1;
 }
+a.link-purple {
+  color: $purple-1;
+  &:hover {
+    color: $cyan-1;
+  }
+}
 blockquote {
   border-left: 2px solid $red-1;
 }
@@ -245,6 +251,7 @@ hr {
 @import "hero.scss";
 @import "foot.scss";
 @import "testimonials.scss";
+@import "plans.scss";
 
 .course-group-title {
   margin-bottom: $gutter*2;
@@ -369,6 +376,10 @@ label, .label {
     width: 19px;
   }
 }
+
+
+
+
 a.box {
   &:link {
     text-decoration: none;
@@ -400,7 +411,6 @@ a.box {
     margin: $gutter*.5 0 $gutter 0;
   }
   &.box-course {
-    text-decoration: none;
     text-align: center;
     margin-top: $gutter*1.5;
     &:after {
@@ -448,8 +458,14 @@ a.box {
 }
 .course-topics-list {
   list-style: none;
-  margin: 0 0 $gutter*2 0;
+  //margin: 0 0 $gutter*2 0;
   padding-left: 0;
+}
+.box-item {
+  display: block;
+  border: 0;
+  width: 100%;
+  text-align: left;
 }
 a.box-item {
   color: $purple-1;
@@ -467,6 +483,8 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
+  display: block;
+  position: relative;
   color: $purple-1;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
@@ -508,14 +526,40 @@ a.box-item {
   right: 15px;
   color: tint($purple-1, 50%);
 }
+.side-meta {
+  color: tint($purple-1, 50%);
+  display: block;
+  text-align: left;
+  @include breakpoint(sm-min) {
+    text-align: right;
+  }
+}
 .lined-list {
   border-top: 1px solid rgba($gray-1, .15);
   padding: 0;
-  & li {
+  li {
     list-style: none;
-    margin: 0;
-    padding: $gutter/2 $gutter/2 $gutter/2 0;
-    border-bottom: 1px solid rgba($gray-1, .15);
+  }
+  a {
+    text-decoration: none;
+  }
+}
+.lined-list-item {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: $gutter/2 $gutter/2 $gutter/2 0;
+  border-bottom: 1px solid rgba($gray-1, .15);
+  position: relative;
+}
+.collapse-list {
+  ul {
+    margin-top: -10px;
+    border-top: 0;
+  }
+  li {
+    padding-left: $gutter*.75;
+    padding-right: $gutter*.75;
   }
 }
 .sign-up {
@@ -544,53 +588,6 @@ a.box-item {
   @include border-radius(100%);
   color: $purple-1;
 }
-.plans {
-  margin-top: $gutter*2;
-}
-.plan {
-  text-align: center;
-  color: $white;
-  margin-bottom: $gutter*2;
-  @include border-radius(5px);
-}
-.plan-monthly {
-  background: $cyan-1;
-}
-.plan-quarterly {
-  background: $red-1;
-}
-.plan-yearly {
-  background: $purple-1;
-}
-.plan-header {
-  background: rgba(#000, .05);
-  padding: $gutter/2 $gutter;
-}
-.plan-title, .plan-price {
-  color: $white;
-  margin: 0;
-}
-.plan-price {
-  margin: 0 0 $gutter/2 0;
-}
-.plan-text {
-  color: $white;
-  margin: 0;
-}
-.plan-inner {
-  padding: $gutter*2 $gutter;
-}
-.plan-option {
-  padding: $gutter/2 $gutter;
-  display: block;
-  color: $white;
-  font-weight: normal;
-  border-top: 1px solid rgba($white, .2);
-  @include transition(background-color .2s ease);
-  &:hover {
-    background: rgba(#000, 0.1);
-  }
-}
 // 4. Print
 @media print {
   * {
@@ -609,7 +606,7 @@ a.box-item {
 }
 .is-lg-right {
   @include breakpoint(sm-min) {
-    float: right;
+    //float: right;
   }
 }
 .is-visually-hidden {
