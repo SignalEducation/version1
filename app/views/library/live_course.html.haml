@@ -19,26 +19,26 @@
           .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
             %ul.course-topics-list
               -@course.children.all_active.all_in_order.each_with_index do |child, counter|
-                %a
-                  %li#headingOne{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
-                    .box-item{ aria: {expand: true, controls: "collapse_#{counter}"} }
-                      .box-topic-item
-                        =child.try(:name)
-                      .time
-                        =seconds_to_time(child.estimated_time_in_seconds)
-                .panel-collapse.collapse.list-group{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
+                %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
+                  %button.box-item#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"} }
+                    .box-topic-item
+                      =child.try(:name)
+                    .time
+                      =seconds_to_time(child.estimated_time_in_seconds)
+                .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
                   -child.children.all_in_order.all_active.each do |grandchild|
-                    =link_to course_special_link(grandchild), class: 'list-group-item' do
-                      .box-topic-item{style: 'position: absolute;'}
-                        =grandchild.name
-                      %p
-                        .time{style: 'margin-top: -4px;'}
-                          -if grandchild.is_video
-                            =seconds_to_time(grandchild.estimated_time_in_seconds)
-                          -elsif grandchild.is_quiz
-                            =grandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                          -else
-                            ='Flash Card'
+                    =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+                      .row
+                        .col-xs-12.col-sm-8
+                          =grandchild.name
+                        .col-xs-12.col-sm-4
+                          .side-meta
+                            -if grandchild.is_video
+                              =seconds_to_time(grandchild.estimated_time_in_seconds)
+                            -elsif grandchild.is_quiz
+                              =grandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                            -else
+                              ='Flash Card'
 
 
         -#%ul.course-topics-list
