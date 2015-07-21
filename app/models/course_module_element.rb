@@ -22,6 +22,7 @@
 #  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -40,7 +41,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
                   :course_module_element_flash_card_pack_attributes,
-                  :is_cme_flash_card_pack
+                  :is_cme_flash_card_pack, :number_of_questions
 
   # Constants
 

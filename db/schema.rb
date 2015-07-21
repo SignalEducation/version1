@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150716160511) do
+ActiveRecord::Schema.define(version: 20150721083145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(version: 20150716160511) do
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
+    t.integer  "number_of_questions",       default: 0
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -198,6 +199,7 @@ ActiveRecord::Schema.define(version: 20150716160511) do
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
+    t.integer  "number_of_questions",       default: 0
   end
 
   add_index "course_modules", ["exam_level_id"], name: "index_course_modules_on_exam_level_id", using: :btree
