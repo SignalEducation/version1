@@ -9,12 +9,14 @@ $gutter: 20px;
 $white: #fff;
 $gray-1: #6E6D75;
 $asphalt-1: #EFF3F6;
+$asphalt-2: #F8FAFF;
 $purple-1: #3E3F5B;
-$purple-2: #363651;
+$purple-2: #4E3F5B;
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
 $green-1: #D0F6BD;
+$pink-1: #FED4CD;
 
 $sans-font: "proxima-nova-soft", Arial, sans-serif;
 
@@ -54,12 +56,6 @@ a:focus {
 }
 a:active {
   color: $purple-1;
-}
-a.link-purple {
-  color: $purple-1;
-  &:hover {
-    color: $cyan-1;
-  }
 }
 blockquote {
   border-left: 2px solid $red-1;
@@ -240,6 +236,9 @@ hr {
 .l-margin-bottom-big {
   margin-bottom: $gutter*2;
 }
+.l-margin-bottom-huge {
+   margin-bottom: $gutter*2.5;
+ }
 .l-margin-top {
   margin-top: $gutter;
 }
@@ -255,6 +254,7 @@ hr {
 @import "foot.scss";
 @import "testimonials.scss";
 @import "plans.scss";
+@import "quiz";
 
 .course-group-title {
   margin-bottom: $gutter*2;
@@ -464,12 +464,12 @@ a.box {
   //margin: 0 0 $gutter*2 0;
   padding-left: 0;
 }
-.box-item {
-  display: block;
-  border: 0;
-  width: 100%;
-  text-align: left;
-}
+//.box-item {
+  //display: block;
+  //border: 0;
+  //width: 100%;
+  //text-align: left;
+//}
 a.box-item {
   color: $purple-1;
   text-decoration: none;
