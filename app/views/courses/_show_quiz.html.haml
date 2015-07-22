@@ -1,30 +1,31 @@
 -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz || @question_bank
 
-  %h2
-    =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
-  %p
-    .l-margin-bottom-small.l-margin-top{style: 'font-size: small'}
-      #question-count
-        Question 1 of 4
-  .progress.l-margin-bottom-huge
-    .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+  .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents
+    %h2
+      =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
+    %p
+      .l-margin-bottom-small.l-margin-top{style: 'font-size: small'}
+        #question-count
+          Question 1 of 4
+    .progress.l-margin-bottom-huge
+      .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
 
-  -@quiz_questions.each do |question|
-    =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
+    -@quiz_questions.each do |question|
+      =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
-  =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
-    =f.text_field :user_id
-    =f.text_field :course_module_id
-    =f.text_field :course_module_element_id
-    =f.text_field :course_module_jumbo_quiz_id
-    =f.text_field :question_bank_id
-    =f.text_field :time_taken_in_seconds, value: (Time.now.to_i * -1)
-    =f.fields_for :quiz_attempts do |attempt|
-      =attempt.text_field :user_id
-      =attempt.text_field :quiz_question_id
-      =attempt.text_field :quiz_answer_id
-      =attempt.text_field :answer_array
+    =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
+      =f.text_field :user_id
+      =f.text_field :course_module_id
+      =f.text_field :course_module_element_id
+      =f.text_field :course_module_jumbo_quiz_id
+      =f.text_field :question_bank_id
+      =f.text_field :time_taken_in_seconds, value: (Time.now.to_i * -1)
+      =f.fields_for :quiz_attempts do |attempt|
+        =attempt.text_field :user_id
+        =attempt.text_field :quiz_question_id
+        =attempt.text_field :quiz_answer_id
+        =attempt.text_field :answer_array
 
 -else
   .row
