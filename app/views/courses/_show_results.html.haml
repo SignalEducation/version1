@@ -3,12 +3,14 @@
     =t('views.courses.show_results.h1')
     =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || 'Custom Quiz'
 
+  .btn.answer-correct{style: 'margin: 15px'}
+    Results Summary
   #results
     %h3.l-margin-top-big.l-margin-bottom-big
       Summary
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed'}
+      .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
         %p.text-inline.text-bold Question #{counter + 1}
         %p.text-inline
           = ' - ' + t("controllers.application.difficulty_levels.name.#{attempt.try(:quiz_question).try(:difficulty_level)}")
@@ -17,10 +19,10 @@
         %p.l-margin-top.l-margin-bottom-small
           =truncate(attempt.try(:quiz_question).try(:quiz_contents).try(:first).try(:text_content).to_s, length: 120)
 
-  #solutions
-    -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      -if attempt
-        =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
+
+  -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+    -if attempt
+      =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
   -if @course_module_element_user_log.is_jumbo_quiz
@@ -47,3 +49,28 @@
   -if @course_module_element
     .cme-nav
       =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
+:javascript
+
+  var answer = $('.answer'),
+      solution = answer.id,
+      allSolutions = $('.all_solutions'),
+      summaryButton = $('.btn.answer-correct');
+
+  $( document ).ready(function() {
+    allSolutions.hide();
+    summaryButton.hide();
+  });
+
+  function showSolution() {
+    var id = this.id;
+    $('#results').hide();
+    $("#solutions_" + id).show();
+    summaryButton.show();
+  }
+
+  summaryButton.click(function() {
+    allSolutions.hide();
+    summaryButton.hide();
+    $('#results').show();
+  });
+
