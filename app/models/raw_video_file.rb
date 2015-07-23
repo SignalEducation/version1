@@ -286,7 +286,8 @@ class RawVideoFile < ActiveRecord::Base
   end
 
   def self.send_notifications(msg_type, payload)
-    users = User.all_admins.where(active: true)
+    #users = User.all_admins.where(active: true)
+    users = User.where(email: 'james@learnsignal.com')
     if msg_type == :file_renamed
       users.each do |user|
         UserNotification.create(
