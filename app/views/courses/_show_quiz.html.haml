@@ -1,6 +1,6 @@
 -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz || @question_bank
 
-  .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents
+  .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
     %h2
       =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
     %p

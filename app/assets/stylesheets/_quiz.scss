@@ -191,6 +191,58 @@ a.list-group-item {
   padding: 15px;
   border-radius: 7px;
 }
+.quiz-answer {
+  min-height: 100px;
+}
 .text-inline {
   display: inline;
 }
+.scrollbar {
+  overflow-y: scroll;
+  max-height: 100%;
+}
+
+.side-nav {
+  height: 550px;
+}
+
+.sidenav-section {
+  min-height: 80px;
+}
+
+.answerpanel{
+  a.list-group-item:hover {
+    background-color: $asphalt-1;
+    border-left: 0px solid $purple-1 !important;
+  }
+  a.list-group-item:focus{
+    background-color: $asphalt-1;
+    border-left: 1px solid $purple-1 !important;
+    //-webkit-animation-name: example; /* Chrome, Safari, Opera */
+    //-webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    //animation-name: example;
+    //animation-duration: 4s;
+  }
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes example {
+  0%   {border-color:red; left:0px; top:0px;}
+  25%  {border-color:yellow; left:200px; top:0px;}
+  50%  {border-color:blue; left:200px; top:200px;}
+  75%  {border-color:green; left:0px; top:200px;}
+  100% {border-color:red; left:0px; top:0px;}
+}
+
+@media (max-width: 768px) {
+  .side-nav{
+    height: auto;
+  }
+  .width-smaller {
+    width: 100%;
+  }
+  .width-bigger {
+    width: 100%;
+    //float: right;
+  }
+}
+

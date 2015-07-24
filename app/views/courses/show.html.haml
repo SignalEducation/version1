@@ -7,12 +7,11 @@
             =link_to library_special_link(@course_module_element) do
               %p.text-left{style: 'color: #333149'}
                 &#60; Back To Library
+        =render 'side_nav_xs'
         .row
-          .col-md-4.col-sm-4
-            .panel.panel-default.side-nav.border-same-backcolor.round-border.width-smaller
-              =render partial: 'courses/new_side_nav'
-
-          .col-md-8.col-sm-8
+          %div
+            =render 'side_nav_md'
+          .col-md-8.col-sm-8{style: 'margin-bottom: 150px;'}
             -if defined?(@results)
               =render partial: 'courses/show_results', locals: {cme: @course_module_element}
             -elsif @course_module_element && paywall_checkpoint(@course_module_element.my_position_among_siblings, false)[:course_content][:view_all] == false
