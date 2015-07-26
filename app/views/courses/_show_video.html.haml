@@ -1,26 +1,16 @@
-.row
-  .col-sm-12
-    %h1.courses-title
-      =cme.name
-.row
-  .col-sm-12
-    .well.text-center#video-window
-      .h2=t('views.general.coming_soon')
+.box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
+  %h2
+    =cme.name
+  #video-window
+  -if !cme.description.blank?
+    .l-margin-bottom.l-margin-top
+      .pull-left
+        %h3=t('views.course_module_elements.form.description')
+        .pull-left
+          =sanitizer(cme.description)
 
 
-
--if !cme.description.blank?
-  =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
-  .row
-    .col-sm-12
-      %h3=t('views.course_module_elements.form.description')
-      -#%p
-        =t('views.user_groups.form.tutor') + ':'
-        =cme.tutor.full_name
-      .well.well-sm
-        =sanitizer(cme.description)
-
--else
+.box-item.question-box.border-same-backcolor.width-bigger
   .cme-nav
     =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
 
