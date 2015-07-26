@@ -1,33 +1,12 @@
-.header.header-dark{:role => "banner"}
+.l-section-small.is-bg-asphalt.is-bg-white-to-asphalt
   .l-wrap
     .container-fluid
-      %nav.navbar-main.navbar-small{:role => "navigation"}
-        =link_to root_url do
-          =image_tag('ls-logo-red.svg', class: 'logo')
-        %ul.nav-main.nav-collapse
-          -if current_user
-            %li
-              =link_to 'Dashboard', dashboard_url
-            %li
-              =link_to 'Library', library_url
-            %li
-              =link_to 'Account', profile_url
-          -else
-            %li
-              =link_to 'Browse Courses', library_url
-            %li
-              =link_to 'Sign Up', student_sign_up_url
-            %li
-              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-.l-asphalt.is-bg-white-to-asphalt
+      .row
+        .col-md-6.col-md-offset-3
+          %h1.h1.h-separator.h-separator-center.text-center
+            Lecturer profiles
+.l-section-small.is-bg-asphalt
   .l-wrap
-    .l-section-small
-      .container-fluid
-        .row
-          .col-md-6.col-md-offset-3
-            %h1.h1.h-separator.h-separator-center.text-center
-              Lecturer profiles
-        =render partial: 'tutors'
+    .container-fluid
+      =render partial: 'tutors'
 
-:javascript
-    var nav = responsiveNav(".nav-collapse");
