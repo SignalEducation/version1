@@ -20,6 +20,9 @@
 #  description                             :text
 #  duration                                :integer
 #  tutor_id                                :integer
+#  live                                    :boolean          default(FALSE), not null
+#  short_description                       :text
+#  mailchimp_list_id                       :string
 #
 
 require 'rails_helper'

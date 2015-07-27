@@ -20,6 +20,9 @@
 #  description                             :text
 #  duration                                :integer
 #  tutor_id                                :integer
+#  live                                    :boolean          default(FALSE), not null
+#  short_description                       :text
+#  mailchimp_list_id                       :string
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -32,7 +35,8 @@ class ExamLevel < ActiveRecord::Base
                   :default_number_of_possible_exam_answers,
                   :enable_exam_sections, :description,
                   :seo_description, :seo_no_index, :duration,
-                  :tutor_id
+                  :tutor_id, :live, :short_description,
+                  :mailchimp_list_id
 
   # Constants
 
@@ -51,6 +55,7 @@ class ExamLevel < ActiveRecord::Base
   # validation
   validates :qualification_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :mailchimp_list_id, presence: true, length: {maximum: 255}
   validates :name, presence: true,
             uniqueness: {scope: :qualification_id}, length: {maximum: 255}
   validates :name_url, presence: true,
@@ -72,12 +77,22 @@ class ExamLevel < ActiveRecord::Base
 
   # scopes
   scope :all_active, -> { where(active: true) }
+  scope :all_live, -> { where(live: true) }
+  scope :all_not_live, -> { where(live: false) }
   scope :all_in_order, -> { order(:qualification_id, :sorting_order) }
   scope :all_with_exam_sections_enabled, -> { where(enable_exam_sections: true) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
     where(name_url: the_name_url).first
+  end
+
+  def self.search(search)
+    if search
+      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+    else
+      ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
+    end
   end
 
   # instance methods

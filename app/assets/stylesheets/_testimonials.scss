@@ -1,0 +1,35 @@
+.testimonials {
+  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
+  &.testimonials-alt {
+    background: $white;
+  }
+}
+.testimonial {
+  h1, h2, h3, h4 {
+    text-align: center;
+  }
+}
+.testimonial-pic-wrap {
+  position: relative;
+  max-width: 140px;
+  margin: $gutter*2 auto;
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    height: 30px;
+    width: 30px;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
+    background-size: contain;
+  }
+}
+.testimonial-pic {
+  display: block;
+  max-width: 140px;
+  @include border-radius(100%);
+}
+.testimonial-sig {
+  color: darken($gray-1, 15%);
+}

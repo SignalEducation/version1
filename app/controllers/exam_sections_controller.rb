@@ -66,10 +66,11 @@ class ExamSectionsController < ApplicationController
       @exam_section = ExamSection.where(id: params[:id]).first
     end
     @exam_levels = ExamLevel.all_with_exam_sections_enabled.all_in_order
+    @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
-    params.require(:exam_section).permit(:name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score, :seo_description, :seo_no_index)
+    params.require(:exam_section).permit(:name, :name_url, :exam_level_id, :active, :sorting_order, :best_possible_first_attempt_score, :seo_description, :seo_no_index, :live, :tutor_id, :description, :short_description, :mailchimp_list_id)
   end
 
 end

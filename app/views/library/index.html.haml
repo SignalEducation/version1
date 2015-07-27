@@ -1,0 +1,47 @@
+.hero-library
+  =render partial: 'layouts/transparent_navbar'
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big.is-text-white
+              Learn Signal Library
+            %form.form-horizontal
+              .row
+                .col-sm-12
+                  .input-group
+                    =form_tag(library_url, method: :get, id: 'search-form') do
+                      =text_field_tag :search, params[:search], placeholder: 'Search our library', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'
+                      %span.input-group-btn
+                        =submit_tag 'Search', class: 'btn btn-red', name: nil
+
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      -if @courses.present?
+        .course-list-wrap
+          .row
+            -@courses.each do |course|
+              .col-sm-6.col-md-4
+                =link_to library_special_link(course), class: 'box box-course' do
+                  .box-inner
+                    %h3.h4.box-title
+                      =course.try(:name)
+                    %p.box-desc
+                      -if course.short_description
+                        =course.try(:short_description).to_s.truncate(30)
+                      -else
+                        =course.parent.try(:name)
+                  -#Todo make this change depending on if user has started it(SET)
+                  .box-label
+                    -if current_user
+                      Start
+                    -else
+                      Start
+
+      -else
+        ="Sorry there are no courses containing the terms #{params[:search]}"
+
+=render partial: 'layouts/new_footer'
+

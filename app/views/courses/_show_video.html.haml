@@ -45,14 +45,10 @@
           -if r.web_url.length > 0
             %li
               =link_to r.name, r.web_url, target: '_blank'
-              %br/
-              .text-muted=r.description
           -else
             %li
               =link_to r.name, r.upload.url, target: '_blank'
-              =link_to '(' + r.upload_file_name + ')', r.upload.url, target: '_blank'
-              %br/
-              .text-muted=r.description
+
 -if controller_name == 'course_module_elements'
 
   :javascript

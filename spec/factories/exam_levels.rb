@@ -20,6 +20,9 @@
 #  description                             :text
 #  duration                                :integer
 #  tutor_id                                :integer
+#  live                                    :boolean          default(FALSE), not null
+#  short_description                       :text
+#  mailchimp_list_id                       :string
 #
 
 FactoryGirl.define do
@@ -35,6 +38,9 @@ FactoryGirl.define do
     description          'Lorem Ipsum'
     seo_description      'Lorem ipsum'
     seo_no_index         false
+    live                 false
+    short_description    'Short Blurb'
+    sequence(:mailchimp_list_id)       {|n| "dfgsdfg#{n}"}
 
     factory :active_exam_level do
       active                       true

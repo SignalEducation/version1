@@ -1,86 +1,92 @@
-.course-acca
-  .header{:role => "banner"}
+.hero-acca
+  .header{role: 'banner'}
     .l-wrap
       .container-fluid
-        %nav.navbar-main{:role => "navigation"}
-          =link_to root_url do
-            =image_tag('ls-logo-red.svg', class: 'logo')
-          %ul.nav-main.nav-collapse
-            %li
-              =link_to 'Browse Courses', library_url
-            %li
-              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-  .course-inner.course-sign-in
+        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
+          .navbar-header
+            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            =link_to root_url do
+              =image_tag('ls-logo-red.svg', class: 'logo')
+          #myNavbar.collapse.navbar-collapse
+            %ul.nav.navbar-nav.navbar-right
+              %li
+                =link_to 'Browse Courses', library_url
+              %li
+                =link_to 'Sign Up', student_sign_up_url
+              %li
+                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+
+  .l-section
     .l-wrap
       .container-fluid
         .row
-          .col-sm-6.col-md-8.col-lg-6
+          .col-md-6.col-md-offset-3.text-center
             %p.h5.h-white
               Prepare for your ACCA exams with a quick revision course
-            %h1.h1.h-white.h-separator.h-separator-left
+            %h1.h1.h-white.h-separator.h-separator-center.l-margin-bottom-big
               A revision of the essentials & Qbank to keep you focused
-          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
-            =render partial: 'sign_up_form'
+            =link_to 'Start your free trial', student_sign_up_url, class: 'btn btn-red'
 
-.course-intro
+.l-section
   .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h5
-              The most consise and advanced study material all in one place
-            %h3.h2.h-center.h-separator.h-separator-center
-              Revision courses to help you pass
-        .row
-          .col-sm-4
-            %h3.h4
-              Practice
-            %p.p
-              Understand and grasp the difficult topics for all the knowledge you need to pass.
-          .col-sm-4
-            %h3.h4
-              Learn
-            %p.p
-              Prepare with challenging questions to ensure you’re ready for your exam day.
-          .col-sm-4
-            %h3.h4
-              Support
-            %p.p
-              Get help from a community of your peers, as well as our team of dedicated tutors.
-.course-list
-  .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h5.text-center
-              Only £25 per month
-            %h3.h2.text-center.h-separator.h-separator-center
-              Access all Available Courses
+    .container-fluid
+      .row
+        .col-sm-12
+          %h2.h5.text-center
+            The most concise and advanced study material all in one place
+          %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
+            Revision courses to help you pass
+      .row
+        .col-sm-4
+          %h3.h4.text-center
+            Practice
+          %p.p.text-center
+            Understand and grasp the difficult topics for all the knowledge you need to pass.
+        .col-sm-4
+          %h3.h4.text-center
+            Learn
+          %p.p.text-center
+            Prepare with challenging questions to ensure you’re ready for your exam day.
+        .col-sm-4
+          %h3.h4.text-center
+            Support
+          %p.p.text-center
+            Get help from a community of your peers, as well as our team of dedicated tutors.
 
-            %h4.h3.course-group-title.text-center
-              Fundamentals knowledge
-        .course-list-wrap
-          .row
-            .col-sm-6.col-md-4.col-md-offset-2
-              =link_to library_special_link(@acca_level_1), class: 'box' do
-                .box-inner
-                  %h3.h4.box-title
-                    F1 Accounting In Business
-                  %p.box-desc
-                    Now available
-                .box-label
-                  7-day free trial
-            .col-sm-6.col-md-4
-              =link_to library_special_link(@acca_level_2), class: 'box' do
-                .box-inner
-                  %h3.h4.box-title
-                    F2 Management Accounting
-                  %p.box-desc
-                    Now available
-                .box-label
-                  7-day free trial
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-sm-12
+          %h2.h5.text-center
+            Only £25 per month
+          %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
+            Access all Available Courses
+          %h4.h3.course-group-title.text-center
+            Fundamentals knowledge
+      .course-list-wrap
+        .row
+          .col-sm-6.col-md-4.col-md-offset-2
+            =link_to library_special_link(@acca_level_1), class: 'box' do
+              .box-inner
+                %h3.h4.box-title
+                  F1 Accounting In Business
+                %p.box-desc
+                  Now available
+              .box-label
+                7-day free trial
+          .col-sm-6.col-md-4
+            =link_to library_special_link(@acca_level_2), class: 'box' do
+              .box-inner
+                %h3.h4.box-title
+                  F2 Management Accounting
+                %p.box-desc
+                  Now available
+              .box-label
+                7-day free trial
 
 .testimonials.testimonials-alt
   .l-wrap
@@ -112,14 +118,32 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to '#' do
-    .start-trial-wrap
-      .l-wrap
+  %a.btn-block.btn-block-red{href: '#sign-up'}
+    .l-wrap
+      .l-section-small
         .container-fluid
-          %p.h5
-            Become a member
-          %p.h2
-            Start your 7-day free trial &rarr;
+          .col-sm-12
+            %p.h5
+              Become a member
+            %p.h2
+              %span.ico-arrow-right-r
+                Start your 7-day free trial &rarr;
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });

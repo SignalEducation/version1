@@ -1,17 +1,16 @@
-// sig: @bojanjanjanin
-// I've based my approach on https://smacss.com and tried to follow http://codeguide.co
-
+// 0. Settings
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome";
 @import "bootstrap-social";
+@import "mixins.scss";
 
-// 0. Settings
 $gutter: 20px;
 $white: #fff;
 $gray-1: #6E6D75;
 $asphalt-1: #EFF3F6;
 $purple-1: #3E3F5B;
+$purple-2: #363651;
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -19,114 +18,18 @@ $green-1: #D0F6BD;
 
 $sans-font: "proxima-nova-soft", Arial, sans-serif;
 
-@mixin font-size($sizeValue: 1.6) {
-  font-size: ($sizeValue * 10) + px;
-  font-size: $sizeValue + rem;
-}
-@mixin clearfix() {
-  &:before,
-  &:after {
-    content: "";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
-}
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-  border-radius: $radius;
-  background-clip: padding-box;
-}
-@mixin border-top-radius($radius) {
-  -webkit-border-top-right-radius: $radius;
-  border-top-right-radius: $radius;
-  -webkit-border-top-left-radius: $radius;
-  border-top-left-radius: $radius;
-  background-clip: padding-box;
-}
-@mixin border-right-radius($radius) {
-  -webkit-border-bottom-right-radius: $radius;
-  border-bottom-right-radius: $radius;
-  -webkit-border-top-right-radius: $radius;
-  border-top-right-radius: $radius;
-  background-clip: padding-box;
-}
-@mixin border-bottom-radius($radius) {
-  -webkit-border-bottom-right-radius: $radius;
-  border-bottom-right-radius: $radius;
-  -webkit-border-bottom-left-radius: $radius;
-  border-bottom-left-radius: $radius;
-  background-clip: padding-box;
-}
-@mixin border-left-radius($radius) {
-  -webkit-border-bottom-left-radius: $radius;
-  border-bottom-left-radius: $radius;
-  -webkit-border-top-left-radius: $radius;
-  border-top-left-radius: $radius;
-  background-clip: padding-box;
-}
-@mixin opacity($opacity) {
-  opacity: $opacity;
-  $opacity-ie: $opacity * 100;
-  filter: alpha(opacity=$opacity-ie); //IE8
-}
-@mixin breakpoint($point) {
-  @if $point == xs-min {
-    @media (min-width: 360px) { @content; }
-  }
-  @if $point == sm-min {
-    @media (min-width: 768px) { @content; }
-  }
-  @else if $point == md-min {
-    @media (min-width: 992px) { @content; }
-  }
-  @else if $point == lg-min {
-    @media (min-width: 1100px)  { @content; }
-  }
-}
-@mixin image-2x($image, $width, $height) {
-  @media (min--moz-device-pixel-ratio: 1.3),
-  (-o-min-device-pixel-ratio: 2.6/2),
-  (-webkit-min-device-pixel-ratio: 1.3),
-  (min-device-pixel-ratio: 1.3),
-  (min-resolution: 1.3dppx) {
-    background-image: url($image);
-    background-size: $width $height;
-  }
-}
-@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
-  @if $inset {
-    -webkit-box-shadow:inset $left $top $blur $color;
-    -moz-box-shadow:inset $left $top $blur $color;
-    box-shadow:inset $left $top $blur $color;
-  } @else {
-    -webkit-box-shadow: $left $top $blur $color;
-    -moz-box-shadow: $left $top $blur $color;
-    box-shadow: $left $top $blur $color;
-  }
-}
-@mixin transition($args...) {
-  -webkit-transition: $args;
-  -moz-transition: $args;
-  -ms-transition: $args;
-  -o-transition: $args;
-  transition: $args;
-}
-@mixin gradient-vertical($start-color: #555, $end-color: #333, $start-percent: 0%, $end-percent: 100%) {
-  background-image: -webkit-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Safari 5.1-6, Chrome 10+
-  background-image: -o-linear-gradient(top, $start-color $start-percent, $end-color $end-percent);  // Opera 12
-  background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down
-}
-
-
-
-
 // 1. Base
 html {
   background: darken($purple-1, 15%);
+  .margin-top {
+    margin-top: 62px;
+  }
+  .no-margin-top {
+    margin-top: 0;
+  }
+  .schedule-margin-top {
+    margin-top: 25px;
+  }
 }
 body {
   font-family: $sans-font;
@@ -139,8 +42,8 @@ body {
 }
 a {
   color: $red-1;
-  text-decoration: underline;
-  @include transition(background-color 2s ease);
+  //text-decoration: underline;
+  @include transition(background-color .2s ease);
   @include transition(color .2s ease);
   @include transition(border .2s ease);
 }
@@ -152,11 +55,18 @@ a:focus {
 a:active {
   color: $purple-1;
 }
+a.link-purple {
+  color: $purple-1;
+  &:hover {
+    color: $cyan-1;
+  }
+}
 blockquote {
   border-left: 2px solid $red-1;
 }
 h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   position: relative;
+  margin-top: 0;
   &.h-white {
     color: $white;
   }
@@ -168,16 +78,21 @@ h1, .h1 {
   font-weight: normal;
   letter-spacing: 0;
   margin-bottom: $gutter*2;
+  margin-bottom: 0;
   line-height: 1.3;
   @include font-size(2.6);
   @include breakpoint(md-min) {
     @include font-size(3.6);
   }
 }
+.h1 {
+  @extend .animated;
+  @extend .fadeIn;
+}
 h2, .h2 {
   font-weight: normal;
   color: $purple-1;
-  //  margin-bottom: $gutter*2;
+  line-height: 1.2;
   @include font-size(2.6);
   @include breakpoint(md-min) {
     @include font-size(3.0);
@@ -188,6 +103,7 @@ h3, .h3 {
   color: $purple-1;
   text-transform: none;
   letter-spacing: 0;
+  margin-top: 0;
   @include font-size(2.4);
 }
 h4, .h4 {
@@ -203,6 +119,7 @@ h5, .h5 {
   text-transform: uppercase;
   letter-spacing: .2rem;
   line-height: 1.5;
+  margin-top: 0;
   @include font-size(1.1);
   @include breakpoint(md-min) {
     @include font-size(1.3);
@@ -230,9 +147,9 @@ hr {
 }
 .h-separator {
   padding-bottom: $gutter*1.5;
-  margin-bottom: $gutter*2;
+  //margin-bottom: $gutter*2;
   @include breakpoint(md-min) {
-    margin-bottom: $gutter*2;
+    //margin-bottom: $gutter*2;
   }
   &:after {
     position: absolute;
@@ -255,6 +172,39 @@ hr {
     }
   }
 }
+.note {
+  color: tint($gray-1, 30%);
+  position: relative;
+  display: block;
+  padding-left: $gutter;
+  &:after {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-lock.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -8px;
+    left: 0;
+    content: "";
+    height: 16px;
+    width: 16px;
+  }
+}
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
 
 // 2. Layout
 .l-wrap {
@@ -273,7 +223,7 @@ hr {
   }
 }
 .l-section-small {
-  padding: 1.5rem 0;
+  padding: 3rem 0;
   @include breakpoint(md-min) {
     padding: 4rem 0;
   }
@@ -281,8 +231,8 @@ hr {
 .l-padding-zero {
   padding: 0;
 }
-.l-asphalt {
-  background: $asphalt-1;
+.l-padding-top-xl { // if header is fixed, this is required on the next element
+  padding-top: $gutter*3;
 }
 .l-margin-bottom {
   margin-bottom: $gutter;
@@ -298,60 +248,14 @@ hr {
 }
 
 // 3. modules
-.hero {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") 50% 0 no-repeat;
-  color: $white;
-  text-transform: uppercase;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.hero-inner {
-  padding: 10rem 0 10rem 0;
-  @include breakpoint(md-min) {
-    padding: 20rem 0 25rem 0;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.course-acca {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.course-cfa {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") no-repeat;
-    background-size: cover;
-  }
-}
-.course-inner {
-  text-align: center;
-  padding: 10rem 0;
-  &.course-sign-up {
-    text-align: left;
-  }
-}
-.course-intro {
-  text-align: center;
-}
-.course-list {
-  background: $asphalt-1;
-}
-.course-list-wrap {
 
-}
+@import "nav.scss";
+@import "btn.scss";
+@import "hero.scss";
+@import "foot.scss";
+@import "testimonials.scss";
+@import "plans.scss";
+
 .course-group-title {
   margin-bottom: $gutter*2;
   @include breakpoint(sm-min) {
@@ -364,199 +268,12 @@ hr {
 .logo {
   padding: $gutter 0;
   float: left;
-  max-width: 125px;
+  max-width: 119px;
   @include breakpoint(sm-min) {
-    max-width: 165px;
-  }
-}
-.navbar-main {
-  letter-spacing: .2rem;
-  border-bottom: 1px solid rgba($white, .2);
-  text-transform: uppercase;
-  @include clearfix();
-}
-.header {
-  &.header-dark {
-    background: $purple-1;
-    & .navbar-small {
-      border-bottom: 0 !important;
-    }
-  }
-}
-.nav-main {
-  list-style: none;
-  padding: 0;
-  margin: 0 -$gutter;
-  background: $red-1;
-  @include font-size(1.3);
-  @include breakpoint(sm-min) {
-    margin: 15px 0 0 0;
-    background: transparent;
-  }
-  li {
-    display: block;
-    border-top: 1px solid rgba($white, .2);
-    @include breakpoint(sm-min) {
-      display: inline-block;
-      border: 0;
-    }
-  }
-  a {
-    color: $white;
-    display: block;
-    background: $red-1;
-    text-decoration: none;
-    padding: $gutter/1.5 $gutter $gutter/1.5 $gutter;
-    @include breakpoint(sm-min) {
-      display: inline-block;
-      background: transparent;
-      padding: $gutter/3 0 $gutter/3 $gutter/4;
-      //@include opacity(0.8);
-      color: rgba($white, .8);
-    }
-    &:hover {
-      color: rgba($white, 1);
-    }
-    &:active, &:hover {
-      background: shade($red-1, 10%);
-      @include breakpoint(sm-min) {
-        background: transparent;
-      }
-    }
-    &.sign-in-link {
-      border: 0;
-      &:hover {
-        @include breakpoint(sm-min) {
-          border-color: $white;
-        }
-      }
-      @include breakpoint(sm-min) {
-        padding: $gutter/4 $gutter/2;
-        border: 1px solid rgba($white, .2);
-        @include border-radius(3px);
-      }
-    }
-  }
-  @include breakpoint(sm-min) {
-    float: right;
-    padding: 0;
-    background: transparent;
-    a {
-      margin: 0 0 0 $gutter/1.5;
-    }
+    max-width: 159px;
   }
 }
 
-.btn {
-  border: 0;
-  padding: 0 $gutter;
-  height: 40px;
-  line-height: 40px;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  display: block;
-  @include font-size(1.1);
-  //@include box-shadow(2px, 0, 0, rgba(#000, .05));
-  @include transition(background-color .2s ease);
-  @include breakpoint(xs-min) {
-    display: inline-block;
-  }
-  @include breakpoint(sm-min) {
-    display: inline-block;
-    @include font-size(1.2);
-  }
-  &:link, &:visited {
-    text-decoration: none;
-    color: $red-1;
-  }
-  &:hover {
-    color: shade($red-1, 20%);
-  }
-  &:active {
-    @include box-shadow(0, 0, 0, 0);
-  }
-  &.btn-red {
-    background: $red-1;
-    color: $white;
-    &:hover {
-      background: shade($red-1, 10%);
-    }
-    &:active {
-      background: ($red-1);
-    }
-  }
-  &.btn-purple {
-    background: $purple-1;
-    color: $white;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-    &:active {
-      background: ($purple-1);
-    }
-  }
-  &.btn-cyan {
-    background: $cyan-1;
-    color: $white;
-    &:hover {
-      background: shade($cyan-1, 10%);
-    }
-    &:active {
-      background: ($cyan-1);
-    }
-  }
-  &.btn-secondary {
-    color: $red-1;
-    background: transparent;
-    border: 2px solid $white;
-    line-height: 36px;
-    @include box-shadow(0, 0, 0, 0);
-    &:hover, &:active {
-      background: transparent;
-      color: shade($red-1, 20%);
-    }
-    &.btn-red{
-      color: $red-1;
-      border: 2px solid $red-1;
-      &:hover {
-        background: transparent;
-        color: shade($red-1, 20%);
-        border: 2px solid shade($red-1, 20%);
-      }
-    }
-    &.btn-purple {
-      color: $purple-1;
-      border: 2px solid $purple-1;
-      &:hover {
-        background: transparent;
-        color: shade($purple-1, 20%);
-        border: 2px solid shade($purple-1, 20%);
-      }
-    }
-    &.btn-cyan {
-      color: $cyan-1;
-      border: 2px solid $cyan-1;
-      &:hover {
-        background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 2px solid shade($cyan-1, 20%);
-      }
-    }
-  }
-}
-a.link-block {
-  display: block;
-  @include transition(background-color .2s ease);
-  &:link, &:visited {
-    background: $red-1;
-  }
-  &:hover {
-    background: shade($red-1, 10%);
-  }
-  &:active {
-    background: $red-1;
-  }
-}
 .no-card {
   height: 40px;
   line-height: 40px;
@@ -572,50 +289,39 @@ a.link-block {
   }
 }
 form {
-  max-width: 700px;
+}
+label, .label {
+  font-weight: bold;
+  color: $purple-1;
+  cursor: pointer;
+  margin-bottom: $gutter/2;
+  padding: 0;
+  display: inline-block;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+}
+.option {
+  margin-right: $gutter/2;
 }
 .form-control {
   padding: $gutter/2 $gutter/1.5;
   height: 40px;
   border: 1px solid darken($asphalt-1, 10%);
   @include font-size(1.4);
-  //@include box-shadow(2px, 0, 0, rgba(#000, .05));
-  //@include box-shadow(0, 0, 6px, darken($asphalt-1, 15%));
-  @include box-shadow(0, 0, 6px, rgba(#000, .15));
+  @include box-shadow(2px, 0, 0, rgba(#000, .05));
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
   &:focus {
     border: 1px solid darken($asphalt-1, 30%);
+    border: 1px solid $purple-1;
     background: $yellow-1;
-    @include box-shadow(0, 0, 6px, rgba(#000, .2));
+    @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
 }
-.main-course-link {
-  color: $white;
-  text-align: center;
-  display: block;
-  padding: $gutter*1.5 $gutter;
-  text-decoration: none;
-  @include transition(background-color .2s ease);
-  @include font-size(2.2);
-  &:hover {
-    color: $white;
-    text-decoration: none;
-  }
-  &.link-purple {
-    background: $purple-1;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-  }
-  &.link-red {
-    background: $red-1;
-    &:hover {
-      background: shade($red-1, 10%);
-    }
-  }
-}
+
 .features {
   text-align: center;
   background: $white;
@@ -624,41 +330,6 @@ form {
   display: block;
   max-width: 110px;
   margin: $gutter*2 auto;
-}
-.testimonials {
-  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
-  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
-  &.testimonials-alt {
-    background: $white;
-  }
-}
-.testimonial {
-  h1, h2, h3, h4 {
-    text-align: center;
-  }
-}
-.testimonial-pic-wrap {
-  position: relative;
-  max-width: 140px;
-  margin: $gutter*2 auto;
-  &:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    height: 30px;
-    width: 30px;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
-    background-size: contain;
-  }
-}
-.testimonial-pic {
-  display: block;
-  max-width: 140px;
-  @include border-radius(100%);
-}
-.testimonial-sig {
-  color: darken($gray-1, 15%);
 }
 .profile-single {
   padding-bottom: $gutter*2;
@@ -691,15 +362,8 @@ form {
     }
   }
 }
-.start-trial-wrap {
-  padding: $gutter*1.5 0;
-  background: transparent;
-  @include breakpoint(md-min) {
-    padding: $gutter*3 0;
-  }
-}
 .ico-arrow-right-r {
-  padding-right: $gutter*2;
+  padding-right: $gutter*1.5;
   position: relative;
   &:after {
     position: absolute;
@@ -713,13 +377,20 @@ form {
     width: 19px;
   }
 }
+
+
+
+
 a.box {
+  text-decoration: none;
+
   &:link {
     text-decoration: none;
   }
   &:hover, &:active {
     text-decoration: none;
-    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
   }
   &:hover {
     .box-title {
@@ -744,6 +415,7 @@ a.box {
   }
   &.box-course {
     text-align: center;
+    margin-top: $gutter*1.5;
     &:after {
       position: absolute;
       top: 0;
@@ -756,21 +428,28 @@ a.box {
     background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
       background-size: contain;
     }
+    & .box-inner {
+      padding-top: $gutter*2.5;
+    }
   }
 }
 .box-title {
-  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
 }
 .box-inner {
   padding: $gutter*2 $gutter/2;
 }
 .box-desc {
-  margin: 0;
+  margin: $gutter/2 0 0 0;
 }
 .box-label {
   background: $red-1;
   color: $white;
-  padding: $gutter/1.25;
+  padding: $gutter/1.45;
   letter-spacing: .2rem;
   text-transform: uppercase;
   @include transition(background-color .2s ease);
@@ -780,70 +459,138 @@ a.box {
     @include font-size(1.2);
   }
 }
+.course-topics-list {
+  list-style: none;
+  //margin: 0 0 $gutter*2 0;
+  padding-left: 0;
+}
+.box-item {
+  display: block;
+  border: 0;
+  width: 100%;
+  text-align: left;
+}
+a.box-item {
+  color: $purple-1;
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+  &:hover, &:active {
+    border: 1px solid $purple-1;
+    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+  }
+}
+.box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  display: block;
+  position: relative;
+  color: $purple-1;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.box-topic-item {
+  padding-right: $gutter*2;
+}
+.time {
+  position: absolute;
+  top: 16px;
+  right: 15px;
+  color: tint($purple-1, 50%);
+}
+.side-meta {
+  color: tint($purple-1, 50%);
+  display: block;
+  text-align: left;
+  @include breakpoint(sm-min) {
+    text-align: right;
+  }
+}
+.lined-list {
+  border-top: 1px solid rgba($gray-1, .15);
+  padding: 0;
+  li {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+  }
+}
+.lined-list-item {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: $gutter/2 $gutter/2 $gutter/2 0;
+  border-bottom: 1px solid rgba($gray-1, .15);
+  position: relative;
+}
+.collapse-list {
+  ul {
+    margin-top: -10px;
+    border-top: 0;
+  }
+  li {
+    padding-left: $gutter*.75;
+    padding-right: $gutter*.75;
+  }
+}
 .sign-up {
   background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
 }
-.foot {
-  background: $purple-1;
-  padding: $gutter*1.5 0 $gutter*2 0;
-  @include clearfix();
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    @include font-size(1.4);
-  }
+.tutor-profile-pic {
+  float: left;
+  max-width: 50px;
+  border: 1px solid $purple-1;
+  margin-top: -15px;
+  margin-right: 10px;
 }
-.foot-nav {
+.tutor-profile-title {
+  padding-top: $gutter;
+  margin: 0;
+}
+.number {
+  display: inline-block;
+  border: 1px solid $purple-1;
+  width: 40px;
+  height: 40px;
   color: $white;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 $gutter 0;
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: right;
-    @include font-size(1.4);
-  }
-  & li {
-    position: relative;
-    display: inline-block;
-    color: lighten($purple-1, 20%);
-    margin-left: $gutter/4;
-    &:before {
-      content: "•";
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  }
-  & li:first-child {
-    margin: 0;
-    &:before {
-      content: "";
-    }
-    & a {
-      margin: 0;
-    }
-  }
-  & a {
-    color: $white;
-    text-decoration: none;
-    margin-left: $gutter/1.5;
-    @include opacity(0.8);
-    &:hover {
-      @include opacity(1);
-    }
-  }
+  line-height: 40px;
+  margin-right: $gutter/2;
+  @include border-radius(100%);
+  color: $purple-1;
 }
-.foot-copyright {
-  color: $white;
-  @include opacity(0.8);
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: left;
-    @include font-size(1.4);
-  }
-}
-
 // 4. Print
 @media print {
   * {
@@ -862,7 +609,7 @@ a.box {
 }
 .is-lg-right {
   @include breakpoint(sm-min) {
-    float: right;
+    //float: right;
   }
 }
 .is-visually-hidden {
@@ -872,6 +619,9 @@ a.box {
 }
 .is-text-disabled {
   color: #999;
+}
+.is-text-white {
+  color: $white;
 }
 .is-bg-red {
   background: $red-1;
@@ -901,110 +651,77 @@ a.box {
   background: $green-1;
 }
 // 6. Vendor
-/*! responsive-nav.js 1.0.39 by @viljamis */
 
-.nav-collapse ul {
-  padding: 0;
-  width: 100%;
-  display: block;
-  list-style: none;
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }
 
-.nav-collapse li {
-  //width: 100%;
-  //display: block;
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
 }
 
-.nav-collapse li a {
-  //display: block;
-}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
 
-.js .nav-collapse {
-  clip: rect(0 0 0 0);
-  max-height: 0;
-  position: absolute;
-  display: block;
-  overflow: hidden;
-  zoom: 1;
-}
-
-.nav-collapse.opened {
-  max-height: 9999px;
-}
-
-.nav-toggle {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-
-  display: block;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  right: $gutter;
-  top: 21px;
-  text-indent: -9999px;
-  background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-hamburger.png") no-repeat 50% 0;
-  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-hamburger%402x.png", 20px, 14px);
-  &.active {
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-close.png") no-repeat 50% 0;
-    @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-close%402x.png", 15px, 15px);
+  100% {
+    opacity: 1;
   }
 }
 
-@media screen and (min-width: 768px) {
-  .js .nav-collapse {
-    position: relative;
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
   }
-  .js .nav-collapse.closed {
-    max-height: none;
-  }
-  .nav-toggle {
-    display: none;
+
+  100% {
+    opacity: 1;
   }
 }
 
-// 7. Debugging
+//  Debugging
 
 // * { outline: 1px solid red }
 
-
-//@include breakpoint(xs-min) {
-  //body {
-    //position: relative;
-    //&:after {
-      //content: "XS";
-      //position: fixed;
-      //display: block;
-      //top: 5px;
-      //right: 5px;
-      //font-size: 8px;
-    //}
-  //}
-//}
-//@include breakpoint(sm-min) {
-  //body {
-    //&:after {
-      //content: "SM";
-    //}
-  //}
-//}
-//@include breakpoint(md-min) {
-  //body {
-    //&:after {
-      //content: "MD";
-    //}
-  //}
-//}
-//@include breakpoint(lg-min) {
-  //body {
-    //&:after {
-      //content: "LG";
-    //}
-  //}
-//}
-//
+/*
+@include breakpoint(xs-min) {
+  body {
+    position: relative;
+    &:after {
+      content: "XS";
+      position: fixed;
+      z-index: 10000;
+      display: block;
+      top: 5px;
+      right: 5px;
+      font-size: 8px;
+    }
+  }
+}
+@include breakpoint(sm-min) {
+  body {
+    &:after {
+      content: "SM";
+    }
+  }
+}
+@include breakpoint(md-min) {
+  body {
+    &:after {
+      content: "MD";
+    }
+  }
+}
+@include breakpoint(lg-min) {
+  body {
+    &:after {
+      content: "LG";
+    }
+  }
+}
+*/

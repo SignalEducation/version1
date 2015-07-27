@@ -15,6 +15,11 @@
 #  seo_description                   :string
 #  seo_no_index                      :boolean          default(FALSE)
 #  duration                          :integer
+#  live                              :boolean          default(FALSE), not null
+#  tutor_id                          :integer
+#  short_description                 :text
+#  description                       :text
+#  mailchimp_list_id                 :string
 #
 
 require 'rails_helper'

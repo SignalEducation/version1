@@ -79,6 +79,7 @@ en:
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
       submit: Sign Up Now
+      user_name: "Hi, "
 
     locales:
       en: English
@@ -332,7 +333,7 @@ en:
       edit:
 
       index:
-        h1: Resources
+        h1: "Resources: "
 
       new:
 
@@ -445,11 +446,14 @@ en:
         name_url_placeholder: first-exam-level
         description: Description
         description_placeholder: Description for this Exam Level
+        short_description: Short Description
+        short_description_placeholder: This appears only on landing page for this course
         duration: Duration
         is_cpd: 'is CPD?'
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         active: 'Active?'
+        live: Live Mode
         best_possible_first_attempt_score: 'Best-possible first attempt score'
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
@@ -458,6 +462,8 @@ en:
         enable_exam_sections: "Enable exam sections?"
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
+        mailchimp_list_id: Mailchimp List ID
+        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
         seo_no_index: "SEO no-index flag"
 
       index:
@@ -483,12 +489,19 @@ en:
         exam_level_id: Exam level
         category_id: Category
         active: Active
+        live: Live Mode
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         best_possible_first_attempt_score: Best-possible first attempt score
         best_possible_first_attempt_score_placeholder: 100
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
+        short_description: Short description
+        short_description_placeholder: Description that will appear on library landing page for this course
+        mailchimp_list_id: Mailchimp List ID
+        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
+        description: Description
+        description_placeholder: Description text of the course
         seo_no_index: "SEO no-index flag"
 
       index:
@@ -671,7 +684,9 @@ en:
         jumbo_quiz: Jumbo quiz
         questions: Questions
         quiz: Quiz
+        quizzes: MCQs
         video: Video
+        videos: of Video
         institution: Institution
         qualification: Qualification
         exam_level: Exam Level
@@ -1043,7 +1058,7 @@ en:
         h1: Create Account
 
       show:
-        h1: Account Details
+        h1: Account
         add_new_card: "Add New Card"
         change_your_password:
           link: Change your password

@@ -15,7 +15,7 @@
   var responsiveNav = function (el, options) {
 
     var computed = !!window.getComputedStyle;
-    
+
     /**
      * getComputedStyle polyfill for old browsers
      */
@@ -38,7 +38,7 @@
       };
     }
     /* exported addEvent, removeEvent, getChildren, setAttributes, addClass, removeClass, forEach */
-    
+
     /**
      * Add Event
      * fn arg can be an object or a function, thanks to handleEvent
@@ -76,7 +76,7 @@
           }
         }
       },
-    
+
       /**
        * Remove Event
        *
@@ -108,7 +108,7 @@
           }
         }
       },
-    
+
       /**
        * Get the children of any element
        *
@@ -129,7 +129,7 @@
         }
         return children;
       },
-    
+
       /**
        * Sets multiple attributes at once
        *
@@ -141,7 +141,7 @@
           el.setAttribute(key, attrs[key]);
         }
       },
-    
+
       /**
        * Adds a class to any element
        *
@@ -154,7 +154,7 @@
           el.className = el.className.replace(/(^\s*)|(\s*$)/g,"");
         }
       },
-    
+
       /**
        * Remove a class from any element
        *
@@ -165,7 +165,7 @@
         var reg = new RegExp("(\\s|^)" + cls + "(\\s|$)");
         el.className = el.className.replace(reg, " ").replace(/(^\s*)|(\s*$)/g,"");
       },
-    
+
       /**
        * forEach method that passes back the stuff we need
        *
@@ -189,62 +189,62 @@
       navOpen;
 
     var ResponsiveNav = function (el, options) {
-        var i;
+      var i;
 
-        /**
-         * Default options
-         * @type {Object}
-         */
-        this.options = {
-          animate: true,                    // Boolean: Use CSS3 transitions, true or false
-          transition: 200,                  // Integer: Speed of the transition, in milliseconds
-          label: "Menu",                    // String: Label for the navigation toggle
-          insert: "before",                 // String: Insert the toggle before or after the navigation
-          customToggle: "",                 // Selector: Specify the ID of a custom toggle
-          closeOnNavClick: false,           // Boolean: Close the navigation when one of the links are clicked
-          openPos: "relative",              // String: Position of the opened nav, relative or static
-          navClass: "nav-collapse",         // String: Default CSS class. If changed, you need to edit the CSS too!
-          navActiveClass: "js-nav-active",  // String: Class that is added to <html> element when nav is active
-          jsClass: "js",                    // String: 'JS enabled' class which is added to <html> element
-          init: function(){},               // Function: Init callback
-          open: function(){},               // Function: Open callback
-          close: function(){}               // Function: Close callback
-        };
+      /**
+       * Default options
+       * @type {Object}
+       */
+      this.options = {
+        animate: true,                    // Boolean: Use CSS3 transitions, true or false
+        transition: 200,                  // Integer: Speed of the transition, in milliseconds
+        label: "Menu",                    // String: Label for the navigation toggle
+        insert: "before",                 // String: Insert the toggle before or after the navigation
+        customToggle: "",                 // Selector: Specify the ID of a custom toggle
+        closeOnNavClick: false,           // Boolean: Close the navigation when one of the links are clicked
+        openPos: "relative",              // String: Position of the opened nav, relative or static
+        navClass: "nav-collapse",         // String: Default CSS class. If changed, you need to edit the CSS too!
+        navActiveClass: "js-nav-active",  // String: Class that is added to <html> element when nav is active
+        jsClass: "js",                    // String: 'JS enabled' class which is added to <html> element
+        init: function(){},               // Function: Init callback
+        open: function(){},               // Function: Open callback
+        close: function(){}               // Function: Close callback
+      };
 
-        // User defined options
-        for (i in options) {
-          this.options[i] = options[i];
-        }
+      // User defined options
+      for (i in options) {
+        this.options[i] = options[i];
+      }
 
-        // Adds "js" class for <html>
-        addClass(htmlEl, this.options.jsClass);
+      // Adds "js" class for <html>
+      addClass(htmlEl, this.options.jsClass);
 
-        // Wrapper
-        this.wrapperEl = el.replace("#", "");
+      // Wrapper
+      this.wrapperEl = el.replace("#", "");
 
-        // Try selecting ID first
-        if (document.getElementById(this.wrapperEl)) {
-          this.wrapper = document.getElementById(this.wrapperEl);
+      // Try selecting ID first
+      if (document.getElementById(this.wrapperEl)) {
+        this.wrapper = document.getElementById(this.wrapperEl);
 
         // If element with an ID doesn't exist, use querySelector
-        } else if (document.querySelector(this.wrapperEl)) {
-          this.wrapper = document.querySelector(this.wrapperEl);
+      } else if (document.querySelector(this.wrapperEl)) {
+        this.wrapper = document.querySelector(this.wrapperEl);
 
         // If element doesn't exists, stop here.
-        } else {
-          throw new Error("The nav element you are trying to select doesn't exist");
-        }
+      } else {
+        throw new Error("The nav element you are trying to select doesn't exist");
+      }
 
-        // Inner wrapper
-        this.wrapper.inner = getChildren(this.wrapper);
+      // Inner wrapper
+      this.wrapper.inner = getChildren(this.wrapper);
 
-        // For minification
-        opts = this.options;
-        nav = this.wrapper;
+      // For minification
+      opts = this.options;
+      nav = this.wrapper;
 
-        // Init
-        this._init(this);
-      };
+      // Init
+      this._init(this);
+    };
 
     ResponsiveNav.prototype = {
 
@@ -325,7 +325,7 @@
               hasAnimFinished = true;
             }, opts.transition + 10);
 
-          // Animations aren't enabled, we can do these immediately
+            // Animations aren't enabled, we can do these immediately
           } else {
             nav.style.position = "absolute";
           }
@@ -375,26 +375,26 @@
         var evt = e || window.event;
 
         switch (evt.type) {
-        case "touchstart":
-          this._onTouchStart(evt);
-          break;
-        case "touchmove":
-          this._onTouchMove(evt);
-          break;
-        case "touchend":
-        case "mouseup":
-          this._onTouchEnd(evt);
-          break;
-        case "click":
-          this._preventDefault(evt);
-          break;
-        case "keyup":
-          this._onKeyUp(evt);
-          break;
-        case "focus":
-        case "resize":
-          this.resize(evt);
-          break;
+          case "touchstart":
+            this._onTouchStart(evt);
+            break;
+          case "touchmove":
+            this._onTouchMove(evt);
+            break;
+          case "touchend":
+          case "mouseup":
+            this._onTouchEnd(evt);
+            break;
+          case "click":
+            this._preventDefault(evt);
+            break;
+          case "keyup":
+            this._onKeyUp(evt);
+            break;
+          case "focus":
+          case "resize":
+            this.resize(evt);
+            break;
         }
       },
 
@@ -482,7 +482,7 @@
 
           navToggle = toggle;
 
-        // There is a toggle already, let's use that one
+          // There is a toggle already, let's use that one
         } else {
           var toggleEl = opts.customToggle.replace("#", "");
 
@@ -527,7 +527,7 @@
           e.stopPropagation();
           return false;
 
-        // This is strictly for old IE
+          // This is strictly for old IE
         } else {
           e.returnValue = false;
         }
@@ -560,7 +560,7 @@
        */
       _onTouchMove: function (e) {
         if (Math.abs(e.touches[0].clientX - this.startX) > 10 ||
-        Math.abs(e.touches[0].clientY - this.startY) > 10) {
+          Math.abs(e.touches[0].clientY - this.startY) > 10) {
           this.touchHasMoved = true;
         }
       },
@@ -584,7 +584,7 @@
             this.toggle();
             return;
 
-          // Event type was click, not touch
+            // Event type was click, not touch
           } else {
             var evt = e || window.event;
 
@@ -618,9 +618,9 @@
             transition = "max-height " + opts.transition + "ms";
 
           objStyle.WebkitTransition =
-          objStyle.MozTransition =
-          objStyle.OTransition =
-          objStyle.transition = transition;
+            objStyle.MozTransition =
+              objStyle.OTransition =
+                objStyle.transition = transition;
         }
       },
 
