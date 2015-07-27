@@ -30,12 +30,6 @@ class MandrillClient
     send_template('free-trial-ended', msg)
   end
 
-  def send_free_trial_cancelled_email(account_settings_url)
-    msg = message_stub.merge({"subject" => "Free Trial Cancelled"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('free-trial-cancelled', msg)
-  end
-
   def send_account_suspended_email
     msg = message_stub.merge({"subject" => "Account Suspended"})
     send_template('account-suspended', msg)

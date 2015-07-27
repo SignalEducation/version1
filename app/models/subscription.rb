@@ -136,32 +136,19 @@ class Subscription < ActiveRecord::Base
     # call stripe and cancel the subscription
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    # update self to say that it's terminating
-    if self.current_status == 'trialing'
-      response = stripe_subscription.delete(at_period_end: false).to_hash
-      if response[:status] == 'canceled'
-        self.update_attribute(:current_status, 'canceled')
-        self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
-        MandrillWorker.perform_async(self.user_id, "send_free_trial_cancelled_email", profile_url)
-      else
-        Rails.logger.error "ERROR: Subscription#cancel failed to cancel a 'trialing' sub. Self:#{self}. StripeResponse:#{response}."
-        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-      end
+    response = self.free_trial? ?
+                 stripe_subscription.delete.to_hash :
+                 stripe_subscription.delete(at_period_end: true).to_hash
+    if response[:status] == 'active' && response[:cancel_at_period_end] == true
+      self.update_attribute(:current_status, 'canceled-pending')
+      SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
+      Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
+    elsif response[:status] == 'canceled' && response[:cancel_at_period_end] == false
+      self.update_attribute(:current_status, response[:status])
+      Rails.logger.info "INFO: Free subscription ##{self.id} has benn canceled"
     else
-      response = self.free_trial? ?
-                   stripe_subscription.delete.to_hash :
-                   stripe_subscription.delete(at_period_end: true).to_hash
-      if response[:status] == 'active' && response[:cancel_at_period_end] == true
-        self.update_attribute(:current_status, 'canceled-pending')
-        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
-        Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
-      elsif response[:status] == 'canceled' && response[:cancel_at_period_end] == false
-        self.update_attribute(:current_status, response[:status])
-        Rails.logger.info "INFO: Free subscription ##{self.id} has benn canceled"
-      else
-        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
-        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-      end
+      Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
     # return true or false - if everything went well
     errors.messages.count == 0
