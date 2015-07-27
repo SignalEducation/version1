@@ -10,7 +10,7 @@
     %p=t('views.courses.content_denied.not_logged_in.start_free_trial')
     %br/
     %p
-      =link_to t('views.courses.content_denied.not_logged_in.sign_up_btn'), student_sign_up_url, class: 'btn free-trial-btn'
+      =link_to t('views.courses.content_denied.not_logged_in.sign_up_btn'), root_url, class: 'btn free-trial-btn'
 
 -elsif @paywall[:course_content][:reason] == 'account_canceled'
   .well.no-content-well.text-center
