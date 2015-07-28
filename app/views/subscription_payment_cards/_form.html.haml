@@ -1,13 +1,27 @@
-%p.payment-errors
-.form-group.form-spacing
-  .col-sm-4.col-sm-offset-1
-    =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
-  .col-sm-2
-    =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
-  .col-sm-2
-    =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
-  .col-sm-2
-    =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 5)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
+.l-margin-top-big.payment-errors
+  .row
+    .col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+      .form-group
+        %label
+          Card Number
+        =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
+      .row
+        .form-group.col-lg-4
+          %label
+            CVV
+          =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
+        .form-group.col-lg-4
+          %label
+            Expiry Month
+          =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
+        .form-group.col-lg-4
+          %label
+            Expiry Year
+          =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
+      %p.note
+        Secure server
+      .form-group
+        =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red'
 
 :javascript
 
