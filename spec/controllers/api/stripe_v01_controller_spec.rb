@@ -159,12 +159,6 @@ describe Api::StripeV01Controller, type: :controller do
         end
 
         it 'updated' do
-          mc = double
-          expect(mc).to receive(:send_trial_converted_email).with(
-                          subscription_2.subscription_plan.name + " - " + I18n.t("views.general.payment_frequency_in_months.a#{subscription_2.subscription_plan.payment_frequency_in_months}"),
-                          subscription_2.subscription_plan.currency.iso_code,
-                          subscription_2.subscription_plan.price)
-          expect(MandrillClient).to receive(:new).and_return(mc)
           post :create, customer_subscription_updated_event.to_json
 
           expect(StripeApiEvent.count).to eq(1)
@@ -173,8 +167,8 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
 
-          expect(subscription_2.reload.current_status).to eq('active')
-          expect((40.days.from_now - referred_signup.reload.maturing_on).to_i.abs).to be < 1.day.seconds
+          expect(subscription_2.reload.next_renewal_date).to eq(Time.at(customer_subscription_updated_event.data.object.current_period_end.to_i).to_date)
+          expect(subscription_2.current_status).to eq(customer_subscription_updated_event.data.object.status)
         end
       end
 

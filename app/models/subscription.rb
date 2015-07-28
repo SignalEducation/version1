@@ -25,7 +25,7 @@ class Subscription < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode
+                  :stripe_token, :livemode, :next_renewal_date
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
