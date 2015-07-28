@@ -15,20 +15,19 @@
               %li
                 =link_to 'Browse Courses', library_url
               %li
-                =link_to 'Sign Up', student_sign_up_url
-              %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
-  .l-section
+  .l-section#sign-up
     .l-wrap
       .container-fluid
         .row
-          .col-md-6.col-md-offset-3.text-center
+          .col-sm-6.col-md-8.col-lg-6
             %p.h5.h-white
               Prepare for your ACCA exams with a quick revision course
-            %h1.h1.h-white.h-separator.h-separator-center.l-margin-bottom-big
+            %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
               A revision of the essentials & Qbank to keep you focused
-            =link_to 'Start your free trial', student_sign_up_url, class: 'btn btn-red'
+          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
+            =render partial: 'sign_up_form'
 
 .l-section
   .l-wrap
