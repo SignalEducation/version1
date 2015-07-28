@@ -82,12 +82,13 @@ class StripeApiEvent < ActiveRecord::Base
           end
         when 'customer.subscription.updated'
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
+          if subscription &&
+             subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
                                             current_status: self.payload[:data][:object][:status])
             self.processed = true
             self.processed_at = Time.now
           else
-            set_process_error("Error updating subscription #{subscription.id} with Stripe ID #{self.payload[:data][:object][:id]}")
+            set_process_error("Error updating subscription #{subscription.try(:id)} with Stripe ID #{self.payload[:data][:object][:id]}")
           end
         when 'customer.subscription.created'
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])

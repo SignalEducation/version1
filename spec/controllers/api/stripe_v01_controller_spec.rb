@@ -175,14 +175,13 @@ describe Api::StripeV01Controller, type: :controller do
       describe 'customer.subscription with invalid data' do
 
         it 'updated with unknown subscription GUID' do
-          expect(MandrillClient).not_to receive(:new)
           post :create, customer_subscription_updated_event.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown subscription or unexpected subscription status states")
+          expect(sae.error_message).to start_with("Error updating subscription")
 
           expect(subscription_2.reload.current_status).to eq('trialing')
         end
