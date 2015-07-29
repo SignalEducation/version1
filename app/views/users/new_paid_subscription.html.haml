@@ -38,7 +38,7 @@
                       %p.plan-text
                         =plan.description.lines[1]
                     %label.plan-option
-                      %input{id: '', name: '', type: 'radio', value: '0', class: 'option'}
+                      %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
                       Choose this plan
 
               =f.fields_for :subscriptions do |sub|
@@ -61,13 +61,14 @@
   var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
 
   function clearPlans() {
-    $('.subscription-panel').removeClass('active');
+    $('.option[type="radio"]').prop('checked', false);
   }
 
   function choosePlan(theThing) {
     clearPlans();
-    $(theThing).find('.subscription-panel').addClass('active');
-    $('#user_subscriptions_attributes_0_subscription_plan_id').val($(theThing).attr('data-plan-id'));
+    $(theThing).find('.option[type="radio"]').prop('checked', true);
+    $('#user_subscriptions_attributes_0_subscription_plan_id')
+      .val($(theThing).parent().attr('data-plan-id'));
   }
 
   function showPlans() {
@@ -79,12 +80,13 @@
         currency = countries[i][1];
       }
     }
-    $('.' + currency).removeClass('hide');
-    $('#user_subscriptions_attributes_0_subscription_plan_id').val(
-      $('.' + currency).find('.active').first().parent().attr('data-plan-id')
-    );
+    choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[0]);
   }
 
   $(document).on('ready', function() {
     showPlans();
+    $(".plan-option").bind('click', function(event) {
+      event.preventDefault();
+      choosePlan(this);
+    });
   })
