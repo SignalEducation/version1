@@ -67,7 +67,7 @@ en:
         coming_soon: Coming Soon
       created_at: Created at
       updated_at: "Last Updated: "
-      credit_card_number_placeholder: "xxxx xxxx xxxx xxxx"
+      credit_card_number_placeholder: Card Number
       expiry_month_prompt: "Exp Mth"
       expiry_year_prompt: "Exp Year"
       payment_frequency_in_months:

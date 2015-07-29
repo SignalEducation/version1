@@ -13,7 +13,7 @@
         =@seo_title
       -else
         LearnSignal
-    -if (controller_name == 'home_pages' && action_name == 'show') || (controller_name == 'tutor_profile') || (controller_name == 'library') || (controller_name == 'study_schedules')
+    -if (controller_name == 'home_pages' && action_name == 'show') || (controller_name == 'tutor_profile') || (controller_name == 'library') || (controller_name == 'study_schedules') || (controller_name == 'users' && action_name == 'new_paid_subscription')
       =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -else
       =stylesheet_link_tag 'old_application', media: 'all'
@@ -72,7 +72,7 @@
     -elsif controller_name == 'home_pages'
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'tutor_profile')
+    -elsif controller_name == 'tutor_profile'
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield
@@ -88,6 +88,9 @@
       -else
         .no-margin-top
       =yield
+    -elsif controller_name == 'users' && action_name == 'new_paid_subscription'
+      =yield
+      =render partial: 'layouts/new_footer'
     -else
       =render partial: 'layouts/new_navbar'
       .container
