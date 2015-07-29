@@ -18,8 +18,13 @@
           %label
             Expiry Year
           =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
-      %p.note
-        Secure server
+      .row{style: "margin-bottom: 15px;"}
+        .col-sm-12
+          .col-sm-6{style: 'padding-left: 0px;'}
+            =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
+          .col-sm-6
+            %p.note{style: "text-align: left; margin-bottom: 0px; margin-top: 13px;"}
+              =t('views.users.upgrade_subscription.secure_server')
       .form-group
         =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red'
 
