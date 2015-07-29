@@ -81,6 +81,11 @@ class HomePagesController < ApplicationController
         @user.user_group_id = UserGroup.default_student_user_group.try(:id)
         @user.account_activation_code = SecureRandom.hex(10)
         @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
+        if cookies.encrypted[:crush_offers]
+          @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
+          cookies.delete(:crush_offers)
+        end
+
         if @user.valid? && @user.save
           clear_mixpanel_initial_id
           MixpanelUserSignUpWorker.perform_async(

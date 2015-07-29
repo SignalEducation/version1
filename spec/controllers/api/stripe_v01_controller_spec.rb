@@ -91,11 +91,61 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
         end
+
+        it 'sends data to CrushOffers on payment_succeeded' do
+          student.update_attribute(:crush_offers_session_id, "1234")
+          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                              customer: student.stripe_customer_id)
+          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
+          expect(Net::HTTP).to receive(:get)
+                                .with(uri)
+                                .and_return("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<result>\r\n\t<code>0</code>\r\n\t<msg>SUCCESS</msg>\r\n</result>")
+
+          post :create, evt.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+        end
       end
 
       describe 'invoice with invalid data' do
         before(:each) do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
+        end
+
+        it 'does not send data to CrushOffers if their session ID is not set' do
+          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                              customer: student.stripe_customer_id)
+          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
+          expect(Net::HTTP).not_to receive(:get)
+
+          post :create, evt.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or price not greater than 0")
+        end
+
+        it 'does not send data to CrushOffers if price is not greater than 0' do
+          student.update_attribute(:crush_offers_session_id, "1234")
+          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                              customer: student.stripe_customer_id,
+                                              total: 0.0)
+          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
+          expect(Net::HTTP).not_to receive(:get)
+
+          post :create, evt.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or price not greater than 0")
         end
 
         it 'should not process invoice.created event if user with given GUID does not exist' do

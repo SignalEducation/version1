@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_failed customer.subscription.created customer.subscription.updated)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.created customer.subscription.updated)
 
   # relationships
 
@@ -69,6 +69,24 @@ class StripeApiEvent < ActiveRecord::Base
             self.processed_at = Time.now
           else
             set_process_error (invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
+          end
+        when 'invoice.payment_succeeded'
+          user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
+          price = self.payload[:data][:object][:total].to_i
+          if user && user.crush_offers_session_id && price > 0
+            uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{price}&f=pb&r=#{user.crush_offers_session_id}&t=#{self.payload[:data][:object][:id]}")
+            resp = Net::HTTP.get(uri)
+            xml_doc = Nokogiri::XML(resp)
+            result = xml_doc.at_xpath('//msg').content
+            if result == 'SUCCESS'
+              self.processed = true
+              self.processed_at = Time.now
+            else
+              Rails.logger.error "ERROR: Notifying CrushOffers fails - response is #{resp}"
+              set_process_error "Error notifying CrushOffers"
+            end
+          else
+            set_process_error "Unknown user, CrushOffers session id or price not greater than 0"
           end
         when 'invoice.payment_failed'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])

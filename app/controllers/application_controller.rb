@@ -32,6 +32,7 @@ class ApplicationController < ActionController::Base
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
   before_action :process_marketing_tokens # not for Api::
+  before_action :process_crush_offers_session_id # not for Api::
   before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user
@@ -222,6 +223,10 @@ class ApplicationController < ActionController::Base
     if existing_token.nil? || current_token.is_hard? || (existing_token.system_defined? && !current_token.system_defined?)
       cookies.encrypted[:marketing_data] = { value: "#{current_token.code},#{Time.now.to_i}", expires: 30.days.from_now, httponly: true }
     end
+  end
+
+  def process_crush_offers_session_id
+    cookies.encrypted[:crush_offers] = { value: params[:co_id], expires: 30.days.from_now, httponly: true } if params[:co_id]
   end
 
   def log_user_activity
