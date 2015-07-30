@@ -15,7 +15,7 @@ class MixpanelSubscriptionCancelWorker
                         'Times Charged' => user_transactions.select { |ut| ut.transaction_type != 'trialing' }.length,
                         'Amount Charged' => user_transactions.inject(0) { |sum, ut| ut.transaction_type == 'payment' ? sum + ut.amount : sum },
                         'Currency' => user_transactions.last.currency.iso_code,
-                        'Plan' => I18n.t("views.student_sign_ups.form.payment_frequency_in_months.a#{sub.subscription_plan.payment_frequency_in_months}")
+                        'Plan' => I18n.t("views.general.payment_frequency_in_months.a#{sub.subscription_plan.payment_frequency_in_months}")
                       })
         tracker.people.set(sub.user_id, {'subscription_plan' => "Cancelled",
                                          "subscription_plan_updated_at" => Time.now.strftime('%Y-%b-%d %H:%M:%S %Z')})

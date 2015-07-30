@@ -1,0 +1,92 @@
+.hero-sign-up
+  =render partial: 'layouts/transparent_navbar'
+
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %p.h5.h-white.text-center
+              Full access &middot; Cancel any time
+            %h1.h1.h-white.h-separator.h-separator-center.text-center
+              Upgrade your membership
+
+#upgrade-subscription
+  =form_for @user, url: user_upgrade_from_free_trial_url(@user.id), html: {role: 'form'} do |f|
+    =f.hidden_field :country_id, value: @user.country_id
+    =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
+    .l-wrap
+      .l-section
+        .container-fluid
+          .row
+            .col-sm-12
+              %h2.h3.text-center
+                %span.number
+                  1
+                Choose a plan
+          .row
+            .plans
+              -@subscription_plans.each do |plan|
+                .col-sm-4
+                  .plan.plan-monthly.currency{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                    .plan-header{}
+                      %h3.h4.plan-title
+                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                    .plan-inner
+                      %h4.h3.plan-price
+                        =plan.currency.format_number(plan.price)
+                      %p.plan-text
+                        =plan.description.lines[1]
+                    %label.plan-option
+                      %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
+                      Choose this plan
+
+              =f.fields_for :subscriptions do |sub|
+                =sub.hidden_field :subscription_plan_id
+                =sub.hidden_field :stripe_token
+
+    .l-section.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row
+            .col-sm-12.col-md-6.col-md-offset-3
+              %h2.h3.text-center
+                %span.number
+                  2
+                Payment details
+          =render partial: 'subscription_payment_cards/form', locals: {f: f}
+
+:javascript
+
+  var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
+
+  function clearPlans() {
+    $('.option[type="radio"]').prop('checked', false);
+  }
+
+  function choosePlan(theThing) {
+    clearPlans();
+    $(theThing).find('.option[type="radio"]').prop('checked', true);
+    $('#user_subscriptions_attributes_0_subscription_plan_id')
+      .val($(theThing).parent().attr('data-plan-id'));
+  }
+
+  function showPlans() {
+    var country_id = $('#user_country_id').val();
+    var currency = 'EUR';
+    $('.currency').addClass('hide');
+    for (var i = 0; i < countries.length; i++) {
+      if (countries[i][0] == country_id) {
+        currency = countries[i][1];
+      }
+    }
+    choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[0]);
+  }
+
+  $(document).on('ready', function() {
+    showPlans();
+    $(".plan-option").bind('click', function(event) {
+      event.preventDefault();
+      choosePlan(this);
+    });
+  })

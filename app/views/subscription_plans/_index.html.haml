@@ -24,7 +24,7 @@
         %td
           =link_to(subscription_plan.name, subscription_plan, title: t('views.general.tooltips.click_to_view'))
           %br/
-          =link_to(t("views.student_sign_ups.form.payment_frequency_in_months.a#{subscription_plan.payment_frequency_in_months}"), subscription_plan, title: t('views.general.view_tooltip'))
+          =link_to(t("views.general.payment_frequency_in_months.a#{subscription_plan.payment_frequency_in_months}"), subscription_plan, title: t('views.general.view_tooltip'))
           =link_to(number_in_local_currency(subscription_plan.price, subscription_plan.currency_id), subscription_plan, title: t('views.general.view_tooltip'))
           -if subscription_plan.subscription_plan_category
             %br/

@@ -15,20 +15,21 @@
               %li
                 =link_to 'Browse Courses', library_url
               %li
-                =link_to 'Sign Up', student_sign_up_url
-              %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
-  .l-section
+  .l-section#sign-up
     .l-wrap
       .container-fluid
         .row
-          .col-md-6.col-md-offset-3.text-center
+          .col-sm-6.col-md-8.col-lg-6
             %p.h5.h-white
               Prepare for your ACCA exams with a quick revision course
-            %h1.h1.h-white.h-separator.h-separator-center.l-margin-bottom-big
+            %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
               A revision of the essentials & Qbank to keep you focused
-            =link_to 'Start your free trial', student_sign_up_url, class: 'btn btn-red'
+          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
+            %p.h5.h-white.l-margin-bottom
+              ='Sign Up for your 7-day free trial'
+            =render partial: 'sign_up_form'
 
 .l-section
   .l-wrap
@@ -36,7 +37,7 @@
       .row
         .col-sm-12
           %h2.h5.text-center
-            The most consise and advanced study material all in one place
+            The most concise and advanced study material all in one place
           %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
             Revision courses to help you pass
       .row
@@ -65,7 +66,6 @@
             Only £25 per month
           %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
             Access all Available Courses
-
           %h4.h3.course-group-title.text-center
             Fundamentals knowledge
       .course-list-wrap
@@ -119,13 +119,32 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url, class: 'btn-block btn-block-red' do
+  %a.btn-block.btn-block-red{href: '#sign-up'}
     .l-wrap
       .l-section-small
         .container-fluid
           .col-sm-12
-            %p.h5.text-center
+            %p.h5
               Become a member
-            %p.h2.text-center
-              Start your 7-day free trial
+            %p.h2
               %span.ico-arrow-right-r
+                Start your 7-day free trial &rarr;
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });
