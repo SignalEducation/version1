@@ -39,6 +39,14 @@
                               =grandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else
                               ='Flash Card'
+                  -if child.course_module_jumbo_quiz && child.course_module_jumbo_quiz.active
+                    =link_to course_special_link(child.course_module_jumbo_quiz), class: 'list-group-item link-purple box-topic-item' do
+                      .row
+                        .col-xs-12.col-sm-8
+                          =child.course_module_jumbo_quiz.name
+                        .col-xs-12.col-sm-4
+                          .side-meta
+                            =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
 
         -#%ul.course-topics-list
