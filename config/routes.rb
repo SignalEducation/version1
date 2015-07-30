@@ -108,6 +108,7 @@ Rails.application.routes.draw do
     end
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
+    get 'wso', to: 'home_pages#show', first_element: 'wso'
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     resources :institutions, concerns: :supports_reordering do

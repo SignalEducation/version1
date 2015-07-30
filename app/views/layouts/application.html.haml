@@ -13,7 +13,7 @@
         =@seo_title
       -else
         LearnSignal
-    -if (controller_name == 'home_pages' && action_name == 'show') || (controller_name == 'tutor_profile') || (controller_name == 'library') || (controller_name == 'study_schedules') || (controller_name == 'users' && action_name == 'new_paid_subscription')
+    -if controller_name == 'home_pages' || (controller_name == 'tutor_profile') || (controller_name == 'library') || (controller_name == 'study_schedules') || (controller_name == 'users' && action_name == 'new_paid_subscription')
       =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -else
       =stylesheet_link_tag 'old_application', media: 'all'
