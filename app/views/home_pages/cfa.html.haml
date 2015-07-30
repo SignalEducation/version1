@@ -15,20 +15,22 @@
               %li
                 =link_to 'Browse Courses', library_url
               %li
-                =link_to 'Sign Up', student_sign_up_url
-              %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
-  .l-section
+  .l-section#sign-up
     .l-wrap
       .container-fluid
         .row
-          .col-md-6.col-md-offset-3.text-center
+          .col-sm-6.col-md-8.col-lg-6
             %p.h5.h-white
               Practice is key to passing the CFA exams
-            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom-big
+            %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
               Take the quick prep course for the CFA level 1
-            =link_to 'Start your free trial', student_sign_up_url, class: 'btn btn-red'
+          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
+            %p.h5.h-white.l-margin-bottom
+              ='Sign Up for your 7-day free trial'
+
+            =render partial: 'sign_up_form'
 
 .l-section
   .l-wrap
@@ -62,7 +64,7 @@
       .course-list-wrap
         .row
           .col-sm-6.col-md-4
-            =link_to library_special_link(@cfa_level_1), class: 'box box-course' do
+            =link_to library_url, class: 'box box-course' do
               .box-inner
                 %h3.h4.box-title
                   CFA Level 1
@@ -88,7 +90,6 @@
                   Coming soon...
               .box-label
                 Get early access
-
 .testimonials.testimonials-alt
   .l-wrap
     .l-section
@@ -119,7 +120,7 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url, class: 'btn-block btn-block-red' do
+  %a.btn-block.btn-block-red{href: '#sign-up'}
     .l-wrap
       .l-section-small
         .container-fluid
@@ -127,5 +128,24 @@
             %p.h5.text-center
               Become a member
             %p.h2.text-center
-              Start your 7-day free trial
-              %span.ico-arrow-right-r
+              Start your 7-day free trial &rarr;
+
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });

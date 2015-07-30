@@ -16,6 +16,8 @@
                 =link_to 'Dashboard', dashboard_url
               %li
                 =link_to 'Library', library_url
+              -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial?
+                %li=link_to "Upgrade", user_new_paid_subscription_url(current_user.id)
 
               -#Admin Dropdown
               -if current_user.admin?
@@ -109,6 +111,6 @@
               %li
                 =link_to 'Library', library_url
               %li
-                =link_to 'Sign Up', student_sign_up_url
+                =link_to 'Sign Up', root_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}

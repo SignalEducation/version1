@@ -10,7 +10,7 @@
     %p=t('views.courses.content_denied.not_logged_in.start_free_trial')
     %br/
     %p
-      =link_to t('views.courses.content_denied.not_logged_in.sign_up_btn'), student_sign_up_url, class: 'btn free-trial-btn'
+      =link_to t('views.courses.content_denied.not_logged_in.sign_up_btn'), root_url, class: 'btn free-trial-btn'
 
 -elsif @paywall[:course_content][:reason] == 'account_canceled'
   .well.no-content-well.text-center
@@ -21,6 +21,11 @@
   .well.no-content-well.text-center
     %h2=t('views.courses.content_denied.account_problem.h2')
     %p=link_to t('views.courses.content_denied.account_problem.account_details'), profile_url(anchor: 'subscriptions'), class: 'btn free-trial-btn'
+
+-elsif @paywall[:course_content][:reason] == 'free_trial_expired'
+  .well.no-content-well.text-center
+    %h2=t('views.courses.content_denied.free_trial_expired.h2')
+    %p=link_to t('views.courses.content_denied.free_trial_expired.upgrade_subscription'), user_new_paid_subscription_url(current_user.id), class: 'btn free-trial-btn'
 
 -else
   %h2=t('views.courses.content_denied.other.h2')

@@ -61,7 +61,7 @@ def student_sign_up_as(user_first_name, user_second_name, user_email, card_type,
   expect(page).to have_content currency.leading_symbol
   student_picks_a_subscription_plan(currency, subscription_months)
   enter_credit_card_details(card_type)
-  click_button I18n.t('views.student_sign_ups.form.submit')
+  click_button I18n.t('views.general.submit')
   sleep 1
   if expect_sign_up
     sleep 2

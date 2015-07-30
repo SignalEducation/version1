@@ -17,7 +17,7 @@
               .row
               -@current_subscription.reactivation_options.each do|plan|
                 .subscription-panel.well.well-sm.text-center{class: "col-sm-#{12 / @current_subscription.reactivation_options.size} #{@current_subscription.reactivation_options.first.id == plan.id ? 'active' : ''}", id: "subscription-panel-#{plan.id}", data: {plan: plan.id}, onclick: "$('#subscription_subscription_plan_id').val($(this).data('plan') ); $('.subscription-panel').removeClass('active'); $(this).addClass('active');"}
-                  %h4=t("views.student_sign_ups.form.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                  %h4=t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                   %p
                     =plan.name
                     %br/

@@ -11,4 +11,9 @@ namespace :mandrill_mail do
   task :we_havent_seen_you_in_a_while => :environment do |t|
     ConditionalMandrillMailsProcessor.process_we_havent_seen_you_in_a_while
   end
+
+  desc "Sends 'Free Trial Ended' email to users"
+  task :free_trial_ended => :environment do |t|
+    ConditionalMandrillMailsProcessor.process_free_trial_ended_notifications
+  end
 end

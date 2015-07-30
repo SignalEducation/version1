@@ -16,10 +16,13 @@ class LibraryController < ApplicationController
     else
       @course = @exam_section
     end
-    if @course.live
-       render 'live_course'
-    else
+
+    if @course.try(:live)
+      render 'live_course'
+    elsif @course.try(:live) == false
       render 'preview_course'
+    else
+      redirect_to library_url
     end
 
   end
