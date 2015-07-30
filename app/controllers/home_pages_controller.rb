@@ -38,6 +38,8 @@ class HomePagesController < ApplicationController
           render :acca
         elsif @home_page.public_url == '/cfa'
           render :cfa
+        elsif @home_page.public_url == '/wso'
+          render :wso
         end
       end
     end

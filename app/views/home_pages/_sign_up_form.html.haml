@@ -2,8 +2,6 @@
 =form_for @user, url: student_sign_up_url do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :country_id, value: @user.country_id
-  %p.h5.h-white.l-margin-bottom
-    =t('views.home_pages.sign_up_form.sign_up_for_free_trial')
   .form-group
     =f.text_field :first_name, placeholder: t('views.users.form.first_name'), required: true, class: 'form-control'
   .form-group

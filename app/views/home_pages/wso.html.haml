@@ -1,4 +1,4 @@
-.hero-home
+.hero-cfa
   .header{role: 'banner'}
     .l-wrap
       .container-fluid
@@ -17,60 +17,79 @@
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
-  .hero-inner#sign-up
+  .l-section#sign-up
     .l-wrap
       .container-fluid
         .row
-          .col-sm-6.col-md-8.col-lg-8
-            %p.h5.h-white
-              Welcome to Learn Signal
-            %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              Become a member and get access to a growing library of professional training courses
-          .col-sm-6.col-md-4.col-lg-4
+          .col-sm-6.col-md-8.col-lg-6
+            %p.h3.h-white.h-separator.h-separator-left
+              LearnSignal & WallStreetOasis
+            %h1.h1.h-white.l-margin-top-big
+              Take the quick prep course for the CFA level 1
+          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
             %p.h5.h-white.l-margin-bottom
-              ='Sign Up for your 7-day free trial'
+              ='Sign Up for your 14-day free trial'
             =render partial: 'sign_up_form'
 
-.container-fluid
-  .row
-    .col-sm-6.l-padding-zero
-      =link_to '/cfa', class: 'btn-block btn-block-purple text-center' do
-        %span.ico-arrow-right-r
-          =@cfa.try(:short_name)
-    .col-sm-6.l-padding-zero
-      =link_to 'acca', class: 'btn-block btn-block-red text-center' do
-        %span.ico-arrow-right-r
-          =@acca.try(:short_name)
-
-.features
+.l-section
   .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.h-center.h-separator.h-separator-center
-              Financial Training, Redefined
-        .row
-          .col-sm-4
-            =image_tag('ico-expert@2x.png', class: 'features-img')
-            %h3.h4
-              Get Expert Insight Into Your Domain
-            %p.p
-              Courses are written by industry experts and designed to give you specific insight into their area of expertise, helping you to hone your skills as a fiinance professional.
-          .col-sm-4
-            %h3.h4
-              =image_tag('ico-anytime@2x.png', class: 'features-img')
-              Learn Anywhere, Anytime, Any Device
-            %p.p
-              Watch videos and take quizzes from any device on the browser, anywhere, anytime. Your time is precious.
-          .col-sm-4
-            %h3.h4
-              =image_tag('ico-test@2x.png', class: 'features-img')
-              Test Your Skills
-            %p.p
-              Take challenges to make you think and review through difficult topics.
+    .container-fluid
+      .row
+        .col-sm-12
+          %h2.h5.text-center
+            Work through our extensive question bank with summary videos to fill in the gaps
+          %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
+            Qbank of 1500 exam quality questions with solutions
+      .row
+        .col-sm-4
+          %h3.h4.text-center
+            Practice
+          %p.p.text-center
+            Prepare with 1500 exam standard questions and worked solutions.
+        .col-sm-4
+          %h3.h4.text-center
+            Learn
+          %p.p.text-center
+            Over 140 summary videos to understand the difficult topics.
+        .col-sm-4
+          %h3.h4.text-center
+            Support
+          %p.p.text-center
+            Get help from our team of dedicated tutors whenever you get stuck.
 
-.testimonials
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .course-list-wrap
+        .row
+          .col-sm-6.col-md-4
+            =link_to library_url, class: 'box box-course' do
+              .box-inner
+                %h3.h4.box-title
+                  CFA Level 1
+                %p.box-desc
+                  £25/Month
+              .box-label
+                Explore our CFA library
+          .col-sm-6.col-md-4
+            %a.box.box-course
+              .box-inner
+                %h3.h4.box-title.is-text-disabled
+                  CFA Level 2
+                %p.box-desc
+                  Coming soon...
+              .box-label
+                Get early access
+          .col-sm-6.col-md-4
+            %a.box.box-course
+              .box-inner
+                %h3.h4.box-title.is-text-disabled
+                  CFA Level 2
+                %p.box-desc
+                  Coming soon...
+              .box-label
+                Get early access
+.testimonials.testimonials-alt
   .l-wrap
     .l-section
       .testimonial
@@ -82,7 +101,7 @@
               %p.h2.text-center.h-separator.h-separator-center
                 What your peers are saying
           .row
-            .col-sm-6.col-sm-offset-3
+            .col-sm-12.col-md-6.col-md-offset-3
               .testimonial
                 .testimonial-pic-wrap
                   =image_tag('mike-testimonial-pic.jpg', class: 'testimonial-pic')
@@ -108,8 +127,8 @@
             %p.h5.text-center
               Become a member
             %p.h2.text-center
-              Start your 7-day free trial
-              %span.ico-arrow-right-r
+              Start your 14-day free trial &rarr;
+
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
