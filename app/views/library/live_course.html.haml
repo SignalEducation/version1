@@ -20,7 +20,7 @@
             %ul.course-topics-list
               -@course.children.all_active.all_in_order.each_with_index do |child, counter|
                 %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
-                  %button.box-item#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"} }
+                  .box-item#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"} }
                     .box-topic-item
                       =child.try(:name)
                     .time

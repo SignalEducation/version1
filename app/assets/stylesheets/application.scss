@@ -61,6 +61,12 @@ a:active {
 blockquote {
   border-left: 2px solid $red-1;
 }
+a.link-purple {
+  color: $purple-1;
+  &:hover {
+    color: $cyan-1;
+  }
+}
 h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   position: relative;
   margin-top: 0;

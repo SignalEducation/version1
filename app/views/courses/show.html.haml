@@ -4,7 +4,7 @@
       .container-fluid
         .row
           .col-sm-4.col-md-4
-            =link_to library_special_link(@course_module_element) do
+            =link_to library_special_link(@course_module.parent) do
               %p.text-left{style: 'color: #333149'}
                 &#60; Back To Library
         =render 'side_nav_xs'
