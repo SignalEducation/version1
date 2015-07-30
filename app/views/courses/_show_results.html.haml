@@ -26,16 +26,16 @@
 
 .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
   -if @course_module_element_user_log.is_jumbo_quiz
-    %hr/
-    .row
-      .col-sm-4
-        =link_to 'Restart Module', course_special_link(@course_module), class: 'btn btn-info btn-sm'
-      .col-sm-4.text-center
-        =link_to t('views.dashboard.index.h1'), dashboard_url, class: 'btn btn-info btn-sm'
-        -if current_user.try(:admin?)
-          =link_to t('views.general.edit'), course_module_special_link(@course_module_element_user_log.course_module), class: 'btn btn-warning btn-sm'
-      .col-sm-4.text-right
-        =link_to 'Next Module', course_special_link(@course_module.next_module), class: 'btn btn-info btn-sm'
+    .col-xs-4.text-left
+      =link_to course_special_link(@course_module), class: 'btn btn-red text-bold' do
+        .glyphicon.glyphicon-arrow-left
+        Restart Module
+    .col-xs-4.text-center
+      =link_to t('views.dashboard.index.h1'), dashboard_url, class: 'btn btn-red text-bold'
+    .col-xs-4.text-right
+      =link_to course_special_link(@course_module.next_module), class: 'btn btn-red text-bold' do
+        Next Module
+        .glyphicon.glyphicon-arrow-right
 
   -if @course_module_element_user_log.is_question_bank
     %hr/
