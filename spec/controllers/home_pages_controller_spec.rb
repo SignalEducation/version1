@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'mandrill_client'
 
 describe HomePagesController, type: :controller do
 
@@ -10,6 +11,14 @@ describe HomePagesController, type: :controller do
   let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
   let!(:home_page_3) { FactoryGirl.create(:home) }
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
+  let!(:sign_up_params) { { first_name: "Test", last_name: "Student",
+                            country_id: Country.first.id,
+                            locale: 'en',
+                            email: "test.student@example.com", password: "dummy_pass",
+                            password_confirmation: "dummy_pass" } }
+  let!(:default_plan) { FactoryGirl.create(:subscription_plan, price: 0.0) }
+  let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
   context 'Not logged in: ' do
 
@@ -48,6 +57,107 @@ describe HomePagesController, type: :controller do
       end
     end
 
+    describe "POST 'student_sign_up'" do
+      describe "invalid data" do
+        it 'does not subscribe user if default plan does not exist' do
+          request.env['HTTP_REFERER'] = '/'
+          default_plan.update_attribute(:price, 0.1)
+          post :student_sign_up, user: sign_up_params
+          expect(session[:sign_up_errors][:subscription]).to include(/undefined default value/)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to('/')
+        end
+
+        it 'does not subscribe user if user with same email already exists' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_sign_up, user: sign_up_params.merge(email: student.email)
+          expect(session[:sign_up_errors].keys).to include(:email)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to('/')
+        end
+
+        it 'does not subscribe user if password is blank' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_sign_up, user: sign_up_params.merge(password: nil)
+          expect(session[:sign_up_errors].keys).to include(:password)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to('/')
+        end
+
+        it 'does not subscribe user if password is not of required length' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_sign_up, user: sign_up_params.merge(password: '12345')
+          expect(session[:sign_up_errors].keys).to include(:password)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to('/')
+        end
+
+        it 'does not subscribe user if password_confirmation is blank' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_sign_up, user: sign_up_params.merge(password_confirmation: nil)
+          expect(session[:sign_up_errors].keys).to include(:password_confirmation)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to('/')
+        end
+
+        it 'does not subscribe user if password_confirmation does not match password' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_sign_up, user: sign_up_params.merge(password_confirmation: sign_up_params[:password] + "1")
+          expect(session[:sign_up_errors].keys).to include(:password_confirmation)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to('/')
+        end
+      end
+
+      describe "valid data" do
+        it 'signs up new student' do
+          post :student_sign_up, user: sign_up_params
+          expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url)
+        end
+
+        it 'sends sign-up event to Mixpanel' do
+          expect(MixpanelUserSignUpWorker).to receive(:perform_async).with(User.last.id + 1, request.remote_ip)
+          post :student_sign_up, user: sign_up_params
+        end
+
+        it 'sends verification email to the user' do
+          # We do not know in advance what will be user's activation
+          # code so we have to capture its value. That's why we are
+          # defining these methods on double. This way we are also
+          # testing that 'send_verification_email' is called on
+          # MandrillClient.
+          mc = double
+          def mc.send_verification_email(url)
+            @url = url
+          end
+          def mc.url
+            return @url
+          end
+
+          expect(MandrillClient).to receive(:new).and_return(mc)
+          post :student_sign_up, user: sign_up_params
+          expect(mc.url).to eq(user_activation_url(activation_code: User.last.account_activation_code))
+        end
+
+        it 'creates referred signup if user comes from referral link' do
+          cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
+          post :student_sign_up, user: sign_up_params
+          expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(Subscription.all.count).to eq(1)
+          expect(User.last.subscriptions.count).to eq(1)
+
+          expect(ReferredSignup.count).to eq(1)
+          rs = ReferredSignup.first
+          expect(rs.referral_code_id).to eq(referral_code.id)
+          expect(rs.user_id).to eq(User.last.id)
+          expect(rs.referrer_url).to eq("http://referral.example.com")
+        end
+      end
+    end
 
   end
 
@@ -122,6 +232,15 @@ describe HomePagesController, type: :controller do
       end
     end
 
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+      end
+    end
   end
 
   context 'Logged in as a tutor_user: ' do
@@ -190,6 +309,16 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
       end
     end
 
@@ -264,6 +393,16 @@ describe HomePagesController, type: :controller do
       end
     end
 
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+      end
+    end
+
   end
 
   context 'Logged in as a corporate_customer_user: ' do
@@ -332,6 +471,16 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
       end
     end
 
@@ -406,6 +555,16 @@ describe HomePagesController, type: :controller do
       end
     end
 
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+      end
+    end
+
   end
 
   context 'Logged in as a forum_manager_user: ' do
@@ -474,6 +633,16 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
       end
     end
 
@@ -548,6 +717,16 @@ describe HomePagesController, type: :controller do
       end
     end
 
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
+      end
+    end
+
   end
 
   context 'Logged in as a admin_user: ' do
@@ -618,6 +797,16 @@ describe HomePagesController, type: :controller do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_update_error_with_model('home_page')
         expect(assigns(:home_page).id).to eq(home_page_1.id)
+      end
+    end
+
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(dashboard_url)
       end
     end
 

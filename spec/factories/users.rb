@@ -41,6 +41,7 @@
 #  updated_at                               :datetime
 #  locale                                   :string
 #  guid                                     :string
+#  trial_ended_notification_sent_at         :datetime
 #
 
 FactoryGirl.define do

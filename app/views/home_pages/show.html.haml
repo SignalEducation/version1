@@ -15,19 +15,19 @@
               %li
                 =link_to 'Browse Courses', library_url
               %li
-                =link_to 'Sign Up', student_sign_up_url
-              %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+
   .hero-inner#sign-up
     .l-wrap
       .container-fluid
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white
-            Welcome to Learn Signal
+              Welcome to Learn Signal
             %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
               Become a member and get access to a growing library of professional training courses
-            =link_to 'Start your free trial &rarr;'.html_safe, student_sign_up_url, class: 'btn btn-red'
+          .col-sm-6.col-md-4.col-lg-4
+            =render partial: 'sign_up_form'
 
 .container-fluid
   .row
@@ -39,8 +39,6 @@
       =link_to 'acca', class: 'btn-block btn-block-red text-center' do
         %span.ico-arrow-right-r
           =@acca.try(:short_name)
-
-
 
 .features
   .l-wrap
@@ -100,7 +98,7 @@
                   Risk Analyst Architect
 
 .start-trial
-  =link_to student_sign_up_url, class: 'btn-block btn-block-red' do
+  %a.btn-block.btn-block-red{href: '#sign-up'}
     .l-wrap
       .l-section-small
         .container-fluid
@@ -113,3 +111,19 @@
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });

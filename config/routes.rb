@@ -37,12 +37,15 @@ Rails.application.routes.draw do
     get '500' => redirect('500-page')
 
     # users and authentication
-    resources :users
+    resources :users do
+      get 'new_paid_subscription', to: 'users#new_paid_subscription', as: :new_paid_subscription
+      patch 'upgrade_from_free_trial', to: 'users#upgrade_from_free_trial', as: :upgrade_from_free_trial
+    end
+
     get 'user_activate/:activation_code', to: 'user_activations#update',
         as: :user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
-    get 'sign_up', to: 'student_sign_ups#new', as: :sign_up
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'profile', to: 'users#show', as: :profile
@@ -52,7 +55,7 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit'
 
     # special routes
-    get 'personal_sign_up_complete/:id', to: 'student_sign_ups#show', as: :personal_sign_up_complete
+    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
     # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
 
@@ -106,6 +109,7 @@ Rails.application.routes.draw do
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
     resources :home_pages, except: [:destroy]
+    post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     resources :institutions, concerns: :supports_reordering do
       get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
     end
@@ -120,8 +124,6 @@ Rails.application.routes.draw do
     resources :qualifications, concerns: :supports_reordering do
       get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
     end
-    get 'student_sign_up', to: 'student_sign_ups#new', as: :student_sign_up
-    resources :student_sign_ups, only: [:show, :new, :create]
     resources :question_banks, only: [:new, :create, :destroy]
     resources :quiz_questions, except: [:index]
     resources :static_pages

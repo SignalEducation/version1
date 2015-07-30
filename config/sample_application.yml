@@ -5,6 +5,7 @@
 
 # General
 SECRET_KEY_BASE: 128-character-code
+free_trial_days: "7"
 
 # Email sending
 learnsignal_v3_server_email_address: 'some-account@gmail.com'

@@ -13,7 +13,7 @@
         %a{href: '#notifications', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.notifications')
       %li{role: 'presentation'}
         %a{href: '#referral-code', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.referral_code')
-      -if @current_subscription
+      -if @current_subscription && !@current_subscription.free_trial?
         %li{role: 'presentation'}
           %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
       -if current_user.admin?
@@ -84,7 +84,7 @@
                           .glyphicon.glyphicon-refresh
                           Refresh
 
-                -if @current_subscription
+                -if @current_subscription && !@current_subscription.free_trial?
                   .well.well-sm
                     .row
                       .col-sm-8
@@ -114,7 +114,7 @@
                           =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-success'
                         -else
                           %h3=t('views.users.show.upgrade_subscription_plan')
-                          -if @current_subscription.upgrade_options.count > 1
+                          -if @current_subscription.upgrade_options.count > 0
                             %p
                               =link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-info', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
                               %br/

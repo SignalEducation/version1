@@ -1,0 +1,20 @@
+.text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+=form_for @user, url: student_sign_up_url do |f|
+  =f.hidden_field :locale, value: (params[:locale] || 'en')
+  =f.hidden_field :country_id, value: @user.country_id
+  %p.h5.h-white.l-margin-bottom
+    =t('views.home_pages.sign_up_form.sign_up_for_free_trial')
+  .form-group
+    =f.text_field :first_name, placeholder: t('views.users.form.first_name'), required: true, class: 'form-control'
+  .form-group
+    =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control'
+  .form-group
+    =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true
+  .form-group
+    =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true
+  .form-group
+    =f.password_field :password_confirmation, placeholder: t('views.home_pages.sign_up_form.confirm_password'), class: 'form-control', required: true
+  .form-group
+    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red'
+    %span.no-card
+      =t('views.home_pages.sign_up_form.no_credit_card_needed')

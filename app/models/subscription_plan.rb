@@ -76,9 +76,9 @@ class SubscriptionPlan < ActiveRecord::Base
   def self.generally_available_or_for_category_guid(the_guid)
     plan_category = SubscriptionPlanCategory.active_with_guid(the_guid).first
     if plan_category
-      where(subscription_plan_category_id: plan_category.id)
+      where(subscription_plan_category_id: plan_category.id).where('price > 0.0')
     else
-      generally_available
+      generally_available.where('price > 0.0')
     end
   end
 
@@ -101,24 +101,31 @@ class SubscriptionPlan < ActiveRecord::Base
   def description
     self.description_without_trial + "\r\n" +
             (self.trial_period_in_days > 0 ?
-                (self.trial_period_in_days).to_s + (I18n.t('views.student_sign_ups.form.day') + I18n.t('views.student_sign_ups.form.free_trial')) +
+                (self.trial_period_in_days).to_s + (I18n.t('views.general.day') + I18n.t('views.general.free_trial')) +
                      "\r\n" : '')
   end
 
   def description_without_trial
     self.currency.format_number(self.price) + "\r\n" + (self.all_you_can_eat ?
-                                              I18n.t('views.student_sign_ups.form.all_you_can_eat_yes') :
-                                              I18n.t('views.student_sign_ups.form.all_you_can_eat_no') )
+                                              I18n.t('views.general.all_you_can_eat_yes') :
+                                              I18n.t('views.general.all_you_can_eat_no') )
   end
 
   def destroyable?
     self.subscriptions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
   end
 
+  def free_trial?
+    self.price == 0.0
+  end
+
   protected
 
   def available_to_in_the_future
-    unless self.available_to && self.available_to.to_date > Proc.new{Time.now.gmtime.to_date}.call
+    # On creating subscription plan available_to must be in the future. Later we can
+    # make subscription plan inactive only by setting this value to some date in the
+    # past so we must allow setting such dates.
+    if self.id.nil? && self.available_to && self.available_to.to_date <= Time.now.gmtime.to_date
       errors.add(:available_to, I18n.t('models.subscription_plans.must_be_in_the_future'))
     end
   end

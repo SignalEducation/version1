@@ -274,8 +274,6 @@ hr {
   }
 }
 
-
-
 .no-card {
   height: 40px;
   line-height: 40px;
@@ -384,6 +382,8 @@ label, .label {
 
 
 a.box {
+  text-decoration: none;
+
   &:link {
     text-decoration: none;
   }

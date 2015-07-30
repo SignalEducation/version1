@@ -25,7 +25,7 @@ class Subscription < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode
+                  :stripe_token, :livemode, :next_renewal_date
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
@@ -136,27 +136,19 @@ class Subscription < ActiveRecord::Base
     # call stripe and cancel the subscription
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    # update self to say that it's terminating
-    if self.current_status == 'trialing'
-      response = stripe_subscription.delete(at_period_end: false).to_hash
-      if response[:status] == 'canceled'
-        self.update_attribute(:current_status, 'canceled')
-        self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
-        MandrillWorker.perform_async(self.user_id, "send_free_trial_cancelled_email", profile_url)
-      else
-        Rails.logger.error "ERROR: Subscription#cancel failed to cancel a 'trialing' sub. Self:#{self}. StripeResponse:#{response}."
-        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-      end
+    response = self.free_trial? ?
+                 stripe_subscription.delete.to_hash :
+                 stripe_subscription.delete(at_period_end: true).to_hash
+    if response[:status] == 'active' && response[:cancel_at_period_end] == true
+      self.update_attribute(:current_status, 'canceled-pending')
+      SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
+      Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
+    elsif response[:status] == 'canceled' && response[:cancel_at_period_end] == false
+      self.update_attribute(:current_status, response[:status])
+      Rails.logger.info "INFO: Free subscription ##{self.id} has benn canceled"
     else
-      response = stripe_subscription.delete(at_period_end: true).to_hash
-      if response[:status] == 'active' && response[:cancel_at_period_end] == true
-        self.update_attribute(:current_status, 'canceled-pending')
-        SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
-        Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
-      else
-        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
-        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-      end
+      Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
     # return true or false - if everything went well
     errors.messages.count == 0
@@ -176,8 +168,20 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def free_trial?
+    self.subscription_plan.free_trial?
+  end
+
+  def free_trial_expired?
+    (Time.now - self.created_at).to_i.abs / 1.day > ENV["free_trial_days"].to_i
+  end
+
   def destroyable?
-    self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
+    self.invoices.empty? &&
+      self.invoice_line_items.empty? &&
+      self.subscription_transactions.empty? &&
+      self.livemode == Invoice::STRIPE_LIVE_MODE &&
+      self.referred_signup.nil?
   end
 
   def stripe_token=(t) # setter method
@@ -189,7 +193,14 @@ class Subscription < ActiveRecord::Base
   end
 
   def reactivation_options
-    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.all_in_order
+    SubscriptionPlan
+      .where(currency_id: self.subscription_plan.currency_id,
+             available_to_students: self.subscription_plan.available_to_students,
+             available_to_corporates: self.subscription_plan.available_to_corporates)
+      .where('price > 0.0')
+      .generally_available
+      .all_active
+      .all_in_order
   end
 
   def un_cancel
@@ -207,7 +218,15 @@ class Subscription < ActiveRecord::Base
   end
 
   def upgrade_options
-    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id, available_to_students: self.subscription_plan.available_to_students, available_to_corporates: self.subscription_plan.available_to_corporates).generally_available.all_active.where('payment_frequency_in_months >= ?', self.subscription_plan.payment_frequency_in_months).all_in_order
+    SubscriptionPlan
+      .where(currency_id: self.subscription_plan.currency_id,
+             available_to_students: self.subscription_plan.available_to_students,
+             available_to_corporates: self.subscription_plan.available_to_corporates)
+      .generally_available
+      .all_active
+      .where('payment_frequency_in_months >= ?', self.subscription_plan.payment_frequency_in_months)
+      .where('price > 0.0')
+      .all_in_order
   end
 
   def upgrade_plan(new_plan_id)
@@ -309,16 +328,13 @@ class Subscription < ActiveRecord::Base
     self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
-      if @stripe_token
+      if @stripe_token || self.free_trial?
         stripe_customer = Stripe::Customer.create(
-                card: @stripe_token,
-                plan: self.subscription_plan.try(:stripe_guid),
-                email: self.user.try(:email)
+          card: @stripe_token,
+          plan: self.subscription_plan.try(:stripe_guid),
+          email: self.user.try(:email)
         )
         stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
-      else
-        errors.add(:stripe_token, I18n.t('models.subscriptions.create.cant_be_blank'))
-        return
       end
     elsif self.stripe_guid.blank?
       #### Existing customer that is reactivating

@@ -32,6 +32,7 @@ class ApplicationController < ActionController::Base
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
   before_action :process_marketing_tokens # not for Api::
+  before_action :process_crush_offers_session_id # not for Api::
   before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user
@@ -121,16 +122,20 @@ class ApplicationController < ActionController::Base
     not_allowed = {course_content: {view_all: false, reason: ''},
                    forum: {read: true, write: false},
                    blog: {comment: false} }
+    subscription_in_charge = current_user.subscriptions.all_in_order.last unless current_user.nil?
     if current_user.nil? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
     elsif !current_user.user_group.subscription_required_to_see_content
       result = allowed
-    elsif %w(trialing active canceled-pending).include?(current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
+    elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
+      result = not_allowed
+      result[:course_content][:reason] = "free_trial_expired"
+    elsif %w(trialing active canceled-pending).include?(subscription_in_charge.try(:current_status) || 'canceled')
       result = allowed
     else
       result = not_allowed
-      result[:course_content][:reason] = 'account_' + (current_user.subscriptions.all_in_order.last.try(:current_status) || 'canceled')
+      result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
     end
     result
   end
@@ -218,6 +223,10 @@ class ApplicationController < ActionController::Base
     if existing_token.nil? || current_token.is_hard? || (existing_token.system_defined? && !current_token.system_defined?)
       cookies.encrypted[:marketing_data] = { value: "#{current_token.code},#{Time.now.to_i}", expires: 30.days.from_now, httponly: true }
     end
+  end
+
+  def process_crush_offers_session_id
+    cookies.encrypted[:crush_offers] = { value: params[:co_id], expires: 30.days.from_now, httponly: true } if params[:co_id]
   end
 
   def log_user_activity
