@@ -103,6 +103,7 @@ class User < ActiveRecord::Base
   has_many :user_notifications
   has_one :referral_code
   has_one :referred_signup
+  belongs_to :subscription_plan_category
 
   accepts_nested_attributes_for :subscriptions
 

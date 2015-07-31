@@ -87,6 +87,10 @@ class HomePagesController < ApplicationController
           @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
           cookies.delete(:crush_offers)
         end
+        if cookies.encrypted[:latest_subscription_plan_category_guid]
+          subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
+          @user.subscription_plan_category_id = subscription_plan_category.try(:id)
+        end
 
         if @user.valid? && @user.save
           clear_mixpanel_initial_id
