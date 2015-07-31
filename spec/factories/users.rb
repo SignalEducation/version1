@@ -42,6 +42,7 @@
 #  locale                                   :string
 #  guid                                     :string
 #  trial_ended_notification_sent_at         :datetime
+#  subscription_plan_category_id            :integer
 #
 
 FactoryGirl.define do

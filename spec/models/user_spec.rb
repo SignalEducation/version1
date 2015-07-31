@@ -42,6 +42,7 @@
 #  locale                                   :string
 #  guid                                     :string
 #  trial_ended_notification_sent_at         :datetime
+#  subscription_plan_category_id            :integer
 #
 
 require 'rails_helper'
@@ -89,6 +90,7 @@ describe User do
   it { should have_many(:user_notifications) }
   it { should have_one(:referral_code) }
   it { should have_one(:referred_signup) }
+  it { should belong_to(:subscription_plan_category) }
 
   # validation
   it { should validate_presence_of(:email) }
