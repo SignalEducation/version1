@@ -8,7 +8,7 @@ RSpec.describe 'exam_sections/new', type: :view do
     @exam_section = FactoryGirl.build(:exam_section)
   end
 
-  it 'renders edit exam_section form' do
+  xit 'renders edit exam_section form' do
     render
     assert_select 'form[action=?][method=?]', exam_sections_path, 'post' do
       assert_select 'input#exam_section_name[name=?]', 'exam_section[name]'

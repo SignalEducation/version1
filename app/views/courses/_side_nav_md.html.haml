@@ -25,8 +25,8 @@
               %p
                 =course_module_element.name
               %h5.text-failed.text-bold
-                -#%i.glyphicon.glyphicon-remove-circle{style: 'font-size: large'}
-                -#Passed
+                %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
+                Start
 
 
 
@@ -52,3 +52,6 @@
           =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item sidenav-section' do
             %p
               =@course_module.course_module_jumbo_quiz.name
+            %h5.text-failed.text-bold
+              %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
+              Start
