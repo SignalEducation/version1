@@ -58,7 +58,7 @@ class SubscriptionPlanCategoriesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subscription_plan_category).permit(:name, :available_from, :available_to)
+    params.require(:subscription_plan_category).permit(:name, :available_from, :available_to, :trial_period_in_days)
   end
 
 end

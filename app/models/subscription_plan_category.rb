@@ -30,6 +30,7 @@ class SubscriptionPlanCategory < ActiveRecord::Base
   validates :available_from, presence: true
   validates :available_to, presence: true
   validates :guid, presence: true
+  validates :trial_period_in_days, numericality: {only_integer: true, greater_than: 0}, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name) }

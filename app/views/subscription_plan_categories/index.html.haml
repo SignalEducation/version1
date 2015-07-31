@@ -12,6 +12,7 @@
           %th=t('views.subscription_plan_categories.form.available_from')
           %th=t('views.subscription_plan_categories.form.available_to')
           %th=t('views.subscription_plan_categories.form.guid')
+          %th=t('views.subscription_plan_categories.form.trial_period_in_days')
           %th
       %tbody
         -@subscription_plan_categories.each do |subscription_plan_category|
@@ -20,6 +21,7 @@
             %td=link_to(subscription_plan_category.available_from.to_s(:standard), subscription_plan_category, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan_category.available_to.to_s(:standard), subscription_plan_category, title: t('views.general.view_tooltip'))
             %td=link_to(subscription_plan_category.guid, subscription_plan_category, title: t('views.general.view_tooltip'))
+            %td=subscription_plan_category.trial_period_in_days
             %td
               =link_to t('views.general.edit'), edit_subscription_plan_category_url(subscription_plan_category), class: 'btn btn-info btn-xs'
               -if subscription_plan_category.destroyable?

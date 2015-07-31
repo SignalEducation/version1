@@ -42,6 +42,8 @@ describe SubscriptionPlanCategory do
 
   it { should validate_presence_of(:available_to) }
 
+  it { should validate_numericality_of(:trial_period_in_days)}
+
   # callbacks
   it { should callback(:set_guid).before(:validation).on(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
