@@ -20,6 +20,9 @@
       %tr
         %td.col-sm-4=t('views.subscription_plan_categories.form.guid')
         %td.col-sm-8=@subscription_plan_category.guid
+      %tr
+        %td.col-sm-4=t('views.subscription_plan_categories.form.trial_period_in_days')
+        %td.col-sm-8=@subscription_plan_category.trial_period_in_days
     %p
       =link_to t('views.general.back'), subscription_plan_categories_url
       |

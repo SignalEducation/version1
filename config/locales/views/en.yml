@@ -964,6 +964,8 @@ en:
         available_to: Available to
         available_to_placeholder: "2015-12-31 23:59"
         guid: GUID
+        trial_period_in_days: Trial period in days
+        trial_period_in_days_placeholder: 7
 
       edit:
         h1: Edit Subscription Plan Category
