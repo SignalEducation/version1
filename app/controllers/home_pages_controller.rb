@@ -28,7 +28,7 @@ class HomePagesController < ApplicationController
 
       if @home_page
         seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-        cookies.encrypted[:latest_subscription_plan_category_guid] ||= {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+        cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
         @cfa = Institution.where(short_name: 'CFA').first
         @acca = Institution.where(short_name: 'ACCA').first
         @cfa_level_1 = ExamLevel.where(name: 'Level 1').first
@@ -86,6 +86,10 @@ class HomePagesController < ApplicationController
         if cookies.encrypted[:crush_offers]
           @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
           cookies.delete(:crush_offers)
+        end
+        if cookies.encrypted[:latest_subscription_plan_category_guid]
+          subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
+          @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
 
         if @user.valid? && @user.save

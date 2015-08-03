@@ -73,8 +73,9 @@ class StripeApiEvent < ActiveRecord::Base
         when 'invoice.payment_succeeded'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           price = self.payload[:data][:object][:total].to_i
+          curr = self.payload[:data][:object][:currency].upcase
           if user && user.crush_offers_session_id && price > 0
-            uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{price}&f=pb&r=#{user.crush_offers_session_id}&t=#{self.payload[:data][:object][:id]}")
+            uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{price}&c=#{curr}&f=pb&r=#{user.crush_offers_session_id}&t=#{self.payload[:data][:object][:id]}")
             resp = Net::HTTP.get(uri)
             xml_doc = Nokogiri::XML(resp)
             result = xml_doc.at_xpath('//msg').content
