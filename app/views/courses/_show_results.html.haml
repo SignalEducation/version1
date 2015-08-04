@@ -27,7 +27,7 @@
     .pull-left
       %h6
       .pull-left
-        =link_to "Discuss #{cme.name} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
+        =link_to "Discuss #{@course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.course_module_jumbo_quiz.try(:name)} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
 
 
 .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
