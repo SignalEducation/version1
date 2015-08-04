@@ -1,0 +1,57 @@
+.col-md-4.col-sm-4.hidden-xs
+  .panel.panel-default.side-nav.border-same-backcolor.round-border.width-smaller
+    .panel-body.text-center
+      %h4.text-bold
+        =@course_module.name
+
+    %ul.list-group.scrollbar
+      -@course_module.course_module_elements.all_active.all_in_order.each do |course_module_element|
+        -if course_module_element.id == @course_module_element.try(:id)
+          .list-group-item.sidenav-section.current-cme
+            %p
+              =course_module_element.name
+            %h5.text-active.text-bold
+              %i.glyphicon.glyphicon-circle-arrow-right{style: 'font-size: large'}
+              Active
+        -else
+          =link_to course_special_link(course_module_element), title: t('views.courses.show.h1'), class: 'list-group-item sidenav-section' do
+            -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+              %p
+                =course_module_element.name
+              %h5.text-passed.text-bold
+                %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                Completed
+            -else
+              %p
+                =course_module_element.name
+              %h5.text-failed.text-bold
+                %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
+                Start
+
+
+
+      -if @course_module.course_module_jumbo_quiz && @course_module.course_module_jumbo_quiz.active
+        -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
+          .list-group-item.sidenav-section.current-cme
+            %P
+              =@course_module.course_module_jumbo_quiz.name
+            %h5.text-active.text-bold
+              %i.glyphicon.glyphicon-circle-arrow-right{style: 'font-size: large'}
+              Active
+
+
+        -elsif @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+          =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item sidenav-section' do
+            %p
+              =@course_module.course_module_jumbo_quiz.name
+            %h5.text-passed.text-bold
+              %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+              Completed
+
+        -else
+          =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item sidenav-section' do
+            %p
+              =@course_module.course_module_jumbo_quiz.name
+            %h5.text-failed.text-bold
+              %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
+              Start

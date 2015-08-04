@@ -1,24 +1,19 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.id}"}
-  .row
-    .col-sm-12
-      .well.quiz-well
-        =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
-  .row
-    .col-sm-12
-      %h3=t('views.quiz_questions.show.choose_an_answer')
-  -answers = question.quiz_answers.sample(question.quiz_answers.size)
-  -answers.each_with_index do |qa, counter|
-    .row
-      .col-sm-12
-        .well.well-sm.quiz-well.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;"}
-          %table.table
-            %tbody
-              %tr
-                %td.col-xs-1{style: 'border: 1px solid transparent;'}
-                  .h1.no-top-gap
-                    =('A.'..'Z.').to_a[counter]
-                %td.col-xs-11{style: 'border: 1px solid transparent;'}
-                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+  %h4.text-bold.l-margin-bottom-big
+    =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
+
+  .panel.panel-default.border-same-backcolor.answerpanel
+    %ul.list-group
+      -answers = question.quiz_answers.sample(question.quiz_answers.size)
+      -answers.each_with_index do |qa, counter|
+        .list-group-item.quiz-answer.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;", style: 'cursor:pointer'}
+          .container-fluid
+            .row
+              .col-md-1
+                %h2=('A'..'Z').to_a[counter]
+              .col-md-11.text
+                %p=render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+
   %small
     %small.text-muted
       QID:

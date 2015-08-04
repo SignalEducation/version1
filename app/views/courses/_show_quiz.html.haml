@@ -1,29 +1,31 @@
 -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz || @question_bank
-  .row
-    .col-sm-12
-      %h1.courses-title
-        =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
-  .row
-    .col-sm-12
-      .progress
-        .progress-bar.quiz-progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%'}
-          %span.sr-only 0% Complete
-          0%
-  -@quiz_questions.each do |question|
-    =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
-  =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
-    =f.text_field :user_id
-    =f.text_field :course_module_id
-    =f.text_field :course_module_element_id
-    =f.text_field :course_module_jumbo_quiz_id
-    =f.text_field :question_bank_id
-    =f.text_field :time_taken_in_seconds, value: (Time.now.to_i * -1)
-    =f.fields_for :quiz_attempts do |attempt|
-      =attempt.text_field :user_id
-      =attempt.text_field :quiz_question_id
-      =attempt.text_field :quiz_answer_id
-      =attempt.text_field :answer_array
+  .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
+    %h2
+      =@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
+    %p
+      .l-margin-bottom-small.l-margin-top{style: 'font-size: small'}
+        #question-count
+          Question 1 of 4
+    .progress.l-margin-bottom-huge
+      .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+
+
+    -@quiz_questions.each do |question|
+      =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
+
+    =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
+      =f.text_field :user_id
+      =f.text_field :course_module_id
+      =f.text_field :course_module_element_id
+      =f.text_field :course_module_jumbo_quiz_id
+      =f.text_field :question_bank_id
+      =f.text_field :time_taken_in_seconds, value: (Time.now.to_i * -1)
+      =f.fields_for :quiz_attempts do |attempt|
+        =attempt.text_field :user_id
+        =attempt.text_field :quiz_question_id
+        =attempt.text_field :quiz_answer_id
+        =attempt.text_field :answer_array
 
 -else
   .row
@@ -44,6 +46,7 @@
       nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
       nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
       progressBar = $('.progress-bar'),
+      questionCount = $('.l-margin-bottom-small.l-margin-top'),
       previousAnswerCorrect = true,
       startTime = #{Time.now.to_i};
 
@@ -52,8 +55,8 @@
     progressBar.attr('aria-valuemax', numberOfQuestions);
     progressBar.attr('aria-valuenow', currentQuestion);
     progressBar.attr('style', 'width: ' + percentage + '%;');
-    progressBar.text(currentQuestion + ' / ' + numberOfQuestions);
     progressBar.find('span').text(currentQuestion + ' of ' + numberOfQuestions);
+    questionCount.find('#question-count').text('Question ' + currentQuestion + ' of ' + numberOfQuestions);
   }
 
   function askQuestion(questionNumber) {

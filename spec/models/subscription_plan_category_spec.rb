@@ -2,13 +2,14 @@
 #
 # Table name: subscription_plan_categories
 #
-#  id             :integer          not null, primary key
-#  name           :string
-#  available_from :datetime
-#  available_to   :datetime
-#  guid           :string
-#  created_at     :datetime
-#  updated_at     :datetime
+#  id                     :integer          not null, primary key
+#  name                   :string
+#  available_from         :datetime
+#  available_to           :datetime
+#  guid                   :string
+#  created_at             :datetime
+#  updated_at             :datetime
+#  trial_period_in_days   :integer
 #
 
 require 'rails_helper'
@@ -40,6 +41,8 @@ describe SubscriptionPlanCategory do
   it { should validate_presence_of(:available_from) }
 
   it { should validate_presence_of(:available_to) }
+
+  it { should validate_numericality_of(:trial_period_in_days)}
 
   # callbacks
   it { should callback(:set_guid).before(:validation).on(:create) }

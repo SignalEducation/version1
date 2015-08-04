@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150728102906) do
+ActiveRecord::Schema.define(version: 20150731104450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -818,6 +818,7 @@ ActiveRecord::Schema.define(version: 20150728102906) do
     t.string   "guid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "trial_period_in_days"
   end
 
   add_index "subscription_plan_categories", ["available_from"], name: "index_subscription_plan_categories_on_available_from", using: :btree
@@ -1059,6 +1060,7 @@ ActiveRecord::Schema.define(version: 20150728102906) do
     t.string   "guid"
     t.datetime "trial_ended_notification_sent_at"
     t.string   "crush_offers_session_id"
+    t.integer  "subscription_plan_category_id"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
@@ -1069,6 +1071,7 @@ ActiveRecord::Schema.define(version: 20150728102906) do
   add_index "users", ["password_reset_token"], name: "index_users_on_password_reset_token", using: :btree
   add_index "users", ["persistence_token"], name: "index_users_on_persistence_token", using: :btree
   add_index "users", ["stripe_customer_id"], name: "index_users_on_stripe_customer_id", using: :btree
+  add_index "users", ["subscription_plan_category_id"], name: "index_users_on_subscription_plan_category_id", using: :btree
   add_index "users", ["user_group_id"], name: "index_users_on_user_group_id", using: :btree
 
   create_table "vat_codes", force: :cascade do |t|

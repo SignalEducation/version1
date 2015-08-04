@@ -8,6 +8,10 @@
           .col-sm-8
             =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', autofocus: true
         .form-group
+          =f.label :trial_period_in_days, t('views.subscription_plan_categories.form.trial_period_in_days'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.number_field :trial_period_in_days, placeholder: t('views.subscription_plan_categories.form.trial_period_in_days_placeholder'), class: 'form-control', autofocus: true
+        .form-group
           =f.label :available_from, t('views.subscription_plan_categories.form.available_from'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_field :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
