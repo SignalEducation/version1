@@ -6,7 +6,7 @@
     %ul.list-group
       -answers = question.quiz_answers.sample(question.quiz_answers.size)
       -answers.each_with_index do |qa, counter|
-        %a.list-group-item.quiz-answer.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;"}
+        .list-group-item.quiz-answer.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;", style: 'cursor:pointer'}
           .container-fluid
             .row
               .col-md-1
