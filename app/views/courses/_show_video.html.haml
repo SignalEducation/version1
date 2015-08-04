@@ -2,13 +2,17 @@
   %h2
     =cme.name
   #video-window
-  -if !cme.description.blank?
-    .l-margin-bottom.l-margin-top
-      .pull-left
+  .l-margin-bottom.l-margin-top
+    .pull-left
+      -if !cme.description.blank?
         %h3=t('views.course_module_elements.form.description')
         .pull-left
           =sanitizer(cme.description)
-
+      -if @course_module.parent.forum_url
+        %br/
+        %h6
+          .pull-left
+            =link_to "Discuss #{cme.name} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
 
 .box-item.question-box.border-same-backcolor.width-bigger
   .cme-nav
