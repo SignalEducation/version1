@@ -251,7 +251,7 @@ en:
         name_placeholder: Give a title that users will see
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
-        description: Description
+        description: "Description:"
         description_placeholder: Description
         estimated_time_in_seconds: Estimated time (seconds)
         estimated_time_in_seconds_placeholder: 180
