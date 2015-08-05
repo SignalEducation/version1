@@ -360,6 +360,14 @@ class Subscription < ActiveRecord::Base
             stripe_customer_id: stripe_customer.id,
             stripe_customer_data: stripe_customer.to_hash.deep_dup)
 
+      # Customer ID on Stripe has been changed because user has converted
+      # from free trial (when he does not have card token on Stripe) to payed
+      # subscription (when he gets card token) so we have to update it in our
+      # DB.
+      if self.user.stripe_customer_id != self.stripe_customer_id
+        self.user.update_attribute(:stripe_customer_id, self.stripe_customer_id)
+      end
+
       if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
         errors.add(:base, I18n.t('models.general.live_mode_error'))
         Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
