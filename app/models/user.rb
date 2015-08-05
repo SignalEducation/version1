@@ -42,6 +42,7 @@
 #  guid                                     :string
 #  trial_ended_notification_sent_at         :datetime
 #  subscription_plan_category_id            :integer
+#  employee_guid                            :string
 #
 
 class User < ActiveRecord::Base
@@ -63,7 +64,7 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes
+                  :subscriptions_attributes, :employee_guid
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -134,6 +135,8 @@ class User < ActiveRecord::Base
   validates :forum_notification_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :locale, inclusion: {in: LOCALES}
+  validates :employee_guid, allow_nil: true,
+            uniqueness: { scope: :corporate_customer_id }
 
   # callbacks
   before_validation :set_defaults, on: :create

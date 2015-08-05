@@ -42,6 +42,7 @@
 #  guid                                     :string
 #  trial_ended_notification_sent_at         :datetime
 #  subscription_plan_category_id            :integer
+#  employee_guid                            :string
 #
 
 require 'rails_helper'
@@ -133,6 +134,8 @@ describe User do
   it { should validate_length_of(:forum_notification_email_frequency).is_at_most(255) }
 
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
+
+  it { should validate_uniqueness_of(:employee_guid).scoped_to(:corporate_customer_id) }
 
   # callbacks
   it { should callback(:set_defaults).before(:validation).on(:create) }
