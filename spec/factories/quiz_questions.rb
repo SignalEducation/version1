@@ -12,6 +12,7 @@
 #  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
 #  exam_level_id                 :integer
+#  exam_section_id               :integer
 #
 
 FactoryGirl.define do

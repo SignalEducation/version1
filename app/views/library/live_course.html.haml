@@ -49,19 +49,6 @@
                             =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
 
-        -#%ul.course-topics-list
-          -#  -@course.children.all_active.all_in_order.each_with_index do |child|
-          -#    %li
-          -#      =link_to course_special_link(child.first_active_cme), class: 'box-item' do
-          -#        .box-topic-item
-          -#          =child.name
-          -#        .time
-          -#          -if child.class == ExamSection
-          -#            =seconds_to_time(child.duration.to_i)
-          -#          -elsif child.class == CourseModule
-          -#            =seconds_to_time(child.estimated_time_in_seconds)
-
-
 
         .col-sm-12.col-md-4
           %h3
@@ -85,6 +72,9 @@
                 ='Learn Signal'
             -if @course.forum_url
               =link_to "Discuss #{@course.name} in the Forum", @course.forum_url, target: '_blank'
-          =#link_to t('views.library.show.new_question_bank'), new_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
+          -if @course.class == ExamSection
+            =link_to t('views.library.show.new_question_bank'), new_section_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
+          -else
+            =link_to t('views.library.show.new_question_bank'), new_level_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
 
   =render partial: 'layouts/new_footer'

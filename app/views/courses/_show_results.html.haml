@@ -27,7 +27,8 @@
     .pull-left
       %h6
       .pull-left
-        =link_to "Discuss #{@course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.course_module_jumbo_quiz.try(:name)} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
+        -if !@course_module_element_user_log.is_question_bank
+          =link_to "Discuss #{@course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.course_module_jumbo_quiz.try(:name)} in the Forum", @course_module_element_user_log.course_module.parent.try(:forum_url), target: '_blank'
 
 
 .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
@@ -44,12 +45,14 @@
         .glyphicon.glyphicon-arrow-right
 
   -if @course_module_element_user_log.is_question_bank
-    %hr/
-    .row
-      .col-sm-4.text-right
-        =link_to 'Restart Quiz', course_special_link(@question_bank), class: 'btn btn-ls-default'
-      .col-sm-4.text-right
-        =link_to 'Return to Library', library_special_link(@question_bank.exam_level), class: 'btn btn-ls-default'
+    .col-xs-4.text-left
+      =link_to course_special_link(@question_bank), class: 'btn btn-red text-bold' do
+        .glyphicon.glyphicon-arrow-left
+        Restart Quiz
+    .col-xs-4.text-right
+      =link_to library_url, class: 'btn btn-red text-bold' do
+        Return to Library
+        .glyphicon.glyphicon-arrow-right
 
 
   -if @course_module_element

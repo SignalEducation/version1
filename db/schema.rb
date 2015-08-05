@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150804143503) do
+ActiveRecord::Schema.define(version: 20150805092024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -549,6 +549,7 @@ ActiveRecord::Schema.define(version: 20150804143503) do
     t.string   "question_selection_strategy"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.integer  "exam_section_id"
   end
 
   add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
@@ -620,6 +621,7 @@ ActiveRecord::Schema.define(version: 20150804143503) do
     t.integer  "flash_quiz_id"
     t.datetime "destroyed_at"
     t.integer  "exam_level_id"
+    t.integer  "exam_section_id"
   end
 
   add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree

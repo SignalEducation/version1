@@ -12,6 +12,7 @@
 #  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
 #  exam_level_id                 :integer
+#  exam_section_id               :integer
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -53,7 +54,9 @@ class QuizQuestion < ActiveRecord::Base
   # callbacks
   before_validation :set_course_module_element
   before_save :set_exam_level_id
+  before_save :set_exam_section_id
   before_update :set_exam_level_id
+  before_update :set_exam_section_id
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_quiz_id) }
@@ -103,6 +106,14 @@ class QuizQuestion < ActiveRecord::Base
   def set_exam_level_id
     unless self.flash_quiz_id
       self.exam_level_id = self.course_module_element_quiz.course_module_element.parent.exam_level_id
+    end
+  end
+
+  def set_exam_section_id
+    unless self.flash_quiz_id
+      if self.course_module_element_quiz.course_module_element.course_module.exam_section_id
+        self.exam_section_id = self.course_module_element_quiz.course_module_element.parent.exam_section_id
+      end
     end
   end
 
