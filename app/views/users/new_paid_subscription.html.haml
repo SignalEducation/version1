@@ -60,12 +60,8 @@
 
   var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
 
-  function clearPlans() {
-    $('.option[type="radio"]').prop('checked', false);
-  }
-
   function choosePlan(theThing) {
-    clearPlans();
+    $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
     $('#user_subscriptions_attributes_0_subscription_plan_id')
       .val($(theThing).parent().attr('data-plan-id'));
@@ -85,6 +81,11 @@
 
   $(document).on('ready', function() {
     showPlans();
+    $('.option').bind('click', function(event) {
+      event.stopPropagation();
+      choosePlan(this.parentElement);
+    });
+
     $(".plan-option").bind('click', function(event) {
       event.preventDefault();
       choosePlan(this);
