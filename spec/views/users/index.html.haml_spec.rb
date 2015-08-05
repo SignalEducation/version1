@@ -5,8 +5,7 @@ RSpec.describe 'users/index', type: :view do
     allow(view).to receive(:tick_or_cross).and_return('nice_boolean')
     @user_group = FactoryGirl.create(:user_group)
     @corporate_customer = FactoryGirl.create(:corporate_customer)
-    @corporate_customer_user_group = FactoryGirl.create(:corporate_customer_user_group)
-    temp_users = FactoryGirl.create_list(:user, 2, user_group_id: @user_group.id, stripe_customer_id: @stripe_customer.id, corporate_customer_id: @corporate_customer.id, corporate_customer_user_group_id: @corporate_customer_user_group.id)
+    temp_users = FactoryGirl.create_list(:user, 2, user_group_id: @user_group.id, stripe_customer_id: @stripe_customer.id, corporate_customer_id: @corporate_customer.id)
     @users = User.paginate(page: 1, per_page: 10)
   end
 
@@ -28,7 +27,6 @@ RSpec.describe 'users/index', type: :view do
     expect(rendered).to match(/#{@users.first.password_reset_at.strftime(t('controllers.application.date_formats.standard'))}/)
     expect(rendered).to match(/#{@users.first.stripe_customer_id.to_s}/)
     expect(rendered).to match(/#{@users.first.corporate_customer.name.to_s}/)
-    expect(rendered).to match(/#{@users.first.corporate_customer_user_group.name.to_s}/)
     expect(rendered).to match(/#{@users.first.operational_email_frequency.to_s}/)
     expect(rendered).to match(/#{@users.first.study_plan_notifications_email_frequency.to_s}/)
     expect(rendered).to match(/#{@users.first.falling_behind_email_alert_frequency.to_s}/)

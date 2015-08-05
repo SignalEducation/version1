@@ -11,27 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150731104450) do
+ActiveRecord::Schema.define(version: 20150805083552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "corporate_customers", force: :cascade do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "organisation_name"
     t.text     "address"
+    t.integer  "owner_id"
     t.integer  "country_id"
     t.boolean  "payments_by_card",     default: false, null: false
     t.boolean  "is_university",        default: false, null: false
-    t.integer  "owner_id"
     t.string   "stripe_customer_guid"
     t.boolean  "can_restrict_content", default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
-
-  add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
-  add_index "corporate_customers", ["owner_id"], name: "index_corporate_customers_on_owner_id", using: :btree
-  add_index "corporate_customers", ["stripe_customer_guid"], name: "index_corporate_customers_on_stripe_customer_guid", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"
@@ -1044,7 +1040,6 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.datetime "password_reset_at"
     t.string   "stripe_customer_id"
     t.integer  "corporate_customer_id"
-    t.integer  "corporate_customer_user_group_id"
     t.string   "operational_email_frequency"
     t.string   "study_plan_notifications_email_frequency"
     t.string   "falling_behind_email_alert_frequency"
@@ -1063,7 +1058,6 @@ ActiveRecord::Schema.define(version: 20150731104450) do
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
   add_index "users", ["corporate_customer_id"], name: "index_users_on_corporate_customer_id", using: :btree
-  add_index "users", ["corporate_customer_user_group_id"], name: "index_users_on_corporate_customer_user_group_id", using: :btree
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["password_reset_token"], name: "index_users_on_password_reset_token", using: :btree

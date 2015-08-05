@@ -32,7 +32,6 @@
         %th=t('views.users.form.password_reset_at')
         %th=t('views.users.form.stripe_customer_id')
         %th=t('views.users.form.corporate_customer_id')
-        %th=t('views.users.form.corporate_customer_user_group_id')
         %th
       -user_group_id_tracker = nil
       -@users.each do |user|
@@ -58,7 +57,6 @@
             -if user.stripe_customer_id
               =link_to(user.stripe_customer_id, user, title: t('views.general.view_tooltip'))
           %td=#link_to(user.corporate_customer.try(:name), user, title: t('views.general.view_tooltip'))
-          %td=#link_to(user.corporate_customer_user_group.try(:name), user, title: t('views.general.view_tooltip'))
 
           %td
             =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-info btn-xs'

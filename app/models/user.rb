@@ -29,7 +29,6 @@
 #  password_reset_at                        :datetime
 #  stripe_customer_id                       :string
 #  corporate_customer_id                    :integer
-#  corporate_customer_user_group_id         :integer
 #  operational_email_frequency              :string
 #  study_plan_notifications_email_frequency :string
 #  falling_behind_email_alert_frequency     :string
@@ -57,8 +56,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
                   :password_reset_token, :password_reset_at, :stripe_customer_id,
-                  :corporate_customer_id, :corporate_customer_user_group_id,
-                  :operational_email_frequency,
+                  :corporate_customer_id, :operational_email_frequency,
                   :study_plan_notifications_email_frequency,
                   :falling_behind_email_alert_frequency, :marketing_email_frequency,
                   :marketing_email_permission_given_at,
@@ -78,7 +76,6 @@ class User < ActiveRecord::Base
   has_many :owned_corporate_accounts,
            class_name: 'CorporateCustomer', foreign_key: :owner_id
            # owns these corporate accounts (usually one, but can be more)
-  # todo belongs_to :corporate_customer_user_group
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
@@ -123,8 +120,6 @@ class User < ActiveRecord::Base
   validates :user_group_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_user_group_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :operational_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }

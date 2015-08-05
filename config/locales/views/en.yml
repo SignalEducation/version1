@@ -1038,7 +1038,6 @@ en:
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID
         corporate_customer_id: Corporate customer
-        corporate_customer_user_group_id: Corporate customer user group
         operational_email_frequency: Operational email frequency
         study_plan_notifications_email_frequency: Study plan notifications email frequency
         falling_behind_email_alert_frequency: Falling behind email alert frequency

@@ -29,7 +29,6 @@
 #  password_reset_at                        :datetime
 #  stripe_customer_id                       :string
 #  corporate_customer_id                    :integer
-#  corporate_customer_user_group_id         :integer
 #  operational_email_frequency              :string
 #  study_plan_notifications_email_frequency :string
 #  falling_behind_email_alert_frequency     :string
@@ -67,7 +66,6 @@ describe User do
   # relationships
   it { should belong_to(:corporate_customer) }
   it { should have_many(:owned_corporate_accounts) }
-  xit { should belong_to(:corporate_customer_user_group) }
   it { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
@@ -115,9 +113,6 @@ describe User do
 
   it { should_not validate_presence_of(:corporate_customer_id) }
   it { should validate_numericality_of(:corporate_customer_id) }
-
-  it { should_not validate_presence_of(:corporate_customer_user_group_id) }
-  it { should validate_numericality_of(:corporate_customer_user_group_id) }
 
   it { should validate_inclusion_of(:operational_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
   it { should validate_length_of(:operational_email_frequency).is_at_most(255) }

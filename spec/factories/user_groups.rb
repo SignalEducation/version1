@@ -47,13 +47,6 @@ FactoryGirl.define do
       subscription_required_to_see_content false
     end
 
-    factory :corporate_customer_user_group do
-      name 'Corporate Customer Group'
-      corporate_customer true
-      subscription_required_at_sign_up true
-      subscription_required_to_see_content true
-    end
-
     factory :content_manager_user_group do
       name 'Content Manager Group'
       content_manager true
