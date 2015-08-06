@@ -90,6 +90,7 @@ describe User do
   it { should have_one(:referral_code) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
+  it { should have_and_belong_to_many(:corporate_groups) }
 
   # validation
   it { should validate_presence_of(:email) }

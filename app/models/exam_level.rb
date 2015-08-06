@@ -51,6 +51,7 @@ class ExamLevel < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :user_exam_level
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  has_many :corporate_group_grants
 
   # validation
   validates :qualification_id, presence: true,

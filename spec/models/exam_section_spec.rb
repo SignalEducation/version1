@@ -45,6 +45,7 @@ describe ExamSection do
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
   it { should have_many(:student_exam_tracks) }
+  it { should have_many(:corporate_group_grants) }
 
   # validation
   it { should validate_presence_of(:name) }

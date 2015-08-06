@@ -35,6 +35,7 @@ class CorporateCustomer < ActiveRecord::Base
   belongs_to :owner, class_name: 'User', foreign_key: :owner_id
   has_many :students, class_name: 'User', foreign_key: :corporate_customer_id
   has_many :subscriptions
+  has_many :corporate_groups
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}

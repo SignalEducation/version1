@@ -102,6 +102,7 @@ class User < ActiveRecord::Base
   has_one :referral_code
   has_one :referred_signup
   belongs_to :subscription_plan_category
+  has_and_belongs_to_many :corporate_groups
 
   accepts_nested_attributes_for :subscriptions
 
