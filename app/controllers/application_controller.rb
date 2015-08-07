@@ -342,10 +342,8 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == QuestionBank
       course_url(
-              the_thing.exam_level.qualification.institution.subject_area.name_url,
-              the_thing.exam_level.qualification.institution.name_url,
-              the_thing.exam_level.qualification.name_url,
-              the_thing.exam_level.name_url,
+              the_thing.exam_level.try(:name_url) || 'all',
+              the_thing.exam_section.try(:name_url) || 'all',
               'custom_quiz',
               the_thing
       )
