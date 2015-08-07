@@ -8,6 +8,7 @@ class UserActivationsController < ApplicationController
     # if found, log the user in
     if @user
       UserSession.create(@user)
+      @user.assign_anonymous_logs_to_user(current_session_guid)
       flash[:success] = I18n.t('controllers.user_activations.update.success')
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
