@@ -36,17 +36,18 @@ class QuestionBanksController < ApplicationController
   def create
     @question_bank = QuestionBank.new(allowed_params)
     @question_bank.user_id = current_user.id
-    url = request.referer
-    exam_level = ExamLevel.where(name_url: params[:exam_level_name_url].to_s).first
-    exam_section = ExamSection.where(name_url: params[:exam_section_name_url].to_s).first
+    url = URI(request.referer).path
+    split_url = url.split('/')
+    exam_level = ExamLevel.where(name_url: split_url).first
+    exam_section = ExamSection.where(name_url: split_url).first
     @question_bank.exam_level_id = exam_level.try(:id)
     @question_bank.exam_section_id = exam_section.try(:id)
     @question_bank.question_selection_strategy = 'random'
     if @question_bank.save
       if @question_bank.exam_section_id
-        redirect_to section_question_bank_path
+        redirect_to question_bank_url(exam_level.name_url, exam_section.name_url, @question_bank.id)
       elsif @question_bank.exam_level_id
-        redirect_to level_question_bank_path
+        redirect_to question_bank_url(exam_level.name_url, exam_section.name_url, @question_bank.id)
       end
     else
       flash[:error] = I18n.t('controllers.question_banks.create.flash.error')

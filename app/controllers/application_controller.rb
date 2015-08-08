@@ -340,13 +340,6 @@ class ApplicationController < ActionController::Base
               the_thing.course_module.name_url,
               the_thing.name_url
       )
-    elsif the_thing.class == QuestionBank
-      course_url(
-              the_thing.exam_level.try(:name_url) || 'all',
-              the_thing.exam_section.try(:name_url) || 'all',
-              'custom_quiz',
-              the_thing
-      )
     else
       # shouldn't be here - re-route to /library/bla-bla
       library_special_link(the_thing)
