@@ -47,7 +47,7 @@ class QuestionBanksController < ApplicationController
       if @question_bank.exam_section_id
         redirect_to question_bank_url(exam_level.name_url, exam_section.name_url, @question_bank.id)
       elsif @question_bank.exam_level_id
-        redirect_to question_bank_url(exam_level.name_url, exam_section.name_url, @question_bank.id)
+        redirect_to question_bank_url(exam_level.name_url, nil, @question_bank.id)
       end
     else
       flash[:error] = I18n.t('controllers.question_banks.create.flash.error')
