@@ -29,3 +29,27 @@ mixpanel_key: mixpanel_api_key_goes_here
 
 # Mandrill
 learnsignal_mandrill_api_key: mandrill_api_key_goes_here
+
+# AWS Load Balancers
+# For each configuration we have to list all load balancer IPs in
+# order to get real request IP. Namely ActionDispatch::RemoteIp
+# middleware removes all IPs from ActionDispatch::RemoteIp::TRUSTED_PROXIES
+# leaving real request IP. If AWS load balancers are not added to
+# this array instead of user's IP address we will get load balancer's
+# IP addres.
+#
+# Format of values listed here are IP addresses (optionally with network
+# prefix length) separated by commas. In environemnts/<configuration>.rb
+# file we split this value on comma char and add each address is added to
+# the array of TRUSTED_PROXIES.
+#
+# Sample of value (first address is given with network prefix length 20,
+# and second is single IP).
+#
+# 172.31.0.0/20,54.154.194.123
+#
+# Configured value for load balancer's IP address with network
+# prefix length for can be seen from Availability Zones list
+# for each load balancer in AWS console (go to Load Balancers, select
+# load balancer and in bottom table all availability zones are listed).
+aws_load_balancers: aws_load_balancers_ips_go_here
