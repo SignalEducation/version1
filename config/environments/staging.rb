@@ -112,7 +112,7 @@ Rails.application.configure do
 
   config.exceptions_app = self.routes
   config.action_dispatch.trusted_proxies = ActionDispatch::RemoteIp::TRUSTED_PROXIES +
-                                           ENV['aws_load_balancers'].split(',').map { |alp| IPAddr.new(ip) }
+                                           ENV['aws_load_balancers'].split(',').map { |alp| IPAddr.new(alp) }
 end
 
 # Required by LogEntries
