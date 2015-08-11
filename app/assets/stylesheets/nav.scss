@@ -55,6 +55,15 @@
       }
     }
   }
+  &.days-left {
+    @include breakpoint(sm-min) {
+      @include border-radius(4px);
+      border: 1px solid rgba($red-1, 0.5);
+      &:hover {
+        border: 1px solid rgba($red-1, 0.8);
+      }
+    }
+  }
 }
 .navbar-nav {
   margin: 0;

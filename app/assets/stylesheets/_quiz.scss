@@ -162,7 +162,10 @@ a.list-group-item {
     background-color: $red-1;
   }
 }
-
+.result-summary {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
 .width-smaller {
   width: 93%;
 }
@@ -177,12 +180,18 @@ a.list-group-item {
 }
 .answer-correct {
   background-color: $green-1;
+  &:hover {
+    background-color: darken($green-1, 7);
+  }
   p {
     color: green;
   }
 }
 .answer-failed {
   background-color: $pink-1;
+  &:hover {
+    background-color: darken($pink-1, 5);
+  }
   p {
     color: $red-1;
   }
@@ -190,6 +199,7 @@ a.list-group-item {
 .answer {
   padding: 15px;
   border-radius: 7px;
+  cursor: pointer;
 }
 .quiz-answer {
   min-height: 100px;
