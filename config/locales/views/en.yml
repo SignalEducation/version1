@@ -181,7 +181,7 @@ en:
           p: We have been notified, and will investigate it immediately.
         free_trial_expired:
           h2: Oops! Looks like your free trial period has expired. Please upgrade your subscription.
-          upgrade_subscription: Upgrade Subsscription
+          upgrade_subscription: Upgrade Subscription
 
       show_results:
         h1: 'Results:'
