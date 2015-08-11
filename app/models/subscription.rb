@@ -187,6 +187,9 @@ class Subscription < ActiveRecord::Base
         free_trial_days = self.user.subscription_plan_category.trial_period_in_days
       end
       free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
+      if ((Time.now - self.created_at).to_i.abs / 1.day) < 0
+        0
+      end
     end
   end
 
