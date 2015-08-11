@@ -121,8 +121,9 @@ class User < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :user_group_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :corporate_customer_id,
+            numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
+            presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :operational_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :study_plan_notifications_email_frequency,

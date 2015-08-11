@@ -56,7 +56,7 @@
           %td
             -if user.stripe_customer_id
               =link_to(user.stripe_customer_id, user, title: t('views.general.view_tooltip'))
-          %td=#link_to(user.corporate_customer.try(:name), user, title: t('views.general.view_tooltip'))
+          %td=link_to(user.corporate_customer.try(:organisation_name), user, title: t('views.general.view_tooltip')) if user.corporate_customer_id
 
           %td
             =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-info btn-xs'

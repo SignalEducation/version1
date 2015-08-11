@@ -42,4 +42,23 @@
   .form-group
     =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label col-sm-4'
     .col-sm-8
-      =# todo f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      = f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name,
+        {include_blank: t('views.general.select')},
+        {class: 'form-control', style: 'display:none;'}
+
+:javascript
+  $(document).ready(function() {
+    if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).first.try(:id)}" ||
+        $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).first.try(:id)}") {
+      $('#user_corporate_customer_id').show();
+    }
+  });
+
+  $('#user_user_group_id').bind('change', function() {
+    if ($(this).val() == '3') {
+      $('#user_corporate_customer_id').show();
+    } else {
+      $('#user_corporate_customer_id option:first').attr('selected', 'selected');
+      $('#user_corporate_customer_id').hide();
+    }
+  });

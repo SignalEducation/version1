@@ -113,8 +113,38 @@ describe User do
   it { should validate_presence_of(:user_group_id) }
   it { should validate_numericality_of(:user_group_id) }
 
-  it { should_not validate_presence_of(:corporate_customer_id) }
-  it { should validate_numericality_of(:corporate_customer_id) }
+  context "corporate_customer_id validation" do
+    before do
+      FactoryGirl.create(:individual_student_user_group)
+      @corporate_student_group = FactoryGirl.create(:corporate_student_user_group)
+      FactoryGirl.create(:tutor_user_group)
+      FactoryGirl.create(:content_manager_user_group)
+      FactoryGirl.create(:blogger_user_group)
+      @corporate_customer_group = FactoryGirl.create(:corporate_customer_user_group)
+      FactoryGirl.create(:site_admin_user_group)
+      FactoryGirl.create(:forum_manager_user_group)
+    end
+
+    it "does not validate presence for non-corporate users" do
+      UserGroup.where(corporate_customer: false, corporate_student: false).each do |ug|
+        user = FactoryGirl.create(:user, user_group_id: ug.id)
+        expect(user).not_to validate_presence_of(:corporate_customer_id)
+      end
+    end
+
+    it "requires corporate_customer_id for corporate customer" do
+      user = FactoryGirl.create(:user, user_group_id: @corporate_customer_group.id, corporate_customer_id: 1)
+      expect(user).to validate_presence_of(:corporate_customer_id)
+      expect(user).to validate_numericality_of(:corporate_customer_id)
+    end
+
+    it "requires corporate_customer_id for corporate student" do
+      user = FactoryGirl.create(:user, user_group_id: @corporate_student_group.id, corporate_customer_id: 1)
+      expect(user).to validate_presence_of(:corporate_customer_id)
+      expect(user).to validate_numericality_of(:corporate_customer_id)
+    end
+  end
+
 
   it { should validate_inclusion_of(:operational_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
   it { should validate_length_of(:operational_email_frequency).is_at_most(255) }

@@ -133,6 +133,7 @@ class UsersController < ApplicationController
     end
     seo_title_maker(@user.try(:full_name), '', true)
     @current_subscription = @user.subscriptions.all_in_order.last
+    @corporate_customers = CorporateCustomer.all_in_order
   end
 
   def allowed_params
