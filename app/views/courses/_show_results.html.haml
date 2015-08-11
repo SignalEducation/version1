@@ -3,7 +3,7 @@
     =t('views.courses.show_results.h1')
     =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || 'Custom Quiz'
 
-  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big{style: 'margin-bottom: 0; margin-top: 20px; '}
+  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary
     Results Summary
   #results
     %h3.l-margin-top-big.l-margin-bottom-big
