@@ -8,7 +8,7 @@
           %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
             =@course.try(:name)
           -if @course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
-            =link_to course_special_link(@course.first_active_cme) do
+            =link_to course_special_link(@next_element) do
               .btn.btn-red
                 =t('views.library.index.continue_course')
           -else

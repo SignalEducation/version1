@@ -14,11 +14,17 @@ class LibraryController < ApplicationController
   def show
     @exam_level = ExamLevel.where(name_url: params[:exam_level_name_url].to_s).first
     @exam_section = ExamSection.where(name_url: params[:exam_section_name_url].to_s).first
+    users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
     if @exam_section.nil?
       @course = @exam_level
+      user_course_sets = users_sets.where(exam_level_id: @exam_level.id)
     else
       @course = @exam_section
+      user_course_sets = users_sets.where(exam_section_id: @exam_section.id)
     end
+    latest_set = user_course_sets.first
+    latest_element_id = latest_set.try(:latest_course_module_element_id)
+    @next_element = CourseModuleElement.where(id: latest_element_id).first.try(:next_element)
 
     if @course.try(:live)
       render 'live_course'
