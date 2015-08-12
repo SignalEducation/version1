@@ -72,7 +72,6 @@ class CourseModule < ActiveRecord::Base
   before_create :set_sorting_order
   before_save :set_cme_count
   before_save :calculate_estimated_time
-  before_save :calculate_number_of_questions
   before_save :sanitize_name_url
   after_commit :update_parent
 
@@ -168,6 +167,11 @@ class CourseModule < ActiveRecord::Base
 
   def recalculate_estimated_time
     calculate_estimated_time
+    self.save
+  end
+
+  def recalculate_question_count
+    calculate_number_of_questions
     self.save
   end
 

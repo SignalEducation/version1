@@ -691,6 +691,7 @@ en:
         quiz: Quiz
         quizzes: MCQs
         video: Video
+        number_of_videos: Videos
         videos: of Video
         institution: Institution
         qualification: Qualification
@@ -699,6 +700,10 @@ en:
         course_module: Course Module
         course_module_element: Step
         new_question_bank: Create a Custom Quiz
+
+      index:
+        continue_course: Continue Course
+        start_course: Start Course
 
     qualifications:
       form:

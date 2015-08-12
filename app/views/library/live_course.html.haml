@@ -7,9 +7,14 @@
         .col-md-12.text-center
           %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
             =@course.try(:name)
-          =link_to course_special_link(@course.first_active_cme) do
-            .btn.btn-red
-              Start course
+          -if @course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+            =link_to course_special_link(@course.first_active_cme) do
+              .btn.btn-red
+                =t('views.library.index.continue_course')
+          -else
+            =link_to course_special_link(@course.first_active_cme) do
+              .btn.btn-red
+                =t('views.library.index.start_course')
 
 .l-section-small.is-bg-asphalt
   .l-wrap
@@ -24,7 +29,11 @@
                     .box-topic-item
                       =child.try(:name)
                     .time
-                      =seconds_to_time(child.estimated_time_in_seconds)
+                      -if child.number_of_questions.to_i > 0
+                        =child.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                        |
+                      =child.children.all_videos.count.to_s + ' ' + t('views.library.show.number_of_videos')
+
                 .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
                   -child.children.all_in_order.all_active.each do |grandchild|
                     =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
@@ -36,7 +45,7 @@
                             -if grandchild.is_video
                               =seconds_to_time(grandchild.estimated_time_in_seconds)
                             -elsif grandchild.is_quiz
-                              =grandchild.course_module_element_quiz.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                              =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else
                               ='Flash Card'
                   -if child.course_module_jumbo_quiz && child.course_module_jumbo_quiz.active

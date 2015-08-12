@@ -91,7 +91,8 @@ class CourseModuleElement < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
-  after_save :update_the_module_total_time
+  before_save :log_question_count
+  after_save :update_the_module_total_time_and_question_count
   after_save :update_student_exam_tracks
 
   # scopes
@@ -126,6 +127,10 @@ class CourseModuleElement < ActiveRecord::Base
     the_list += self.quiz_answers.to_a
     the_list += self.quiz_questions.to_a
     the_list
+  end
+
+  def log_question_count
+    self.number_of_questions = self.try(:quiz_questions).try(:count)
   end
 
   def my_position_among_siblings
@@ -163,9 +168,11 @@ class CourseModuleElement < ActiveRecord::Base
     true
   end
 
-  def update_the_module_total_time
+  def update_the_module_total_time_and_question_count
     self.course_module.try(:recalculate_estimated_time)
+    self.course_module.try(:recalculate_question_count)
   end
+
 
   def type_name
     if is_quiz
