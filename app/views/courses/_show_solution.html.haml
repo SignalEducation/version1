@@ -23,7 +23,7 @@
                 .col-md-11
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
 
-  .answer.answer-correct.text-center.l-margin-top-big
+  .answer.text-center.l-margin-top-big{class: attempt.correct ? 'answer-correct' : 'answer-failed', style: 'cursor: default;'}
     %p.text-inline
       Correct Answer:
       &#160;

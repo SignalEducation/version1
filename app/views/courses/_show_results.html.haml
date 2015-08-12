@@ -3,7 +3,7 @@
     =t('views.courses.show_results.h1')
     =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || 'Custom Quiz'
 
-  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big{style: 'margin-bottom: 0; margin-top: 20px; '}
+  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary
     Results Summary
   #results
     %h3.l-margin-top-big.l-margin-bottom-big
@@ -16,8 +16,29 @@
           = ' - ' + t("controllers.application.difficulty_levels.name.#{attempt.try(:quiz_question).try(:difficulty_level)}")
         -#%i.glyphicon.glyphicon-ok-circle.text-inline{'style'=>'font-size: 25px; color:green; float: right'}
         %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
-        %p.l-margin-top.l-margin-bottom-small
-          =sanitizer attempt.try(:quiz_question).try(:quiz_contents).try(:first).try(:text_content).to_s
+        %p.l-margin-top-small.l-margin-bottom-small
+          -correct_answer = 0; your_answer = 0
+          -attempt.answers.each_with_index do |qa, counter2|
+            -correct_answer = counter2 if qa.correct
+            -your_answer = counter2 if qa.id == attempt.quiz_answer_id
+          %p.text-inline
+            Correct Answer:
+            &#160;
+          %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+          %p.text-inline
+            &#160;
+            &bull;
+            &#160;
+            =' Your Answer:'
+            &#160;
+          %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
+          -if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
+            %p.text-bold{style: 'margin-top: 15px; margin-bottom: 10px;'}
+              Explanation
+            -if attempt.try(:quiz_question).try(:quiz_solutions)
+              %p
+                =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+
 
 
   -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|

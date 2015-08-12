@@ -575,6 +575,12 @@ a.box-item {
     padding-right: $gutter*.75;
   }
 }
+.lib-panel {
+  cursor: pointer;
+  &:hover {
+    background: darken($white, 5);
+  }
+}
 .sign-up {
   background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);

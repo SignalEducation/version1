@@ -177,7 +177,21 @@ class Subscription < ActiveRecord::Base
     if self.user.subscription_plan_category_id && self.user.subscription_plan_category.trial_period_in_days
       free_trial_days = self.user.subscription_plan_category.trial_period_in_days
     end
-    (Time.now - self.created_at).to_i.abs / 1.day > free_trial_days
+    (Time.now - self.created_at).to_i.abs / 1.day >= free_trial_days
+  end
+
+  def days_left
+    if free_trial?
+      free_trial_days = ENV["free_trial_days"].to_i
+      if self.user.subscription_plan_category_id && self.user.subscription_plan_category.trial_period_in_days
+        free_trial_days = self.user.subscription_plan_category.trial_period_in_days
+      end
+      if free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day).to_i > 0
+        free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
+      else
+        '0'
+      end
+    end
   end
 
   def destroyable?
