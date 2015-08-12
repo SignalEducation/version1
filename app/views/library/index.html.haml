@@ -1,4 +1,3 @@
--first_set = @incomplete_student_exam_tracks.first
 .hero-library
   =render partial: 'layouts/transparent_navbar'
   .l-section
@@ -18,6 +17,7 @@
                         =submit_tag 'Search', class: 'btn btn-red', name: nil
 
 .l-section.is-bg-asphalt
+  =render 'layouts/error_messages'
   .l-wrap
     .container-fluid
       -if @courses.present?
@@ -34,12 +34,14 @@
                         =course.try(:short_description).to_s.truncate(30)
                       -else
                         =course.parent.try(:name)
-                  -#Todo make this change depending on if user has started it(SET)
                   .box-label
-                    -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
-                      =t('views.course_module_elements.show.continue')
+                    -if course.live
+                      -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+                        =t('views.course_module_elements.show.continue')
+                      -else
+                        =t('views.general.start')
                     -else
-                      =t('views.general.start')
+                      Get Early Access
 
       -else
         ="Sorry there are no courses containing the terms #{params[:search]}"
