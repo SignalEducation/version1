@@ -20,7 +20,7 @@ class CorporateGroup < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:corporate_customer_id) }
+  scope :all_in_order, -> { order(:corporate_customer_id, :name) }
 
   # class methods
 
