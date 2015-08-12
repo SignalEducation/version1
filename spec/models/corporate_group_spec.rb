@@ -36,5 +36,8 @@ describe CorporateGroup do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
+  it { should respond_to(:exam_level_restricted?) }
+  it { should respond_to(:exam_level_compulsory?) }
+  it { should respond_to(:exam_section_restricted?) }
+  it { should respond_to(:exam_section_compulsory?) }
 end

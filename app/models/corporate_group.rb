@@ -29,6 +29,22 @@ class CorporateGroup < ActiveRecord::Base
     corporate_group_grants.empty?
   end
 
+  def exam_level_restricted?(exam_section_id)
+    corporate_group_grants.where(exam_level_id: exam_section_id).first.try(:restricted)
+  end
+
+  def exam_level_compulsory?(exam_section_id)
+    corporate_group_grants.where(exam_level_id: exam_section_id).first.try(:compulsory)
+  end
+
+  def exam_section_restricted?(exam_section_id)
+    corporate_group_grants.where(exam_section_id: exam_section_id).first.try(:restricted)
+  end
+
+  def exam_section_compulsory?(exam_section_id)
+    corporate_group_grants.where(exam_section_id: exam_section_id).first.try(:compulsory)
+  end
+
   protected
 
   def check_dependencies
