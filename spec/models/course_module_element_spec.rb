@@ -93,7 +93,8 @@ describe CourseModuleElement do
 
   # callbacks
   it { should callback(:sanitize_name_url).before(:save) }
-  it { should callback(:update_the_module_total_time).after(:save) }
+  it { should callback(:update_the_module_total_time_and_question_count).after(:save) }
+  it { should callback(:log_question_count).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -114,6 +115,7 @@ describe CourseModuleElement do
   it { should respond_to(:next_element) }
   it { should respond_to(:parent) }
   it { should respond_to(:previous_element) }
-  it { should respond_to(:update_the_module_total_time) }
+  it { should respond_to(:update_the_module_total_time_and_question_count) }
+  it { should respond_to(:log_question_count) }
 
 end

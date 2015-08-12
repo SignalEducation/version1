@@ -17,8 +17,6 @@
                         =submit_tag 'Search', class: 'btn btn-red', name: nil
 
 .l-section.is-bg-asphalt
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render 'layouts/error_messages'
   .l-wrap
     .container-fluid
       -if @courses.present?
