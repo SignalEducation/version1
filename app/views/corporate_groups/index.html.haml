@@ -1,0 +1,27 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.corporate_groups.index.h1')
+.row
+  .col-sm-12
+    =will_paginate @corporate_groups, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th=t('views.corporate_groups.form.name')
+          %th=t('views.corporate_groups.form.corporate_customer')
+          %th
+      %tbody
+        -@corporate_groups.each do |corporate_group|
+          %tr{id: "cg-" + corporate_group.id.to_s}
+            %td
+              =link_to corporate_group.name, edit_corporate_group_url(corporate_group)
+            %td=corporate_group.corporate_customer.organisation_name
+            %td
+              =link_to t('views.general.edit'), edit_corporate_group_url(corporate_group), class: 'btn btn-info btn-xs'
+              -if corporate_group.destroyable?
+                =link_to t('views.general.delete'), corporate_group, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_corporate_group_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

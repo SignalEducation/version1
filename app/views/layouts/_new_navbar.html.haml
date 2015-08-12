@@ -32,6 +32,7 @@
                     %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                     %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
                     %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
+                    %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
                     %li.divider
                     %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
                     %li=link_to t('views.stripe_developer_calls.index.h1'), stripe_developer_calls_url
@@ -95,6 +96,9 @@
                     %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
                     %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
                     %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
+                    %li.divider
+                  -elsif current_user.corporate_customer?
+                    %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), profile_url

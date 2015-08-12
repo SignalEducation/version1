@@ -1,0 +1,24 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@corporate_group, html: {class: 'form-horizontal', role: 'form', id: 'corporate-group-frm'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @corporate_group, message: nil}
+        .form-group
+          =f.label :corporate_customer_id, t('views.corporate_groups.form.corporate_customer'), class: 'control-label col-sm-4'
+          .col-sm-8
+            = f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name,
+            { include_blank: t('views.general.select') },
+            { class: 'form-control', disabled: !current_user.admin? }
+        .form-group
+          =f.label :name, t('views.corporate_groups.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.corporate_groups.form.name_placeholder'), class: 'form-control'
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), corporate_groups_path
+
+:javascript
+  $('#corporate-group-frm').bind('submit', function() {
+    $("#corporate_group_corporate_customer_id").attr("disabled", false);
+  });

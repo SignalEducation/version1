@@ -445,3 +445,15 @@ en:
       update:
         flash:
           success: Referred Signup details have been updated successfully
+
+    corporate_groups:
+      create:
+        flash:
+          success: Corporate Group has been created successfully
+      update:
+        flash:
+          success: Corporate Group details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Group has been deleted
+          error: Corporate Group was not deleted

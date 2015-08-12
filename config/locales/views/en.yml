@@ -1361,3 +1361,21 @@ en:
       edit:
         h1: Editing Referred Signup
         payed_at: Payed At
+
+    corporate_groups:
+      form:
+        name: Name
+        name_placeholder: Corporate Group Name
+        corporate_customer: Corporate Customer
+
+      index:
+        h1: Corporate Groups
+
+      show:
+        h1: Corporate Group
+
+      edit:
+        h1: Edit Corporate Group
+
+      new:
+        h1: New Corporate Group
