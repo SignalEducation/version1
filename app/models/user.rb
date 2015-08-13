@@ -43,6 +43,7 @@
 #  trial_ended_notification_sent_at         :datetime
 #  subscription_plan_category_id            :integer
 #  employee_guid                            :string
+#  password_change_required                 :boolean
 #
 
 class User < ActiveRecord::Base
@@ -64,7 +65,7 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes, :employee_guid
+                  :subscriptions_attributes, :employee_guid, :password_change_required
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
