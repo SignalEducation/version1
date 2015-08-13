@@ -1,74 +1,25 @@
-.header
-  .container
-    .col-md-12
-      %h1='Teach'
-      %p='Create prestigious financial training, earn roylalties, sharing your passion.'
+.form-container.l-margin-top-big
+  =form_for(@tutor_application, html: {role: 'form'}) do |f|
+    =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
 
-.content
-  .container-fluid
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
-    .side-nav--info-pages.col-sm-3
-      %ul.nav.nav-pills.nav-stacked
-        %li
-          %a{ href: '/about', title: 'About' }
-            ='About'
-        %li
-          %a{ href: '/jobs', title: 'Jobs' }
-            ='Jobs'
-        %li
-          =link_to 'Teach', new_tutor_application_path, title: 'Teach'
-        %li
-          %a{ href: '/terms_of_use', title: 'About' }
-            ='Terms of Use'
-    .main
-      .sheet
-        .section
-          %h3{style: 'font-weight: 500;'}
-            ='Are you:'
-          %ul
-            %li{style: 'font-weight: 300;'}
-              ='An expert in an area in finance? Have you got some insights you know others would value?'
-            %li{style: 'font-weight: 300;'}
-              ='Passionate about teaching others? Experienced in taking the leaders position?'
-            %li{style: 'font-weight: 300;'}
-              ='Involved in the community surrounding your skillset?'
-          %h3{style: 'font-weight: 500;'}
-            ='Lets build a course that can:'
-          %ul
-            %li{style: 'font-weight: 300;'}
-              ='Provide someone with a useful skill or insight that will help them be better at their job.'
-            %li{style: 'font-weight: 300;'}
-              ='Teach students about popular topics in the industry that are likely to drive attention to your course.'
-          %h3{style: 'font-weight: 500;'}
-            ='Already full of ideas? Lets get started!'
-          %ul
-            %li{style: 'font-weight: 300;'}
-              ="Submit the course ideas that you'd be interested in covering. Then we'll get take it from there! We'll get in touch with you to kick off the conversation and start the path to an amazing course in finance! We cant wait to hear from you!"
+    .form-group.f-name
+      =f.label :first_name, t('views.tutor_applications.form.first_name')
+      =f.text_field :first_name, class: 'form-control'#, autofocus: true
 
+    .form-group.l-name
+      =f.label :last_name, t('views.tutor_applications.form.last_name')
+      =f.text_field :last_name, class: 'form-control'
 
-        .form-container
-          =form_for(@tutor_application, html: {role: 'form'}) do |f|
-            =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
+    .form-group.email
+      =f.label :email, t('views.tutor_applications.form.email')
+      =f.text_field :email, class: 'form-control'
 
-            .form-group.f-name
-              =f.label :first_name, t('views.tutor_applications.form.first_name')
-              =f.text_field :first_name, class: 'form-control'#, autofocus: true
+    .form-group.about-you
+      =f.label :info, t('views.tutor_applications.form.info')
+      =f.text_field :info, rows: 4, class: 'form-control'
 
-            .form-group.l-name
-              =f.label :last_name, t('views.tutor_applications.form.last_name')
-              =f.text_field :last_name, class: 'form-control'
+    .form-group.teach
+      =f.label :description, t('views.tutor_applications.form.description')
+      =f.text_field :description, rows: 4, class: 'form-control'
 
-            .form-group.email
-              =f.label :email, t('views.tutor_applications.form.email')
-              =f.text_field :email, class: 'form-control'
-
-            .form-group.about-you
-              =f.label :info, t('views.tutor_applications.form.info')
-              =f.text_field :info, rows: 4, class: 'form-control'
-
-            .form-group.teach
-              =f.label :description, t('views.tutor_applications.form.description')
-              =f.text_field :description, rows: 4, class: 'form-control'
-
-            =f.submit 'Submit', class: 'btn btn-ls-default'
+    =f.submit 'Submit', class: 'btn btn-red'

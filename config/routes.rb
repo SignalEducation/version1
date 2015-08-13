@@ -146,6 +146,9 @@ Rails.application.routes.draw do
     get 'tutor_profile/liam_doran'
     get 'tutor_profile/john_owens'
     get 'tutor_profile/sana_khan'
+    get 'about', to: 'footer_pages#about_us'
+    get 'jobs', to: 'footer_pages#jobs'
+    get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     resources :user_activity_logs
     resources :user_notifications
     resources :vat_codes

@@ -1,2 +1,46 @@
-.tutor-form
-  =render 'tutor_applications/form'
+.hero-library
+  =render partial: 'layouts/transparent_navbar'
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
+              Teach
+            %p.h5.h-white.text-center.l-margin-bottom-big
+              Create prestigious financial training, earn roylalties, sharing your passion.
+.l-asphalt
+  .l-section
+    .container-fluid
+      .row
+        .col-sm-3
+          =render partial: 'footer_pages/side_nav'
+
+        .col-sm-9
+          .panel-body.no-top-padding
+            %h2
+              Are you:
+            %ul
+              %li
+                An expert in an area in finance? Have you got some insights you know others would value?
+              %li
+                Passionate about teaching others? Experienced in taking the leaders position?
+              %li
+                Involved in the community surrounding your skillset?
+
+            %h2
+              Lets build a course that can:
+            %ul
+              %li
+                Provide someone with a useful skill or insight that will help them be better at their job.
+              %li
+                Teach students about popular topics in the industry that are likely to drive attention to your course.
+            %h2
+              Already full of ideas? Lets get started!
+            %ul
+              %li
+                Submit the course ideas that you'd be interested in covering. Then we'll get take it from there! We'll get in touch with you to kick off the conversation and start the path to an amazing course in finance! We cant wait to hear from you!
+
+            =render partial: 'tutor_applications/form'
+
+=render partial: 'layouts/new_footer'

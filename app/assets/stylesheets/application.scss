@@ -388,8 +388,27 @@ label, .label {
   }
 }
 
+.footer-nav {
+  color: $red-1;
+  &:hover {
+    background-color: darken($white, 5);
+  }
+  .border {
+    margin-left: $gutter;
+  }
+}
+.no-top-padding {
+  padding-top: 0;
+}
 
-
+.panel.clickable {
+  margin-bottom: 5px;
+  background-color: darken($white, 5);
+  &:hover {
+    cursor: pointer;
+    background-color: darken($white, 15);
+  }
+}
 
 a.box {
   text-decoration: none;
@@ -564,6 +583,9 @@ a.box-item {
   padding: $gutter/2 $gutter/2 $gutter/2 0;
   border-bottom: 1px solid rgba($gray-1, .15);
   position: relative;
+  .current {
+    color: #009900;
+  }
 }
 .collapse-list {
   ul {
