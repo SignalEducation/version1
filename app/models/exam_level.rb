@@ -23,6 +23,7 @@
 #  live                                    :boolean          default(FALSE), not null
 #  short_description                       :text
 #  mailchimp_list_id                       :string
+#  forum_url                               :string
 #
 
 class ExamLevel < ActiveRecord::Base
@@ -36,7 +37,7 @@ class ExamLevel < ActiveRecord::Base
                   :enable_exam_sections, :description,
                   :seo_description, :seo_no_index, :duration,
                   :tutor_id, :live, :short_description,
-                  :mailchimp_list_id
+                  :mailchimp_list_id, :forum_url
 
   # Constants
 

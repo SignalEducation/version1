@@ -22,6 +22,7 @@
 #  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -40,7 +41,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
                   :course_module_element_flash_card_pack_attributes,
-                  :is_cme_flash_card_pack
+                  :is_cme_flash_card_pack, :number_of_questions
 
   # Constants
 
@@ -90,7 +91,8 @@ class CourseModuleElement < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
-  after_save :update_the_module_total_time
+  before_save :log_question_count
+  after_save :update_the_module_total_time_and_question_count
   after_save :update_student_exam_tracks
 
   # scopes
@@ -125,6 +127,10 @@ class CourseModuleElement < ActiveRecord::Base
     the_list += self.quiz_answers.to_a
     the_list += self.quiz_questions.to_a
     the_list
+  end
+
+  def log_question_count
+    self.number_of_questions = self.try(:quiz_questions).try(:count)
   end
 
   def my_position_among_siblings
@@ -162,9 +168,11 @@ class CourseModuleElement < ActiveRecord::Base
     true
   end
 
-  def update_the_module_total_time
+  def update_the_module_total_time_and_question_count
     self.course_module.try(:recalculate_estimated_time)
+    self.course_module.try(:recalculate_question_count)
   end
+
 
   def type_name
     if is_quiz

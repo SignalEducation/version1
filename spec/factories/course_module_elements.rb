@@ -22,6 +22,7 @@
 #  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
 #
 
 FactoryGirl.define do

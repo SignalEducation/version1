@@ -464,6 +464,8 @@ en:
         seo_description_placeholder: Description text that Google will show in search results
         mailchimp_list_id: Mailchimp List ID
         mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
+        forum_url: Forum URL
+        forum_url_placeholder: This is the Forum URL
         seo_no_index: "SEO no-index flag"
 
       index:
@@ -503,6 +505,9 @@ en:
         description: Description
         description_placeholder: Description text of the course
         seo_no_index: "SEO no-index flag"
+        forum_url: Forum URL
+        forum_url_placeholder: This is the Forum URL
+
 
       index:
         h1: Exam Sections
@@ -686,6 +691,7 @@ en:
         quiz: Quiz
         quizzes: MCQs
         video: Video
+        number_of_videos: Videos
         videos: of Video
         institution: Institution
         qualification: Qualification
@@ -694,6 +700,10 @@ en:
         course_module: Course Module
         course_module_element: Step
         new_question_bank: Create a Custom Quiz
+
+      index:
+        continue_course: Continue Course
+        start_course: Start Course
 
     qualifications:
       form:

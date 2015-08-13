@@ -326,7 +326,7 @@ en:
 
     user_activations:
       update:
-        success: Your account has been activated, and you have been logged in.
+        success: Welcome to LearnSignal, your account has been activated.
         error: Sorry, something went wrong. Please contact us for assistance.
 
     user_activity_logs:

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150731104450) do
+ActiveRecord::Schema.define(version: 20150805092024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,9 +109,9 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
-    t.integer  "seconds_watched",             default: 0
     t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
+    t.integer  "seconds_watched",             default: 0
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
+    t.integer  "number_of_questions",       default: 0
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -198,6 +199,7 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
+    t.integer  "number_of_questions",       default: 0
   end
 
   add_index "course_modules", ["exam_level_id"], name: "index_course_modules_on_exam_level_id", using: :btree
@@ -244,6 +246,7 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.boolean  "live",                                    default: false, null: false
     t.text     "short_description"
     t.string   "mailchimp_list_id"
+    t.string   "forum_url"
   end
 
   add_index "exam_levels", ["qualification_id"], name: "index_exam_levels_on_qualification_id", using: :btree
@@ -266,6 +269,7 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.text     "short_description"
     t.text     "description"
     t.string   "mailchimp_list_id"
+    t.string   "forum_url"
   end
 
   add_index "exam_sections", ["exam_level_id"], name: "index_exam_sections_on_exam_level_id", using: :btree
@@ -545,6 +549,7 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.string   "question_selection_strategy"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.integer  "exam_section_id"
   end
 
   add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
@@ -616,6 +621,7 @@ ActiveRecord::Schema.define(version: 20150731104450) do
     t.integer  "flash_quiz_id"
     t.datetime "destroyed_at"
     t.integer  "exam_level_id"
+    t.integer  "exam_section_id"
   end
 
   add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree

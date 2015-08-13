@@ -13,7 +13,7 @@ class UserActivationsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
     end
-    redirect_to root_url # dashboard_url todo
+    redirect_to library_url
   end
 
 end
