@@ -1379,3 +1379,25 @@ en:
 
       new:
         h1: New Corporate Group
+
+    corporate_students:
+      form:
+        email: Email
+        email_placeholder: jay@example.com
+        full_name: Full name
+        first_name: First name
+        first_name_placeholder: Jay
+        last_name: Last name
+        last_name_placeholder: Smith
+        employee_guid: Employee ID
+        employee_guid_placeholder: Employee ID
+        active: Active
+
+      index:
+        h1: Corporate Students
+
+      edit:
+        h1: Edit Corporate Student
+
+      new:
+        h1: New Corporate Student

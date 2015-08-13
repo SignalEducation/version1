@@ -82,6 +82,7 @@ Rails.application.routes.draw do
     # general resources
     resources :corporate_customers
     resources :corporate_groups, except: [:show]
+    resources :corporate_students, except: [:show]
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]

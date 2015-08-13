@@ -1,0 +1,33 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1=t('views.corporate_students.index.h1')
+      %h4=current_user.corporate_customer.organisation_name
+.row
+  .col-sm-12
+    =will_paginate @corporate_students, renderer: BootstrapPagination::Rails
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th
+            =t('views.corporate_students.form.full_name')
+            %br/
+            =t('views.corporate_students.form.email')
+          %th=t('views.corporate_students.form.active')
+          %th=t('views.corporate_students.form.employee_guid')
+          %th
+      %tbody
+        -@corporate_students.each do |corporate_student|
+          %tr{id: corporate_student.id}
+            %td
+              =link_to(corporate_student.full_name, edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
+              %br/
+              =link_to(corporate_student.email, edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
+            %td=link_to(corporate_student.active, edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
+            %td=link_to(corporate_student.employee_guid || '', edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
+            %td
+              =link_to t('views.general.edit'), edit_corporate_student_url(corporate_student), class: 'btn btn-info btn-xs'
+
+.row
+  .col-sm-12
+    =link_to t('views.general.new'), new_corporate_student_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

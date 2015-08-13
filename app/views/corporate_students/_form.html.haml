@@ -1,0 +1,33 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(:corporate_student,
+      url: @corporate_student.new_record? ? corporate_students_path : corporate_student_path(@corporate_student),
+      method: @corporate_student.new_record? ? 'POST' : 'PATCH',
+      html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @corporate_student, message: nil}
+        .form-group
+          =f.label :first_name, t('views.corporate_students.form.first_name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :first_name, placeholder: t('views.corporate_students.form.first_name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :last_name, t('views.corporate_students.form.last_name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :last_name, placeholder: t('views.corporate_students.form.last_name_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :email, t('views.corporate_students.form.email'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :email, placeholder: t('views.corporate_students.form.email_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :employee_guid, t('views.corporate_students.form.employee_guid'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :employee_guid, placeholder: t('views.corporate_students.form.employee_guid_placeholder'), class: 'form-control'
+        - unless @corporate_student.new_record?
+          .form-group
+            =f.label :active, t('views.corporate_students.form.active'), class: 'control-label col-sm-4'
+            .col-sm-8
+              =f.check_box :active, class: 'form-control'
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), corporate_students_path

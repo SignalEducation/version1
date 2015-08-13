@@ -99,6 +99,7 @@
                     %li.divider
                   -elsif current_user.corporate_customer?
                     %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
+                    %li=link_to t('views.corporate_students.index.h1'), corporate_students_url
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), profile_url
