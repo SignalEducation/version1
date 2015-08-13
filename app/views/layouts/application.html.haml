@@ -77,7 +77,7 @@
       .margin-top
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications' && action_name == 'new')
+    -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications')
       -if @course.try(:live)
         .margin-top
       -else

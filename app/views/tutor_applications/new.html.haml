@@ -40,6 +40,8 @@
             %ul
               %li
                 Submit the course ideas that you'd be interested in covering. Then we'll get take it from there! We'll get in touch with you to kick off the conversation and start the path to an amazing course in finance! We cant wait to hear from you!
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
 
             =render partial: 'tutor_applications/form'
 
