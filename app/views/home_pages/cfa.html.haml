@@ -16,7 +16,6 @@
                 =link_to 'Browse Courses', library_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
-
   .l-section#sign-up
     .l-wrap
       .container-fluid
@@ -31,65 +30,87 @@
               ='Sign Up for your 7-day free trial'
 
             =render partial: 'sign_up_form'
-
-.l-section
-  .l-wrap
-    .container-fluid
-      .row
-        .col-sm-12
-          %h2.h5.text-center
-            Work through our extensive question bank with summary videos to fill in the gaps
-          %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
-            Qbank of 1500 exam quality questions with solutions
-      .row
-        .col-sm-4
-          %h3.h4.text-center
-            Practice
-          %p.p.text-center
-            Prepare with 1500 exam standard questions and worked solutions.
-        .col-sm-4
-          %h3.h4.text-center
-            Learn
-          %p.p.text-center
-            Over 140 summary videos to understand the difficult topics.
-        .col-sm-4
-          %h3.h4.text-center
-            Support
-          %p.p.text-center
-            Get help from our team of dedicated tutors whenever you get stuck.
-
-.l-section.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .course-list-wrap
+%div{:itemscope => 'true', :itemtype => 'http://schema.org/Product'}
+  %div.is-visually-hidden
+    %span{:itemprop => 'brand'}
+      LearnSignal
+    %span{:itemprop => 'name'}
+      CFA Level I Online Course
+    %div{:itemprop => 'review', :itemscope => 'true', :itemtype => 'http://schema.org/Review'}
+      Review:
+      %span{:itemprop => 'reviewRating', :itemscope => 'true', :itemtype => 'http://schema.org/Rating'}
+        %span{:itemprop => 'ratingValue'}5
+        -
+      %b
+        "
+        %span{:itemprop => 'name'}Got Through My 300 Hours in 85 Days
+        "
+      by
+      %span{:itemprop => 'author', :itemscope => 'true', :itemtype => 'http://schema.org/Person'} 
+        %span{:itemprop => 'name'}Mike Sinclair
+      , written on
+      %meta{:itemprop => 'datePublished', :content => '2015-04-5'}
+        April 4, 2015
+        %div{:itemprop => 'reviewBody'}
+          The videos were quick, very well presented and contained only the essential information. The tests at the end of each section were helpful at highlighting gaps in my knowledge. I'm not sure I would have finished the material in time and passed the exam had I not used Learn Signal.
+  .l-section
+    .l-wrap
+      .container-fluid
         .row
-          .col-sm-6.col-md-4
-            %a.box.box-course{href: '#sign-up'}
-              .box-inner
-                %h3.h4.box-title
-                  CFA Level 1
-                %p.box-desc
-                  £25/Month
-              .box-label
-                7-day free trial
-          .col-sm-6.col-md-4
-            %a.box.box-course
-              .box-inner
-                %h3.h4.box-title.is-text-disabled
-                  CFA Level 2
-                %p.box-desc
-                  Coming soon...
-              .box-label
-                Coming Soon
-          .col-sm-6.col-md-4
-            %a.box.box-course
-              .box-inner
-                %h3.h4.box-title.is-text-disabled
-                  CFA Level 3
-                %p.box-desc
-                  Coming soon...
-              .box-label
-                Coming Soon
+          .col-sm-12
+            %h2.h5.text-center
+              Work through our extensive question bank with summary videos to fill in the gaps
+            %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
+              Qbank of 1500 exam quality questions with solutions
+        .row
+          .col-sm-4
+            %h3.h4.text-center
+              Practice
+            %p.p.text-center
+              Prepare with 1500 exam standard questions and worked solutions.
+          .col-sm-4
+            %h3.h4.text-center
+              Learn
+            %p.p.text-center
+              Over 140 summary videos to understand the difficult topics.
+          .col-sm-4
+            %h3.h4.text-center
+              Support
+            %p.p.text-center
+              Get help from our team of dedicated tutors whenever you get stuck.
+
+  .l-section.is-bg-asphalt
+    .l-wrap
+      .container-fluid
+        .course-list-wrap
+          .row
+            .col-sm-6.col-md-4
+              %a.box.box-course{href: '#sign-up'}
+                .box-inner
+                  %h3.h4.box-title
+                    CFA Level 1
+                  %p.box-desc
+                    £25/Month
+                .box-label
+                  7-day free trial
+            .col-sm-6.col-md-4
+              %a.box.box-course
+                .box-inner
+                  %h3.h4.box-title.is-text-disabled
+                    CFA Level 2
+                  %p.box-desc
+                    Coming soon...
+                .box-label
+                  Coming Soon
+            .col-sm-6.col-md-4
+              %a.box.box-course
+                .box-inner
+                  %h3.h4.box-title.is-text-disabled
+                    CFA Level 3
+                  %p.box-desc
+                    Coming soon...
+                .box-label
+                  Coming Soon
 .testimonials.testimonials-alt
   .l-wrap
     .l-section
