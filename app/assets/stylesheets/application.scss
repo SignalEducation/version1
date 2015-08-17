@@ -13,6 +13,7 @@ $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
+$purple-3: rgb(83, 84, 112);
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -647,7 +648,7 @@ a.box-item {
 }
 .is-lg-right {
   @include breakpoint(sm-min) {
-    //float: right;
+    float: right;
   }
 }
 .is-visually-hidden {
@@ -666,6 +667,12 @@ a.box-item {
 }
 .is-bg-purple {
   background: $purple-1;
+}
+.is-bg-purple-1 {
+  background: $purple-2;
+}
+.is-bg-purple-2 {
+  background: $purple-3;
 }
 .is-bg-cyan {
   background: $cyan-1;
@@ -721,6 +728,35 @@ a.box-item {
     opacity: 1;
   }
 }
+
+.coursebar {
+  color: white;
+  padding: 24px
+}
+.coursebar a:hover {
+  color: white;
+  text-decoration: initial;
+}
+.coursetype {
+  text-decoration: initial;
+  padding: 13px;
+  padding-left: 20px;
+  padding-righ: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+  text-decoration: none;
+  font-size: 12px;
+  //font-size: 1.3rem;
+  &:focus {
+    background-color: $purple-1;
+    border-radius: 8%;
+    border: 0px solid $purple-1;
+    text-decoration: initial;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
 
 //  Debugging
 
