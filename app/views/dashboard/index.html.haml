@@ -20,101 +20,47 @@
               %p{'style'=>'font-size: 24px'}
                 My Active Courses
           .row.l-margin-bottom-huge
-            .col-md-4.l-margin-top
-              = link_to "#", class:"box-item panel text-center" do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-pencil
-                .panel-body
-                  %h4.text-bold.one-line-text
-                    Loiem Epsm
-                  - total_lesson = 10
-                  - complete_lesson = 9
-                  - complete_percent = 100 * complete_lesson / total_lesson
-                  %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                  .progress.l-margin-top-big
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                .box-label continue
-            .col-md-4.l-margin-top
-              = link_to "#", class:"box-item panel text-center" do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-pencil
-                .panel-body
-                  %h4.text-bold.one-line-text
-                    CFA Level 1
-                  - total_lesson = 10
-                  - complete_lesson = 5
-                  - complete_percent = 100 * complete_lesson / total_lesson
-                  %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                  .progress.l-margin-top-big
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                .box-label continue
-            .col-md-4.l-margin-top
-              = link_to "#", class:"box-item panel text-center" do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-pencil
-                .panel-body
-                  %h4.text-bold.one-line-text
-                    CFA Level 2
-                  - total_lesson = 10
-                  - complete_lesson = 5
-                  - complete_percent = 100 * complete_lesson / total_lesson
-                  %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                  .progress.l-margin-top-big
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                .box-label continue
+            -@incomplete_student_exam_tracks.each do |set|
+              .col-md-4.l-margin-top
+                = link_to course_special_link(set.course_module.parent), class: 'box-item no-image-box-item panel text-center', style: 'background-image: 0;' do
+                  .panel-icon.icon-big
+                    %i.glyphicon.glyphicon-pencil
+                  .panel-body
+                    %h4.text-bold.one-line-text
+                      =set.course_module.try(:parent).try(:name)
+                    - total_lesson = set.elements_total
+                    - complete_lesson = set.elements_complete
+                    - complete_percent = set.percentage_complete
+                    %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
+                    .progress.l-margin-top-big
+                      .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                  .box-label continue
 
       .tab-pane.fade#completed{role: 'tabpanel'}
         .l-wrap.active.tab-pane.fade.in#active{role: 'tabpanel'}
-        .container-fluid
-          .row
-            .col-md-12.text-center
-              %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
-              %p{'style'=>'font-size: 24px'}
-                My Completed Courses
-          .row.l-margin-bottom-huge
-            .col-md-4.l-margin-top
-              = link_to "#", class:"box-item panel text-center" do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-pencil
-                .panel-body
-                  %h4.text-bold.one-line-text
-                    Loiem Epsm
-                  - total_lesson = 10
-                  - complete_lesson = 9
-                  - complete_percent = 100 * complete_lesson / total_lesson
-                  %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                  .progress.l-margin-top-big
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                .box-label continue
-            .col-md-4.l-margin-top
-              = link_to "#", class:"box-item panel text-center" do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-pencil
-                .panel-body
-                  %h4.text-bold.one-line-text
-                    CFA Level 1
-                  - total_lesson = 10
-                  - complete_lesson = 5
-                  - complete_percent = 100 * complete_lesson / total_lesson
-                  %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                  .progress.l-margin-top-big
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                .box-label continue
-            .col-md-4.l-margin-top
-              = link_to "#", class:"box-item panel text-center" do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-pencil
-                .panel-body
-                  %h4.text-bold.one-line-text
-                    CFA Level 2
-                  - total_lesson = 10
-                  - complete_lesson = 5
-                  - complete_percent = 100 * complete_lesson / total_lesson
-                  %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                  .progress.l-margin-top-big
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                .box-label continue
+          .container-fluid
+            .row
+              .col-md-12.text-center
+                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+                  ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                %p{'style'=>'font-size: 24px'}
+                  My Completed Courses
+            .row.l-margin-bottom-huge
+              -@completed_student_exam_tracks.each do |set|
+                .col-md-4.l-margin-top
+                  =link_to course_special_link(set.course_module.parent), class: 'box-item no-image-box-item panel text-center' do
+                    .panel-icon.icon-big
+                      %i.glyphicon.glyphicon-pencil
+                    .panel-body
+                      %h4.text-bold.one-line-text
+                        =set.course_module.try(:parent).try(:name)
+                      - total_lesson = set.elements_total
+                      - complete_lesson = set.elements_complete
+                      - complete_percent = set.percentage_complete
+                      %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                      .progress.l-margin-top-big
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                    .box-label continue
 
 
 =render partial: 'shared/activate_tab'
