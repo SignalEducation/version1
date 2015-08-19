@@ -67,7 +67,7 @@
       .margin-top
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'study_schedules'
+    -elsif controller_name == 'study_schedules'|| (controller_name == 'tutor_applications' && action_name == 'index')
       =render partial: 'layouts/new_navbar'
       .schedule-margin-top
       =yield
