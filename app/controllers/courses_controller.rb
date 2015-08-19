@@ -212,7 +212,7 @@ class CoursesController < ApplicationController
         session_guid: current_session_guid,
         course_module_id: nil,
         course_module_element_id: nil,
-        question_bank_id: @question_bank.id,
+        question_bank_id: @question_bank.try(:id),
         is_question_bank: true,
         user_id: current_user.try(:id)
     )
