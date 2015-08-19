@@ -244,7 +244,8 @@ class CourseModuleElementsController < ApplicationController
             :tags,
             :difficulty_level,
             # :estimated_study_time_seconds,
-            :transcript],
+            :transcript,
+            :video_id],
         course_module_element_quiz_attributes: [
             :id,
             :course_module_element_id,

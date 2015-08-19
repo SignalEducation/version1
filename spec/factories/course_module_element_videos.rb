@@ -12,6 +12,7 @@
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  destroyed_at                 :datetime
+#  video_id                     :string
 #
 
 FactoryGirl.define do
@@ -22,6 +23,7 @@ FactoryGirl.define do
     difficulty_level 'easy'
     estimated_study_time_seconds 1
     transcript "MyText"
+    video_id 'abc123'
   end
 
 end

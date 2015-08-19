@@ -12,6 +12,7 @@
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  destroyed_at                 :datetime
+#  video_id                     :string
 #
 
 class CourseModuleElementVideo < ActiveRecord::Base
@@ -20,7 +21,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript
+  attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript, :video_id
 
   # Constants
 
@@ -31,8 +32,9 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :raw_video_file_id, presence: true,
+  validates :raw_video_file_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :video_id, presence: true, length: {maximum: 255}
   validates :tags, presence: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
   validates :transcript, presence: true

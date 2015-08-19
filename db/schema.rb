@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150805092024) do
+ActiveRecord::Schema.define(version: 20150819135156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,9 +109,9 @@ ActiveRecord::Schema.define(version: 20150805092024) do
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
+    t.integer  "seconds_watched",             default: 0
     t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
-    t.integer  "seconds_watched",             default: 0
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20150805092024) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
+    t.string   "video_id"
   end
 
   add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree

@@ -134,7 +134,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
             session_guid: current_session_guid,
-            element_completed: false,
+            element_completed: true,
             time_taken_in_seconds: 0,
             quiz_score_actual: nil,
             quiz_score_potential: nil,
