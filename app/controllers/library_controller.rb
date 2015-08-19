@@ -33,7 +33,7 @@ class LibraryController < ApplicationController
     else
       redirect_to library_url
     end
-    seo_title_maker(@course.name, @course.seo_description, @course.seo_no_index)
+    seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
   end
 
   def subscribe
