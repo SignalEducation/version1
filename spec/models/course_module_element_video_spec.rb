@@ -40,8 +40,8 @@ describe CourseModuleElementVideo do
   it { should validate_presence_of(:course_module_element_id).on(:update) }
   xit { should validate_numericality_of(:course_module_element_id) }
 
-  it { should validate_presence_of(:raw_video_file_id) }
-  it { should_not validate_numericality_of(:raw_video_file_id) }
+  it { should_not validate_presence_of(:raw_video_file_id) }
+  it { should validate_numericality_of(:raw_video_file_id) }
   #it { should validate_uniqueness_of(:raw_video_file_id) }
 
   it { should validate_presence_of(:tags) }
