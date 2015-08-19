@@ -12,6 +12,7 @@
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  destroyed_at                 :datetime
+#  video_id                     :string
 #
 
 require 'rails_helper'
@@ -40,11 +41,14 @@ describe CourseModuleElementVideo do
   xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:raw_video_file_id) }
-  it { should validate_numericality_of(:raw_video_file_id) }
+  it { should_not validate_numericality_of(:raw_video_file_id) }
   #it { should validate_uniqueness_of(:raw_video_file_id) }
 
   it { should validate_presence_of(:tags) }
   it { should validate_length_of(:tags).is_at_most(255) }
+
+  it { should validate_presence_of(:video_id) }
+  it { should validate_length_of(:video_id).is_at_most(255) }
 
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES) }
   it { should validate_length_of(:difficulty_level).is_at_most(255) }

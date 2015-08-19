@@ -1,7 +1,10 @@
 .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
   %h2
     =cme.name
-  #video-window
+  -if cme.course_module_element_video.try(:video_id)
+    %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
+  -else
+    #video-window
   .l-margin-bottom.l-margin-top
     .pull-left
       -if !cme.description.blank?
@@ -31,96 +34,93 @@
             %li
               =link_to r.name, r.upload.url, target: '_blank'
 
--if controller_name == 'course_module_elements'
+-if cme.course_module_element_video.try(:video_id)
 
   :javascript
 
-    jwplayer("video-window").setup({
-      //file: "https://signaleducation-output-videos.s3.amazonaws.com/cfa1_2014_13_1_.m3u8",
-      //file: "https://s3-eu-west-1.amazonaws.com/signaleducation-output-videos/2014_Product_Final/ALT/cfa1_2014_13.1/hls/master.m3u8",
-      //provider:'http',
-      //'http.startparam': 'starttime',
-      //flashplayer: "javascripts/player.swf",
-      //file: "https://dvetmi3t70548.cloudfront.net/cfa1_2014_13.2/hls/master.m3u8",
-      file: '#{cme.course_module_element_video.raw_video_file.url}',
-      image: "https://dvetmi3t70548.cloudfront.net/video-still-image-2.png",
-      width: "100%", aspectratio: "16:9", volume: 80,
-      androidhls: 'true'
+    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
+      videoFoam: true,
+      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
     });
 
 -else
-  :javascript
 
-    jwplayer("video-window").setup({
-      //file: "https://signaleducation-output-videos.s3.amazonaws.com/cfa1_2014_13_1_.m3u8",
-      //file: "https://s3-eu-west-1.amazonaws.com/signaleducation-output-videos/2014_Product_Final/ALT/cfa1_2014_13.1/hls/master.m3u8",
-      //provider:'http',
-      //'http.startparam': 'starttime',
-      //flashplayer: "javascripts/player.swf",
-      //file: "https://dvetmi3t70548.cloudfront.net/cfa1_2014_13.2/hls/master.m3u8",
-      file: '#{cme.course_module_element_video.raw_video_file.url}',
-      image: "https://dvetmi3t70548.cloudfront.net/video-still-image-2.png",
-      width: "100%", aspectratio: "16:9", volume: 80,
-      androidhls: 'true'
-    });
+  -if controller_name == 'course_module_elements'
+    :javascript
+      jwplayer("video-window").setup({
+        file: '#{cme.course_module_element_video.raw_video_file.url}',
+        image: "https://dvetmi3t70548.cloudfront.net/video-still-image-2.png",
+        width: "100%", aspectratio: "16:9", volume: 80,
+        androidhls: 'true'
+      });
+
+  -else
+    :javascript
+
+      jwplayer("video-window").setup({
+        file: '#{cme.course_module_element_video.raw_video_file.url}',
+        image: "https://dvetmi3t70548.cloudfront.net/video-still-image-2.png",
+        width: "100%", aspectratio: "16:9", volume: 80,
+        androidhls: 'true'
+      });
 
 
-    var completedDataSent = false;
-    var timeWatchedDataSent = false;
-    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+      var completedDataSent = false;
+      var timeWatchedDataSent = false;
+      var videoCmeUserLog = #{@video_cme_user_log.id || 0};
 
-    var onCompletedHandler = function() {
-      var duration = jwplayer().getDuration();
-      var position = +(jwplayer().getPosition()).toFixed(2);
-      // Prevent sending same data twice when video is ended and page unloaded.
-      if (false === timeWatchedDataSent) {
-        $.ajax({
-          url: '#{video_watched_data_courses_path}',
-          dataType: 'json',
-          data: JSON.stringify({'videoLogId': videoCmeUserLog, 'position': position, 'duration': duration}),
-          method: 'PATCH',
-          contentType: "application/json; charset=utf-8"
-        });
-        timeWatchedDataSent = true;
-      }
-      // Avoid error in development mode where Mixpanel is turned off
-      if (typeof mixpanel !== 'undefined' && completedDataSent === false) {
-        mixpanel.track("Video View End", {
-          'Video Name': '#{cme.name}',
-          'Course Module': '#{cme.course_module.name}',
-          'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
-          'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
-          'Video Length': +(duration / 60.0).toFixed(2),
-          'Time Viewed': position,
-          'Percent Completed': +(position * 100 / duration).toFixed(2),
-          'Next CME': ['#{course_special_link(cme.try(:next_element)) || ''}', '#{cme.try(:next_element).try(:type_name) || ''}']
-        });
-        mixpanel.people.increment("Videos Completed");
-        mixpanel.people.increment("Total Time Viewing Videos", position);
-        completedDataSent = true;
-      }
-    };
-
-    var playsNo = 0;
-    jwplayer().onPlay(function(stateInfo) {
-      if (stateInfo.newstate == 'PLAYING') {
-        // If user has clicked on play again after video is ended
-        // we have to send data again.
-        timeWatchedDataSent = false;
-        playsNo += 1;
+      var onCompletedHandler = function() {
+        var duration = jwplayer().getDuration();
+        var position = +(jwplayer().getPosition()).toFixed(2);
+        // Prevent sending same data twice when video is ended and page unloaded.
+        if (false === timeWatchedDataSent) {
+          $.ajax({
+            url: '#{video_watched_data_courses_path}',
+            dataType: 'json',
+            data: JSON.stringify({'videoLogId': videoCmeUserLog, 'position': position, 'duration': duration}),
+            method: 'PATCH',
+            contentType: "application/json; charset=utf-8"
+          });
+          timeWatchedDataSent = true;
+        }
         // Avoid error in development mode where Mixpanel is turned off
-        if (typeof mixpanel !== 'undefined' && 1 == playsNo) {
-          mixpanel.track("Video View Begin", {
+        if (typeof mixpanel !== 'undefined' && completedDataSent === false) {
+          mixpanel.track("Video View End", {
             'Video Name': '#{cme.name}',
             'Course Module': '#{cme.course_module.name}',
             'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
             'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
-            'Video Length': +(jwplayer().getDuration() / 60.0).toFixed(2)
+            'Video Length': +(duration / 60.0).toFixed(2),
+            'Time Viewed': position,
+            'Percent Completed': +(position * 100 / duration).toFixed(2),
+            'Next CME': ['#{course_special_link(cme.try(:next_element)) || ''}', '#{cme.try(:next_element).try(:type_name) || ''}']
           });
-          mixpanel.people.increment("Videos Viewed");
+          mixpanel.people.increment("Videos Completed");
+          mixpanel.people.increment("Total Time Viewing Videos", position);
+          completedDataSent = true;
         }
-      }
-    });
+      };
 
-    window.onbeforeunload = onCompletedHandler;
-    jwplayer().onComplete(onCompletedHandler);
+      var playsNo = 0;
+      jwplayer().onPlay(function(stateInfo) {
+        if (stateInfo.newstate == 'PLAYING') {
+          // If user has clicked on play again after video is ended
+          // we have to send data again.
+          timeWatchedDataSent = false;
+          playsNo += 1;
+          // Avoid error in development mode where Mixpanel is turned off
+          if (typeof mixpanel !== 'undefined' && 1 == playsNo) {
+            mixpanel.track("Video View Begin", {
+              'Video Name': '#{cme.name}',
+              'Course Module': '#{cme.course_module.name}',
+              'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
+              'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
+              'Video Length': +(jwplayer().getDuration() / 60.0).toFixed(2)
+            });
+            mixpanel.people.increment("Videos Viewed");
+          }
+        }
+      });
+
+      window.onbeforeunload = onCompletedHandler;
+      jwplayer().onComplete(onCompletedHandler);
