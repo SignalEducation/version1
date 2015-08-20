@@ -17,9 +17,12 @@
             .row
               .col-md-12.text-center
                 %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                  ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                  -if current_user
+                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                  -else
+                    ='You are making good progress!'
                 %p{'style'=>'font-size: 24px'}
-                  My Active Courses
+                  Your Active Courses
             .row.l-margin-bottom-huge
               -@incomplete_courses.each do |course|
                 .col-md-4.l-margin-top
@@ -49,9 +52,12 @@
               .row
                 .col-md-12.text-center
                   %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                    -if current_user
+                      ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                    -else
+                      ='You are making good progress!'
                   %p{'style'=>'font-size: 24px'}
-                    My Completed Courses
+                    Your Completed Courses
               .row.l-margin-bottom-huge
                 -@completed_courses.each do |course|
                   .col-md-4.l-margin-top
