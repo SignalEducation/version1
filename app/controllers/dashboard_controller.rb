@@ -15,6 +15,7 @@ class DashboardController < ApplicationController
 
       exam_levels = ExamLevel.all_active.all_live.all_in_order.all_without_exam_sections_enabled
       exam_sections = ExamSection.all_active.all_live.all_in_order
+      @exam_sections = exam_sections
 
       @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
       @latest_set = @student_exam_tracks.first
