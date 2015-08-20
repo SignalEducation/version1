@@ -95,8 +95,7 @@
           =render partial: 'layouts/flash_messages'
         =yield
       =render partial: 'layouts/new_footer'
-    =unless controller_name == 'dashboard'
-      =render partial: 'layouts/misc_javascript'
+    =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
     -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
       =render partial: 'layouts/ls_referral'
