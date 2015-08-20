@@ -43,11 +43,16 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(allowed_params)
+    password = SecureRandom.hex(5)
+    @user = User.new(allowed_params.merge({password: password,
+                                           password_confirmation: password,
+                                           password_change_required: true}))
     @user.de_activate_user
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
-      Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@user.id)
+      MandrillWorker.perform_async(@user.id,
+                                   'send_verification_email',
+                                   user_activation_url(activation_code: @user.account_activation_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -138,9 +143,9 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :password, :password_confirmation)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :password, :password_confirmation, :employee_guid)
+      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid)
     end
   end
 

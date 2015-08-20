@@ -768,6 +768,7 @@ describe UsersController, type: :controller do
       it 'should report OK for valid params' do
         post :create, user: valid_params
         expect_create_success_with_model('user', users_url)
+        expect(assigns(:user).password_change_required).to eq(true)
       end
 
       it 'should report error for invalid params' do

@@ -24,13 +24,14 @@ def expect_bounce_as_not_allowed
   expect(response).to redirect_to(root_url)
 end
 
-def expect_index_success_with_model(model_name, record_count)
+def expect_index_success_with_model(model_name, record_count, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to be_nil
   expect(response.status).to eq(200)
   expect(response).to render_template(:index)
-  expect(assigns(model_name.to_sym).first.class.name).to eq(model_name.classify)
-  expect(assigns(model_name.to_sym).count).to eq(record_count)
+  expect(assigns(assign_name.to_sym).first.class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).count).to eq(record_count)
 end
 
 def expect_show_success_with_model(model_name, expected_id=nil)
@@ -42,53 +43,59 @@ def expect_show_success_with_model(model_name, expected_id=nil)
   expect(assigns(model_name.to_sym).id).to eq(expected_id) if expected_id
 end
 
-def expect_new_success_with_model(model_name)
+def expect_new_success_with_model(model_name, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to be_nil
   expect(response.status).to eq(200)
   expect(response).to render_template(:new)
-  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
 end
 
-def expect_edit_success_with_model(model_name, expected_id=nil)
+def expect_edit_success_with_model(model_name, expected_id=nil, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to be_nil
   expect(response.status).to eq(200)
   expect(response).to render_template(:edit)
-  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
-  expect(assigns(model_name.to_sym).id).to eq(expected_id) if expected_id
+  expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).id).to eq(expected_id) if expected_id
 end
 
-def expect_create_success_with_model(model_name, destination, special_flash=nil)
+def expect_create_success_with_model(model_name, destination, special_flash=nil, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:error]).to be_nil
-  expect(flash[:success]).to eq(special_flash || I18n.t("controllers.#{model_name.pluralize}.create.flash.success"))
+  expect(flash[:success]).to eq(special_flash || I18n.t("controllers.#{assign_name.pluralize}.create.flash.success"))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
-  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
 end
 
-def expect_create_error_with_model(model_name)
+def expect_create_error_with_model(model_name, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to be_nil
   expect(response.status).to eq(200)
   expect(response).to render_template(:new)
-  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
 end
 
-def expect_update_success_with_model(model_name, destination)
+def expect_update_success_with_model(model_name, destination, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:error]).to be_nil
-  expect(flash[:success]).to eq(I18n.t("controllers.#{model_name.pluralize}.update.flash.success"))
+  expect(flash[:success]).to eq(I18n.t("controllers.#{assign_name.pluralize}.update.flash.success"))
   expect(response.status).to eq(302)
   expect(response).to redirect_to(destination)
-  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
 end
 
-def expect_update_error_with_model(model_name)
+def expect_update_error_with_model(model_name, assign_name = nil)
+  assign_name = model_name if assign_name.nil?
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to be_nil
   expect(response.status).to eq(200)
   expect(response).to render_template(:edit)
-  expect(assigns(model_name.to_sym).class.name).to eq(model_name.classify)
+  expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
 end
 
 def expect_reorder_success

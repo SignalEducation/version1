@@ -8,10 +8,13 @@ class CorporateStudentsController < ApplicationController
 
   def index
     @corporate_students = User
-                          .where(corporate_customer_id: current_user.corporate_customer_id)
                           .where(user_group_id: UserGroup.where(corporate_student: true).first.id)
-                          .paginate(per_page: 50, page: params[:page])
-                          .all_in_order
+    if current_user.admin?
+      @corporate_students = @corporate_students.where("corporate_customer_id is not null")
+    else
+      @corporate_students = @corporate_students.where(corporate_customer_id: current_user.corporate_customer_id)
+    end
+    @corporate_students = @corporate_students.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def new
@@ -22,13 +25,19 @@ class CorporateStudentsController < ApplicationController
   end
 
   def create
-    @corporate_student = User
-                         .new(allowed_params.merge({corporate_customer_id: current_user.corporate_customer_id,
-                                                   user_group_id: UserGroup.where(corporate_student: true).first.id}))
+    password = SecureRandom.hex(5)
+    @corporate_student = User.new(allowed_params.merge({password: password,
+                                                        password_confirmation: password,
+                                                        user_group_id: UserGroup.where(corporate_student: true).first.id,
+                                                        password_change_required: true}))
+
+    @corporate_student.corporate_customer_id = current_user.corporate_customer_id if current_user.corporate_customer?
     @corporate_student.de_activate_user
     @corporate_student.locale = 'en'
     if @corporate_student.save
-      Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@corporate_student.id)
+      MandrillWorker.perform_async(@corporate_student.id,
+                                   'send_verification_email',
+                                   user_activation_url(activation_code: @corporate_student.account_activation_code))
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
@@ -39,11 +48,7 @@ class CorporateStudentsController < ApplicationController
   def update
     if @corporate_student.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.corporate_students.update.flash.success')
-      if current_user.admin?
-        redirect_to users_url
-      else
-        redirect_to corporate_students_url
-      end
+      redirect_to corporate_students_url
     else
       render action: :edit
     end
@@ -62,13 +67,17 @@ class CorporateStudentsController < ApplicationController
   protected
 
   def get_variables
+    @countries = Country.all_in_order
+    @corporate_customers = CorporateCustomer.all_in_order
     if params[:id].to_i > 0
       @corporate_student = User.where(id: params[:id]).first
     end
   end
 
   def allowed_params
-    params.require(:corporate_student).permit(:first_name, :last_name, :email, :employee_guid)
+    usr_params = [:first_name, :last_name, :country_id, :email, :employee_guid]
+    usr_params << :corporate_customer_id if current_user.admin?
+    params.require(:corporate_student).permit(usr_params)
   end
 
 end

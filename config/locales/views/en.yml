@@ -1048,6 +1048,8 @@ en:
         created_at: Created at
         updated_at: Updated at
         guid: GUID
+        employee_guid: Employee GUID
+        employee_guid_placeholder: Employee GUID
 
       edit:
         h1: Edit Account
@@ -1392,6 +1394,8 @@ en:
         employee_guid: Employee ID
         employee_guid_placeholder: Employee ID
         active: Active
+        country: Country
+        corporate_customer: Corporate customer
 
       index:
         h1: Corporate Students
