@@ -13,6 +13,7 @@ $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
+$purple-3: rgb(83, 84, 112);
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -515,8 +516,6 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  display: block;
-  position: relative;
   color: $purple-1;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
@@ -647,7 +646,7 @@ a.box-item {
 }
 .is-lg-right {
   @include breakpoint(sm-min) {
-    //float: right;
+    float: right;
   }
 }
 .is-visually-hidden {
@@ -666,6 +665,12 @@ a.box-item {
 }
 .is-bg-purple {
   background: $purple-1;
+}
+.is-bg-purple-1 {
+  background: $purple-2;
+}
+.is-bg-purple-2 {
+  background: $purple-3;
 }
 .is-bg-cyan {
   background: $cyan-1;
@@ -722,6 +727,141 @@ a.box-item {
   }
 }
 
+.coursebar {
+  color: white;
+  padding: 24px
+}
+.coursebar a:hover {
+  color: white;
+  text-decoration: initial;
+}
+.coursetype {
+  text-decoration: initial;
+  padding: 13px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+  text-decoration: none;
+  font-size: 12px;
+  //font-size: 1.3rem;
+  &:focus {
+    background-color: $purple-1;
+    border-radius: 5%;
+    border: 0px solid $purple-1;
+    text-decoration: initial;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+// Dashboard Boxes
+.no-image-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $purple-1;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+
+
+.referral-header {
+  border: none;
+}
+
+.referral-footer {
+  border: none;
+  padding-top: 0px;
+}
+
+.referral-footer-p {
+  font-weight: bold;
+}
+
+.referral-dialog-body {
+  margin-top: -25px;
+}
+
+.referral-title {
+  text-align: center;
+  color: #2D68D8;
+}
+
+.referral-info {
+  margin-bottom: 10px;
+}
+
+.referral-code-input {
+  height: 34px;
+}
+
+.referral-btn-email {
+  @include btn-social(#2A2C2E);
+  > :first-child {
+    top: -1;
+    //font-size: 1em;
+    background-color: #616566;
+  }
+}
+
+.referral-btn-facebook {
+  @include btn-social(#1B2E66);
+  > :first-child {
+    top: 0;
+    font-size: 1.4em;
+    background-color: #3C4F7F;
+  }
+}
+
+.referral-btn-twitter {
+  @include btn-social(#3984C9);
+  > :first-child {
+    top: 0;
+    font-size: 1.4em;
+    background-color: #5899D3;
+  }
+}
+
+.referral-social-content {
+  display: none;
+}
+
+#referral-link {
+  a:hover {
+    text-decoration: underline;
+
+  }
+}
 //  Debugging
 
 // * { outline: 1px solid red }

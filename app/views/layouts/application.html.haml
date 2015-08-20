@@ -13,7 +13,7 @@
         =@seo_title
       -else
         LearnSignal
-    -if controller_name == 'home_pages' || controller_name == 'tutor_applications' || controller_name == 'courses' || controller_name == 'tutor_profile' || controller_name == 'library'|| controller_name == 'footer_pages' || controller_name == 'study_schedules' || (controller_name == 'users' && action_name == 'new_paid_subscription') || (controller_name == 'course_module_elements' && action_name == 'show')
+    -if controller_name == 'home_pages' || controller_name == 'tutor_applications' || controller_name == 'dashboard' || controller_name == 'courses' || controller_name == 'tutor_profile' || controller_name == 'library'|| controller_name == 'footer_pages' || controller_name == 'study_schedules' || (controller_name == 'users' && action_name == 'new_paid_subscription') || (controller_name == 'course_module_elements' && action_name == 'show')
       =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -else
       =stylesheet_link_tag 'old_application', media: 'all'
@@ -74,7 +74,7 @@
       .schedule-margin-top
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'courses'
+    -elsif (controller_name == 'courses') || (controller_name == 'dashboard')
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield
@@ -95,7 +95,8 @@
           =render partial: 'layouts/flash_messages'
         =yield
       =render partial: 'layouts/new_footer'
-    =render partial: 'layouts/misc_javascript'
+    =unless controller_name == 'dashboard'
+      =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
     -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
       =render partial: 'layouts/ls_referral'
