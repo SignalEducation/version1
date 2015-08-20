@@ -164,8 +164,11 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_student_exam_tracks
-    StudentExamTracksWorker.perform_async(self.course_module_id)
-    true
+    #StudentExamTracksWorker.perform_async(self.course_module_id)
+    #true
+    StudentExamTrack.where(course_module_id: self.course_module_id).each do |set|
+      set.recalculate_completeness
+    end
   end
 
   def update_the_module_total_time_and_question_count
