@@ -34,11 +34,11 @@ describe Api::StripeV01Controller, type: :controller do
   let!(:invoice_created_event) {
     StripeMock.mock_webhook_event('invoice.created',
                                   subscription: subscription_1.stripe_guid,
-                                  customer: student.stripe_customer_id) }
+                                  customer: student.reload.stripe_customer_id) }
   let!(:invoice_payment_failed_event) {
     StripeMock.mock_webhook_event('invoice.payment_failed',
                                   subscription: subscription_1.stripe_guid,
-                                  customer: student.stripe_customer_id) }
+                                  customer: student.reload.stripe_customer_id) }
   let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
   let!(:customer_subscription_created_event) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active') }
 
@@ -96,7 +96,7 @@ describe Api::StripeV01Controller, type: :controller do
           student.update_attribute(:crush_offers_session_id, "1234")
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                               customer: student.stripe_customer_id)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&c=#{evt.data.object.currency.upcase}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
+          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total.to_f / 100.0}&c=#{evt.data.object.currency.upcase}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
           expect(Net::HTTP).to receive(:get)
                                 .with(uri)
                                 .and_return("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<result>\r\n\t<code>0</code>\r\n\t<msg>SUCCESS</msg>\r\n</result>")
