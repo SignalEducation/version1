@@ -1,6 +1,6 @@
 =f.fields_for :course_module_element_video do |cme_video|
 
-  .form-group
+  -#.form-group
     =cme_video.label :raw_video_file_id, t('views.course_module_element_videos.form.raw_video_file_id'), class: 'control-label col-sm-4'
     .col-sm-8
       =cme_video.collection_select :raw_video_file_id, @raw_video_files, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
@@ -8,6 +8,11 @@
       -#else
         =cme_video.hidden_field :raw_video_file_id
         .form-control-static=cme_video.object.raw_video_file.file_name
+
+  .form-group
+    =cme_video.label :video_id, t('views.course_module_element_videos.form.video_id'), class: 'control-label col-sm-4'
+    .col-sm-8
+      =cme_video.text_field :video_id, placeholder: t('views.course_module_element_videos.form.video_id_placeholder'), class: 'form-control'
   .form-group
     =cme_video.label :tags, t('views.course_module_element_videos.form.tags'), class: 'control-label col-sm-4'
     .col-sm-8

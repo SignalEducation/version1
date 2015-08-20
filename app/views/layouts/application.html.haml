@@ -25,6 +25,8 @@
     %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
+    %script{src: 'http://fast.wistia.net/static/E-v1.js'}
+    %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
 
     %script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
 
@@ -67,7 +69,7 @@
       .margin-top
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'study_schedules'
+    -elsif controller_name == 'study_schedules'|| (controller_name == 'tutor_applications' && action_name == 'index')
       =render partial: 'layouts/new_navbar'
       .schedule-margin-top
       =yield

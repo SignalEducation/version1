@@ -349,6 +349,8 @@ en:
         estimated_study_time_seconds_placeholder: 100
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
+        video_id: Video ID
+        video_id_placeholder: Wistia ID
 
     course_module_jumbo_quiz:
       form:

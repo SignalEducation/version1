@@ -17,10 +17,10 @@ class LibraryController < ApplicationController
     users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
     if @exam_section.nil?
       @course = @exam_level
-      user_course_sets = users_sets.where(exam_level_id: @exam_level.id)
+      user_course_sets = users_sets.where(exam_level_id: @exam_level.try(:id))
     else
       @course = @exam_section
-      user_course_sets = users_sets.where(exam_section_id: @exam_section.id)
+      user_course_sets = users_sets.where(exam_section_id: @exam_section.try(:id))
     end
     latest_set = user_course_sets.first
     latest_element_id = latest_set.try(:latest_course_module_element_id)
@@ -33,7 +33,7 @@ class LibraryController < ApplicationController
     else
       redirect_to library_url
     end
-    seo_title_maker(@course.name, @course.seo_description, @course.seo_no_index)
+    seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
   end
 
   def subscribe
