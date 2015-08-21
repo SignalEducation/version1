@@ -37,17 +37,61 @@ class DashboardController < ApplicationController
     end
 
     if @dashboard_type.include?('tutor')
-      @exam_levels = ExamLevel.all_in_order.all_active.where(tutor_id: current_user.id)
-      @course_modules = CourseModule.where(tutor_id: current_user.id).where(exam_level_id: @exam_levels)
-      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
-      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
-      @total_seconds = @cmeuls.sum(:seconds_watched)
-      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
+      #@exam_levels = ExamLevel.all_in_order.all_active.where(tutor_id: current_user.id)
+      #@course_modules = CourseModule.where(tutor_id: current_user.id).where(exam_level_id: @exam_levels)
+      #@cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
+      #@monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
+      #@total_seconds = @cmeuls.sum(:seconds_watched)
+      #@monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
+      exam_levels = ExamLevel.all_active.all_live.all_in_order.all_without_exam_sections_enabled
+      exam_sections = ExamSection.all_active.all_live.all_in_order
+      @exam_sections = exam_sections
+
+      @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
+      @latest_set = @student_exam_tracks.first
+      @completed_student_exam_tracks = @student_exam_tracks.where(percentage_complete: 100)
+      @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete < ?', 100)
+      @latest_level_or_section = @latest_set.try(:course_module).try(:parent)
+
+      incomplete_level_set_ids = @incomplete_student_exam_tracks.all.map(&:exam_level_id)
+      incomplete_section_set_ids = @incomplete_student_exam_tracks.all.map(&:exam_section_id)
+      completed_level_set_ids = @completed_student_exam_tracks.all.map(&:exam_level_id)
+      completed_sections_set_ids = @completed_student_exam_tracks.all.map(&:exam_section_id)
+
+      incomplete_levels = exam_levels.where(id: incomplete_level_set_ids)
+      incomplete_sections = exam_sections.where(id: incomplete_section_set_ids)
+      completed_levels = exam_levels.where(id: completed_level_set_ids)
+      completed_sections = exam_sections.where(id: completed_sections_set_ids)
+      @incomplete_courses = incomplete_levels + incomplete_sections
+      @completed_courses = completed_levels + completed_sections
+
     end
 
     if @dashboard_type.include?('content_manager')
-      @exam_levels = ExamLevel.all_in_order
-      @course_modules = CourseModule.all_in_order.where(exam_level_id: @exam_levels)
+      #@exam_levels = ExamLevel.all_in_order
+      #@course_modules = CourseModule.all_in_order.where(exam_level_id: @exam_levels)
+      exam_levels = ExamLevel.all_active.all_live.all_in_order.all_without_exam_sections_enabled
+      exam_sections = ExamSection.all_active.all_live.all_in_order
+      @exam_sections = exam_sections
+
+      @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
+      @latest_set = @student_exam_tracks.first
+      @completed_student_exam_tracks = @student_exam_tracks.where(percentage_complete: 100)
+      @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete < ?', 100)
+      @latest_level_or_section = @latest_set.try(:course_module).try(:parent)
+
+      incomplete_level_set_ids = @incomplete_student_exam_tracks.all.map(&:exam_level_id)
+      incomplete_section_set_ids = @incomplete_student_exam_tracks.all.map(&:exam_section_id)
+      completed_level_set_ids = @completed_student_exam_tracks.all.map(&:exam_level_id)
+      completed_sections_set_ids = @completed_student_exam_tracks.all.map(&:exam_section_id)
+
+      incomplete_levels = exam_levels.where(id: incomplete_level_set_ids)
+      incomplete_sections = exam_sections.where(id: incomplete_section_set_ids)
+      completed_levels = exam_levels.where(id: completed_level_set_ids)
+      completed_sections = exam_sections.where(id: completed_sections_set_ids)
+      @incomplete_courses = incomplete_levels + incomplete_sections
+      @completed_courses = completed_levels + completed_sections
+
     end
 
     if @dashboard_type.include?('admin')
