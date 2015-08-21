@@ -12,7 +12,6 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
-      flash[:success] = I18n.t('controllers.user_sessions.create.flash.success')
       redirect_back_or_default root_url
     else
       render action: :new
