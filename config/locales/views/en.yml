@@ -1186,6 +1186,8 @@ en:
 
       edit:
         h1: Reset your password
+        corporate_student: Set password
+        h3: In order to log in for the first time you have to set your password.
         paragraph_1: "Choose a new password for your account:"
 
     user_notifications:

@@ -194,7 +194,12 @@ class User < ActiveRecord::Base
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
       user = User.where(password_reset_token: reset_token.to_s, active: false).first
       if user
-        if user.update_attributes(password: new_password.to_s, password_confirmation: new_password_confirmation.to_s, active: true, password_reset_token: nil, password_reset_requested_at: nil, password_reset_at: Proc.new{Time.now}.call)
+        if user.update_attributes(password: new_password.to_s,
+                                  password_confirmation: new_password_confirmation.to_s,
+                                  active: true, password_reset_token: nil,
+                                  password_reset_requested_at: nil,
+                                  password_reset_at: Time.now,
+                                  password_change_required: nil)
           user # return this
         else
           false
