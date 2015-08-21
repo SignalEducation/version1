@@ -2,7 +2,7 @@
   position: relative;
   margin-bottom: -50px; /* negative value of footer height */
   background: $purple-1;
-  border-top: $gutter*3 solid $asphalt-1;
+  border-top: 0px solid $asphalt-1;
   padding: $gutter*1.5 0 $gutter*2 0;
   text-align: center;
   @include clearfix();
@@ -10,6 +10,9 @@
   @include breakpoint(md-min) {
     text-align: left;
     @include font-size(1.4);
+  }
+  .border-top {
+    border-top: 10px solid $asphalt-1;
   }
 }
 .foot-nav {

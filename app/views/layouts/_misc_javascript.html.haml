@@ -1,52 +1,38 @@
--if controller_name == 'dashboard'
-  :javascript
+:javascript
 
-    $('.datepicker').datetimepicker({
-      pickTime: false
-    });
+  $('.datepicker').datetimepicker({
+    pickTime: false
+  });
 
-    $('.time_only_picker').datetimepicker({
-      pickDate: false
-    });
+  $('.time_only_picker').datetimepicker({
+    pickDate: false
+  });
 
-    $('.datetimepicker').datetimepicker({
-    });
+  $('.datetimepicker').datetimepicker({
+  });
 
--else
-  :javascript
+  $(document).on('ready page:load', function() {
+    var navbar = $('.foot');
+    if (navbar.length > 0) {
+      var topOfFooter = navbar.offset().top,
+        heightOfFooter = navbar.height(),
+        bottomOfFooter = topOfFooter + heightOfFooter,
+        viewportHeight = $(window).height(),
+        currentBorderTop = parseInt(navbar.css('border-top'));
 
-    $('.datepicker').datetimepicker({
-      pickTime: false
-    });
-
-    $('.time_only_picker').datetimepicker({
-      pickDate: false
-    });
-
-    $('.datetimepicker').datetimepicker({
-    });
-
-    $(document).on('ready page:load', function() {
-      var navbar = $('.navbar-footer');
-      if (navbar.length > 0) {
-        var topOfFooter = navbar.offset().top,
-          heightOfFooter = navbar.height(),
-          bottomOfFooter = topOfFooter + heightOfFooter,
-          viewportHeight = $(window).height(),
-          currentMarginTop = parseInt(navbar.css('margin-top'));
-
-        if (bottomOfFooter < viewportHeight) {
-          var extra = 0,
-            browser = navigator.userAgent;
-          if (browser.match(/OPR/i) == 'OPR') {
-            extra = 5;
-          } else if (browser.match(/Safari/i) == 'Safari') {
-            extra = 0;
-          } else if (browser.match(/Mozilla/i) == 'Mozilla') {
-            extra = 15;
-          }
-          var newMargin = currentMarginTop + viewportHeight - bottomOfFooter + extra;
-          navbar.css('margin-top', newMargin + 'px');
-        }
+      if (bottomOfFooter < viewportHeight) {
+        var extra = 0,
+          browser = navigator.userAgent;
+        if (browser.match(/OPR/i) == 'OPR') {
+          extra = 5;
+        } else if (browser.match(/Safari/i) == 'Safari') {
+          extra = 0;
+        } else if (browser.match(/Mozilla/i) == 'Mozilla') {
+          extra = 15;
+        } else
+          extra = 10;
+        var newBorder = currentBorderTop + viewportHeight - bottomOfFooter + extra;
+        navbar.css('border-top', newBorder + 'px solid #EFF3F6');
       }
-    });
+    }
+  });
