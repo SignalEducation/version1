@@ -35,6 +35,7 @@ class CorporateStudentsController < ApplicationController
     @corporate_student.de_activate_user
     @corporate_student.locale = 'en'
     if @corporate_student.save
+      @corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
       MandrillWorker.perform_async(@corporate_student.id,
                                    'send_verification_email',
                                    user_activation_url(activation_code: @corporate_student.account_activation_code))
@@ -47,6 +48,7 @@ class CorporateStudentsController < ApplicationController
 
   def update
     if @corporate_student.update_attributes(allowed_params)
+      @corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
       flash[:success] = I18n.t('controllers.corporate_students.update.flash.success')
       redirect_to corporate_students_url
     else
@@ -68,7 +70,11 @@ class CorporateStudentsController < ApplicationController
 
   def get_variables
     @countries = Country.all_in_order
-    @corporate_customers = CorporateCustomer.all_in_order
+    if current_user.admin?
+      @corporate_customers = CorporateCustomer.all_in_order
+    elsif current_user.corporate_customer?
+      @corporate_groups = CorporateGroup.where(corporate_customer_id: current_user.corporate_customer_id)
+    end
     if params[:id].to_i > 0
       @corporate_student = User.where(id: params[:id]).first
     end

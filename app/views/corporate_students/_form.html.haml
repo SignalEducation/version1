@@ -38,7 +38,18 @@
             =f.label :active, t('views.corporate_students.form.active'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.check_box :active, class: 'form-control'
-
+        - if @corporate_groups
+          .form-group
+            %table.col-sm-5.col-sm-offset-3
+              %thead
+                %tr
+                  %th{style: 'width: 90%;'}= t('views.corporate_students.form.corporate_group_name')
+                  %th
+              %tbody
+                - @corporate_groups.each do |cg|
+                  %tr
+                    %td= cg.name
+                    %td= check_box_tag "corporate_student[corporate_group_ids][]", cg.id, @corporate_student.corporate_groups.include?(cg)
       =f.submit t('views.general.save'), class: 'btn btn-success'
       =t('views.general.or')
       =link_to t('views.general.cancel'), corporate_students_path

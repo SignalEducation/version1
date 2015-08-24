@@ -1398,6 +1398,7 @@ en:
         active: Active
         country: Country
         corporate_customer: Corporate customer
+        corporate_group_name: Corporate group
 
       index:
         h1: Corporate Students
