@@ -16,6 +16,7 @@
 //= require jquery-ui
 //= require jquery.remotipart
 //= require jquery-sortable
+//= require Chart
 //= require bootstrap-sprockets
 //= require_tree .
 //= require zeroclipboard

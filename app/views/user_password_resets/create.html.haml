@@ -1,8 +1,14 @@
-.row
-  .col-sm-6.col-sm-offset-3
-    .page-header
-      %h1=t('views.user_password_resets.create.h1')
-.row
-  .col-sm-6.col-sm-offset-3
-    %p=t('views.user_password_resets.create.paragraph_1')
-    %p=link_to t('views.general.home'), root_url, class: 'btn btn-ls-default'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Reset password
+        .col-md-8.col-md-offset-2.l-margin-bottom-6x
+          .col-md-8.col-md-offset-2.l-margin-top-small
+            %p
+              Check your mailbox for further instructions. If you don't receive an email within a couple of minutes, check your spam folder.
+          = form_tag  do
+            .col-md-8.col-md-offset-2.l-margin-top-big
+              =link_to t('views.general.home'), root_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x'
