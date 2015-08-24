@@ -1188,8 +1188,8 @@ en:
 
     user_password_resets:
       new:
-        h1: Reset your password?
-        paragraph_1: No problem! Enter your email address and we will send you further instructions.
+        h1: Password Reset
+        paragraph_1: Forgot password? No problem! Enter your email address and we will send you further instructions.
 
       create:
         h1: Reset your password...
