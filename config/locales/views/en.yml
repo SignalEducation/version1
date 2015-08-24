@@ -1197,7 +1197,7 @@ en:
 
       edit:
         h1: Reset your password
-        paragraph_1: "Choose a new password for your account:"
+        paragraph_1: "Enter a new password for your account:"
 
     user_notifications:
       form:
