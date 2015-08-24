@@ -66,6 +66,15 @@ class DashboardController < ApplicationController
     end
 
     if @dashboard_type.include?('tutor')
+      @tutor_exam_levels = ExamLevel.all_without_exam_sections_enabled.all_in_order.all_active.where(tutor_id: current_user.id)
+      @tutor_exam_sections = ExamSection.all_in_order.all_active.where(tutor_id: current_user.id)
+      @tutor_courses = @tutor_exam_levels + @tutor_exam_sections
+      @level_course_modules = CourseModule.where(tutor_id: current_user.id).where(exam_level_id: @tutor_exam_levels)
+      @section_course_modules = CourseModule.where(tutor_id: current_user.id).where(exam_section_id: @tutor_exam_sections)
+      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
+      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
+      @total_seconds = @cmeuls.sum(:seconds_watched)
+      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
 
     end
 
