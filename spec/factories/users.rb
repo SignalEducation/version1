@@ -41,6 +41,7 @@
 #  locale                                   :string
 #  guid                                     :string
 #  trial_ended_notification_sent_at         :datetime
+#  crush_offers_session_id                  :string
 #  subscription_plan_category_id            :integer
 #  employee_guid                            :string
 #  password_change_required                 :boolean

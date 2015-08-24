@@ -23,6 +23,7 @@
 #  live                                    :boolean          default(FALSE), not null
 #  short_description                       :text
 #  mailchimp_list_id                       :string
+#  forum_url                               :string
 #
 
 require 'rails_helper'

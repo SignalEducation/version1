@@ -12,26 +12,27 @@
   });
 
   $(document).on('ready page:load', function() {
-    var navbar = $('.navbar-footer');
+    var navbar = $('.foot');
     if (navbar.length > 0) {
       var topOfFooter = navbar.offset().top,
-          heightOfFooter = navbar.height(),
-          bottomOfFooter = topOfFooter + heightOfFooter,
-          viewportHeight = $(window).height(),
-          currentMarginTop = parseInt(navbar.css('margin-top'));
+        heightOfFooter = navbar.height(),
+        bottomOfFooter = topOfFooter + heightOfFooter,
+        viewportHeight = $(window).height(),
+        currentBorderTop = parseInt(navbar.css('border-top'));
 
       if (bottomOfFooter < viewportHeight) {
         var extra = 0,
-            browser = navigator.userAgent;
+          browser = navigator.userAgent;
         if (browser.match(/OPR/i) == 'OPR') {
           extra = 5;
         } else if (browser.match(/Safari/i) == 'Safari') {
           extra = 0;
         } else if (browser.match(/Mozilla/i) == 'Mozilla') {
           extra = 15;
-        }
-        var newMargin = currentMarginTop + viewportHeight - bottomOfFooter + extra;
-        navbar.css('margin-top', newMargin + 'px');
+        } else
+          extra = 10;
+        var newBorder = currentBorderTop + viewportHeight - bottomOfFooter + extra;
+        navbar.css('border-top', newBorder + 'px solid #EFF3F6');
       }
     }
   });

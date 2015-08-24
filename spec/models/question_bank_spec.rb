@@ -11,6 +11,7 @@
 #  question_selection_strategy :string
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
+#  exam_section_id             :integer
 #
 
 require 'rails_helper'
@@ -39,8 +40,11 @@ describe QuestionBank do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:exam_level_id) }
+  it { should_not validate_presence_of(:exam_level_id) }
   it { should validate_numericality_of(:exam_level_id) }
+
+  it { should_not validate_presence_of(:exam_section_id) }
+  it { should validate_numericality_of(:exam_section_id) }
 
 
   # callbacks

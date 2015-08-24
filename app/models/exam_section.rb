@@ -20,6 +20,7 @@
 #  short_description                 :text
 #  description                       :text
 #  mailchimp_list_id                 :string
+#  forum_url                         :string
 #
 
 class ExamSection < ActiveRecord::Base
@@ -29,7 +30,7 @@ class ExamSection < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :exam_level_id, :active, :sorting_order,
                   :seo_description, :seo_no_index, :duration, :live, :tutor_id,
-                  :short_description, :description, :mailchimp_list_id
+                  :short_description, :description, :mailchimp_list_id, :forum_url
 
   # Constants
 

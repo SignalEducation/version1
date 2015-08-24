@@ -1,0 +1,249 @@
+.hero-upcoming
+  =render partial: 'layouts/transparent_navbar'
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
+              Jobs
+            %p.h5.h-white.text-center.l-margin-bottom-big
+              We strive to change the way professional education is taught
+.l-asphalt
+  .l-section
+    .container-fluid
+      .row
+        .col-sm-3
+          =render partial: 'footer_pages/side_nav'
+        .col-sm-9
+          .panel-body.no-top-padding
+            %h2
+              Join Our Team
+            %p
+              We like innovators, who seek to do great work and play an impactful role in interesting projects. Our passion is to make education a better experience for students and we are looking for individuals with the same mindset.
+            %h2
+              Great Place To Work
+            %p
+              We are a small team of passionate people working in a challenging environment. Everyone makes an impact. Everyone has the opportunity to showcase their talent. Taking risks is encouraged with the belief that by experimenting, we can build a platform that students love.
+            %p
+              We like to practice what we preach. We're always learning and expanding our knowledge. If there’s something you want to learn or a course you want to take, we have you covered. We work in a beautiful office in the centre of Dublin, and we’re flexible around the hours you work there.
+            %h2
+              Available Positions:
+            .panel-group#accordion{ role: 'tablist', aria: {multiselectable: true} }
+              .panel.clickable
+                .panel-heading#headingOne{role: 'tab'}
+                  .panel-title{data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseOne', aria: {expanded: 'true', controls: 'collapseOne'}}
+                    Content Writer: ACCA
+
+              .panel-collapse.collapse{id: 'collapseOne', role: 'tabpanel', aria: {labelledby: 'headingOne'} }
+                .panel-body
+                  %h4
+                    About You
+                  %ul
+                    %li
+                      You love to teach. Every time you get the opportunity to share knowledge, you do so.
+                    %li
+                      You love to learn. Any chance you get to open a book, you go for it because you know you'll discover something new.
+                    %li
+                      The feeling of knowing half of something makes you feel uneasy. You need to know and understand the whole context.
+                  %h4
+                    Responsibilities
+                  %ul
+                    %li
+                      Work with other teachers to design the Learn Signal curriculum at a high level by identifying topics that are critical to passing the ACCA exam.
+                    %li
+                      Write structured educational content and work with the video team through production and release. This includes:
+                      %ul
+                        %li
+                          Writing scripts
+                        %li
+                          Creating engaging example projects
+                        %li
+                          You like to teach and explain in creative ways. We like that too!
+                        %li
+                          Building assessment material using Learn Signal Quizzes
+                        %li
+                          Recording all course materials both on-set and as a screencast
+                    %li
+                      Iterate quickly on courses to keep up-to-date with the latest course changes.
+                    %Li
+                      Be a virtual teacher; support Learn Signal students after the release of a course by responding to student questions and making critical updates to course as necessary.
+                  %h4
+                    Qualifications
+                  %ul
+                    %li
+                      Deep knowledge of ACCA, preferably a charterholder.
+                    %li
+                      Passionate about creating a curriculum that takes people from zero to exam-ready.
+                    %li
+                      Passionate about sharing knowledge and teaching others.
+                    %li
+                      Outstanding writing abilities.
+                    %li
+                      Excellent presentation skills and on-camera confidence.
+                  %h4
+                    Benefits
+                  %ul
+                    %li
+                      Office setup budget
+                    %li
+                      Annual education budget (conferences, books, classes, etc.)
+                    %li
+                      Free lunch every day
+                  %h4
+                    Location
+                  %ul
+                    %li
+                      Dublin, Ireland / Remote (possible)
+                  =link_to new_tutor_application_url do
+                    .btn.btn-red
+                      Apply Now
+
+
+              .panel.clickable
+                .panel-heading#headingTwo{role: 'tab'}
+                  .panel-title{data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseTwo', aria: {expanded: 'true', controls: 'collapseTwo'}}
+                    Content Writer: CIMA
+
+              .panel-collapse.collapse{id: 'collapseTwo', role: 'tabpanel', aria: {labelledby: 'headingTwo'} }
+                .panel-body
+                  %h4
+                    About You
+                  %ul
+                    %li
+                      You love to teach. Every time you get the opportunity to share knowledge, you do so.
+                    %li
+                      You love to learn. Any chance you get to open a book, you go for it because you know you'll discover something new.
+                    %li
+                      The feeling of knowing half of something makes you feel uneasy. You need to know and understand the whole context.
+                  %h4
+                    Responsibilities
+                  %ul
+                    %li
+                      Work with other teachers to design the Learn Signal curriculum at a high level by identifying topics that are critical to passing the CIMA exams.
+                    %li
+                      Write structured educational content and work with the video team through production and release. This includes:
+                      %ul
+                        %li
+                          Writing scripts
+                        %li
+                          Creating engaging example projects
+                        %li
+                          Building assessment material using Learn Signal Quizzes
+                        %li
+                          Recording all course materials both on-set and as a screencast
+                    %li
+                      Iterate quickly on courses to keep up-to-date with the latest course changes.
+                    %Li
+                      Support Learn Signal courses after their release by responding to student questions and making critical updates to courses as necessary.
+                  %h4
+                    Qualifications
+                  %ul
+                    %li
+                      Deep knowledge of CIMA, preferably a charterholder.
+                    %li
+                      Passionate about creating a curriculum that takes people from zero to exam-ready.
+                    %li
+                      Passionate about sharing knowledge and teaching others.
+                    %li
+                      Outstanding writing abilities.
+                    %li
+                      Excellent presentation skills and on-camera confidence.
+                  %h4
+                    Benefits
+                  %ul
+                    %li
+                      Office setup budget
+                    %li
+                      Annual education budget (conferences, books, classes, etc.)
+                    %li
+                      Free lunch every day
+                  %h4
+                    Location
+                  %ul
+                    %li
+                      Dublin, Ireland / Remote (possible)
+                  =link_to new_tutor_application_url do
+                    .btn.btn-red
+                      Apply Now
+
+              .panel.clickable
+                .panel-heading#headingThree{role: 'tab'}
+                  .panel-title{data: {toggle: 'collapse', parent: '#accordion'}, href: '#collapseThree', aria: {expanded: 'true', controls: 'collapseThree'}}
+                    IOS Developer
+
+              .panel-collapse.collapse{id: 'collapseThree', role: 'tabpanel', aria: {labelledby: 'headingThree'} }
+                .panel-body
+                  %h4
+                    About You
+                  %ul
+                    %li
+                      You love to learn. If your asked to do something you dont know, you dont say you can't do it, but rather seek a solution.
+                    %li
+                      You like to own your code, you take pride in what you create and strive to always make it better.
+                  %h4
+                    Responsibilities
+                  %ul
+                    %li
+                      Help design a more robust and maintainable application ecosystem with the rest of the Learn Signal development team.
+                    %li
+                      Work with other members of the Learn Signal team to create a more compelling educational experience for our students through new features and interactive tools.
+                    %li
+                      Improve our own internal tools and processes alongside the Learn Signal team as we grow and change as a company.
+                    %Li
+                      Expand our education platform in order to allow us to impact a broader range of students.
+                  %h4
+                    Qualifications
+                  %ul
+                    %li
+                      Actions speak louder than words, that's why we love to see projects (actual projects, not just code).
+                    %li
+                      Great writing and communication skills. We are a distributed team and rely heavily on asynchronous written communication; a strong command of English and the ability to communicate clearly and effectively are crucial.
+                    %li
+                      Good problem-solving and requirement-gathering skills. We need team members who are capable of starting with a problem and working from there to achieve a great solution; a skeptical approach and the willingness to dig for the real problem are valuable.
+                    %li
+                      Team-oriented mindset. It may sound cliche, but we are very much a team of peers; being able to work towards the best interests of the team, regardless of personal preference, is important.
+                    %li
+                      Experience writing and maintaining iOS applications using Objective-C and Swift.
+                    %li
+                      Experience building custom user interface controls.
+                    %li
+                      Experience with Core Data and concurrency
+                    %li
+                      Experience with asynchronous networking
+                    %li
+                      Experience as a significant contributor on an app published to the App Store
+                    %li
+                      Experience with the Ruby programming language and/or the Ruby on Rails web application framework is a bonus, but not required.
+
+                  %h4
+                    Benefits
+                  %ul
+                    %li
+                      Office setup budget
+                    %li
+                      Annual education budget (conferences, books, classes, etc.)
+                    %li
+                      Free lunch every day
+                  %h4
+                    Location
+                  %ul
+                    %li
+                      Dublin, Ireland / Remote (possible)
+                  =link_to new_tutor_application_url do
+                    .btn.btn-red
+                      Apply Now
+
+
+
+
+
+
+
+
+
+
+
+
+
+=render partial: 'layouts/new_footer'

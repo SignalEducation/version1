@@ -11,6 +11,7 @@
 #  question_selection_strategy :string
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
+#  exam_section_id             :integer
 #
 
 FactoryGirl.define do
@@ -21,6 +22,14 @@ FactoryGirl.define do
     medium_questions 1
     hard_questions 1
     question_selection_strategy 'random'
+
+    factory :exam_level_question_bank do
+      exam_level_id 1
+    end
+
+    factory :exam_section_question_bank do
+      exam_section_id 1
+    end
   end
 
 end

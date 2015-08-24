@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     institution = Institution.find_by(name_url: params[:institution_name_url])
     qualification = Qualification.find_by_name_url(params[:qualification_name_url])
-    exam_level = qualification.exam_levels.find_by(name_url: params[:exam_level_name_url])
+    exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
     @course_module = exam_level.course_modules.find_by(name_url: params[:course_module_name_url])
     if @course_module
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
@@ -19,7 +19,7 @@ class CoursesController < ApplicationController
 
     if @course_module_element.nil? && @course_module.nil?
 
-      @question_bank = QuestionBank.find_by_id(params[:course_module_name_url])
+      @question_bank = QuestionBank.find_by_id(params[:id])
       set_up_question_bank
 
       # The URL is out of date or wrong.
@@ -134,7 +134,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
             session_guid: current_session_guid,
-            element_completed: false,
+            element_completed: true,
             time_taken_in_seconds: 0,
             quiz_score_actual: nil,
             quiz_score_potential: nil,
@@ -212,7 +212,7 @@ class CoursesController < ApplicationController
         session_guid: current_session_guid,
         course_module_id: nil,
         course_module_element_id: nil,
-        question_bank_id: @question_bank.id,
+        question_bank_id: @question_bank.try(:id),
         is_question_bank: true,
         user_id: current_user.try(:id)
     )

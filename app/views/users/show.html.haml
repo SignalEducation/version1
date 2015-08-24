@@ -9,7 +9,7 @@
     %ul.nav.nav-tabs{role: 'tablist'}
       %li.active{role: 'presentation'}
         %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
-      %li{role: 'presentation'}
+      -#%li{role: 'presentation'}
         %a{href: '#notifications', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.notifications')
       %li{role: 'presentation'}
         %a{href: '#referral-code', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.referral_code')
@@ -35,7 +35,7 @@
               -if @user.id == current_user.id
                 =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
 
-        .tab-pane.fade#notifications{role: 'tabpanel'}
+        -#.tab-pane.fade#notifications{role: 'tabpanel'}
           .row
             .col-sm-8.col-sm-offset-2
               .well.well-sm
@@ -48,7 +48,7 @@
 
         .tab-pane.fade#referral-code{role: 'tabpanel'}
           .rows
-            .col-sm-8.col-sm-offset-2
+            .col-sm-8.col-sm-offset-2{style: 'padding-top: 30px;'}
               -if current_user.referral_code.nil?
                 .row
                   %h2=t('views.users.show.you_dont_have_referral_code')

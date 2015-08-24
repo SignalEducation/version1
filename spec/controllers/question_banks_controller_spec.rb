@@ -8,8 +8,8 @@ describe QuestionBanksController, type: :controller do
   include_context 'course_content'
 
   # todo: Try to create children for question_bank_1
-  let!(:question_bank_1) { FactoryGirl.create(:question_bank) }
-  let!(:question_bank_2) { FactoryGirl.create(:question_bank) }
+  let!(:question_bank_1) { FactoryGirl.create(:exam_level_question_bank) }
+  let!(:question_bank_2) { FactoryGirl.create(:exam_section_question_bank) }
   let!(:valid_params) { FactoryGirl.attributes_for(:question_bank) }
 
   context 'Not logged in: ' do
@@ -296,7 +296,7 @@ describe QuestionBanksController, type: :controller do
         post :create, question_bank: valid_params, exam_level_name_url: exam_level_1.name_url
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(subject.course_special_link(assigns(:question_bank)))
+        expect(response).to redirect_to question_bank_url
       end
 
       it 'should report error for invalid params' do

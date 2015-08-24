@@ -20,6 +20,7 @@
 #  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
 #
 
 class CourseModule < ActiveRecord::Base
@@ -31,7 +32,8 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :institution_id, :qualification_id, :exam_level_id,
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
-                  :active, :cme_count, :seo_description, :seo_no_index
+                  :active, :cme_count, :seo_description, :seo_no_index,
+                  :number_of_questions
 
   # Constants
 
@@ -168,6 +170,11 @@ class CourseModule < ActiveRecord::Base
     self.save
   end
 
+  def recalculate_question_count
+    calculate_number_of_questions
+    self.save
+  end
+
   def total_time_watched_videos
     total_seconds = CourseModuleElementUserLog.where(course_module_id: self.id).sum(:seconds_watched)
     @time_watched ||= { hours: total_seconds / 3600, minutes: (total_seconds / 60) % 60, seconds: total_seconds % 60 }
@@ -177,6 +184,10 @@ class CourseModule < ActiveRecord::Base
 
   def calculate_estimated_time
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
+  end
+
+  def calculate_number_of_questions
+    self.number_of_questions = self.course_module_elements.sum(:number_of_questions)
   end
 
   def set_cme_count

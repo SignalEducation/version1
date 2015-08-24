@@ -165,22 +165,22 @@ en:
 
       content_denied:
         panel:
-          need_to_sign_in: You need to be signed in with a Learn Signal account to view this material.
+          need_to_sign_in: You need to be a Learn Signal member to view this material.
         not_logged_in:
           sign_up_btn: Sign up for Learn Signal
           start_free_trial: Start your free trial
           h2: Please Sign In To View This Content
         account_cancelled:
-          h2: Oops! Looks like your account is cancelled. Please re-activate it to continue.
+          h2: Your account is cancelled. Please re-activate it to continue.
           reactivate: 'Re-activate Your Account'
         account_problem:
-          h2: Oops! Looks like there is a problem with your account
-          account_details: Account Details
+          h2: Looks like there is a problem with your account
+          account_details: Please Check Your Account Details
         other:
           h2: Oops! Something has gone wrong.
           p: We have been notified, and will investigate it immediately.
         free_trial_expired:
-          h2: Oops! Looks like your free trial period has expired. Please upgrade your subscription.
+          h2: Your free trial period has expired. Please upgrade your subscription.
           upgrade_subscription: Upgrade Subscription
 
       show_results:
@@ -349,6 +349,8 @@ en:
         estimated_study_time_seconds_placeholder: 100
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
+        video_id: Video ID
+        video_id_placeholder: Wistia ID
 
     course_module_jumbo_quiz:
       form:
@@ -464,6 +466,8 @@ en:
         seo_description_placeholder: Description text that Google will show in search results
         mailchimp_list_id: Mailchimp List ID
         mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
+        forum_url: Forum URL
+        forum_url_placeholder: This is the Forum URL
         seo_no_index: "SEO no-index flag"
 
       index:
@@ -503,6 +507,9 @@ en:
         description: Description
         description_placeholder: Description text of the course
         seo_no_index: "SEO no-index flag"
+        forum_url: Forum URL
+        forum_url_placeholder: This is the Forum URL
+
 
       index:
         h1: Exam Sections
@@ -686,6 +693,7 @@ en:
         quiz: Quiz
         quizzes: MCQs
         video: Video
+        number_of_videos: Videos
         videos: of Video
         institution: Institution
         qualification: Qualification
@@ -694,6 +702,10 @@ en:
         course_module: Course Module
         course_module_element: Step
         new_question_bank: Create a Custom Quiz
+
+      index:
+        continue_course: Continue Course
+        start_course: Start Course
 
     qualifications:
       form:

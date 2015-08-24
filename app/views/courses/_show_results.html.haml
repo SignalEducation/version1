@@ -44,6 +44,13 @@
   -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
     -if attempt
       =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
+  .l-margin-bottom.l-margin-top
+    .pull-left
+      %h6
+      .pull-left
+        -if !@course_module_element_user_log.is_question_bank
+          =link_to "Discuss #{@course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.course_module_jumbo_quiz.try(:name)} in the Forum", @course_module_element_user_log.course_module.parent.try(:forum_url), target: '_blank'
+
 
 .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
   -if @course_module_element_user_log.is_jumbo_quiz
@@ -59,12 +66,14 @@
         .glyphicon.glyphicon-arrow-right
 
   -if @course_module_element_user_log.is_question_bank
-    %hr/
-    .row
-      .col-sm-4.text-right
-        =link_to 'Restart Quiz', course_special_link(@question_bank), class: 'btn btn-ls-default'
-      .col-sm-4.text-right
-        =link_to 'Return to Library', library_special_link(@question_bank.exam_level), class: 'btn btn-ls-default'
+    .col-xs-4.text-left
+      =link_to question_bank_url(@question_bank.exam_level.name_url, @question_bank.try(:exam_section).try(:name_url), @question_bank.id), class: 'btn btn-red text-bold' do
+        .glyphicon.glyphicon-arrow-left
+        Restart Quiz
+    .col-xs-4.text-right
+      =link_to library_url, class: 'btn btn-red text-bold' do
+        Return to Library
+        .glyphicon.glyphicon-arrow-right
 
 
   -if @course_module_element

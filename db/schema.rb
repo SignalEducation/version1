@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813111524) do
+ActiveRecord::Schema.define(version: 20150819135156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,37 +32,6 @@ ActiveRecord::Schema.define(version: 20150813111524) do
   add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
   add_index "corporate_customers", ["owner_id"], name: "index_corporate_customers_on_owner_id", using: :btree
   add_index "corporate_customers", ["stripe_customer_guid"], name: "index_corporate_customers_on_stripe_customer_guid", using: :btree
-
-  create_table "corporate_group_grants", force: :cascade do |t|
-    t.integer  "corporate_group_id"
-    t.integer  "exam_level_id"
-    t.integer  "exam_section_id"
-    t.boolean  "compulsory"
-    t.boolean  "restricted"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "corporate_group_grants", ["corporate_group_id"], name: "index_corporate_group_grants_on_corporate_group_id", using: :btree
-  add_index "corporate_group_grants", ["exam_level_id"], name: "index_corporate_group_grants_on_exam_level_id", using: :btree
-  add_index "corporate_group_grants", ["exam_section_id"], name: "index_corporate_group_grants_on_exam_section_id", using: :btree
-
-  create_table "corporate_groups", force: :cascade do |t|
-    t.integer  "corporate_customer_id"
-    t.string   "name"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "corporate_groups", ["corporate_customer_id"], name: "index_corporate_groups_on_corporate_customer_id", using: :btree
-
-  create_table "corporate_groups_users", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "corporate_group_id"
-  end
-
-  add_index "corporate_groups_users", ["corporate_group_id"], name: "index_corporate_groups_users_on_corporate_group_id", using: :btree
-  add_index "corporate_groups_users", ["user_id"], name: "index_corporate_groups_users_on_user_id", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"
@@ -160,6 +129,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
+    t.string   "video_id"
   end
 
   add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree
@@ -185,6 +155,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
+    t.integer  "number_of_questions",       default: 0
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -229,6 +200,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
+    t.integer  "number_of_questions",       default: 0
   end
 
   add_index "course_modules", ["exam_level_id"], name: "index_course_modules_on_exam_level_id", using: :btree
@@ -275,6 +247,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.boolean  "live",                                    default: false, null: false
     t.text     "short_description"
     t.string   "mailchimp_list_id"
+    t.string   "forum_url"
   end
 
   add_index "exam_levels", ["qualification_id"], name: "index_exam_levels_on_qualification_id", using: :btree
@@ -297,6 +270,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.text     "short_description"
     t.text     "description"
     t.string   "mailchimp_list_id"
+    t.string   "forum_url"
   end
 
   add_index "exam_sections", ["exam_level_id"], name: "index_exam_sections_on_exam_level_id", using: :btree
@@ -576,6 +550,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.string   "question_selection_strategy"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.integer  "exam_section_id"
   end
 
   add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
@@ -647,6 +622,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.integer  "flash_quiz_id"
     t.datetime "destroyed_at"
     t.integer  "exam_level_id"
+    t.integer  "exam_section_id"
   end
 
   add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree
@@ -1075,6 +1051,7 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.datetime "password_reset_at"
     t.string   "stripe_customer_id"
     t.integer  "corporate_customer_id"
+    t.integer  "corporate_customer_user_group_id"
     t.string   "operational_email_frequency"
     t.string   "study_plan_notifications_email_frequency"
     t.string   "falling_behind_email_alert_frequency"
@@ -1089,12 +1066,11 @@ ActiveRecord::Schema.define(version: 20150813111524) do
     t.datetime "trial_ended_notification_sent_at"
     t.string   "crush_offers_session_id"
     t.integer  "subscription_plan_category_id"
-    t.string   "employee_guid"
-    t.boolean  "password_change_required"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
   add_index "users", ["corporate_customer_id"], name: "index_users_on_corporate_customer_id", using: :btree
+  add_index "users", ["corporate_customer_user_group_id"], name: "index_users_on_corporate_customer_user_group_id", using: :btree
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["password_reset_token"], name: "index_users_on_password_reset_token", using: :btree

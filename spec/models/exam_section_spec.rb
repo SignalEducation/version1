@@ -20,6 +20,7 @@
 #  short_description                 :text
 #  description                       :text
 #  mailchimp_list_id                 :string
+#  forum_url                         :string
 #
 
 require 'rails_helper'

@@ -236,6 +236,7 @@ class CourseModuleElementsController < ApplicationController
         :seo_description,
         :seo_no_index,
         :is_cme_flash_card_pack,
+        :number_of_questions,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
@@ -243,7 +244,8 @@ class CourseModuleElementsController < ApplicationController
             :tags,
             :difficulty_level,
             # :estimated_study_time_seconds,
-            :transcript],
+            :transcript,
+            :video_id],
         course_module_element_quiz_attributes: [
             :id,
             :course_module_element_id,
