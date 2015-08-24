@@ -13,7 +13,7 @@
           =f.label :name, t('views.corporate_groups.form.name'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_field :name, placeholder: t('views.corporate_groups.form.name_placeholder'), class: 'form-control'
-        .form-group
+        .form-group{style: 'margin-left: 0px;'}
           %table.col-sm-12
             %thead
               %tr
@@ -28,7 +28,7 @@
                   %td=radio_button_tag("exam_levels[#{el.id}]", "compulsory", @corporate_group.exam_level_compulsory?(el.id), class: "col-sm-3")
                   %td=radio_button_tag("exam_levels[#{el.id}]", "restricted", @corporate_group.exam_level_restricted?(el.id), class: "col-sm-3")
                   %td=link_to('Clear', '#', id: "exam_levels_#{el.id}_clear", class: "clear-radio-lnk col-sm-3")
-        .form-group
+        .form-group{style: 'margin-left: 0px;'}
           %table.col-sm-12
             %thead
               %tr
