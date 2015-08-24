@@ -55,7 +55,30 @@ RSpec.describe UserPasswordResetsController, type: :controller do
         put :update, password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token
         expect(flash[:success]).to eq(I18n.t('controllers.user_password_resets.update.flash.success'))
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
+        expect(response.status).to be(302)
+        expect(response).to redirect_to(root_url)
+      end
+
+      it 'returns sends e-mail to user' do
+        ActionMailer::Base.deliveries.clear
+        put :update, password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
+      end
+
+      it 'does not send e-mail to user created by admin or corporate manager' do
+        ActionMailer::Base.deliveries.clear
+        reset_user.update_attribute(:password_change_required, true)
+        put :update, password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token
+        expect(ActionMailer::Base.deliveries.count).to eq(0)
+      end
+
+      it 'resets password_change_required flag for users created by admin or corporate manager' do
+        reset_user.update_attribute(:password_change_required, true)
+        put :update, password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token
+        expect(flash[:success]).to eq(I18n.t('controllers.user_password_resets.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to be(302)
+        expect(reset_user.reload.password_change_required).to eq(nil)
         expect(response).to redirect_to(root_url)
       end
 
@@ -63,16 +86,14 @@ RSpec.describe UserPasswordResetsController, type: :controller do
         put :update, password: '123123123', password_confirmation: '123123123', id: '123'
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.error'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(root_url)
+        expect(response).to render_template(:edit)
       end
 
       it 'returns ERROR for mismatching passwords' do
         put :update, password: '123123123', password_confirmation: '456456456', id: reset_user.password_reset_token
         expect(flash[:success]).to be_nil
-        expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.error'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(root_url)
+        expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.password_and_confirmation_do_not_match'))
+        expect(response).to render_template(:edit)
       end
     end
 

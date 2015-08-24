@@ -376,6 +376,7 @@ en:
         flash:
           success: Your password has been successsfully reset; welcome back!
           error: Your password has not been reset. Please start again.
+          password_and_confirmation_do_not_match: Password and password confirmation do not match. Please try again.
 
     user_sessions:
       create:

@@ -198,8 +198,7 @@ class User < ActiveRecord::Base
                                   password_confirmation: new_password_confirmation.to_s,
                                   active: true, password_reset_token: nil,
                                   password_reset_requested_at: nil,
-                                  password_reset_at: Time.now,
-                                  password_change_required: nil)
+                                  password_reset_at: Time.now)
           user # return this
         else
           false
