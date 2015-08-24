@@ -1188,8 +1188,8 @@ en:
 
     user_password_resets:
       new:
-        h1: Reset your password?
-        paragraph_1: No problem! Enter your email address and we will send you further instructions.
+        h1: Password Reset
+        paragraph_1: Forgot password? No problem! Enter your email address and we will send you further instructions.
 
       create:
         h1: Reset your password...
@@ -1197,7 +1197,7 @@ en:
 
       edit:
         h1: Reset your password
-        paragraph_1: "Choose a new password for your account:"
+        paragraph_1: "Enter a new password for your account:"
 
     user_notifications:
       form:
@@ -1254,9 +1254,9 @@ en:
       form:
         error_message: 'prevented you from signing in'
         email: Email
-        email_placeholder: 'john@example.com'
+        email_placeholder: 'Enter your e-mail address'
         password: Password
-        password_placeholder: '******'
+        password_placeholder: 'Enter your password address'
         forgot_password: 'Forgot password?'
 
     vat_codes:
