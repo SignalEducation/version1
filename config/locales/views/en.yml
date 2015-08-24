@@ -1254,9 +1254,9 @@ en:
       form:
         error_message: 'prevented you from signing in'
         email: Email
-        email_placeholder: 'john@example.com'
+        email_placeholder: 'Enter your e-mail address'
         password: Password
-        password_placeholder: '******'
+        password_placeholder: 'Enter your password address'
         forgot_password: 'Forgot password?'
 
     vat_codes:
