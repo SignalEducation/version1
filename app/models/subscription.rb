@@ -216,7 +216,7 @@ class Subscription < ActiveRecord::Base
              available_to_students: self.subscription_plan.available_to_students,
              available_to_corporates: self.subscription_plan.available_to_corporates)
       .where('price > 0.0')
-      .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+      .generally_available
       .all_active
       .all_in_order
   end
