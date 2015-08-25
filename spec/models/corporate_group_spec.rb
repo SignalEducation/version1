@@ -40,4 +40,49 @@ describe CorporateGroup do
   it { should respond_to(:exam_level_compulsory?) }
   it { should respond_to(:exam_section_restricted?) }
   it { should respond_to(:exam_section_compulsory?) }
+
+  context "compulsory and restricted flags handling" do
+    before do
+      @corporate_group = FactoryGirl.create(:corporate_group)
+      @compulsory_levels = FactoryGirl.create_list(:active_exam_level, 2, live: true)
+      @compulsory_levels.each do |cl|
+        @corporate_group.corporate_group_grants.create(exam_level_id: cl.id, compulsory: true)
+      end
+
+      @restricted_levels = FactoryGirl.create_list(:active_exam_level, 3, live: true)
+      @restricted_levels.each do |rl|
+        @corporate_group.corporate_group_grants.create(exam_level_id: rl.id, restricted: true)
+      end
+
+      @compulsory_sections = FactoryGirl.create_list(:active_exam_section, 4, live: true)
+      @compulsory_sections.each do |cs|
+        @corporate_group.corporate_group_grants.create(exam_section_id: cs.id, compulsory: true)
+      end
+
+      @restricted_sections = FactoryGirl.create_list(:active_exam_section, 5, live: true)
+      @restricted_sections.each do |rs|
+        @corporate_group.corporate_group_grants.create(exam_section_id: rs.id, restricted: true)
+      end
+    end
+
+    it "returns exact compulsory level IDs" do
+      expect(@corporate_group.compulsory_level_ids.count).to eq(@compulsory_levels.length)
+      expect(@corporate_group.compulsory_level_ids.sort).to eq(@compulsory_levels.map(&:id).sort)
+    end
+
+    it "returns exact restricted level IDs" do
+      expect(@corporate_group.restricted_level_ids.count).to eq(@restricted_levels.length)
+      expect(@corporate_group.restricted_level_ids.sort).to eq(@restricted_levels.map(&:id).sort)
+    end
+
+    it "returns exact compulsory section IDs" do
+      expect(@corporate_group.compulsory_section_ids.count).to eq(@compulsory_sections.length)
+      expect(@corporate_group.compulsory_section_ids.sort).to eq(@compulsory_sections.map(&:id).sort)
+    end
+
+    it "returns exact restricted section IDs" do
+      expect(@corporate_group.restricted_section_ids.count).to eq(@restricted_sections.length)
+      expect(@corporate_group.restricted_section_ids.sort).to eq(@restricted_sections.map(&:id).sort)
+    end
+  end
 end

@@ -45,6 +45,36 @@ class CorporateGroup < ActiveRecord::Base
     corporate_group_grants.where(exam_section_id: exam_section_id).first.try(:compulsory)
   end
 
+  def compulsory_level_ids
+    corporate_group_grants
+      .where('exam_level_id is not null')
+      .where(exam_section_id: nil)
+      .where(compulsory: true)
+      .pluck(:exam_level_id)
+  end
+
+  def compulsory_section_ids
+    corporate_group_grants
+      .where("exam_section_id is not null")
+      .where(compulsory: true)
+      .pluck(:exam_section_id)
+  end
+
+  def restricted_level_ids
+    corporate_group_grants
+      .where('exam_level_id is not null')
+      .where(exam_section_id: nil)
+      .where(restricted: true)
+      .pluck(:exam_level_id)
+  end
+
+  def restricted_section_ids
+    corporate_group_grants
+      .where("exam_section_id is not null")
+      .where(restricted: true)
+      .pluck(:exam_section_id)
+  end
+
   protected
 
   def check_dependencies
