@@ -1,35 +1,145 @@
-%br/
-%h1=t('views.dashboard.tutor.title') + ': ' + current_user.try(:full_name)
-%br/
-.row
-  .col-sm-8
-    -@exam_levels.each do |el|
-      %h4=el.name
+-#TODO This is currently duplicate code from individual student partial but it will be changed once tutor profiles are completed.
 
-      %table.table.table-striped.table-bordered
-        %thead
-          %tr
-            %th=t('views.course_modules.index.h1')
-            %th=t('views.course_module_elements.form.active')
-            %th=t('views.dashboard.tutor.course_module_element_quizzes')
-            %th="#{t('views.dashboard.tutor.course_module_element_videos')} / #{t('views.dashboard.tutor.total_time_watched')}"
-            %th=t('views.dashboard.tutor.total_course_module_elements')
-            %th=t('views.library.show.jumbo_quiz')
-        %tbody
-          -@course_modules.where(exam_level_id: el.id).each do |course_modules|
-            %tr{id: course_modules.id}
-              %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
-              %td=tick_or_cross(course_modules.active?)
-              %td=course_modules.course_module_element_quizzes.count
-              - if course_modules.course_module_element_videos.count > 0
-                %td= "%d (%02d:%02d:%02d)" % [course_modules.course_module_element_videos.count,
-                course_modules.total_time_watched_videos[:hours], course_modules.total_time_watched_videos[:minutes],
-                course_modules.total_time_watched_videos[:seconds]]
-              - else
-                %td= course_modules.course_module_element_videos.count
-              %td=course_modules.course_module_elements.count
-              %td=tick_or_cross(course_modules.course_module_jumbo_quiz)
+%div{role: 'tabpanel'}
+  .is-bg-purple-2.coursebar
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-12{role: 'tablist'}
+            %a.coursetype.l-margin-top{href: '#tutor', aria: {controls: 'tutor'}, role: 'tab', data: {toggle: 'tab'}}
+              ='Tutor Courses'
+            %a.coursetype.l-margin-top{href: '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
+              ='Active Courses'
+            %a.coursetype.l-margin-top{href: '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
+              ='Complete Courses'
 
-  .col-sm-4
-    %p='Your Video View Time: ' + humanize_time(@total_seconds).to_s
-    %p='Your Video View Time this month: ' + humanize_time(@monthly_total_seconds).to_s
+  .l-section-small.is-bg-asphalt
+    .tab-content
+      .l-wrap.active.tab-pane.fade.in#tutor{role: 'tabpanel'}
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                Your Courses
+              %p Real content will appear here soon!
+          .row
+            .col-md-12
+              -#.box-item.chart-box
+                .row.l-margin-bottom-big
+                  .col-md-6
+                    %h2.letter-space-wide Loem ipsum dolor
+                  .col-md-6.chart-legend.text-right
+                    .color-circle.color-red.text-inline
+                    %p.text-inline.font-small Video
+                    .color-circle.color-cyan.text-inline
+                    %p.text-inline.font-small MCQ's
+                    .color-circle.color-purple.text-inline
+                    %p.text-inline.font-small Flash Cards
+                .row.l-margin-bottom
+                  %canvas#canvas{height:"300", width:"790"}
+
+              -@tutor_courses.each do |course|
+                %h2.l-margin-bottom
+                  =course.name
+                .no-image-box-item.table-box
+                  -#TODO complete this once Wistia project ID are added to tutor users
+                  %table.table{style: 'font-size: 16px;'}
+                    %thead
+                      %tr
+                        %th
+                        %th This month
+                        %th Total lifetime
+                    %tbody
+                      %tr
+                        %td.row-name.text-bold Total
+                        %td 11:11
+                        %td 11:11
+                      %tr
+                        %td.row-name.text-bold Minutes
+                        %td 11:11
+                        %td 11:11
+                      %tr
+                        %td.row-name.text-bold MCQ's
+                        %td 11:11
+                        %td 11:11
+                      %tr
+                        %td.row-name.text-bold Flashcards
+                        %td 11:11
+                        %td 11:11
+                      %tr
+                        %td
+                        %td
+                        %td
+
+      .tab-pane.fade#active{role: 'tabpanel'}
+        .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
+          .container-fluid
+            .row
+              .col-md-12.text-center
+                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+                  -if current_user
+                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                  -else
+                    ='You are making good progress!'
+                %p{'style'=>'font-size: 24px'}
+                  Your Active Courses
+            .row.l-margin-bottom-huge
+              -@incomplete_courses.each do |course|
+                .col-md-4.l-margin-top
+                  = link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center', style: 'background-image: 0;' do
+                    .panel-icon.icon-big
+                      %i.glyphicon.glyphicon-pencil
+                    .panel-body
+                      %h4.text-bold.one-line-text
+                        =course.try(:name)
+                      %p
+                        -if course.short_description
+                          =course.try(:short_description).to_s.truncate(30)
+                        -else
+                          =course.parent.try(:name)
+
+                      - #total_lesson = course.active_children.count
+                      - #complete_lesson = course.number_complete_by_user_or_guid(current_user.id, current_session_guid)
+                      - #complete_percent = course.percentage_complete_by_user_or_guid(current_user.id, current_session_guid)
+                    -#%p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
+                    -#.progress.l-margin-top-big
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                    .box-label continue
+
+      .tab-pane.fade#completed{role: 'tabpanel'}
+        .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
+          .container-fluid
+            .row
+              .col-md-12.text-center
+                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+                  -if current_user
+                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                  -else
+                    ='You are making good progress!'
+                %p{'style'=>'font-size: 24px'}
+                  Your Completed Courses
+            .row.l-margin-bottom-huge
+              -@completed_courses.each do |course|
+                .col-md-4.l-margin-top
+                  =link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center' do
+                    .panel-icon.icon-big
+                      %i.glyphicon.glyphicon-pencil
+                    .panel-body
+                      %h4.text-bold.one-line-text
+                        =course.try(:name)
+                      %p
+                        -if course.short_description
+                          =course.try(:short_description).to_s.truncate(30)
+                        -else
+                          =course.parent.try(:name)
+
+                      - #total_lesson = course.course_modules.count
+                      - #complete_lesson = course.course_modules.where(student_exam_tracks.percentage_complete = 100).count
+                      - #complete_percent = course.percentage_complete_by_user_or_guid(current_user.id, current_session_guid)
+                    -#%p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                    -#.progress.l-margin-top-big
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                    .box-label continue
+
+
+=render partial: 'shared/activate_tab'
