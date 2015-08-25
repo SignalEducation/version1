@@ -1384,6 +1384,9 @@ en:
 
       index:
         h1: Corporate Groups
+        exam_level: Exam Level
+        compulsory: Compulsory
+        restricted: Restricted
 
       show:
         h1: Corporate Group

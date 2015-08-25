@@ -17,9 +17,9 @@
           %table.col-sm-12
             %thead
               %tr
-                %th{style: "width: 70%;"} Exam Level
-                %th{style: "width: 13%;"} Compulsory
-                %th{style: "width: 13%;"} Restricted
+                %th{style: "width: 70%;"}=t('views.corporate_groups.index.exam_level')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.compulsory')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.restricted')
                 %th{style: "width: 4%;"}
             %tbody
               -ExamLevel.where(enable_exam_sections: false).all_active.all_in_order.each do |el|
@@ -32,9 +32,9 @@
           %table.col-sm-12
             %thead
               %tr
-                %th{style: "width: 70%;"} Exam Section
-                %th{style: "width: 13%;"} Compulsory
-                %th{style: "width: 13%;"} Restricted
+                %th{style: "width: 70%;"}=t('views.corporate_groups.index.exam_level')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.compulsory')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.restricted')
                 %th{style: "width: 4%;"}
             %tbody
               -ExamSection.all_active.all_in_order.each do |es|
