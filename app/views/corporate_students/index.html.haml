@@ -23,7 +23,7 @@
               =link_to(corporate_student.full_name, edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
               %br/
               =link_to(corporate_student.email, edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
-            %td=link_to(corporate_student.active, edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
+            %td=link_to(tick_or_cross(corporate_student.active), corporate_student, title: t('views.general.view_tooltip'))
             %td=link_to(corporate_student.employee_guid || '', edit_corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
             %td
               =link_to t('views.general.edit'), edit_corporate_student_url(corporate_student), class: 'btn btn-info btn-xs'
