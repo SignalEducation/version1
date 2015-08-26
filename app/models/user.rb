@@ -322,6 +322,28 @@ class User < ActiveRecord::Base
     @mixpanel_alias_id = mixpanel_alias_id
   end
 
+  def compulsory_exam_level_ids
+    @compulsory_level_ids ||=
+      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_level_ids }.flatten.uniq : []
+  end
+
+  def compulsory_exam_section_ids
+    @compulsory_section_ids ||=
+      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_section_ids }.flatten.uniq : []
+  end
+
+  def restricted_exam_level_ids
+    @restricted_level_ids ||=
+      corporate_student? ?
+        (corporate_groups.map { |cg| cg.restricted_level_ids }.flatten.uniq - compulsory_exam_level_ids) : []
+  end
+
+  def restricted_exam_section_ids
+    @restricted_section_ids =
+      corporate_student? ?
+        (corporate_groups.map { |cg| cg.restricted_section_ids }.flatten.uniq - compulsory_exam_section_ids) : []
+  end
+
   protected
 
   def add_guid
