@@ -1,19 +1,17 @@
 -if current_user
-  -if current_user.individual_student?
-    =render partial: 'dashboard/individual_student'
+  -if current_user.individual_student? || current_user.corporate_student?
+    =render partial: 'dashboard/student'
   -elsif current_user.admin?
     =render partial: 'dashboard/admin'
   -elsif current_user.content_manager?
     =render partial: 'dashboard/content_manager'
   -elsif current_user.tutor?
     =render partial: 'dashboard/tutor'
-  -elsif current_user.tutor?
-    =render partial: 'dashboard/individual_student'
-  -elsif current_user.tutor?
+  -elsif current_user.corporate_customer?
     =render partial: 'dashboard/corporate_customer'
   -else
-    =render partial: 'dashboard/individual_student'
+    =render partial: 'dashboard/student'
 
 
 -else
-  =render partial: 'dashboard/individual_student'
+  =render partial: 'dashboard/student'
