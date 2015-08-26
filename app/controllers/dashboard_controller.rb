@@ -36,6 +36,7 @@ class DashboardController < ApplicationController
     completed_sections = exam_sections.where(id: completed_sections_set_ids)
     @incomplete_courses = incomplete_levels + incomplete_sections
     @completed_courses = completed_levels + completed_sections
+    @compulsory_courses = []
 
     if @dashboard_type.include?('admin')
       @all_users = User.all
@@ -75,9 +76,13 @@ class DashboardController < ApplicationController
       @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
       @total_seconds = @cmeuls.sum(:seconds_watched)
       @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
-
     end
 
+    if current_user.corporate_student?
+      @exam_sections = @exam_sections.where('id not in (?)', current_user.restricted_exam_section_ids) unless current_user.restricted_exam_section_ids.empty?
+      @compulsory_courses = ExamLevel.all_active.all_live.all_in_order.all_without_exam_sections_enabled.where(id: current_user.compulsory_exam_section_ids) +
+                            ExamSection.all_active.all_live.all_in_order.where(id: current_user.compulsory_exam_section_ids)
+    end
   end
 
 end

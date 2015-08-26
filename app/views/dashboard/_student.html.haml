@@ -7,6 +7,9 @@
             .col-md-12{role: 'tablist'}
               %a.coursetype.l-margin-top{href: '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
                 ='Active Courses'
+              - if current_user.corporate_student?
+                %a.coursetype.l-margin-top{href: '#compulsory', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
+                  ='Compulsory Courses'
               %a.coursetype.l-margin-top{href: '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
                 ='Complete Courses'
 
@@ -45,6 +48,36 @@
                     -#.progress.l-margin-top-big
                         .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                     .box-label continue
+
+        - if current_user.corporate_student?
+          .tab-pane.fade#compulsory{role: 'tabpanel'}
+            .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
+              .container-fluid
+                .row
+                  .col-md-12.text-center
+                    %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+                      -if current_user
+                        ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                      -else
+                        ='You are making good progress!'
+                    %p{'style'=>'font-size: 24px'}
+                      Your Compulsory Courses
+                .row.l-margin-bottom-huge
+                  -@compulsory_courses.each do |course|
+                    .col-md-4.l-margin-top
+                      =link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center' do
+                        .panel-icon.icon-big
+                          %i.glyphicon.glyphicon-pencil
+                        .panel-body
+                          %h4.text-bold.one-line-text
+                            =course.try(:name)
+                          %p
+                            -if course.short_description
+                              =course.try(:short_description).to_s.truncate(30)
+                            -else
+                              =course.parent.try(:name)
+
+                        .box-label continue
 
         .tab-pane.fade#completed{role: 'tabpanel'}
           .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
