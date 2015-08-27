@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: corporate_group_grants
+#
+#  id                 :integer          not null, primary key
+#  corporate_group_id :integer
+#  exam_level_id      :integer
+#  exam_section_id    :integer
+#  compulsory         :boolean
+#  restricted         :boolean
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+
 require 'rails_helper'
 
 describe CorporateGroupGrant do
