@@ -1,10 +1,13 @@
 class CorporateCustomersController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
+  before_action except: [:update] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
+  before_action :update do
+    ensure_user_is_of_type(['admin', 'corporate_customer'])
+  end
 
   def index
     @corporate_customers = CorporateCustomer.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -33,7 +36,7 @@ class CorporateCustomersController < ApplicationController
   def update
     if @corporate_customer.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.corporate_customers.update.flash.success')
-      redirect_to corporate_customers_url
+      redirect_to request.referrer.include?("profile") ? profile_url : corporate_customers_url
     else
       render action: :edit
     end
@@ -61,7 +64,15 @@ class CorporateCustomersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:corporate_customer).permit(:organisation_name, :address, :country_id, :payments_by_card, :is_university, :owner_id, :stripe_customer_guid, :can_restrict_content)
+    params.require(:corporate_customer).permit(:organisation_name,
+                                               :address,
+                                               :country_id,
+                                               :payments_by_card,
+                                               :is_university,
+                                               :owner_id,
+                                               :stripe_customer_guid,
+                                               :can_restrict_content,
+                                               :logo)
   end
 
 end

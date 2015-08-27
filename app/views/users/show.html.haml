@@ -28,6 +28,9 @@
           .row
             .col-sm-8.col-sm-offset-2
               .well.well-sm
+                -if current_user.corporate_customer?
+                  %p
+                    =link_to image_tag(current_user.corporate_customer.logo.url), '#', data: {toggle: 'modal', target: '#company-data-modal'}, class: 'btn btn-info'
                 =render partial: 'users/form_personal_details', locals: {f: f}
           .row
             .col-sm-8.col-sm-offset-2
@@ -180,7 +183,6 @@
                   %p
                     =link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-info'
 
-
         -if current_user.admin?
           .tab-pane.fade#admin{role: 'tabpanel'}
             .row
@@ -258,5 +260,8 @@
   -else
     =render partial: 'users/upgrade_plan'
   =render partial: 'subscription_payment_cards/modal'
+
+-if current_user.corporate_customer?
+  =render partial: 'users/company'
 
 =render partial: 'shared/activate_tab'

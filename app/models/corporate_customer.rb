@@ -26,7 +26,7 @@ class CorporateCustomer < ActiveRecord::Base
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
                   :is_university, :owner_id, :stripe_customer_guid,
-                  :can_restrict_content
+                  :can_restrict_content, :logo
 
   # Constants
 
@@ -40,6 +40,7 @@ class CorporateCustomer < ActiveRecord::Base
   has_many :students, class_name: 'User', foreign_key: :corporate_customer_id
   has_many :subscriptions
   has_many :corporate_groups
+  has_attached_file :logo, default_url: "/assets/images/placeholder-company.gif"
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}
@@ -48,6 +49,7 @@ class CorporateCustomer < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :owner_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation { squish_fields(:organisation_name, :address) }

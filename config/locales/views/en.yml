@@ -1075,6 +1075,7 @@ en:
       show:
         h1: Account
         add_new_card: "Add New Card"
+        change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
           h4: Change your password
@@ -1097,6 +1098,7 @@ en:
         re_subscribe_plan: 'Thank you for reactivating'
         tabs:
           personal_details: Personal details
+          corporation: Corporation
           subscriptions: Subscriptions
           notifications: Notifications
           admin: Admin
