@@ -14,6 +14,15 @@ class CorporateStudentsController < ApplicationController
     else
       @corporate_students = @corporate_students.where(corporate_customer_id: current_user.corporate_customer_id)
     end
+
+    unless params[:search_term].empty?
+      @corporate_students = @corporate_students.search_for(params[:search_term])
+    end
+
+    unless params[:corporate_group].empty?
+      @corporate_students = @corporate_students.joins(:corporate_groups).where("corporate_groups_users.corporate_group_id = ?", params[:corporate_group])
+    end
+
     @corporate_students = @corporate_students.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
