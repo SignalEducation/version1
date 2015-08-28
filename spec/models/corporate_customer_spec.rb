@@ -24,7 +24,7 @@ require 'rails_helper'
 describe CorporateCustomer do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at logo_file_size logo_updated_at logo_file_name logo_content_type)
   CorporateCustomer.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
