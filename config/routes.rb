@@ -84,7 +84,12 @@ Rails.application.routes.draw do
 
     # general resources
     resources :corporate_customers
-    resources :corporate_groups, except: [:show]
+    resources :corporate_groups, except: [:show] do
+      get 'edit_members', action: :edit_members
+      patch 'update_members', action: :update_members
+      put 'update_members', action: :update_members
+    end
+
     resources :corporate_students
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do

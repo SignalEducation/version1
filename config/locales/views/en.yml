@@ -1389,6 +1389,7 @@ en:
         exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted
+        members: Members
 
       show:
         h1: Corporate Group
@@ -1398,6 +1399,9 @@ en:
 
       new:
         h1: New Corporate Group
+
+      manage_members:
+        student: Student
 
     corporate_students:
       form:

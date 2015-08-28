@@ -31,6 +31,15 @@ class CorporateGroupsController < ApplicationController
     end
   end
 
+  def edit_members
+    @corporate_group = CorporateGroup.find(params[:corporate_group_id]) rescue nil
+    if @corporate_group.nil? ||
+       (current_user.corporate_customer? && current_user.corporate_customer_id != @corporate_group.corporate_customer_id)
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to corporate_groups_url
+    end
+  end
+
   def create
     @corporate_group = CorporateGroup.new(allowed_params)
     if (current_user.admin? || current_user.corporate_customer_id == @corporate_group.corporate_customer_id) &&
@@ -52,6 +61,18 @@ class CorporateGroupsController < ApplicationController
       redirect_to corporate_groups_url
     else
       render action: :edit
+    end
+  end
+
+  def update_members
+    @corporate_group = CorporateGroup.find(params[:corporate_group_id]) rescue nil
+    if @corporate_group &&
+       (current_user.admin? || current_user.corporate_customer_id == @corporate_group.corporate_customer_id)
+      @corporate_group.user_ids = params[:corporate_group][:corporate_student_ids]
+      flash[:success] = I18n.t('controllers.corporate_groups.update_members.flash.success')
+      redirect_to corporate_groups_url
+    else
+      render action: :edit_members
     end
   end
 

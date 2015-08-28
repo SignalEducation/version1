@@ -19,8 +19,11 @@
             %td=corporate_group.corporate_customer.organisation_name
             %td
               =link_to t('views.general.edit'), edit_corporate_group_url(corporate_group), class: 'btn btn-info btn-xs'
+              =link_to t('views.corporate_groups.index.members'),
+              corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-info btn-xs'
               -if corporate_group.destroyable?
-                =link_to t('views.general.delete'), corporate_group, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+                =link_to t('views.general.delete'), corporate_group,
+                method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
 
 .row
   .col-sm-12

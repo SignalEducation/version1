@@ -27,5 +27,16 @@ RSpec.describe CorporateGroupsController, type: :routing do
       expect(delete: '/corporate_groups/1').to route_to('corporate_groups#destroy', id: '1')
     end
 
+    it 'routes to #edit_members' do
+      expect(get: 'corporate_groups/1/edit_members').to route_to('corporate_groups#edit_members', corporate_group_id: '1')
+    end
+
+    it 'routes to #update_members' do
+      expect(patch: 'corporate_groups/1/update_members').to route_to('corporate_groups#update_members', corporate_group_id: '1')
+    end
+
+    it 'routes to #update_members' do
+      expect(put: 'corporate_groups/1/update_members').to route_to('corporate_groups#update_members', corporate_group_id: '1')
+    end
   end
 end

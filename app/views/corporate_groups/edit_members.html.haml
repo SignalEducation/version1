@@ -1,0 +1,26 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1= t('views.corporate_groups.index.members')
+      %h3= @corporate_group.name
+
+.row
+  .col-sm-8.col-sm-offset-2
+    = form_for(@corporate_group, url: { action: :update_members }, html: {class: 'form-horizontal', role: 'form', id: 'group-users-form'}) do |f|
+      .well.well-sm
+        .form-group
+          %table.col-sm-10.col-sm-offset-1
+            %thead
+              %tr
+                %th= t('views.corporate_groups.manage_members.student')
+                %th
+            %tbody
+              - @corporate_group.corporate_customer.students.each do |student|
+                %tr
+                  %td= student.full_name
+                  %td{style: 'width: 5%;'}= check_box_tag "corporate_group[corporate_student_ids][]",
+                  student.id, @corporate_group.users.include?(student)
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), corporate_groups_path

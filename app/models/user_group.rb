@@ -31,6 +31,7 @@ class UserGroup < ActiveRecord::Base
 
   # Constants
   FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger forum_manager content_manager admin)
+  CORPORATE_STUDENTS = 2
 
   # relationships
   has_many :users

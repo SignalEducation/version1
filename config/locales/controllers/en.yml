@@ -458,6 +458,9 @@ en:
         flash:
           success: Corporate Group has been deleted
           error: Corporate Group was not deleted
+      update_members:
+        flash:
+          success: Corporate group members have been updated successfully
 
     corporate_students:
       create:

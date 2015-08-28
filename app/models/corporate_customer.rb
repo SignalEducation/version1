@@ -37,7 +37,10 @@ class CorporateCustomer < ActiveRecord::Base
   # todo has_many :corporate_customer_users
   has_many :invoices
   belongs_to :owner, class_name: 'User', foreign_key: :owner_id
-  has_many :students, class_name: 'User', foreign_key: :corporate_customer_id
+  has_many :students,
+           -> { where(user_group_id: UserGroup::CORPORATE_STUDENTS) },
+           class_name: 'User',
+           foreign_key: :corporate_customer_id
   has_many :subscriptions
   has_many :corporate_groups
   has_attached_file :logo, default_url: "/assets/images/placeholder-company.gif"
