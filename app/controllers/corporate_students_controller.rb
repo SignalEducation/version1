@@ -33,7 +33,7 @@ class CorporateStudentsController < ApplicationController
   def edit
   end
 
-  def show_all
+  def show
   end
 
   def create
