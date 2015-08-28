@@ -103,14 +103,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -161,14 +161,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -219,14 +219,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -277,15 +277,15 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
-        expect_bounce_as_not_allowed
+        put :update, id: corporate_customer_1.id, corporate_customer: valid_params
+        expect_update_success_with_model('corporate_customer', corporate_customers_url)
       end
     end
 
@@ -335,14 +335,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -393,14 +393,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -451,21 +451,21 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+      it 'should respond OK to valid params for corporate_customer_1' do
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+        delete :destroy, id: corporate_customer_1.id
         expect_bounce_as_not_allowed
       end
     end
