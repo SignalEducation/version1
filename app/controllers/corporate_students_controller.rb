@@ -15,11 +15,11 @@ class CorporateStudentsController < ApplicationController
       @corporate_students = @corporate_students.where(corporate_customer_id: current_user.corporate_customer_id)
     end
 
-    unless params[:search_term].empty?
+    unless params[:search_term].blank?
       @corporate_students = @corporate_students.search_for(params[:search_term])
     end
 
-    unless params[:corporate_group].empty?
+    unless params[:corporate_group].blank?
       @corporate_students = @corporate_students.joins(:corporate_groups).where("corporate_groups_users.corporate_group_id = ?", params[:corporate_group])
     end
 
@@ -31,6 +31,9 @@ class CorporateStudentsController < ApplicationController
   end
 
   def edit
+  end
+
+  def show_all
   end
 
   def create
