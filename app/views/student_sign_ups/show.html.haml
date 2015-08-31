@@ -1,6 +1,14 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.student_sign_ups.show.h1')
-      .leader
-        %p=t('views.student_sign_ups.show.sub-head')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Thanks for joining us!
+        .col-md-8.col-md-offset-2.l-margin-bottom-6x
+          .col-md-8.col-md-offset-2.l-margin-top.text-center
+            =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sendmailimage.png', class: 'l-margin-bottom-big')
+            %p{style: 'letter-spacing: 0.5px;'}
+              Welcome aboard! Your sign-up was completed successfully.
+            %p{style: 'text-align: left;  letter-spacing: 0.5px;'}
+              An E-mail with your activation code has been sent. Please check your inbox and click on the link to activate your LearnSignal account.

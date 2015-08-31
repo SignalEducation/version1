@@ -37,7 +37,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   validates :name, presence: true, length: {maximum: 255}
   validates :description, presence: true
   validates_attachment_content_type :upload,
-            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document text/csv application/octet-stream application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)
   validates :web_url, format: {with: URI::regexp(%w(http https)) },
             if: '!web_url.blank?', length: {maximum: 255}
   validate  :web_url_or_upload_required
