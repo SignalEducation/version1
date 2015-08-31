@@ -1,45 +1,138 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.corporate_customers.show.h1')
-        = current_user.admin? ? "##{@corporate_customer.id}" : "Overview"
-.row
-  .col-sm-12
-    - if current_user.admin?
-      %table.table.table-bordered
-        %tr
-          %td.col-sm-4=t('views.corporate_customers.form.organisation_name')
-          %td.col-sm-8=@corporate_customer.organisation_name
-        %tr
-          %td.col-sm-4=t('views.corporate_customers.form.address')
-          %td.col-sm-8=@corporate_customer.address
-        %tr
-          %td.col-sm-4=t('views.corporate_customers.form.country_id')
-          %td.col-sm-8
-            -# todo =@corporate_customer.country.name
-        %tr
-          %td.col-sm-4=t('views.corporate_customers.form.payments_by_card')
-          %td.col-sm-8=tick_or_cross(@corporate_customer.payments_by_card)
-        %tr
-          %td.col-sm-4=t('views.corporate_customers.form.stripe_customer_guid')
-          %td.col-sm-8=@corporate_customer.stripe_customer_guid
+#wrapper
+  .hidden-xs
+    #sidebar-wrapper.text-center
+      %ul.sidebar-nav
+        .sidebar-brand
+          = image_tag @corporate_customer.logo.url
+        %li.first-li
+          %a{href: '#' } Overview
+        %li
+          %a{href: '#' } Users
+        %li
+          %a{ href: '#' } Groups
+        %li
+          %a{ href: '#' } Account
 
-    %h3= t('views.corporate_customers.show.compulsory_courses')
-    %table.table
-      %tbody
-        - @compulsory_courses.each do |cc|
-          %tr
-            %td= cc.name
-    %h3= t('views.corporate_customers.show.started_courses')
-    %table.table
-      %tbody
-        - @started_courses.each do |sc|
-          %tr
-            %td= sc.name
+  .main-content
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid
+        .row.l-margin-bottom
+          .col-md-12
+            %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+              = current_user.admin? ? "##{@corporate_customer.id}" : "Overview"
+          .col-md-12.l-margin-top-big
+            -if current_user.admin?
+              .corporate-box-item.table-box
+                .table-responsive
+                  %table.table{style: 'font-size: 16px;'}
+                    %thead
+                      %tr
+                        %th
+                          =t('views.corporate_customers.form.organisation_name')
+                        %th
+                          =t('views.corporate_customers.form.address')
+                        %th
+                          =t('views.corporate_customers.form.payments_by_card')
+                        %th
+                          =t('views.corporate_customers.form.stripe_customer_guid')
+                    %tbody
+                      %tr
+                        %td
+                          =@corporate_customer.organisation_name
+                        %td
+                          =@corporate_customer.address
+                        %td
+                          =tick_or_cross(@corporate_customer.payments_by_card)
+                        %td
+                          =@corporate_customer.stripe_customer_guid ? "#{@corporate_customer.stripe_customer_guid}" : "Nil"
+                      %tr
+                        %td
+                        %td
+                        %td
+                        %td
 
-    %p
-      - if current_user.admin?
-        =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
-        |
-        =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')
+            .corporate-box-item.chart-box
+              .row.l-margin-bottom-big
+                .col-md-6
+                  %h2.letter-space-wide User Activity
+                .col-md-6.chart-legend.text-right
+                  .color-circle.color-red.text-inline
+                  %p.text-inline.font-small Videos
+                  .color-circle.color-cyan.text-inline
+                  %p.text-inline.font-small Quizzes
+              .row.l-margin-bottom
+                %canvas#canvas{height:"300", width:"790"}
+
+
+            .corporate-box-item.table-box
+              %h2.l-margin-bottom
+                = t('views.corporate_customers.show.compulsory_courses')
+              .table-responsive
+                %table.table{style: 'font-size: 16px;'}
+                  %tbody
+                    - @compulsory_courses.each do |cc|
+                      %tr
+                        %td= cc.name
+
+            .corporate-box-item.table-box
+              %h2.l-margin-bottom
+                = t('views.corporate_customers.show.started_courses')
+              .table-responsive
+                %table.table{style: 'font-size: 16px;'}
+                  %tbody
+                    - @started_courses.each do |sc|
+                      %tr
+                        %td= sc.name
+
+      %p
+        - if current_user.admin?
+          =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
+          |
+          =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')
+
+  =render partial: 'layouts/new_footer'
+
+
+:javascript
+    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+    var months = #{@labels},
+        videoCounts = #{@video_count}
+    var lineChartData = {
+      labels : months,
+      datasets : [
+        {
+          label: "Videos",
+          fillColor : "rgba(220,220,220,0)",
+          strokeColor : "#EE5457",
+          pointColor : "#EE5457",
+          pointStrokeColor : "#EE5457",
+          pointHighlightFill : "#fff",
+          pointHighlightStroke : "rgba(220,220,220,1)",
+          data : [#{@this_month},#{@this_month},55,69,23,52,31,50]
+          //data : videoCounts
+        },
+        {
+          label: "Quizzes",
+          fillColor : "rgba(62,185,206,0.2)",
+          strokeColor : "rgba(62,185,206,1)",
+          pointColor : "rgba(62,185,206,1)",
+          //pointStrokeColor : "#fff",
+          pointHighlightFill : "#fff",
+          pointHighlightStroke : "rgba(151,187,205,1)",
+          data : [30,20,57,40,20,52,47,100]
+        }
+      ]
+    }
+
+    window.onload = function(){
+      var ctx = document.getElementById("canvas").getContext("2d");
+      window.myLine = new Chart(ctx).Line(lineChartData, {
+        responsive: true,scaleShowVerticalLines: false,datasetStrokeWidth : 3,scaleGridLineColor : "rgba(0,0,0,.1)",
+        scaleOverride: true, scaleStartValue: 0, scaleStepWidth: 10, scaleSteps: 10,scaleShowLabels: true
+      });
+    }
+
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });

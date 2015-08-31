@@ -14,6 +14,7 @@ $asphalt-2: #F8FAFF;
 $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
 $purple-3: rgb(83, 84, 112);
+$purple-4: #9E9FAD;
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -267,6 +268,7 @@ hr {
 @import "testimonials.scss";
 @import "plans.scss";
 @import "quiz";
+@import "corporate-sidebar";
 
 .course-group-title {
   margin-bottom: $gutter*2;

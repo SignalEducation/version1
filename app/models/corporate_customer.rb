@@ -42,7 +42,7 @@ class CorporateCustomer < ActiveRecord::Base
            foreign_key: :corporate_customer_id
   has_many :subscriptions
   has_many :corporate_groups
-  has_attached_file :logo, default_url: "/assets/images/placeholder-company.gif"
+  has_attached_file :logo, default_url: "/assets/images/missing_corporate_logo.png"
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}

@@ -23,6 +23,20 @@ class CorporateCustomersController < ApplicationController
     started_levels = ExamLevel.where(id: exam_tracks.where("exam_level_id is not null and exam_section_id is null").pluck(:exam_level_id))
     started_sections = ExamSection.where(id: exam_tracks.where("exam_section_id is not null").pluck(:exam_section_id))
     @started_courses = started_levels + started_sections
+
+    #Graph Data
+    date_to  = Date.parse("#{Proc.new{Time.now}.call}")
+    date_from = date_to - 6.months
+    date_range = date_from..date_to
+    date_months = date_range.map {|d| Date.new(d.year, d.month, 1) }.uniq
+    @labels = date_months.map {|d| d.strftime "%B" }
+
+    video_logs = CourseModuleElementUserLog.where(is_video: true)
+    quiz_logs = CourseModuleElementUserLog.where(is_quiz: true)
+    corporate_videos = video_logs.where(user_id: @corporate_customer.students.pluck(:id))
+    @this_month = corporate_videos.where(created_at: Date.today.month)
+    @last_month = corporate_videos.this_month.count
+
   end
 
   def new
