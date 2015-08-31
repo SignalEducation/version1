@@ -75,7 +75,6 @@ class CorporateCustomersController < ApplicationController
       @corporate_customer = CorporateCustomer.where(id: params[:id]).first
     end
     @countries = Country.all_in_order
-    @owners = User.all_in_order
     seo_title_maker(@corporate_customer.try(:organisation_name) || 'Corporate Customers', '', true)
   end
 
@@ -84,10 +83,7 @@ class CorporateCustomersController < ApplicationController
                                                :address,
                                                :country_id,
                                                :payments_by_card,
-                                               :is_university,
-                                               :owner_id,
                                                :stripe_customer_guid,
-                                               :can_restrict_content,
                                                :logo)
   end
 

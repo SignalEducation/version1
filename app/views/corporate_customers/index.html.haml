@@ -11,9 +11,6 @@
           %th=t('views.corporate_customers.form.organisation_name')
           %th=t('views.corporate_customers.form.country_id')
           %th=t('views.corporate_customers.form.payments_by_card')
-          %th=t('views.corporate_customers.form.is_university')
-          %th=t('views.corporate_customers.form.owner_id')
-          %th=t('views.corporate_customers.form.can_restrict_content')
           %th
       %tbody
         -@corporate_customers.each do |corporate_customer|
@@ -22,9 +19,6 @@
             %td
               -# todo =link_to(corporate_customer.country.name, corporate_customer, title: t('views.general.view_tooltip'))
             %td=link_to(tick_or_cross(corporate_customer.payments_by_card), corporate_customer, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(corporate_customer.is_university), corporate_customer, title: t('views.general.view_tooltip'))
-            %td=link_to(corporate_customer.owner.full_name, corporate_customer, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(corporate_customer.can_restrict_content), corporate_customer, title: t('views.general.view_tooltip'))
             %td
               -#=link_to t('views.general.view'), corporate_customer
               =link_to t('views.general.edit'), edit_corporate_customer_url(corporate_customer), class: 'btn btn-info btn-xs'

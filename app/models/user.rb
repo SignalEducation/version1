@@ -76,9 +76,6 @@ class User < ActiveRecord::Base
   # relationships
   belongs_to :corporate_customer
              # employed by the corporate customer
-  has_many :owned_corporate_accounts,
-           class_name: 'CorporateCustomer', foreign_key: :owner_id
-           # owns these corporate accounts (usually one, but can be more)
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
@@ -288,7 +285,6 @@ class User < ActiveRecord::Base
         self.forum_topic_users.empty? &&
         self.institution_users.empty? &&
         self.invoices.empty? &&
-        self.owned_corporate_accounts.empty? &&
         self.quiz_attempts.empty? &&
         self.student_exam_tracks.empty? &&
         self.subscriptions.empty? &&

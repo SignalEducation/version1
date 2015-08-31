@@ -68,7 +68,6 @@ describe User do
 
   # relationships
   it { should belong_to(:corporate_customer) }
-  it { should have_many(:owned_corporate_accounts) }
   it { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }

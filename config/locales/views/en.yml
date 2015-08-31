@@ -114,10 +114,7 @@ en:
         address_placeholder: '123 Fake Street'
         country_id: Country
         payments_by_card: Payments by card
-        is_university: Is University
-        owner_id: Owner
         stripe_customer_guid: Stripe Customer ID
-        can_restrict_content: Can restrict content
 
       index:
         h1: Corporate Customers

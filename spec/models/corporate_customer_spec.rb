@@ -7,12 +7,9 @@
 #  updated_at           :datetime
 #  organisation_name    :string
 #  address              :text
-#  owner_id             :integer
 #  country_id           :integer
 #  payments_by_card     :boolean          default(FALSE), not null
-#  is_university        :boolean          default(FALSE), not null
 #  stripe_customer_guid :string
-#  can_restrict_content :boolean          default(FALSE), not null
 #  logo_file_name       :string
 #  logo_content_type    :string
 #  logo_file_size       :integer
@@ -42,7 +39,6 @@ describe CorporateCustomer do
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:invoices) }
   it { should belong_to(:country) }
-  it { should belong_to(:owner) }
   it { should have_many(:students)
                .class_name('User')
                .conditions(user_group_id: UserGroup::CORPORATE_STUDENTS) }
@@ -60,10 +56,6 @@ describe CorporateCustomer do
 
   it { should validate_presence_of(:country_id) }
   it { should validate_numericality_of(:country_id) }
-
-  it { should validate_presence_of(:owner_id) }
-  it { should validate_numericality_of(:owner_id) }
-
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
