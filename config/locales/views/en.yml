@@ -124,6 +124,9 @@ en:
 
       show:
         h1: Corporate Customer
+        compulsory_courses: Compulsory Courses
+        started_courses: Started Courses
+        overview: Overview
 
       edit:
         h1: Edit Corporate Customer

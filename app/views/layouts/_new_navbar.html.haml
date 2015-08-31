@@ -98,6 +98,7 @@
                     %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
                     %li.divider
                   -elsif current_user.corporate_customer?
+                    %li=link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
                     %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
                     %li=link_to t('views.corporate_students.index.h1'), corporate_students_url
                     %li.divider

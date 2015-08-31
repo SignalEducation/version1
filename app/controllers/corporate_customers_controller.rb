@@ -1,10 +1,10 @@
 class CorporateCustomersController < ApplicationController
 
   before_action :logged_in_required
-  before_action only: [:update] do
+  before_action only: [:update, :show] do
     ensure_user_is_of_type(['admin', 'corporate_customer'])
   end
-  before_action except: [:update] do
+  before_action except: [:update, :show] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -14,6 +14,15 @@ class CorporateCustomersController < ApplicationController
   end
 
   def show
+    redirect_to dashboard_url if current_user.corporate_customer? && current_user.corporate_customer_id != params[:id].to_i
+    @compulsory_courses = ExamLevel.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten ) +
+                          ExamSection.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
+    exam_tracks = StudentExamTrack
+                  .where(user_id: @corporate_customer.students.pluck(:id))
+                  .where('percentage_complete < 100')
+    started_levels = ExamLevel.where(id: exam_tracks.where("exam_level_id is not null and exam_section_id is null").pluck(:exam_level_id))
+    started_sections = ExamSection.where(id: exam_tracks.where("exam_section_id is not null").pluck(:exam_section_id))
+    @started_courses = started_levels + started_sections
   end
 
   def new
