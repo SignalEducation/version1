@@ -78,7 +78,7 @@ class DashboardController < ApplicationController
       @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
     end
 
-    if current_user.corporate_student?
+    if current_user && current_user.corporate_student?
       @exam_sections = @exam_sections.where('id not in (?)', current_user.restricted_exam_section_ids) unless current_user.restricted_exam_section_ids.empty?
       @compulsory_courses = ExamLevel.all_active.all_live.all_in_order.all_without_exam_sections_enabled.where(id: current_user.compulsory_exam_section_ids) +
                             ExamSection.all_active.all_live.all_in_order.where(id: current_user.compulsory_exam_section_ids)

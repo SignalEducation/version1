@@ -3,7 +3,7 @@ class LibraryController < ApplicationController
   def index
     @exam_levels = ExamLevel.all_active.all_in_order.where(enable_exam_sections: false )
     @exam_sections = ExamSection.all_active.all_in_order
-    if current_user.corporate_student?
+    if current_user && current_user.corporate_student?
       @exam_levels = @exam_levels.where('id not in (?)', current_user.restricted_exam_level_ids) unless current_user.restricted_exam_level_ids.empty?
       @exam_sections = @exam_sections.where('id not in (?)', current_user.restricted_exam_section_ids) unless current_user.restricted_exam_section_ids.empty?
     end
