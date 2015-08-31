@@ -41,6 +41,10 @@ class CorporateCustomer < ActiveRecord::Base
            -> { where(user_group_id: UserGroup::CORPORATE_STUDENTS) },
            class_name: 'User',
            foreign_key: :corporate_customer_id
+  has_many :managers,
+           -> { where(user_group_id: UserGroup::CORPORATE_CUSTOMERS)},
+           class_name: 'User',
+           foreign_key: :corporate_customer_id
   has_many :subscriptions
   has_many :corporate_groups
   has_attached_file :logo, default_url: "/assets/images/placeholder-company.gif"
@@ -64,7 +68,11 @@ class CorporateCustomer < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.students.empty? && self.course_module_element_user_logs.empty? && self.invoices.empty? && self.subscriptions.empty? # todo && self.corporate_customer_prices.empty? && self.corporate_customer_users.empty?
+    self.students.empty? &&
+      self.managers.empty? &&
+      self.course_module_element_user_logs.empty? &&
+      self.invoices.empty? &&
+      self.subscriptions.empty?
   end
 
   protected

@@ -46,6 +46,9 @@ describe CorporateCustomer do
   it { should have_many(:students)
                .class_name('User')
                .conditions(user_group_id: UserGroup::CORPORATE_STUDENTS) }
+  it { should have_many(:managers)
+               .class_name('User')
+               .conditions(user_group_id: UserGroup::CORPORATE_CUSTOMERS) }
   it { should have_many(:subscriptions) }
   it { should have_many(:corporate_groups) }
 
