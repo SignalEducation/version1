@@ -12,6 +12,8 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
+      @user_session.user.update_attribute(:session_key, session[:session_id])
+      flash[:error] = nil
       redirect_back_or_default root_url
     else
       render action: :new
@@ -30,7 +32,7 @@ class UserSessionsController < ApplicationController
   end
 
   def set_variables
-    @seo_title = 'LearnSignal – Sign In'
+    @seo_title = 'LearnSignal - Sign In'
   end
 
 end
