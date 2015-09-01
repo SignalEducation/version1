@@ -13,6 +13,8 @@ class CorporateStudentsController < ApplicationController
       @corporate_students = @corporate_students.where("corporate_customer_id is not null")
     else
       @corporate_students = @corporate_students.where(corporate_customer_id: current_user.corporate_customer_id)
+      @corporate_customer = CorporateCustomer.where(id: current_user.corporate_customer_id).first
+
     end
 
     unless params[:search_term].blank?

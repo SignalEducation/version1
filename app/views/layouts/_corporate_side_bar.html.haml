@@ -5,8 +5,8 @@
     %li.first-li
       =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
     %li
-      %a{href: '#' } Users
+      =link_to t('views.corporate_students.index.corp_h1'), corporate_students_url
     %li
-      %a{ href: '#' } Groups
+      =link_to t('views.corporate_groups.index.corp_h1'), corporate_groups_url
     %li
-      %a{ href: '#' } Account
+      =link_to t('views.users.show.h1'), profile_url

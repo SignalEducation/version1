@@ -1,28 +1,70 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.corporate_students.index.h1')
-      %h4=current_user.corporate_customer.organisation_name if current_user.corporate_customer?
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/corporate_side_bar'
 
-.well.well-sm
-  .row
-    .col-sm-6
-      =form_tag(corporate_students_url, method: :get, role: 'form', class: 'form-inline') do
-        .form-group
-          %label.sr-only{for: 'search_term'} Search box
-          .input-group
-            =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
-            .input-group-addon
-              %span.glyphicon.glyphicon-search
-        .form-group
-          =label_tag :corporate_group, t('views.corporate_students.form.corporate_group_name')
-          =select_tag :corporate_group,
-          options_for_select(@corporate_groups.map {|cg| [cg.name, cg.id]},
-          params[:corporate_group].to_s), class: 'form-control', include_blank: true
-    .col-sm-6.user-pagination.text-right
-      =will_paginate @corporate_students, renderer: BootstrapPagination::Rails
+  .main-content
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid.l-padding-side-3x
+        .row.l-margin-bottom.l-margin-top
+          .col-md-6.col-sm-6.col-xs-6
+            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+              Users
+          .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
+            =link_to t('views.general.add_user'), new_corporate_student_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+        .row.l-margin-top.l-margin-bottom
+          .col-md-4.col-sm-4.l-margin-top
+            =form_tag(corporate_students_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
+              .form-group
+                %label.sr-only{for: 'search_term'} Search box
+                .input-group.input-group-lg
+                  =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
+                  .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                    %span.glyphicon.glyphicon-search
+          .col-md-offset-4.col-md-4.l-margin-top
+            .input-group.input-group-lg.is-lg-right.full-width
+              .form-group
+                =select_tag :corporate_group,
+                options_for_select(@corporate_groups.map {|cg| [cg.name, cg.id]},
+                params[:corporate_group].to_s), class: 'form-control', style: 'border-radius: 6px;', prompt: 'All User Groups'
+          .col-md-12.l-margin-top-big
+            .corporate-box-item.table-box
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      -#%th{width: 20}
+                      %th Name
+                      %th Email
+                      %th Groups
+                      %th Edit
+                  %tbody
+                    -@corporate_students.each do |corporate_student|
+                      %tr{id: corporate_student.id}
+                        -#%td
+                          =link_to edit_corporate_student_url(corporate_student) do
+                            %i.glyphicon.glyphicon-remove-circle
+                        %td
+                          =corporate_student.full_name
+                        %td
+                          =corporate_student.email
+                        %td
+                          =corporate_student.corporate_groups.map(&:name).join("<br>").html_safe
+                        %td
+                          =link_to t('views.general.edit_user'), new_corporate_student_url, class: 'btn btn-small btn-purple'
+                      %tr
+                        %td
+                        %td
+                        %td
+                        %td
+                        %td
 
-.row
+
+
+
+          .col-md-12.l-margin-bottom-6x
+            =will_paginate @corporate_students, renderer: BootstrapPagination::Rails
+  =render partial: 'layouts/new_footer'
+-#.row
   .col-sm-12
     %table.table.table-striped.table-bordered
       %thead
@@ -49,7 +91,7 @@
             %td
               =link_to t('views.general.edit'), corporate_student_url(corporate_student), class: 'btn btn-info btn-xs'
 
-.row
+-#.row
   .col-sm-12
     =link_to t('views.general.new'), new_corporate_student_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
 

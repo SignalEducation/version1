@@ -7,6 +7,8 @@ en:
         thousands_separator: ","
         decimal_separator: "."
       active: Active
+      add_user: Add a user
+      edit_user: Edit user
       admin: Admin
       approve: Approve
       approve_tooltip: click to approve
@@ -1386,6 +1388,7 @@ en:
 
       index:
         h1: Corporate Groups
+        corp_h1: Groups
         exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted
@@ -1421,6 +1424,7 @@ en:
 
       index:
         h1: Corporate Students
+        corp_h1: Users
 
       edit:
         h1: Edit Corporate Student
