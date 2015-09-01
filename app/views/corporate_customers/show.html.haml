@@ -57,9 +57,9 @@
                   %h2.letter-space-wide User Activity
                 .col-md-6.chart-legend.text-right
                   .color-circle.color-red.text-inline
-                  %p.text-inline.font-small Videos
+                  %p.text-inline.font-small Videos Watched
                   .color-circle.color-cyan.text-inline
-                  %p.text-inline.font-small Quizzes
+                  %p.text-inline.font-small Quizzes Taken
               .row.l-margin-bottom
                 %canvas#canvas{height:"300", width:"790"}
 
@@ -96,30 +96,40 @@
 :javascript
     var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
     var months = #{@labels},
-        videoCounts = #{@video_count}
+        videosThisMonth = #{@videos_this_month},
+        videosOneMonthAgo = #{@videos_one_month_ago},
+        videosTwoMonthsAgo = #{@videos_two_months_ago},
+        videosThreeMonthsAgo = #{@videos_three_months_ago},
+        videosFourMonthsAgo = #{@videos_four_months_ago},
+        videosFiveMonthsAgo = #{@videos_five_months_ago}
+        quizzesThisMonth = #{@quizzes_this_month},
+        quizzesOneMonthAgo = #{@quizzes_one_month_ago},
+        quizzesTwoMonthsAgo = #{@quizzes_two_months_ago},
+        quizzesThreeMonthsAgo = #{@quizzes_three_months_ago},
+        quizzesFourMonthsAgo = #{@quizzes_four_months_ago},
+        quizzesFiveMonthsAgo = #{@quizzes_five_months_ago}
     var lineChartData = {
       labels : months,
       datasets : [
         {
-          label: "Videos",
+          label: "Videos Watched",
           fillColor : "rgba(220,220,220,0)",
           strokeColor : "#EE5457",
           pointColor : "#EE5457",
           pointStrokeColor : "#EE5457",
           pointHighlightFill : "#fff",
           pointHighlightStroke : "rgba(220,220,220,1)",
-          data : [#{@this_month},#{@this_month},55,69,23,52,31,50]
-          //data : videoCounts
+          data : [videosFiveMonthsAgo,videosFourMonthsAgo,videosThreeMonthsAgo,videosTwoMonthsAgo,videosOneMonthAgo,videosThisMonth]
         },
         {
-          label: "Quizzes",
+          label: "Quizzes Taken",
           fillColor : "rgba(62,185,206,0.2)",
           strokeColor : "rgba(62,185,206,1)",
           pointColor : "rgba(62,185,206,1)",
           //pointStrokeColor : "#fff",
           pointHighlightFill : "#fff",
           pointHighlightStroke : "rgba(151,187,205,1)",
-          data : [30,20,57,40,20,52,47,100]
+          data : [quizzesFiveMonthsAgo,quizzesFourMonthsAgo,quizzesThreeMonthsAgo,quizzesTwoMonthsAgo,quizzesOneMonthAgo,quizzesThisMonth]
         }
       ]
     }
