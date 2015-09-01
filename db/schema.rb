@@ -17,18 +17,21 @@ ActiveRecord::Schema.define(version: 20150901074128) do
   enable_extension "plpgsql"
 
   create_table "corporate_customers", force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "organisation_name"
     t.text     "address"
     t.integer  "country_id"
     t.boolean  "payments_by_card",     default: false, null: false
     t.string   "stripe_customer_guid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "logo_file_name"
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
   end
+
+  add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
+  add_index "corporate_customers", ["stripe_customer_guid"], name: "index_corporate_customers_on_stripe_customer_guid", using: :btree
 
   create_table "corporate_group_grants", force: :cascade do |t|
     t.integer  "corporate_group_id"
@@ -1051,6 +1054,23 @@ ActiveRecord::Schema.define(version: 20150901074128) do
   add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
   add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "tutor_project_id"
+    t.string   "tutor_wistia_url"
+    t.text     "description"
+    t.string   "url"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "user_profiles", ["tutor_project_id"], name: "index_user_profiles_on_tutor_project_id", using: :btree
+  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"

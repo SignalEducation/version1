@@ -45,6 +45,7 @@
 #  subscription_plan_category_id            :integer
 #  employee_guid                            :string
 #  password_change_required                 :boolean
+#  session_key                              :string
 #
 
 FactoryGirl.define do

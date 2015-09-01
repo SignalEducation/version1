@@ -122,7 +122,7 @@ en:
       show:
         h1: Corporate Customer
         compulsory_courses: Compulsory Courses
-        started_courses: Started Courses
+        started_courses: Other Courses
         overview: Overview
 
       edit:

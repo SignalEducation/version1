@@ -69,20 +69,43 @@
                 = t('views.corporate_customers.show.compulsory_courses')
               .table-responsive
                 %table.table{style: 'font-size: 16px;'}
+                  %thead
+                    %tr
+                      %th Course
+                      %th Videos Watched
+                      %th Quizzes Taken
                   %tbody
                     - @compulsory_courses.each do |cc|
                       %tr
                         %td= cc.name
+                        -if cc.class == ExamSection
+                          -ids = cc.children.all.map(&:id)
+                        -else
+                          -ids = cc.course_modules.all.map(&:id)
+                        %td=@corporate_videos_logs.where(course_module_id: ids).count
+                        %td=@corporate_quiz_logs.where(course_module_id: ids).count
 
             .corporate-box-item.table-box
               %h2.l-margin-bottom
                 = t('views.corporate_customers.show.started_courses')
               .table-responsive
                 %table.table{style: 'font-size: 16px;'}
+                  %thead
+                    %tr
+                      %th Course
+                      %th Videos Watched
+                      %th Quizzes Taken
                   %tbody
                     - @started_courses.each do |sc|
                       %tr
                         %td= sc.name
+                        -if sc.class == ExamSection
+                          -ids = sc.children.all.map(&:id)
+                        -else
+                          -ids = sc.course_modules.all.map(&:id)
+                        %td=@corporate_videos_logs.where(course_module_id: ids).count
+                        %td=@corporate_quiz_logs.where(course_module_id: ids).count
+
 
       %p
         - if current_user.admin?

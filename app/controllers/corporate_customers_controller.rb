@@ -17,11 +17,9 @@ class CorporateCustomersController < ApplicationController
     redirect_to dashboard_url if current_user.corporate_customer? && current_user.corporate_customer_id != params[:id].to_i
     @compulsory_courses = ExamLevel.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten ) +
                           ExamSection.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
-    exam_tracks = StudentExamTrack
-                  .where(user_id: @corporate_customer.students.pluck(:id))
-                  .where('percentage_complete < 100')
-    started_levels = ExamLevel.where(id: exam_tracks.where("exam_level_id is not null and exam_section_id is null").pluck(:exam_level_id))
-    started_sections = ExamSection.where(id: exam_tracks.where("exam_section_id is not null").pluck(:exam_section_id))
+    exam_tracks = StudentExamTrack.where(user_id: @corporate_customer.students.pluck(:id))
+    started_levels = ExamLevel.where(id: exam_tracks.where("exam_level_id is not null and exam_section_id is null").pluck(:exam_level_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten )
+    started_sections = ExamSection.where(id: exam_tracks.where("exam_section_id is not null").pluck(:exam_section_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
     @started_courses = started_levels + started_sections
 
     #Graph Dates Data
@@ -33,23 +31,25 @@ class CorporateCustomersController < ApplicationController
 
     #CourseModuleElementUserLogs Video Data
     video_logs = CourseModuleElementUserLog.where(is_video: true)
-    corporate_videos_logs = video_logs.where(user_id: @corporate_customer.students.pluck(:id))
-    @videos_this_month = corporate_videos_logs.this_month.count
-    @videos_one_month_ago = corporate_videos_logs.one_month_ago.count
-    @videos_two_months_ago = corporate_videos_logs.two_months_ago.count
-    @videos_three_months_ago = corporate_videos_logs.three_months_ago.count
-    @videos_four_months_ago = corporate_videos_logs.four_months_ago.count
-    @videos_five_months_ago = corporate_videos_logs.five_months_ago.count
+    @corporate_videos_logs = video_logs.where(corporate_customer_id: @corporate_customer.id)
+    @videos_this_month = @corporate_videos_logs.this_month.count
+    @videos_one_month_ago = @corporate_videos_logs.one_month_ago.count
+    @videos_two_months_ago = @corporate_videos_logs.two_months_ago.count
+    @videos_three_months_ago = @corporate_videos_logs.three_months_ago.count
+    @videos_four_months_ago = @corporate_videos_logs.four_months_ago.count
+    @videos_five_months_ago = @corporate_videos_logs.five_months_ago.count
 
     #CourseModuleElementUserLogs Quiz Data
     quiz_logs = CourseModuleElementUserLog.where(is_quiz: true)
-    corporate_quiz_logs = quiz_logs.where(user_id: @corporate_customer.students.pluck(:id))
-    @quizzes_this_month = corporate_quiz_logs.this_month.count
-    @quizzes_one_month_ago = corporate_quiz_logs.one_month_ago.count
-    @quizzes_two_months_ago = corporate_quiz_logs.two_months_ago.count
-    @quizzes_three_months_ago = corporate_quiz_logs.three_months_ago.count
-    @quizzes_four_months_ago = corporate_quiz_logs.four_months_ago.count
-    @quizzes_five_months_ago = corporate_quiz_logs.five_months_ago.count
+    @corporate_quiz_logs = quiz_logs.where(corporate_customer_id: @corporate_customer.id)
+    @quizzes_this_month = @corporate_quiz_logs.this_month.count
+    @quizzes_one_month_ago = @corporate_quiz_logs.one_month_ago.count
+    @quizzes_two_months_ago = @corporate_quiz_logs.two_months_ago.count
+    @quizzes_three_months_ago = @corporate_quiz_logs.three_months_ago.count
+    @quizzes_four_months_ago = @corporate_quiz_logs.four_months_ago.count
+    @quizzes_five_months_ago = @corporate_quiz_logs.five_months_ago.count
+    @compulsory_level_cms = CourseModule.where(exam_level_id: @compulsory_courses).map(&:id)
+    @compulsory_section_cms = CourseModule.where(exam_section_id: @compulsory_courses).map(&:id)
 
   end
 
