@@ -1,0 +1,12 @@
+#sidebar-wrapper.text-center
+  %ul.sidebar-nav
+    .sidebar-brand
+      = image_tag @corporate_customer.logo.url
+    %li.first-li
+      =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
+    %li
+      %a{href: '#' } Users
+    %li
+      %a{ href: '#' } Groups
+    %li
+      %a{ href: '#' } Account

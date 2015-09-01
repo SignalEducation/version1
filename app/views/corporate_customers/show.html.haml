@@ -1,17 +1,6 @@
 #wrapper
   .hidden-xs
-    #sidebar-wrapper.text-center
-      %ul.sidebar-nav
-        .sidebar-brand
-          = image_tag @corporate_customer.logo.url
-        %li.first-li
-          %a{href: '#' } Overview
-        %li
-          %a{href: '#' } Users
-        %li
-          %a{ href: '#' } Groups
-        %li
-          %a{ href: '#' } Account
+    =render partial: 'layouts/corporate_side_bar'
 
   .main-content
     .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
