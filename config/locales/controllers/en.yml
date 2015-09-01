@@ -21,6 +21,7 @@ en:
       logged_out_required:
         flash_error: 'You must be logged out to do that'
       you_are_not_permitted_to_do_that: 'You are not permitted to do that'
+      simultaneous_logins_detected: 'Access denied. Simultaneous logins detected.'
 
     duplicate_me_for_controller:
       create:
