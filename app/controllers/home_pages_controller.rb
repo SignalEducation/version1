@@ -75,7 +75,7 @@ class HomePagesController < ApplicationController
     if current_user
       redirect_to dashboard_url
     else
-      currency = (IpAddress.get_country(request.remote_ip).try(:id).try(:currency_id)) || (Currency.find(3)) #USD
+      currency = IpAddress.get_country(request.remote_ip).try(:id).try(:currency_id) || Currency.where(iso_code: 'USD').first
       subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).first
       if subscription_plan
         @user = User.new(student_allowed_params.merge({
