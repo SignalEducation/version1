@@ -1,30 +1,47 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.corporate_groups.index.h1')
-.row
-  .col-sm-12
-    =will_paginate @corporate_groups, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.corporate_groups.form.name')
-          %th=t('views.corporate_groups.form.corporate_customer')
-          %th
-      %tbody
-        -@corporate_groups.each do |corporate_group|
-          %tr{id: "cg-" + corporate_group.id.to_s}
-            %td
-              =link_to corporate_group.name, edit_corporate_group_url(corporate_group)
-            %td=corporate_group.corporate_customer.organisation_name
-            %td
-              =link_to t('views.general.edit'), edit_corporate_group_url(corporate_group), class: 'btn btn-info btn-xs'
-              =link_to t('views.corporate_groups.index.members'),
-              corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-info btn-xs'
-              -if corporate_group.destroyable?
-                =link_to t('views.general.delete'), corporate_group,
-                method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/corporate_side_bar'
 
-.row
-  .col-sm-12
-    =link_to t('views.general.new'), new_corporate_group_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+  .main-content
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid.l-padding-side-3x
+        .row.l-margin-bottom.l-margin-top
+          .col-md-6.col-sm-6.col-xs-6
+            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+              Groups
+          .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
+            =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+
+          .col-md-12.l-margin-top-big.l-margin-bottom-6x
+            .corporate-box-item.table-box
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th Group
+                      %th No. of Users
+                      %th Edit Members
+                      %th
+                  %tbody
+                    -@corporate_groups.each do |corporate_group|
+                      %tr
+                        %td
+                          =corporate_group.name
+                        %td
+                          =corporate_group.users.count
+                        %td
+                          =link_to t('views.general.edit_group'), edit_corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'
+                          =link_to t('views.corporate_groups.index.members'),
+              corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-small btn-purple'
+                          -if corporate_group.destroyable?
+                            =link_to t('views.general.delete'), corporate_group,
+                method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
+
+
+
+  -if current_user.admin?
+    .row
+      .col-sm-12
+        =link_to t('views.general.new'), new_corporate_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+  =render partial: 'layouts/new_footer'

@@ -8,7 +8,9 @@ en:
         decimal_separator: "."
       active: Active
       add_user: Add a user
+      add_group: Add a group
       edit_user: Edit user
+      edit_group: Edit Group
       admin: Admin
       approve: Approve
       approve_tooltip: click to approve

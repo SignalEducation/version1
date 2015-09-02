@@ -16,6 +16,9 @@ class CorporateGroupsController < ApplicationController
                           .paginate(per_page: 50, page: params[:page]).all_in_order
     end
     @corporate_groups
+    if current_user.corporate_customer?
+      @corporate_customer = CorporateCustomer.where(id: current_user.corporate_customer_id).first
+    end
   end
 
   def new
