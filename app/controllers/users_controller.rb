@@ -110,7 +110,7 @@ class UsersController < ApplicationController
       @subscription_plans = SubscriptionPlan
                             .includes(:currency)
                             .for_students
-                            .in_currency(current_user.country.currency_id)
+                            .in_currency(current_user.subscriptions.first.subscription_plan.currency_id)
                             .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
                             .all_active
                             .all_in_order
