@@ -611,6 +611,10 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           payment_frequency_in_months: 12,
           currency_id: 1,
           price: 99.99})); print '.'
+  SubscriptionPlan.where(id: 12).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 1,
+          price: 0.0})); print '.'
   # Sterling
   SubscriptionPlan.where(id: 4).first_or_create!(subscription_plan_stuff.merge({
           payment_frequency_in_months: 1,
@@ -624,6 +628,11 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           payment_frequency_in_months: 12,
           currency_id: 2,
           price: 79.99})); print '.'
+  SubscriptionPlan.where(id: 11).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 2,
+          price: 0.0})); print '.'
+
   # US Dollar
   SubscriptionPlan.where(id: 7).first_or_create!(subscription_plan_stuff.merge({
           payment_frequency_in_months: 1,
@@ -637,6 +646,10 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           payment_frequency_in_months: 12,
           currency_id: 3,
           price: 129.99})); print '.'
+  SubscriptionPlan.where(id: 10).first_or_create!(subscription_plan_stuff.merge({
+          payment_frequency_in_months: 12,
+          currency_id: 3,
+          price: 0.0})); print '.'
 
   puts ' DONE'
   puts 'Completed the db:seed process'
