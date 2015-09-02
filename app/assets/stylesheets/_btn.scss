@@ -138,3 +138,14 @@ a.btn-block {
   }
 }
 
+.pagination > li > a, .pagination > li > span {
+  padding: 10px 18px;
+  color: $purple-1;
+  &:hover {
+
+  }
+}
+.pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
+  background-color: $asphalt-3;
+  border-color: $asphalt-3;
+}

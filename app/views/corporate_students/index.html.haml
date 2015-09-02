@@ -14,15 +14,13 @@
         .row.l-margin-top.l-margin-bottom
           .col-md-4.col-sm-4.l-margin-top
             =form_tag(corporate_students_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
-              .form-group
-                %label.sr-only{for: 'search_term'} Search box
-                .input-group.input-group-lg
-                  =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
-                  .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                    %span.glyphicon.glyphicon-search
+              .form-group.input-group.input-group-lg
+                =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
+                .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                  %span.glyphicon.glyphicon-search
           .col-md-offset-4.col-md-4.l-margin-top
-            .input-group.input-group-lg.is-lg-right.full-width
-              .form-group
+            =form_tag(corporate_students_url, method: :get, role: 'form', class: 'form-inline') do
+              .form-group.input-group.input-group-lg.is-lg-right.full-width
                 =select_tag :corporate_group,
                 options_for_select(@corporate_groups.map {|cg| [cg.name, cg.id]},
                 params[:corporate_group].to_s), class: 'form-control', style: 'border-radius: 6px;', prompt: 'All User Groups'
@@ -50,13 +48,7 @@
                         %td
                           =corporate_student.corporate_groups.map(&:name).join("<br>").html_safe
                         %td
-                          =link_to t('views.general.edit_user'), new_corporate_student_url, class: 'btn btn-small btn-purple'
-                      %tr
-                        %td
-                        %td
-                        %td
-                        %td
-                        %td
+                          =link_to t('views.general.edit_user'), edit_corporate_student_url(corporate_student), class: 'btn btn-small btn-purple'
 
 
 
@@ -64,36 +56,6 @@
           .col-md-12.l-margin-bottom-6x
             =will_paginate @corporate_students, renderer: BootstrapPagination::Rails
   =render partial: 'layouts/new_footer'
--#.row
-  .col-sm-12
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th
-            =t('views.corporate_students.form.full_name')
-            %br/
-            =t('views.corporate_students.form.email')
-          %th=t('views.corporate_students.form.corporate_group_name')
-          %th=t('views.corporate_students.form.active')
-          %th=t('views.corporate_students.form.employee_guid')
-          %th
-      %tbody
-        -@corporate_students.each do |corporate_student|
-          %tr{id: corporate_student.id}
-            %td
-              =link_to(corporate_student.full_name, corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
-              %br/
-              =link_to(corporate_student.email, corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
-            %td
-              =corporate_student.corporate_groups.map(&:name).join("<br>").html_safe
-            %td=link_to(tick_or_cross(corporate_student.active), corporate_student, title: t('views.general.view_tooltip'))
-            %td=link_to(corporate_student.employee_guid || '', corporate_student_url(corporate_student), title: t('views.general.view_tooltip'))
-            %td
-              =link_to t('views.general.edit'), corporate_student_url(corporate_student), class: 'btn btn-info btn-xs'
-
--#.row
-  .col-sm-12
-    =link_to t('views.general.new'), new_corporate_student_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
 
 :javascript
   $(document).ready(function() {
