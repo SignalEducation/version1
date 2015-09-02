@@ -18,6 +18,7 @@ describe HomePagesController, type: :controller do
                             password_confirmation: "dummy_pass" } }
   let!(:default_plan) { FactoryGirl.create(:subscription_plan, price: 0.0) }
   let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:currency) { FactoryGirl.create(:usd) }
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
   context 'Not logged in: ' do

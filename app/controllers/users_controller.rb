@@ -102,12 +102,24 @@ class UsersController < ApplicationController
   def new_paid_subscription
     redirect_to profile_url if current_user.subscriptions.count > 1
     @user = current_user
-    @subscription_plans = SubscriptionPlan
-                          .includes(:currency)
-                          .for_students
-                          .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
-                          .all_active
-                          .all_in_order
+    if current_user.subscriptions.first == SubscriptionPlan.where(id: 51).first
+      @subscription_plans = SubscriptionPlan
+                                .includes(:currency)
+                                .for_students
+                                .in_currency(1)
+                                .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+                                .all_active
+                                .all_in_order
+
+    else
+      @subscription_plans = SubscriptionPlan
+                            .includes(:currency)
+                            .for_students
+                            .in_currency(current_user.country.currency_id)
+                            .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+                            .all_active
+                            .all_in_order
+    end
   end
 
   def upgrade_from_free_trial

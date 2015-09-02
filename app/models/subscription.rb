@@ -346,12 +346,18 @@ class Subscription < ActiveRecord::Base
     self.complimentary = false
     if self.stripe_customer_id.blank?
       #### New customer
-      if @stripe_token || self.free_trial?
+      if self.free_trial?
         stripe_customer = Stripe::Customer.create(
           card: @stripe_token,
           plan: self.subscription_plan.try(:stripe_guid),
           email: self.user.try(:email)
         )
+        stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
+      elsif @stripe_token
+        stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
+        stripe_customer.plan = self.subscription_plan.try(:stripe_guid)
+        stripe_customer.source = @stripe_token
+        stripe_customer.save
         stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
       end
     elsif self.stripe_guid.blank?
@@ -373,14 +379,6 @@ class Subscription < ActiveRecord::Base
             current_status: stripe_subscription.status,
             stripe_customer_id: stripe_customer.id,
             stripe_customer_data: stripe_customer.to_hash.deep_dup)
-
-      # Customer ID on Stripe has been changed because user has converted
-      # from free trial (when he does not have card token on Stripe) to payed
-      # subscription (when he gets card token) so we have to update it in our
-      # DB.
-      if self.user.stripe_customer_id != self.stripe_customer_id
-        self.user.update_attribute(:stripe_customer_id, self.stripe_customer_id)
-      end
 
       if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
         errors.add(:base, I18n.t('models.general.live_mode_error'))
