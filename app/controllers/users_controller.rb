@@ -33,6 +33,9 @@ class UsersController < ApplicationController
       end
       @user.reload
     end
+    if current_user.corporate_customer?
+      @corporate_customer = current_user.corporate_customer
+    end
   end
 
   def new

@@ -67,7 +67,8 @@ class User < ActiveRecord::Base
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes, :employee_guid, :password_change_required
+                  :subscriptions_attributes, :employee_guid, :password_change_required,
+                  :address
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)

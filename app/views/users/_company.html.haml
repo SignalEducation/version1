@@ -1,29 +1,31 @@
 =form_for(@user.corporate_customer, html: {class: 'form-horizontal', role: 'form', id: 'company-data-form'}) do |f|
   .modal.fade#company-data-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'companyDataLabel', hidden: 'true'}}
     .modal-dialog
-      .modal-content
-        .modal-header
-          %button.close{type: 'button', data: {dismiss: 'modal'}}
-            %span{aria: {hidden: 'true'}} &times;
-            %span.sr-only=t('views.general.close')
-          %h4.modal-title#companyDataLabel=t('views.corporate_customers.show.h1')
-
-        .modal-body
-          .l-margin-top-big.payment-errors
+      .modal-content.is-bg-asphalt.l-padding-side-15
+        .container-fluid
+          .modal-header
             .row
-              .col-sm-12
-                .form-group
-                  .col-sm-8
-                    =f.file_field :logo
-                .form-group
-                  =f.label :organisation_name, t('views.corporate_customers.form.organisation_name'), class: 'control-label col-sm-4'
-                  .col-sm-8
-                    =f.text_field :organisation_name, class: 'form-control', autofocus: true
-                .form-group
-                  =f.label :address, t('views.corporate_customers.form.address'), class: 'control-label col-sm-4'
-                  .col-sm-8
-                    =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control'
+              .col-md-12.l-margin-top
+                %button{type: 'button', class: 'close', "data-dismiss": 'modal', "aria-label": "Close", style: 'font-size: 30px'} &times;
+                %h2.modal-title{style: 'width: 95%'}
+                  =t('views.corporate_customers.show.h1')
+            .row.l-margin-top
+              .col-md-12
+                %h4
+                  Corporate Logo
+                %br/
+                .sidebar-brand
+                  = image_tag @corporate_customer.logo.url
+                %br/
+                =f.file_field :logo
+                %br/
+                =f.label :organisation_name, t('views.corporate_customers.form.organisation_name')
+                .input-group.input-group-lg.full-width
+                  =f.text_field :organisation_name, class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :address, t('views.corporate_customers.form.address')
+                .input-group.input-group-lg.full-width
+                  =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+                %br/
 
-        .modal-footer
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
-          =f.submit t('views.general.save'), class: 'btn btn-success'
+            %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
+            =f.submit t('views.general.save'), class: 'btn btn-red l-margin-top-big l-margin-bottom-big'

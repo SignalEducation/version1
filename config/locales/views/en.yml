@@ -44,6 +44,7 @@ en:
       or: or
       review: Review
       save: Save
+      save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
       search: Search...
       select: Select...
@@ -1078,6 +1079,7 @@ en:
 
       show:
         h1: Account
+        edit: Edit Account
         add_new_card: "Add New Card"
         change_company_data: "Change Company Data"
         change_your_password:
