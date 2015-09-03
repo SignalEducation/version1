@@ -26,6 +26,7 @@ class CorporateStudentsController < ApplicationController
     end
 
     @corporate_students = @corporate_students.paginate(per_page: 50, page: params[:page]).all_in_order
+    @corporate_student = User.new
   end
 
   def new
@@ -56,7 +57,8 @@ class CorporateStudentsController < ApplicationController
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
-      render action: :new
+      flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
+      redirect_to corporate_students_url
     end
   end
 

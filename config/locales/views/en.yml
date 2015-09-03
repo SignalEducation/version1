@@ -1425,6 +1425,7 @@ en:
         country: Country
         corporate_customer: Corporate customer
         corporate_group_name: Corporate group
+        add_to_groups: Add to Groups
 
       index:
         h1: Corporate Students

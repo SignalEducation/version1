@@ -467,6 +467,7 @@ en:
       create:
         flash:
           success: Corporate student user has been created successfully
+          error: There was invalid data Please try again
       update:
         flash:
           success: Corporate student user details have been updated successfully

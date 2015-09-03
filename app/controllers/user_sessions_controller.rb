@@ -14,7 +14,11 @@ class UserSessionsController < ApplicationController
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
       @user_session.user.update_attribute(:session_key, session[:session_id])
       flash[:error] = nil
-      redirect_back_or_default root_url
+      if @user_session.user.corporate_customer?
+        redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer)
+      else
+        redirect_back_or_default root_url
+      end
     else
       render action: :new
     end
