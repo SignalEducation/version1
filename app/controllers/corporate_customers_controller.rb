@@ -15,8 +15,8 @@ class CorporateCustomersController < ApplicationController
 
   def show
     redirect_to dashboard_url if current_user.corporate_customer? && current_user.corporate_customer_id != params[:id].to_i
-    @compulsory_courses = ExamLevel.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten ) +
-                          ExamSection.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
+    @compulsory_courses = ExamLevel.all_active.all_live.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten ) +
+                          ExamSection.all_active.all_live.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
     exam_tracks = StudentExamTrack.where(user_id: @corporate_customer.students.pluck(:id))
     started_levels = ExamLevel.where(id: exam_tracks.where("exam_level_id is not null and exam_section_id is null").pluck(:exam_level_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten )
     started_sections = ExamSection.where(id: exam_tracks.where("exam_section_id is not null").pluck(:exam_section_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
