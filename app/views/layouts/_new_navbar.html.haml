@@ -13,7 +13,10 @@
           %ul.nav.navbar-nav.navbar-right
             -if current_user
               %li
-                =link_to 'Dashboard', dashboard_url
+                -if current_user.corporate_customer?
+                  =link_to 'Dashboard', corporate_customer_url(current_user.corporate_customer)
+                -else
+                  =link_to 'Dashboard', dashboard_url
               %li
                 =link_to 'Library', library_url
               -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial?
@@ -96,11 +99,6 @@
                     %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
                     %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
                     %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
-                    %li.divider
-                  -elsif current_user.corporate_customer?
-                    %li=link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
-                    %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
-                    %li=link_to t('views.corporate_students.index.h1'), corporate_students_url
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), profile_url
