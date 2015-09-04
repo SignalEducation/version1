@@ -1078,7 +1078,7 @@ en:
         h1: Create Account
 
       show:
-        h1: Account
+        h1: My Account
         edit: Edit Account
         add_new_card: "Add New Card"
         change_company_data: "Change Company Data"
