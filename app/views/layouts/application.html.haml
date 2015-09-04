@@ -79,7 +79,7 @@
       .margin-top
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'corporate_customers' || 'corporate_students') || (controller_name == 'corporate_students' && action_name == 'index') || (controller_name == 'users' && action_name == 'show')
+    -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_students' && action_name == 'index') || (controller_name == 'users' && action_name == 'show') || (controller_name == 'corporate_groups')
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield

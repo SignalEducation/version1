@@ -1,0 +1,67 @@
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/corporate_side_bar'
+
+  .main-content
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid.l-padding-side-3x
+        .row.l-margin-bottom.l-margin-top
+          .col-md-6.col-sm-6.col-xs-6
+            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+              User Group
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top
+            .corporate-box-item.table-box
+              =form_for(@corporate_group, html: {class: 'form-horizontal', role: 'form', id: 'corporate-group-frm'}) do |f|
+                =render partial: '/layouts/error_messages', locals: {thing: @corporate_group, message: nil}
+                =f.hidden_field :corporate_customer_id, value: current_user.corporate_customer_id
+                =f.label :name, t('views.corporate_groups.form.name')
+                %br/
+                .input-group.input-group-lg.full-width
+                  =f.text_field :name, placeholder: t('views.corporate_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                .form-group{style: 'margin-left: 0px;'}
+                  %table.col-sm-12
+                    %thead
+                      %tr
+                        %th{style: "width: 70%; font-size: 1.6rem;"}='Course'
+                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.compulsory')
+                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
+                        %th{style: "width: 4%;"}
+                    %tbody
+                      -exam_levels = ExamLevel.where(enable_exam_sections: false).all_active.all_live.all_in_order
+                      -exam_sections = ExamSection.all_active.all_live.all_in_order
+                      -@courses = exam_levels + exam_sections
+
+                      -@courses.each do |el|
+                        %tr
+                          %td=el.name
+                          %td=radio_button_tag("exam_levels[#{el.id}]", "compulsory", @corporate_group.exam_level_compulsory?(el.id), class: "col-sm-3")
+                          %td=radio_button_tag("exam_levels[#{el.id}]", "restricted", @corporate_group.exam_level_restricted?(el.id), class: "col-sm-3")
+                          %td=link_to('Clear', '#', id: "exam_levels_#{el.id}_clear", class: "clear-radio-lnk col-sm-3")
+                =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+
+
+
+  =render partial: 'layouts/new_footer'
+  :javascript
+    $(document).ready(function() {
+      $('.clear-radio-lnk').bind('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var compulsoryId = $(this).attr('id').replace('clear', 'compulsory');
+        var restrictedId = $(this).attr('id').replace('clear', 'restricted');
+        $("#" + compulsoryId).prop('checked', false);
+        $("#" + restrictedId).prop('checked', false);
+      });
+
+      $('#corporate-group-frm').bind('submit', function() {
+        $("#corporate_group_corporate_customer_id").attr("disabled", false);
+      });
+    });
+
+
+
+
+
