@@ -53,7 +53,7 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code address guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key)
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
