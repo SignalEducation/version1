@@ -1,5 +1,9 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.corporate_students.new.h1')
-=render partial: 'form'
+-if current_user.corporate_customer?
+  =render partial: 'corporate_students/form'
+
+-else
+  .row
+    .col-sm-12
+      .page-header
+        %h1=t('views.corporate_students.new.h1')
+  =render partial: 'form'

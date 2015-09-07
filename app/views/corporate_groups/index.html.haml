@@ -39,9 +39,4 @@
 
 
 
-  -if current_user.admin?
-    .row
-      .col-sm-12
-        =link_to t('views.general.new'), new_corporate_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
-
   =render partial: 'layouts/new_footer'
