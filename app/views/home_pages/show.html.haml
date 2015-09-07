@@ -31,16 +31,92 @@
               ='Sign Up for your 7-day free trial'
             =render partial: 'sign_up_form'
 
-.container-fluid
+-#.container-fluid
   .row
     .col-sm-6.l-padding-zero
-      =link_to '/cfa', class: 'btn-block btn-block-purple text-center' do
-        %span.ico-arrow-right-r
-          =@cfa.try(:short_name)
+      .purple-block.text-center
+        .l-section-small
+          %p.h3.h-white.h-separator.h-separator-center.l-margin-bottom
+            ='Finance'
+          %p{style: 'color: #fff;'}
+            ='Covering everything from financial modelling to international reporting standards.'
     .col-sm-6.l-padding-zero
-      =link_to 'acca', class: 'btn-block btn-block-red text-center' do
-        %span.ico-arrow-right-r
-          =@acca.try(:short_name)
+      .red-block.text-center
+        .l-section-small
+          %p.h3.h-white.h-separator.h-separator-center.l-margin-bottom
+            ='Business'
+          %p{style: 'color: #fff;'}
+            ='Focused on the key components of business life, covering sales, leadership, management through to complexity modelling.'
+    .col-sm-6.l-padding-zero
+      .red-block.text-center
+        .l-section-small
+          %p.h3.h-white.h-separator.h-separator-center.l-margin-bottom
+            ='Skills'
+          %p{style: 'color: #fff;'}
+            ='Key applications from excel basics to macros, access, tableau are covered along with more bespoke areas such as SQL for financial analysis.'
+    .col-sm-6.l-padding-zero
+      .purple-block.text-center
+        .l-section-small
+          %p.h3.h-white.h-separator.h-separator-center.l-margin-bottom
+            ='Qualifications'
+          %p{style: 'color: #fff;'}
+            ="Supporting people pursuing professional qualifications in finance and accounting, and those maintaining their CPD with Videos, Quizzes and 1000's of MCQs."
+
+
+.benefits
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              Benefits to Businesses
+        .row
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Manager
+            %p.p{style: 'color: #fff;'}
+              Ease of use, realtime reporting, full content control and the ability to add your own content through your LMS.
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Users
+            %p.p{style: 'color: #fff;'}
+              Interactive content with Videos, Quizzes and Flashcards creates and engaging experience for users.  Access to learning on mobile, tablet and desktop allowing users engage when they want.
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Company
+            %p.p{style: 'color: #fff;'}
+              Companies that offer training have on average 26% higher revenue.  Online learning allows for a greater variety of content at a much better price ensuring it enhance the bottom line.
+
+.areas
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              4 Distinct Areas of Learning
+        .row
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Finance
+            %p.p{style: 'color: #fff;'}
+              Covering everything from financial modelling to international reporting standards.
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Business
+            %p.p{style: 'color: #fff;'}
+              Focused on the key components of business life, covering sales, leadership, management through to complexity modelling.
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Skills
+            %p.p{style: 'color: #fff;'}
+              Key applications from excel basics to macros, access, tableau are covered along with more bespoke areas such as SQL for financial analysis.
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Qualifications
+            %p.p{style: 'color: #fff;'}
+              Supporting people pursuing professional qualifications in finance and accounting, and those maintaining their CPD with Videos, Quizzes and 1000's of MCQs.
 
 .features
   .l-wrap

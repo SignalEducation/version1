@@ -147,6 +147,9 @@ p, .p, ol, .ol, ul, .ul, address, dl {
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
+  &.p-white {
+    color: lighten($purple-1, 40%);
+  }
 }
 hr {
   border-color: lighten($purple-1, 60%);
@@ -237,6 +240,9 @@ hr {
 }
 .l-padding-zero {
   padding: 0;
+}
+.l-padding-top {
+  padding-top: $gutter;
 }
 .l-padding-top-xl { // if header is fixed, this is required on the next element
   padding-top: $gutter*3;
@@ -340,6 +346,16 @@ label, .label {
 .features {
   text-align: center;
   background: $white;
+}
+.benefits {
+  text-align: center;
+  background: $red-1;
+  color: lighten($purple-1, 40%);
+}
+.areas {
+  text-align: center;
+  background: $purple-1;
+  color: $white
 }
 .features-img {
   display: block;
@@ -866,6 +882,31 @@ a.box-item {
 
   }
 }
+
+.purple-block {
+  background: $purple-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
+.red-block {
+  background: $red-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
+.cyan-block {
+  background: $cyan-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
+.grey-block {
+  background: $gray-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
 //  Debugging
 
 // * { outline: 1px solid red }
