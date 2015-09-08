@@ -29,16 +29,20 @@
                         %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
                         %th{style: "width: 4%;"}
                     %tbody
-                      -exam_levels = ExamLevel.where(enable_exam_sections: false).all_active.all_live.all_in_order
-                      -exam_sections = ExamSection.all_active.all_live.all_in_order
-                      -@courses = exam_levels + exam_sections
-
-                      -@courses.each do |el|
+                      -ExamLevel.where(enable_exam_sections: false).all_active.all_live.all_in_order.each do |el|
                         %tr
                           %td=el.name
                           %td=radio_button_tag("exam_levels[#{el.id}]", "compulsory", @corporate_group.exam_level_compulsory?(el.id), class: "col-sm-3")
                           %td=radio_button_tag("exam_levels[#{el.id}]", "restricted", @corporate_group.exam_level_restricted?(el.id), class: "col-sm-3")
                           %td=link_to('Clear', '#', id: "exam_levels_#{el.id}_clear", class: "clear-radio-lnk col-sm-3")
+                      -ExamSection.all_active.all_live.all_in_order.each do |es|
+                        %tr
+                          %td=es.name
+                          %td=radio_button_tag("exam_sections[#{es.id}]", "compulsory", @corporate_group.exam_section_compulsory?(es.id), class: "col-sm-3")
+                          %td=radio_button_tag("exam_sections[#{es.id}]", "restricted", @corporate_group.exam_section_restricted?(es.id), class: "col-sm-3")
+                          %td=link_to('Clear', '#', id: "exam_sections_#{es.id}_clear", class: "clear-radio-lnk col-sm-3")
+
+
                 =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
                 =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
 
