@@ -1,34 +1,31 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@corporate_customer, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @corporate_customer, message: nil}
-        .form-group
-          =f.label :organisation_name, t('views.corporate_customers.form.organisation_name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :organisation_name, placeholder: t('views.corporate_customers.form.organisation_name_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :address, t('views.corporate_customers.form.address'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control'
-        -# todo remove this line when Country is implemented
-        =f.hidden_field :country_id, value: 105
-        -# todo .form-group
-          =f.label :country_id, t('views.corporate_customers.form.country_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :payments_by_card
-                =t('views.corporate_customers.form.payments_by_card')
-        -if f.object.id.to_i > 0 # is this an existing object
-          .form-group
-            =f.label :stripe_customer_guid, t('views.corporate_customers.form.stripe_customer_guid'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_field :stripe_customer_guid, class: 'form-control'
-      %p
-        =f.submit t('views.general.save'), class: 'btn btn-success'
-        =t('views.general.or')
-        =link_to t('views.general.cancel'), corporate_customers_path
+.corporate-box-item.table-box
+  =form_for(@corporate_customer, html: {class: 'form-horizontal', role: 'form'}) do |f|
+    =render partial: '/layouts/error_messages', locals: {thing: @corporate_customer, message: nil}
+    .form-group
+      =f.label :organisation_name, t('views.corporate_customers.form.organisation_name'), class: 'control-label col-sm-4'
+      .col-sm-8
+        =f.text_field :organisation_name, placeholder: t('views.corporate_customers.form.organisation_name_placeholder'), class: 'form-control', autofocus: true
+    .form-group
+      =f.label :address, t('views.corporate_customers.form.address'), class: 'control-label col-sm-4'
+      .col-sm-8
+        =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control'
+    -# todo remove this line when Country is implemented
+    =f.hidden_field :country_id, value: 105
+    -# todo .form-group
+      =f.label :country_id, t('views.corporate_customers.form.country_id'), class: 'control-label col-sm-4'
+      .col-sm-8
+        =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+    .form-group
+      .col-sm-8.col-sm-offset-4
+        .checkbox
+          %label
+            =f.check_box :payments_by_card
+            =t('views.corporate_customers.form.payments_by_card')
+    -if f.object.id.to_i > 0 # is this an existing object
+      .form-group
+        =f.label :stripe_customer_guid, t('views.corporate_customers.form.stripe_customer_guid'), class: 'control-label col-sm-4'
+        .col-sm-8
+          =f.text_field :stripe_customer_guid, class: 'form-control'
+    .row
+      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+      =link_to t('views.general.cancel'), corporate_customers_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
