@@ -107,7 +107,7 @@ class UsersController < ApplicationController
     @user = current_user
     if current_user.subscriptions.first == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
-                                .where.not(price: 0.0)
+                                .where('price > 0.0')
                                 .includes(:currency)
                                 .for_students
                                 .in_currency(1)
@@ -116,7 +116,6 @@ class UsersController < ApplicationController
                                 .all_in_order
     else
       @subscription_plans = SubscriptionPlan
-                            .where.not(price: 0.0)
                             .includes(:currency)
                             .for_students
                             .in_currency(current_user.subscriptions.first.subscription_plan.currency_id)
