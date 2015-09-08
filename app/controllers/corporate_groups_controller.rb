@@ -10,6 +10,7 @@ class CorporateGroupsController < ApplicationController
     @corporate_groups = []
     if current_user.admin?
       @corporate_groups = CorporateGroup.paginate(per_page: 50, page: params[:page]).all_in_order
+      @corporate_customers =CorporateCustomer.all
     elsif current_user.corporate_customer? && current_user.corporate_customer_id
       @corporate_groups = CorporateGroup
                           .where(corporate_customer_id: current_user.corporate_customer_id)

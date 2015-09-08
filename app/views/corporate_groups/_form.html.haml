@@ -43,9 +43,8 @@
                   %td=radio_button_tag("exam_sections[#{es.id}]", "compulsory", @corporate_group.exam_section_compulsory?(es.id), class: "col-sm-3")
                   %td=radio_button_tag("exam_sections[#{es.id}]", "restricted", @corporate_group.exam_section_restricted?(es.id), class: "col-sm-3")
                   %td=link_to('Clear', '#', id: "exam_sections_#{es.id}_clear", class: "clear-radio-lnk col-sm-3")
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), corporate_groups_path
+      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+      =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
 
 :javascript
   $(document).ready(function() {

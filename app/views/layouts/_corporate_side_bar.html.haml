@@ -6,10 +6,7 @@
       -else
         %img.logo{alt: 'Corporate Logo', src: 'assets/images/missing_corporate_logo.png'}
     %li.first-li
-      -if current_user.corporate_customer?
-        =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
-      -else
-        =link_to t('views.corporate_customers.show.overview'), '#'
+      =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
     %li
       =link_to t('views.corporate_students.index.corp_h1'), corporate_students_url
     %li

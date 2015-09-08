@@ -2,8 +2,13 @@
   =render partial: 'corporate_groups/corporate_user_group_form'
 
 -else
-  .row
-    .col-sm-12
-      .page-header
-        %h1=t('views.corporate_groups.new.h1')
-  =render partial: 'form'
+  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .container-fluid.l-padding-side-3x
+      .row.l-margin-bottom.l-margin-top
+        .col-md-6.col-sm-6.col-xs-6
+          %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            =t('views.corporate_groups.new.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
+
+          =render partial: 'form'

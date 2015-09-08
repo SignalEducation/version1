@@ -1,20 +1,59 @@
-#wrapper
-  .hidden-xs
-    =render partial: 'layouts/corporate_side_bar'
+-if current_user.corporate_customer?
+  #wrapper
+    .hidden-xs
+      =render partial: 'layouts/corporate_side_bar'
 
-  .main-content
-    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
-      .container-fluid.l-padding-side-3x
-        .row.l-margin-bottom.l-margin-top
-          .col-md-6.col-sm-6.col-xs-6
-            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
-              Groups
-          .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
-            =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+    .main-content
+      .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+        .container-fluid.l-padding-side-3x
+          .row.l-margin-bottom.l-margin-top
+            .col-md-6.col-sm-6.col-xs-6
+              %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+                Groups
+            .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
+              =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
-          .col-md-12.l-margin-top-big.l-margin-bottom-6x
+            .col-md-12.l-margin-top-big.l-margin-bottom-6x
+              .corporate-box-item.table-box
+                .table-responsive
+                  %table.table{style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th Group
+                        %th No. of Users
+                        %th Edit Members
+                        %th
+                    %tbody
+                      -@corporate_groups.each do |corporate_group|
+                        %tr
+                          %td
+                            =corporate_group.name
+                          %td
+                            =corporate_group.users.count
+                          %td
+                            =link_to t('views.general.edit_group'), edit_corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'
+                            =link_to t('views.corporate_groups.index.members'),
+                corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-small btn-purple'
+                            -if corporate_group.destroyable?
+                              =link_to t('views.general.delete'), corporate_group,
+                  method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
+    =render partial: 'layouts/new_footer'
+-else
+
+  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .container-fluid.l-padding-side-3x
+      .row.l-margin-bottom.l-margin-top
+        .col-md-6.col-sm-6.col-xs-6
+          %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            Groups
+        .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
+          =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+
+        .col-md-12.l-margin-top-big.l-margin-bottom-6x
+          -@corporate_customers.each do |cc|
             .corporate-box-item.table-box
               .table-responsive
+                %h2=cc.organisation_name
                 %table.table{style: 'font-size: 18px;'}
                   %thead
                     %tr
@@ -23,7 +62,7 @@
                       %th Edit Members
                       %th
                   %tbody
-                    -@corporate_groups.each do |corporate_group|
+                    -cc.corporate_groups.all_in_order.each do |corporate_group|
                       %tr
                         %td
                           =corporate_group.name
@@ -32,11 +71,9 @@
                         %td
                           =link_to t('views.general.edit_group'), edit_corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'
                           =link_to t('views.corporate_groups.index.members'),
-              corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-small btn-purple'
+                  corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-small btn-purple'
                           -if corporate_group.destroyable?
                             =link_to t('views.general.delete'), corporate_group,
-                method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
-
-
+                    method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
 
   =render partial: 'layouts/new_footer'

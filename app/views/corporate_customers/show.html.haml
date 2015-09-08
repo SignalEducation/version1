@@ -1,107 +1,203 @@
-#wrapper
-  .hidden-xs
-    =render partial: 'layouts/corporate_side_bar'
+-if current_user.corporate_customer?
+  #wrapper
+    .hidden-xs
+      =render partial: 'layouts/corporate_side_bar'
 
-  .main-content
-    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12
-            %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
-              = current_user.admin? ? "##{@corporate_customer.id}" : "Overview"
-          .col-md-12.l-margin-top-big
-            -if current_user.admin?
+    .main-content
+      .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12
+              %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+                ="Overview"
+            .col-md-12.l-margin-top-big
+              -if current_user.admin?
+                .corporate-box-item.table-box
+                  .table-responsive
+                    %table.table{style: 'font-size: 16px;'}
+                      %thead
+                        %tr
+                          %th
+                            =t('views.corporate_customers.form.organisation_name')
+                          %th
+                            =t('views.corporate_customers.form.address')
+                          %th
+                            =t('views.corporate_customers.form.payments_by_card')
+                          %th
+                            =t('views.corporate_customers.form.stripe_customer_guid')
+                      %tbody
+                        %tr
+                          %td
+                            =@corporate_customer.organisation_name
+                          %td
+                            =@corporate_customer.address
+                          %td
+                            =tick_or_cross(@corporate_customer.payments_by_card)
+                          %td
+                            =@corporate_customer.stripe_customer_guid ? "#{@corporate_customer.stripe_customer_guid}" : "Nil"
+                        %tr
+                          %td
+                          %td
+                          %td
+                          %td
+
+              .corporate-box-item.chart-box
+                .row.l-margin-bottom-big
+                  .col-md-6
+                    %h2.letter-space-wide User Activity
+                  .col-md-6.chart-legend.text-right
+                    .color-circle.color-red.text-inline
+                    %p.text-inline.font-small Videos Watched
+                    .color-circle.color-cyan.text-inline
+                    %p.text-inline.font-small Quizzes Taken
+                .row.l-margin-bottom
+                  %canvas#canvas{height:"300", width:"790"}
+
+
               .corporate-box-item.table-box
+                %h2.l-margin-bottom
+                  = t('views.corporate_customers.show.compulsory_courses')
                 .table-responsive
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
-                        %th
-                          =t('views.corporate_customers.form.organisation_name')
-                        %th
-                          =t('views.corporate_customers.form.address')
-                        %th
-                          =t('views.corporate_customers.form.payments_by_card')
-                        %th
-                          =t('views.corporate_customers.form.stripe_customer_guid')
+                        %th Course
+                        %th Videos Watched
+                        %th Quizzes Taken
                     %tbody
+                      - @compulsory_courses.each do |cc|
+                        %tr
+                          %td= cc.name
+                          -if cc.class == ExamSection
+                            -ids = cc.children.all.map(&:id)
+                          -else
+                            -ids = cc.course_modules.all.map(&:id)
+                          %td=@corporate_videos_logs.where(course_module_id: ids).count
+                          %td=@corporate_quiz_logs.where(course_module_id: ids).count
+
+              .corporate-box-item.table-box
+                %h2.l-margin-bottom
+                  = t('views.corporate_customers.show.started_courses')
+                .table-responsive
+                  %table.table{style: 'font-size: 16px;'}
+                    %thead
                       %tr
-                        %td
-                          =@corporate_customer.organisation_name
-                        %td
-                          =@corporate_customer.address
-                        %td
-                          =tick_or_cross(@corporate_customer.payments_by_card)
-                        %td
-                          =@corporate_customer.stripe_customer_guid ? "#{@corporate_customer.stripe_customer_guid}" : "Nil"
-                      %tr
-                        %td
-                        %td
-                        %td
-                        %td
-
-            .corporate-box-item.chart-box
-              .row.l-margin-bottom-big
-                .col-md-6
-                  %h2.letter-space-wide User Activity
-                .col-md-6.chart-legend.text-right
-                  .color-circle.color-red.text-inline
-                  %p.text-inline.font-small Videos Watched
-                  .color-circle.color-cyan.text-inline
-                  %p.text-inline.font-small Quizzes Taken
-              .row.l-margin-bottom
-                %canvas#canvas{height:"300", width:"790"}
+                        %th Course
+                        %th Videos Watched
+                        %th Quizzes Taken
+                    %tbody
+                      - @started_courses.each do |sc|
+                        %tr
+                          %td= sc.name
+                          -if sc.class == ExamSection
+                            -ids = sc.children.all.map(&:id)
+                          -else
+                            -ids = sc.course_modules.all.map(&:id)
+                          %td=@corporate_videos_logs.where(course_module_id: ids).count
+                          %td=@corporate_quiz_logs.where(course_module_id: ids).count
 
 
+        %p
+          - if current_user.admin?
+            =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
+            |
+            =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')
+
+    =render partial: 'layouts/new_footer'
+
+-else
+
+  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            = @corporate_customer.organisation_name
+        .col-md-12.l-margin-top-big
+          -if current_user.admin?
             .corporate-box-item.table-box
-              %h2.l-margin-bottom
-                = t('views.corporate_customers.show.compulsory_courses')
               .table-responsive
                 %table.table{style: 'font-size: 16px;'}
                   %thead
                     %tr
-                      %th Course
-                      %th Videos Watched
-                      %th Quizzes Taken
+                      %th
+                        =t('views.corporate_customers.form.organisation_name')
+                      %th
+                        =t('views.corporate_customers.form.address')
+                      %th
+                        =t('views.corporate_customers.form.payments_by_card')
+                      %th
+                        =t('views.corporate_customers.form.stripe_customer_guid')
                   %tbody
-                    - @compulsory_courses.each do |cc|
-                      %tr
-                        %td= cc.name
-                        -if cc.class == ExamSection
-                          -ids = cc.children.all.map(&:id)
-                        -else
-                          -ids = cc.course_modules.all.map(&:id)
-                        %td=@corporate_videos_logs.where(course_module_id: ids).count
-                        %td=@corporate_quiz_logs.where(course_module_id: ids).count
-
-            .corporate-box-item.table-box
-              %h2.l-margin-bottom
-                = t('views.corporate_customers.show.started_courses')
-              .table-responsive
-                %table.table{style: 'font-size: 16px;'}
-                  %thead
                     %tr
-                      %th Course
-                      %th Videos Watched
-                      %th Quizzes Taken
-                  %tbody
-                    - @started_courses.each do |sc|
-                      %tr
-                        %td= sc.name
-                        -if sc.class == ExamSection
-                          -ids = sc.children.all.map(&:id)
-                        -else
-                          -ids = sc.course_modules.all.map(&:id)
-                        %td=@corporate_videos_logs.where(course_module_id: ids).count
-                        %td=@corporate_quiz_logs.where(course_module_id: ids).count
+                      %td
+                        =@corporate_customer.organisation_name
+                      %td
+                        =@corporate_customer.address
+                      %td
+                        =tick_or_cross(@corporate_customer.payments_by_card)
+                      %td
+                        =@corporate_customer.stripe_customer_guid ? "#{@corporate_customer.stripe_customer_guid}" : "Nil"
+                    %tr
+                      %td
+                      %td
+                      %td
+                      %td
+
+          .corporate-box-item.chart-box
+            .row.l-margin-bottom-big
+              .col-md-6
+                %h2.letter-space-wide User Activity
+              .col-md-6.chart-legend.text-right
+                .color-circle.color-red.text-inline
+                %p.text-inline.font-small Videos Watched
+                .color-circle.color-cyan.text-inline
+                %p.text-inline.font-small Quizzes Taken
+            .row.l-margin-bottom
+              %canvas#canvas{height:"300", width:"790"}
 
 
-      %p
-        - if current_user.admin?
-          =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
-          |
-          =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')
+          .corporate-box-item.table-box
+            %h2.l-margin-bottom
+              = t('views.corporate_customers.show.compulsory_courses')
+            .table-responsive
+              %table.table{style: 'font-size: 16px;'}
+                %thead
+                  %tr
+                    %th Course
+                    %th Videos Watched
+                    %th Quizzes Taken
+                %tbody
+                  - @compulsory_courses.each do |cc|
+                    %tr
+                      %td= cc.name
+                      -if cc.class == ExamSection
+                        -ids = cc.children.all.map(&:id)
+                      -else
+                        -ids = cc.course_modules.all.map(&:id)
+                      %td=@corporate_videos_logs.where(course_module_id: ids).count
+                      %td=@corporate_quiz_logs.where(course_module_id: ids).count
 
+          .corporate-box-item.table-box
+            %h2.l-margin-bottom
+              = t('views.corporate_customers.show.started_courses')
+            .table-responsive
+              %table.table{style: 'font-size: 16px;'}
+                %thead
+                  %tr
+                    %th Course
+                    %th Videos Watched
+                    %th Quizzes Taken
+                %tbody
+                  - @started_courses.each do |sc|
+                    %tr
+                      %td= sc.name
+                      -if sc.class == ExamSection
+                        -ids = sc.children.all.map(&:id)
+                      -else
+                        -ids = sc.course_modules.all.map(&:id)
+                      %td=@corporate_videos_logs.where(course_module_id: ids).count
+                      %td=@corporate_quiz_logs.where(course_module_id: ids).count
   =render partial: 'layouts/new_footer'
 
 

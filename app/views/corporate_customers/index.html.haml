@@ -1,30 +1,32 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.corporate_customers.index.h1')
-.row
-  .col-sm-12
-    =will_paginate @corporate_customers, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.corporate_customers.form.organisation_name')
-          %th=t('views.corporate_customers.form.country_id')
-          %th=t('views.corporate_customers.form.payments_by_card')
-          %th
-      %tbody
-        -@corporate_customers.each do |corporate_customer|
-          %tr{id: corporate_customer.id}
-            %td=link_to(corporate_customer.organisation_name, corporate_customer, title: t('views.general.view_tooltip'))
-            %td
-              -# todo =link_to(corporate_customer.country.name, corporate_customer, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(corporate_customer.payments_by_card), corporate_customer, title: t('views.general.view_tooltip'))
-            %td
-              -#=link_to t('views.general.view'), corporate_customer
-              =link_to t('views.general.edit'), edit_corporate_customer_url(corporate_customer), class: 'btn btn-info btn-xs'
-              -if corporate_customer.destroyable?
-                =link_to t('views.general.delete'), corporate_customer, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+.l-section-small.is-bg-asphalt
+  .container-fluid.l-padding-side-3x
+    .row.l-margin-bottom.l-margin-top
+      .col-md-6.col-sm-6.col-xs-6
+        %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+          =t('views.corporate_customers.index.h1')
+    .row.l-margin-top.l-margin-bottom
+      .col-md-12.l-margin-top
+        =will_paginate @corporate_customers, renderer: BootstrapPagination::Rails
+        %table.table.table-striped.table-bordered
+          %thead
+            %tr
+              %th=t('views.corporate_customers.form.organisation_name')
+              %th=t('views.corporate_customers.form.payments_by_card')
+              %th
+          %tbody
+            -@corporate_customers.each do |corporate_customer|
+              %tr{id: corporate_customer.id}
+                %td=link_to(corporate_customer.organisation_name, corporate_customer, title: t('views.general.view_tooltip'))
+                %td=link_to(tick_or_cross(corporate_customer.payments_by_card), corporate_customer, title: t('views.general.view_tooltip'))
+                %td
+                  -#=link_to t('views.general.view'), corporate_customer
+                  =link_to t('views.general.edit'), edit_corporate_customer_url(corporate_customer), class: 'btn btn-cyan'
+                  -if corporate_customer.destroyable?
+                    =link_to t('views.general.delete'), corporate_customer, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
 
-.row
-  .col-sm-12
-    =link_to t('views.general.new'), new_corporate_customer_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+    .row
+      .col-sm-12
+        =link_to t('views.general.new'), new_corporate_customer_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', title: t('views.general.new_tooltip')
+
+
+=render partial: 'layouts/new_footer'
