@@ -7,6 +7,10 @@ en:
         thousands_separator: ","
         decimal_separator: "."
       active: Active
+      add_user: Add a user
+      add_group: Add a group
+      edit_user: Edit user
+      edit_group: Edit Group
       admin: Admin
       approve: Approve
       approve_tooltip: click to approve
@@ -40,6 +44,7 @@ en:
       or: or
       review: Review
       save: Save
+      save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
       search: Search...
       select: Select...
@@ -114,16 +119,16 @@ en:
         address_placeholder: '123 Fake Street'
         country_id: Country
         payments_by_card: Payments by card
-        is_university: Is University
-        owner_id: Owner
         stripe_customer_guid: Stripe Customer ID
-        can_restrict_content: Can restrict content
 
       index:
         h1: Corporate Customers
 
       show:
         h1: Corporate Customer
+        compulsory_courses: Compulsory Courses
+        started_courses: Other Courses
+        overview: Overview
 
       edit:
         h1: Edit Corporate Customer
@@ -1050,7 +1055,6 @@ en:
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID
         corporate_customer_id: Corporate customer
-        corporate_customer_user_group_id: Corporate customer user group
         operational_email_frequency: Operational email frequency
         study_plan_notifications_email_frequency: Study plan notifications email frequency
         falling_behind_email_alert_frequency: Falling behind email alert frequency
@@ -1061,6 +1065,8 @@ en:
         created_at: Created at
         updated_at: Updated at
         guid: GUID
+        employee_guid: Employee GUID
+        employee_guid_placeholder: Employee GUID
 
       edit:
         h1: Edit Account
@@ -1072,8 +1078,10 @@ en:
         h1: Create Account
 
       show:
-        h1: Account
+        h1: My Account
+        edit: Edit Account
         add_new_card: "Add New Card"
+        change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
           h4: Change your password
@@ -1096,6 +1104,7 @@ en:
         re_subscribe_plan: 'Thank you for reactivating'
         tabs:
           personal_details: Personal details
+          corporation: Corporation
           subscriptions: Subscriptions
           notifications: Notifications
           admin: Admin
@@ -1374,3 +1383,59 @@ en:
       edit:
         h1: Editing Referred Signup
         payed_at: Payed At
+
+    corporate_groups:
+      form:
+        name: Name
+        name_placeholder: Corporate Group Name
+        corporate_customer: Corporate Customer
+
+      index:
+        h1: Corporate Groups
+        corp_h1: Groups
+        exam_level: Exam Level
+        compulsory: Compulsory
+        restricted: Restricted
+        members: Members
+
+      show:
+        h1: Corporate Group
+
+      edit:
+        h1: Edit Corporate Group
+
+      new:
+        h1: New Corporate Group
+
+      manage_members:
+        student: Students
+
+    corporate_students:
+      form:
+        email: Email
+        email_placeholder: jay@example.com
+        full_name: Full name
+        first_name: First name
+        first_name_placeholder: Jay
+        last_name: Last name
+        last_name_placeholder: Smith
+        employee_guid: Employee ID
+        employee_guid_placeholder: Employee ID
+        active: Active
+        country: Country
+        corporate_customer: Corporate customer
+        corporate_group_name: Corporate group
+        add_to_groups: Add to Groups
+
+      index:
+        h1: Corporate Students
+        corp_h1: Users
+
+      edit:
+        h1: Edit Corporate Student
+
+      new:
+        h1: New Corporate Student
+
+      show:
+        h1: Corporate Student

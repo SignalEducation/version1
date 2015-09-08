@@ -1,0 +1,49 @@
+=form_for(:corporate_student,
+      url: @corporate_student.new_record? ? corporate_students_path : corporate_student_path(@corporate_student),
+      method: @corporate_student.new_record? ? 'POST' : 'PATCH',
+      html: {class: 'form-horizontal', role: 'form'}) do |f|
+
+  .modal.fade#userModal{tabindex:'-1', role:'dialog', 'aria-labelledby':'userModalLabel'}
+    .modal-dialog
+      .modal-content.is-bg-asphalt.l-padding-side-15
+        .container-fluid
+          .modal-header
+            =render partial: '/layouts/error_messages', locals: {thing: @corporate_student, message: nil}
+            .row
+              .col-md-12.l-margin-top
+                %button{type: "button", class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
+                %h2.modal-title{style: 'width: 95%'} Add a user
+            .row.l-margin-top
+              .col-md-12
+                =f.hidden_field :country_id, value: current_user.corporate_customer.country_id
+                =f.label :first_name, t('views.corporate_students.form.first_name'), class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.text_field :first_name, placeholder: t('views.corporate_students.form.first_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                =f.label :last_name, t('views.corporate_students.form.last_name')
+                .input-group.input-group-lg.full-width
+                  =f.text_field :last_name, placeholder: t('views.corporate_students.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                =f.label :email, t('views.corporate_students.form.email')
+                .input-group.input-group-lg.full-width
+                  =f.text_field :email, placeholder: t('views.corporate_students.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                =f.label :employee_guid, t('views.corporate_students.form.employee_guid')
+                .input-group.input-group-lg.full-width
+                  =f.text_field :employee_guid, placeholder: t('views.corporate_students.form.employee_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                %table
+                  %thead
+                    %tr
+                      %th
+                        %p= t('views.corporate_students.form.add_to_groups')
+                      %th
+                  %tbody
+                    - @corporate_groups.each do |cg|
+                      %tr
+                        %td= cg.name
+                        %td= check_box_tag "corporate_student[corporate_group_ids][]", cg.id, @corporate_student.corporate_groups.include?(cg)
+
+
+            %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
+            =f.submit t('views.general.save'), class: 'btn btn-red l-margin-top-big l-margin-bottom-big'

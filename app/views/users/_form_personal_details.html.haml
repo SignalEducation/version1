@@ -11,17 +11,8 @@
   =f.label :last_name, t('views.users.form.last_name'), class: 'control-label col-sm-4'
   .col-sm-8
     =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control'
--if @user.id.nil?
-  .form-group
-    =f.label :password, t('views.users.form.password'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =f.password_field :password, placeholder: t('views.users.form.password_placeholder'), class: 'form-control'
-  .form-group
-    =f.label :password_confirmation, t('views.users.form.password_confirmation'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control'
 .form-group
-  =f.label :country_id, t('views.users.form.address'), class: 'control-label col-sm-4'
+  =f.label :address, t('views.users.form.address'), class: 'control-label col-sm-4'
   .col-sm-8
     =f.text_area :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', rows: 4
 .form-group
@@ -29,12 +20,13 @@
   .col-sm-8
     =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
 -if current_user && current_user.admin?
-  .form-group
-    .col-sm-8.col-sm-offset-4
-      .checkbox
-        %label
-          =f.check_box :active
-          =t('views.users.form.active')
+  - unless @user.new_record?
+    .form-group
+      .col-sm-8.col-sm-offset-4
+        .checkbox
+          %label
+            =f.check_box :active
+            =t('views.users.form.active')
   .form-group
     =f.label :user_group_id, t('views.users.form.user_group_id'), class: 'control-label col-sm-4'
     .col-sm-8
@@ -42,8 +34,32 @@
   .form-group
     =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label col-sm-4'
     .col-sm-8
-      =# todo f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      = f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name,
+        {include_blank: t('views.general.select')},
+        {class: 'form-control', style: 'display:none;'}
   .form-group
-    =f.label :corporate_customer_user_group_id, t('views.users.form.corporate_customer_user_group_id'), class: 'control-label col-sm-4'
+    =f.label :employee_guid, t('views.users.form.employee_guid'), class: 'control-label col-sm-4'
     .col-sm-8
-      =# todo f.collection_select :corporate_customer_user_group_id, @corporate_customer_user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      =f.text_field :employee_guid, placeholder: t('views.users.form.employee_guid_placeholder'), class: 'form-control'
+
+:javascript
+
+  function handleUserGroupChange() {
+    if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).first.try(:id)}" ||
+        $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).first.try(:id)}") {
+      $('#user_corporate_customer_id').show();
+      $('#user_employee_guid').show();
+    } else {
+      $('#user_corporate_customer_id option:first').attr('selected', 'selected');
+      $('#user_corporate_customer_id').hide();
+      $('#user_employee_guid').hide();
+    }
+  }
+
+  $(document).ready(function() {
+    handleUserGroupChange()
+  });
+
+  $('#user_user_group_id').bind('change', function() {
+    handleUserGroupChange();
+  });

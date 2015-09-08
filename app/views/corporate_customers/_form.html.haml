@@ -23,27 +23,11 @@
               %label
                 =f.check_box :payments_by_card
                 =t('views.corporate_customers.form.payments_by_card')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :is_university
-                =t('views.corporate_customers.form.is_university')
-        .form-group
-          =f.label :owner_id, t('views.corporate_customers.form.owner_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :owner_id, @owners, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         -if f.object.id.to_i > 0 # is this an existing object
           .form-group
             =f.label :stripe_customer_guid, t('views.corporate_customers.form.stripe_customer_guid'), class: 'control-label col-sm-4'
             .col-sm-8
               =f.text_field :stripe_customer_guid, class: 'form-control'
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :can_restrict_content
-                =t('views.corporate_customers.form.can_restrict_content')
       %p
         =f.submit t('views.general.save'), class: 'btn btn-success'
         =t('views.general.or')

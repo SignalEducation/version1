@@ -29,7 +29,6 @@
 #  password_reset_at                        :datetime
 #  stripe_customer_id                       :string
 #  corporate_customer_id                    :integer
-#  corporate_customer_user_group_id         :integer
 #  operational_email_frequency              :string
 #  study_plan_notifications_email_frequency :string
 #  falling_behind_email_alert_frequency     :string
@@ -44,6 +43,9 @@
 #  trial_ended_notification_sent_at         :datetime
 #  crush_offers_session_id                  :string
 #  subscription_plan_category_id            :integer
+#  employee_guid                            :string
+#  password_change_required                 :boolean
+#  session_key                              :string
 #
 
 FactoryGirl.define do
@@ -70,7 +72,6 @@ FactoryGirl.define do
       user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       corporate_customer_id             nil
-      corporate_customer_user_group_id  nil
       account_activation_code           'abc123'
 
       factory :inactive_individual_student_user do
@@ -94,25 +95,22 @@ FactoryGirl.define do
       user_group_id                     1
       stripe_customer_id                nil
       corporate_customer_id             nil
-      corporate_customer_user_group_id  nil
     end
 
     factory :corporate_student_user do
       sequence(:email)                  { |n| "corporate.student-#{n}@example.com" }
       active                            true
-      user_group_id                     1
+      user_group_id                     UserGroup::CORPORATE_STUDENTS
       stripe_customer_id                nil
       corporate_customer_id             1
-      corporate_customer_user_group_id  1
     end
 
     factory :corporate_customer_user do
       sequence(:email)                  { |n| "corporate.customer-#{n}@example.com" }
       active                            true
-      user_group_id                     1
+      user_group_id                     UserGroup::CORPORATE_CUSTOMERS
       stripe_customer_id                nil
       corporate_customer_id             1
-      corporate_customer_user_group_id  1
     end
 
     factory :blogger_user do
@@ -121,7 +119,6 @@ FactoryGirl.define do
       user_group_id                     1
       stripe_customer_id                nil
       corporate_customer_id             nil
-      corporate_customer_user_group_id  nil
     end
 
     factory :forum_manager_user do
@@ -130,7 +127,6 @@ FactoryGirl.define do
       user_group_id                     1
       stripe_customer_id                nil
       corporate_customer_id             nil
-      corporate_customer_user_group_id  nil
     end
 
     factory :content_manager_user do
@@ -139,7 +135,6 @@ FactoryGirl.define do
       user_group_id                     1
       stripe_customer_id                nil
       corporate_customer_id             nil
-      corporate_customer_user_group_id  nil
     end
 
     factory :admin_user do
@@ -148,7 +143,6 @@ FactoryGirl.define do
       user_group_id                     1
       stripe_customer_id                nil
       corporate_customer_id             nil
-      corporate_customer_user_group_id  nil
     end
 
   end

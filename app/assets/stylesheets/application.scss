@@ -11,9 +11,11 @@ $white: #fff;
 $gray-1: #6E6D75;
 $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
+$asphalt-3: #C0CFD5;
 $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
 $purple-3: rgb(83, 84, 112);
+$purple-4: #9E9FAD;
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -145,6 +147,9 @@ p, .p, ol, .ol, ul, .ul, address, dl {
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
+  &.p-white {
+    color: lighten($purple-1, 40%);
+  }
 }
 hr {
   border-color: lighten($purple-1, 60%);
@@ -236,6 +241,9 @@ hr {
 .l-padding-zero {
   padding: 0;
 }
+.l-padding-top {
+  padding-top: $gutter;
+}
 .l-padding-top-xl { // if header is fixed, this is required on the next element
   padding-top: $gutter*3;
 }
@@ -267,6 +275,7 @@ hr {
 @import "testimonials.scss";
 @import "plans.scss";
 @import "quiz";
+@import "corporate-sidebar";
 
 .course-group-title {
   margin-bottom: $gutter*2;
@@ -337,6 +346,16 @@ label, .label {
 .features {
   text-align: center;
   background: $white;
+}
+.benefits {
+  text-align: center;
+  background: $red-1;
+  color: lighten($purple-1, 40%);
+}
+.areas {
+  text-align: center;
+  background: $purple-1;
+  color: $white
 }
 .features-img {
   display: block;
@@ -863,6 +882,31 @@ a.box-item {
 
   }
 }
+
+.purple-block {
+  background: $purple-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
+.red-block {
+  background: $red-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
+.cyan-block {
+  background: $cyan-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
+.grey-block {
+  background: $gray-1;
+  color: $white;
+  padding-top: $gutter;
+}
+
 //  Debugging
 
 // * { outline: 1px solid red }

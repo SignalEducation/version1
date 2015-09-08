@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     post 'change_password', to: 'users#change_password', as: :change_password
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
-    get 'reset_password/:id', to: 'user_password_resets#edit'
+    get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
 
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
@@ -84,6 +84,13 @@ Rails.application.routes.draw do
 
     # general resources
     resources :corporate_customers
+    resources :corporate_groups, except: [:show] do
+      get 'edit_members', action: :edit_members
+      patch 'update_members', action: :update_members
+      put 'update_members', action: :update_members
+    end
+
+    resources :corporate_students
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]

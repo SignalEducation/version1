@@ -31,16 +31,60 @@
               ='Sign Up for your 7-day free trial'
             =render partial: 'sign_up_form'
 
-.container-fluid
-  .row
-    .col-sm-6.l-padding-zero
-      =link_to '/cfa', class: 'btn-block btn-block-purple text-center' do
-        %span.ico-arrow-right-r
-          =@cfa.try(:short_name)
-    .col-sm-6.l-padding-zero
-      =link_to 'acca', class: 'btn-block btn-block-red text-center' do
-        %span.ico-arrow-right-r
-          =@acca.try(:short_name)
+.benefits
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              Benefits to Business
+        .row
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              To Manager
+            %p.p{style: 'color: #fff;'}
+              Ease of use, realtime reporting, full content control and the ability to add your own content through your LMS.
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              For Users
+            %p.p{style: 'color: #fff;'}
+              Interactive content with Videos, Quizzes and Flashcards creates an engaging experience for users.  Access to learning on mobile, tablet and desktop allowing users engage when they want.
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              To your Company
+            %p.p{style: 'color: #fff;'}
+              Companies that offer training have on average 26% higher revenue.  Online learning allows for a greater variety of content at a much better price ensuring it enhances the bottom line.
+
+.areas
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              Areas of Learning
+        .row
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Finance
+            %p.p{style: 'color: #fff;'}
+              Covering everything from financial modelling to international reporting standards.
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Business
+            %p.p{style: 'color: #fff;'}
+              Focused on the key components of business life covering sales, leadership, management through to complexity modeling.
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Skills
+            %p.p{style: 'color: #fff;'}
+              Key applications from excel basics to macros, access, tableau are covered along with more bespoke areas such as SQL for financial analysis.
+          .col-sm-3
+            %h3.h-white.l-margin-bottom-big
+              Qualifications
+            %p.p{style: 'color: #fff;'}
+              Supporting people pursuing professional qualifications in finance and accounting, and those maintaining their CPD with Videos, Quizzes and 1000's of MCQs.
 
 .features
   .l-wrap

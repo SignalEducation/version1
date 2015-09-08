@@ -41,6 +41,7 @@ class ExamSection < ActiveRecord::Base
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :student_exam_tracks
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  has_many :corporate_group_grants
 
   # validation
   validates :name, presence: true, length: {maximum: 255}

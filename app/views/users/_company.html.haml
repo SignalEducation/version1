@@ -1,0 +1,31 @@
+=form_for(@user.corporate_customer, html: {class: 'form-horizontal', role: 'form', id: 'company-data-form'}) do |f|
+  .modal.fade#company-data-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'companyDataLabel', hidden: 'true'}}
+    .modal-dialog
+      .modal-content.is-bg-asphalt.l-padding-side-15
+        .container-fluid
+          .modal-header
+            .row
+              .col-md-12.l-margin-top
+                %button{type: 'button', class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
+                %h2.modal-title{style: 'width: 95%'}
+                  =t('views.corporate_customers.show.h1')
+            .row.l-margin-top
+              .col-md-12
+                %h4
+                  Corporate Logo
+                %br/
+                .brand-logo
+                  = image_tag @corporate_customer.logo.url
+                %br/
+                =f.file_field :logo
+                %br/
+                =f.label :organisation_name, t('views.corporate_customers.form.organisation_name')
+                .input-group.input-group-lg.full-width
+                  =f.text_field :organisation_name, class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :address, t('views.corporate_customers.form.address')
+                .input-group.input-group-lg.full-width
+                  =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+
+            %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
+            =f.submit t('views.general.save'), class: 'btn btn-red l-margin-top-big l-margin-bottom-big'

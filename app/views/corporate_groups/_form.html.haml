@@ -1,0 +1,63 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@corporate_group, html: {class: 'form-horizontal', role: 'form', id: 'corporate-group-frm'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @corporate_group, message: nil}
+        .form-group
+          =f.label :corporate_customer_id, t('views.corporate_groups.form.corporate_customer'), class: 'control-label col-sm-4'
+          .col-sm-8
+            = f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name,
+            { include_blank: t('views.general.select') },
+            { class: 'form-control', disabled: !current_user.admin? }
+        .form-group
+          =f.label :name, t('views.corporate_groups.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.corporate_groups.form.name_placeholder'), class: 'form-control'
+        .form-group{style: 'margin-left: 0px;'}
+          %table.col-sm-12
+            %thead
+              %tr
+                %th{style: "width: 70%;"}=t('views.corporate_groups.index.exam_level')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.compulsory')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.restricted')
+                %th{style: "width: 4%;"}
+            %tbody
+              -ExamLevel.where(enable_exam_sections: false).all_active.all_in_order.each do |el|
+                %tr
+                  %td=el.name
+                  %td=radio_button_tag("exam_levels[#{el.id}]", "compulsory", @corporate_group.exam_level_compulsory?(el.id), class: "col-sm-3")
+                  %td=radio_button_tag("exam_levels[#{el.id}]", "restricted", @corporate_group.exam_level_restricted?(el.id), class: "col-sm-3")
+                  %td=link_to('Clear', '#', id: "exam_levels_#{el.id}_clear", class: "clear-radio-lnk col-sm-3")
+        .form-group{style: 'margin-left: 0px;'}
+          %table.col-sm-12
+            %thead
+              %tr
+                %th{style: "width: 70%;"}=t('views.corporate_groups.index.exam_level')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.compulsory')
+                %th{style: "width: 13%;"}=t('views.corporate_groups.index.restricted')
+                %th{style: "width: 4%;"}
+            %tbody
+              -ExamSection.all_active.all_in_order.each do |es|
+                %tr
+                  %td=es.name
+                  %td=radio_button_tag("exam_sections[#{es.id}]", "compulsory", @corporate_group.exam_section_compulsory?(es.id), class: "col-sm-3")
+                  %td=radio_button_tag("exam_sections[#{es.id}]", "restricted", @corporate_group.exam_section_restricted?(es.id), class: "col-sm-3")
+                  %td=link_to('Clear', '#', id: "exam_sections_#{es.id}_clear", class: "clear-radio-lnk col-sm-3")
+      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+      =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+
+:javascript
+  $(document).ready(function() {
+    $('.clear-radio-lnk').bind('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var compulsoryId = $(this).attr('id').replace('clear', 'compulsory');
+      var restrictedId = $(this).attr('id').replace('clear', 'restricted');
+      $("#" + compulsoryId).prop('checked', false);
+      $("#" + restrictedId).prop('checked', false);
+    });
+
+    $('#corporate-group-frm').bind('submit', function() {
+      $("#corporate_group_corporate_customer_id").attr("disabled", false);
+    });
+  });

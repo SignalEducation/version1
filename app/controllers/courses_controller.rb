@@ -51,6 +51,7 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
     @course_module_element_user_log.session_guid = current_session_guid
+    @course_module_element_user_log.corporate_customer_id = current_user.try(:corporate_customer_id)
     @course_module_element_user_log.element_completed = true
     @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
     @course_module_element = @course_module_element_user_log.course_module_element
@@ -141,7 +142,7 @@ class CoursesController < ApplicationController
             is_video: true,
             is_quiz: false,
             course_module_id: @course_module_element.course_module_id,
-            corporate_customer_id: nil,
+            corporate_customer_id: current_user.try(:corporate_customer_id),
             course_module_jumbo_quiz_id: nil,
             is_jumbo_quiz: false,
             question_bank_id: nil,
@@ -156,7 +157,8 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
             is_video: false,
-            user_id: current_user.try(:id)
+            user_id: current_user.try(:id),
+            corporate_customer_id: current_user.try(:corporate_customer_id)
     )
     @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
 
@@ -183,7 +185,8 @@ class CoursesController < ApplicationController
             course_module_element_id: nil,
             course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
             is_jumbo_quiz: true,
-            user_id: current_user.try(:id)
+            user_id: current_user.try(:id),
+            corporate_customer_id: current_user.try(:corporate_customer_id)
     )
     @number_of_questions = @course_module_jumbo_quiz.total_number_of_questions
 
@@ -214,7 +217,8 @@ class CoursesController < ApplicationController
         course_module_element_id: nil,
         question_bank_id: @question_bank.try(:id),
         is_question_bank: true,
-        user_id: current_user.try(:id)
+        user_id: current_user.try(:id),
+        corporate_customer_id: current_user.try(:corporate_customer_id)
     )
     @number_of_questions = @question_bank.number_of_questions
     @number_of_easy_questions = @question_bank.easy_questions.to_i

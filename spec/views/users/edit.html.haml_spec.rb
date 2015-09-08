@@ -6,8 +6,6 @@ RSpec.describe 'users/edit', type: :view do
     @user_groups = UserGroup.all
     x = FactoryGirl.create(:corporate_customer)
     @corporate_customers = CorporateCustomer.all
-    x = FactoryGirl.create(:corporate_customer_user_group)
-    @corporate_customer_user_groups = CorporateCustomerUserGroup.all
     @user = FactoryGirl.create(:user)
   end
 
@@ -22,7 +20,6 @@ RSpec.describe 'users/edit', type: :view do
       assert_select 'input#user_active[name=?]', 'user[active]'
       assert_select 'select#user_user_group_id[name=?]', 'user[user_group_id]'
       assert_select 'select#user_corporate_customer_id[name=?]', 'user[corporate_customer_id]'
-      assert_select 'select#user_corporate_customer_user_group_id[name=?]', 'user[corporate_customer_user_group_id]'
       assert_select 'input#user_operational_email_frequency[name=?]', 'user[operational_email_frequency]'
       assert_select 'input#user_study_plan_notifications_email_frequency[name=?]', 'user[study_plan_notifications_email_frequency]'
       assert_select 'input#user_falling_behind_email_alert_frequency[name=?]', 'user[falling_behind_email_alert_frequency]'

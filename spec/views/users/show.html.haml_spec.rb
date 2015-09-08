@@ -5,8 +5,7 @@ RSpec.describe 'users/show', type: :view do
     allow(view).to receive(:tick_or_cross).and_return('nice_boolean')
     @user_group = FactoryGirl.create(:user_group)
     @corporate_customer = FactoryGirl.create(:corporate_customer)
-    @corporate_customer_user_group = FactoryGirl.create(:corporate_customer_user_group)
-    @user = FactoryGirl.create(:user, user_group_id: @user_group.id, stripe_customer_id: @stripe_customer.id, corporate_customer_id: @corporate_customer.id, corporate_customer_user_group_id: @corporate_customer_user_group.id)
+    @user = FactoryGirl.create(:user, user_group_id: @user_group.id, stripe_customer_id: @stripe_customer.id, corporate_customer_id: @corporate_customer.id)
   end
 
   xit 'renders attributes' do
@@ -27,7 +26,6 @@ RSpec.describe 'users/show', type: :view do
     expect(rendered).to match(/#{@user.password_reset_at.to_s(:standard)}/)
     expect(rendered).to match(/#{@user.stripe_customer_id}/)
     expect(rendered).to match(/#{@user.corporate_customer.name}/)
-    expect(rendered).to match(/#{@user.corporate_customer_user_group.name}/)
     expect(rendered).to match(/#{@user.operational_email_frequency}/)
     expect(rendered).to match(/#{@user.study_plan_notifications_email_frequency}/)
     expect(rendered).to match(/#{@user.falling_behind_email_alert_frequency}/)

@@ -1,0 +1,29 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.corporate_students.show.h1')
+
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.corporate_students.form.full_name')
+        %td.col-sm-8= @corporate_student.full_name
+      %tr
+        %td.col-sm-4=t('views.corporate_students.form.email')
+        %td.col-sm-8= @corporate_student.email
+      %tr
+        %td.col-sm-4=t('views.corporate_students.form.country')
+        %td.col-sm-8= @corporate_student.country.name
+      %tr
+        %td.col-sm-4=t('views.corporate_students.form.corporate_group_name')
+        %td.col-sm-8= @corporate_student.corporate_groups.map(&:name).join("<br>").html_safe
+      %tr
+        %td.col-sm-4=t('views.corporate_students.form.employee_guid')
+        %td.col-sm-8= @corporate_student.employee_guid
+
+    %p
+      =link_to sanitize('&larr; ' + t('views.corporate_students.index.h1')), corporate_students_url
+      |
+      =link_to t('views.general.edit'), edit_corporate_student_url(id: @corporate_student.id), title: t('views.general.edit_tooltip')

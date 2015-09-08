@@ -21,6 +21,7 @@ en:
       logged_out_required:
         flash_error: 'You must be logged out to do that'
       you_are_not_permitted_to_do_that: 'You are not permitted to do that'
+      simultaneous_logins_detected: 'Access denied. Simultaneous logins detected.'
 
     duplicate_me_for_controller:
       create:
@@ -376,6 +377,7 @@ en:
         flash:
           success: Your password has been successsfully reset; welcome back!
           error: Your password has not been reset. Please start again.
+          password_and_confirmation_do_not_match: Password and password confirmation do not match. Please try again.
 
     user_sessions:
       create:
@@ -445,3 +447,31 @@ en:
       update:
         flash:
           success: Referred Signup details have been updated successfully
+
+    corporate_groups:
+      create:
+        flash:
+          success: Corporate Group has been created successfully
+      update:
+        flash:
+          success: Corporate Group details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Group has been deleted
+          error: Corporate Group was not deleted
+      update_members:
+        flash:
+          success: Corporate group members have been updated successfully
+
+    corporate_students:
+      create:
+        flash:
+          success: Corporate student user has been created successfully
+          error: There was invalid data Please try again
+      update:
+        flash:
+          success: Corporate student user details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate student user has been deactivated
+          error: Corporate student user was not deactivated

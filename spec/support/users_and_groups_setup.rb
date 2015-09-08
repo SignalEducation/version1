@@ -11,9 +11,9 @@ shared_context 'users_and_groups_setup' do
   let(:tutor_user_group) { FactoryGirl.create(:tutor_user_group) }
   let(:content_manager_user_group) { FactoryGirl.create(:content_manager_user_group) }
   let(:blogger_user_group) { FactoryGirl.create(:blogger_user_group) }
-  let(:corporate_customer_user_group) { FactoryGirl.create(:corporate_customer_user_group) }
   let(:forum_manager_user_group) { FactoryGirl.create(:forum_manager_user_group) }
   let(:site_admin_user_group) { FactoryGirl.create(:site_admin_user_group) }
+  let(:corporate_customer_user_group) { FactoryGirl.create(:corporate_customer_user_group) }
 
   # users
   let!(:individual_student_user) { FactoryGirl.create(:individual_student_user,

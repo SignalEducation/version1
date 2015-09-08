@@ -33,6 +33,9 @@ class UsersController < ApplicationController
       end
       @user.reload
     end
+    if current_user.corporate_customer?
+      @corporate_customer = current_user.corporate_customer
+    end
   end
 
   def new
@@ -43,11 +46,16 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(allowed_params)
+    password = SecureRandom.hex(5)
+    @user = User.new(allowed_params.merge({password: password,
+                                           password_confirmation: password,
+                                           password_change_required: true}))
     @user.de_activate_user
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
-      Mailers::OperationalMailers::ActivateAccountWorker.perform_async(@user.id)
+      MandrillWorker.perform_async(@user.id,
+                                   'send_verification_email',
+                                   user_activation_url(activation_code: @user.account_activation_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -99,13 +107,13 @@ class UsersController < ApplicationController
     @user = current_user
     if current_user.subscriptions.first == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
+                                .where('price > 0.0')
                                 .includes(:currency)
                                 .for_students
                                 .in_currency(1)
-                                .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+                                .generally_available
                                 .all_active
                                 .all_in_order
-
     else
       @subscription_plans = SubscriptionPlan
                             .includes(:currency)
@@ -145,13 +153,14 @@ class UsersController < ApplicationController
     end
     seo_title_maker(@user.try(:full_name), '', true)
     @current_subscription = @user.subscriptions.all_in_order.last
+    @corporate_customers = CorporateCustomer.all_in_order
   end
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :corporate_customer_user_group_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :password, :password_confirmation)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :password, :password_confirmation)
+      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid)
     end
   end
 

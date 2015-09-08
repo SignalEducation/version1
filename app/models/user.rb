@@ -29,7 +29,6 @@
 #  password_reset_at                        :datetime
 #  stripe_customer_id                       :string
 #  corporate_customer_id                    :integer
-#  corporate_customer_user_group_id         :integer
 #  operational_email_frequency              :string
 #  study_plan_notifications_email_frequency :string
 #  falling_behind_email_alert_frequency     :string
@@ -44,6 +43,9 @@
 #  trial_ended_notification_sent_at         :datetime
 #  crush_offers_session_id                  :string
 #  subscription_plan_category_id            :integer
+#  employee_guid                            :string
+#  password_change_required                 :boolean
+#  session_key                              :string
 #
 
 class User < ActiveRecord::Base
@@ -58,15 +60,15 @@ class User < ActiveRecord::Base
   attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
                   :password_reset_token, :password_reset_at, :stripe_customer_id,
-                  :corporate_customer_id, :corporate_customer_user_group_id,
-                  :operational_email_frequency,
+                  :corporate_customer_id, :operational_email_frequency,
                   :study_plan_notifications_email_frequency,
                   :falling_behind_email_alert_frequency, :marketing_email_frequency,
                   :marketing_email_permission_given_at,
                   :blog_notification_email_frequency,
                   :forum_notification_email_frequency, :password,
                   :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes
+                  :subscriptions_attributes, :employee_guid, :password_change_required,
+                  :address
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -76,10 +78,6 @@ class User < ActiveRecord::Base
   # relationships
   belongs_to :corporate_customer
              # employed by the corporate customer
-  has_many :owned_corporate_accounts,
-           class_name: 'CorporateCustomer', foreign_key: :owner_id
-           # owns these corporate accounts (usually one, but can be more)
-  # todo belongs_to :corporate_customer_user_group
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
@@ -105,6 +103,7 @@ class User < ActiveRecord::Base
   has_one :referral_code
   has_one :referred_signup
   belongs_to :subscription_plan_category
+  has_and_belongs_to_many :corporate_groups
 
   accepts_nested_attributes_for :subscriptions
 
@@ -123,10 +122,9 @@ class User < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :user_group_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_user_group_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :corporate_customer_id,
+            numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
+            presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :operational_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :study_plan_notifications_email_frequency,
@@ -140,6 +138,8 @@ class User < ActiveRecord::Base
   validates :forum_notification_email_frequency,
             inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :locale, inclusion: {in: LOCALES}
+  validates :employee_guid, allow_nil: true,
+            uniqueness: { scope: :corporate_customer_id }
 
   # callbacks
   before_validation :set_defaults, on: :create
@@ -194,7 +194,11 @@ class User < ActiveRecord::Base
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
       user = User.where(password_reset_token: reset_token.to_s, active: false).first
       if user
-        if user.update_attributes(password: new_password.to_s, password_confirmation: new_password_confirmation.to_s, active: true, password_reset_token: nil, password_reset_requested_at: nil, password_reset_at: Proc.new{Time.now}.call)
+        if user.update_attributes(password: new_password.to_s,
+                                  password_confirmation: new_password_confirmation.to_s,
+                                  active: true, password_reset_token: nil,
+                                  password_reset_requested_at: nil,
+                                  password_reset_at: Time.now)
           user # return this
         else
           false
@@ -283,7 +287,6 @@ class User < ActiveRecord::Base
         self.forum_topic_users.empty? &&
         self.institution_users.empty? &&
         self.invoices.empty? &&
-        self.owned_corporate_accounts.empty? &&
         self.quiz_attempts.empty? &&
         self.student_exam_tracks.empty? &&
         self.subscriptions.empty? &&
@@ -315,6 +318,28 @@ class User < ActiveRecord::Base
 
   def set_original_mixpanel_alias_id(mixpanel_alias_id)
     @mixpanel_alias_id = mixpanel_alias_id
+  end
+
+  def compulsory_exam_level_ids
+    @compulsory_level_ids ||=
+      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_level_ids }.flatten.uniq : []
+  end
+
+  def compulsory_exam_section_ids
+    @compulsory_section_ids ||=
+      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_section_ids }.flatten.uniq : []
+  end
+
+  def restricted_exam_level_ids
+    @restricted_level_ids ||=
+      corporate_student? ?
+        (corporate_groups.map { |cg| cg.restricted_level_ids }.flatten.uniq - compulsory_exam_level_ids) : []
+  end
+
+  def restricted_exam_section_ids
+    @restricted_section_ids =
+      corporate_student? ?
+        (corporate_groups.map { |cg| cg.restricted_section_ids }.flatten.uniq - compulsory_exam_section_ids) : []
   end
 
   protected

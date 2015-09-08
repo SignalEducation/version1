@@ -103,14 +103,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -161,14 +161,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -219,14 +219,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -244,7 +244,7 @@ describe CorporateCustomersController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(corporate_customer_user)
+      UserSession.create!(corporate_customer_user, corporate_customer_id: corporate_customer_1.id)
     end
 
     describe "GET 'index'" do
@@ -255,9 +255,15 @@ describe CorporateCustomersController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
+      it 'should see his corporate customer overview' do
+        corporate_customer_user.update_attribute(:corporate_customer_id, corporate_customer_1.id)
+        get :show, id: corporate_customer_1.id
+        expect_show_success_with_model('corporate_customer', corporate_customer_1.id)
+      end
+
+      it 'should not see other corporate customer overview' do
+        get :show, id: corporate_customer_2.id
+        expect(response).to redirect_to(dashboard_url)
       end
     end
 
@@ -277,15 +283,15 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
-        expect_bounce_as_not_allowed
+        put :update, id: corporate_customer_1.id, corporate_customer: valid_params
+        expect_update_success_with_model('corporate_customer', corporate_customers_url)
       end
     end
 
@@ -335,14 +341,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -393,14 +399,14 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -451,21 +457,21 @@ describe CorporateCustomersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
+        post :create, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+      it 'should respond OK to valid params for corporate_customer_1' do
+        put :update, id: 1, corporate_customer: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+        delete :destroy, id: corporate_customer_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -552,7 +558,14 @@ describe CorporateCustomersController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be ERROR as corporate students exist' do
+        FactoryGirl.create(:corporate_student_user, corporate_customer_id: corporate_customer_1.id)
+        delete :destroy, id: corporate_customer_1.id
+        expect_delete_error_with_model('corporate_customer', corporate_customers_url)
+      end
+
+      it 'should be ERROR as corporate managers exist' do
+        FactoryGirl.create(:corporate_customer_user, corporate_customer_id: corporate_customer_1.id)
         delete :destroy, id: corporate_customer_1.id
         expect_delete_error_with_model('corporate_customer', corporate_customers_url)
       end

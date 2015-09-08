@@ -35,6 +35,7 @@ describe UserGroup do
 
   # Constants
   it { expect(UserGroup.const_defined?(:FEATURES)).to eq(true) }
+  it { expect(UserGroup.const_defined?(:CORPORATE_STUDENTS)).to eq(true) }
 
   # relationships
   it { should have_many(:users) }

@@ -13,7 +13,10 @@
           %ul.nav.navbar-nav.navbar-right
             -if current_user
               %li
-                =link_to 'Dashboard', dashboard_url
+                -if current_user.corporate_customer?
+                  =link_to 'Dashboard', corporate_customer_url(current_user.corporate_customer)
+                -else
+                  =link_to 'Dashboard', dashboard_url
               %li
                 =link_to 'Library', library_url
               -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial?
@@ -43,10 +46,6 @@
                     %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
                     %li=link_to t('views.institutions.index.h1'), institutions_url
                     %li=link_to t('views.qualifications.index.h1'), qualifications_url
-                    %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
-                    %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
-                    %li=link_to t('views.course_modules.index.h1'), course_modules_url
-                    %li.divider
                     %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
                     %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                     %li=link_to t('views.course_modules.index.h1'), course_modules_url
