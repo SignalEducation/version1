@@ -16,6 +16,8 @@ class UserSessionsController < ApplicationController
       flash[:error] = nil
       if @user_session.user.corporate_customer?
         redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer)
+      elsif @user_session.user.corporate_student?
+        redirect_back_or_default library_url
       else
         redirect_back_or_default root_url
       end
