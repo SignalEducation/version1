@@ -116,6 +116,7 @@ class UsersController < ApplicationController
                                 .all_in_order
     else
       @subscription_plans = SubscriptionPlan
+                            .where('price > 0.0')
                             .includes(:currency)
                             .for_students
                             .in_currency(current_user.subscriptions.first.subscription_plan.currency_id)
