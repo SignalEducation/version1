@@ -4,7 +4,7 @@
       .container-fluid
         .row
           .col-md-12{role: 'tablist'}
-            -if current_user.compulsory_exam_level_ids || current_user.compulsory_exam_section_ids
+            -if current_user.compulsory_exam_level_ids.any? || current_user.compulsory_exam_section_ids.any?
               %a.coursetype.l-margin-top{href: '#compulsory', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
                 ='Compulsory Courses'
             %a.coursetype.l-margin-top{href: '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
@@ -14,7 +14,7 @@
 
   .l-section-small.is-bg-asphalt
     .tab-content
-      -if current_user.compulsory_exam_level_ids || current_user.compulsory_exam_section_ids
+      -if current_user.compulsory_exam_level_ids.any? || current_user.compulsory_exam_section_ids.any?
         .l-wrap.active.tab-pane.fade.in#compulsory{role: 'tabpanel'}
           .container-fluid
             .row
