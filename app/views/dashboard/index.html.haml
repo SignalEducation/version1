@@ -1,5 +1,5 @@
 -if current_user
-  -if current_user.individual_student? || current_user.corporate_student?
+  -if current_user.individual_student?
     =render partial: 'dashboard/student'
   -elsif current_user.admin?
     =render partial: 'dashboard/admin'
@@ -9,6 +9,8 @@
     =render partial: 'dashboard/tutor'
   -elsif current_user.corporate_customer?
     =render partial: 'dashboard/corporate_customer'
+  -elsif current_user.corporate_student?
+    =render partial: 'dashboard/corporate_student'
   -else
     =render partial: 'dashboard/student'
 
