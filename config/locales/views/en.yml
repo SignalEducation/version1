@@ -1026,7 +1026,7 @@ en:
     users:
       form:
         email: Email
-        email_placeholder: jay@example.com
+        email_placeholder: user@example.com
         first_name: First name
         first_name_placeholder: Jay
         last_name: Last name
