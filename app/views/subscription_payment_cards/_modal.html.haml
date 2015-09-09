@@ -6,14 +6,9 @@
   .modal.fade#new-subscription-payment-card-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'newSubscriptionPaymentCardLabel', hidden: 'true'}}
     .modal-dialog
       .modal-content
-        .modal-header
-          %button.close{type: 'button', data: {dismiss: 'modal'}}
-            %span{aria: {hidden: 'true'}} &times;
-            %span.sr-only=t('views.general.close')
-          %h4.modal-title#newSubscriptionPaymentCardLabel=t('views.subscription_payment_cards.modal.h4')
-
         .modal-body
-          =render partial: 'subscription_payment_cards/form', locals: {f: f}
+          %h4.modal-title#newSubscriptionPaymentCardLabel=t('views.subscription_payment_cards.modal.h4')
+          =render partial: 'users/new_card_form', locals: {f: f}
           .form-group
             .col-sm-8.col-sm-offset-4
               .checkbox
@@ -23,5 +18,5 @@
 
 
         .modal-footer
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
-          =f.submit t('views.general.save'), class: 'btn btn-success'
+          .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
+          =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

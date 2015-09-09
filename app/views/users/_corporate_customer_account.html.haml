@@ -1,0 +1,32 @@
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/corporate_side_bar'
+
+  .main-content
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid.l-padding-side-3x
+        .row.l-margin-bottom.l-margin-top
+          .col-md-8
+            %h1.h-separator.h-separator-left.l-margin-bottom-big{style: 'letter-spacing:1.5px;'}
+              ='Edit your Details'
+          .col-md-6.l-margin-bottom-6x
+            =form_for(@user, role: 'form') do |f|
+              =render partial: 'users/corporate_details', locals: {f: f}
+              %br/
+              %br/
+              %br/
+              =f.submit t('views.general.save_changes'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+              =link_to t('views.general.cancel'), corporate_customer_url(current_user.corporate_customer), class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+          .col-md-6.l-margin-bottom-6x
+            %br/
+            %h2
+              Corporate Details
+            %br/
+            .brand-logo
+              = image_tag @corporate_customer.logo.url
+            %br/
+            %br/
+            =link_to 'Edit Corporate Details', '#', data: {toggle: 'modal', target: '#company-data-modal'}, style: 'color: #3E3F5B; font-size: 18px'
+
+  =render partial: 'users/company'
+  =render partial: 'layouts/new_footer'

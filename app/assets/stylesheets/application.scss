@@ -907,6 +907,51 @@ a.box-item {
   padding-top: $gutter;
 }
 
+.account-tab {
+  padding: 13px;
+  padding-left:0px;
+  //text-decoration: underline;
+  border-bottom: 4px solid gainsboro ;
+  a {
+    color: $gray-1;
+    margin-bottom: $gutter;
+    letter-spacing: .1rem;
+    @include font-size(1.4);
+    @include breakpoint(md-min) {
+      @include font-size(1.6);
+    }
+    text-decoration: initial;
+    margin-right: 20px;
+
+    &:hover {
+      padding-bottom: 15px;
+      //border-bottom: 4px solid;
+      box-sizing: content-box;
+      color: $purple-1;
+      font-weight: bold;
+    }
+    &:focus {
+      padding-bottom: 15px;
+      border-bottom: 4px solid;
+      box-sizing: content-box;
+      color: $purple-1;
+      font-weight: bold;
+    }
+  }
+}
+
+.change-password {
+  margin-top: 27px;
+}
+
+.checkbox {
+  padding-top: 25px;
+}
+
+.selected {
+  background: $green-1;
+  color: $white;
+}
 //  Debugging
 
 // * { outline: 1px solid red }

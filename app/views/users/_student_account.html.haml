@@ -1,0 +1,228 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.users.show.h1')
+      .row.l-margin-bottom
+        .col-md-12{role: 'tablist'}
+          .account-tab
+            %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
+            %a{href: '#referral-code', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.referral_code')
+            -if @current_subscription && !@current_subscription.free_trial?
+              %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
+            -if current_user.admin?
+              %a{href: '#admin', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.admin')
+
+      .row
+        .l-margin-top-big
+          .l-margin-bottom
+            =form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
+              .tab-content
+                .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
+                  .row
+                    .col-md-8.col-md-offset-2{style: 'padding-bottom: 50px;'}
+                      .no-image-box-item{style: 'padding-bottom: 40px; padding-top: 40px;'}
+                        =render partial: 'users/form_personal_details', locals: {f: f}
+
+                .tab-pane.fade#referral-code{role: 'tabpanel'}
+                  .rows
+                    .col-sm-8.col-sm-offset-2{style: 'padding-top: 30px;'}
+                      -if current_user.referral_code.nil?
+                        .row
+                          %h2=t('views.users.show.you_dont_have_referral_code')
+                          %a.refer-a-friend-lnk#referral-link{href: '#', class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', data: {toggle: 'modal', target: '#refer-a-friend-dialog'}}Click here to create one
+                        %div.l-margin-bottom-huge.l-margin-top-big
+                          .no-image-box-item
+                            .row
+                              .col-sm-10
+                                %p=t('views.users.show.total_number_of_referred_users')
+                              .col-sm-2
+                                %p.pull-right='0'
+                            .row
+                              .col-sm-10
+                                %p=t('views.users.show.number_of_referred_users_this_month')
+                              .col-sm-2
+                                %p.pull-right='0'
+
+                      -else
+                        %div.l-margin-bottom-huge
+                          .no-image-box-item
+                            %h2.l-margin-top="#{t('views.users.show.tabs.your_referral_code')}:  #{current_user.referral_code.code}"
+                            %hr/
+                            .row
+                              .col-sm-10
+                                %p=t('views.users.show.total_number_of_referred_users')
+                              .col-sm-2
+                                %p.pull-right=current_user.referral_code.referred_signups.count
+                            .row
+                              .col-sm-10
+                                %p=t('views.users.show.number_of_referred_users_this_month')
+                              .col-sm-2
+                                %p.pull-right=current_user.referral_code.referred_signups.where("created_at >= ? and created_at <= ?", Time.now.beginning_of_month, Time.now.end_of_month).count
+
+                -if @current_subscription
+                  .tab-pane.fade#subscriptions{role: 'tabpanel'}
+                    .row
+                      .col-md-12
+                        .no-image-box-item
+                          %h2.l-margin-bottom
+                            =t('views.users.show.your_subscription')
+
+                          -if @current_subscription && !@current_subscription.free_trial?
+                            .row
+                              .col-sm-8
+                                %h3=t("views.general.sibscription_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}") + " - #{number_in_local_currency(@current_subscription.subscription_plan.price, @current_subscription.subscription_plan.currency_id)}"
+                                %p
+                                  =t('views.users.show.your_plans_current_status')
+                                  ="#{@current_subscription.current_status}."
+                                  %br/
+                                  -if @current_subscription.current_status == 'canceled'
+                                    =t('views.users.show.your_plan_expired_on')
+                                  -elsif @current_subscription.current_status == 'canceled-pending'
+                                    =t('views.users.show.your_plan_will_expire_on')
+                                  -else
+                                    =t('views.users.show.your_next_payment_will_be_on')
+                                  =@current_subscription.next_renewal_date.to_s + '.'
+
+                              .col-sm-4
+                                -if @current_subscription.current_status == 'canceled'
+                                  %h3=t('views.users.show.reactivate_subscription.h3')
+                                  =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), '#', class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', data: {toggle: 'modal', target: '#re-subscribe-modal'}
+                                -elsif @current_subscription.current_status == 'canceled-pending'
+                                  %h3=t('views.users.show.un_cancel_subscription.h3')
+                                  =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                                -else
+                                  %h3=t('views.users.show.upgrade_subscription_plan')
+                                  -if @current_subscription.upgrade_options.count > 0
+                                    %p
+                                      =link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
+                                      %br/
+                                  -else
+                                    %p=t('views.users.show.no_upgrade_options_available')
+                                  -if @current_subscription.current_status == 'active'
+                                    =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
+                                  -elsif !@current_subscription.current_status.include?('cancel')
+                                    =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
+
+
+                    .row
+                      .col-md-12
+                        .no-image-box-item
+                          .col-md-8#invoices-panel
+                            %h2.l-margin-bottom
+                              =t('views.users.show.your_invoices')
+                            -@invoices = @user.invoices.paginate(page: 1, per_page: 50).all_in_order
+                            =render partial: 'invoices/index'
+                          -unless @current_subscription.current_status.include?('cancel')
+                            .col-md-4#credit-cards-panel
+                              %h2
+                                =t('views.users.show.your_card_details')
+                              %table.table.table-striped#cards-table
+                                %tbody
+                                  -@user.subscription_payment_cards.all_in_order.each do |card|
+                                    %tr{class: card.status == 'expired' ? 'text-muted' : ''}
+                                      %td
+                                        ='xxxx-xxxx-xxxx-' + card.last_4
+                                        %br/
+                                        =t('views.users.show.card_expires')
+                                        =card.expiry_month
+                                        \/
+                                        =card.expiry_year
+                                      %td{id: "card-#{card.last_4}"}
+                                        -if card.status == 'card-live'
+                                          .fake-btn.btn-cyan.btn-small
+                                            =t('views.users.show.card_live')
+                                        -elsif card.status == 'not-live'
+                                          =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-purple btn-small'
+                                        -elsif card.status == 'expired'
+                                          =t('views.users.show.card_expired')
+                              %p
+                                =link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+
+
+
+
+                -if current_user.admin?
+                  .tab-pane.fade#admin{role: 'tabpanel'}
+                    .row
+                      .col-sm-8.col-sm-offset-2
+                        %table.table.table-bordered
+                          %tbody
+                            %tr
+                              %td.col-sm-4=t('views.users.form.guid')
+                              %td.col-sm-8=@user.guid
+                            %tr
+                              %td.col-sm-4=t('views.users.form.login_count')
+                              %td.col-sm-8=@user.login_count
+                            %tr
+                              %td.col-sm-4=t('views.users.form.failed_login_count')
+                              %td.col-sm-8=@user.failed_login_count
+                            %tr
+                              %td.col-sm-4=t('views.users.form.last_request_at')
+                              %td.col-sm-8
+                                -if @user.last_request_at
+                                  =@user.last_request_at.to_s(:standard)
+                            %tr
+                              %td.col-sm-4=t('views.users.form.current_login_at')
+                              %td.col-sm-8
+                                -if @user.current_login_at
+                                  =@user.current_login_at.to_s(:standard)
+                            %tr
+                              %td.col-sm-4=t('views.users.form.last_login_at')
+                              %td.col-sm-8
+                                -if @user.last_login_at
+                                  =@user.last_login_at.to_s(:standard)
+                            %tr
+                              %td.col-sm-4=t('views.users.form.current_login_ip')
+                              %td.col-sm-8=@user.current_login_ip
+                            %tr
+                              %td.col-sm-4=t('views.users.form.last_login_ip')
+                              %td.col-sm-8=@user.last_login_ip
+                            %tr
+                              %td.col-sm-4=t('views.users.form.active')
+                              %td.col-sm-8=tick_or_cross(@user.active)
+                            %tr
+                              %td.col-sm-4=t('views.users.form.user_group_id')
+                              %td.col-sm-8=link_to @user.user_group.name, @user.user_group
+                            %tr
+                              %td.col-sm-4=t('views.users.form.password_reset_requested_at')
+                              %td.col-sm-8
+                                -if @user.password_reset_requested_at
+                                  =@user.password_reset_requested_at.to_s(:standard)
+                            %tr
+                              %td.col-sm-4=t('views.users.form.password_reset_at')
+                              %td.col-sm-8
+                                -if @user.password_reset_at
+                                  =@user.password_reset_at.to_s(:standard)
+                            %tr
+                              %td.col-sm-4=t('views.users.form.stripe_customer_id')
+                              %td.col-sm-8=@user.stripe_customer_id
+                            -if @user.corporate_customer_id
+                              %tr
+                                %td.col-sm-4=t('views.users.form.corporate_customer_id')
+                                %td.col-sm-8=# todo @user.corporate_customer.try(:name)
+                        %p
+                          -if current_user.admin?
+                            =link_to sanitize('&larr; ' + t('views.users.index.h1')), users_url
+                    .row
+                      .col-sm-8.col-sm-offset-2
+                        =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                        -if @user.id == current_user.id
+                          =link_to(t('views.users.show.change_your_password.link'), '#',class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top', data: {toggle: 'modal', target: '#change_password_modal'})
+  -if @user.id == current_user.id
+    =render partial: 'users/change_password'
+
+  -if @current_subscription
+    -if @current_subscription.current_status.include?('cancel')
+      =render partial: 'users/re_subscribe'
+    -else
+      =render partial: 'users/upgrade_plan'
+    =render partial: 'subscription_payment_cards/modal'
+
+  -if current_user.corporate_customer?
+    =render partial: 'users/company'
+
+  =render partial: 'shared/activate_tab'
+  =render partial: 'layouts/new_footer'

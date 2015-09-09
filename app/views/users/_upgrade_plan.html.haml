@@ -4,26 +4,19 @@
   .modal.fade#upgrade-subscription-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'upgradeSubscriptionLabel', hidden: 'true'}}
     .modal-dialog
       .modal-content
-        .modal-header
-          %button.close{type: 'button', data: {dismiss: 'modal'}}
-            %span{aria: {hidden: 'true'}} &times;
-            %span.sr-only=t('views.general.close')
-          %h4.modal-title#upgradeSubscriptionLabel=t('views.users.show.upgrade_subscription_plan')
-
         .modal-body
+          %h4.modal-title.l-margin-bottom-big#upgradeSubscriptionLabel=t('views.users.show.upgrade_subscription_plan')
           .row
             .col-sm-10.col-sm-offset-1
               .row
               -@current_subscription.upgrade_options.each do|plan|
-                .subscription-panel.well.well-sm.text-center{class: "col-sm-#{12 / @current_subscription.upgrade_options.size} #{@current_subscription.subscription_plan_id == plan.id ? 'active' : ''}", id: "subscription-panel-#{plan.id}", data: {plan: plan.id}, onclick: "$('#subscription_subscription_plan_id').val($(this).data('plan') ); if (#{@current_subscription.subscription_plan_id} == $(this).data('plan')) {$('#upgrade-submit').addClass('disabled');} else {$('#upgrade-submit').removeClass('disabled');} $('.subscription-panel').removeClass('active'); $(this).addClass('active');"}
+                .subscription-panel.no-image-box-item{class: "col-sm-#{12 / @current_subscription.upgrade_options.size} #{@current_subscription.subscription_plan_id == plan.id ? 'selected' : ''}", id: "subscription-panel-#{plan.id}", data: {plan: plan.id}, onclick: "$('#subscription_subscription_plan_id').val($(this).data('plan') ); if (#{@current_subscription.subscription_plan_id} == $(this).data('plan')) {$('#upgrade-submit').addClass('disabled');} else {$('#upgrade-submit').removeClass('disabled');} $('.subscription-panel').removeClass('selected'); $(this).addClass('selected');"}
                   %h4=t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                   %p
-                    =plan.name
-                    %br/
                     -plan.description.lines.each do |line|
                       =line
                       %br/
 
         .modal-footer
-          %button.btn.btn-default{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
-          =f.submit t('views.users.show.upgrade_now'), id: 'upgrade-submit', class: 'btn btn-success disabled'
+          .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
+          =f.submit t('views.users.show.upgrade_now'), id: 'upgrade-submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
