@@ -80,6 +80,11 @@ en:
         a3: Quarterly
         a6: Half-yearly
         a12: Yearly
+      sibscription_in_months:
+        a1: Monthly subscription
+        a3: Quarterly subscription
+        a6: Half-yearly subscription
+        a12: Yearly subscription
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
@@ -1085,20 +1090,20 @@ en:
         change_your_password:
           link: Change your password
           h4: Change your password
-        cancel_your_subscription_plan: Cancel Your Subscription
+        cancel_your_subscription_plan: "Would you like to cancel your subscription?"
         card_expired: "Expired"
         card_expires: "Expires"
-        card_live: "Live"
+        card_live: "Live Card"
         card_no: "Card No.:"
         confirm_deletion: "If you cancel your subscription, you may continue to use LearnSignal until your current billing period expires. After that, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
-        confirm_immediate_deletion: "If you cancel your subscription, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
+        confirm_immediate_deletion: "Cancel Your Membership? Cancellation will be effective at the end of your current billing period on "
         no_upgrade_options_available: "You are on the best Subscription Plan we offer."
         reactivate_subscription:
           h3: Reactivate Your Account
           features_and_benefits: "Get back on track with your study plans and realise your full career potential. Your study history and an ever expanding range of content are just a few clicks away."
-          button_call_to_action: 'Reactivate Now'
+          button_call_to_action: 'Reactivate Account'
         un_cancel_subscription:
-          h3: "Un-cancel Your Account"
+          h3: "Undo Your Account Cancellation"
           features_and_benefits: "Don't give up! You can do it, and the whole Learn Signal community are here to help. It's not too late to keep uninterrupted access to your account."
           button_call_to_action: 'Un-cancel Now'
         re_subscribe_plan: 'Thank you for reactivating'
@@ -1109,17 +1114,18 @@ en:
           notifications: Notifications
           admin: Admin
           referral_code: Referral Code
+          your_referral_code: Your Referral Code
         upgrade_now: Upgrade Now
-        upgrade_subscription_plan: Upgrade Your Subscription
+        upgrade_subscription_plan: Edit Your Subscription
         use_this_card: "Use this card"
-        your_card_details: Card Details
+        your_card_details: Update Payment Info
         your_invoices: Your Invoices
         your_next_payment_will_be_on: "Your next payment will be processed on"
-        your_plans_current_status: "Your plan's current status is"
+        your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
-        your_plan_will_expire_on: "Your plan will expire on"
-        your_subscription: Your Subscription
-        you_dont_have_referral_code: "You don't have a referral code."
+        your_plan_will_expire_on: "Your plan is set to expire on"
+        your_subscription: Current Subscription
+        you_dont_have_referral_code: "You don't have a referral code Yet."
         total_number_of_referred_users: Total number of referred users
         number_of_referred_users_this_month: Number of referred users this month
       upgrade_subscription:
