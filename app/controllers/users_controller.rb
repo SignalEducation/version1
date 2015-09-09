@@ -105,7 +105,7 @@ class UsersController < ApplicationController
   def new_paid_subscription
     redirect_to profile_url if current_user.subscriptions.count > 1
     @user = current_user
-    if current_user.subscriptions.first == SubscriptionPlan.where(id: 51).first
+    if current_user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
                                 .where('price > 0.0')
                                 .includes(:currency)
