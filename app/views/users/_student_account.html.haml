@@ -13,8 +13,7 @@
             -if @current_subscription && !@current_subscription.free_trial?
               %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
             -if current_user.admin?
-              %li{role: 'presentation'}
-                %a{href: '#admin', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.admin')
+              %a{href: '#admin', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.admin')
 
       .row
         .l-margin-top-big

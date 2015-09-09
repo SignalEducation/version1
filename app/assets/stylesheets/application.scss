@@ -948,6 +948,10 @@ a.box-item {
   padding-top: 25px;
 }
 
+.selected {
+  background: $green-1;
+  color: $white;
+}
 //  Debugging
 
 // * { outline: 1px solid red }
