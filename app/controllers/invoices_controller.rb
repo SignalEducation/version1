@@ -7,7 +7,7 @@ class InvoicesController < ApplicationController
     if current_user.admin?
       @invoices = Invoice.paginate(per_page: 50, page: params[:page]).all_in_order
     else
-      @invoices = current_user.invoices.paginate(per_page: 50, page: params[:page]).all_in_order
+      @invoices = current_user.invoices.where('total > 0.0').paginate(per_page: 50, page: params[:page]).all_in_order
     end
   end
 
