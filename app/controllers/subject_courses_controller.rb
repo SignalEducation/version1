@@ -1,0 +1,72 @@
+class SubjectCoursesController < ApplicationController
+
+  before_action :logged_in_required
+  before_action do
+    ensure_user_is_of_type(['admin', 'tutor', 'content_manager'])
+  end
+  before_action :get_variables
+
+  def index
+    @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
+  def show
+  end
+
+  def new
+    @subject_course = SubjectCourse.new
+  end
+
+  def edit
+  end
+
+  def create
+    @subject_course = SubjectCourse.new(allowed_params)
+    if @subject_course.save
+      flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
+      redirect_to subject_courses_url
+    else
+      render action: :new
+    end
+  end
+
+  def update
+    if @subject_course.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.subject_courses.update.flash.success')
+      redirect_to subject_courses_url
+    else
+      render action: :edit
+    end
+  end
+
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      SubjectCourse.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
+  end
+
+  def destroy
+    if @subject_course.destroy
+      flash[:success] = I18n.t('controllers.subject_courses.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.subject_courses.destroy.flash.error')
+    end
+    redirect_to subject_courses_url
+  end
+
+  protected
+
+  def get_variables
+    if params[:id].to_i > 0
+      @subject_course = SubjectCourse.where(id: params[:id]).first
+    end
+    @tutors = User.all_tutors.all_in_order
+  end
+
+  def allowed_params
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url)
+  end
+
+end

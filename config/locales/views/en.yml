@@ -943,6 +943,41 @@ en:
       modal:
         h4: New Card Details
 
+    subject_courses:
+      form:
+        name: Name
+        name_placeholder: Course name
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        active: Active
+        live: Live
+        wistia_guid: Wistia Project ID
+        wistia_guid_placeholder: Wistia Project ID
+        tutor_id: Tutor
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        description: Description
+        description_placeholder: Course Description
+        short_description: Short Description
+        short_description_placeholder: Description
+        mailchimp_guid: MailChimp List ID
+        mailchimp_guid_placeholder: MailChimp ID
+        forum_url: Forum Course URL
+        forum_url_placeholder: Forum Course URL
+
+      index:
+        h1: Courses
+
+      show:
+        h1: Course
+
+      edit:
+        h1: Edit Course
+
+      new:
+        h1: New Course
+
+
     subscription_plans:
       form:
         name: Name

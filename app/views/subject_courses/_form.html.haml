@@ -1,0 +1,53 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    =form_for(@subject_course, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .well.well-sm
+        =render partial: '/layouts/error_messages', locals: {thing: @subject_course, message: nil}
+        .form-group
+          =f.label :name, t('views.subject_courses.form.name'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name, placeholder: t('views.subject_courses.form.name_placeholder'), class: 'form-control', autofocus: true
+        .form-group
+          =f.label :name_url, t('views.subject_courses.form.name_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control'
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.subject_courses.form.active')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :live
+                =t('views.subject_courses.form.live')
+        .form-group
+          =f.label :wistia_guid, t('views.subject_courses.form.wistia_guid'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :wistia_guid, placeholder: t('views.subject_courses.form.wistia_guid_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :tutor_id, t('views.subject_courses.form.tutor_id'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        .form-group
+          =f.label :description, t('views.subject_courses.form.description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_area :description, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 4, class: 'form-control'
+        .form-group
+          =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :short_description, placeholder: t('views.subject_courses.form.short_description_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :mailchimp_guid, t('views.subject_courses.form.mailchimp_guid'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :mailchimp_guid, placeholder: t('views.subject_courses.form.mailchimp_guid_placeholder'), class: 'form-control'
+        .form-group
+          =f.label :forum_url, t('views.subject_courses.form.forum_url'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :forum_url, placeholder: t('views.subject_courses.form.forum_url_placeholder'), class: 'form-control'
+
+      =f.submit t('views.general.save'), class: 'btn btn-success'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), subject_courses_path
