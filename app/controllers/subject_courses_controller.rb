@@ -7,14 +7,18 @@ class SubjectCoursesController < ApplicationController
   before_action :get_variables
 
   def index
-    @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page]).all_in_order
+    if current_user.tutor?
+      @subject_courses = SubjectCourse.where(tutor_id: current_user.id).paginate(per_page: 50, page: params[:page]).all_in_order
+    else
+      @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page]).all_in_order
+    end
   end
 
   def show
   end
 
   def new
-    @subject_course = SubjectCourse.new
+    @subject_course = SubjectCourse.new(sorting_order: 1)
   end
 
   def edit
@@ -66,7 +70,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers)
   end
 
 end

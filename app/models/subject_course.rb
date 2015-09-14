@@ -26,8 +26,10 @@
 
 class SubjectCourse < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers
 
   # Constants
 
@@ -52,10 +54,14 @@ class SubjectCourse < ActiveRecord::Base
   validates :short_description, presence: true, length: {maximum: 255}
   validates :mailchimp_guid, presence: true, length: {maximum: 255}
   validates :forum_url, presence: true, length: {maximum: 255}
+  validates :default_number_of_possible_exam_answers, presence: true, numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
   before_create :set_sorting_order
+  before_save :calculate_best_possible_score
+  before_save :sanitize_name_url
+  before_save :recalculate_cme_count
   before_destroy :check_dependencies
 
   # scopes
@@ -129,10 +135,6 @@ class SubjectCourse < ActiveRecord::Base
 
   def recalculate_cme_count
     self.cme_count = self.active_children.sum(:cme_count)
-  end
-
-  def recalculate_duration
-    self.duration = self.active_children.sum(:estimated_time_in_seconds)
   end
 
   def check_dependencies

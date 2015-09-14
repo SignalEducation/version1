@@ -41,6 +41,7 @@ FactoryGirl.define do
     short_description "MyString"
     mailchimp_guid "MyString"
     forum_url "MyString"
+    default_number_of_possible_exam_answers 1
   end
 
 end

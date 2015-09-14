@@ -10,12 +10,13 @@
 #  restricted         :boolean
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  subject_course_id  :integer
 #
 
 class CorporateGroupGrant < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :corporate_group_id, :exam_level_id, :exam_section_id, :compulsory, :restricted
+  attr_accessible :corporate_group_id, :exam_level_id, :exam_section_id, :compulsory, :restricted, :subject_course
 
   # Constants
 
@@ -23,6 +24,7 @@ class CorporateGroupGrant < ActiveRecord::Base
   belongs_to :corporate_group
   belongs_to :exam_level
   belongs_to :exam_section
+  belongs_to :subject_course
 
   # validation
   validates :corporate_group_id, presence: true,
@@ -30,6 +32,8 @@ class CorporateGroupGrant < ActiveRecord::Base
   validates :exam_level_id, allow_nil: true,
             numericality: { only_integer: true, greater_than: 0 }
   validates :exam_section_id, allow_nil: true,
+            numericality: { only_integer: true, greater_than: 0 }
+  validates :subject_course_id, allow_nil: true,
             numericality: { only_integer: true, greater_than: 0 }
 
   # callbacks

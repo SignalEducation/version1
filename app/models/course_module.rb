@@ -21,6 +21,7 @@
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
+#  subject_course_id         :integer
 #
 
 class CourseModule < ActiveRecord::Base
@@ -33,7 +34,7 @@ class CourseModule < ActiveRecord::Base
                   :exam_section_id, :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
-                  :number_of_questions
+                  :number_of_questions, :subject_course_id
 
   # Constants
 
@@ -47,13 +48,16 @@ class CourseModule < ActiveRecord::Base
   belongs_to :exam_section
   belongs_to :institution
   belongs_to :qualification
+  belongs_to :subject_course
   has_many :student_exam_tracks
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
   validates :institution_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_level_id, presence: true,
+  validates :exam_level_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -143,7 +147,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def parent
-    self.exam_section ? self.exam_section : self.exam_level
+    self.subject_course
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
@@ -210,7 +214,7 @@ class CourseModule < ActiveRecord::Base
       self.parent.save
       if changes_2 && changes_2[0] != changes_2[1]
         self.student_exam_tracks.each do |set|
-          set.recalculate_completeness # todo - move this to a worker
+          set.recalculate_completeness
         end
       end
     end

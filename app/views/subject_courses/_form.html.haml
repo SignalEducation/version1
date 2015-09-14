@@ -44,6 +44,10 @@
           .col-sm-8
             =f.text_field :mailchimp_guid, placeholder: t('views.subject_courses.form.mailchimp_guid_placeholder'), class: 'form-control'
         .form-group
+          =f.label :default_number_of_possible_exam_answers, t('views.subject_courses.form.default_number_of_possible_exam_answers'), class: 'control-label col-sm-4'
+          .col-sm-8
+            =f.text_field :default_number_of_possible_exam_answers, placeholder: t('views.subject_courses.form.default_number_of_possible_exam_answers_placeholder'), class: 'form-control'
+        .form-group
           =f.label :forum_url, t('views.subject_courses.form.forum_url'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.text_field :forum_url, placeholder: t('views.subject_courses.form.forum_url_placeholder'), class: 'form-control'

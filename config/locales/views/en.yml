@@ -964,6 +964,8 @@ en:
         mailchimp_guid_placeholder: MailChimp ID
         forum_url: Forum Course URL
         forum_url_placeholder: Forum Course URL
+        default_number_of_possible_exam_answers: Default No. of Questions
+        default_number_of_possible_exam_answers_placeholder: No. of Questions
 
       index:
         h1: Courses

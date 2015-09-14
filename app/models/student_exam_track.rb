@@ -15,6 +15,7 @@
 #  jumbo_quiz_taken                :boolean          default(FALSE)
 #  percentage_complete             :float            default(0.0)
 #  count_of_cmes_completed         :integer          default(0)
+#  subject_course_id               :integer
 #
 
 class StudentExamTrack < ActiveRecord::Base
@@ -25,7 +26,7 @@ class StudentExamTrack < ActiveRecord::Base
   attr_accessible :user_id, :exam_level_id, :exam_section_id,
                   :latest_course_module_element_id, :exam_schedule_id,
                   :session_guid, :course_module_id, :jumbo_quiz_taken,
-                  :percentage_complete, :count_of_cmes_completed
+                  :percentage_complete, :count_of_cmes_completed, :subject_course
 
   # Constants
 
@@ -33,6 +34,7 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :user
   belongs_to :exam_level
   belongs_to :exam_section
+  belongs_to :subject_course
   belongs_to :course_module
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
@@ -79,6 +81,7 @@ class StudentExamTrack < ActiveRecord::Base
               user_id: the_user_id,
               session_guid: the_session_guid,
               exam_level_id: duplicate_sets.last.exam_level_id,
+              subject_course_id: duplicate_sets.last.subject_course_id,
               exam_section_id: duplicate_sets.last.exam_section_id,
               latest_course_module_element_id: duplicate_sets.last.latest_course_module_element_id,
               exam_schedule_id: duplicate_sets.last.exam_schedule_id,
@@ -137,6 +140,7 @@ class StudentExamTrack < ActiveRecord::Base
               self.user_id,
               self.course_module.name,
               self.exam_section.try(:name),
+              self.subject_course.name,
               self.exam_level.name,
               self.exam_level.parent.name,
               self.course_module.institution.name,

@@ -29,7 +29,7 @@ require 'rails_helper'
 describe SubjectCourse do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at video_count quiz_count question_count)
+  black_list = %w(id created_at updated_at video_count quiz_count question_count best_possible_first_attempt_score)
   SubjectCourse.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -42,47 +42,65 @@ describe SubjectCourse do
   #it { expect(SubjectCourse.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:tutor) }
+  it { should have_many(:course_modules) }
+  it { should have_many(:course_module_elements) }
+  it { should have_many(:course_module_element_quizzes) }
+  it { should have_many(:course_module_jumbo_quizzes) }
+  it { should have_many(:student_exam_tracks) }
+  it { should have_many(:corporate_group_grants) }
 
   # validation
   it { should validate_presence_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
-
-  it { should validate_presence_of(:sorting_order) }
+  it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:wistia_guid) }
+  it { should validate_length_of(:wistia_guid).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 
-  it { should validate_presence_of(:cme_count) }
-
-  it { should validate_presence_of(:video_count) }
-
-  it { should validate_presence_of(:quiz_count) }
-
-  it { should validate_presence_of(:question_count) }
-
   it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:short_description) }
+  it { should validate_length_of(:short_description).is_at_most(255) }
 
   it { should validate_presence_of(:mailchimp_guid) }
+  it { should validate_length_of(:mailchimp_guid).is_at_most(255) }
 
   it { should validate_presence_of(:forum_url) }
+  it { should validate_length_of(:forum_url).is_at_most(255) }
+
+  it { should validate_presence_of(:default_number_of_possible_exam_answers) }
+  it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:set_sorting_order).before(:create) }
+  it { should callback(:calculate_best_possible_score).before(:save) }
+  it { should callback(:sanitize_name_url).before(:save) }
+  it { should callback(:recalculate_cme_count).before(:save) }
+  it { should callback(:recalculate_duration).before(:save) }
+
 
   # scopes
+  it { expect(SubjectCourse).to respond_to(:all_active) }
   it { expect(SubjectCourse).to respond_to(:all_in_order) }
 
+
   # class methods
+  it { expect(SubjectCourse).to respond_to(:get_by_name_url) }
+  it { expect(SubjectCourse).to respond_to(:search) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:active_children) }
+  it { should respond_to(:children) }
+  it { should respond_to(:completed_by_user_or_guid) }
+  it { should respond_to(:first_active_cme) }
+  it { should respond_to(:number_complete_by_user_or_guid) }
+  it { should respond_to(:percentage_complete_by_user_or_guid) }
 
 end
