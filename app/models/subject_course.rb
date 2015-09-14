@@ -2,24 +2,26 @@
 #
 # Table name: subject_courses
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  name_url          :string
-#  sorting_order     :integer
-#  active            :boolean          default(FALSE), not null
-#  live              :boolean          default(FALSE), not null
-#  wistia_guid       :string
-#  tutor_id          :integer
-#  cme_count         :integer
-#  video_count       :integer
-#  quiz_count        :integer
-#  question_count    :integer
-#  description       :text
-#  short_description :string
-#  mailchimp_guid    :string
-#  forum_url         :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                                      :integer          not null, primary key
+#  name                                    :string
+#  name_url                                :string
+#  sorting_order                           :integer
+#  active                                  :boolean          default(FALSE), not null
+#  live                                    :boolean          default(FALSE), not null
+#  wistia_guid                             :string
+#  tutor_id                                :integer
+#  cme_count                               :integer
+#  video_count                             :integer
+#  quiz_count                              :integer
+#  question_count                          :integer
+#  description                             :text
+#  short_description                       :string
+#  mailchimp_guid                          :string
+#  forum_url                               :string
+#  created_at                              :datetime         not null
+#  updated_at                              :datetime         not null
+#  best_possible_first_attempt_score       :float
+#  default_number_of_possible_exam_answers :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -52,6 +54,8 @@ class SubjectCourse < ActiveRecord::Base
   validates :forum_url, presence: true, length: {maximum: 255}
 
   # callbacks
+  before_validation { squish_fields(:name, :name_url) }
+  before_create :set_sorting_order
   before_destroy :check_dependencies
 
   # scopes
@@ -61,13 +65,75 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
-
-  # instance methods
-  def destroyable?
-    false
+  def self.get_by_name_url(the_name_url)
+    where(name_url: the_name_url).first
   end
 
+  def self.search(search)
+    if search
+      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+    else
+      SubjectCourse.all_active.all_in_order
+    end
+  end
+
+
+  # instance methods
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
+  def children
+    self.course_modules.all
+  end
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def destroyable?
+    !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
+  end
+
+  def first_active_cme
+    self.active_children.first.try(:first_active_cme)
+  end
+
+  def full_name
+    #self.qualification.name + ' > ' + self.name
+  end
+
+  def number_complete_by_user_or_guid(user_id, session_guid)
+    self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
+  end
+
+  def parent
+    #self.path
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    if self.cme_count > 0
+      (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
+    else
+      0
+    end
+  end
+
+
+
   protected
+
+  def calculate_best_possible_score
+    self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
+  end
+
+  def recalculate_cme_count
+    self.cme_count = self.active_children.sum(:cme_count)
+  end
+
+  def recalculate_duration
+    self.duration = self.active_children.sum(:estimated_time_in_seconds)
+  end
 
   def check_dependencies
     unless self.destroyable?

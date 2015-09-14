@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914100559) do
+ActiveRecord::Schema.define(version: 20150914152633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -817,8 +817,8 @@ ActiveRecord::Schema.define(version: 20150914100559) do
     t.string   "name"
     t.string   "name_url"
     t.integer  "sorting_order"
-    t.boolean  "active",            default: false, null: false
-    t.boolean  "live",              default: false, null: false
+    t.boolean  "active",                                  default: false, null: false
+    t.boolean  "live",                                    default: false, null: false
     t.string   "wistia_guid"
     t.integer  "tutor_id"
     t.integer  "cme_count"
@@ -829,8 +829,10 @@ ActiveRecord::Schema.define(version: 20150914100559) do
     t.string   "short_description"
     t.string   "mailchimp_guid"
     t.string   "forum_url"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.float    "best_possible_first_attempt_score"
+    t.integer  "default_number_of_possible_exam_answers"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
