@@ -147,7 +147,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def parent
-    self.subject_course
+    self.exam_section ? self.exam_section : self.exam_level
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)

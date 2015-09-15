@@ -140,7 +140,6 @@ class StudentExamTrack < ActiveRecord::Base
               self.user_id,
               self.course_module.name,
               self.exam_section.try(:name),
-              self.subject_course.name,
               self.exam_level.name,
               self.exam_level.parent.name,
               self.course_module.institution.name,

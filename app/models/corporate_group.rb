@@ -56,6 +56,14 @@ class CorporateGroup < ActiveRecord::Base
     corporate_group_grants.where(exam_section_id: exam_section_id).first.try(:compulsory)
   end
 
+  def subject_course_restricted?(subject_course_id)
+    corporate_group_grants.where(subject_course_id: subject_course_id).first.try(:restricted)
+  end
+
+  def subject_course_compulsory?(subject_course_id)
+    corporate_group_grants.where(subject_course_id: subject_course_id).first.try(:compulsory)
+  end
+
   def compulsory_level_ids
     corporate_group_grants
       .where('exam_level_id is not null')
@@ -71,6 +79,13 @@ class CorporateGroup < ActiveRecord::Base
       .pluck(:exam_section_id)
   end
 
+  def compulsory_subject_course_ids
+    corporate_group_grants
+      .where("subject_course_id is not null")
+      .where(compulsory: true)
+      .pluck(:subject_course_id)
+  end
+
   def restricted_level_ids
     corporate_group_grants
       .where('exam_level_id is not null')
@@ -84,6 +99,13 @@ class CorporateGroup < ActiveRecord::Base
       .where("exam_section_id is not null")
       .where(restricted: true)
       .pluck(:exam_section_id)
+  end
+
+  def restricted_subject_course_ids
+    corporate_group_grants
+      .where("subject_course_id is not null")
+      .where(restricted: true)
+      .pluck(:subject_course_id)
   end
 
   protected
