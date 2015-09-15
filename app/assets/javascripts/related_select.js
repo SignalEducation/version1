@@ -1,5 +1,3 @@
-// Written by Dan Laffan - 5 Nov 2014.
-
 function getMatchesAsOptionTags(arrayOfChildren, targetValue, currentValue) {
   var result = "<option value=''>Select...</option>";
   for(var counter = 0; counter < arrayOfChildren.length; counter++) {

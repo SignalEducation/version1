@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901074128) do
+ActiveRecord::Schema.define(version: 20150914161335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20150901074128) do
     t.boolean  "restricted"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "subject_course_id"
   end
 
   add_index "corporate_group_grants", ["corporate_group_id"], name: "index_corporate_group_grants_on_corporate_group_id", using: :btree
@@ -232,6 +233,7 @@ ActiveRecord::Schema.define(version: 20150901074128) do
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
     t.integer  "number_of_questions",       default: 0
+    t.integer  "subject_course_id"
   end
 
   add_index "course_modules", ["exam_level_id"], name: "index_course_modules_on_exam_level_id", using: :btree
@@ -582,6 +584,7 @@ ActiveRecord::Schema.define(version: 20150901074128) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "exam_section_id"
+    t.integer  "subject_course_id"
   end
 
   add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
@@ -790,6 +793,7 @@ ActiveRecord::Schema.define(version: 20150901074128) do
     t.boolean  "jumbo_quiz_taken",                default: false
     t.float    "percentage_complete",             default: 0.0
     t.integer  "count_of_cmes_completed",         default: 0
+    t.integer  "subject_course_id"
   end
 
   add_index "student_exam_tracks", ["exam_level_id"], name: "index_student_exam_tracks_on_exam_level_id", using: :btree
@@ -812,6 +816,32 @@ ActiveRecord::Schema.define(version: 20150901074128) do
   add_index "subject_areas", ["name"], name: "index_subject_areas_on_name", using: :btree
   add_index "subject_areas", ["name_url"], name: "index_subject_areas_on_name_url", using: :btree
   add_index "subject_areas", ["sorting_order"], name: "index_subject_areas_on_sorting_order", using: :btree
+
+  create_table "subject_courses", force: :cascade do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.integer  "sorting_order"
+    t.boolean  "active",                                  default: false, null: false
+    t.boolean  "live",                                    default: false, null: false
+    t.string   "wistia_guid"
+    t.integer  "tutor_id"
+    t.integer  "cme_count"
+    t.integer  "video_count"
+    t.integer  "quiz_count"
+    t.integer  "question_count"
+    t.text     "description"
+    t.string   "short_description"
+    t.string   "mailchimp_guid"
+    t.string   "forum_url"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.float    "best_possible_first_attempt_score"
+    t.integer  "default_number_of_possible_exam_answers"
+  end
+
+  add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
+  add_index "subject_courses", ["tutor_id"], name: "index_subject_courses_on_tutor_id", using: :btree
+  add_index "subject_courses", ["wistia_guid"], name: "index_subject_courses_on_wistia_guid", using: :btree
 
   create_table "subscription_payment_cards", force: :cascade do |t|
     t.integer  "user_id"
@@ -1054,6 +1084,23 @@ ActiveRecord::Schema.define(version: 20150901074128) do
   add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
   add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "tutor_project_id"
+    t.string   "tutor_wistia_url"
+    t.text     "description"
+    t.string   "url"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "user_profiles", ["tutor_project_id"], name: "index_user_profiles_on_tutor_project_id", using: :btree
+  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"

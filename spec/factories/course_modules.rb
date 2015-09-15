@@ -21,6 +21,7 @@
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
+#  subject_course_id         :integer
 #
 
 FactoryGirl.define do
