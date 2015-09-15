@@ -3,22 +3,9 @@
   .well.well-sm
     =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
     .form-group
-      =f.label :institution_id, t('views.course_modules.form.institution_id'), class: 'control-label col-sm-4'
+      =f.label :subject_course_id, t('views.course_modules.form.exam_level_id'), class: 'control-label col-sm-4'
       .col-sm-8
-        =f.collection_select :institution_id, @institutions, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    .form-group
-      =f.label :qualification_id, t('views.course_modules.form.qualification_id'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.collection_related_select :qualification_id, @qualifications, :id, :name, :institution_id, :institution_id, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    .form-group
-      =f.label :exam_level_id, t('views.course_modules.form.exam_level_id'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.collection_related_select :exam_level_id, @exam_levels, :id, :name, :qualification_id, :qualification_id, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    -if f.object.exam_level.enable_exam_sections
-      .form-group
-        =f.label :exam_section_id, t('views.course_modules.form.exam_section_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_related_select :exam_section_id, @exam_sections, :id, :name, :exam_level_id, :exam_level_id, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
     .form-group
       =f.label :name, t('views.course_modules.form.name'), class: 'control-label col-sm-4'
       .col-sm-8

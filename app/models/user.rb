@@ -82,6 +82,7 @@ class User < ActiveRecord::Base
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
   has_many :exam_levels, foreign_key: :tutor_id
+  has_many :subject_courses, foreign_key: :tutor_id
   has_many :forum_posts
   has_many :forum_post_concerns
   has_many :forum_topic_users

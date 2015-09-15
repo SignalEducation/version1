@@ -35,6 +35,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    subject_courses:
+      create:
+        flash:
+          success: Subject Course has been created successfully
+      update:
+        flash:
+          success: Subject Course details have been updated successfully
+      destroy:
+        flash:
+          success: Subject Course has been deleted
+          error: Subject Course was not deleted
+
     corporate_customers:
       create:
         flash:

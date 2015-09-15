@@ -15,6 +15,7 @@
 #  jumbo_quiz_taken                :boolean          default(FALSE)
 #  percentage_complete             :float            default(0.0)
 #  count_of_cmes_completed         :integer          default(0)
+#  subject_course_id               :integer
 #
 
 require 'rails_helper'

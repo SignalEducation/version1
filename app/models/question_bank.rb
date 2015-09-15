@@ -12,6 +12,7 @@
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  exam_section_id             :integer
+#  subject_course_id           :integer
 #
 
 class QuestionBank < ActiveRecord::Base
@@ -19,7 +20,7 @@ class QuestionBank < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :user_id, :exam_level_id, :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy, :exam_section_id
+  attr_accessible :user_id, :exam_level_id, :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy, :exam_section_id, :subject_course_id
 
   # Constants
   STRATEGIES = %w(random progressive)
@@ -28,12 +29,15 @@ class QuestionBank < ActiveRecord::Base
   belongs_to :user
   belongs_to :exam_level
   belongs_to :exam_section
+  belongs_to :subject_course
   has_many :course_module_element_user_logs
 
   # validation
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_level_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :exam_section_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}

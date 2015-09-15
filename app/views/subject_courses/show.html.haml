@@ -1,0 +1,47 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.subject_courses.show.h1')
+        \#
+        =@subject_course.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.name')
+        %td.col-sm-8=@subject_course.name
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.name_url')
+        %td.col-sm-8=@subject_course.name_url
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.active')
+        %td.col-sm-8=tick_or_cross(@subject_course.active)
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.live')
+        %td.col-sm-8=tick_or_cross(@subject_course.live)
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.wistia_guid')
+        %td.col-sm-8=@subject_course.wistia_guid
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.tutor_id')
+        %td.col-sm-8=@subject_course.tutor.full_name
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.description')
+        %td.col-sm-8=@subject_course.description
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.short_description')
+        %td.col-sm-8=@subject_course.short_description
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.mailchimp_guid')
+        %td.col-sm-8=@subject_course.mailchimp_guid
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.default_number_of_possible_exam_answers')
+        %td.col-sm-8=@subject_course.default_number_of_possible_exam_answers
+      %tr
+        %td.col-sm-4=t('views.subject_courses.form.forum_url')
+        %td.col-sm-8=@subject_course.forum_url
+    %p
+      =link_to t('views.general.back'), subject_courses_url
+      |
+      =link_to t('views.general.edit'), edit_subject_course_url(id: @subject_course.id), title: t('views.general.edit_tooltip')
