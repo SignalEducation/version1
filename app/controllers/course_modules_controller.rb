@@ -125,18 +125,20 @@ class CourseModulesController < ApplicationController
     @qualifications = Qualification.all_in_order
     if current_user.admin? || current_user.content_manager?
       @exam_levels = ExamLevel.all_in_order
+      @subject_courses = SubjectCourse.all_active.all_in_order
     elsif current_user.tutor?
       assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
       non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
       exam_levels = assigned_levels + non_assigned_levels
       @exam_levels = exam_levels.uniq
+      @subject_courses = SubjectCourse.where(tutor_id: current_user.id).all_active.all_in_order
     end
     @exam_sections = ExamSection.all_in_order
     @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
-    params.require(:course_module).permit(:institution_id, :qualification_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions)
+    params.require(:course_module).permit(:institution_id, :qualification_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id)
   end
 
   def set_up_side_nav

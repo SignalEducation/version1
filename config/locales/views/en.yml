@@ -219,6 +219,7 @@ en:
         institution_id: Institution
         qualification_id: Qualification
         exam_level_id: Exam level
+        subject_course_id: Course
         exam_section_id: Exam section
         name: Name
         name_placeholder: Introduction to surfing
