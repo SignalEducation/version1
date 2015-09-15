@@ -9,11 +9,12 @@ class CourseModulesController < ApplicationController
   def index
     qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.try(:qualification)
     exam_level = qualification.try(:exam_levels).try(:first)
-    if exam_level
-      redirect_to course_module_special_link(exam_level)
+    subject_course = SubjectCourse.all_in_order.first
+    if subject_course
+      redirect_to course_module_special_link(subject_course)
     else
       flash[:error] = I18n.t('controllers.course_modules.index.no_exam_level')
-      redirect_to exam_levels_url
+      redirect_to subject_courses_url
     end
   end
 

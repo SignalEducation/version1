@@ -56,31 +56,12 @@ Rails.application.routes.draw do
 
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
-    # todo get 'corporate_sign_up_complete', to: 'corporate_dashboard#index', as: :corporate_sign_up_complete
-    # todo get 'personal_profile_created', to: 'dashboard#index', as: :personal_profile_created # for corporate users who have converted to personal users
-
-
-    get 'courses/:exam_level_name_url(/:exam_section_name_url)/question_bank/:id', to: 'courses#show', as: :question_bank
-
-    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
-
-    get 'library/:exam_level_name_url/question_banks/new', to: 'question_banks#new', as: :level_question_banks
-    get 'library/:exam_level_name_url/:exam_section_name_url/question_banks/new', to: 'question_banks#new', as: :section_question_banks
-
-    post 'library/:exam_level_name_url/question_banks/new', to: 'question_banks#create', as: :new_level_question_bank
-
-    post 'library/:exam_level_name_url/:exam_section_name_url/question_banks/new', to: 'question_banks#create', as: :new_section_question_bank
-
-    get 'courses/:subject_area_name_url',
-        to: redirect('/%{locale}/library/%{subject_area_name_url}')
-    get 'courses/:subject_area_name_url/:institution_name_url',
-        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}')
-    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
-        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
-    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
-        to: redirect('/%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
-    get 'courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
-        to: redirect('%{locale}/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
+    get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :question_bank
+    get 'courses/:subject_course_name_url/:course_module_element_name_url', to: 'courses#show', as: :course
+    get 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
+    post 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#create', as: :new_question_bank
+    get 'courses/:subject_course_name_url',
+        to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
     # general resources
     resources :corporate_customers
@@ -96,16 +77,11 @@ Rails.application.routes.draw do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     resources :course_modules, concerns: :supports_reordering
-    get 'course_modules/:qualification_url', to: 'course_modules#show',
-        as: :course_modules_for_qualification
-    get 'course_modules/:qualification_url/:exam_level_url', to: 'course_modules#show',
-        as: :course_modules_for_qualification_and_exam_level
-    get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url',
+    get 'course_modules/:subject_course_name_url', to: 'course_modules#show',
+        as: :course_modules_for_subject_course
+    get 'course_modules/:subject_course_name_url/:course_module_url',
         to: 'course_modules#show',
-        as: :course_modules_for_qualification_exam_level_and_exam_section
-    get 'course_modules/:qualification_url/:exam_level_url/:exam_section_url/:course_module_url',
-        to: 'course_modules#show',
-        as: :course_modules_for_qualification_exam_level_exam_section_and_name
+        as: :course_modules_for_subject_course_and_name
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     resources :currencies, concerns: :supports_reordering
@@ -128,7 +104,7 @@ Rails.application.routes.draw do
 
     post '/subscribe', to: 'library#subscribe'
 
-    get 'library/:exam_level_name_url(/:exam_section_name_url)', to: 'library#show', as: :library_course
+    get 'library/:subject_course_name_url', to: 'library#show', as: :library_course
     get 'library', to: 'library#index', as: :library
 
     #get 'library/:exam_level_name_url', to: 'library#show'

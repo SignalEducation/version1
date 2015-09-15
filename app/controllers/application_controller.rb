@@ -273,33 +273,12 @@ class ApplicationController < ActionController::Base
         edit_course_module_element_url(the_thing.id)
 
     elsif the_thing.class == CourseModule && !the_thing.id.nil?
-      if the_thing.exam_section_id
-        course_modules_for_qualification_exam_level_exam_section_and_name_url(
-                the_thing.exam_level.qualification.name_url,
-                the_thing.exam_level.name_url,
-                the_thing.exam_section.try(:name_url) || 'all',
+      course_modules_for_subject_course_and_name_url(
+                the_thing.subject_course.name_url,
                 the_thing.name_url)
-      else
-        course_modules_for_qualification_exam_level_exam_section_and_name_url(
-                the_thing.exam_level.qualification.name_url,
-                the_thing.exam_level.name_url,
-                'all',
-                the_thing.name_url)
-      end
 
-    elsif the_thing.class == ExamSection
-      course_modules_for_qualification_exam_level_and_exam_section_url(
-              the_thing.exam_level.qualification.name_url,
-              the_thing.exam_level.name_url,
-              the_thing.name_url)
-
-    elsif the_thing.class == ExamLevel
-      course_modules_for_qualification_and_exam_level_url(
-              the_thing.qualification.name_url,
-              the_thing.name_url)
-
-    elsif the_thing.class == Qualification
-      course_modules_for_qualification_url(the_thing.name_url)
+    elsif the_thing.class == SubjectCourse
+      course_modules_for_subject_course_url(the_thing.name_url)
 
     else # default route
       course_modules_url
@@ -310,39 +289,21 @@ class ApplicationController < ActionController::Base
   # customer-facing
   def library_special_link(the_thing)
     the_thing = the_thing
-
-    if the_thing.class == ExamSection
-      library_course_url(
-                  the_thing.exam_level.name_url,
-                  the_thing.name_url
-      )
-    elsif the_thing.class == ExamLevel
-      library_course_url(
-                  the_thing.name_url
-      )
-    else
-      library_url
-    end
+    library_course_url(
+                the_thing.name_url
+    )
   end
   helper_method :library_special_link
 
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
       course_url(
-              the_thing.exam_level.qualification.institution.subject_area.name_url,
-              the_thing.exam_level.qualification.institution.name_url,
-              the_thing.exam_level.qualification.name_url,
-              the_thing.exam_level.name_url,
-              the_thing.exam_section.try(:name_url) || 'all',
+              the_thing.subject_course.name_url,
               the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
-              the_thing.course_module.exam_level.qualification.institution.subject_area.name_url,
-              the_thing.course_module.exam_level.qualification.institution.name_url,
-              the_thing.course_module.exam_level.qualification.name_url,
-              the_thing.course_module.exam_level.name_url,
-              the_thing.course_module.exam_section.try(:name_url) || 'all',
+              the_thing.course_module.subject_course.name_url,
               the_thing.course_module.name_url,
               the_thing.name_url
       )
