@@ -60,12 +60,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
                   :password_reset_token, :password_reset_at, :stripe_customer_id,
-                  :corporate_customer_id, :operational_email_frequency,
-                  :study_plan_notifications_email_frequency,
-                  :falling_behind_email_alert_frequency, :marketing_email_frequency,
-                  :marketing_email_permission_given_at,
-                  :blog_notification_email_frequency,
-                  :forum_notification_email_frequency, :password,
+                  :corporate_customer_id, :password,
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address
@@ -81,12 +76,7 @@ class User < ActiveRecord::Base
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
   has_many :course_module_element_user_logs
-  has_many :exam_levels, foreign_key: :tutor_id
   has_many :subject_courses, foreign_key: :tutor_id
-  has_many :forum_posts
-  has_many :forum_post_concerns
-  has_many :forum_topic_users
-  has_many :institution_users
   has_many :invoices
   has_many :quiz_attempts
   has_many :question_banks
@@ -98,8 +88,6 @@ class User < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :user_activity_logs
   belongs_to :user_group
-  has_many :user_exam_level
-  has_many :user_likes
   has_many :user_notifications
   has_one :referral_code
   has_one :referred_signup
@@ -126,18 +114,6 @@ class User < ActiveRecord::Base
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
-  validates :operational_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
-  validates :study_plan_notifications_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
-  validates :falling_behind_email_alert_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
-  validates :marketing_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
-  validates :blog_notification_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
-  validates :forum_notification_email_frequency,
-            inclusion: {in: EMAIL_FREQUENCIES}, length: { maximum: 255 }
   validates :locale, inclusion: {in: LOCALES}
   validates :employee_guid, allow_nil: true,
             uniqueness: { scope: :corporate_customer_id }
@@ -283,26 +259,16 @@ class User < ActiveRecord::Base
     !self.admin? &&
         self.course_modules.empty? &&
         self.course_module_element_user_logs.empty? &&
-        self.forum_posts.empty? &&
-        self.forum_post_concerns.empty? &&
-        self.forum_topic_users.empty? &&
-        self.institution_users.empty? &&
         self.invoices.empty? &&
         self.quiz_attempts.empty? &&
         self.student_exam_tracks.empty? &&
         self.subscriptions.empty? &&
         self.subscription_payment_cards.empty? &&
         self.subscription_transactions.empty? &&
-        self.user_exam_level.empty? &&
-        self.user_likes.empty? &&
         self.user_notifications.empty? &&
         self.created_static_pages.empty? &&
         self.updated_static_pages.empty? &&
         self.user_activity_logs.empty?
-  end
-
-  def frequent_forum_user?
-    self.forum_posts.count > 100
   end
 
   def full_name
@@ -321,26 +287,15 @@ class User < ActiveRecord::Base
     @mixpanel_alias_id = mixpanel_alias_id
   end
 
-  def compulsory_exam_level_ids
+  def compulsory_subject_courses_ids
     @compulsory_level_ids ||=
-      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_level_ids }.flatten.uniq : []
-  end
-
-  def compulsory_exam_section_ids
-    @compulsory_section_ids ||=
-      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_section_ids }.flatten.uniq : []
+      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_subject_course_ids }.flatten.uniq : []
   end
 
   def restricted_exam_level_ids
     @restricted_level_ids ||=
       corporate_student? ?
-        (corporate_groups.map { |cg| cg.restricted_level_ids }.flatten.uniq - compulsory_exam_level_ids) : []
-  end
-
-  def restricted_exam_section_ids
-    @restricted_section_ids =
-      corporate_student? ?
-        (corporate_groups.map { |cg| cg.restricted_section_ids }.flatten.uniq - compulsory_exam_section_ids) : []
+        (corporate_groups.map { |cg| cg.restricted_subject_course_ids }.flatten.uniq - compulsory_subject_course_ids) : []
   end
 
   protected

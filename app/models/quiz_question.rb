@@ -13,6 +13,7 @@
 #  destroyed_at                  :datetime
 #  exam_level_id                 :integer
 #  exam_section_id               :integer
+#  subject_course_id             :integer
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -24,8 +25,7 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :flash_quiz_id, :exam_level_id,
-                  :exam_section_id
+                  :quiz_solutions_attributes, :flash_quiz_id, :subject_course_id
 
   # Constants
 
@@ -54,10 +54,8 @@ class QuizQuestion < ActiveRecord::Base
 
   # callbacks
   before_validation :set_course_module_element
-  before_save :set_exam_level_id
-  before_save :set_exam_section_id
-  before_update :set_exam_level_id
-  before_update :set_exam_section_id
+  before_save :set_subject_course_id
+  before_update :set_subject_course_id
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_quiz_id) }
@@ -104,17 +102,9 @@ class QuizQuestion < ActiveRecord::Base
     true
   end
 
-  def set_exam_level_id
+  def set_subject_course_id
     unless self.flash_quiz_id
-      self.exam_level_id = self.course_module_element_quiz.course_module_element.parent.exam_level_id
-    end
-  end
-
-  def set_exam_section_id
-    unless self.flash_quiz_id
-      if self.course_module_element_quiz.course_module_element.course_module.exam_section_id
-        self.exam_section_id = self.course_module_element_quiz.course_module_element.parent.exam_section_id
-      end
+      self.subject_course_id = self.course_module_element_quiz.course_module_element.parent.subject_course_id
     end
   end
 

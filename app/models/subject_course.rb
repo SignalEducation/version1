@@ -105,16 +105,8 @@ class SubjectCourse < ActiveRecord::Base
     self.active_children.first.try(:first_active_cme)
   end
 
-  def full_name
-    #self.qualification.name + ' > ' + self.name
-  end
-
   def number_complete_by_user_or_guid(user_id, session_guid)
     self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
-  end
-
-  def parent
-    #self.path
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
@@ -124,8 +116,6 @@ class SubjectCourse < ActiveRecord::Base
       0
     end
   end
-
-
 
   protected
 
