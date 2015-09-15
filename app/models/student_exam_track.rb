@@ -26,7 +26,7 @@ class StudentExamTrack < ActiveRecord::Base
   attr_accessible :user_id, :exam_level_id, :exam_section_id,
                   :latest_course_module_element_id, :exam_schedule_id,
                   :session_guid, :course_module_id, :jumbo_quiz_taken,
-                  :percentage_complete, :count_of_cmes_completed, :subject_course
+                  :percentage_complete, :count_of_cmes_completed, :subject_course_id
 
   # Constants
 
