@@ -34,7 +34,7 @@ class CourseModuleElement < ActiveRecord::Base
   attr_accessible :name, :name_url, :description,
                   :estimated_time_in_seconds, :active,
                   :course_module_id, :sorting_order,
-                  :forum_topic_id, :tutor_id, :related_quiz_id,
+                  :tutor_id, :related_quiz_id,
                   :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
@@ -52,7 +52,6 @@ class CourseModuleElement < ActiveRecord::Base
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
   has_one :course_module_element_video
-  belongs_to :forum_topic
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
   belongs_to :related_quiz, class_name: 'CourseModuleElement',
@@ -71,14 +70,11 @@ class CourseModuleElement < ActiveRecord::Base
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
-  # validates :description, presence: true
   validates :estimated_time_in_seconds, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :course_module_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :forum_topic_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
