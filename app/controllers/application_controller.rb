@@ -312,6 +312,7 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
               the_thing.course_module.subject_course.name_url,
+              the_thing.course_module.name_url,
               the_thing.name_url
       )
     else
