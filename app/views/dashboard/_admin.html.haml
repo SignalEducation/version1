@@ -3,12 +3,12 @@
 %br/
 .row
   .col-sm-8
-    -@exam_levels.each_with_index do |el|
+    -@all_courses.each_with_index do |course|
       .col-sm-12
-        -if el.tutor
-          %h3=el.name + ': ' + el.tutor.full_name
+        -if course.tutor
+          %h3=course.name + ': ' + course.tutor.full_name
         -else
-          %h3=el.name + ': ' + 'No Tutor Assigned'
+          %h3=course.name + ': ' + 'No Tutor Assigned'
         %table.table.table-striped.table-bordered
           %thead
             %tr
@@ -19,7 +19,7 @@
               %th=t('views.dashboard.tutor.total_course_module_elements')
               %th=t('views.library.show.jumbo_quiz')
           %tbody
-            -@course_modules.where(exam_level_id: el.id).each do |course_modules|
+            -@course_modules.where(exam_level_id: course.id).each do |course_modules|
               %tr{id: course_modules.id}
                 %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
                 %td=tick_or_cross(course_modules.active?)

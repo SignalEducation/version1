@@ -288,15 +288,23 @@ class ApplicationController < ActionController::Base
 
   # customer-facing
   def library_special_link(the_thing)
-    the_thing = the_thing
-    library_course_url(
-                the_thing.name_url
-    )
+    if the_thing.class == SubjectCourse
+      the_thing = the_thing
+      library_course_url(
+                  the_thing.name_url
+      )
+    else
+      library_url
+    end
   end
   helper_method :library_special_link
 
   def course_special_link(the_thing, direction='forwards')
-    if the_thing.class == CourseModule
+    if the_thing.class == SubjectCourse
+      course_url(
+              the_thing.name_url
+      )
+    elsif the_thing.class == CourseModule
       course_url(
               the_thing.subject_course.name_url,
               the_thing.name_url
@@ -304,7 +312,6 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
               the_thing.course_module.subject_course.name_url,
-              the_thing.course_module.name_url,
               the_thing.name_url
       )
     else

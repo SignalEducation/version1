@@ -42,7 +42,7 @@
                 %h2.l-margin-bottom
                   =course.name
                 .no-image-box-item.table-box
-                  -#TODO complete this once Wistia project ID are added to tutor users
+                  -#TODO complete this once Wistia project ID are added to Courses
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
@@ -119,27 +119,28 @@
                 %p{'style'=>'font-size: 24px'}
                   Your Completed Courses
             .row.l-margin-bottom-huge
-              -@completed_courses.each do |course|
-                .col-md-4.l-margin-top
-                  =link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center' do
-                    .panel-icon.icon-big
-                      %i.glyphicon.glyphicon-pencil
-                    .panel-body
-                      %h4.text-bold.one-line-text
-                        =course.try(:name)
-                      %p
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.parent.try(:name)
+              -if @completed_courses.count > 0
+                -@completed_courses.each do |course|
+                  .col-md-4.l-margin-top
+                    =link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center' do
+                      .panel-icon.icon-big
+                        %i.glyphicon.glyphicon-pencil
+                      .panel-body
+                        %h4.text-bold.one-line-text
+                          =course.try(:name)
+                        %p
+                          -if course.short_description
+                            =course.try(:short_description).to_s.truncate(30)
+                          -else
+                            =course.parent.try(:name)
 
-                      - #total_lesson = course.course_modules.count
-                      - #complete_lesson = course.course_modules.where(student_exam_tracks.percentage_complete = 100).count
-                      - #complete_percent = course.percentage_complete_by_user_or_guid(current_user.id, current_session_guid)
-                    -#%p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
-                    -#.progress.l-margin-top-big
-                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                    .box-label continue
+                        - #total_lesson = course.course_modules.count
+                        - #complete_lesson = course.course_modules.where(student_exam_tracks.percentage_complete = 100).count
+                        - #complete_percent = course.percentage_complete_by_user_or_guid(current_user.id, current_session_guid)
+                      -#%p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                      -#.progress.l-margin-top-big
+                          .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                      .box-label continue
 
 
 =render partial: 'shared/activate_tab'
