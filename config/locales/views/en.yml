@@ -970,6 +970,10 @@ en:
 
       index:
         h1: Courses
+        your_courses: Your Courses
+        add_course: Add Course
+        edit_content: Edit Content
+
 
       show:
         h1: Course
