@@ -117,6 +117,10 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
+  def tutor_name
+    self.tutor.full_name
+  end
+
   protected
 
   def calculate_best_possible_score

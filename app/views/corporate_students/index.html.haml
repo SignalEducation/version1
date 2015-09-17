@@ -20,7 +20,7 @@
                   %span.glyphicon.glyphicon-search
           .col-md-offset-4.col-md-4.l-margin-top
             =form_tag(corporate_students_url, method: :get, role: 'form', class: 'form-inline') do
-              .form-group.input-group.input-group-lg.is-lg-right.full-width
+              .form-group.input-group.input-group-lg.is-lg-right.t@full-width
                 =select_tag :corporate_group,
                 options_for_select(@corporate_groups.map {|cg| [cg.name, cg.id]},
                 params[:corporate_group].to_s), class: 'form-control', style: 'border-radius: 6px;', prompt: 'All User Groups'

@@ -8,6 +8,13 @@
               =t('views.subject_courses.index.h1')
             -else
               =t('views.subject_courses.index.your_courses')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-4.col-sm-4.l-margin-top
+          =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
         .col-md-12.l-margin-top-big
           .no-image-box-item.table-box
             .table-responsive
@@ -24,7 +31,7 @@
                     %th
                     %th
                 %tbody
-                  -@subject_courses.each do |subject_course|
+                  -@courses.each do |subject_course|
                     %tr{id: subject_course.id}
                       %td=subject_course.name
                       %td=tick_or_cross(subject_course.active)
@@ -43,3 +50,14 @@
                           %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
               .l-margin-top-big.l-margin-bottom
                 =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+
+
+
+:javascript
+  $(document).ready(function() {
+    $("#search").on('blur', function() {
+      $(this).parents('form').submit();
+    });
+
+  });
