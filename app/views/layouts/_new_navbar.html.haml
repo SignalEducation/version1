@@ -47,37 +47,7 @@
                     %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
                     %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
                     %li=link_to t('views.course_modules.index.h1'), course_modules_url
-
-                -#Content Manager Dropdown
-              -elsif current_user.content_manager?
-                %li.dropdown
-                  %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                    Manager
-                    -#Todo when user notifications are reactivated
-                    -#%span.user-notification
-                      1
-                    %span.caret
-                  %ul#menu.dropdown-menu
-                    %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
-                    %li=link_to t('views.institutions.index.h1'), institutions_url
-                    %li=link_to t('views.qualifications.index.h1'), qualifications_url
-                    %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
-                    %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
-                    %li=link_to t('views.course_modules.index.h1'), course_modules_url
-
-                -#Tutpr Dropdown
-              -elsif current_user.tutor?
-                %li.dropdown
-                  %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                    Manager
-                    -#Todo when user notifications are reactivated
-                    -#%span.user-notification
-                      1
-                    %span.caret
-                  %ul#menu.dropdown-menu
-                    %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
-                    %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
-                    %li=link_to t('views.course_modules.index.h1'), course_modules_url
+                    %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
 
                 -#Student Dropdown
               %li.dropdown
@@ -88,6 +58,8 @@
                     1
                   %span.caret
                 %ul#menu.dropdown-menu
+                  -if current_user.tutor? || current_user.content_manager?
+                    %li=link_to t('views.subject_courses.index.my_courses'), subject_courses_url
                   -if current_user.admin?
                     %li=link_to t('views.users.index.h1'), users_url
                     %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url

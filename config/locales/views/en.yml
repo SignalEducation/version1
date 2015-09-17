@@ -222,9 +222,9 @@ en:
         subject_course_id: Course
         exam_section_id: Exam section
         name: Name
-        name_placeholder: Introduction to surfing
+        name_placeholder: Course Module Name
         name_url: Name URL
-        name_url_placeholder: Introduction-to-surfing
+        name_url_placeholder: course-module-name
         description: Description
         description_placeholder: Describe the course module here
         tutor_id: Tutor
@@ -971,6 +971,7 @@ en:
       index:
         h1: Courses
         your_courses: Your Courses
+        my_courses: My Courses
         add_course: Add Course
         edit_content: Edit Content
 

@@ -57,7 +57,7 @@ Rails.application.routes.draw do
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :question_bank
-    get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+    get 'courses/:subject_course_name_url/:course_module_element_name_url', to: 'courses#show', as: :course
     get 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
     post 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#create', as: :new_question_bank
     get 'courses/:subject_course_name_url',

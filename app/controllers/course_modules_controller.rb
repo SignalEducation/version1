@@ -6,18 +6,6 @@ class CourseModulesController < ApplicationController
   end
   before_action :get_variables, except: :show
 
-  def index
-    qualification = Qualification.where(name_url: params[:qualification_url].to_s).first || ExamLevel.all_in_order.first.try(:qualification)
-    exam_level = qualification.try(:exam_levels).try(:first)
-    subject_course = SubjectCourse.all_in_order.first
-    if subject_course
-      redirect_to course_module_special_link(subject_course)
-    else
-      flash[:error] = I18n.t('controllers.course_modules.index.no_exam_level')
-      redirect_to subject_courses_url
-    end
-  end
-
   def show
     if params[:qualification_url]
       @qualification = Qualification.with_url(params[:qualification_url]).first
@@ -71,11 +59,9 @@ class CourseModulesController < ApplicationController
     else
       @course_module = CourseModule.new(sorting_order: 1)
     end
-    set_up_side_nav
   end
 
   def edit
-    set_up_side_nav
   end
 
   def create

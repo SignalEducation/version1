@@ -13,7 +13,7 @@
         =@seo_title
       -else
         LearnSignal
-    -if controller_name == 'home_pages' || controller_name == 'student_sign_ups' || controller_name == 'subject_courses' || controller_name == 'corporate_customers' || controller_name == 'corporate_students' || controller_name == 'user_sessions' || controller_name == 'user_password_resets' || controller_name == 'tutor_applications' || controller_name == 'dashboard' || controller_name == 'courses' || controller_name == 'tutor_profile' || controller_name == 'library' || controller_name == 'footer_pages' || controller_name == 'study_schedules' || controller_name == 'users' || (controller_name == 'course_module_elements' && action_name == 'show') || (controller_name == 'corporate_groups')
+    -if controller_name == 'home_pages' || controller_name == 'course_modules' || controller_name == 'student_sign_ups' || controller_name == 'subject_courses' || controller_name == 'corporate_customers' || controller_name == 'corporate_students' || controller_name == 'user_sessions' || controller_name == 'user_password_resets' || controller_name == 'tutor_applications' || controller_name == 'dashboard' || controller_name == 'courses' || controller_name == 'tutor_profile' || controller_name == 'library' || controller_name == 'footer_pages' || controller_name == 'study_schedules' || controller_name == 'users' || (controller_name == 'course_module_elements' && action_name == 'show') || (controller_name == 'corporate_groups')
       =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
     -else
       =stylesheet_link_tag 'old_application', media: 'all'
@@ -74,7 +74,7 @@
       .schedule-margin-top
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_sessions') || (controller_name == 'user_password_resets') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
+    -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_sessions') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield

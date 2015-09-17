@@ -1,44 +1,33 @@
 =form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  =f.hidden_field :sorting_order
-  .well.well-sm
-    =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
-    .form-group
-      =f.label :subject_course_id, t('views.course_modules.form.exam_level_id'), class: 'control-label col-sm-4'
-      .col-sm-8
+  .row
+    .col-md-6
+      =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
+      =f.hidden_field :sorting_order
+      =f.label :subject_course_id, t('views.course_modules.form.exam_level_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
         =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    .form-group
-      =f.label :name, t('views.course_modules.form.name'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url'
-    .form-group
-      =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control'
-    .form-group
-      =f.label :description, t('views.course_modules.form.description'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 4, class: 'form-control'
-    .form-group
-      =f.label :seo_description, t('views.course_modules.form.seo_description'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.text_area :seo_description, placeholder: t('views.course_modules.form.seo_description_placeholder'), rows: 4, class: 'form-control'
-    .form-group
-      =f.label :tutor_id, t('views.course_modules.form.tutor_id'), class: 'control-label col-sm-4'
-      .col-sm-8
-        =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    .form-group
-      .col-sm-8.col-sm-offset-4
-        .checkbox
-          %label
-            =f.check_box :seo_no_index
-            =t('views.course_modules.form.seo_no_index')
-    .form-group
-      .col-sm-8.col-sm-offset-4
+      %br/
+      =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
+      %br/
+      =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    .col-md-6
+      =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      %br/
+      .col-sm-11.col-sm-offset-1
         .checkbox
           %label
             =f.check_box :active
             =t('views.course_modules.form.active')
-  %p
-    =f.submit t('views.general.save'), class: 'btn btn-success'
-    =t('views.general.or')
-    =link_to t('views.general.cancel'), course_module_special_link(@course_module)
+  %br/
+  %br/
+  .row
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-red'
+      =link_to t('views.general.cancel'), subject_course_url(@course_module.parent), class: 'btn btn-cyan'
