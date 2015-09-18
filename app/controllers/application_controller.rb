@@ -272,16 +272,15 @@ class ApplicationController < ActionController::Base
     if the_thing.class == CourseModuleElement && !the_thing.id.nil?
         edit_course_module_element_url(the_thing.id)
 
-    elsif the_thing.class == CourseModule && !the_thing.id.nil?
-      course_modules_for_subject_course_and_name_url(
-                the_thing.subject_course.name_url,
-                the_thing.name_url)
+    elsif the_thing.class == CourseModule
+      subject_course_url(
+                the_thing.subject_course)
 
     elsif the_thing.class == SubjectCourse
-      course_modules_for_subject_course_url(the_thing.name_url)
+      new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
 
     else # default route
-      course_modules_url
+      subject_course_url
     end
   end
   helper_method :course_module_special_link

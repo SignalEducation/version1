@@ -4,61 +4,14 @@ class CourseModulesController < ApplicationController
   before_action do
     ensure_user_is_of_type(['tutor','admin', 'content_manager'])
   end
-  before_action :get_variables, except: :show
+  before_action :get_variables
 
   def show
-    if params[:qualification_url]
-      @qualification = Qualification.with_url(params[:qualification_url]).first
-      if @qualification
-        if current_user.admin? || current_user.content_manager?
-          @exam_levels = @qualification.exam_levels.all_in_order
-          @exam_level = @exam_levels.where(name_url: params[:exam_level_url]).first || @exam_levels.first
-          @exam_level_id = @exam_level.try(:id)
-          if params[:course_module_url]
-            @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
-          else
-            @course_module = @exam_level.course_modules.all_in_order.first
-          end
-        else
-          assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
-          non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
-          exam_levels = assigned_levels + non_assigned_levels
-          @exam_levels = exam_levels.uniq
-          @exam_level = @exam_levels.first
-          @exam_level_id = @exam_level.try(:id)
-          if params[:course_module_url]
-            @course_module = @exam_level.course_modules.with_url(params[:course_module_url]).first
-          else
-            @course_module = @exam_level.course_modules.all_in_order.first
-          end
-        end
-      else
-        flash[:error] = I18n.t('controllers.course_modules.show.cant_find')
-        redirect_to course_modules_url
-      end
-    else
-      flash[:error] =   I18n.t('controllers.course_modules.show.cant_find')
-      redirect_to course_modules_url
-    end
   end
 
   def new
-    if params[:exam_section_url]
-      exam_section = ExamSection.with_url(params[:exam_section_url]).first
-      @course_module = CourseModule.new(sorting_order: 1,
-          exam_section_id: exam_section.id,
-          exam_level_id: exam_section.exam_level_id,
-          qualification_id: exam_section.exam_level.qualification_id,
-          institution_id: exam_section.exam_level.qualification.institution_id )
-    elsif params[:exam_level_url]
-      exam_level = ExamLevel.where(name_url: params[:exam_level_url]).first
-      @course_module = CourseModule.new(sorting_order: 1,
-          exam_level_id: exam_level.id,
-          qualification_id: exam_level.qualification_id,
-          institution_id: exam_level.qualification.institution_id )
-    else
-      @course_module = CourseModule.new(sorting_order: 1)
-    end
+    @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
+    @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
   end
 
   def edit
@@ -70,7 +23,6 @@ class CourseModulesController < ApplicationController
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
       redirect_to course_module_special_link(@course_module)
     else
-      set_up_side_nav
       render action: :new
     end
   end
@@ -80,7 +32,6 @@ class CourseModulesController < ApplicationController
       flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
       redirect_to course_module_special_link(@course_module)
     else
-      set_up_side_nav
       render action: :edit
     end
   end
@@ -99,7 +50,7 @@ class CourseModulesController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.course_modules.destroy.flash.error')
     end
-    redirect_to course_modules_url
+    redirect_to course_module_special_link(@course_module)
   end
 
   protected
@@ -108,29 +59,12 @@ class CourseModulesController < ApplicationController
     if params[:id].to_i > 0
       @course_module = CourseModule.where(id: params[:id]).first
     end
-    @institutions = Institution.all_in_order
-    @qualifications = Qualification.all_in_order
-    if current_user.admin? || current_user.content_manager?
-      @exam_levels = ExamLevel.all_in_order
-      @subject_courses = SubjectCourse.all_active.all_in_order
-    elsif current_user.tutor?
-      assigned_levels = ExamLevel.all_in_order.where(tutor_id: current_user.id)
-      non_assigned_levels = ExamLevel.all_in_order.where(tutor_id: nil)
-      exam_levels = assigned_levels + non_assigned_levels
-      @exam_levels = exam_levels.uniq
-      @subject_courses = SubjectCourse.where(tutor_id: current_user.id).all_active.all_in_order
-    end
-    @exam_sections = ExamSection.all_in_order
+    @subject_courses = SubjectCourse.all_in_order
     @tutors = User.all_tutors.all_in_order
   end
 
   def allowed_params
-    params.require(:course_module).permit(:institution_id, :qualification_id, :exam_level_id, :exam_section_id, :name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id)
-  end
-
-  def set_up_side_nav
-    @qualification = @course_module.exam_level.try(:qualification)
-    @exam_level_id = @course_module.exam_level_id
+    params.require(:course_module).permit(:name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id)
   end
 
 end

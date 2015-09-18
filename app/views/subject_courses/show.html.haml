@@ -9,7 +9,7 @@
             =@subject_course.name
       .row.l-margin-top.l-margin-bottom
         .pull-right
-          =link_to t('views.course_modules.new.h1'), new_course_module_url, class: 'btn btn-red'
+          =link_to t('views.course_modules.new.h1'), course_module_special_link(@subject_course), class: 'btn btn-red'
         .col-md-12.l-margin-top
           -@subject_course.children.all_in_order.each do |course_module|
             .l-margin-bottom-big

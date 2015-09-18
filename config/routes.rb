@@ -76,12 +76,12 @@ Rails.application.routes.draw do
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
-    resources :course_modules, concerns: :supports_reordering
+    get 'course_modules/:subject_course_name_url',
+        to: 'course_modules#new',
+        as: :new_course_modules_for_subject_course_and_name
     get 'course_modules/:subject_course_name_url', to: 'course_modules#show',
         as: :course_modules_for_subject_course
-    get 'course_modules/:subject_course_name_url/:course_module_url',
-        to: 'course_modules#show',
-        as: :course_modules_for_subject_course_and_name
+    resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     resources :currencies, concerns: :supports_reordering

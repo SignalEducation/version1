@@ -3,10 +3,8 @@
     .col-md-6
       =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
       =f.hidden_field :sorting_order
-      =f.label :subject_course_id, t('views.course_modules.form.exam_level_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      %br/
+      =f.hidden_field :subject_course_id
+      =f.hidden_field :tutor_id
       =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
@@ -30,4 +28,4 @@
   .row
     .col-md-12
       =f.submit t('views.general.save'), class: 'btn btn-red'
-      =link_to t('views.general.cancel'), subject_course_url(@course_module.parent), class: 'btn btn-cyan'
+      =link_to t('views.general.cancel'), course_module_special_link(@course_module), class: 'btn btn-cyan'
