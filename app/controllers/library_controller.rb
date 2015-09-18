@@ -2,10 +2,8 @@ class LibraryController < ApplicationController
 
   def index
     if current_user && current_user.corporate_student?
-      @exam_levels = ExamLevel.all_active.all_live.all_in_order.where(enable_exam_sections: false )
-      @exam_sections = ExamSection.all_active.all_live.all_in_order
-      @exam_levels = @exam_levels.where('id not in (?)', current_user.restricted_exam_level_ids) unless current_user.restricted_exam_level_ids.empty?
-      @exam_sections = @exam_sections.where('id not in (?)', current_user.restricted_exam_section_ids) unless current_user.restricted_exam_section_ids.empty?
+      @subject_courses = SubjectCourse.all_active.all_live.all_in_order
+      @courses = @subject_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
     else
       @subject_courses = SubjectCourse.all_active.all_in_order
     end

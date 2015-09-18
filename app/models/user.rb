@@ -287,13 +287,13 @@ class User < ActiveRecord::Base
     @mixpanel_alias_id = mixpanel_alias_id
   end
 
-  def compulsory_subject_courses_ids
-    @compulsory_level_ids ||=
+  def compulsory_subject_course_ids
+    @compulsory_subject_course_ids ||=
       corporate_student? ? corporate_groups.map { |cg| cg.compulsory_subject_course_ids }.flatten.uniq : []
   end
 
-  def restricted_exam_level_ids
-    @restricted_level_ids ||=
+  def restricted_subject_course_ids
+    @restricted_subject_course_ids ||=
       corporate_student? ?
         (corporate_groups.map { |cg| cg.restricted_subject_course_ids }.flatten.uniq - compulsory_subject_course_ids) : []
   end

@@ -39,10 +39,8 @@ class DashboardController < ApplicationController
 
     if @dashboard_type.include?('corporate_student')
       if current_user && current_user.corporate_student?
-        @exam_sections = @exam_sections.where('id not in (?)', current_user.restricted_exam_section_ids) unless current_user.restricted_exam_section_ids.empty?
-        compulsory_levels = ExamLevel.all_active.all_live.all_without_exam_sections_enabled.where(id: current_user.compulsory_exam_level_ids).all_in_order
-        compulsory_sections = ExamSection.all_active.all_live.where(id: current_user.compulsory_exam_section_ids).all_in_order
-        @compulsory_courses = compulsory_levels + compulsory_sections
+        @subject_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
+        @compulsory_courses = SubjectCourse.all_active.all_live.where(id: current_user.compulsory_subject_course_ids).all_in_order
       end
 
 
@@ -69,12 +67,6 @@ class DashboardController < ApplicationController
       @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
     end
 
-    if current_user && current_user.corporate_student?
-      @exam_sections = @exam_sections.where('id not in (?)', current_user.restricted_exam_section_ids) unless current_user.restricted_exam_section_ids.empty?
-      compulsory_levels = ExamLevel.all_active.all_live.all_without_exam_sections_enabled.where(id: current_user.compulsory_exam_level_ids).all_in_order
-      compulsory_sections = ExamSection.all_active.all_live.where(id: current_user.compulsory_exam_section_ids).all_in_order
-      @compulsory_courses = compulsory_levels + compulsory_sections
-    end
   end
 
 end

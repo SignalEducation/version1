@@ -15,15 +15,12 @@ class CorporateCustomersController < ApplicationController
 
   def show
     redirect_to dashboard_url if current_user.corporate_customer? && current_user.corporate_customer_id != params[:id].to_i
-    @compulsory_courses = ExamLevel.all_active.all_live.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten ) +
-                          ExamSection.all_active.all_live.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
+    @compulsory_courses = SubjectCourse.all_active.all_live.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_subject_course_ids}.flatten )
     corp_student_ids = @corporate_customer.students.pluck(:id)
     corp_manager_ids = @corporate_customer.managers.pluck(:id)
     corp_user_ids = corp_student_ids + corp_manager_ids
     exam_tracks = StudentExamTrack.where(user_id: corp_user_ids)
-    started_levels = ExamLevel.where(id: exam_tracks.where("exam_level_id is not null and exam_section_id is null").pluck(:exam_level_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_level_ids}.flatten )
-    started_sections = ExamSection.where(id: exam_tracks.where("exam_section_id is not null").pluck(:exam_section_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_section_ids}.flatten )
-    @started_courses = started_levels + started_sections
+    @started_courses = SubjectCourse.where(id: exam_tracks.pluck(:subject_course_id)).where.not(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_subject_course_ids}.flatten )
 
     #Graph Dates Data
     date_to  = Date.parse("#{Proc.new{Time.now}.call}")
