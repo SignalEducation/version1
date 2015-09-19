@@ -299,11 +299,7 @@ class ApplicationController < ActionController::Base
   helper_method :library_special_link
 
   def course_special_link(the_thing, direction='forwards')
-    if the_thing.class == SubjectCourse
-      course_url(
-              the_thing.name_url
-      )
-    elsif the_thing.class == CourseModule
+    if the_thing.class == CourseModule
       course_url(
               the_thing.subject_course.name_url,
               the_thing.name_url

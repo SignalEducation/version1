@@ -3,11 +3,13 @@ class LibraryController < ApplicationController
   def index
     if current_user && current_user.corporate_student?
       @subject_courses = SubjectCourse.all_active.all_live.all_in_order
-      @courses = @subject_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
+      @non_restricted_courses = @subject_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
+      @courses = @non_restricted_courses.search(params[:search])
     else
       @subject_courses = SubjectCourse.all_active.all_in_order
+      @courses = @subject_courses.search(params[:search])
     end
-    @courses = @subject_courses.search(params[:search])
+
     @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
     @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete <= ?', 100)
   end
