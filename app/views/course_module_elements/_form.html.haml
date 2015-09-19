@@ -1,67 +1,51 @@
 =form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  .well.well-sm
-    .row
-      .col-sm-12
-        =f.hidden_field :sorting_order
-        =f.hidden_field :course_module_id
-        =f.hidden_field :is_quiz
-        =f.hidden_field :is_video
-        =f.hidden_field :is_cme_flash_card_pack
-        =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
-        .col-sm-6
-          .form-group
-            =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', autocomplete: false
-          .form-group
-            =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control'
-          .form-group
-            =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 6
-          .form-group
-            =f.label :seo_description, t('views.course_module_elements.form.seo_description'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_area :seo_description, placeholder: t('views.course_module_elements.form.seo_description_placeholder'), class: 'form-control', rows: 6
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :seo_no_index
-                  =t('views.course_modules.form.seo_no_index')
-          .form-group
-            =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
-          .form-group
-            =f.label :tutor_id, t('views.course_module_elements.form.tutor_id'), class: 'control-label col-sm-4'
-            .col-sm-8
-              =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          -if f.object.is_cme_flash_card_pack
-            .form-group
-              .col-sm-8.col-sm-offset-4
-                .checkbox
-                  %label
-                    =f.check_box :active, disabled: (f.object.id.nil?)
-                    =t('views.course_modules.form.active')
-          -else
-            .form-group
-              .col-sm-8.col-sm-offset-4
-                .checkbox
-                  %label
-                    =f.check_box :active
-                    =t('views.course_modules.form.active')
-        -if @course_module_element.course_module_element_video
-          .col-sm-6
-            =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
-        -elsif @course_module_element.course_module_element_quiz
-          .col-sm-6
-            =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
-        -elsif @course_module_element.course_module_element_flash_card_pack
-          .col-sm-6
-            =render partial: 'course_module_element_flash_card_packs/fields_for', locals: {f: f}
+  .row
+    .col-md-6
+      =f.hidden_field :sorting_order
+      =f.hidden_field :course_module_id
+      =f.hidden_field :is_quiz
+      =f.hidden_field :is_video
+      =f.hidden_field :is_cme_flash_card_pack
+      =f.hidden_field :tutor_id
+      =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
+      =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', autocomplete: false, style: 'border-radius: 6px;'
+      %br/
+      =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 5, style: 'border-radius: 6px;'
+      %br/
+      =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      %br/
+      -if f.object.is_cme_flash_card_pack
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active, disabled: (f.object.id.nil?)
+                =t('views.course_modules.form.active')
+      -else
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.course_modules.form.active')
+    .col-md-6
+      -if @course_module_element.course_module_element_video
+        =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
+      -elsif @course_module_element.course_module_element_quiz
+        =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+      -elsif @course_module_element.course_module_element_flash_card_pack
+        =render partial: 'course_module_element_flash_card_packs/fields_for', locals: {f: f}
 
   -if @course_module_element.course_module_element_quiz
     %h3=t('views.course_module_elements.form.questions')
@@ -84,44 +68,45 @@
       %h2=t('views.course_module_element_resources.index.h1')
       %p=t('views.general.these_are_optional')
       =f.fields_for :course_module_element_resources do |cme_resource|
-        .well.well-sm
-          .row
-            .col-sm-6
-              .form-group
-                =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label col-sm-3'
-                .col-sm-9
-                  =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control'
-              .form-group
-                =cme_resource.label :description, t('views.course_module_element_resources.form.description'), class: 'control-label col-sm-3'
-                .col-sm-9
-                  =cme_resource.text_area :description, placeholder: t('views.course_module_element_resources.form.description_placeholder'), class: 'form-control', rows: 3
-            .col-sm-6
-              .form-group
-                =cme_resource.label :web_url, t('views.course_module_element_resources.form.web_url'), class: 'control-label col-sm-3'
-                .col-sm-9
-                  =cme_resource.url_field :web_url, placeholder: t('views.course_module_element_resources.form.web_url_placeholder'), class: 'form-control'
-              .form-group
-                .col-sm-3.text-right
-                  =t('views.general.or')
-              .form-group
-                =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label col-sm-3'
-                .col-sm-9
-                  -if cme_resource.object.upload_file_name
-                    .form-control-static
-                      =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
-                      =number_to_human_size(cme_resource.object.upload_file_size)
-                      %br/
-                      Upload a replacement if you wish
-                  =cme_resource.file_field :upload, class: 'form-control'
+        .col-md-12
+          .col-md-6.l-margin-bottom-big
+            =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            %br/
+            =cme_resource.label :description, t('views.course_module_element_resources.form.description'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =cme_resource.text_area :description, placeholder: t('views.course_module_element_resources.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;', rows: 3
+          .col-md-6
+            =cme_resource.label :web_url, t('views.course_module_element_resources.form.web_url'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =cme_resource.url_field :web_url, placeholder: t('views.course_module_element_resources.form.web_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            .col-sm-3.text-right
+              %h3
+                =t('views.general.or')
+            %br/
+            .pull-left
+              =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              -if cme_resource.object.upload_file_name
+                .form-control-static
+                  =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
+                  =number_to_human_size(cme_resource.object.upload_file_size)
+                  %br/
+                  Upload a replacement if you wish
+              =cme_resource.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
+          %hr/
 
   -elsif @course_module_element.course_module_element_flash_card_pack
     =render partial: 'course_module_element_flash_card_packs/form', locals: {f: f}
 
 
-  %p
-    =f.submit t('views.general.save'), class: 'btn btn-success'
-    -if f.object.course_module_element_quiz
-      =t('views.general.or')
-      =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-success'
-    =t('views.general.or')
-    =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module)
+  .row
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-red'
+      -if f.object.course_module_element_quiz
+        =t('views.general.or')
+        =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
+      =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module), class: 'btn btn-cyan'

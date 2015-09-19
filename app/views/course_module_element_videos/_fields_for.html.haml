@@ -1,27 +1,17 @@
 =f.fields_for :course_module_element_video do |cme_video|
 
-  -#.form-group
-    =cme_video.label :raw_video_file_id, t('views.course_module_element_videos.form.raw_video_file_id'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_video.collection_select :raw_video_file_id, @raw_video_files, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      -#if cme_video.object.id.nil?
-      -#else
-        =cme_video.hidden_field :raw_video_file_id
-        .form-control-static=cme_video.object.raw_video_file.file_name
-
-  .form-group
-    =cme_video.label :video_id, t('views.course_module_element_videos.form.video_id'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_video.text_field :video_id, placeholder: t('views.course_module_element_videos.form.video_id_placeholder'), class: 'form-control'
-  .form-group
-    =cme_video.label :tags, t('views.course_module_element_videos.form.tags'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_video.text_field :tags, placeholder: t('views.course_module_element_videos.form.tags_placeholder'), class: 'form-control'
-  .form-group
-    =cme_video.label :difficulty_level, t('views.course_module_element_videos.form.difficulty_level'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_video.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control'}
-    .form-group
-    =cme_video.label :transcript, t('views.course_module_element_videos.form.transcript'), class: 'control-label col-sm-4'
-    .col-sm-8
-      =cme_video.text_area :transcript, placeholder: t('views.course_module_element_videos.form.transcript_placeholder'), class: 'form-control', rows: 6
+  =cme_video.label :video_id, t('views.course_module_element_videos.form.video_id'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =cme_video.text_field :video_id, placeholder: t('views.course_module_element_videos.form.video_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+  %br/
+  =cme_video.label :tags, t('views.course_module_element_videos.form.tags'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =cme_video.text_field :tags, placeholder: t('views.course_module_element_videos.form.tags_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+  %br/
+  =cme_video.label :transcript, t('views.course_module_element_videos.form.transcript'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =cme_video.text_area :transcript, placeholder: t('views.course_module_element_videos.form.transcript_placeholder'), class: 'form-control', rows: 5, style: 'border-radius: 6px;'
+  %br/
+  =cme_video.label :difficulty_level, t('views.course_module_element_videos.form.difficulty_level'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =cme_video.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
