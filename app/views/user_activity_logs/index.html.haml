@@ -1,47 +1,49 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.user_activity_logs.index.h1')
-.row
-  .col-sm-12
-    =will_paginate @user_activity_logs, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.user_activity_logs.form.created_at')
-          %th=t('views.user_activity_logs.form.user_id')
-          %th
-            =t('views.user_activity_logs.form.session_guid')
-            \/
-            =t('views.user_activity_logs.form.ip_address')
-          %th=t('views.user_activity_logs.form.signed_in')
-          %th.col-sm-3=t('views.user_activity_logs.form.original_uri')
-          %th=t('views.user_activity_logs.form.alert_level')
-          %th
-      %tbody
-        -@user_activity_logs.each do |user_activity_log|
-          %tr{id: user_activity_log.id, class: user_activity_log.display_class}
-            %td
-              =link_to(user_activity_log.created_at.to_s(:standard), user_activity_log, title: t('views.general.view_tooltip'))
-            %td
-              -if user_activity_log.user
-                =link_to(user_activity_log.user.full_name, user_activity_log, title: t('views.general.view_tooltip'))
-                =link_to user_activity_log.user do
-                  .glyphicon.glyphicon-expand
-            %td
-              =link_to(truncate(user_activity_log.session_guid, length: 16), user_activity_log, title: t('views.general.view_tooltip'))
-              =link_to(user_activity_log.ip_address, user_activity_log, title: t('views.general.view_tooltip'))
-            %td=link_to(tick_or_cross(user_activity_log.signed_in), user_activity_log, title: t('views.general.view_tooltip'))
-            %td
-              =link_to(user_activity_log.original_uri, user_activity_log, title: t('views.general.view_tooltip'))
-              %br/
-              =link_to(user_activity_log.controller_name, user_activity_log, title: t('views.general.view_tooltip'))
-              \#
-              =link_to(user_activity_log.action_name, user_activity_log, title: t('views.general.view_tooltip'))
-            %td=link_to(user_activity_log.alert_level, user_activity_log, title: t('views.general.view_tooltip'))
-            %td
-              -#=link_to t('views.general.view'), user_activity_log
-              =link_to t('views.general.edit'), edit_user_activity_log_url(user_activity_log), class: 'btn btn-info btn-xs'
-              -if user_activity_log.destroyable?
-                =link_to t('views.general.delete'), user_activity_log, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.user_activity_logs.index.h1')
+        .col-md-12.l-margin-top-big
+          .corporate-box-item.table-box
+            .table-responsive
+              .col-sm-10.user-pagination.text-right
+                =will_paginate @user_activity_logs, renderer: BootstrapPagination::Rails
+              %table.table.table-striped.table-bordered
+                %thead
+                  %tr
+                    %th=t('views.user_activity_logs.form.created_at')
+                    %th=t('views.user_activity_logs.form.user_id')
+                    %th
+                      =t('views.user_activity_logs.form.session_guid')
+                      \/
+                      =t('views.user_activity_logs.form.ip_address')
+                    %th=t('views.user_activity_logs.form.signed_in')
+                    %th.col-sm-3=t('views.user_activity_logs.form.original_uri')
+                    %th
+                %tbody
+                  -@user_activity_logs.each do |user_activity_log|
+                    %tr{id: user_activity_log.id, class: user_activity_log.display_class}
+                      %td
+                        =user_activity_log.created_at.to_s(:standard)
+                      %td
+                        -if user_activity_log.user
+                          =user_activity_log.user.full_name
+                          =link_to user_activity_log.user do
+                            .glyphicon.glyphicon-expand
+                      %td
+                        =truncate(user_activity_log.session_guid, length: 16)
+                        =user_activity_log.ip_address
+                      %td=tick_or_cross(user_activity_log.signed_in)
+                      %td
+                        =user_activity_log.original_uri
+                        %br/
+                        =user_activity_log.controller_name
+                        \#
+                        =user_activity_log.action_name
+                      %td
+                        =link_to t('views.general.show'), user_activity_log_url(user_activity_log), class: 'btn btn-cyan btn-small'
+                        -if user_activity_log.destroyable?
+                          =link_to t('views.general.delete'), user_activity_log, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 

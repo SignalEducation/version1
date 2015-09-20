@@ -10,7 +10,7 @@
           .no-image-box-item.table-box
             .table-responsive
               =will_paginate @subscription_plan_categories, renderer: BootstrapPagination::Rails
-              %table.table
+              %table.table.table-bordered.l-margin-top-big
                 %thead
                   %tr
                     %th=t('views.subscription_plan_categories.form.name')

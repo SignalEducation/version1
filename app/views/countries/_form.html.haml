@@ -1,36 +1,36 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@country, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      =f.hidden_field :sorting_order
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @country, message: nil}
-        .form-group
-          =f.label :name, t('views.countries.form.name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :name, placeholder: t('views.countries.form.name_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :iso_code, t('views.countries.form.iso_code'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :iso_code, placeholder: t('views.countries.form.iso_code_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :country_tld, t('views.countries.form.country_tld'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :country_tld, placeholder: t('views.countries.form.country_tld_placeholder'), class: 'form-control'
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :in_the_eu
-                =t('views.countries.form.in_the_eu')
-        .form-group
-          =f.label :currency_id, t('views.countries.form.currency_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
-          =f.label :continent, t('views.countries.form.continent'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.select :continent, @continents, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      %p
-        =f.submit t('views.general.save'), class: 'btn btn-success'
-        =t('views.general.or')
-        =link_to t('views.general.cancel'), countries_path
+=form_for(@country, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =f.hidden_field :sorting_order
+  =render partial: '/layouts/error_messages', locals: {thing: @country, message: nil}
+  .row
+    .col-md-6
+      =f.label :name, t('views.countries.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.countries.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      =f.label :iso_code, t('views.countries.form.iso_code'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :iso_code, placeholder: t('views.countries.form.iso_code_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :country_tld, t('views.countries.form.country_tld'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :country_tld, placeholder: t('views.countries.form.country_tld_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    .col-md-6
+      =f.label :currency_id, t('views.countries.form.currency_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
+      =f.label :continent, t('views.countries.form.continent'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.select :continent, @continents, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
+      %br/
+      .form-group
+        .col-sm-8.col-sm-offset-4
+          .checkbox
+            %label
+              =f.check_box :in_the_eu
+              =t('views.countries.form.in_the_eu')
+
+  .row.l-margin-top-big
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), countries_path, class: 'btn btn-cyan'

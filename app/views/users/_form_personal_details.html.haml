@@ -46,14 +46,13 @@
       .input-group.input-group-lg.full-width
         =f.text_field :employee_guid, placeholder: t('views.users.form.employee_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-.row
-  .col-md-2
-    =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-  .col-md-4
-    -if @user.id == current_user.id
+-if @user.id == current_user.id
+  .row.l-margin-top-big
+    .col-md-2
+      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+    .col-md-4
       .change-password
         =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
-
 
 :javascript
 

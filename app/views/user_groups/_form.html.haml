@@ -1,16 +1,17 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@user_group, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @user_group, message: nil}
-        .form-group
-          =f.label :name, t('views.user_groups.form.name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :description, t('views.user_groups.form.description'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control'
+=form_for(@user_group, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-md-6
+      =render partial: '/layouts/error_messages', locals: {thing: @user_group, message: nil}
+      =f.label :name, t('views.user_groups.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      %br/
+      =f.label :description, t('views.user_groups.form.description'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+    .col-md-6
+      .col-md-6
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
@@ -41,6 +42,7 @@
               %label
                 =f.check_box :corporate_customer
                 =t('views.user_groups.form.corporate_customer')
+      .col-md-6
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
@@ -65,7 +67,6 @@
               %label
                 =f.check_box :subscription_required_to_see_content
                 =t('views.user_groups.form.subscription_required_to_see_content')
-      %p
-        =f.submit t('views.general.save'), class: 'btn btn-success'
-        =t('views.general.or')
-        =link_to t('views.general.cancel'), user_groups_path
+  .row.l-margin-top-big
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), user_groups_path, class: 'btn btn-cyan'
