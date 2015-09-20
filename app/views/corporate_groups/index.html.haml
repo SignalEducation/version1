@@ -39,16 +39,13 @@
                   method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
     =render partial: 'layouts/new_footer'
 -else
-
-  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
-    .container-fluid.l-padding-side-3x
-      .row.l-margin-bottom.l-margin-top
-        .col-md-6.col-sm-6.col-xs-6
-          %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Groups
-        .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
-          =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
-
         .col-md-12.l-margin-top-big.l-margin-bottom-6x
           -@corporate_customers.each do |cc|
             .corporate-box-item.table-box
@@ -75,5 +72,9 @@
                           -if corporate_group.destroyable?
                             =link_to t('views.general.delete'), corporate_group,
                     method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
+
+      .row
+        =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+
 
   =render partial: 'layouts/new_footer'

@@ -1,36 +1,40 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.subscription_plan_categories.show.h1')
-        \#
-        =@subscription_plan_category.id
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.subscription_plan_categories.form.name')
-        %td.col-sm-8=@subscription_plan_category.name
-      %tr
-        %td.col-sm-4=t('views.subscription_plan_categories.form.available_from')
-        %td.col-sm-8=@subscription_plan_category.available_from.to_s(:standard)
-      %tr
-        %td.col-sm-4=t('views.subscription_plan_categories.form.available_to')
-        %td.col-sm-8=@subscription_plan_category.available_to.to_s(:standard)
-      %tr
-        %td.col-sm-4=t('views.subscription_plan_categories.form.guid')
-        %td.col-sm-8=@subscription_plan_category.guid
-      %tr
-        %td.col-sm-4=t('views.subscription_plan_categories.form.trial_period_in_days')
-        %td.col-sm-8=@subscription_plan_category.trial_period_in_days
-    %p
-      =link_to t('views.general.back'), subscription_plan_categories_url
-      |
-      =link_to t('views.general.edit'), edit_subscription_plan_category_url(id: @subscription_plan_category.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.subscription_plan_categories.show.h1')
+            \#
+            =@subscription_plan_category.id
+      .row
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.subscription_plan_categories.form.name')
+                  %td.col-sm-8=@subscription_plan_category.name
+                %tr
+                  %td.col-sm-4=t('views.subscription_plan_categories.form.available_from')
+                  %td.col-sm-8=@subscription_plan_category.available_from.to_s(:standard)
+                %tr
+                  %td.col-sm-4=t('views.subscription_plan_categories.form.available_to')
+                  %td.col-sm-8=@subscription_plan_category.available_to.to_s(:standard)
+                %tr
+                  %td.col-sm-4=t('views.subscription_plan_categories.form.guid')
+                  %td.col-sm-8=@subscription_plan_category.guid
+                %tr
+                  %td.col-sm-4=t('views.subscription_plan_categories.form.trial_period_in_days')
+                  %td.col-sm-8=@subscription_plan_category.trial_period_in_days
+              %p
+                =link_to t('views.general.back'), subscription_plan_categories_url
+                |
+                =link_to t('views.general.edit'), edit_subscription_plan_category_url(id: @subscription_plan_category.id), title: t('views.general.edit_tooltip')
 
-.row
-  .col-sm-12
-    %h2=t('views.subscription_plans.index.h1')
-.row
-  .col-sm-12
-    =render partial: 'subscription_plans/index', locals: {the_plans: @subscription_plan_category.subscription_plans.paginate(per_page: 100, page: 1)}
+      .row
+        .col-sm-12
+          %h2=t('views.subscription_plans.index.h1')
+      .row
+        .col-sm-12
+          =render partial: 'subscription_plans/index', locals: {the_plans: @subscription_plan_category.subscription_plans.paginate(per_page: 100, page: 1)}
