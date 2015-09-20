@@ -64,29 +64,44 @@
     -elsif controller_name == 'tutor_profile'
       =render partial: 'layouts/new_navbar'
       .margin-top
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif controller_name == 'study_schedules'|| (controller_name == 'tutor_applications' && action_name == 'index')
       =render partial: 'layouts/new_navbar'
       .schedule-margin-top
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_sessions') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
       =render partial: 'layouts/new_navbar'
       .margin-top
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'users' && action_name != 'new_paid_subscription') || (controller_name == 'corporate_groups')
       =render partial: 'layouts/new_navbar'
       .margin-top
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
       =yield
     -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications')
       -if @course.try(:live)
         .margin-top
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+
       -else
         .no-margin-top
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
       =yield
     -elsif controller_name == 'users' && action_name == 'new_paid_subscription'
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -else

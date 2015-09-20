@@ -1,14 +1,14 @@
 -# =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: flash_quiz, mode: 'flash'}
   - mode can be 'flash' or 'full'
 
-.well.well-sm.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id.to_s)}
+.question-box-item.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id.to_s)}
   .row
     %div{class: mode == 'full' ? 'col-sm-12' : 'col-sm-6'}
       %h3.no-top-gap=question.object.id.nil? ? t('views.course_module_element_quizzes.form.h3.question_new') : t('views.course_module_element_quizzes.form.h3.question_number') + question.object.id.to_s
     -unless mode == 'full'
       .col-sm-6.text-right
-        =link_to t('views.flash_quizzes.form.add_extra_answer'), '#', class: 'btn btn-xs btn-info addExtraFlashQuizAnswer'
-        =link_to t('views.general.delete'), '#', class: 'btn btn-xs btn-danger deleteFlashQuizQuestion'
+        =link_to t('views.flash_quizzes.form.add_extra_answer'), '#', class: 'btn btn-small btn-cyan addExtraFlashQuizAnswer'
+        =link_to t('views.general.delete'), '#', class: 'btn btn-small btn-red deleteFlashQuizQuestion'
 
   .row
     .col-sm-4
@@ -58,7 +58,7 @@
           .col-sm-2.text-left
             .form-group#degree-of-wrongness
               =answer.select :degree_of_wrongness, QuizAnswer::WRONGNESS, {include_blank: t('views.general.select')}, {onchange: "if ($(this).val() == 'correct') { $(this).parent().parent().parent().find('.wrong-answer-explanation').hide(); } else {  $(this).parent().parent().parent().find('.wrong-answer-explanation').show(); }", class: 'form-control flash_quiz_field'}
-            =link_to 'Delete this answer' ,'#', class: 'btn btn-danger btn-xs deleteFlashAnswer'
+            =link_to 'Delete' ,'#', class: 'btn btn-red btn-small deleteFlashAnswer'
           .col-sm-5
             .form-group
               .col-sm-12
@@ -75,18 +75,18 @@
           .col-sm-6.text-right
             -if parent.object.id.nil?
               -# new parent
-              =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-info'
-              =f.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-info'
+              =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
+              =f.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-cyan'
             -elsif question.object.id.nil?
               -# new question
-              =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-info'
-              =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: parent.object.id), class: 'btn btn-info'
+              =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
+              =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: parent.object.id), class: 'btn btn-cyan'
             -else
               -# edit question of existing quiz
-              =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-info'
-              =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: parent.object.id), class: 'btn btn-info'
+              =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-cyan'
+              =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: parent.object.id), class: 'btn btn-cyan'
             -if question.object.id.nil?
-              =link_to t('views.general.delete'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-danger'
+              =link_to t('views.general.delete'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-red'
             -elsif question.object.destroyable?
-              =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-danger'
+              =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-red'
 

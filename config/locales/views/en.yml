@@ -319,7 +319,7 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
-        advanced_setup_link: Advanced Setup
+        advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
         h3:

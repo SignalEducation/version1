@@ -1,4 +1,6 @@
 .hero-home
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
   .header{role: 'banner'}
     .l-wrap
       .container-fluid
