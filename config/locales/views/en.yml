@@ -28,6 +28,7 @@ en:
       drag_to_reorder: Drag to reorder
       duration: "Duration: "
       edit: Edit
+      show: Show
       edit_tooltip: click to edit
       example: Example
       go: Go
@@ -1002,7 +1003,7 @@ en:
         available_to: Available to
         available_to_placeholder: "2019-12-31"
         stripe_guid: Stripe ID
-        trial_period_in_days: Trial period in days
+        trial_period_in_days: Trial
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
 
