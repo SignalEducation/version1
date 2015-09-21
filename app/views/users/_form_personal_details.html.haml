@@ -48,11 +48,8 @@
 
 -if @user.id == current_user.id
   .row.l-margin-top-big
-    .col-md-2
-      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-    .col-md-4
-      .change-password
-        =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'})
+    =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+    =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'}, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top')
 
 :javascript
 

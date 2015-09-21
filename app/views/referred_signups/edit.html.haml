@@ -1,17 +1,17 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.referred_signups.edit.h1')
-      .row
-        .col-sm-8.col-sm-offset-2
-          =form_for(@referred_signup, html: {class: 'form-horizontal', role: 'form'}) do |f|
-            .well.well-sm
-              =render partial: '/layouts/error_messages', locals: { thing: @referred_signup, message: nil }
-              .form-group
-                =f.label :payed_at, t('views.referred_signups.edit.payed_at'), class: 'control-label col-sm-4'
-                .col-sm-8
-                  =f.date_select :payed_at, class: 'form-control', autofocus: true
-            %p
-              =f.submit t('views.general.save'), class: 'btn btn-success'
-              =t('views.general.or')
-              =link_to t('views.general.cancel'), referred_signups_path
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.referred_signups.edit.h1')
+      =form_for(@referred_signup, html: {class: 'form-horizontal', role: 'form'}) do |f|
+        =render partial: '/layouts/error_messages', locals: { thing: @referred_signup, message: nil }
+        .row
+          .col-md-8.col-md-offset-2
+            =f.label :payed_at, t('views.referred_signups.edit.payed_at'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.date_select :payed_at, class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+          .row
+            =f.submit t('views.general.save'), class: 'btn btn-red'
+            =link_to t('views.general.cancel'), referred_signups_path, class: 'btn btn-cyan'
