@@ -30,7 +30,7 @@ require 'rails_helper'
 describe CourseModuleElement do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at )
+  black_list = %w(id created_at updated_at destroyed_at forum_topic_id forum_topic_id )
   CourseModuleElement.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -49,7 +49,6 @@ describe CourseModuleElement do
   it { should have_many(:course_module_element_resources)}
   it { should have_many(:course_module_element_user_logs) }
   it { should have_one(:course_module_element_video) }
-  it { should belong_to(:forum_topic) }
   it { should have_many(:quiz_answers) }
   it { should have_many(:quiz_questions) }
   it { should belong_to(:related_quiz) }
@@ -76,9 +75,6 @@ describe CourseModuleElement do
 
   it { should validate_presence_of(:sorting_order) }
   it { should validate_numericality_of(:sorting_order) }
-
-  it { should_not validate_presence_of(:forum_topic_id) }
-  it { should validate_numericality_of(:forum_topic_id) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }

@@ -51,9 +51,9 @@ class CourseModule < ActiveRecord::Base
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true,
-            uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
+            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :name_url, presence: true,
-            uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
+            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true

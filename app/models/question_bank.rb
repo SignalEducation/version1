@@ -33,7 +33,7 @@ class QuestionBank < ActiveRecord::Base
   # validation
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course, allow_nil: true,
+  validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
   validate :at_least_one_question_set

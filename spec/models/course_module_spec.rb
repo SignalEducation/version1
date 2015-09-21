@@ -29,7 +29,7 @@ require 'rails_helper'
 describe CourseModule do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at)
+  black_list = %w(id created_at updated_at destroyed_at exam_section_id exam_level_id institution_id qualification_id)
   CourseModule.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -47,29 +47,20 @@ describe CourseModule do
   it { should have_many(:course_module_element_videos) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_one(:course_module_jumbo_quiz) }
-  it { should belong_to(:exam_level) }
-  it { should belong_to(:exam_section) }
-  it { should belong_to(:institution) }
-  it { should belong_to(:qualification) }
   it { should have_many(:student_exam_tracks) }
   it { should belong_to(:tutor) }
 
   # validation
-  it { should validate_presence_of(:institution_id) }
-  it { should validate_numericality_of(:institution_id) }
 
-  it { should validate_presence_of(:exam_level_id) }
-  it { should validate_numericality_of(:exam_level_id) }
-
-  it { should_not validate_presence_of(:exam_section_id) }
-  it { should validate_numericality_of(:exam_section_id) }
+  it { should validate_presence_of(:subject_course_id)}
+  it { should validate_numericality_of(:subject_course_id)}
 
   it { should validate_presence_of(:name) }
-  it { should validate_uniqueness_of(:name).scoped_to([:exam_section_id, :exam_level_id]) }
+  it { should validate_uniqueness_of(:name).scoped_to(:subject_course_id) }
   it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
-  it { should validate_uniqueness_of(:name_url).scoped_to([:exam_section_id, :exam_level_id]) }
+  it { should validate_uniqueness_of(:name_url).scoped_to(:subject_course_id) }
   it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
@@ -80,7 +71,6 @@ describe CourseModule do
   it { should validate_length_of(:seo_description).is_at_most(255) }
 
   # callbacks
-  it { should callback(:unify_hierarchy_ids).before(:validation) }
   it { should callback(:set_sorting_order).before(:create) }
   it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
