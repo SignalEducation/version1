@@ -98,10 +98,10 @@ class User < ActiveRecord::Base
 
   # validation
   validates :email, presence: true, uniqueness: true,
-            length: {within: 7..40}#,
+            length: {within: 7..40}
+            #TODO
             #format: {with:  /^([^\s]+)((?:[-a-z0-9]\.)[a-z]{2,})$/i,
             #         message: 'must be a valid email address.'}
-
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create

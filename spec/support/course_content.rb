@@ -5,19 +5,9 @@ shared_context 'course_content' do
   # Courses Structure
 
   # first set
-  let!(:subject_area_1)  { FactoryGirl.create(:active_subject_area) }
-  let!(:institution_1)   { FactoryGirl.create(:active_institution,
-                           subject_area_id: subject_area_1.id) }
-  let!(:qualification_1) { FactoryGirl.create(:active_qualification,
-                           institution_id: institution_1.id) }
-  let!(:exam_level_1)    { FactoryGirl.create(:active_exam_level_with_exam_sections,
-                           qualification_id: qualification_1.id) }
-  let!(:exam_section_1)  { FactoryGirl.create(:active_exam_section,
-                           exam_level_id: exam_level_1.id) }
-
+  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
-                           qualification_id: qualification_1.id,
-                           exam_section_id: exam_section_1.id,
+                           subject_course_id: subject_course_1.id,
                            tutor_id: tutor_user.id) }
   let!(:course_module_element_1_1) { FactoryGirl.create(:cme_quiz,
                            course_module_id: course_module_1.id) }
@@ -27,27 +17,19 @@ shared_context 'course_content' do
                            course_module_id: course_module_1.id) }
   let!(:course_module_element_quiz_1_1) { FactoryGirl.create(:course_module_element_quiz,
                            course_module_element_id: course_module_element_1_1.id) }
-  let!(:raw_video_file_1) { FactoryGirl.create(:raw_video_file) }
   let!(:course_module_element_video_1_1_1) { FactoryGirl.create(:course_module_element_video,
                            course_module_element_id: course_module_element_1_2.id,
-                           raw_video_file_id: raw_video_file_1.id) }
+                                                                video_id: 'abc123') }
   let!(:course_module_element_video_1_1_2) { FactoryGirl.create(:course_module_element_video,
                            course_module_element_id: course_module_element_1_3.id,
-                           raw_video_file_id: raw_video_file_1.id) }
+                                                                video_id: '123abc') }
 
   # Second set
-  let!(:subject_area_2)  { FactoryGirl.create(:active_subject_area) }
-  let!(:institution_2)   { FactoryGirl.create(:active_institution,
-                           subject_area_id: subject_area_2.id) }
-  let!(:qualification_2) { FactoryGirl.create(:active_qualification,
-                           institution_id: institution_2.id) }
-  let!(:exam_level_2)    { FactoryGirl.create(:active_exam_level_without_exam_sections,
-                           qualification_id: qualification_2.id) }
+  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course) }
 
   let!(:course_module_2) { FactoryGirl.create(:active_course_module,
-                           qualification_id: qualification_2.id,
-                           exam_level_id: exam_level_2.id,
-                           tutor_id: tutor_user.id) }
+                                              subject_course_id: subject_course_2.id,
+                                              tutor_id: tutor_user.id) }
   let!(:course_module_element_2_1) { FactoryGirl.create(:cme_quiz,
                            course_module_id: course_module_2.id) }
   let!(:course_module_element_quiz_2_2_1) { FactoryGirl.create(:course_module_element_quiz,

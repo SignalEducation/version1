@@ -1,9 +1,11 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 describe CourseModuleJumboQuizzesController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
 
   # todo: Try to create children for currency_1
   let!(:course_module_jumbo_quiz_1) { FactoryGirl.create(:course_module_jumbo_quiz) }
@@ -116,7 +118,7 @@ describe CourseModuleJumboQuizzesController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module_jumbo_quiz: valid_params
-        expect_create_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_create_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
       end
 
       it 'should report error for invalid params' do
@@ -128,13 +130,13 @@ describe CourseModuleJumboQuizzesController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_jumbo_quiz_1' do
         put :update, id: course_module_jumbo_quiz_1.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_update_success_with_model('course_module_jumbo_quiz', subject_course_url)
       end
 
       # optional
       it 'should respond OK to valid params for course_module_jumbo_quiz_2' do
         put :update, id: course_module_jumbo_quiz_2.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_update_success_with_model('course_module_jumbo_quiz', course_module_jumbo_quiz_2.course_module.subject_course)
         expect(assigns(:course_module_jumbo_quiz).id).to eq(course_module_jumbo_quiz_2.id)
       end
 
@@ -325,7 +327,7 @@ describe CourseModuleJumboQuizzesController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module_jumbo_quiz: valid_params
-        expect_create_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_create_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
       end
 
       it 'should report error for invalid params' do
@@ -337,13 +339,13 @@ describe CourseModuleJumboQuizzesController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_jumbo_quiz_1' do
         put :update, id: course_module_jumbo_quiz_1.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_update_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
       end
 
       # optional
       it 'should respond OK to valid params for course_module_jumbo_quiz_2' do
         put :update, id: course_module_jumbo_quiz_2.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_update_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
         expect(assigns(:course_module_jumbo_quiz).id).to eq(course_module_jumbo_quiz_2.id)
       end
 
@@ -398,13 +400,13 @@ describe CourseModuleJumboQuizzesController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_module_jumbo_quiz_1' do
         put :update, id: course_module_jumbo_quiz_1.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_update_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
       end
 
       # optional
       it 'should respond OK to valid params for course_module_jumbo_quiz_2' do
         put :update, id: course_module_jumbo_quiz_2.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_modules_url)
+        expect_update_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
         expect(assigns(:course_module_jumbo_quiz).id).to eq(course_module_jumbo_quiz_2.id)
       end
 

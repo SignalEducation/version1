@@ -5,32 +5,24 @@ class CoursesController < ApplicationController
   def show
 
     @mathjax_required = true
-    course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    @course_module = course.course_modules.find_by(name_url: params[:course_module_name_url])
+    @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+    if @course
+      @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
+    end
     if @course_module
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
       @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
       @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
-      seo_title_maker("#{course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
+      seo_title_maker("#{@course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
     end
 
     if @course_module_element.nil? && @course_module.nil?
 
-      @question_bank = QuestionBank.find_by_id(params[:id])
-      set_up_question_bank
-
       # The URL is out of date or wrong.
-      #@exam_section = params[:exam_section_name_url] == 'all' ?
-            #nil :
-            #ExamSection.find_by(name_url: params[:exam_section_name_url])
-      #@exam_level = ExamLevel.find_by(name_url: params[:exam_level_name_url])
-      #@qualification = Qualification.find_by(name_url: params[:qualification_name_url])
-      #@institution = Institution.find_by(name_url: params[:institution_name_url])
-      #@subject_area = SubjectArea.find_by(name_url: params[:subject_area_name_url])
-      #flash[:warning] = t('controllers.courses.show.warning')
-      #Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      #redirect_to library_special_link(@exam_section || @exam_level || @qualification || @institution || @subject_area || nil)
+      flash[:warning] = t('controllers.courses.show.warning')
+      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+      redirect_to library_special_link(@course)
     else
       # The URL worked out Okay
       reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user

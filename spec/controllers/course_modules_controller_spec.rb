@@ -5,12 +5,11 @@ describe CourseModulesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:qualification) {FactoryGirl.create(:qualification) }
-  let!(:exam_level) {FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
-  let!(:course_module_1) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
+  let!(:subject_course) {FactoryGirl.create(:subject_course) }
+  let!(:course_module_1) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
-  let!(:course_module_2) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
+  let!(:course_module_2) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:course_module, subject_course_id: subject_course.id) }
 
   context 'Not logged in: ' do
 
@@ -137,33 +136,9 @@ describe CourseModulesController, type: :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index, id: nil, course_module_url: course_module_1.name_url
-        expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to redirect_to(subject.course_module_special_link(exam_level))
-        expect(flash[:error]).to eq(nil)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see course_module_1' do
-        get :show, id: nil, course_module_url: course_module_1.name_url,
-            qualification_url: qualification.name_url
-        expect_show_success_with_model('course_module', course_module_1.id)
-      end
-
-      # optional - some other object
-      it 'should see course_module_2' do
-        get :show, id: course_module_2.id
-        expect(response).to redirect_to(course_modules_url)
-        expect(flash[:error]).to eq(I18n.t('controllers.course_modules.show.cant_find'))
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, subject_course: subject_course
         expect_new_success_with_model('course_module')
       end
     end

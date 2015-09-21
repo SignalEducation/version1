@@ -7,11 +7,16 @@ class CourseModulesController < ApplicationController
   before_action :get_variables
 
   def show
+    redirect_to subject_course_url
   end
 
   def new
     @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
-    @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+    if @subject_course
+      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+    else
+      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: SubjectCourse.all_active.all_in_order.last.id, tutor_id: @subject_course.tutor_id)
+    end
   end
 
   def edit

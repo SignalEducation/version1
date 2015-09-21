@@ -997,10 +997,14 @@ a.box-item {
 }
 .alert.error {
   background: $red-1;
+  color: $white;
+  border-radius: 0;
   margin-bottom: 0;
 }
 .alert.warning {
   background: $red-1;
+  color: $white;
+  border-radius: 0;
   margin-bottom: 0;
 }
 .alert.alert-info {

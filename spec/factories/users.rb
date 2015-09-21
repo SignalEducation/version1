@@ -51,8 +51,8 @@
 FactoryGirl.define do
   factory :user do
     sequence(:email)      { |n| "horace.smyth-#{n}@example.com" }
-    first_name            'Horace'
-    last_name             'Smyth'
+    first_name            'John'
+    last_name             'Smith'
     country_id            { Country.first.try(:id) || 1 }
     password              'letSomeone1n'
     password_confirmation 'letSomeone1n'
