@@ -67,7 +67,7 @@
 
   -if @course_module_element_user_log.is_question_bank
     .col-xs-4.text-left
-      =link_to question_bank_url(@question_bank.exam_level.name_url, @question_bank.try(:exam_section).try(:name_url), @question_bank.id), class: 'btn btn-red text-bold' do
+      =link_to question_bank_url(@question_bank.subject_course.name_url, @question_bank.try(:subject_course).try(:name_url), @question_bank.id), class: 'btn btn-red text-bold' do
         .glyphicon.glyphicon-arrow-left
         Restart Quiz
     .col-xs-4.text-right

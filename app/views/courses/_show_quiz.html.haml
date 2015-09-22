@@ -79,7 +79,6 @@
         'Question Score': isCorrect,
         'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
         'Course Module': '#{@course_module.try(:name) || ""}',
-        'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
         'Course': '#{@course_module.try(:qualification).try(:name)} #{@course_module.try(:subject_course).try(:name) || ''}'
       });
       mixpanel.people.increment("Questions Taken");
@@ -126,7 +125,6 @@
       mixpanel.track("Quiz View Begin", {
         'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
         'Course Module': '#{@course_module.try(:name) || ""}',
-        'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
         'Course': '#{@course_module.try(:qualification).try(:name) || ''} #{@course_module.try(:subject_course).try(:name) || ''}',
         'Quiz Length': questionsNo,
         'Next CME': ['#{course_special_link(@course_module_element.try(:next_element)) || ''}', '#{@course_module_element.try(:next_element).try(:type_name) || ''}']
@@ -144,7 +142,6 @@
       mixpanel.track("Quiz View End", {
         'Quiz Name': '#{@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || ""}',
         'Course Module': '#{@course_module.try(:name) || ""}',
-        'Exam Section': '#{@course_module.try(:exam_section).try(:name) || ""}',
         'Course': '#{@course_module.try(:qualification).try(:name) || ''} #{@course_module.try(:subject_course).try(:name) || ''}',
         'Quiz Length': questionsNo,
         'Time Viewed': timeViewed,
