@@ -42,7 +42,7 @@
                     %li.divider
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
 
-                -#Student Dropdown
+                -#Student/Tutor/Content Manager Dropdown
               %li.dropdown
                 %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   =t('views.general.user_name') + current_user.first_name.to_s
