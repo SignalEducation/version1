@@ -3,6 +3,8 @@
     =render partial: 'layouts/corporate_side_bar'
 
   .main-content
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
     .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
       .container-fluid.l-padding-side-3x
         .row.l-margin-bottom.l-margin-top
