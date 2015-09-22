@@ -13,7 +13,11 @@ class CourseModulesController < ApplicationController
   def new
     @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
     if @subject_course
-      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+      if @subject_course.children.count > 0
+        @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+      else
+        @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+      end
     else
       course = SubjectCourse.all_active.all_in_order.last
       @course_module = CourseModule.new(sorting_order: 1, subject_course_id: course.id, tutor_id: course.tutor_id)
