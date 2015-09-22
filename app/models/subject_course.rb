@@ -116,6 +116,18 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
+  def project_data
+    Wistia::Stats::Project.get("#{self.wistia_guid}")
+  end
+
+  def monthly_project_data
+    Wistia::Stats::Project.get("#{self.wistia_guid}/by_date", start_date: "#{Proc.new{Time.now.beginning_of_month }.call}", end_date: "#{Proc.new{Time.now}.call}")
+  end
+
+  def last_6_months_project_data
+    Wistia::Stats::Project.get("#{self.wistia_guid}/by_date", start_date: "#{Proc.new{Time.now - 6.months}.call}", end_date: "#{Proc.new{Time.now}.call}")
+  end
+
   def tutor_name
     self.tutor.full_name
   end
