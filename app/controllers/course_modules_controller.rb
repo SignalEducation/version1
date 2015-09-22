@@ -15,7 +15,8 @@ class CourseModulesController < ApplicationController
     if @subject_course
       @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
     else
-      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: SubjectCourse.all_active.all_in_order.last.id, tutor_id: @subject_course.tutor_id)
+      course = SubjectCourse.all_active.all_in_order.last
+      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: course.id, tutor_id: course.tutor_id)
     end
   end
 
