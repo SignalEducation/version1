@@ -53,8 +53,8 @@ class CourseModule < ActiveRecord::Base
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
-  #validates :subject_course_id, presence: true,
-  #          numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true,
             uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
   validates :name_url, presence: true,
