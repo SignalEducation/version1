@@ -53,7 +53,7 @@ class SubjectCourse < ActiveRecord::Base
   validates :description, presence: true
   validates :short_description, presence: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
-  validates :forum_url, presence: true, length: {maximum: 255}
+  validates :forum_url, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true, numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
