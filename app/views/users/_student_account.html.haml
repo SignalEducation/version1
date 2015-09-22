@@ -1,3 +1,5 @@
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -23,8 +25,7 @@
                 .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
                   .row
                     .col-md-8.col-md-offset-2{style: 'padding-bottom: 50px;'}
-                      .no-image-box-item{style: 'padding-bottom: 40px; padding-top: 40px;'}
-                        =render partial: 'users/form_personal_details', locals: {f: f}
+                      =render partial: 'users/form_personal_details', locals: {f: f}
 
                 .tab-pane.fade#referral-code{role: 'tabpanel'}
                   .rows

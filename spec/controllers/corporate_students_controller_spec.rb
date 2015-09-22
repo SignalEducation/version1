@@ -269,16 +269,13 @@ describe CorporateStudentsController, type: :controller do
         expect(assigns[:corporate_student].password_change_required).to eq(true)
       end
 
-      it 'should report error if country ID is missing' do
-        valid_params.delete(:country_id)
-        post :create, corporate_student: valid_params
-        expect_create_error_with_model('user', 'corporate_student')
-      end
-
       it 'should report error if email is missing' do
         valid_params.delete(:email)
         post :create, corporate_student: valid_params
-        expect_create_error_with_model('user', 'corporate_student')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.corporate_students.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(assigns('corporate_student'.to_sym).class.name).to eq('user'.classify)
       end
     end
 
@@ -510,16 +507,13 @@ describe CorporateStudentsController, type: :controller do
         expect(assigns[:corporate_student].password_change_required).to eq(true)
       end
 
-      it 'should report error if country ID is missing' do
-        valid_params.delete(:country_id)
-        post :create, corporate_student: valid_params
-        expect_create_error_with_model('user', 'corporate_student')
-      end
-
       it 'should report error if email is missing' do
         valid_params.delete(:email)
         post :create, corporate_student: valid_params
-        expect_create_error_with_model('user', 'corporate_student')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.corporate_students.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(assigns('corporate_student'.to_sym).class.name).to eq('user'.classify)
       end
     end
 

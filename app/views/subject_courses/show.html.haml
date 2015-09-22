@@ -1,47 +1,75 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.subject_courses.show.h1')
-        \#
-        =@subject_course.id
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.name')
-        %td.col-sm-8=@subject_course.name
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.name_url')
-        %td.col-sm-8=@subject_course.name_url
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.active')
-        %td.col-sm-8=tick_or_cross(@subject_course.active)
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.live')
-        %td.col-sm-8=tick_or_cross(@subject_course.live)
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.wistia_guid')
-        %td.col-sm-8=@subject_course.wistia_guid
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.tutor_id')
-        %td.col-sm-8=@subject_course.tutor.full_name
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.description')
-        %td.col-sm-8=@subject_course.description
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.short_description')
-        %td.col-sm-8=@subject_course.short_description
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.mailchimp_guid')
-        %td.col-sm-8=@subject_course.mailchimp_guid
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.default_number_of_possible_exam_answers')
-        %td.col-sm-8=@subject_course.default_number_of_possible_exam_answers
-      %tr
-        %td.col-sm-4=t('views.subject_courses.form.forum_url')
-        %td.col-sm-8=@subject_course.forum_url
-    %p
-      =link_to t('views.general.back'), subject_courses_url
-      |
-      =link_to t('views.general.edit'), edit_subject_course_url(id: @subject_course.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.subject_courses.show.h1')
+            \-
+            =@subject_course.name
+      .row.l-margin-top.l-margin-bottom
+        .pull-right
+          =link_to t('views.course_modules.new.h1'), course_module_special_link(@subject_course), class: 'btn btn-red'
+        .col-md-12.l-margin-top
+          .ol.sortable-area
+            -@subject_course.children.all_in_order.each do |course_module|
+              .li.l-margin-bottom-big
+                .no-image-box-item.table-box
+                  .table-responsive
+                    .col-md-10.l-margin-bottom
+                      %h2=course_module.name.to_s.truncate(50)
+                    .col-md-2
+                      .pull-right
+                        %span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
+                    %table.table.sorted_table{data: {destination: course_module_elements_url}, id: "cm-#{course_module.id}", style: 'font-size: 18px;'}
+                      %thead
+                        %tr
+                          %th Name
+                          %th Active
+                          %th Type
+                          %th
+                          %th
+                      %tbody
+                        -course_module.children.all_in_order.each do |cme|
+                          %tr{id: cme.id}
+                            %td
+                              =cme.name.to_s.truncate(30)
+                            %td
+                              =tick_or_cross(cme.active)
+                            %td
+                              =cme.type_name
+                            %td
+                              =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-small btn-purple'
+                              =link_to t('views.course_module_elements.show.preview'), cme, class: 'btn btn-small btn-purple', target: '_blank'
+                              -if cme.destroyable?
+                                =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                            %td
+                              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+                        -if course_module.course_module_jumbo_quiz
+                          %tr
+                            %td
+                              =course_module.course_module_jumbo_quiz.name
+                            %td
+                              =tick_or_cross(course_module.course_module_jumbo_quiz.active)
+                            %td
+                              ='Jumbo'
+                            %td
+                              =link_to t('views.general.edit'), edit_course_module_jumbo_quiz_url(course_module.course_module_jumbo_quiz), class: 'btn btn-small btn-purple'
+                            %td
+                            %td
+
+
+                    .col-md-6
+                      =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: course_module.id), class: 'btn btn-purple'
+                      =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: course_module.id), class: 'btn btn-purple'
+                      -unless course_module.course_module_jumbo_quiz
+                        =link_to t('views.course_module_jumbo_quiz.show.h1'), new_course_module_jumbo_quiz_url(cm_id: course_module.id), class: 'btn btn-purple'
+                    .col-md-6
+                      .pull-right
+                        =link_to t('views.course_modules.edit.h1'), edit_course_module_url(course_module), class: 'btn btn-purple'
+                        =link_to t('views.general.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
+
+
+
+

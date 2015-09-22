@@ -29,11 +29,6 @@ class HomePagesController < ApplicationController
       if @home_page
         seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
         cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
-        @cfa = Institution.where(short_name: 'CFA').first
-        @acca = Institution.where(short_name: 'ACCA').first
-        @cfa_level_1 = ExamLevel.where(name: 'Level 1').first
-        @acca_level_1 = ExamLevel.where(name_url: 'f1').first
-        @acca_level_2 = ExamLevel.where(name_url: 'f2').first
         if @home_page.public_url == '/acca'
           render :acca
         elsif @home_page.public_url == '/cfa'

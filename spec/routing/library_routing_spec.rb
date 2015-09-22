@@ -14,11 +14,7 @@ RSpec.describe LibraryController, type: :routing do
     # special routes
 
     it 'routes to #show' do
-      expect(get: 'library/exam_level').to route_to('library#show', exam_level_name_url: 'exam_level')
-    end
-
-    it 'routes to #show' do
-      expect(get: 'library/exam_level/exam_section').to route_to('library#show', exam_level_name_url: 'exam_level', exam_section_name_url: 'exam_section')
+      expect(get: 'library/subject_course').to route_to('library#show', subject_course_name_url: 'subject_course')
     end
 
   end

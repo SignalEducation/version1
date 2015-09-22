@@ -88,12 +88,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :videos, -> { where(is_video: true) }
   scope :jumbo_quizzes, -> { where(is_jumbo_quiz: true) }
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
-  scope :this_month, -> { where(:created_at => Time.now.beginning_of_month..Time.now.end_of_month) }
-  scope :one_month_ago, -> { where(:created_at => 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
-  scope :two_months_ago, -> { where(:created_at => 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
-  scope :three_months_ago, -> { where(:created_at => 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
-  scope :four_months_ago, -> { where(:created_at => 4.month.ago.beginning_of_month..4.month.ago.end_of_month) }
-  scope :five_months_ago, -> { where(:created_at => 5.month.ago.beginning_of_month..5.month.ago.end_of_month) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :one_month_ago, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
+  scope :two_months_ago, -> { where(created_at: 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
+  scope :three_months_ago, -> { where(created_at: 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
+  scope :four_months_ago, -> { where(created_at: 4.month.ago.beginning_of_month..4.month.ago.end_of_month) }
+  scope :five_months_ago, -> { where(created_at: 5.month.ago.beginning_of_month..5.month.ago.end_of_month) }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)
@@ -156,8 +156,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def create_or_update_student_exam_track
     unless self.is_question_bank
       set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-      set.exam_level_id ||= self.course_module.exam_level_id
-      set.exam_section_id ||= self.course_module.exam_section_id
+      set.subject_course_id ||= self.course_module.subject_course.id
       set.latest_course_module_element_id = self.course_module_element_id
       set.jumbo_quiz_taken = true if self.is_jumbo_quiz
       set.save!

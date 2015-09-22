@@ -23,9 +23,7 @@ class ConditionalMandrillMailsProcessor
     sets.each do |student_id, student_exam_track|
       # Pick up all course module ids with given section_id or exam_level_id
       # (if section_id is null).
-      course_module_ids = student_exam_track.exam_section_id ?
-                            CourseModule.where(exam_section_id: student_exam_track.exam_section_id).pluck(:id) :
-                            CourseModule.where(exam_level_id: student_exam_track.exam_level_id).pluck(:id)
+      course_module_ids = CourseModule.where(subject_course_id: student_exam_track.subject_course_id).pluck(:id)
       # Now get all element ids wor all course modules so we can extract
       # related course module element user logs.
       course_module_element_ids = CourseModuleElement.where(course_module_id: course_module_ids).pluck(:id)
@@ -69,7 +67,7 @@ class ConditionalMandrillMailsProcessor
                    .order("updated_at desc")
                    .first
       if exam_track
-        course = exam_track.exam_section_id ? exam_track.exam_section : exam_track.exam_level
+        course = exam_track.subject_course
         modules = course.course_modules.all_active.all_in_order
         args = [DAYS_HAVENT_SEEN, course.name]
         0.upto(2) do |idx|

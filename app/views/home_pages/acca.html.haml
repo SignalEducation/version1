@@ -1,4 +1,6 @@
 .hero-acca
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
   .header{role: 'banner'}
     .l-wrap
       .container-fluid
@@ -71,7 +73,7 @@
       .course-list-wrap
         .row
           .col-sm-6.col-md-4.col-md-offset-2
-            =link_to library_special_link(@acca_level_1), class: 'box' do
+            =link_to library_url, class: 'box' do
               .box-inner
                 %h3.h4.box-title
                   F1 Accounting In Business
@@ -80,7 +82,7 @@
               .box-label
                 7-day free trial
           .col-sm-6.col-md-4
-            =link_to library_special_link(@acca_level_2), class: 'box' do
+            =link_to library_url, class: 'box' do
               .box-inner
                 %h3.h4.box-title
                   F2 Management Accounting

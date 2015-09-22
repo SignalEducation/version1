@@ -15,7 +15,7 @@
                 .row
                   .col-sm-12
                     .input-group
-                      =hidden_field_tag(:list_id, "#{@course.try(:mailchimp_list_id)}")
+                      =hidden_field_tag(:list_id, "#{@course.try(:mailchimp_guid)}")
                       =email_field(:email, :address, {id: 'email', placeholder: 'Register for notifications', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'})
                       %span.input-group-btn
                         =submit_tag 'Register', class: 'btn btn-red', name: nil

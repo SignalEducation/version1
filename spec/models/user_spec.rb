@@ -53,7 +53,7 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key forum_notification_email_frequency falling_behind_email_alert_frequency marketing_email_frequency study_plan_notifications_email_frequency operational_email_frequency marketing_email_permission_given_at blog_notification_email_frequency)
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -72,10 +72,6 @@ describe User do
   it { should belong_to(:country) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_many(:forum_posts) }
-  it { should have_many(:forum_post_concerns) }
-  it { should have_many(:forum_topic_users) }
-  it { should have_many(:institution_users) }
   it { should have_many(:invoices) }
   it { should have_many(:quiz_attempts) }
   it { should have_many(:created_static_pages) }
@@ -84,10 +80,8 @@ describe User do
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:student_exam_tracks) }
-  it { should have_many(:user_exam_level) }
   it { should have_many(:user_activity_logs) }
   it { should belong_to(:user_group) }
-  it { should have_many(:user_likes) }
   it { should have_many(:user_notifications) }
   it { should have_one(:referral_code) }
   it { should have_one(:referred_signup) }
@@ -148,24 +142,6 @@ describe User do
   end
 
 
-  it { should validate_inclusion_of(:operational_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
-  it { should validate_length_of(:operational_email_frequency).is_at_most(255) }
-
-  it { should validate_inclusion_of(:study_plan_notifications_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
-  it { should validate_length_of(:study_plan_notifications_email_frequency).is_at_most(255) }
-
-  it { should validate_inclusion_of(:falling_behind_email_alert_frequency).in_array(User::EMAIL_FREQUENCIES) }
-  it { should validate_length_of(:falling_behind_email_alert_frequency).is_at_most(255) }
-
-  it { should validate_inclusion_of(:marketing_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
-  it { should validate_length_of(:marketing_email_frequency).is_at_most(255) }
-
-  it { should validate_inclusion_of(:blog_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
-  it { should validate_length_of(:blog_notification_email_frequency).is_at_most(255) }
-
-  it { should validate_inclusion_of(:forum_notification_email_frequency).in_array(User::EMAIL_FREQUENCIES) }
-  it { should validate_length_of(:forum_notification_email_frequency).is_at_most(255) }
-
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
 
   it { should validate_uniqueness_of(:employee_guid).scoped_to(:corporate_customer_id) }
@@ -199,7 +175,6 @@ describe User do
   it { should respond_to(:corporate_student?) }
   it { should respond_to(:de_activate_user) }
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:frequent_forum_user?) }
   it { should respond_to(:full_name) }
   it { should respond_to(:individual_student?) }
   it { should respond_to(:tutor?) }
@@ -211,29 +186,20 @@ describe User do
       @junior_group = FactoryGirl.create(:corporate_group)
       @senior_group = FactoryGirl.create(:corporate_group)
 
-      @exam_levels = FactoryGirl.create_list(:active_exam_level, 3, live: true)
-      @junior_group.corporate_group_grants.create(exam_level_id: @exam_levels[0].id, restricted: true)
-      @junior_group.corporate_group_grants.create(exam_level_id: @exam_levels[1].id, restricted: true)
-      @senior_group.corporate_group_grants.create(exam_level_id: @exam_levels[1].id, compulsory: true)
-      @senior_group.corporate_group_grants.create(exam_level_id: @exam_levels[2].id, compulsory: true)
+      @subject_courses = FactoryGirl.create_list(:active_subject_course, 3, live: true)
+      @junior_group.corporate_group_grants.create(subject_course_id: @subject_courses[0].id, restricted: true)
+      @junior_group.corporate_group_grants.create(subject_course_id: @subject_courses[1].id, restricted: true)
+      @senior_group.corporate_group_grants.create(subject_course_id: @subject_courses[1].id, compulsory: true)
+      @senior_group.corporate_group_grants.create(subject_course_id: @subject_courses[2].id, compulsory: true)
 
-      @exam_sections = FactoryGirl.create_list(:active_exam_section, 4, live: true)
-      @junior_group.corporate_group_grants.create(exam_section_id: @exam_sections[0].id, restricted: true)
-      @junior_group.corporate_group_grants.create(exam_section_id: @exam_sections[1].id, restricted: true)
-      @junior_group.corporate_group_grants.create(exam_section_id: @exam_sections[2].id, restricted: true)
-      @senior_group.corporate_group_grants.create(exam_section_id: @exam_sections[1].id, compulsory: true)
-      @senior_group.corporate_group_grants.create(exam_section_id: @exam_sections[2].id, compulsory: true)
-      @senior_group.corporate_group_grants.create(exam_section_id: @exam_sections[3].id, compulsory: true)
     end
 
     context 'non-corporate student' do
-      it 'returns empty arrays for compulsory and restricted exam levels and sections' do
+      it 'returns empty arrays for compulsory and restricted subject courses' do
         corporate_customer = FactoryGirl.create(:corporate_customer)
         student = FactoryGirl.create(:individual_student_user, corporate_customer_id: corporate_customer.id)
-        expect(student.compulsory_exam_level_ids.length).to eq(0)
-        expect(student.compulsory_exam_section_ids.length).to eq(0)
-        expect(student.restricted_exam_level_ids.length).to eq(0)
-        expect(student.restricted_exam_section_ids.length).to eq(0)
+        expect(student.compulsory_subject_course_ids.length).to eq(0)
+        expect(student.restricted_subject_course_ids.length).to eq(0)
       end
     end
 
@@ -246,61 +212,28 @@ describe User do
         @senior.corporate_group_ids = [@senior_group.id]
       end
 
-      it 'returns all compulsory exam levels' do
-        expect(@junior.compulsory_exam_level_ids.length).to eq(0)
-        expect(@senior.compulsory_exam_level_ids.length).to eq(@senior_group
+      it 'returns all compulsory subject courses' do
+        expect(@junior.compulsory_subject_course_ids.length).to eq(0)
+        expect(@senior.compulsory_subject_course_ids.length).to eq(@senior_group
                                                              .corporate_group_grants
-                                                             .where('exam_level_id is not null')
-                                                             .where(exam_section_id: nil)
                                                              .count)
-        expect(@senior.compulsory_exam_level_ids.sort).to eq(@senior_group
+        expect(@senior.compulsory_subject_course_ids.sort).to eq(@senior_group
                                                              .corporate_group_grants
-                                                             .where('exam_level_id is not null')
-                                                             .where(exam_section_id: nil)
-                                                             .pluck(:exam_level_id)
+                                                             .pluck(:subject_course_id)
                                                              .sort)
       end
 
-      it 'returns all compulsory exam sections' do
-        expect(@junior.compulsory_exam_section_ids.length).to eq(0)
-        expect(@senior.compulsory_exam_section_ids.length).to eq(@senior_group
-                                                               .corporate_group_grants
-                                                               .where('exam_section_id is not null')
-                                                               .count)
-        expect(@senior.compulsory_exam_section_ids.sort).to eq(@senior_group
-                                                                .corporate_group_grants
-                                                                .where('exam_section_id is not null')
-                                                                .pluck(:exam_section_id)
-                                                                .sort)
-      end
-
-      it 'returns all restricted exam levels' do
-        expect(@junior.restricted_exam_level_ids.length).to eq(@junior_group
+      it 'returns all restricted subject courses' do
+        expect(@junior.restricted_subject_course_ids.length).to eq(@junior_group
                                                              .corporate_group_grants
-                                                             .where('exam_level_id is not null')
-                                                             .where(exam_section_id: nil)
                                                              .count)
-        expect(@junior.restricted_exam_level_ids.sort).to eq(@junior_group
+        expect(@junior.restricted_subject_course_ids.sort).to eq(@junior_group
                                                               .corporate_group_grants
-                                                              .where('exam_level_id is not null')
-                                                              .where(exam_section_id: nil)
-                                                              .pluck(:exam_level_id)
+                                                              .pluck(:subject_course_id)
                                                               .sort)
-        expect(@senior.restricted_exam_level_ids.length).to eq(0)
+        expect(@senior.restricted_subject_course_ids.length).to eq(0)
       end
 
-      it 'returns all restricted exam sections' do
-        expect(@junior.restricted_exam_section_ids.length).to eq(@junior_group
-                                                               .corporate_group_grants
-                                                               .where('exam_section_id is not null')
-                                                               .count)
-        expect(@junior.restricted_exam_section_ids.sort).to eq(@junior_group
-                                                                .corporate_group_grants
-                                                                .where('exam_section_id is not null')
-                                                                .pluck(:exam_section_id)
-                                                                .sort)
-        expect(@senior.restricted_exam_section_ids.length).to eq(0)
-      end
     end
 
     context "multiple group membership" do
@@ -309,40 +242,19 @@ describe User do
         @corporate_student.corporate_group_ids = [@junior_group.id, @senior_group.id]
       end
 
-      it 'returns all compulsory exam levels' do
-        expect(@corporate_student.compulsory_exam_level_ids.length).to eq(@senior_group
+      it 'returns all compulsory subject courses' do
+        expect(@corporate_student.compulsory_subject_course_ids.length).to eq(@senior_group
                                                                            .corporate_group_grants
-                                                                           .where('exam_level_id is not null')
-                                                                           .where(exam_section_id: nil)
                                                                            .count)
-        expect(@corporate_student.compulsory_exam_level_ids.sort).to eq(@senior_group
+        expect(@corporate_student.compulsory_subject_course_ids.sort).to eq(@senior_group
                                                                          .corporate_group_grants
-                                                                         .where('exam_level_id is not null')
-                                                                         .where(exam_section_id: nil)
-                                                                         .pluck(:exam_level_id)
+                                                                         .pluck(:subject_course_id)
                                                                          .sort)
       end
 
-      it 'returns all compulsory exam sections' do
-        expect(@corporate_student.compulsory_exam_section_ids.length).to eq(@senior_group
-                                                                             .corporate_group_grants
-                                                                             .where('exam_section_id is not null')
-                                                                             .count)
-        expect(@corporate_student.compulsory_exam_section_ids.sort).to eq(@senior_group
-                                                                           .corporate_group_grants
-                                                                           .where('exam_section_id is not null')
-                                                                           .pluck(:exam_section_id)
-                                                                           .sort)
-      end
-
-      it 'returns all restricted exam levels' do
-        expect(@corporate_student.restricted_exam_level_ids.length).to eq(1)
-        expect(@corporate_student.restricted_exam_level_ids[0]).to eq(@exam_levels[0].id)
-      end
-
-      it 'returns all restricted exam sections' do
-        expect(@corporate_student.restricted_exam_section_ids.length).to eq(1)
-        expect(@corporate_student.restricted_exam_section_ids[0]).to eq(@exam_sections[0].id)
+      it 'returns all restricted subject courses' do
+        expect(@corporate_student.restricted_subject_course_ids.length).to eq(1)
+        expect(@corporate_student.restricted_subject_course_ids[0]).to eq(@subject_courses[0].id)
       end
     end
   end

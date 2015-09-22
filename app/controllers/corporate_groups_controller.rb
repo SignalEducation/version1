@@ -105,50 +105,26 @@ class CorporateGroupsController < ApplicationController
                                             :name)
   end
 
-  # Method is extremely unoptimised because feature must be finished
-  # before Philip's meeting. After meeting it has to be optimised and
-  # acompanying specs must be implemented.
   def process_grants
     # First we will update existing grants or destroy
     # them if flags were cleared.
-    exam_section_ids = params[:exam_sections].try(:keys) || []
-    exam_level_ids = params[:exam_levels].try(:keys) || []
+    subject_course_ids = params[:courses].try(:keys) || []
     remove_grants = []
     @corporate_group.corporate_group_grants.each do |cgg|
-      if cgg.exam_section_id && cgg.exam_level_id.nil?
-        if exam_section_ids.include?(cgg.exam_section_id.to_s)
-          cgg.compulsory = params[:exam_sections][cgg.exam_section_id.to_s] == "compulsory"
-          cgg.restricted = params[:exam_sections][cgg.exam_section_id.to_s] == "restricted"
-          cgg.save
-          exam_section_ids.delete(cgg.exam_section_id.to_s)
-        else
-          cgg.destroy
-        end
-      elsif cgg.exam_section_id.nil? && cgg.exam_level_id
-        if exam_level_ids.include?(cgg.exam_level_id.to_s)
-          cgg.compulsory = params[:exam_levels][cgg.exam_level_id.to_s] == "compulsory"
-          cgg.restricted = params[:exam_levels][cgg.exam_level_id.to_s] == "restricted"
-          exam_level_ids.delete(cgg.exam_level_id.to_s)
-          cgg.save
-        else
-          cgg.destroy
-        end
+      if subject_course_ids.include?(cgg.subject_course_id.to_s)
+        cgg.compulsory = params[:courses][cgg.subject_course_id.to_s] == "compulsory"
+        cgg.restricted = params[:courses][cgg.subject_course_id.to_s] == "restricted"
+        subject_course_ids.delete(cgg.subject_course_id.to_s)
+        cgg.save
       else
-        Rails.logger.error "ERROR: Inconsistent state (both are set) of exam level and exam section ids for corporate group grant #{cgg.id}"
-      end
+        cgg.destroy
+        end
     end
-
     # Now let's add new ones.
-    exam_section_ids.each do |exi|
-      @corporate_group.corporate_group_grants.create(exam_section_id: exi,
-                                                     compulsory: params[:exam_sections][exi] == "compulsory",
-                                                     restricted: params[:exam_sections][exi] == "restricted")
-    end
-
-    exam_level_ids.each do |eli|
-      @corporate_group.corporate_group_grants.create(exam_level_id: eli,
-                                                     compulsory: params[:exam_levels][eli] == "compulsory",
-                                                     restricted: params[:exam_levels][eli] == "restricted")
+    subject_course_ids.each do |id|
+      @corporate_group.corporate_group_grants.create(subject_course_id: id,
+                                                     compulsory: params[:courses][id] == "compulsory",
+                                                     restricted: params[:courses][id] == "restricted")
     end
   end
 end

@@ -20,7 +20,7 @@ require 'rails_helper'
 describe QuestionBank do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at exam_level_id exam_section_id)
   QuestionBank.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -34,19 +34,15 @@ describe QuestionBank do
 
   # relationships
   it { should belong_to(:user) }
-  it { should belong_to(:exam_level) }
+  it { should belong_to(:subject_course) }
   it { should have_many(:course_module_element_user_logs) }
 
   # validation
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should_not validate_presence_of(:exam_level_id) }
-  it { should validate_numericality_of(:exam_level_id) }
-
-  it { should_not validate_presence_of(:exam_section_id) }
-  it { should validate_numericality_of(:exam_section_id) }
-
+  it { should validate_presence_of(:subject_course_id) }
+  it { should validate_numericality_of(:subject_course_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

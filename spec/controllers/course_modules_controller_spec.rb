@@ -5,12 +5,11 @@ describe CourseModulesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:qualification) {FactoryGirl.create(:qualification) }
-  let!(:exam_level) {FactoryGirl.create(:exam_level, qualification_id: qualification.id) }
-  let!(:course_module_1) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
+  let!(:subject_course) {FactoryGirl.create(:active_subject_course) }
+  let!(:course_module_1) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
-  let!(:course_module_2) { FactoryGirl.create(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:course_module, qualification_id: qualification.id, exam_level_id: exam_level.id) }
+  let!(:course_module_2) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:course_module, subject_course_id: subject_course.id) }
 
   context 'Not logged in: ' do
 
@@ -137,30 +136,6 @@ describe CourseModulesController, type: :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index, id: nil, course_module_url: course_module_1.name_url
-        expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to redirect_to(subject.course_module_special_link(exam_level))
-        expect(flash[:error]).to eq(nil)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see course_module_1' do
-        get :show, id: nil, course_module_url: course_module_1.name_url,
-            qualification_url: qualification.name_url
-        expect_show_success_with_model('course_module', course_module_1.id)
-      end
-
-      # optional - some other object
-      it 'should see course_module_2' do
-        get :show, id: course_module_2.id
-        expect(response).to redirect_to(course_modules_url)
-        expect(flash[:error]).to eq(I18n.t('controllers.course_modules.show.cant_find'))
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -199,7 +174,7 @@ describe CourseModulesController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_module).class).to eq(CourseModule)
-        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_1.exam_level.qualification.name_url, course_module_1.exam_level.name_url, course_module_1.exam_section.try(:name_url) || 'all', course_module_1.name_url))
+        expect(response).to redirect_to(subject_course_url(course_module_1.subject_course))
       end
 
       # optional
@@ -208,8 +183,7 @@ describe CourseModulesController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_module).class).to eq(CourseModule)
-        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_2.exam_level.qualification.name_url, course_module_2.exam_level.name_url, course_module_2.exam_section.try(:name_url) || 'all', course_module_2.name_url))
-      end
+        expect(response).to redirect_to(subject_course_url(course_module_1.subject_course))      end
 
       it 'should reject invalid params' do
         put :update, id: course_module_1.id, course_module: {valid_params.keys.first => ''}
@@ -228,12 +202,12 @@ describe CourseModulesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK even though dependencies exist' do
         delete :destroy, id: course_module_1.id
-        expect_archive_success_with_model('course_module', course_module_1.id, course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_1.id, subject_course_url(course_module_1.subject_course))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: course_module_2.id
-        expect_archive_success_with_model('course_module', course_module_2.id, course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_2.id, subject_course_url(course_module_2.subject_course))
       end
     end
 
@@ -478,30 +452,6 @@ describe CourseModulesController, type: :controller do
       UserSession.create!(content_manager_user)
     end
 
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index, id: nil, course_module_url: course_module_1.name_url
-        expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to redirect_to(subject.course_module_special_link(exam_level))
-        expect(flash[:error]).to eq(nil)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see course_module_1' do
-        get :show, id: nil, course_module_url: course_module_1.name_url,
-            qualification_url: qualification.name_url
-        expect_show_success_with_model('course_module', course_module_1.id)
-      end
-
-      # optional - some other object
-      it 'should see course_module_2' do
-        get :show, id: course_module_2.id
-        expect(response).to redirect_to(course_modules_url)
-        expect(flash[:error]).to eq(I18n.t('controllers.course_modules.show.cant_find'))
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -540,7 +490,7 @@ describe CourseModulesController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_module).class).to eq(CourseModule)
-        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_1.exam_level.qualification.name_url, course_module_1.exam_level.name_url, course_module_1.exam_section.try(:name_url) || 'all', course_module_1.name_url))
+        expect(response).to redirect_to(subject_course_url(course_module_1.subject_course))
       end
 
       # optional
@@ -549,7 +499,7 @@ describe CourseModulesController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_module).class).to eq(CourseModule)
-        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_2.exam_level.qualification.name_url, course_module_2.exam_level.name_url, course_module_2.exam_section.try(:name_url) || 'all', course_module_2.name_url))
+        expect(response).to redirect_to(subject_course_url(course_module_2.subject_course))
       end
 
       it 'should reject invalid params' do
@@ -569,12 +519,12 @@ describe CourseModulesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK even though dependencies exist' do
         delete :destroy, id: course_module_1.id
-        expect_archive_success_with_model('course_module', course_module_1.id, course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_1.id, subject_course_url(course_module_1.subject_course))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: course_module_2.id
-        expect_archive_success_with_model('course_module', course_module_2.id, course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_2.id, subject_course_url(course_module_2.subject_course))
       end
     end
 
@@ -587,30 +537,6 @@ describe CourseModulesController, type: :controller do
       UserSession.create!(admin_user)
     end
 
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index, id: nil, course_module_url: course_module_1.name_url
-        expect(assigns[:qualifications].first.class).to eq(Qualification)
-        expect(response).to redirect_to(subject.course_module_special_link(exam_level))
-        expect(flash[:error]).to eq(nil)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see course_module_1' do
-        get :show, id: nil, course_module_url: course_module_1.name_url,
-            qualification_url: qualification.name_url
-        expect_show_success_with_model('course_module', course_module_1.id)
-      end
-
-      # optional - some other object
-      it 'should see course_module_2' do
-        get :show, id: course_module_2.id
-        expect(response).to redirect_to(course_modules_url)
-        expect(flash[:error]).to eq(I18n.t('controllers.course_modules.show.cant_find'))
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -649,7 +575,7 @@ describe CourseModulesController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_module).class).to eq(CourseModule)
-        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_1.exam_level.qualification.name_url, course_module_1.exam_level.name_url, course_module_1.exam_section.try(:name_url) || 'all', course_module_1.name_url))
+        expect(response).to redirect_to(subject_course_url(course_module_1.subject_course))
       end
 
       # optional
@@ -658,7 +584,7 @@ describe CourseModulesController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.course_modules.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_module).class).to eq(CourseModule)
-        expect(response).to redirect_to(course_modules_for_qualification_exam_level_exam_section_and_name_url(course_module_2.exam_level.qualification.name_url, course_module_2.exam_level.name_url, course_module_2.exam_section.try(:name_url) || 'all', course_module_2.name_url))
+        expect(response).to redirect_to(subject_course_url(course_module_2.subject_course))
       end
 
       it 'should reject invalid params' do
@@ -678,12 +604,12 @@ describe CourseModulesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK even though dependencies exist' do
         delete :destroy, id: course_module_1.id
-        expect_archive_success_with_model('course_module', course_module_1.id, course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_1.id, subject_course_url(course_module_1.subject_course))
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: course_module_2.id
-        expect_archive_success_with_model('course_module', course_module_2.id, course_modules_url)
+        expect_archive_success_with_model('course_module', course_module_2.id, subject_course_url(course_module_2.subject_course))
       end
     end
 

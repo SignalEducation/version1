@@ -23,8 +23,7 @@ class StudentExamTrack < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :user_id, :exam_level_id, :exam_section_id,
-                  :latest_course_module_element_id, :exam_schedule_id,
+  attr_accessible :user_id, :latest_course_module_element_id,
                   :session_guid, :course_module_id, :jumbo_quiz_taken,
                   :percentage_complete, :count_of_cmes_completed, :subject_course_id
 
@@ -32,24 +31,17 @@ class StudentExamTrack < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :exam_level
-  belongs_to :exam_section
   belongs_to :subject_course
   belongs_to :course_module
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
-  # todo belongs_to :exam_schedule
 
   # validation
   validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_level_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :exam_section_id, allow_nil: true,
+  validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :latest_course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :exam_schedule_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true, length: { maximum: 255 }
   validates :course_module_id, presence: true,
@@ -80,11 +72,8 @@ class StudentExamTrack < ActiveRecord::Base
       new_one = StudentExamTrack.new(
               user_id: the_user_id,
               session_guid: the_session_guid,
-              exam_level_id: duplicate_sets.last.exam_level_id,
               subject_course_id: duplicate_sets.last.subject_course_id,
-              exam_section_id: duplicate_sets.last.exam_section_id,
               latest_course_module_element_id: duplicate_sets.last.latest_course_module_element_id,
-              exam_schedule_id: duplicate_sets.last.exam_schedule_id,
               course_module_id: duplicate_cm_id,
               jumbo_quiz_taken: duplicate_sets.map(&:jumbo_quiz_taken).any?,
       )
@@ -139,11 +128,7 @@ class StudentExamTrack < ActiveRecord::Base
       MixpanelCourseModuleCompleteWorker.perform_async(
               self.user_id,
               self.course_module.name,
-              self.exam_section.try(:name),
-              self.exam_level.name,
-              self.exam_level.parent.name,
-              self.course_module.institution.name,
-              self.course_module.institution.subject_area.name,
+              self.subject_course.name,
               self.course_module.course_module_elements.all_active.all_videos.count,
               self.course_module.course_module_elements.all_active.all_quizzes.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
       )

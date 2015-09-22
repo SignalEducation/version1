@@ -1,23 +1,27 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.subscription_plans.index.h1')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.subscription_plans.index.h1')
 
-%div{role: 'tabpanel'}
-  %ul.nav.nav-tabs{role: 'tablist'}
-    %li.active{role: 'presentation'}
-      %a{href: '#students', aria: {controls: 'students'}, role: 'tab', data: {toggle: 'tab'}}
-        =t('views.subscription_plans.index.students')
-    %li{role: 'presentation'}
-      %a{href: '#corporates', aria: {controls: 'corporates'}, role: 'tab', data: {toggle: 'tab'}}
-        =t('views.subscription_plans.index.corporates')
+      .row.l-margin-top.l-margin-bottom
+        %div{role: 'tabpanel'}
+          %ul.nav.nav-tabs{role: 'tablist'}
+            %li.active{role: 'presentation'}
+              %a{href: '#students', aria: {controls: 'students'}, role: 'tab', data: {toggle: 'tab'}}
+                =t('views.subscription_plans.index.students')
+            %li{role: 'presentation'}
+              %a{href: '#corporates', aria: {controls: 'corporates'}, role: 'tab', data: {toggle: 'tab'}}
+                =t('views.subscription_plans.index.corporates')
 
-  .tab-content
-    #students.tab-pane.active{role: 'tabpanel'}
-      =render partial: 'subscription_plans/index', locals: {the_plans: @student_subscription_plans}
-    #corporates.tab-pane{role: 'tabpanel'}
-      =render partial: 'subscription_plans/index', locals: {the_plans: @corporate_subscription_plans}
+          .tab-content
+            #students.tab-pane.active{role: 'tabpanel'}
+              =render partial: 'subscription_plans/index', locals: {the_plans: @student_subscription_plans}
+            #corporates.tab-pane{role: 'tabpanel'}
+              =render partial: 'subscription_plans/index', locals: {the_plans: @corporate_subscription_plans}
 
-.row
-  .col-sm-12
-    =link_to t('views.general.new'), new_subscription_plan_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+      .row
+        .col-sm-12
+          =link_to t('views.general.new'), new_subscription_plan_url, class: 'btn btn-red', title: t('views.general.new_tooltip')

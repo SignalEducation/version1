@@ -29,8 +29,6 @@ class CorporateCustomer < ActiveRecord::Base
   # relationships
   belongs_to :country
   has_many :course_module_element_user_logs
-  # todo has_many :corporate_customer_prices
-  # todo has_many :corporate_customer_users
   has_many :invoices
   has_many :students,
            -> { where(user_group_id: UserGroup::CORPORATE_STUDENTS) },
@@ -46,7 +44,6 @@ class CorporateCustomer < ActiveRecord::Base
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}
-  validates :address, presence: true
   validates :country_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/

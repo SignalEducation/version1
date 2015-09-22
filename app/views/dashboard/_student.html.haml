@@ -1,4 +1,4 @@
--if @latest_level_or_section
+-if @latest_course
   %div{role: 'tabpanel'}
     .is-bg-purple-2.coursebar
       .l-wrap
@@ -104,7 +104,7 @@
               Here are some of our most popular courses to get you started:
         .course-list-wrap
           .row
-            -@exam_sections.each do |course|
+            -@courses.each do |course|
               .col-sm-6.col-md-4
                 =link_to library_special_link(course), class: 'box box-course' do
                   .box-inner

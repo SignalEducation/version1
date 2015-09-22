@@ -28,6 +28,7 @@ en:
       drag_to_reorder: Drag to reorder
       duration: "Duration: "
       edit: Edit
+      show: Show
       edit_tooltip: click to edit
       example: Example
       go: Go
@@ -222,9 +223,9 @@ en:
         subject_course_id: Course
         exam_section_id: Exam section
         name: Name
-        name_placeholder: Introduction to surfing
+        name_placeholder: Course Module Name
         name_url: Name URL
-        name_url_placeholder: Introduction-to-surfing
+        name_url_placeholder: course-module-name
         description: Description
         description_placeholder: Describe the course module here
         tutor_id: Tutor
@@ -319,7 +320,7 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
-        advanced_setup_link: Advanced Setup
+        advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
         h3:
@@ -970,6 +971,11 @@ en:
 
       index:
         h1: Courses
+        your_courses: Your Courses
+        my_courses: My Courses
+        add_course: Add Course
+        edit_content: Edit Content
+
 
       show:
         h1: Course
@@ -997,7 +1003,7 @@ en:
         available_to: Available to
         available_to_placeholder: "2019-12-31"
         stripe_guid: Stripe ID
-        trial_period_in_days: Trial period in days
+        trial_period_in_days: Trial
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
 

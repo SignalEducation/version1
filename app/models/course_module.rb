@@ -30,8 +30,7 @@ class CourseModule < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :institution_id, :qualification_id, :exam_level_id,
-                  :exam_section_id, :name, :name_url, :description,
+  attr_accessible :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
                   :number_of_questions, :subject_course_id
@@ -44,10 +43,6 @@ class CourseModule < ActiveRecord::Base
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_one :course_module_jumbo_quiz
-  belongs_to :exam_level
-  belongs_to :exam_section
-  belongs_to :institution
-  belongs_to :qualification
   belongs_to :subject_course
   has_many :student_exam_tracks
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
@@ -56,9 +51,9 @@ class CourseModule < ActiveRecord::Base
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true,
-            uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
+            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :name_url, presence: true,
-            uniqueness: {scope: [:exam_section_id, :exam_level_id]}, length: {maximum: 255}
+            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :sorting_order, presence: true
@@ -66,7 +61,6 @@ class CourseModule < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_validation :unify_hierarchy_ids
   before_create :set_sorting_order
   before_save :set_cme_count
   before_save :calculate_estimated_time
@@ -141,7 +135,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def parent
-    self.exam_section ? self.exam_section : self.exam_level
+    self.subject_course
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
@@ -191,14 +185,6 @@ class CourseModule < ActiveRecord::Base
   def set_cme_count
     self.cme_count = children_available_count
     true
-  end
-
-  def unify_hierarchy_ids
-    if self.exam_section_id
-      self.exam_level_id = self.exam_section.try(:exam_level_id)
-    end
-    self.qualification_id = self.exam_level.try(:qualification_id)
-    self.institution_id = self.qualification.try(:institution_id)
   end
 
   def update_parent

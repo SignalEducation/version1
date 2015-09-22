@@ -1,5 +1,8 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.countries.new.h1')
-=render partial: 'form'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.countries.new.h1')
+      =render partial: 'form'

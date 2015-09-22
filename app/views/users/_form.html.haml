@@ -1,10 +1,8 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: 'users/form_personal_details', locals: {f: f}
-        =render partial: 'users/form_notifications', locals: {f: f}
-      %p
-        =f.submit t('views.general.save'), class: 'btn btn-success'
-        =t('views.general.or')
-        =link_to t('views.general.cancel'), profile_url
+=form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-md-8.col-md-offset-2
+      =render partial: 'users/form_personal_details', locals: {f: f}
+      =#render partial: 'users/form_notifications', locals: {f: f}
+      .row
+        =f.submit t('views.general.save'), class: 'btn btn-red'
+        =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'

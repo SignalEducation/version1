@@ -88,8 +88,7 @@
           mixpanel.track("Video View End", {
             'Video Name': '#{cme.name}',
             'Course Module': '#{cme.course_module.name}',
-            'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
-            'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
+            'Course': '#{cme.course_module.subject_course.try(:name) || ''}',
             'Video Length': +(duration / 60.0).toFixed(2),
             'Time Viewed': position,
             'Percent Completed': +(position * 100 / duration).toFixed(2),
@@ -113,8 +112,7 @@
             mixpanel.track("Video View Begin", {
               'Video Name': '#{cme.name}',
               'Course Module': '#{cme.course_module.name}',
-              'Exam Section': '#{cme.course_module.exam_section.try(:name) || ''}',
-              'Course': '#{cme.course_module.qualification.name} #{cme.course_module.exam_level.name}',
+              'Course': '#{cme.course_module.subject_course.name} #{cme.course_module.subject_course.name}',
               'Video Length': +(jwplayer().getDuration() / 60.0).toFixed(2)
             });
             mixpanel.people.increment("Videos Viewed");

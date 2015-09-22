@@ -58,7 +58,6 @@ class SubjectCourse < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
-  before_create :set_sorting_order
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
   before_save :recalculate_cme_count
@@ -105,16 +104,8 @@ class SubjectCourse < ActiveRecord::Base
     self.active_children.first.try(:first_active_cme)
   end
 
-  def full_name
-    #self.qualification.name + ' > ' + self.name
-  end
-
   def number_complete_by_user_or_guid(user_id, session_guid)
     self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
-  end
-
-  def parent
-    #self.path
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
@@ -125,7 +116,9 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-
+  def tutor_name
+    self.tutor.full_name
+  end
 
   protected
 

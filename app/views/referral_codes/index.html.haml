@@ -1,33 +1,38 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.referral_codes.index.h1')
-.row
-  .col-sm-12
-    =will_paginate @referral_codes, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.referral_codes.index.code')
-          %th
-            =t('views.referral_codes.index.name')
-            %br
-            =t('views.referral_codes.index.email')
-          %th=t('views.referral_codes.index.paid_referred_no')
-          %th=t('views.referral_codes.index.unpaid_referred_no')
-          %th=t('views.referral_codes.index.for_paying_no')
-          %th
-      %tbody
-        -@referral_codes.each do |referral_code|
-          %tr{id: referral_code.id}
-            %td= referral_code.code
-            %td
-              = referral_code.user.full_name
-              %br
-              = referral_code.user.email
-            %td= referral_code.payed_referred_signups.count
-            %td= referral_code.unpayed_referred_signups.count
-            %td= referral_code.referred_signups_ready_for_paying.count
-            %td
-              -if referral_code.destroyable?
-                =link_to t('views.general.delete'), referral_code, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.referral_codes.index.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              =will_paginate @referral_codes, renderer: BootstrapPagination::Rails
+              %table.table.table-striped.table-bordered
+                %thead
+                  %tr
+                    %th=t('views.referral_codes.index.code')
+                    %th
+                      =t('views.referral_codes.index.name')
+                      %br
+                      =t('views.referral_codes.index.email')
+                    %th=t('views.referral_codes.index.paid_referred_no')
+                    %th=t('views.referral_codes.index.unpaid_referred_no')
+                    %th=t('views.referral_codes.index.for_paying_no')
+                    %th
+                %tbody
+                  -@referral_codes.each do |referral_code|
+                    %tr{id: referral_code.id}
+                      %td= referral_code.code
+                      %td
+                        = referral_code.user.full_name
+                        %br
+                        = referral_code.user.email
+                      %td= referral_code.payed_referred_signups.count
+                      %td= referral_code.unpayed_referred_signups.count
+                      %td= referral_code.referred_signups_ready_for_paying.count
+                      %td
+                        -if referral_code.destroyable?
+                          =link_to t('views.general.delete'), referral_code, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'

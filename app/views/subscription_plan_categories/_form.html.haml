@@ -1,25 +1,23 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@subscription_plan_category, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan_category, message: nil}
-        .form-group
-          =f.label :name, t('views.subscription_plan_categories.form.name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :trial_period_in_days, t('views.subscription_plan_categories.form.trial_period_in_days'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.number_field :trial_period_in_days, placeholder: t('views.subscription_plan_categories.form.trial_period_in_days_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :available_from, t('views.subscription_plan_categories.form.available_from'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
-        .form-group
-          =f.label :available_to, t('views.subscription_plan_categories.form.available_to'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+=form_for(@subscription_plan_category, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-md-8.col-md-offset-2
+      =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan_category, message: nil}
+      =f.label :name, t('views.subscription_plan_categories.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      =f.label :trial_period_in_days, t('views.subscription_plan_categories.form.trial_period_in_days'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.number_field :trial_period_in_days, placeholder: t('views.subscription_plan_categories.form.trial_period_in_days_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      =f.label :available_from, t('views.subscription_plan_categories.form.available_from'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+      %br/
+      =f.label :available_to, t('views.subscription_plan_categories.form.available_to'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
 
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), subscription_plan_categories_path
+  .row.l-margin-top-big
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), subscription_plan_categories_path, class: 'btn btn-cyan'

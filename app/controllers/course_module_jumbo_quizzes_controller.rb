@@ -17,7 +17,7 @@ class CourseModuleJumboQuizzesController < ApplicationController
     @course_module_jumbo_quiz = CourseModuleJumboQuiz.new(allowed_params)
     if @course_module_jumbo_quiz.save
       flash[:success] = I18n.t('controllers.course_module_jumbo_quizzes.create.flash.success')
-      redirect_to course_module_special_link(@course_module_jumbo_quiz.course_module)
+      redirect_to subject_course_url(@course_module_jumbo_quiz.course_module.subject_course)
     else
       render action: :new
     end
@@ -26,7 +26,7 @@ class CourseModuleJumboQuizzesController < ApplicationController
   def update
     if @course_module_jumbo_quiz.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_module_jumbo_quizzes.update.flash.success')
-      redirect_to course_module_special_link(@course_module_jumbo_quiz.course_module)
+      redirect_to subject_course_url(@course_module_jumbo_quiz.course_module.subject_course)
     else
       render action: :edit
     end

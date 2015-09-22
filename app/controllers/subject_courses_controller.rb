@@ -12,9 +12,11 @@ class SubjectCoursesController < ApplicationController
     else
       @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page]).all_in_order
     end
+    @courses = @subject_courses.search(params[:search])
   end
 
   def show
+
   end
 
   def new

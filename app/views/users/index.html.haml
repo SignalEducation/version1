@@ -1,72 +1,61 @@
 .l-section-small.is-bg-asphalt
   .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+    .container-fluid.l-padding-side-3x
+      .row.l-margin-bottom.l-margin-top
+        .col-md-6.col-sm-6.col-xs-6
+          %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
             =t('views.users.index.h1')
+        .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
+          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-4.col-sm-4.l-margin-top
+          =form_tag(users_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
+        .col-md-offset-4.col-md-4.l-margin-top
+          =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
 
-    .well.well-sm
-      .row
-        .col-sm-6
-          =form_tag(users_url, method: :get, role: 'form', class: 'form-inline') do
-            .form-group
-              %label.sr-only{for: 'search_term'} Search box
-              .input-group
-                =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
-                .input-group-addon
-                  %span.glyphicon.glyphicon-search
-            .form-group
-              =label_tag :sort_by, t('views.countries.form.sorting_order')
-              =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
-        .col-sm-6.user-pagination.text-right
-          =will_paginate @users, renderer: BootstrapPagination::Rails
+        .col-md-12.l-margin-top-big
+          .corporate-box-item.table-box
+            .table-responsive
+              .col-sm-6.user-pagination.text-right
+                =will_paginate @users, renderer: BootstrapPagination::Rails
 
-    .row
-      .col-sm-12
-        %table.table.table-striped.table-bordered
-          %tr
-            %th
-              =t('views.users.form.full_name')
-              %br/
-              =t('views.users.form.email')
-            %th=t('views.users.form.active')
-            %th=t('views.users.form.password_reset_requested_at')
-            %th=t('views.users.form.password_reset_at')
-            %th=t('views.users.form.stripe_customer_id')
-            %th=t('views.users.form.corporate_customer_id')
-            %th
-          -user_group_id_tracker = nil
-          -@users.each do |user|
-            -if (params[:sort_by].to_s.blank? || params[:sort_by].to_s == 'user_group') && user.user_group_id != user_group_id_tracker
-              -user_group_id_tracker = user.user_group_id
-              %tr
-                %td{colspan: 8}
-                  -if user.user_group
-                    .h2=link_to user.user_group.name, user.user_group
-                  -else
-                    .h2=t('views.general.missing_data_error')
-            %tr
-              %td
-                =link_to(user.full_name, user, title: t('views.general.view_tooltip'))
-                %br/
-                =link_to(user.email, user, title: t('views.general.view_tooltip'))
-              %td=link_to(tick_or_cross(user.active), user, title: t('views.general.view_tooltip'))
-              %td=link_to(user.password_reset_requested_at.to_s, user, title: t('views.general.view_tooltip'))
-              %td
-                -if user.password_reset_at
-                  =link_to(user.password_reset_at.to_s(:standard), user, title: t('views.general.view_tooltip'))
-              %td
-                -if user.stripe_customer_id
-                  =link_to(user.stripe_customer_id, user, title: t('views.general.view_tooltip'))
-              %td=link_to(user.corporate_customer.try(:organisation_name), user, title: t('views.general.view_tooltip')) if user.corporate_customer_id
-
-              %td
-                =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
-                -if user.destroyable?
-                  =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-    .row
-      .col-sm-12
-        =link_to t('views.general.new'), new_user_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', title: t('views.general.new_tooltip')
+              %table.table.table-bordered
+                %tr
+                  %th
+                    =t('views.users.form.full_name')
+                    %br/
+                    =t('views.users.form.email')
+                  %th=t('views.users.form.active')
+                  %th=t('views.users.form.stripe_customer_id')
+                  %th=t('views.users.form.corporate_customer_id')
+                  %th
+                  -user_group_id_tracker = nil
+                  -@users.each do |user|
+                    -if (params[:sort_by].to_s.blank? || params[:sort_by].to_s == 'user_group') && user.user_group_id != user_group_id_tracker
+                      -user_group_id_tracker = user.user_group_id
+                      %tr
+                        %td{colspan: 8}
+                          -if user.user_group
+                            .h2=link_to user.user_group.name, user.user_group
+                          -else
+                            .h2=t('views.general.missing_data_error')
+                    %tr
+                      %td
+                        =user.full_name
+                        %br/
+                        =user.email
+                      %td=tick_or_cross(user.active)
+                      %td
+                        -if user.stripe_customer_id
+                          =user.stripe_customer_id
+                      %td=user.corporate_customer.try(:organisation_name)
+                      %td
+                        =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
+                        -if user.destroyable?
+                          =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
 =render partial: 'layouts/new_footer'

@@ -13,6 +13,7 @@
 #  destroyed_at                  :datetime
 #  exam_level_id                 :integer
 #  exam_section_id               :integer
+#  subject_course_id             :integer
 #
 
 require 'rails_helper'
@@ -20,7 +21,7 @@ require 'rails_helper'
 describe QuizQuestion do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at course_module_element_id destroyed_at)
+  black_list = %w(id created_at updated_at course_module_element_id destroyed_at exam_level_id exam_section_id)
   QuizQuestion.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

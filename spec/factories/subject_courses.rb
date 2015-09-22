@@ -26,12 +26,12 @@
 
 FactoryGirl.define do
   factory :subject_course do
-    name "MyString"
-    name_url "MyString"
+    sequence(:name)      { |x| "Subject Course #{x}" }
+    sequence(:name_url)  { |x| "subject-course-#{x}" }
     sorting_order 1
     active false
     live false
-    wistia_guid "MyString"
+    sequence(:wistia_guid)       {|n| "dfgsdfg#{n}"}
     tutor_id 1
     cme_count 1
     video_count 1
@@ -39,9 +39,17 @@ FactoryGirl.define do
     question_count 1
     description "MyText"
     short_description "MyString"
-    mailchimp_guid "MyString"
+    sequence(:mailchimp_guid)       {|n| "dfgsdfg#{n}"}
     forum_url "MyString"
     default_number_of_possible_exam_answers 1
+
+    factory :active_subject_course do
+      active                       true
+    end
+
+    factory :inactive_subject_course do
+      active                       false
+    end
   end
 
 end

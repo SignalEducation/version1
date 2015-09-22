@@ -1,17 +1,21 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.marketing_categories.show.h1')
-        \#
-        =@marketing_category.id
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.marketing_categories.form.name')
-        %td.col-sm-8=@marketing_category.name
-    %p
-      =link_to t('views.general.back'), marketing_categories_url
-      |
-      =link_to t('views.general.edit'), edit_marketing_category_url(id: @marketing_category.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.marketing_categories.show.h1')
+            \#
+            =@marketing_category.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered
+                %tr
+                  %td.col-sm-4=t('views.marketing_categories.form.name')
+                  %td.col-sm-8=@marketing_category.name
+      .row
+        =link_to t('views.general.back'), marketing_categories_url
+        |
+        =link_to t('views.general.edit'), edit_marketing_category_url(id: @marketing_category.id), title: t('views.general.edit_tooltip')

@@ -13,6 +13,7 @@
 #  destroyed_at                  :datetime
 #  exam_level_id                 :integer
 #  exam_section_id               :integer
+#  subject_course_id             :integer
 #
 
 FactoryGirl.define do
