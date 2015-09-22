@@ -38,9 +38,9 @@ class QuestionBanksController < ApplicationController
 
   def destroy
     if @question_bank.destroy
-      redirect_to library_special_link(@question_bank.exam_level)
+      redirect_to library_special_link(@question_bank.subject_course)
     else
-      redirect_to library_special_link(@question_bank.exam_level.qualification)
+      redirect_to library_special_link(@question_bank.subject_course)
     end
   end
 
@@ -51,11 +51,10 @@ class QuestionBanksController < ApplicationController
       @question_bank = QuestionBank.where(id: params[:id]).first
     end
     @users = User.all_in_order
-    @exam_levels = ExamLevel.all_in_order
  end
 
   def allowed_params
-    params.require(:question_bank).permit(:user_id, :exam_level_id, :easy_questions, :medium_questions, :hard_questions, :exam_section_id)
+    params.require(:question_bank).permit(:user_id, :easy_questions, :medium_questions, :hard_questions, :subject_course_id)
   end
 
 end

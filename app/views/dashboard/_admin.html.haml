@@ -19,7 +19,7 @@
               %th=t('views.dashboard.tutor.total_course_module_elements')
               %th=t('views.library.show.jumbo_quiz')
           %tbody
-            -@course_modules.where(exam_level_id: course.id).each do |course_modules|
+            -@course_modules.where(subject_course_id: course.id).each do |course_modules|
               %tr{id: course_modules.id}
                 %td=link_to(course_modules.name, course_module_special_link(course_modules), title: t('views.general.view_tooltip'))
                 %td=tick_or_cross(course_modules.active?)

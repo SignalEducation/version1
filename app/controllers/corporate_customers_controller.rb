@@ -48,8 +48,7 @@ class CorporateCustomersController < ApplicationController
     @quizzes_three_months_ago = @corporate_quiz_logs.three_months_ago.count
     @quizzes_four_months_ago = @corporate_quiz_logs.four_months_ago.count
     @quizzes_five_months_ago = @corporate_quiz_logs.five_months_ago.count
-    @compulsory_level_cms = CourseModule.where(exam_level_id: @compulsory_courses).map(&:id)
-    @compulsory_section_cms = CourseModule.where(exam_section_id: @compulsory_courses).map(&:id)
+    @compulsory_course_cms = CourseModule.where(subject_course_id: @compulsory_courses).map(&:id)
 
   end
 

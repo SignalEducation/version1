@@ -220,7 +220,7 @@ class CoursesController < ApplicationController
     end
 
     @strategy = @question_bank.question_selection_strategy
-    all_questions = QuizQuestion.where(exam_level_id: @question_bank.exam_level_id)
+    all_questions = QuizQuestion.where(subject_course_id: @question_bank.subject_course_id)
     all_easy_ids = all_questions.all_easy.map(&:id)
     all_medium_ids = all_questions.all_medium.map(&:id)
     all_difficult_ids = all_questions.all_difficult.map(&:id)
