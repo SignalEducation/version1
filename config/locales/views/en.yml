@@ -1108,6 +1108,8 @@ en:
         account_activated_at: Activated at
         active: Active
         user_group_id: User group
+        name_url: Name Url
+        name_url_placeholder: Tutor Name in URL format
         password_reset_requested_at: Password reset requested at
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID

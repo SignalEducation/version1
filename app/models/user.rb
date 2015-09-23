@@ -50,6 +50,7 @@
 #  second_description                       :text
 #  wistia_url                               :string
 #  personal_url                             :string
+#  name_url                                 :string
 #
 
 class User < ActiveRecord::Base
@@ -67,7 +68,7 @@ class User < ActiveRecord::Base
                   :corporate_customer_id, :password,
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
-                  :address, :first_description, :second_description, :wistia_url, :personal_url
+                  :address, :first_description, :second_description, :wistia_url, :personal_url, :name_url
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)

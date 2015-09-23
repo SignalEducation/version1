@@ -50,6 +50,7 @@
 #  second_description                       :text
 #  wistia_url                               :string
 #  personal_url                             :string
+#  name_url                                 :string
 #
 
 require 'rails_helper'

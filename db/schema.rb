@@ -1151,6 +1151,7 @@ ActiveRecord::Schema.define(version: 20150923191834) do
     t.text     "second_description"
     t.string   "wistia_url"
     t.string   "personal_url"
+    t.string   "name_url"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
