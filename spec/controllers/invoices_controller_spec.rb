@@ -65,7 +65,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 
@@ -94,7 +94,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 
@@ -124,7 +124,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 
@@ -153,7 +153,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 
@@ -182,7 +182,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 
@@ -211,7 +211,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 
@@ -240,7 +240,7 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(profile_url)
+        expect_error_bounce(account_url)
       end
     end
 

@@ -81,7 +81,7 @@
     -if current_user.admin?
       =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
     -else
-      =link_to sanitize('&larr; ' + t('views.users.show.h1')), profile_url
+      =link_to sanitize('&larr; ' + t('views.users.show.h1')), account_url
 
 .row.print-only
   .col-xs-12.text-center

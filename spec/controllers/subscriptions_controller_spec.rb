@@ -65,7 +65,7 @@ describe SubscriptionsController, type: :controller do
     describe "POST 'create'" do
       it 'should be OK locally and on Stripe' do
         post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
-        expect_create_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
       end
     end
@@ -73,7 +73,7 @@ describe SubscriptionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should be OK locally and on Stripe' do
         put :update, id: subscription_1.id, subscription: valid_params
-        expect_update_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
       end
 
@@ -90,7 +90,7 @@ describe SubscriptionsController, type: :controller do
         delete :destroy, id: subscription_1.id
         expect(flash[:error]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).current_status).to eq('canceled')
       end
 
@@ -98,7 +98,7 @@ describe SubscriptionsController, type: :controller do
         delete :destroy, id: subscription_2.id
         expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
 
@@ -174,7 +174,7 @@ describe SubscriptionsController, type: :controller do
     describe "POST 'create'" do
       it 'should be OK locally and on Stripe' do
         post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: corporate_customer_user.id}
-        expect_create_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
       end
     end
@@ -182,7 +182,7 @@ describe SubscriptionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should be OK locally and on Stripe' do
         put :update, id: subscription_2.id, subscription: valid_params
-        expect_update_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
       end
 
@@ -199,7 +199,7 @@ describe SubscriptionsController, type: :controller do
         delete :destroy, id: subscription_2.id
         expect(flash[:error]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).current_status).to eq('canceled')
       end
 
@@ -207,7 +207,7 @@ describe SubscriptionsController, type: :controller do
         delete :destroy, id: subscription_1.id
         expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
 
@@ -313,7 +313,7 @@ describe SubscriptionsController, type: :controller do
     describe "POST 'create'" do
       it 'should be OK locally and on Stripe' do
         post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
-        expect_create_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
       end
     end
@@ -321,7 +321,7 @@ describe SubscriptionsController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: subscription_1.id, subscription: valid_params
-        expect_update_success_with_model('subscription', profile_url(anchor: 'subscriptions'))
+        expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
       end
     end
@@ -331,7 +331,7 @@ describe SubscriptionsController, type: :controller do
         delete :destroy, id: subscription_1.id
         expect(flash[:error]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).current_status).to eq('canceled')
       end
     end

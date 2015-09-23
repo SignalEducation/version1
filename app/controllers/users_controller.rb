@@ -69,7 +69,7 @@ class UsersController < ApplicationController
       if current_user.admin?
         redirect_to users_url
       else
-        redirect_to profile_url
+        redirect_to account_url
       end
     else
       render action: :edit
@@ -98,12 +98,12 @@ class UsersController < ApplicationController
     if current_user.admin?
       redirect_to users_url
     else
-      redirect_to profile_url
+      redirect_to account_url
     end
   end
 
   def new_paid_subscription
-    redirect_to profile_url if current_user.subscriptions.count > 1
+    redirect_to account_url if current_user.subscriptions.count > 1
     @user = current_user
     if current_user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
@@ -135,7 +135,7 @@ class UsersController < ApplicationController
                                         stripe_token: subscription_params["stripe_token"])
       redirect_to dashboard_url
     else
-      redirect_to profile_url
+      redirect_to account_url
     end
   end
 

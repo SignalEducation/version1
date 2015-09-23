@@ -17,7 +17,7 @@ class SubscriptionsController < ApplicationController
       Rails.logger.warn "WARN: Subscription#create failed to create a new (reactivated) subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscriptions.create.flash.error')
     end
-    redirect_to profile_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'subscriptions')
   end
 
   def update
@@ -31,7 +31,7 @@ class SubscriptionsController < ApplicationController
         Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong. @subscription.errors: #{@subscription.errors.inspect}."
         flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
       end
-      redirect_to profile_url(anchor: 'subscriptions')
+      redirect_to account_url(anchor: 'subscriptions')
     else
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to root_url
@@ -40,7 +40,7 @@ class SubscriptionsController < ApplicationController
 
   def destroy
     if @subscription
-      if @subscription.cancel(profile_url)
+      if @subscription.cancel(account_url)
         MixpanelSubscriptionCancelWorker.perform_async(@subscription.id)
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else
@@ -50,7 +50,7 @@ class SubscriptionsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
-    redirect_to profile_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'subscriptions')
   end
 
   protected

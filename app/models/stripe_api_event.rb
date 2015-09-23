@@ -18,12 +18,12 @@ class StripeApiEvent < ActiveRecord::Base
   # Since we shouldn't access routes in models and we need profile URL
   # for sending email through Mandrill we are defining non-DB attribute
   # here which will use value passed by Stripe API controller.
-  attr_accessor :profile_url
+  attr_accessor :account_url
 
   serialize :payload, Hash
 
   # attr-accessible
-  attr_accessible :guid, :api_version, :profile_url
+  attr_accessible :guid, :api_version, :account_url
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
@@ -92,7 +92,7 @@ class StripeApiEvent < ActiveRecord::Base
         when 'invoice.payment_failed'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           if user
-            MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.profile_url)
+            MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.account_url)
             self.processed = true
             self.processed_at = Time.now
           else

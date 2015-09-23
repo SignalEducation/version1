@@ -72,7 +72,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
 
       it 'should report ERROR as token is invalid' do
@@ -80,7 +80,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
   end
@@ -154,7 +154,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
 
       it 'should report ERROR as token is invalid' do
@@ -162,7 +162,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
 
@@ -172,7 +172,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
   end
@@ -259,7 +259,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
 
       it 'should report ERROR as token is invalid' do
@@ -267,7 +267,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
 
@@ -277,7 +277,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(profile_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
       end
     end
   end

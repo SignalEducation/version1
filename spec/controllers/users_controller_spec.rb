@@ -122,13 +122,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: individual_student_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(individual_student_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(individual_student_user.id)
       end
 
@@ -148,12 +148,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
@@ -214,13 +214,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: corporate_student_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(corporate_student_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(corporate_student_user.id)
       end
 
@@ -241,12 +241,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
@@ -307,13 +307,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: tutor_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(tutor_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(tutor_user.id)
       end
 
@@ -334,12 +334,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
@@ -400,13 +400,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: corporate_customer_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(corporate_customer_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(corporate_customer_user.id)
       end
 
@@ -427,12 +427,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
@@ -494,13 +494,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: blogger_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(blogger_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(blogger_user.id)
       end
 
@@ -521,12 +521,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
@@ -587,13 +587,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: forum_manager_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(forum_manager_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(forum_manager_user.id)
       end
 
@@ -614,12 +614,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
@@ -680,13 +680,13 @@ describe UsersController, type: :controller do
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
         put :update, id: content_manager_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(content_manager_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', profile_url)
+        expect_update_success_with_model('user', account_url)
         expect(assigns(:user).id).to eq(content_manager_user.id)
       end
 
@@ -708,12 +708,12 @@ describe UsersController, type: :controller do
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(profile_url)
+        expect_change_password_success_with_model(account_url)
       end
 
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(profile_url)
+        expect_change_password_error_with_model(account_url)
       end
     end
 
