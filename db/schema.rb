@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915135348) do
+ActiveRecord::Schema.define(version: 20150923191834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1147,6 +1147,10 @@ ActiveRecord::Schema.define(version: 20150915135348) do
     t.string   "employee_guid"
     t.boolean  "password_change_required"
     t.string   "session_key"
+    t.text     "first_description"
+    t.text     "second_description"
+    t.string   "wistia_url"
+    t.string   "personal_url"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

@@ -46,6 +46,10 @@
 #  employee_guid                            :string
 #  password_change_required                 :boolean
 #  session_key                              :string
+#  first_description                        :text
+#  second_description                       :text
+#  wistia_url                               :string
+#  personal_url                             :string
 #
 
 require 'rails_helper'
