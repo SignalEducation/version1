@@ -26,7 +26,7 @@
 #  forum_url                               :string
 #
 
-class SubjectCourseExamLevel < ActiveRecord::Base
+class ExamLevel < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
