@@ -18,27 +18,8 @@
       .input-group.input-group-lg.full-width
         =f.collection_select :user_group_id, @user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
       %br/
-      =f.label :wistia_url, t('views.users.form.wistia_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :wistia_url, placeholder: t('views.users.form.wistia_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :qualifications, t('views.users.form.qualifications'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :qualifications, placeholder: t('views.users.form.qualifications_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :personal_url, t('views.users.form.personal_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :personal_url, placeholder: t('views.users.form.personal_url'), class: 'form-control', style: 'border-radius: 6px;'
-      =f.label :first_description, t('views.users.form.first_description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :first_description, placeholder: t('views.users.form.first_description'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :second_description, t('views.users.form.second_description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :second_description, placeholder: t('views.users.form.second_description'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
+
     -if current_user && current_user.tutor?
-      %br/
       =f.label :qualifications, t('views.users.form.qualifications'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :qualifications, placeholder: t('views.users.form.qualifications_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
@@ -46,6 +27,7 @@
       =f.label :personal_url, t('views.users.form.personal_url'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :personal_url, placeholder: t('views.users.form.personal_url'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
       =f.label :first_description, t('views.users.form.first_description'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_area :first_description, placeholder: t('views.users.form.first_description'), class: 'form-control', style: 'border-radius: 6px;'
@@ -62,6 +44,19 @@
     =f.label :country_id, t('views.users.form.country_id'), class: 'control-label'
     .input-group.input-group-lg.full-width
       =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+    -if current_user && current_user.tutor?
+      %br/
+      .col-sm-8
+        =f.label :profile_image, t('views.users.form.profile_image'), class: 'control-label'
+        -if f.object.profile_image
+          =image_tag f.object.profile_image.url, class: 'img-responsive'
+          %br/
+          Upload a replacement if you wish
+          %br/
+        =f.file_field :profile_image, class: 'form-control'
+
+
+
 
     -if current_user && current_user.admin?
       - unless @user.new_record?
@@ -80,17 +75,37 @@
         %br/
         =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          = f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name,
-          {include_blank: t('views.general.select')},
-          {class: 'form-control', style: 'display:none; border-radius: 6px;'}
-    .col-sm-8
-      =f.label :profile_image, t('views.users.form.profile_image'), class: 'control-label'
-      -if f.object.profile_image
-        =image_tag f.object.profile_image.url, class: 'img-responsive'
+          =f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+
+      #tutor-fields
+        =f.label :wistia_url, t('views.users.form.wistia_url'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :wistia_url, placeholder: t('views.users.form.wistia_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
-        Upload a replacement if you wish
+        =f.label :qualifications, t('views.users.form.qualifications'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :qualifications, placeholder: t('views.users.form.qualifications_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
-      =f.file_field :profile_image, class: 'form-control'
+        =f.label :personal_url, t('views.users.form.personal_url'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :personal_url, placeholder: t('views.users.form.personal_url'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :first_description, t('views.users.form.first_description'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :first_description, placeholder: t('views.users.form.first_description'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :second_description, t('views.users.form.second_description'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :second_description, placeholder: t('views.users.form.second_description'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        .col-sm-8
+          =f.label :profile_image, t('views.users.form.profile_image'), class: 'control-label'
+          -if f.object.profile_image
+            =image_tag f.object.profile_image.url, class: 'img-responsive'
+            %br/
+            Upload a replacement if you wish
+            %br/
+          =f.file_field :profile_image, class: 'form-control'
 
 
 
@@ -106,9 +121,14 @@
     if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).first.try(:id)}" ||
         $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).first.try(:id)}") {
       $('#corporate-fields').show();
+      $('#tutor-fields').hide();
+    } else if ($('#user_user_group_id').val() == "#{UserGroup.where(tutor: true).first.try(:id)}") {
+      $('#tutor-fields').show();
+      $('#corporate-fields').hide();
     } else {
       $('#user_corporate_customer_id option:first').attr('selected', 'selected');
       $('#corporate-fields').hide();
+      $('#tutor-fields').hide();
     }
   }
 
