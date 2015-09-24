@@ -128,8 +128,12 @@ class UsersController < ApplicationController
 
   def profile
     #/profile/id
-    @tutor = User.where(id: params[:id]).first
-    @courses = SubjectCourse.where(tutor_id: @tutor.id)
+    @tutor = User.all_tutors.where(id: params[:id]).first
+    if @tutor
+      @courses = SubjectCourse.where(tutor_id: @tutor.id)
+    else
+      redirect_to root_url
+    end
   end
 
   def profile_index
