@@ -134,7 +134,7 @@ class UsersController < ApplicationController
 
   def profile_index
     #/profiles
-    @tutors = User.all_tutors
+    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
   end
 
   def upgrade_from_free_trial
