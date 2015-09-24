@@ -1149,9 +1149,10 @@ ActiveRecord::Schema.define(version: 20150923191834) do
     t.string   "session_key"
     t.text     "first_description"
     t.text     "second_description"
-    t.string   "wistia_url"
-    t.string   "personal_url"
+    t.text     "wistia_url"
+    t.text     "personal_url"
     t.string   "name_url"
+    t.text     "qualifications"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

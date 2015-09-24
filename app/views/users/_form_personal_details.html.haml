@@ -31,7 +31,11 @@
       %br/
       =f.label :wistia_url, t('views.users.form.wistia_url'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.text_field :wistia_url, placeholder: t('views.users.form.wistia_url'), class: 'form-control', style: 'border-radius: 6px;'
+        =f.text_field :wistia_url, placeholder: t('views.users.form.wistia_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :qualifications, t('views.users.form.qualifications'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :qualifications, placeholder: t('views.users.form.qualifications_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
       =f.label :personal_url, t('views.users.form.personal_url'), class: 'control-label'
       .input-group.input-group-lg.full-width

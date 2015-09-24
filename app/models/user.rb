@@ -48,9 +48,10 @@
 #  session_key                              :string
 #  first_description                        :text
 #  second_description                       :text
-#  wistia_url                               :string
-#  personal_url                             :string
+#  wistia_url                               :text
+#  personal_url                             :text
 #  name_url                                 :string
+#  qualifications                           :text
 #
 
 class User < ActiveRecord::Base
@@ -68,7 +69,8 @@ class User < ActiveRecord::Base
                   :corporate_customer_id, :password,
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
-                  :address, :first_description, :second_description, :wistia_url, :personal_url, :name_url
+                  :address, :first_description, :second_description, :wistia_url, :personal_url,
+                  :name_url, :qualifications
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -120,6 +122,7 @@ class User < ActiveRecord::Base
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
+  validates :name_url, presence: true
   validates :employee_guid, allow_nil: true,
             uniqueness: { scope: :corporate_customer_id }
 

@@ -1095,8 +1095,12 @@ en:
         second_description_placeholder: Second paragraph
         wistia_url: Wistia URL
         wistia_url_placeholder: Wistia Project URL
+        qualifications: Qualifications
+        qualifications_url_placeholder: FCCA, MBS (Finance)
         personal_url: Site URL
         personal_url_placeholder: Personal site or LinkedIn URL
+        name_url: Name URL
+        name_url_placeholder: must-be-lower-case-and-no-spaces
         country_id: Country
         login_count: Login count
         failed_login_count: Failed login count
@@ -1108,8 +1112,6 @@ en:
         account_activated_at: Activated at
         active: Active
         user_group_id: User group
-        name_url: Name Url
-        name_url_placeholder: Tutor Name in URL format
         password_reset_requested_at: Password reset requested at
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID

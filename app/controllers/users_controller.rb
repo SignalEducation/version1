@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:show]
+  before_action :logged_in_required, except: [:profile]
   before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile] do
     ensure_user_is_of_type(['admin'])
   end
@@ -127,7 +127,8 @@ class UsersController < ApplicationController
   end
 
   def profile
-    @user = User.find_by(name_url: params[:user_name_url])
+    @tutor = User.find_by(name_url: params[:user_name_url])
+    @courses = SubjectCourse.where(tutor_id: @tutor.id)
   end
 
   def upgrade_from_free_trial
@@ -156,16 +157,18 @@ class UsersController < ApplicationController
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-    seo_title_maker(@user.try(:full_name), '', true)
-    @current_subscription = @user.subscriptions.all_in_order.last
-    @corporate_customers = CorporateCustomer.all_in_order
+    if current_user
+      seo_title_maker(@user.try(:full_name), '', true)
+      @current_subscription = @user.subscriptions.all_in_order.last
+      @corporate_customers = CorporateCustomer.all_in_order
+    end
   end
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :name_url)
+      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications)
     end
   end
 

@@ -48,9 +48,10 @@
 #  session_key                              :string
 #  first_description                        :text
 #  second_description                       :text
-#  wistia_url                               :string
-#  personal_url                             :string
+#  wistia_url                               :text
+#  personal_url                             :text
 #  name_url                                 :string
+#  qualifications                           :text
 #
 
 FactoryGirl.define do
