@@ -15,7 +15,8 @@
               .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
                 %span.glyphicon.glyphicon-search
         .col-md-offset-4.col-md-4.l-margin-top
-          =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
+          =form_tag(users_url, method: :get, role: 'form') do
+            =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
 
         .col-md-12.l-margin-top-big
           .corporate-box-item.table-box
