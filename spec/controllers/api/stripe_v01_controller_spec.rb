@@ -80,7 +80,7 @@ describe Api::StripeV01Controller, type: :controller do
 
         it 'payment_failed' do
           mc = double
-          expect(mc).to receive(:send_card_payment_failed_email).with(profile_url)
+          expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           expect(MandrillClient).to receive(:new).and_return(mc)
 
           post :create, invoice_payment_failed_event.to_json

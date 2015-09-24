@@ -32,7 +32,7 @@ class InvoicesController < ApplicationController
 
   def bounce_to_profile
     flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-    redirect_to profile_url
+    redirect_to account_url
     false
   end
 

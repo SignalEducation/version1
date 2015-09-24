@@ -116,6 +116,46 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
+  def project_data
+    Wistia::Stats::Project.get("#{self.wistia_guid}")
+  end
+
+  def total_project_hours_watched
+    data = Wistia::Stats::Project.get("#{self.wistia_guid}")
+    data['hours_watched']
+  end
+
+  def monthly_project_hours_watched
+    raw_data = Wistia::Stats::Project.get("#{self.wistia_guid}/by_date", start_date: "#{Proc.new{Time.now.beginning_of_month }.call}", end_date: "#{Proc.new{Time.now}.call}")
+    monthly_project_data = []
+    raw_data.each do |data|
+      monthly_project_data << data['hours_watched']
+    end
+    monthly_project_data.inject(:+)
+  end
+
+  def last_6_months_project_data
+    Wistia::Stats::Project.get("#{self.wistia_guid}/by_date", start_date: "#{Proc.new{Time.now - 6.months}.call}", end_date: "#{Proc.new{Time.now}.call}")
+  end
+
+  def total_questions_answered
+    cmeuls = CourseModuleElementUserLog.where(is_quiz: true).where(course_module_id: self.children)
+    total_questions_answered = []
+    cmeuls.each do |log|
+      total_questions_answered << log.quiz_attempts.count
+    end
+    total_questions_answered.inject(:+)
+  end
+
+  def monthly_questions_answered
+    monthly_cmeuls = CourseModuleElementUserLog.this_month.where(is_quiz: true).where(course_module_id: self.children)
+    monthly_questions_answered = []
+    monthly_cmeuls.each do |log|
+      monthly_questions_answered << log.quiz_attempts.count
+    end
+    monthly_questions_answered.inject(:+)
+  end
+
   def tutor_name
     self.tutor.full_name
   end

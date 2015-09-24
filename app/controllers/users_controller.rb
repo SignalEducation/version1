@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
 
-  before_action :logged_in_required
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial] do
+  before_action :logged_in_required, except: [:profile, :profile_index]
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: [:profile, :profile_index]
 
   def index
     @users = params[:search_term].to_s.blank? ?
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    # profile page
+    # account page
     if params[:update].to_s.length > 0
       case params[:update]
         when 'invoices'
@@ -69,7 +69,7 @@ class UsersController < ApplicationController
       if current_user.admin?
         redirect_to users_url
       else
-        redirect_to profile_url
+        redirect_to account_url
       end
     else
       render action: :edit
@@ -98,12 +98,12 @@ class UsersController < ApplicationController
     if current_user.admin?
       redirect_to users_url
     else
-      redirect_to profile_url
+      redirect_to account_url
     end
   end
 
   def new_paid_subscription
-    redirect_to profile_url if current_user.subscriptions.count > 1
+    redirect_to account_url if current_user.subscriptions.count > 1
     @user = current_user
     if current_user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
@@ -126,6 +126,17 @@ class UsersController < ApplicationController
     end
   end
 
+  def profile
+    #/profile/id
+    @tutor = User.where(id: params[:id]).first
+    @courses = SubjectCourse.where(tutor_id: @tutor.id)
+  end
+
+  def profile_index
+    #/profiles
+    @tutors = User.all_tutors
+  end
+
   def upgrade_from_free_trial
     if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial? &&
        params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"]
@@ -135,7 +146,7 @@ class UsersController < ApplicationController
                                         stripe_token: subscription_params["stripe_token"])
       redirect_to dashboard_url
     else
-      redirect_to profile_url
+      redirect_to account_url
     end
   end
 
@@ -152,16 +163,16 @@ class UsersController < ApplicationController
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-    seo_title_maker(@user.try(:full_name), '', true)
-    @current_subscription = @user.subscriptions.all_in_order.last
-    @corporate_customers = CorporateCustomer.all_in_order
+      seo_title_maker(@user.try(:full_name), '', true)
+      @current_subscription = @user.subscriptions.all_in_order.last
+      @corporate_customers = CorporateCustomer.all_in_order
   end
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid)
+      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image)
     end
   end
 

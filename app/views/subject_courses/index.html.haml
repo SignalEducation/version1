@@ -48,6 +48,7 @@
                       -if current_user.admin? || current_user.content_manager?
                         %td
                           %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+              =will_paginate @currencies, renderer: BootstrapPagination::Rails
               .l-margin-top-big.l-margin-bottom
                 =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 

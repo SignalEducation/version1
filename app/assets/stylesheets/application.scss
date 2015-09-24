@@ -1031,6 +1031,21 @@ ol.example li.placeholder:before {
   position: absolute;
   /** Define arrowhead **/
 }
+
+
+.tutor-header {
+  .profile-pic {
+    display: block;
+    max-width: 120px;
+    margin: 0 auto $gutter auto;
+    @include border-radius(100%);
+    &.profile-pic-big {
+      max-width: 170px;
+    }
+  }
+
+}
+
 //  Debugging
 
 // * { outline: 1px solid red }

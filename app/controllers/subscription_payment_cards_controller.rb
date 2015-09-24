@@ -12,7 +12,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
     end
-    redirect_to profile_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'subscriptions')
   end
 
   def update
@@ -22,7 +22,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.update.flash.error')
     end
-    redirect_to profile_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'subscriptions')
   end
 
   protected

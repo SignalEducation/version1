@@ -46,6 +46,16 @@
 #  employee_guid                            :string
 #  password_change_required                 :boolean
 #  session_key                              :string
+#  first_description                        :text
+#  second_description                       :text
+#  wistia_url                               :text
+#  personal_url                             :text
+#  name_url                                 :string
+#  qualifications                           :text
+#  profile_image_file_name                  :string
+#  profile_image_content_type               :string
+#  profile_image_file_size                  :integer
+#  profile_image_updated_at                 :datetime
 #
 
 FactoryGirl.define do

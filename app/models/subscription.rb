@@ -132,7 +132,7 @@ class Subscription < ActiveRecord::Base
   end
 
   # instance methods
-  def cancel(profile_url = nil)
+  def cancel(account_url = nil)
     # call stripe and cancel the subscription
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)

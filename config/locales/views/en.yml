@@ -1089,6 +1089,18 @@ en:
         password_confirmation_placeholder: "******"
         address: Address
         address_placeholder: Your billing address
+        first_description: Description 1
+        first_description_placeholder: First paragraph
+        second_description: Description 2
+        second_description_placeholder: Second paragraph
+        wistia_url: Wistia URL
+        wistia_url_placeholder: Wistia Project URL
+        qualifications: Qualifications
+        qualifications_url_placeholder: FCCA, MBS (Finance)
+        personal_url: Site URL
+        personal_url_placeholder: Personal site or LinkedIn URL
+        name_url: Name URL
+        name_url_placeholder: must-be-lower-case-and-no-spaces
         country_id: Country
         login_count: Login count
         failed_login_count: Failed login count
@@ -1116,6 +1128,7 @@ en:
         guid: GUID
         employee_guid: Employee GUID
         employee_guid_placeholder: Employee GUID
+        profile_image: Profile Image
 
       edit:
         h1: Edit Account
