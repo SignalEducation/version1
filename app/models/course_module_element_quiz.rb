@@ -20,7 +20,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   include Archivable
 
   # Constants
-  STRATEGIES = %w(random progressive)
+  STRATEGIES = %w(random)
+  #STRATEGIES = %w(random progressive)
 
   # attr-accessible
   attr_accessible :course_module_element_id,
