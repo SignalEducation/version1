@@ -10,9 +10,11 @@ class SubjectCoursesController < ApplicationController
     if current_user.tutor?
       @subject_courses = SubjectCourse.where(tutor_id: current_user.id).paginate(per_page: 50, page: params[:page]).all_in_order
     else
-      @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page]).all_in_order
+      @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
     end
-    @courses = @subject_courses.search(params[:search])
+    @courses = params[:search].to_s.blank? ?
+        @courses = @subject_courses.all_in_order :
+        @courses = @subject_courses.search(params[:search])
   end
 
   def show
@@ -20,7 +22,11 @@ class SubjectCoursesController < ApplicationController
   end
 
   def new
-    @subject_course = SubjectCourse.new(sorting_order: 1)
+    if current_user.tutor?
+      @subject_course = SubjectCourse.new(sorting_order: 1, tutor_id: current_user.id)
+    else
+      @subject_course = SubjectCourse.new(sorting_order: 1)
+    end
   end
 
   def edit

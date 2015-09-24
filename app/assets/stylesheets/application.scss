@@ -140,6 +140,18 @@ h6, .h6 {
     @include font-size(1.6);
   }
 }
+h7, .h7 {
+  color: lighten($purple-1, 60%);
+  letter-spacing: .1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  text-transform: none;
+  margin-top: 0;
+  @include font-size(1.8);
+  @include breakpoint(md-min) {
+    @include font-size(1.8);
+  }
+}
 p, .p, ol, .ol, ul, .ul, address, dl {
   color: $gray-1;
   margin-bottom: $gutter;
@@ -347,14 +359,19 @@ label, .label {
   text-align: center;
   background: $white;
 }
-.benefits {
+.course-types {
   text-align: center;
-  background: $red-1;
+  background: lighten($purple-1, 5%);
   color: lighten($purple-1, 40%);
 }
-.areas {
+.business {
   text-align: center;
-  background: $purple-1;
+  background: $white;
+  color: lighten($purple-1, 40%);
+}
+.individuals {
+  text-align: center;
+  background: lighten($purple-1, 5%);
   color: $white
 }
 .features-img {

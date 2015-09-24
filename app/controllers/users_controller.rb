@@ -46,7 +46,11 @@ class UsersController < ApplicationController
   end
 
   def create
-    password = SecureRandom.hex(5)
+    if Rails.env.production?
+      password = SecureRandom.hex(5)
+    else
+      password = '123123123'
+    end
     @user = User.new(allowed_params.merge({password: password,
                                            password_confirmation: password,
                                            password_change_required: true}))

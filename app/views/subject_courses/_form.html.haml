@@ -4,6 +4,7 @@
       =render partial: '/layouts/error_messages', locals: {thing: @subject_course, message: nil}
       .row
         .col-md-6
+          =f.hidden_field :tutor_id
           =f.label :name, t('views.subject_courses.form.name'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :name, placeholder: t('views.subject_courses.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'

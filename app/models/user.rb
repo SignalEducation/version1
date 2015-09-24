@@ -262,6 +262,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_student)
   end
 
+  def corporate_tutor?
+    self.user_group.try(:corporate_tutor)
+  end
+
   def de_activate_user
     self.active = false
     self.account_activated_at = nil

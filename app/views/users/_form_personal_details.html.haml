@@ -118,8 +118,9 @@
 :javascript
 
   function handleUserGroupChange() {
-    if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).first.try(:id)}" ||
-        $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).first.try(:id)}") {
+    if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).where(tutor: false).first.try(:id)}" ||
+        $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).where(tutor: false).first.try(:id)}" ||
+        $('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).where(tutor: true).first.try(:id)}") {
       $('#corporate-fields').show();
       $('#tutor-fields').hide();
     } else if ($('#user_user_group_id').val() == "#{UserGroup.where(tutor: true).first.try(:id)}") {
