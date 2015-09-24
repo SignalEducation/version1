@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:profile]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile] do
+  before_action :logged_in_required, except: [:profile, :profile_index]
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: [:profile, :profile_index]
 
   def index
     @users = params[:search_term].to_s.blank? ?
@@ -127,8 +127,14 @@ class UsersController < ApplicationController
   end
 
   def profile
-    @tutor = User.find_by(name_url: params[:user_name_url])
+    #/profile/id
+    @tutor = User.where(id: params[:id]).first
     @courses = SubjectCourse.where(tutor_id: @tutor.id)
+  end
+
+  def profile_index
+    #/profiles
+    @tutors = User.all_tutors
   end
 
   def upgrade_from_free_trial
@@ -157,11 +163,9 @@ class UsersController < ApplicationController
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-    if current_user
       seo_title_maker(@user.try(:full_name), '', true)
       @current_subscription = @user.subscriptions.all_in_order.last
       @corporate_customers = CorporateCustomer.all_in_order
-    end
   end
 
   def allowed_params
