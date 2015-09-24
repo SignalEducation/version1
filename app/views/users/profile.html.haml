@@ -4,7 +4,7 @@
       .profile-single
         .row
           .pull-left
-            =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/chris-a.jpg', class: 'profile-pic profile-pic-big', alt: 'Chris Ahlstrand')
+            = image_tag @tutor.profile_image.url, class: 'profile-pic profile-pic-big'
           .pull-left{style: 'margin-left: 40px;'}
             %h1.h1.h-separator.h-separator-left.text-left.l-margin-bottom-big
               =@tutor.full_name

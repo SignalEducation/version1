@@ -52,6 +52,10 @@
 #  personal_url                             :text
 #  name_url                                 :string
 #  qualifications                           :text
+#  profile_image_file_name                  :string
+#  profile_image_content_type               :string
+#  profile_image_file_size                  :integer
+#  profile_image_updated_at                 :datetime
 #
 
 require 'rails_helper'

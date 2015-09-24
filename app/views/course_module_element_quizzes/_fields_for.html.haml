@@ -3,10 +3,10 @@
   .input-group.input-group-lg.full-width
     =cme_quiz.select :number_of_questions, options_for_select([3, 5, 10, 15, 20, 25, 30], cme_quiz.object.number_of_questions || 20), {}, {class: 'form-control', style: 'border-radius: 6px;'}
   %br/
-  -#=cme_quiz.label :question_selection_strategy, t('views.course_module_element_quizzes.form.question_selection_strategy'), class: 'control-label'
-  -#.input-group.input-group-lg.full-width
+  =cme_quiz.label :question_selection_strategy, t('views.course_module_element_quizzes.form.question_selection_strategy'), class: 'control-label'
+  .input-group.input-group-lg.full-width
     =cme_quiz.select :question_selection_strategy, options_for_select(CourseModuleElementQuiz::STRATEGIES, cme_quiz.object.question_selection_strategy), {}, {class: 'form-control', style: 'border-radius: 6px;'}
-  -#%br/
+  %br/
   =f.label :related_video_id, t('views.course_module_elements.form.related_video_id'), class: 'control-label'
   .input-group.input-group-lg.full-width
     =f.collection_select :related_video_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}

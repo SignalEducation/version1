@@ -54,6 +54,7 @@
                           =user.stripe_customer_id
                       %td=user.corporate_customer.try(:organisation_name)
                       %td
+                        =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
                         =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
                         -if user.destroyable?
                           =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'

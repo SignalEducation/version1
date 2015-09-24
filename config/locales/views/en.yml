@@ -1128,6 +1128,7 @@ en:
         guid: GUID
         employee_guid: Employee GUID
         employee_guid_placeholder: Employee GUID
+        profile_image: Profile Image
 
       edit:
         h1: Edit Account

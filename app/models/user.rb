@@ -52,6 +52,10 @@
 #  personal_url                             :text
 #  name_url                                 :string
 #  qualifications                           :text
+#  profile_image_file_name                  :string
+#  profile_image_content_type               :string
+#  profile_image_file_size                  :integer
+#  profile_image_updated_at                 :datetime
 #
 
 class User < ActiveRecord::Base
@@ -70,7 +74,7 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications
+                  :name_url, :qualifications, :profile_image
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -100,6 +104,7 @@ class User < ActiveRecord::Base
   has_one :referred_signup
   belongs_to :subscription_plan_category
   has_and_belongs_to_many :corporate_groups
+  has_attached_file :profile_image, default_url: "/assets/images/missing_corporate_logo.png"
 
   accepts_nested_attributes_for :subscriptions
 
@@ -122,9 +127,9 @@ class User < ActiveRecord::Base
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
-  validates :name_url, presence: true
   validates :employee_guid, allow_nil: true,
             uniqueness: { scope: :corporate_customer_id }
+  validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation :set_defaults, on: :create
