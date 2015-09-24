@@ -67,10 +67,10 @@ describe SubjectCourse do
   it { should validate_presence_of(:short_description) }
   it { should validate_length_of(:short_description).is_at_most(255) }
 
-  it { should validate_presence_of(:mailchimp_guid) }
+  it { should_not validate_presence_of(:mailchimp_guid) }
   it { should validate_length_of(:mailchimp_guid).is_at_most(255) }
 
-  it { should validate_presence_of(:forum_url) }
+  it { should_not validate_presence_of(:forum_url) }
   it { should validate_length_of(:forum_url).is_at_most(255) }
 
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
