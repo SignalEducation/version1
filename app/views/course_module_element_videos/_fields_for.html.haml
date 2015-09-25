@@ -1,8 +1,11 @@
 =f.fields_for :course_module_element_video do |cme_video|
 
-  =cme_video.label :video_id, t('views.course_module_element_videos.form.video_id'), class: 'control-label'
-  .input-group.input-group-lg.full-width
+  -#=cme_video.label :video_id, t('views.course_module_element_videos.form.video_id'), class: 'control-label'
+  -#.input-group.input-group-lg.full-width
     =cme_video.text_field :video_id, placeholder: t('views.course_module_element_videos.form.video_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+  %br/
+  =cme_video.file_field :video, class: 'form-control'
   %br/
   =cme_video.label :tags, t('views.course_module_element_videos.form.tags'), class: 'control-label'
   .input-group.input-group-lg.full-width

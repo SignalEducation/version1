@@ -1,4 +1,4 @@
-=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}) do |f|
+=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |f|
   .row
     =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
     .col-md-6
@@ -19,10 +19,11 @@
       =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', rows: 5, style: 'border-radius: 6px;'
-      %br/
-      =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      -if @course_module_element.course_module_element_quiz
+        %br/
+        =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
       %br/
       -if f.object.is_cme_flash_card_pack

@@ -58,32 +58,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
         ApplicationController.find_multiplier_for_difficulty_level(self.difficulty_level)
   end
 
-  def post_video_to_wistia(name, path_to_video)
-    require 'net/http'
-    require 'net/http/post/multipart'
-    require 'json'
-    uri = URI('https://upload.wistia.com/')
-
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-
-    # Construct the request.
-    request = Net::HTTP::Post::Multipart.new uri.request_uri, {
-                                                                api_password: ENV['learnsignal_wistia_api_key'],
-                                                                name: self.course_module_element.name.to_s,
-                                                                project_id: self.course_module_element.parent.parent.wistia_guid.to_s,
-
-                                                                file: UploadIO.new(
-                                                                    File.open(path_to_video),
-                                                                    'application/octet-stream',
-                                                                    File.basename(path_to_video)
-                                                                )
-                                                            }
-    # Make it so!
-    response = http.request(request)
-
-    return response
-  end
 
   protected
 
