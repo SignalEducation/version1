@@ -31,7 +31,7 @@ class SubjectCourse < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id
 
   # Constants
 
@@ -49,11 +49,11 @@ class SubjectCourse < ActiveRecord::Base
   validates :name, presence: true, length: {maximum: 255}
   validates :name_url, presence: true,
             length: {maximum: 255}
-  validates :wistia_guid, presence: true, length: {maximum: 255}
+  validates :wistia_guid, allow_nil: true, length: {maximum: 255}
   validates :tutor_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :description, presence: true
-  validates :short_description, presence: true, length: {maximum: 255}
+  validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :forum_url, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true, numericality: {only_integer: true, greater_than: 0}

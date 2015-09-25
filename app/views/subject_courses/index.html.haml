@@ -23,8 +23,11 @@
                   %tr
                     %th Name
                     %th Active
-                    %th Live
-                    %th Wistia ID
+                    -if current_user.corporate_customer? && current_user.tutor?
+                      %th Restricted
+                    -else
+                      %th Live
+                      %th Wistia ID
                     -if current_user.admin? || current_user.content_manager?
                       %th Tutor
                       %th
@@ -35,8 +38,11 @@
                     %tr{id: subject_course.id}
                       %td=subject_course.name
                       %td=tick_or_cross(subject_course.active)
-                      %td=tick_or_cross(subject_course.live)
-                      %td=subject_course.wistia_guid
+                      -if current_user.corporate_customer? && current_user.tutor?
+                        %td=tick_or_cross(subject_course.restricted)
+                      -else
+                        %td=tick_or_cross(subject_course.live)
+                        %td=subject_course.wistia_guid
                       -if current_user.admin? || current_user.content_manager?
                         %td=subject_course.tutor.full_name
                       %td

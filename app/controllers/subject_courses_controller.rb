@@ -18,7 +18,6 @@ class SubjectCoursesController < ApplicationController
   end
 
   def show
-
   end
 
   def new
@@ -33,7 +32,13 @@ class SubjectCoursesController < ApplicationController
   end
 
   def create
-    @subject_course = SubjectCourse.new(allowed_params)
+    if current_user.tutor? && current_user.corporate_customer?
+      @subject_course = SubjectCourse.new(allowed_params)
+      @subject_course.corporate_customer_id = current_user.corporate_customer_id
+      @subject_course.live = true
+    else
+      @subject_course = SubjectCourse.new(allowed_params)
+    end
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url
@@ -75,10 +80,11 @@ class SubjectCoursesController < ApplicationController
       @subject_course = SubjectCourse.where(id: params[:id]).first
     end
     @tutors = User.all_tutors.all_in_order
+    @corporate_customers = CorporateCustomer.all_in_order
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id)
   end
 
 end

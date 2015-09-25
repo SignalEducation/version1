@@ -472,8 +472,7 @@ en:
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
         default_number_of_possible_exam_answers_placeholder: 4
-        default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
-        enable_exam_sections: "Enable exam sections?"
+        default_number_of_possible_exam_answers_help_text: "When creating quizzes, this is the default number of answers that will be created"
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
         mailchimp_list_id: Mailchimp List ID
@@ -952,10 +951,12 @@ en:
         name_url: Name URL
         name_url_placeholder: Name URL
         active: Active
+        restricted: "Restricted (Check this to allow only your students to see this course)"
         live: Live
         wistia_guid: Wistia Project ID
         wistia_guid_placeholder: Wistia Project ID
         tutor_id: Tutor
+        corporate_customer: "Corporate account to restrict this course to:"
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
