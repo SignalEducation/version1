@@ -140,6 +140,18 @@ h6, .h6 {
     @include font-size(1.6);
   }
 }
+h7, .h7 {
+  color: lighten($purple-1, 60%);
+  letter-spacing: .1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  text-transform: none;
+  margin-top: 0;
+  @include font-size(1.8);
+  @include breakpoint(md-min) {
+    @include font-size(1.8);
+  }
+}
 p, .p, ol, .ol, ul, .ul, address, dl {
   color: $gray-1;
   margin-bottom: $gutter;
@@ -254,8 +266,8 @@ hr {
   margin-bottom: $gutter*2;
 }
 .l-margin-bottom-huge {
-   margin-bottom: $gutter*2.5;
- }
+  margin-bottom: $gutter*2.5;
+}
 .l-margin-top {
   margin-top: $gutter;
 }
@@ -347,14 +359,19 @@ label, .label {
   text-align: center;
   background: $white;
 }
-.benefits {
+.course-types {
   text-align: center;
-  background: $red-1;
+  background: lighten($purple-1, 5%);
   color: lighten($purple-1, 40%);
 }
-.areas {
+.business {
   text-align: center;
-  background: $purple-1;
+  background: $white;
+  color: lighten($purple-1, 40%);
+}
+.individuals {
+  text-align: center;
+  background: lighten($purple-1, 5%);
   color: $white
 }
 .features-img {
@@ -475,7 +492,7 @@ a.box {
       width: 30px;
       margin-left: -15px;
       margin-top: -15px;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
       background-size: contain;
     }
     & .box-inner {
@@ -515,10 +532,10 @@ a.box {
   padding-left: 0;
 }
 //.box-item {
-  //display: block;
-  //border: 0;
-  //width: 100%;
-  //text-align: left;
+//display: block;
+//border: 0;
+//width: 100%;
+//text-align: left;
 //}
 a.box-item {
   color: $purple-1;
