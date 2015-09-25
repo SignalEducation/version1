@@ -13,6 +13,8 @@
 #  updated_at                   :datetime
 #  destroyed_at                 :datetime
 #  video_id                     :string
+#  duration                     :float
+#  thumbnail                    :text
 #
 
 class CourseModuleElementVideo < ActiveRecord::Base
@@ -35,9 +37,11 @@ class CourseModuleElementVideo < ActiveRecord::Base
   validates :raw_video_file_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :video_id, presence: true, length: {maximum: 255}
+  validates :duration, presence: true, numericality: true
   validates :tags, presence: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
   validates :transcript, presence: true
+  validates :thumbnail, presence: true
 
   # callbacks
   before_validation { squish_fields(:tags) }

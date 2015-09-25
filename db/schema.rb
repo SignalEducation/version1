@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924104007) do
+ActiveRecord::Schema.define(version: 20150925165315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,6 +162,8 @@ ActiveRecord::Schema.define(version: 20150924104007) do
     t.datetime "updated_at"
     t.datetime "destroyed_at"
     t.string   "video_id"
+    t.float    "duration"
+    t.text     "thumbnail"
   end
 
   add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree
@@ -838,6 +840,8 @@ ActiveRecord::Schema.define(version: 20150924104007) do
     t.datetime "updated_at",                                              null: false
     t.float    "best_possible_first_attempt_score"
     t.integer  "default_number_of_possible_exam_answers"
+    t.boolean  "restricted",                              default: false, null: false
+    t.integer  "corporate_customer_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

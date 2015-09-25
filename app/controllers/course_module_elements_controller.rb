@@ -85,7 +85,9 @@ class CourseModuleElementsController < ApplicationController
     response = post_video_to_wistia(@course_module_element.name.to_s, upload_io.path)
     wistia_data = response.body
     @course_module_element.course_module_element_video.video_id = wistia_data.split(',')[6].split(':')[1].tr("\"", "")
-    #@course_module_element.estimated_time_in_seconds = wistia_data.split(',')[5].split(':')[1].tr("\"", "")
+    @course_module_element.course_module_element_video.duration = wistia_data.split(',')[5].split(':')[1].tr("\"", "")
+    thumbnail_url = wistia_data.split(',')[10].split(':{')[1].split(':')[-1].chop.prepend('https:')
+    @course_module_element.course_module_element_video.thumbnail = thumbnail_url
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
