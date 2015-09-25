@@ -193,6 +193,9 @@ en:
         free_trial_expired:
           h2: Your free trial period has expired. Please upgrade your subscription.
           upgrade_subscription: Upgrade Subscription
+        free_trial:
+          h2: Your free trial is limited to certain content. Please upgrade your subscription to get full access.
+          upgrade_subscription: Upgrade Subscription
 
       show_results:
         h1: 'Results:'
