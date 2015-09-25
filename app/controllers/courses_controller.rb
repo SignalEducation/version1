@@ -4,6 +4,8 @@ class CoursesController < ApplicationController
 
   def show
 
+    #Add some restrictions depending on current_user being student, corporate and the course being restricted or attached to a corporate group grant.
+
     @mathjax_required = true
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
     if @course

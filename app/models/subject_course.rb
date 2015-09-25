@@ -69,6 +69,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_active, -> { where(active: true) }
   scope :all_live, -> { where(live: true) }
   scope :all_not_live, -> { where(live: false) }
+  scope :all_not_restricted, -> { where(restricted: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods

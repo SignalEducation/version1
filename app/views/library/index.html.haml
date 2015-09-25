@@ -32,7 +32,7 @@
                       -if course.short_description
                         =course.try(:short_description).to_s.truncate(30)
                       -else
-                        =course.parent.try(:name)
+                        =truncate(course.description, length: 20)
                   .box-label
                     -if course.live
                       -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
