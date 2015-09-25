@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
   helper_method :ensure_user_is_of_type
 
   def paywall_checkpoint(cme_position, is_a_jumbo_quiz)
-    number_of_free_cmes_allowed = -1
+    number_of_free_cmes_allowed = 2
     allowed     = {course_content: {view_all: true, reason: nil},
                    forum: {read: true, write: true},
                    blog: {comment: true} }
@@ -129,11 +129,14 @@ class ApplicationController < ActionController::Base
                    forum: {read: true, write: false},
                    blog: {comment: false} }
     subscription_in_charge = current_user.subscriptions.all_in_order.last unless current_user.nil?
-    if current_user.nil? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
+    if current_user.nil?
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
     elsif !current_user.user_group.subscription_required_to_see_content
       result = allowed
+    elsif subscription_in_charge && subscription_in_charge.free_trial? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
+      result = not_allowed
+      result[:course_content][:reason] = 'free_trial'
     elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
       result = not_allowed
       result[:course_content][:reason] = "free_trial_expired"
