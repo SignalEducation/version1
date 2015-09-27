@@ -43,7 +43,10 @@
                         .col-xs-12.col-sm-4
                           .side-meta
                             -if grandchild.is_video
-                              =seconds_to_time(grandchild.estimated_time_in_seconds)
+                              -if grandchild.course_module_element_video.duration
+                                =grandchild.course_module_element_video.duration
+                              -else
+                                =seconds_to_time(grandchild.estimated_time_in_seconds)
                             -elsif grandchild.is_quiz
                               =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else

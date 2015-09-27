@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
-  SORT_OPTIONS = %w(user_group name email created)
+  SORT_OPTIONS = %w(created user_group name email)
 
   # relationships
   belongs_to :corporate_customer

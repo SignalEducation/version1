@@ -3,20 +3,26 @@ class CoursesController < ApplicationController
   before_action :check_for_old_url_format, only: :show
 
   def show
+    @mathjax_required = true
 
     #Add some restrictions depending on current_user being student, corporate and the course being restricted or attached to a corporate group grant.
 
-    @mathjax_required = true
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    if @course
-      @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
-    end
-    if @course_module
-      @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
-      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+    if @course.restricted && current_user.corporate_customer_id = nil
+      redirect_to library_url
+    elsif @course.restricted && current_user.corporate_customer_id != @course.corporate_customer_id
+      redirect_to library_url
+    else
+      if @course
+        @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
+      end
+      if @course_module
+        @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
+        @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
+        @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
-      seo_title_maker("#{@course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
+        seo_title_maker("#{@course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
+      end
     end
 
     if @course_module_element.nil? && @course_module.nil?

@@ -7,7 +7,9 @@ class SubjectCoursesController < ApplicationController
   before_action :get_variables
 
   def index
-    if current_user.tutor?
+    if current_user.tutor? && current_user.corporate_customer?
+      @subject_courses = SubjectCourse.where(corporate_customer_id: current_user.corporate_customer_id).paginate(per_page: 50, page: params[:page])
+    elsif current_user.tutor?
       @subject_courses = SubjectCourse.where(tutor_id: current_user.id).paginate(per_page: 50, page: params[:page]).all_in_order
     else
       @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
