@@ -29,6 +29,16 @@ class CorporateStudentsController < ApplicationController
     @corporate_student = User.new
   end
 
+  def managers_index
+    @corporate_managers = User
+                              .where(user_group_id: UserGroup.where(corporate_customer: true).first.id)
+
+    unless params[:search_term].blank?
+      @corporate_managers = @corporate_managers.search_for(params[:search_term])
+    end
+
+  end
+
   def new
     @corporate_student = User.new
   end

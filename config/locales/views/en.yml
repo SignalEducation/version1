@@ -8,6 +8,7 @@ en:
         decimal_separator: "."
       active: Active
       add_user: Add a user
+      add_manager: Add Manager
       add_group: Add a group
       edit_user: Edit user
       edit_group: Edit Group
@@ -1143,7 +1144,7 @@ en:
         h1: Create Account
 
       show:
-        h1: My Account
+        h1: Account
         edit: Edit Account
         add_new_card: "Add New Card"
         change_company_data: "Change Company Data"
@@ -1479,10 +1480,10 @@ en:
     corporate_students:
       form:
         email: Email
-        email_placeholder: jay@example.com
+        email_placeholder: john@example.com
         full_name: Full name
         first_name: First name
-        first_name_placeholder: Jay
+        first_name_placeholder: John
         last_name: Last name
         last_name_placeholder: Smith
         employee_guid: Employee ID
@@ -1496,6 +1497,7 @@ en:
       index:
         h1: Corporate Students
         corp_h1: Users
+        corp_managers: Managers
 
       edit:
         h1: Edit Corporate Student

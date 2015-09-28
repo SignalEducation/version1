@@ -13,7 +13,7 @@
               =@corporate_student.new_record? ? 'New User' : 'Edit User'
         .row.l-margin-top.l-margin-bottom
           .col-md-12.l-margin-top
-            .corporate-box-item.table-box
+            .table-box
               =form_for(:corporate_student,
                 url: @corporate_student.new_record? ? corporate_students_path : corporate_student_path(@corporate_student),
                 method: @corporate_student.new_record? ? 'POST' : 'PATCH',
