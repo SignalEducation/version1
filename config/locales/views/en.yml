@@ -233,7 +233,7 @@ en:
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
-        active: "Active?"
+        active: Active
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
         seo_no_index: "SEO no-index flag"
@@ -361,6 +361,7 @@ en:
         estimated_study_time_seconds_placeholder: 100
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
+        video_file: Video File
         video_id: Video ID
         video_id_placeholder: Wistia ID
 
@@ -980,6 +981,7 @@ en:
 
       show:
         h1: Course
+        add_course_module: Please create a Course module to begin
 
       edit:
         h1: Edit Course
