@@ -20,18 +20,24 @@ class LibraryController < ApplicationController
 
   def show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
-    user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-    latest_set = user_course_sets.first
-    latest_element_id = latest_set.try(:latest_course_module_element_id)
-    @next_element = CourseModuleElement.where(id: latest_element_id).first.try(:next_element)
-
-    if @course.try(:live)
-      render 'live_course'
-    elsif @course.try(:live) == false
-      render 'preview_course'
+    if @course.corporate_customer_id
+      if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
+        redirect_to library_url
+      end
     else
-      redirect_to library_url
+      users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
+      user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
+      latest_set = user_course_sets.first
+      latest_element_id = latest_set.try(:latest_course_module_element_id)
+      @next_element = CourseModuleElement.where(id: latest_element_id).first.try(:next_element)
+
+      if @course.try(:live)
+        render 'live_course'
+      elsif @course.try(:live) == false
+        render 'preview_course'
+      else
+        redirect_to library_url
+      end
     end
     seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
   end

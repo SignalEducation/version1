@@ -8,10 +8,10 @@ class CoursesController < ApplicationController
     #Add some restrictions depending on current_user being student, corporate and the course being restricted or attached to a corporate group grant.
 
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    if @course.restricted && current_user.corporate_customer_id = nil
-      redirect_to library_url
-    elsif @course.restricted && current_user.corporate_customer_id != @course.corporate_customer_id
-      redirect_to library_url
+    if @course.corporate_customer_id
+      if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
+        redirect_to library_url
+      end
     else
       if @course
         @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
@@ -23,23 +23,24 @@ class CoursesController < ApplicationController
 
         seo_title_maker("#{@course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
       end
-    end
 
-    if @course_module_element.nil? && @course_module.nil?
 
-      # The URL is out of date or wrong.
-      flash[:warning] = t('controllers.courses.show.warning')
-      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      redirect_to library_special_link(@course)
-    else
-      # The URL worked out Okay
-      reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
-      if @course_module_element.try(:is_quiz)
-        set_up_quiz
-      elsif @course_module_jumbo_quiz
-        set_up_jumbo_quiz
-      elsif @course_module_element.try(:is_video)
-        @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+      if @course_module_element.nil? && @course_module.nil?
+
+        # The URL is out of date or wrong.
+        flash[:warning] = t('controllers.courses.show.warning')
+        Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+        redirect_to library_special_link(@course)
+      else
+        # The URL worked out Okay
+        reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
+        if @course_module_element.try(:is_quiz)
+          set_up_quiz
+        elsif @course_module_jumbo_quiz
+          set_up_jumbo_quiz
+        elsif @course_module_element.try(:is_video)
+          @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+        end
       end
     end
     @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
