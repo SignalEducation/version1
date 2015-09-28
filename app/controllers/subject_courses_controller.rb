@@ -34,7 +34,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def create
-    if current_user.tutor? && current_user.corporate_customer?
+    if current_user.corporate_customer?
       @subject_course = SubjectCourse.new(allowed_params)
       @subject_course.corporate_customer_id = current_user.corporate_customer_id
       @subject_course.live = true
