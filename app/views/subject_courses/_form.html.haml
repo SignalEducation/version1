@@ -6,6 +6,7 @@
         .col-md-6
           =f.hidden_field :tutor_id
           =f.hidden_field :corporate_customer_id
+          =f.hidden_field :wistia_guid
           =f.label :name, t('views.subject_courses.form.name'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :name, placeholder: t('views.subject_courses.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
@@ -18,10 +19,6 @@
             =f.label :tutor_id, t('views.subject_courses.form.tutor_id'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
-          %br/
-          =f.label :wistia_guid, t('views.subject_courses.form.wistia_guid'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :wistia_guid, placeholder: t('views.subject_courses.form.wistia_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           %br/
           -if current_user.admin? || current_user.content_manager?
             =f.label :corporate_customer_id, t('views.subject_courses.form.corporate_customer'), class: 'control-label'

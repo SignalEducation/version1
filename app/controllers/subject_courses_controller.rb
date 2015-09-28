@@ -38,6 +38,8 @@ class SubjectCoursesController < ApplicationController
       @subject_course = SubjectCourse.new(allowed_params)
       @subject_course.corporate_customer_id = current_user.corporate_customer_id
       @subject_course.live = true
+      wistia_response = create_wistia_project(@subject_course.name)
+      @subject_course.wistia_guid = wistia_response.hashedId
     else
       @subject_course = SubjectCourse.new(allowed_params)
     end
@@ -47,6 +49,11 @@ class SubjectCoursesController < ApplicationController
     else
       render action: :new
     end
+  end
+
+  def create_wistia_project(name)
+    wistia_response = Wistia::Project.create(name: name)
+    return wistia_response
   end
 
   def update
