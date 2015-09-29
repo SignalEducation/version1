@@ -1507,3 +1507,31 @@ en:
 
       show:
         h1: Corporate Student
+
+    corporate_managers:
+      form:
+        email: Email
+        email_placeholder: john@example.com
+        first_name: First name
+        first_name_placeholder: John
+        last_name: Last name
+        last_name_placeholder: Smith
+        employee_guid: Employee ID
+        employee_guid_placeholder: Employee ID
+        active: Active
+        country: Country
+        corporate_customer: Corporate customer
+        corporate_group_name: Corporate group
+        add_to_groups: Add to Groups
+
+      index:
+        h1: Corporate Managers
+
+      edit:
+        h1: Edit Corporate Managers
+
+      new:
+        h1: New Corporate Managers
+
+      show:
+        h1: Corporate Managers

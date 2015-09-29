@@ -73,8 +73,8 @@ Rails.application.routes.draw do
       put 'update_members', action: :update_members
     end
 
+    resources :corporate_managers
     resources :corporate_students
-    get '/managers', to: 'corporate_students#managers_index', as: :corporate_managers
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]

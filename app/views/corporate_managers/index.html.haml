@@ -12,7 +12,7 @@
             %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
               Managers
           .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
-            =link_to t('views.general.add_manager'), new_corporate_student_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+            =link_to t('views.general.add_manager'), new_corporate_manager_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
         .row.l-margin-top.l-margin-bottom
           .col-md-4.col-sm-4.l-margin-top
             =form_tag(corporate_managers_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
@@ -21,25 +21,19 @@
                 .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
                   %span.glyphicon.glyphicon-search
 
-
           .col-md-12.l-margin-top-big
             .corporate-box-item.table-box
               .table-responsive
                 %table.table{style: 'font-size: 18px;'}
                   %thead
                     %tr
-                      -#%th{width: 20}
                       %th Name
                       %th Email
                       %th Active
-                      %th Groups
                       %th Edit
                   %tbody
                     -@corporate_managers.each do |corporate_student|
                       %tr{id: corporate_student.id}
-                        -#%td
-                          =link_to edit_corporate_student_url(corporate_student) do
-                            %i.glyphicon.glyphicon-remove-circle
                         %td
                           =corporate_student.full_name
                         %td
@@ -47,9 +41,8 @@
                         %td
                           =tick_or_cross(corporate_student.active)
                         %td
-                          =corporate_student.corporate_groups.map(&:name).join("<br>").html_safe
                         %td
-                          =link_to t('views.general.edit_user'), edit_corporate_student_url(corporate_student), class: 'btn btn-small btn-purple'
+                          =link_to t('views.general.edit_user'), edit_corporate_manager_url(corporate_student), class: 'btn btn-small btn-purple'
 
 
 

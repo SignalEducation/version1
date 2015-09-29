@@ -29,16 +29,6 @@ class CorporateStudentsController < ApplicationController
     @corporate_student = User.new
   end
 
-  def managers_index
-    @corporate_managers = User
-                              .where(user_group_id: UserGroup.where(corporate_customer: true).first.id)
-
-    unless params[:search_term].blank?
-      @corporate_managers = @corporate_managers.search_for(params[:search_term])
-    end
-
-  end
-
   def new
     @corporate_student = User.new
   end
@@ -50,7 +40,11 @@ class CorporateStudentsController < ApplicationController
   end
 
   def create
-    password = SecureRandom.hex(5)
+    if Rails.env.production?
+      password = SecureRandom.hex(5)
+    else
+      password = '123123123'
+    end
     @corporate_student = User.new(allowed_params.merge({password: password,
                                                         password_confirmation: password,
                                                         user_group_id: UserGroup.where(corporate_student: true).first.id,
@@ -67,8 +61,7 @@ class CorporateStudentsController < ApplicationController
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
-      flash[:error] = I18n.t('controllers.corporate_students.create.flash.error')
-      redirect_to corporate_students_url
+      render action: :new
     end
   end
 

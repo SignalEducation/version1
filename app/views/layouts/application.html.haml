@@ -96,7 +96,7 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
-    -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_groups')
+    -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_groups') || (controller_name == 'corporate_managers')
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield
