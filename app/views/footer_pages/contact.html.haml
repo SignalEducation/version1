@@ -1,0 +1,28 @@
+.hero-acca
+  =render partial: 'layouts/transparent_navbar'
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-white.h-separator.h-separator-center.text-center
+              Contact
+.is-bg-asphalt
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-md-10.col-md-offset-1
+            %h2.text-center.l-margin-bottom
+              Keep in touch
+            %p
+              If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.
+            %h4
+              =mail_to 'team@learnsignal.com', 'CONTACT US', subject: 'Contact Page Info'
+
+
+
+
+
+
+=render partial: 'layouts/new_footer'

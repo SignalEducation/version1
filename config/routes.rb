@@ -127,7 +127,8 @@ Rails.application.routes.draw do
     resources :subscription_plan_categories
     resources :tutor_applications
     get 'about', to: 'footer_pages#about_us'
-    get 'jobs', to: 'footer_pages#jobs'
+    get 'careers', to: 'footer_pages#careers'
+    get 'contact', to: 'footer_pages#contact'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     resources :user_activity_logs
     resources :user_notifications

@@ -1,25 +1,29 @@
-.form-container.l-margin-top-big
-  =form_for(@tutor_application, html: {role: 'form'}) do |f|
-    =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
+.row.l-margin-top.l-margin-bottom
+  .col-md-12.l-margin-top
+    =form_for(@tutor_application, html: {role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
+      .row
+        .col-md-6
+          =f.label :first_name, t('views.tutor_applications.form.first_name'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :first_name, class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          =f.label :email, t('views.tutor_applications.form.email'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :email, class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          =f.label :description, t('views.tutor_applications.form.description'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_area :description, rows: 4, class: 'form-control', style: 'border-radius: 6px;'
 
-    .form-group.f-name
-      =f.label :first_name, t('views.tutor_applications.form.first_name')
-      =f.text_field :first_name, class: 'form-control'#, autofocus: true
+        .col-md-6
+          =f.label :last_name, t('views.tutor_applications.form.last_name')
+          .input-group.input-group-lg.full-width
+            =f.text_field :last_name, class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          =f.label :info, t('views.tutor_applications.form.info'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :info, rows: 4, class: 'form-control', style: 'border-radius: 6px;'
 
-    .form-group.l-name
-      =f.label :last_name, t('views.tutor_applications.form.last_name')
-      =f.text_field :last_name, class: 'form-control'
-
-    .form-group.email
-      =f.label :email, t('views.tutor_applications.form.email')
-      =f.text_field :email, class: 'form-control'
-
-    .form-group.about-you
-      =f.label :info, t('views.tutor_applications.form.info')
-      =f.text_field :info, rows: 4, class: 'form-control'
-
-    .form-group.teach
-      =f.label :description, t('views.tutor_applications.form.description')
-      =f.text_field :description, rows: 4, class: 'form-control'
-
-    =f.submit 'Submit', class: 'btn btn-red'
+      .row.l-margin-top-big
+        =f.submit 'Submit', class: 'btn btn-red'
