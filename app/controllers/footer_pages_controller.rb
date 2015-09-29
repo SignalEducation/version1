@@ -1,6 +1,6 @@
 class FooterPagesController < ApplicationController
 
-  def about_us
+  def why_learn_signal
   end
 
   def careers

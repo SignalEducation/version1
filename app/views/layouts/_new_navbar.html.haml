@@ -13,14 +13,14 @@
           %ul.nav.navbar-nav.navbar-right
             -if current_user
               %li
+                =link_to 'Why Learn Signal', why_learn_signal_url
+              %li
+                %a{href: 'http://blog.learnsignal.com', target: '_blank'}Blog
+              %li
                 -if current_user.corporate_customer?
                   =link_to 'Dashboard', corporate_customer_url(current_user.corporate_customer)
                 -else
                   =link_to 'Dashboard', dashboard_url
-              %li
-                =link_to 'Why Learn Signal', about_url
-              %li
-                %a{href: 'http://blog.learnsignal.com', target: '_blank'}Blog
               %li
                 =link_to 'Courses', library_url
               -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial?
@@ -78,7 +78,7 @@
 
             -else
               %li
-                =link_to 'Why Learn Signal', about_url
+                =link_to 'Why Learn Signal', why_learn_signal_url
               %li
                 %a{href: 'http://blog.learnsignal.com', target: '_blank'}Blog
               %li
