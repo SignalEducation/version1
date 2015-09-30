@@ -88,6 +88,8 @@ Rails.application.routes.draw do
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
+    get '/contacts', to: 'contacts#new', as: :new_contact
+    resources :contacts, only: [:new, :create]
     resources :exam_levels, concerns: :supports_reordering do
       get  '/filter/:qualification_url', on: :collection, action: :index, as: :filtered
     end

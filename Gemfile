@@ -28,6 +28,7 @@ gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
+gem 'mail_form' #For Forms that immediately send emails
 gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
