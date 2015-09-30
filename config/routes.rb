@@ -105,6 +105,7 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show]
 
     post '/subscribe', to: 'library#subscribe'
+    post '/info_subscribe', to: 'footer_pages#info_subscribe'
 
     get 'library/:subject_course_name_url', to: 'library#show', as: :library_course
     get 'library', to: 'library#index', as: :library

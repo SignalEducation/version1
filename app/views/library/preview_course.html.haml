@@ -10,7 +10,7 @@
             %p.h5.h-white.text-center.l-margin-bottom-big
               =@course.try(:short_description)
             #response
-            =form_tag('/subscribe', method: "post", id: 'mailchimpform', remote: "true") do
+            =form_tag('/subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
               .form-horizontal
                 .row
                   .col-sm-12
