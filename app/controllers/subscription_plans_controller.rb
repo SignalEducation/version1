@@ -1,7 +1,7 @@
 class SubscriptionPlansController < ApplicationController
 
-  before_action :logged_in_required
-  before_action do
+  before_action :logged_in_required, except: [:public_index]
+  before_action except: [:public_index]do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -9,6 +9,29 @@ class SubscriptionPlansController < ApplicationController
   def index
     @student_subscription_plans = SubscriptionPlan.for_students.paginate(per_page: 50, page: params[:page]).all_in_order
     @corporate_subscription_plans = SubscriptionPlan.for_corporates.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
+  def public_index
+    @currency_id = IpAddress.get_country(request.remote_ip).try(:currency_id)
+    @student_subscription_plans = @subscription_plans = SubscriptionPlan
+                                                            .where('price > 0.0')
+                                                            .includes(:currency)
+                                                            .for_students
+                                                            .in_currency(@currency_id)
+                                                            .all_active
+                                                            .all_in_order
+
+    @corporate_subscription_plans = SubscriptionPlan
+                                        .where('price > 0.0')
+                                        .includes(:currency)
+                                        .for_corporates
+                                        .in_currency(@currency_id)
+                                        .all_active
+                                        .all_in_display_order
+    @first_plan = @corporate_subscription_plans[0]
+    @second_plan = @corporate_subscription_plans[1]
+    @third_plan = @corporate_subscription_plans[2]
+    @fourth_plan = @corporate_subscription_plans[3]
   end
 
   def show

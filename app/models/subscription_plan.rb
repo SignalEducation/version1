@@ -66,6 +66,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
+  scope :all_in_display_order, -> { order(:created_at) }
   scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
   scope :for_corporates, -> { where(available_to_corporates: true) }
   scope :for_students, -> { where(available_to_students: true) }

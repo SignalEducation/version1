@@ -193,6 +193,12 @@ hr {
       margin-left: -30px;
     }
   }
+  &.h-separator-white {
+    padding-top: $gutter*1.5;
+    &:after {
+      background: $white;
+    }
+  }
 }
 .note {
   color: tint($gray-1, 30%);
@@ -248,6 +254,12 @@ hr {
   padding: 3rem 0;
   @include breakpoint(md-min) {
     padding: 4rem 0;
+  }
+}
+.l-section-extra-small {
+  padding: 1rem 0;
+  @include breakpoint(md-min) {
+    padding: 2rem 0;
   }
 }
 .l-padding-zero {

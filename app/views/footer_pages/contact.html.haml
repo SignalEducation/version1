@@ -20,9 +20,10 @@
             %br/
             %h4.text-center.l-margin-top
               =mail_to 'team@learnsignal.com', 'CONTACT US', subject: 'Contact Page Info'
-            %br/
+            %hr/
             %h4.text-center.l-margin-top-big
               Sign up for the LearnSignal newsletter
+            %br/
             .col-md-8.col-md-offset-2
               #response
               =form_tag('/info_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do

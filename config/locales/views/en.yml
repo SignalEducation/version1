@@ -81,6 +81,11 @@ en:
         a3: Quarterly
         a6: Half-yearly
         a12: Yearly
+      payment_intervals:
+        a1: Month
+        a3: Quarter
+        a6: 6 Months
+        a12: Year
       sibscription_in_months:
         a1: Monthly subscription
         a3: Quarterly subscription
@@ -1017,6 +1022,11 @@ en:
         h1: Subscription Plans
         corporates: For Corporates
         students: For Students
+
+      public_index:
+        h1: Pricing
+        corporates: For businesses
+        students: For individuals
 
       new:
         h1: New Subscription Plan
