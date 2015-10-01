@@ -116,6 +116,6 @@
                       -if course.short_description
                         =course.try(:short_description).to_s.truncate(30)
                       -else
-                        =course.parent.try(:name)
+                        =course.try(:description).to_s.truncate(30)
                   .box-label
                     =t('views.general.start')

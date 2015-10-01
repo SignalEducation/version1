@@ -263,7 +263,7 @@ class User < ActiveRecord::Base
   end
 
   def corporate_tutor?
-    self.user_group.try(:corporate_tutor)
+    self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
   end
 
   def de_activate_user

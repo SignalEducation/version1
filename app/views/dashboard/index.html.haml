@@ -5,12 +5,12 @@
     =render partial: 'dashboard/admin'
   -elsif current_user.content_manager?
     =render partial: 'dashboard/content_manager'
-  -elsif current_user.tutor?
-    =render partial: 'dashboard/tutor'
   -elsif current_user.corporate_customer?
     =render partial: 'dashboard/corporate_customer'
   -elsif current_user.corporate_student?
     =render partial: 'dashboard/corporate_student'
+  -elsif current_user.tutor?
+    =render partial: 'dashboard/tutor'
   -else
     =render partial: 'dashboard/student'
 
