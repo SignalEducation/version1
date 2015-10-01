@@ -1,7 +1,7 @@
 class CorporateRequestsController < ApplicationController
 
   before_action :logged_in_required, except: [:new, :create]
-  before_action do
+  before_action except: [:new, :create] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -24,9 +24,11 @@ class CorporateRequestsController < ApplicationController
     @corporate_request = CorporateRequest.new(allowed_params)
     if @corporate_request.save
       flash[:success] = I18n.t('controllers.corporate_requests.create.flash.success')
-      redirect_to corporate_requests_url
+      redirect_to request.referrer
+      Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request)
+
     else
-      render action: :new
+      redirect_to request.referrer
     end
   end
 
