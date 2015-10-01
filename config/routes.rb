@@ -74,6 +74,7 @@ Rails.application.routes.draw do
     end
 
     resources :corporate_students
+    resources :corporate_requests
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]

@@ -35,6 +35,18 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    corporate_requests:
+      create:
+        flash:
+          success: Corporate Request has been created successfully
+      update:
+        flash:
+          success: Corporate Request details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate Request has been deleted
+          error: Corporate Request was not deleted
+
     subject_courses:
       create:
         flash:

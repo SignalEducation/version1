@@ -1,5 +1,5 @@
-=form_for(:contact,
-      url: new_contact_path,
+=form_for(:corporate_request,
+      url: corporate_requests_path,
       method: 'POST',
       html: {class: 'form-horizontal', role: 'form'}) do |f|
 
@@ -14,27 +14,27 @@
                 %h2.modal-title{style: 'width: 95%'} Make an enquiry
             .row.l-margin-top
               .col-md-12
-                =f.label :name, t('views.contact_modal.form.name'), class: 'control-label'
+                =f.label :name, t('views.corporate_requests.form.name'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :name, placeholder: t('views.contact_modal.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :email, t('views.contact_modal.form.email'), class: 'control-label'
+                  =f.text_field :name, placeholder: t('views.corporate_requests.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+                =f.label :title, t('views.corporate_requests.form.title'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :email, placeholder: t('views.contact_modal.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :title, t('views.contact_modal.form.title'), class: 'control-label'
+                  =f.text_field :title, placeholder: t('views.corporate_requests.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :company, t('views.corporate_requests.form.company'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :title, placeholder: t('views.contact_modal.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :company, t('views.contact_modal.form.company'), class: 'control-label'
+                  =f.text_field :company, placeholder: t('views.corporate_requests.form.company_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :email, t('views.corporate_requests.form.email'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :company, placeholder: t('views.contact_modal.form.company_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :phone_number, t('views.contact_modal.form.phone_number'), class: 'control-label'
+                  =f.text_field :email, placeholder: t('views.corporate_requests.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :phone_number, t('views.corporate_requests.form.phone_number'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :phone_number, placeholder: t('views.contact_modal.form.phone_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :website, t('views.contact_modal.form.website'), class: 'control-label'
+                  =f.text_field :phone_number, placeholder: t('views.corporate_requests.form.phone_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :website, t('views.corporate_requests.form.website'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :company, placeholder: t('views.contact_modal.form.website_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :message, t('views.contact_modal.form.message'), class: 'control-label'
+                  =f.text_field :website, placeholder: t('views.corporate_requests.form.website_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.label :personal_message, t('views.corporate_requests.form.personal_message'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_area :message, placeholder: t('views.contact_modal.form.message_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                  =f.text_area :personal_message, placeholder: t('views.corporate_requests.form.personal_message_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
                 %br/
 
             %button.btn.btn-cyan{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
