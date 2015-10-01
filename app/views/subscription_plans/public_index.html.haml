@@ -28,6 +28,8 @@
               %h5.h5.plan-title
                 Access all courses
             .plan-inner
+              %h5.h5.plan-text
+                Per User
               .l-section-extra-small
                 -if @first_plan
                   %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
@@ -81,6 +83,9 @@
               %h5.h5.plan-title
                 Access all courses
             .plan-inner{style: 'min-height: 463px;'}
+              %h5.h5.plan-text
+                Per User
+
               -@student_subscription_plans.each do |plan|
                 .l-section-extra-small
                   %h3.plan-text.h-separator.h-separator-white.h-separator-center
