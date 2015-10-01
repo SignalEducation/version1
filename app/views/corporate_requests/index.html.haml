@@ -1,0 +1,38 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.corporate_requests.index.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            =will_paginate @corporate_requests, renderer: BootstrapPagination::Rails
+            .table-responsive
+              %table.table.sorted_table{data: {destination: subject_courses_url}, style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th=t('views.corporate_requests.form.name')
+                    %th=t('views.corporate_requests.form.title')
+                    %th=t('views.corporate_requests.form.company')
+                    %th=t('views.corporate_requests.form.email')
+                    %th=t('views.corporate_requests.form.phone_number')
+                    %th=t('views.corporate_requests.form.website')
+                    %th=t('views.corporate_requests.form.personal_message')
+                    %th
+                %tbody
+                  -@corporate_requests.each do |corporate_request|
+                    %tr{id: corporate_request.id}
+                      %td=corporate_request.name
+                      %td=corporate_request.title
+                      %td=corporate_request.company
+                      %td=corporate_request.email
+                      %td=corporate_request.phone_number
+                      %td=corporate_request.website
+                      %td=corporate_request.personal_message
+                      %td
+                        =link_to t('views.general.show'), corporate_request_url(corporate_request), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.edit'), edit_corporate_request_url(corporate_request), class: 'btn btn-cyan btn-small'
+                        -if corporate_request.destroyable?
+                          =link_to t('views.general.delete'), corporate_request, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'

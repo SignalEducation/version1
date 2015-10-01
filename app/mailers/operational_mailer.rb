@@ -5,6 +5,13 @@ class OperationalMailer < ActionMailer::Base
 
   before_action :set_the_url
 
+  def send_corporate_enquiry_email(corporate_request) # backgrounded
+    @request = corporate_request
+    emails = ['philip@learnsignal.com', 'conn@learnsignal.com', 'johnny@learnsignal.com']
+    mail(to: emails,
+         subject: I18n.t('mailers.operational.corporate_enquiry.subject_line')
+    )
+  end
   def signup_completed(user) # backgrounded
     @user = user
     mail(to: @user.email,

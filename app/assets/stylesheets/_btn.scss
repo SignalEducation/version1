@@ -39,6 +39,12 @@
       background: ($red-1);
     }
   }
+  &.btn-wide {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+
+  }
   &.btn-purple {
     background: $purple-1;
     color: $white;

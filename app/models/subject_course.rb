@@ -22,6 +22,8 @@
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
+#  restricted                              :boolean          default(FALSE), not null
+#  corporate_customer_id                   :integer
 #
 
 class SubjectCourse < ActiveRecord::Base

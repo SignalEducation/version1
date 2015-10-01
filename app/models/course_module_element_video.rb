@@ -13,6 +13,8 @@
 #  updated_at                   :datetime
 #  destroyed_at                 :datetime
 #  video_id                     :string
+#  duration                     :float
+#  thumbnail                    :text
 #
 
 class CourseModuleElementVideo < ActiveRecord::Base

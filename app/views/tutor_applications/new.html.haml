@@ -7,39 +7,22 @@
           .col-md-6.col-md-offset-3
             %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
               Teach
-            %p.h5.h-white.text-center.l-margin-bottom-big
-              Create prestigious financial training, earn roylalties, sharing your passion.
-.l-asphalt
-  .l-section
-    .container-fluid
-      .row
-        .col-sm-3
-          =render partial: 'footer_pages/side_nav'
+            %p.h5.h-white.text-center
+              Your skills, our platform
+.is-bg-asphalt
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-md-10.col-md-offset-1
+            %p
+              As a dedicated training resource we are always on the lookout for talent. If you possess the required qualifications along with extensive experience in finance, IT or business, and are passionate about teaching, we’d love to hear from you.
+            %p
+              LearnSignal is an evolving company and is looking to expand its services, so if you are a specialist in a certain subject or area and think you could add value to our course curriculum, we are open to proposals. In return, we’ll provide you and your course with exposure to individuals and businesses who are actively seeking professional development. It’s a win win.
+            %p
+              Use the contact form below and one of our team will get in touch with you to discuss further teaching opportunities with LearnSignal.
+            %hr/
 
-        .col-sm-9
-          .panel-body.no-top-padding
-            %h2
-              Are you:
-            %ul
-              %li
-                An expert in an area in finance? Have you got some insights you know others would value?
-              %li
-                Passionate about teaching others? Experienced in taking the leaders position?
-              %li
-                Involved in the community surrounding your skillset?
-
-            %h2
-              Lets build a course that can:
-            %ul
-              %li
-                Provide someone with a useful skill or insight that will help them be better at their job.
-              %li
-                Teach students about popular topics in the industry that are likely to drive attention to your course.
-            %h2
-              Already full of ideas? Lets get started!
-            %ul
-              %li
-                Submit the course ideas that you'd be interested in covering. Then we'll get take it from there! We'll get in touch with you to kick off the conversation and start the path to an amazing course in finance! We cant wait to hear from you!
             -if flash[:success] || flash[:error] || flash[:warning]
               =render partial: 'layouts/flash_messages'
 

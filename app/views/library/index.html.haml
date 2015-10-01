@@ -1,18 +1,24 @@
 .hero-library
   =render partial: 'layouts/transparent_navbar'
-  .l-section
+  .l-section-small
     .l-wrap
       .container-fluid
         .row
           .col-md-6.col-md-offset-3
             %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big.is-text-white
-              Learn Signal Library
-            %form.form-horizontal
+              Learn anytime, anywhere
+          .col-md-10.col-md-offset-1
+            %p.h5.h-white.text-center
+              Learn Signal provides tailored online learning for businesses and individuals, offering a wide portfolio of integrated skills from professional courses to recognised and accredited qualifications.
+            %p.h5.h-white.text-center
+              Using leading technologies, skilled tutors and bespoke solutions tailored to individuals and organisations, Learn Signal can help increase productivity, improve business outcomes and support greater business agility.
+          .col-md-6.col-md-offset-3
+            %form.form-horizontal.l-margin-top
               .row
                 .col-sm-12
                   .input-group
                     =form_tag(library_url, method: :get, id: 'search-form') do
-                      =text_field_tag :search, params[:search], placeholder: 'Search our library', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'
+                      =text_field_tag :search, params[:search], placeholder: 'Search our courses', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'
                       %span.input-group-btn
                         =submit_tag 'Search', class: 'btn btn-red', name: nil
 
@@ -32,7 +38,7 @@
                       -if course.short_description
                         =course.try(:short_description).to_s.truncate(30)
                       -else
-                        =course.parent.try(:name)
+                        =course.description.truncate(15)
                   .box-label
                     -if course.live
                       -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1

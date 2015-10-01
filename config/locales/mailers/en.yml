@@ -37,3 +37,6 @@ en:
         subject_line: Your Learn Signal password has changed
         paragraph_1: We wanted to let you know that someone (hopefully you) has just changed your Learn Signal account password.  If it was you, then you can ingnore this email.
         paragraph_2: If you did not change your password, please notify us immediately so we can investigate things further.
+
+      corporate_enquiry:
+        subject_line: This is a new enquiry for a corporate account.

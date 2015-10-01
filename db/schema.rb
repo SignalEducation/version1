@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924104007) do
+ActiveRecord::Schema.define(version: 20151001081120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,23 @@ ActiveRecord::Schema.define(version: 20150924104007) do
 
   add_index "corporate_groups_users", ["corporate_group_id"], name: "index_corporate_groups_users_on_corporate_group_id", using: :btree
   add_index "corporate_groups_users", ["user_id"], name: "index_corporate_groups_users_on_user_id", using: :btree
+
+  create_table "corporate_requests", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "company"
+    t.string   "email"
+    t.string   "phone_number"
+    t.string   "website"
+    t.text     "personal_message"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "corporate_requests", ["company"], name: "index_corporate_requests_on_company", using: :btree
+  add_index "corporate_requests", ["email"], name: "index_corporate_requests_on_email", using: :btree
+  add_index "corporate_requests", ["name"], name: "index_corporate_requests_on_name", using: :btree
+  add_index "corporate_requests", ["phone_number"], name: "index_corporate_requests_on_phone_number", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"
@@ -162,6 +179,8 @@ ActiveRecord::Schema.define(version: 20150924104007) do
     t.datetime "updated_at"
     t.datetime "destroyed_at"
     t.string   "video_id"
+    t.float    "duration"
+    t.text     "thumbnail"
   end
 
   add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree
@@ -838,6 +857,8 @@ ActiveRecord::Schema.define(version: 20150924104007) do
     t.datetime "updated_at",                                              null: false
     t.float    "best_possible_first_attempt_score"
     t.integer  "default_number_of_possible_exam_answers"
+    t.boolean  "restricted",                              default: false, null: false
+    t.integer  "corporate_customer_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
