@@ -5,5 +5,5 @@
 %p="Email: #{@request.email}"
 %p="Number: #{@request.phone_number}"
 %p="Website: #{@request.website}"
-%p="Message: #{@request.personal_message}"
+%p="Message: #{@request.try(:personal_message)}"
 

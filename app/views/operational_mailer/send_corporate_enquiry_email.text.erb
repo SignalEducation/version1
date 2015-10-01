@@ -1,0 +1,14 @@
+<%= t('mailers.operational.corporate_enquiry.subject_line') %>
+
+<%= "Name: #{@request.name}" %>
+
+<%= "Title: #{@request.title}" %>
+
+<%= "Company: #{@request.company}" %>
+
+<%= "Email: #{@request.email}" %>
+<%= "Number: #{@request.phone_number}" %>
+<%= "Message: #{@request.try(:personal_message)}" %>
+
+
+<%= t('mailers.general.signature') %>

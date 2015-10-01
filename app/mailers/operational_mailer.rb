@@ -12,6 +12,7 @@ class OperationalMailer < ActionMailer::Base
          subject: I18n.t('mailers.operational.corporate_enquiry.subject_line')
     )
   end
+
   def signup_completed(user) # backgrounded
     @user = user
     mail(to: @user.email,
