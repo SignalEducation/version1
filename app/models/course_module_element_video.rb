@@ -45,7 +45,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:tags) }
-  before_update :set_estimated_study_time
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -56,12 +55,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   def destroyable?
     true
   end
-
-  def set_estimated_study_time
-    self.estimated_study_time_seconds = self.course_module_element.try(:estimated_time_in_seconds).to_i *
-        ApplicationController.find_multiplier_for_difficulty_level(self.difficulty_level)
-  end
-
 
   protected
 

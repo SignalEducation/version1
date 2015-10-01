@@ -88,6 +88,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
   before_save :log_question_count
+  before_save :set_estimated_time
   after_save :update_the_module_total_time_and_question_count
   after_save :update_student_exam_tracks
 
@@ -181,6 +182,14 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   protected
+
+  def set_estimated_time
+    if self.is_video
+      self.estimated_time_in_seconds = self.course_module_element_video.duration ? self.course_module_element_video.duration : self.course_module_element_video.estimated_study_time_seconds
+    else
+      true
+    end
+  end
 
   def self.nested_resource_is_blank?(attributes)
     attributes['name'].blank? &&
