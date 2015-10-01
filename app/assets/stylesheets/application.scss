@@ -193,6 +193,12 @@ hr {
       margin-left: -30px;
     }
   }
+  &.h-separator-white {
+    padding-top: $gutter*1.5;
+    &:after {
+      background: $white;
+    }
+  }
 }
 .note {
   color: tint($gray-1, 30%);
@@ -250,6 +256,12 @@ hr {
     padding: 4rem 0;
   }
 }
+.l-section-extra-small {
+  padding: 1rem 0;
+  @include breakpoint(md-min) {
+    padding: 2rem 0;
+  }
+}
 .l-padding-zero {
   padding: 0;
 }
@@ -266,8 +278,8 @@ hr {
   margin-bottom: $gutter*2;
 }
 .l-margin-bottom-huge {
-   margin-bottom: $gutter*2.5;
- }
+  margin-bottom: $gutter*2.5;
+}
 .l-margin-top {
   margin-top: $gutter;
 }
@@ -492,7 +504,7 @@ a.box {
       width: 30px;
       margin-left: -15px;
       margin-top: -15px;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
       background-size: contain;
     }
     & .box-inner {
@@ -532,10 +544,10 @@ a.box {
   padding-left: 0;
 }
 //.box-item {
-  //display: block;
-  //border: 0;
-  //width: 100%;
-  //text-align: left;
+//display: block;
+//border: 0;
+//width: 100%;
+//text-align: left;
 //}
 a.box-item {
   color: $purple-1;

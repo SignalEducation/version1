@@ -2,7 +2,7 @@ class MandrillWorker
   include Sidekiq::Worker
   require 'mandrill_client'
 
-  sidekiq_options queue: 'low'
+  sidekiq_options queue: 'high'
 
   def perform(user_id, method_name, *template_args)
     @user = User.find_by_id(user_id)

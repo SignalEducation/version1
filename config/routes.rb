@@ -75,6 +75,7 @@ Rails.application.routes.draw do
 
     resources :corporate_managers
     resources :corporate_students
+    resources :corporate_requests
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]
@@ -98,6 +99,7 @@ Rails.application.routes.draw do
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
     get 'wso', to: 'home_pages#show', first_element: 'wso'
+    get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     resources :institutions, concerns: :supports_reordering do
@@ -106,6 +108,7 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show]
 
     post '/subscribe', to: 'library#subscribe'
+    post '/info_subscribe', to: 'footer_pages#info_subscribe'
 
     get 'library/:subject_course_name_url', to: 'library#show', as: :library_course
     get 'library', to: 'library#index', as: :library
@@ -127,8 +130,9 @@ Rails.application.routes.draw do
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :tutor_applications
-    get 'about', to: 'footer_pages#about_us'
-    get 'jobs', to: 'footer_pages#jobs'
+    get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
+    get 'careers', to: 'footer_pages#careers'
+    get 'contact', to: 'footer_pages#contact'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     resources :user_activity_logs
     resources :user_notifications

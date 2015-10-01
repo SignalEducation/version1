@@ -1,0 +1,98 @@
+.l-section-small.is-bg-asphalt
+  .container-fluid
+    .row.l-margin-bottom
+      .col-md-12.text-center
+        %h1.h1.l-margin-bottom.l-margin-top.text-center{style: 'letter-spacing:1.5px; '}
+          =t('views.subscription_plans.public_index.h1')
+
+    .row.l-margin-top.l-margin-bottom
+      .col-md-10.col-md-offset-1
+        .col-md-6
+          %h2.text-center.h-separator.h-separator-center
+            For businesses
+          .l-wrap
+            %p.text-center
+              Learn Signal provides flexible pricing options for organisations, with a range of tailored options to suit small teams or entire organisations. Realtime reporting and full content control is available through management dashboards, providing the ability to track, measure and record employee progress rates.
+        .col-md-6
+          %h2.text-center.h-separator.h-separator-center
+            For individuals
+          .l-wrap
+            %p.text-center
+              With a whole host of courses to choose from to enhance your professional development, there are a range of subscription options available to suit your specific needs. Your own personalised dashboard enables you to track and measure your progress along each learning module.
+
+
+      .col-md-10.col-md-offset-1
+        .col-md-6
+          .plan.plan-yearly
+            .plan-header
+              %h5.h5.plan-title
+                Access all courses
+            .plan-inner
+              %h5.h5.plan-text
+                Per User
+              .l-section-extra-small
+                -if @first_plan
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
+                    = '1 - 24 Users'
+                    &#160;
+                    &#160;
+                    &#160;
+                    =@first_plan.currency.leading_symbol
+                    =@first_plan.price
+                    &#47;
+                    =t("views.general.payment_intervals.a#{@first_plan.payment_frequency_in_months}")
+                -if @second_plan
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
+                    ='25 - 49 Users'
+                    &#160;
+                    &#160;
+                    &#160;
+                    =@second_plan.currency.leading_symbol
+                    =@second_plan.price
+                    &#47;
+                    =t("views.general.payment_intervals.a#{@second_plan.payment_frequency_in_months}")
+                -if @third_plan
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
+                    ='50 - 99 Users'
+                    &#160;
+                    &#160;
+                    &#160;
+                    =@third_plan.currency.leading_symbol
+                    =@third_plan.price
+                    &#47;
+                    =t("views.general.payment_intervals.a#{@third_plan.payment_frequency_in_months}")
+                -if @fourth_plan
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
+                    ='100 - 500 Users'
+                    &#160;
+                    &#160;
+                    &#160;
+                    =@fourth_plan.currency.leading_symbol
+                    =@fourth_plan.price
+                    &#47;
+                    =t("views.general.payment_intervals.a#{@fourth_plan.payment_frequency_in_months}")
+
+          .text-center.l-margin-bottom
+            %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}MAKE AN ENQUIRY
+
+
+
+        .col-md-6
+          .plan.plan-monthly
+            .plan-header
+              %h5.h5.plan-title
+                Access all courses
+            .plan-inner{style: 'min-height: 463px;'}
+              %h5.h5.plan-text
+                Per User
+
+              -@student_subscription_plans.each do |plan|
+                .l-section-extra-small
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center
+                    =plan.currency.leading_symbol
+                    =plan.price
+                    &#47;
+                    =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+
+          .text-center.l-margin-bottom
+            =link_to 'SIGN UP NOW', root_url, class: 'btn btn-red btn-wide'

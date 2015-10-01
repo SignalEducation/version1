@@ -82,6 +82,11 @@ en:
         a3: Quarterly
         a6: Half-yearly
         a12: Yearly
+      payment_intervals:
+        a1: Month
+        a3: Quarter
+        a6: 6 Months
+        a12: Year
       sibscription_in_months:
         a1: Monthly subscription
         a3: Quarterly subscription
@@ -91,6 +96,7 @@ en:
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
       submit: Sign Up Now
+      actual_submit: Submit
       user_name: "Hi, "
 
     locales:
@@ -143,6 +149,35 @@ en:
       new:
         h1: New Corporate Customer
 
+    corporate_requests:
+      form:
+        name: Name
+        name_placeholder: Full Name
+        title: Title
+        title_placeholder: Your Job Title
+        company: Company
+        company_placeholder: Company Name
+        email: Email
+        email_placeholder: Your Email
+        phone_number: Phone Number
+        phone_number_placeholder: Contact Number
+        website: Website
+        website_placeholder: Company Website or Linkedin
+        personal_message: Message
+        personal_message_placeholder: Message (Optional)
+
+      index:
+        h1: Corporate Enquiries
+
+      show:
+        h1: Corporate Enquiry
+
+      edit:
+        h1: Corporate Enquiry
+
+      new:
+        h1: Corporate Enquiry
+
     countries:
       form:
         name: Name
@@ -193,6 +228,9 @@ en:
           p: We have been notified, and will investigate it immediately.
         free_trial_expired:
           h2: Your free trial period has expired. Please upgrade your subscription.
+          upgrade_subscription: Upgrade Subscription
+        free_trial:
+          h2: Your free trial is limited to certain content. Please upgrade your subscription to get full access.
           upgrade_subscription: Upgrade Subscription
 
       show_results:
@@ -1019,6 +1057,11 @@ en:
         corporates: For Corporates
         students: For Students
 
+      public_index:
+        h1: Pricing
+        corporates: For businesses
+        students: For individuals
+
       new:
         h1: New Subscription Plan
 
@@ -1535,3 +1578,20 @@ en:
 
       show:
         h1: Corporate Managers
+
+    contact_modal:
+      form:
+        email: Email
+        email_placeholder: jay@example.com
+        name: Name
+        name_placeholder: Full Name
+        title: Title
+        title_placeholder: Your job title
+        company: Company
+        company_placeholder: Your companies name
+        phone_number: Phone Number
+        phone_number_placeholder: A Contact Phone Number
+        website: Website
+        website_placeholder: Company Website or Linkedin
+        message: Message
+        message_placeholder: Message (optional)

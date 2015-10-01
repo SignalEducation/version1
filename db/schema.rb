@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150925165315) do
+ActiveRecord::Schema.define(version: 20151001081120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,23 @@ ActiveRecord::Schema.define(version: 20150925165315) do
 
   add_index "corporate_groups_users", ["corporate_group_id"], name: "index_corporate_groups_users_on_corporate_group_id", using: :btree
   add_index "corporate_groups_users", ["user_id"], name: "index_corporate_groups_users_on_user_id", using: :btree
+
+  create_table "corporate_requests", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "company"
+    t.string   "email"
+    t.string   "phone_number"
+    t.string   "website"
+    t.text     "personal_message"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "corporate_requests", ["company"], name: "index_corporate_requests_on_company", using: :btree
+  add_index "corporate_requests", ["email"], name: "index_corporate_requests_on_email", using: :btree
+  add_index "corporate_requests", ["name"], name: "index_corporate_requests_on_name", using: :btree
+  add_index "corporate_requests", ["phone_number"], name: "index_corporate_requests_on_phone_number", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"
