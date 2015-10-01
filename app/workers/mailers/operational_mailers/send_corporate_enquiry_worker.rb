@@ -3,7 +3,8 @@ class Mailers::OperationalMailers::SendCorporateEnquiryWorker
 
   sidekiq_options queue: 'medium'
 
-  def perform(corporate_request)
-    OperationalMailer.send_corporate_enquiry_email(corporate_request).deliver_now
+  def perform(corporate_request_id)
+    @request = CorporateRequest.find_by_id(corporate_request_id)
+    OperationalMailer.send_corporate_enquiry_email(@request).deliver_now
   end
 end
