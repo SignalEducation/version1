@@ -15,6 +15,7 @@ class SubscriptionPlansController < ApplicationController
     @currency_id = IpAddress.get_country(request.remote_ip).try(:currency_id)
     @student_subscription_plans = @subscription_plans = SubscriptionPlan
                                                             .where('price > 0.0')
+                                                            .where(livemode: true)
                                                             .includes(:currency)
                                                             .for_students
                                                             .in_currency(@currency_id)
@@ -23,11 +24,14 @@ class SubscriptionPlansController < ApplicationController
 
     @corporate_subscription_plans = SubscriptionPlan
                                         .where('price > 0.0')
+                                        .where(livemode: true)
+                                        .where(subscription_plan_category_id: nil)
                                         .includes(:currency)
                                         .for_corporates
                                         .in_currency(@currency_id)
                                         .all_active
                                         .all_in_display_order
+
     @first_plan = @corporate_subscription_plans[0]
     @second_plan = @corporate_subscription_plans[1]
     @third_plan = @corporate_subscription_plans[2]
