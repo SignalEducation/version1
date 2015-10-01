@@ -25,7 +25,7 @@ class CorporateRequestsController < ApplicationController
     if @corporate_request.save
       flash[:success] = I18n.t('controllers.corporate_requests.create.flash.success')
       redirect_to request.referrer
-      Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request)
+      Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request.id)
     else
       redirect_to request.referrer
     end
