@@ -13,7 +13,7 @@ class SubscriptionPlansController < ApplicationController
 
   def public_index
     @currency_id = IpAddress.get_country(request.remote_ip).try(:currency_id)
-    @student_subscription_plans = @subscription_plans = SubscriptionPlan
+    @student_subscription_plans = SubscriptionPlan
                                                             .where('price > 0.0')
                                                             .where(livemode: true)
                                                             .where(subscription_plan_category_id: nil)
