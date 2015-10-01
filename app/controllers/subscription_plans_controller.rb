@@ -16,6 +16,7 @@ class SubscriptionPlansController < ApplicationController
     @student_subscription_plans = @subscription_plans = SubscriptionPlan
                                                             .where('price > 0.0')
                                                             .where(livemode: true)
+                                                            .where(subscription_plan_category_id: nil)
                                                             .includes(:currency)
                                                             .for_students
                                                             .in_currency(@currency_id)
