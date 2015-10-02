@@ -273,8 +273,7 @@ describe CorporateStudentsController, type: :controller do
         valid_params.delete(:email)
         post :create, corporate_student: valid_params
         expect(flash[:success]).to be_nil
-        expect(flash[:error]).to eq(I18n.t('controllers.corporate_students.create.flash.error'))
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(200)
         expect(assigns('corporate_student'.to_sym).class.name).to eq('user'.classify)
       end
     end
@@ -511,8 +510,7 @@ describe CorporateStudentsController, type: :controller do
         valid_params.delete(:email)
         post :create, corporate_student: valid_params
         expect(flash[:success]).to be_nil
-        expect(flash[:error]).to eq(I18n.t('controllers.corporate_students.create.flash.error'))
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(200)
         expect(assigns('corporate_student'.to_sym).class.name).to eq('user'.classify)
       end
     end
