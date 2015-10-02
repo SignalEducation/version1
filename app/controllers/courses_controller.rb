@@ -83,8 +83,7 @@ class CoursesController < ApplicationController
       format.json {
         video_cme_user_log = CourseModuleElementUserLog.find_by_id(params[:course][:videoLogId])
         if video_cme_user_log
-          video_cme_user_log.seconds_watched += params[:course][:position]
-          video_cme_user_log.element_completed = video_cme_user_log.seconds_watched >= params[:course][:duration].to_i
+          video_cme_user_log.element_completed = true
           video_cme_user_log.save
         end
         render json: {}, status: :ok
@@ -140,7 +139,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
             session_guid: current_session_guid,
-            element_completed: true,
+            element_completed: false,
             time_taken_in_seconds: 0,
             quiz_score_actual: nil,
             quiz_score_potential: nil,
