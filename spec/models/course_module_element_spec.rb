@@ -67,9 +67,6 @@ describe CourseModuleElement do
 
   # it { should validate_presence_of(:description) }
 
-  it { should validate_presence_of(:estimated_time_in_seconds) }
-  it { should validate_numericality_of(:estimated_time_in_seconds) }
-
   it { should validate_presence_of(:course_module_id) }
   it { should validate_numericality_of(:course_module_id) }
 

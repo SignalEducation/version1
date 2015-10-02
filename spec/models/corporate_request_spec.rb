@@ -46,7 +46,7 @@ describe CorporateRequest do
 
   it { should validate_presence_of(:website) }
 
-  it { should validate_presence_of(:message) }
+  it { should_not validate_presence_of(:personal_message) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

@@ -33,8 +33,8 @@ RSpec.describe UsersController, type: :routing do
 
     # special routes
 
-    it 'routes /profile to #show' do
-      expect(get: '/profile').to route_to('users#show')
+    it 'routes /account to #show' do
+      expect(get: '/account').to route_to('users#show')
     end
 
     xit 'routes /sign_up to #new' do
