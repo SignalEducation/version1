@@ -41,7 +41,7 @@ class CorporateRequest < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   protected
