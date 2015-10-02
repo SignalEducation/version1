@@ -30,12 +30,13 @@
                 =f.check_box :live
                 =t('views.subject_courses.form.live')
             %br/
-          %br/
-          .checkbox
-            %label
-              =f.check_box :restricted
-              =t('views.subject_courses.form.restricted')
-          %br/
+          -if current_user.corporate_customer? || current_user.content_manager? || current_user.admin?
+            %br/
+            .checkbox
+              %label
+                =f.check_box :restricted
+                =t('views.subject_courses.form.restricted')
+            %br/
           %br/
           .checkbox
             %label
