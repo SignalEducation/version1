@@ -57,8 +57,7 @@ class CorporateStudentsController < ApplicationController
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
-      flash[:error] = I18n.t('controllers.corporate_students.create.flash.error')
-      redirect_to corporate_students_url
+      render action: :new
     end
   end
 

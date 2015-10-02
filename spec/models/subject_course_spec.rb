@@ -58,16 +58,16 @@ describe SubjectCourse do
   it { should validate_presence_of(:name_url) }
   it { should validate_length_of(:name_url).is_at_most(255) }
 
-  it { should validate_presence_of(:wistia_guid) }
-  it { should validate_length_of(:wistia_guid).is_at_most(255) }
+  xit { should validate_presence_of(:wistia_guid) }
+  xit { should validate_length_of(:wistia_guid).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
   it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:description) }
 
-  it { should validate_presence_of(:short_description) }
-  it { should validate_length_of(:short_description).is_at_most(255) }
+  xit { should validate_presence_of(:short_description) }
+  xit { should validate_length_of(:short_description).is_at_most(255) }
 
   it { should_not validate_presence_of(:mailchimp_guid) }
   it { should validate_length_of(:mailchimp_guid).is_at_most(255) }

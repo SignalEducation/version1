@@ -1,8 +1,27 @@
 =f.fields_for :course_module_element_video do |cme_video|
 
-  =cme_video.label :video_id, t('views.course_module_element_videos.form.video_id'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =cme_video.text_field :video_id, placeholder: t('views.course_module_element_videos.form.video_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+  =cme_video.label :video, t('views.course_module_element_videos.form.video_file'), class: 'control-label'
+  %br/
+  -if cme_video.object.thumbnail
+    .col-sm-6
+      =image_tag cme_video.object.thumbnail, class: 'img-responsive', style: 'margin-top: 12px;'
+    .col-sm-6
+      Upload a replacement
+      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
+      %br/
+  -elsif !cme_video.object.thumbnail && cme_video.object.video_id
+    .row
+      .col-sm-6
+        %br/
+        =cme_video.text_field :video_id, class: 'form-control', style: 'border-radius: 6px; height: 45px;', readonly: true
+      .col-sm-6
+        Upload a replacement
+        =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
+        %br/
+  -else
+    .input-group.input-group-lg.full-width
+      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
+    %br/
   %br/
   =cme_video.label :tags, t('views.course_module_element_videos.form.tags'), class: 'control-label'
   .input-group.input-group-lg.full-width

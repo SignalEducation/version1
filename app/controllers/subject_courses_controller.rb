@@ -7,33 +7,53 @@ class SubjectCoursesController < ApplicationController
   before_action :get_variables
 
   def index
-    if current_user.tutor?
+    if current_user.tutor? && current_user.corporate_customer?
+      @subject_courses = SubjectCourse.where(corporate_customer_id: current_user.corporate_customer_id).paginate(per_page: 50, page: params[:page])
+    elsif current_user.tutor?
       @subject_courses = SubjectCourse.where(tutor_id: current_user.id).paginate(per_page: 50, page: params[:page]).all_in_order
     else
-      @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page]).all_in_order
+      @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
     end
-    @courses = @subject_courses.search(params[:search])
+    @courses = params[:search].to_s.blank? ?
+        @courses = @subject_courses.all_in_order :
+        @courses = @subject_courses.search(params[:search])
   end
 
   def show
-
   end
 
   def new
-    @subject_course = SubjectCourse.new(sorting_order: 1)
+    if current_user.tutor?
+      @subject_course = SubjectCourse.new(sorting_order: 1, tutor_id: current_user.id)
+    else
+      @subject_course = SubjectCourse.new(sorting_order: 1)
+    end
   end
 
   def edit
   end
 
   def create
-    @subject_course = SubjectCourse.new(allowed_params)
+    if current_user.corporate_customer?
+      @subject_course = SubjectCourse.new(allowed_params)
+      @subject_course.corporate_customer_id = current_user.corporate_customer_id
+      @subject_course.live = true
+      wistia_response = create_wistia_project(@subject_course.name)
+      @subject_course.wistia_guid = wistia_response.hashedId
+    else
+      @subject_course = SubjectCourse.new(allowed_params)
+    end
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url
     else
       render action: :new
     end
+  end
+
+  def create_wistia_project(name)
+    wistia_response = Wistia::Project.create(name: name)
+    return wistia_response
   end
 
   def update
@@ -69,10 +89,11 @@ class SubjectCoursesController < ApplicationController
       @subject_course = SubjectCourse.where(id: params[:id]).first
     end
     @tutors = User.all_tutors.all_in_order
+    @corporate_customers = CorporateCustomer.all_in_order
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id)
   end
 
 end

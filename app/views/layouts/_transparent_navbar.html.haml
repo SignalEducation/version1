@@ -7,8 +7,12 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          =link_to root_url do
-            =image_tag('ls-logo-red.svg', class: 'logo')
+          -if current_user && current_user.corporate_customer?
+            =link_to corporate_customer_url(current_user.corporate_customer) do
+              =image_tag('ls-logo-red.svg', class: 'logo')
+          -else
+            =link_to root_url do
+              =image_tag('ls-logo-red.svg', class: 'logo')
         #myNavbar.collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
             -if current_user
@@ -54,9 +58,11 @@
                     1
                   %span.caret
                 %ul#menu.dropdown-menu
-                  -if current_user.tutor?
+                  -if current_user.corporate_customer?
+                    %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
+                  -elsif current_user.tutor?
                     %li=link_to t('views.subject_courses.index.my_courses'), subject_courses_url
-                  -if current_user.content_manager?
+                  -elsif current_user.content_manager?
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
                   -if current_user.admin?
                     %li=link_to t('views.users.index.h1'), users_url

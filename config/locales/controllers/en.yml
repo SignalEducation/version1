@@ -501,3 +501,16 @@ en:
         flash:
           success: Corporate student user has been deactivated
           error: Corporate student user was not deactivated
+
+    corporate_managers:
+      create:
+        flash:
+          success: Corporate manager user has been created successfully
+          error: There was invalid data Please try again
+      update:
+        flash:
+          success: Corporate manager user details have been updated successfully
+      destroy:
+        flash:
+          success: Corporate manager user has been deactivated
+          error: Corporate manager user was not deactivated

@@ -73,6 +73,7 @@ Rails.application.routes.draw do
       put 'update_members', action: :update_members
     end
 
+    resources :corporate_managers
     resources :corporate_students
     resources :corporate_requests
     resources :countries, concerns: :supports_reordering

@@ -230,6 +230,7 @@ GEM
     minitest (5.7.0)
     mixpanel-ruby (2.2.0)
     multi_json (1.11.2)
+    multipart-post (2.0.0)
     nenv (0.2.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -479,6 +480,7 @@ DEPENDENCIES
   mandrill-api
   mathjax-rails
   mixpanel-ruby (~> 2.1)
+  multipart-post
   newrelic_rpm
   paperclip (~> 4.2.1)
   pg

@@ -72,13 +72,13 @@ class CorporateCustomersController < ApplicationController
   def update
     if @corporate_customer.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.corporate_customers.update.flash.success')
-      if request.referrer && request.referrer.include?("profile")
+      if request.referrer && request.referrer.include?("account")
         redirect_to account_url
       else
         redirect_to corporate_customers_url
       end
     else
-      if request.referrer && request.referrer.include?("profile")
+      if request.referrer && request.referrer.include?("account")
         redirect_to account_url
       else
         render action: :edit

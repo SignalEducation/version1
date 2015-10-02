@@ -37,13 +37,15 @@ class CourseModuleElementVideo < ActiveRecord::Base
   validates :raw_video_file_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :video_id, presence: true, length: {maximum: 255}
+  #validates :duration, presence: true, numericality: true
   validates :tags, presence: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
   validates :transcript, presence: true
+  #validates :thumbnail, presence: true
 
   # callbacks
   before_validation { squish_fields(:tags) }
-  before_update :set_estimated_study_time
+  before_save :set_estimated_time
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -55,11 +57,15 @@ class CourseModuleElementVideo < ActiveRecord::Base
     true
   end
 
-  def set_estimated_study_time
-    self.estimated_study_time_seconds = self.course_module_element.try(:estimated_time_in_seconds).to_i *
-        ApplicationController.find_multiplier_for_difficulty_level(self.difficulty_level)
+  def parent
+    self.course_module_element
   end
 
   protected
+
+  def set_estimated_time
+    self.parent.estimated_time_in_seconds = self.duration ? self.duration.to_i : self.estimated_study_time_seconds
+  end
+
 
 end

@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
-  SORT_OPTIONS = %w(user_group name email created)
+  SORT_OPTIONS = %w(created user_group name email)
 
   # relationships
   belongs_to :corporate_customer
@@ -127,8 +127,8 @@ class User < ActiveRecord::Base
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
-  validates :employee_guid, allow_nil: true,
-            uniqueness: { scope: :corporate_customer_id }
+  #validates :employee_guid, allow_nil: true,
+  #          uniqueness: { scope: :corporate_customer_id }
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
@@ -260,6 +260,10 @@ class User < ActiveRecord::Base
 
   def corporate_student?
     self.user_group.try(:corporate_student)
+  end
+
+  def corporate_tutor?
+    self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
   end
 
   def de_activate_user

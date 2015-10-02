@@ -8,6 +8,7 @@ en:
         decimal_separator: "."
       active: Active
       add_user: Add a user
+      add_manager: Add Manager
       add_group: Add a group
       edit_user: Edit user
       edit_group: Edit Group
@@ -271,7 +272,7 @@ en:
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
         estimated_time_in_seconds_placeholder: 600
-        active: "Active?"
+        active: Active
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
         seo_no_index: "SEO no-index flag"
@@ -399,6 +400,7 @@ en:
         estimated_study_time_seconds_placeholder: 100
         transcript: Transcript
         transcript_placeholder: Paste Transcript Here !
+        video_file: Video File
         video_id: Video ID
         video_id_placeholder: Wistia ID
 
@@ -510,8 +512,7 @@ en:
         best_possible_first_attempt_score_placeholder: 200
         default_number_of_possible_exam_answers: Default Number of Exam Answers
         default_number_of_possible_exam_answers_placeholder: 4
-        default_number_of_possible_exam_answers_help_text: "When creating quiz questions, this is the default number of multiple choice answers the system will create."
-        enable_exam_sections: "Enable exam sections?"
+        default_number_of_possible_exam_answers_help_text: "When creating quizzes, this is the default number of answers that will be created"
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
         mailchimp_list_id: Mailchimp List ID
@@ -990,10 +991,12 @@ en:
         name_url: Name URL
         name_url_placeholder: Name URL
         active: Active
+        restricted: "Restricted (Check this to allow only your students to see this course)"
         live: Live
         wistia_guid: Wistia Project ID
         wistia_guid_placeholder: Wistia Project ID
         tutor_id: Tutor
+        corporate_customer: "Corporate account to restrict this course to:"
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
@@ -1017,6 +1020,7 @@ en:
 
       show:
         h1: Course
+        add_course_module: Please create a Course module to begin
 
       edit:
         h1: Edit Course
@@ -1183,7 +1187,7 @@ en:
         h1: Create Account
 
       show:
-        h1: My Account
+        h1: Account
         edit: Edit Account
         add_new_card: "Add New Card"
         change_company_data: "Change Company Data"
@@ -1519,10 +1523,10 @@ en:
     corporate_students:
       form:
         email: Email
-        email_placeholder: jay@example.com
+        email_placeholder: john@example.com
         full_name: Full name
         first_name: First name
-        first_name_placeholder: Jay
+        first_name_placeholder: John
         last_name: Last name
         last_name_placeholder: Smith
         employee_guid: Employee ID
@@ -1536,6 +1540,7 @@ en:
       index:
         h1: Corporate Students
         corp_h1: Users
+        corp_managers: Managers
 
       edit:
         h1: Edit Corporate Student
@@ -1545,6 +1550,34 @@ en:
 
       show:
         h1: Corporate Student
+
+    corporate_managers:
+      form:
+        email: Email
+        email_placeholder: john@example.com
+        first_name: First name
+        first_name_placeholder: John
+        last_name: Last name
+        last_name_placeholder: Smith
+        employee_guid: Employee ID
+        employee_guid_placeholder: Employee ID
+        active: Active
+        country: Country
+        corporate_customer: Corporate customer
+        corporate_group_name: Corporate group
+        add_to_groups: Add to Groups
+
+      index:
+        h1: Corporate Managers
+
+      edit:
+        h1: Edit Corporate Managers
+
+      new:
+        h1: New Corporate Managers
+
+      show:
+        h1: Corporate Managers
 
     contact_modal:
       form:

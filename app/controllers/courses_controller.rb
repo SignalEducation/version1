@@ -3,38 +3,53 @@ class CoursesController < ApplicationController
   before_action :check_for_old_url_format, only: :show
 
   def show
-
     @mathjax_required = true
+
+    #Add some restrictions depending on current_user being student, corporate and the course being restricted or attached to a corporate group grant.
+
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
     if @course
-      @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
-    end
-    if @course_module
-      @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
-      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+      if @course.corporate_customer_id
+        if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
+          redirect_to library_url
+        end
+      else
+        if @course
+          @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
+        end
+        if @course_module
+          @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
+          @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
+          @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
-      seo_title_maker("#{@course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
-    end
+          seo_title_maker("#{@course.name} - #{@course_module.name} - #{@course_module_element.try(:name)}", @course_module_element.try(:seo_description) || @course_module.try(:seo_description).to_s, @course_module_element.try(:seo_no_index) || @course_module.try(:seo_no_index))
+        end
 
-    if @course_module_element.nil? && @course_module.nil?
 
-      # The URL is out of date or wrong.
+        if @course_module_element.nil? && @course_module.nil?
+
+          # The URL is out of date or wrong.
+          flash[:warning] = t('controllers.courses.show.warning')
+          Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+          redirect_to library_special_link(@course)
+        else
+          # The URL worked out Okay
+          reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
+          if @course_module_element.try(:is_quiz)
+            set_up_quiz
+          elsif @course_module_jumbo_quiz
+            set_up_jumbo_quiz
+          elsif @course_module_element.try(:is_video)
+            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+          end
+        end
+      end
+      @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
+    else
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      redirect_to library_special_link(@course)
-    else
-      # The URL worked out Okay
-      reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
-      if @course_module_element.try(:is_quiz)
-        set_up_quiz
-      elsif @course_module_jumbo_quiz
-        set_up_jumbo_quiz
-      elsif @course_module_element.try(:is_video)
-        @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
-      end
+      redirect_to library_url
     end
-    @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
   end
 
   def create # course_module_element_user_log and children
@@ -68,8 +83,7 @@ class CoursesController < ApplicationController
       format.json {
         video_cme_user_log = CourseModuleElementUserLog.find_by_id(params[:course][:videoLogId])
         if video_cme_user_log
-          video_cme_user_log.seconds_watched += params[:course][:position]
-          video_cme_user_log.element_completed = video_cme_user_log.seconds_watched >= params[:course][:duration].to_i
+          video_cme_user_log.element_completed = true
           video_cme_user_log.save
         end
         render json: {}, status: :ok
@@ -125,7 +139,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
             session_guid: current_session_guid,
-            element_completed: true,
+            element_completed: false,
             time_taken_in_seconds: 0,
             quiz_score_actual: nil,
             quiz_score_potential: nil,

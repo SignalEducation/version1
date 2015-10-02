@@ -22,7 +22,7 @@ require 'rails_helper'
 describe CourseModuleElementVideo do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at)
+  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at thumbnail duration)
   CourseModuleElementVideo.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -58,7 +58,6 @@ describe CourseModuleElementVideo do
   it { should validate_presence_of(:transcript) }
 
   # callbacks
-  it { should callback(:set_estimated_study_time).before(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -69,6 +68,5 @@ describe CourseModuleElementVideo do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:set_estimated_study_time) }
 
 end
