@@ -33,22 +33,29 @@
           -else
             %li
               =link_to r.name, r.upload.url, target: '_blank'
+-if @video_cme_user_log
+  :javascript
 
-:javascript
-
-  wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
-    videoFoam: true,
-    stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
-  });
-
-  var videoCmeUserLog = #{@video_cme_user_log.id || 0};
-  wistiaEmbed.bind('play', function() {
-    $.ajax({
-      url: '#{video_watched_data_courses_path}',
-      dataType: 'json',
-      data: JSON.stringify({'videoLogId': videoCmeUserLog}),
-      method: 'PATCH',
-      contentType: "application/json; charset=utf-8"
+    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
+      videoFoam: true,
+      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
     });
-    return this.unbind;
-  });
+
+    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+    wistiaEmbed.bind('play', function() {
+      $.ajax({
+        url: '#{video_watched_data_courses_path}',
+        dataType: 'json',
+        data: JSON.stringify({'videoLogId': videoCmeUserLog}),
+        method: 'PATCH',
+        contentType: "application/json; charset=utf-8"
+      });
+      return this.unbind;
+    });
+-else
+  :javascript
+
+    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
+      videoFoam: true,
+      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
+    });

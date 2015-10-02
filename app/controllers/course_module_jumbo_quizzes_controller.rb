@@ -26,7 +26,7 @@ class CourseModuleJumboQuizzesController < ApplicationController
   def update
     if @course_module_jumbo_quiz.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_module_jumbo_quizzes.update.flash.success')
-      redirect_to subject_course_url(@course_module_jumbo_quiz.course_module.subject_course)
+      redirect_to subject_course_url(@course_module_jumbo_quiz.parent.subject_course)
     else
       render action: :edit
     end
