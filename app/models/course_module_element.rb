@@ -135,6 +135,8 @@ class CourseModuleElement < ActiveRecord::Base
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
     elsif self.course_module.course_module_jumbo_quiz
       self.course_module.course_module_jumbo_quiz
+    elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
+      CourseModuleElement.find(self.course_module.parent.first_active_cme)
     else
       next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
       CourseModuleElement.find(next_id) if next_id

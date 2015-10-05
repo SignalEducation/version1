@@ -30,9 +30,13 @@
                       =child.try(:name)
                     .time
                       -if child.number_of_questions.to_i > 0
-                        =child.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                        -if child.number_of_questions.to_i == 1
+                          =child.number_of_questions.to_s + ' ' + t('views.library.show.question')
+                        -elsif child.number_of_questions.to_i > 1
+                          =child.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                         |
-                      =child.children.all_videos.count.to_s + ' ' + t('views.library.show.number_of_videos')
+                      -if child.video_count > 0
+                        =humanize_time(child.video_duration)
 
                 .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
                   -child.children.all_in_order.all_active.each do |grandchild|
@@ -43,7 +47,7 @@
                         .col-xs-12.col-sm-4
                           .side-meta
                             -if grandchild.is_video
-                              =grandchild.course_module_element_video.duration
+                              =humanize_time(grandchild.course_module_element_video.duration)
                             -elsif grandchild.is_quiz
                               =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else
@@ -69,7 +73,7 @@
           %ul.lined-list
             %li
               =t('views.general.duration')
-              =humanize_time(@course.try(:duration).to_i)
+              =humanize_time(@duration)
             %li
               =t('views.general.updated_at')
               =humanize_datetime(@course.updated_at)
@@ -79,8 +83,6 @@
                 =@course.tutor.try(:full_name)
               -else
                 ='Learn Signal'
-            -if @course.forum_url
-              =link_to "Discuss #{@course.name} in the Forum", @course.forum_url, target: '_blank'
           -#if @course.class == ExamSection
             =link_to t('views.library.show.new_question_bank'), new_section_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
           -#else

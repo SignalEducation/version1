@@ -741,6 +741,7 @@ en:
         items: items
         jumbo_quiz: Jumbo quiz
         questions: Questions
+        question: Question
         quiz: Quiz
         quizzes: MCQs
         video: Video

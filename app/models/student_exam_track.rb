@@ -56,6 +56,7 @@ class StudentExamTrack < ActiveRecord::Base
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :with_active_cmes, -> { includes(:course_module).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
+  scope :all_incomplete, -> { where('percentage_complete < 100') }
 
   # class methods
   def self.assign_user_to_session_guid(the_user_id, the_session_guid)

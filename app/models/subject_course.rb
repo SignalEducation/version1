@@ -103,6 +103,10 @@ class SubjectCourse < ActiveRecord::Base
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
+  def estimated_time_in_seconds
+    self.children.sum(:estimated_time_in_seconds)
+  end
+
   def first_active_cme
     self.active_children.first.try(:first_active_cme)
   end
