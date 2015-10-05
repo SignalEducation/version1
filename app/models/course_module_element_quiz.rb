@@ -49,7 +49,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   before_save :set_jumbo_quiz_id
   before_update :set_high_score_fields
   after_commit :set_ancestors_best_scores
-  after_commit :update_parent_number_of_questions
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -99,10 +98,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def difficult_ids
     self.quiz_questions.all_difficult.map(&:id)
-  end
-
-  def update_parent_number_of_questions
-    self.course_module_element.try(:set_number_of_questions)
   end
 
   protected

@@ -37,6 +37,10 @@ class CorporateStudentsController < ApplicationController
   end
 
   def show
+    tracks =  StudentExamTrack.where(user_id: @corporate_student.id)
+    track_ids = tracks.all.map(&:subject_course_id)
+    @courses = SubjectCourse.where(id: track_ids)
+
   end
 
   def create

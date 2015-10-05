@@ -1,29 +1,38 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.corporate_students.show.h1')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/corporate_side_bar'
 
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.corporate_students.form.full_name')
-        %td.col-sm-8= @corporate_student.full_name
-      %tr
-        %td.col-sm-4=t('views.corporate_students.form.email')
-        %td.col-sm-8= @corporate_student.email
-      %tr
-        %td.col-sm-4=t('views.corporate_students.form.country')
-        %td.col-sm-8= @corporate_student.country.name
-      %tr
-        %td.col-sm-4=t('views.corporate_students.form.corporate_group_name')
-        %td.col-sm-8= @corporate_student.corporate_groups.map(&:name).join("<br>").html_safe
-      %tr
-        %td.col-sm-4=t('views.corporate_students.form.employee_guid')
-        %td.col-sm-8= @corporate_student.employee_guid
+  .main-content
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid.l-padding-side-3x
+        .row.l-margin-bottom.l-margin-top
+          .col-md-6.col-sm-6.col-xs-6
+            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+              =@corporate_student.full_name
 
-    %p
-      =link_to sanitize('&larr; ' + t('views.corporate_students.index.h1')), corporate_students_url
-      |
-      =link_to t('views.general.edit'), edit_corporate_student_url(id: @corporate_student.id), title: t('views.general.edit_tooltip')
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            .corporate-box-item.table-box
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
+                        Course
+                      %th
+                        Completed
+                      %th
+                  %tbody
+                    -@courses.each do |course|
+                      -course.children.count
+                      %tr
+                        %td
+                          =course.name
+
+        .row
+          =link_to t('views.corporate_students.index.h1'), corporate_students_url, class: 'btn btn-cyan'
+          =link_to t('views.general.edit_user'), edit_corporate_student_url(id: @corporate_student.id), class: 'btn btn-red'
+
+  =render partial: 'layouts/new_footer'

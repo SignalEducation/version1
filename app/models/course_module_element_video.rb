@@ -45,7 +45,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:tags) }
-  before_save :set_estimated_time
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -62,10 +61,5 @@ class CourseModuleElementVideo < ActiveRecord::Base
   end
 
   protected
-
-  def set_estimated_time
-    self.parent.estimated_time_in_seconds = self.duration ? self.duration.to_i : self.estimated_study_time_seconds
-  end
-
 
 end

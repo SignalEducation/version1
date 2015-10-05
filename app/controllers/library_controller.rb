@@ -31,13 +31,13 @@ class LibraryController < ApplicationController
       latest_element_id = latest_set.try(:latest_course_module_element_id)
       @next_element = CourseModuleElement.where(id: latest_element_id).first.try(:next_element)
 
-      if @course.try(:live)
-        render 'live_course'
-      elsif @course.try(:live) == false
-        render 'preview_course'
-      else
-        redirect_to library_url
-      end
+    end
+    if @course.try(:live)
+      render 'live_course'
+    elsif @course.try(:live) == false
+      render 'preview_course'
+    else
+      redirect_to library_url
     end
     seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
   end

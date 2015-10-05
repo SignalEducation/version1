@@ -24,6 +24,7 @@
 #  default_number_of_possible_exam_answers :integer
 #  restricted                              :boolean          default(FALSE), not null
 #  corporate_customer_id                   :integer
+#  total_video_duration                    :float            default(0.0)
 #
 
 require 'rails_helper'

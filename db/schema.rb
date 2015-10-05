@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151001081120) do
+ActiveRecord::Schema.define(version: 20151005102207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 20151001081120) do
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
     t.integer  "number_of_questions",       default: 0
+    t.float    "duration",                  default: 0.0
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -253,6 +254,9 @@ ActiveRecord::Schema.define(version: 20151001081120) do
     t.datetime "destroyed_at"
     t.integer  "number_of_questions",       default: 0
     t.integer  "subject_course_id"
+    t.float    "video_duration",            default: 0.0
+    t.integer  "video_count",               default: 0
+    t.integer  "quiz_count",                default: 0
   end
 
   add_index "course_modules", ["exam_level_id"], name: "index_course_modules_on_exam_level_id", using: :btree
@@ -859,6 +863,7 @@ ActiveRecord::Schema.define(version: 20151001081120) do
     t.integer  "default_number_of_possible_exam_answers"
     t.boolean  "restricted",                              default: false, null: false
     t.integer  "corporate_customer_id"
+    t.float    "total_video_duration",                    default: 0.0
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
