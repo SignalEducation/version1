@@ -589,6 +589,32 @@ en:
       form:
         add_extra_answer: 'Add an extra answer'
 
+    groups:
+      form:
+        name: Name
+        name_placeholder: Name
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        description: Discription
+        description_placeholder: Discription goes here!
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        subject_id: Subject
+
+      index:
+        h1: Groups
+
+      show:
+        h1: Group
+
+      edit:
+        h1: Edit Group
+
+      new:
+        h1: New Group
+
+
     home_pages:
       form:
         seo_title: SEO Title
@@ -1010,6 +1036,7 @@ en:
         forum_url_placeholder: Forum Course URL
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
+        group_id: Group
 
       index:
         h1: Courses

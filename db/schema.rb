@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006130004) do
+ActiveRecord::Schema.define(version: 20151006132903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -423,6 +423,20 @@ ActiveRecord::Schema.define(version: 20151006130004) do
   add_index "forum_topics", ["course_module_element_id"], name: "index_forum_topics_on_course_module_element_id", using: :btree
   add_index "forum_topics", ["forum_topic_id"], name: "index_forum_topics_on_forum_topic_id", using: :btree
   add_index "forum_topics", ["reviewed_by"], name: "index_forum_topics_on_reviewed_by", using: :btree
+
+  create_table "groups", force: :cascade do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.boolean  "active",        default: false, null: false
+    t.integer  "sorting_order"
+    t.text     "description"
+    t.integer  "subject_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
+  add_index "groups", ["subject_id"], name: "index_groups_on_subject_id", using: :btree
 
   create_table "home_pages", force: :cascade do |t|
     t.string   "seo_title"
@@ -868,6 +882,8 @@ ActiveRecord::Schema.define(version: 20151006130004) do
     t.boolean  "restricted",                              default: false, null: false
     t.integer  "corporate_customer_id"
     t.float    "total_video_duration",                    default: 0.0
+    t.integer  "group_id"
+    t.integer  "subject_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

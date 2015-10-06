@@ -25,12 +25,35 @@
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
+      -if @groups.present?
+        .course-list-wrap
+          .row
+            -@groups.each do |group|
+              .col-sm-6.col-md-4
+                =link_to library_special_link(group), class: 'box box-course' do
+                  .box-inner
+                    %h3.h4.box-title
+                      =group.try(:name)
+                    %p.box-desc
+                      -if group.short_description
+                        =group.try(:short_description).to_s.truncate(30)
+                      -else
+                        =group.description.to_s.truncate(15)
+                  .box-labelgroup
+                    -if group.live
+                      -if group.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+                        =t('views.course_module_elements.show.continue')
+                      -else
+                        =t('views.general.start')
+                    -else
+                      Get Early Access
+
       -if @courses.present?
         .course-list-wrap
           .row
             -@courses.each do |course|
               .col-sm-6.col-md-4
-                =link_to library_course_url(course.name_url), class: 'box box-course' do
+                =link_to library_special_link(course), class: 'box box-course' do
                   .box-inner
                     %h3.h4.box-title
                       =course.try(:name)

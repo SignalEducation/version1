@@ -35,8 +35,10 @@
                         -elsif child.number_of_questions.to_i > 1
                           =child.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                         |
-                      -if child.video_count > 0
+                      -if child.video_duration > 0
                         =humanize_time(child.video_duration)
+                      -else
+                        =humanize_time(child.estimated_time_in_seconds)
 
                 .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
                   -child.children.all_in_order.all_active.each do |grandchild|
@@ -47,7 +49,11 @@
                         .col-xs-12.col-sm-4
                           .side-meta
                             -if grandchild.is_video
-                              =humanize_time(grandchild.course_module_element_video.duration)
+                              -if grandchild.duration > 0
+                                =humanize_time(grandchild.duration)
+                              -else
+                                =humanize_time(grandchild.estimated_time_in_seconds)
+
                             -elsif grandchild.is_quiz
                               =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                             -else

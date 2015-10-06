@@ -15,6 +15,10 @@
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           -if current_user.admin? || current_user.content_manager?
+            =f.label :group_id, t('views.subject_courses.form.group_id'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
+
             %br/
             =f.label :tutor_id, t('views.subject_courses.form.tutor_id'), class: 'control-label'
             .input-group.input-group-lg.full-width

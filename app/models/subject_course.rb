@@ -25,6 +25,8 @@
 #  restricted                              :boolean          default(FALSE), not null
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
+#  group_id                                :integer
+#  subject_id                              :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -32,12 +34,14 @@ class SubjectCourse < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :group_id
 
   # Constants
 
   # relationships
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  belongs_to :group
+  #belongs_to :subject
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements

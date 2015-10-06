@@ -168,6 +168,19 @@ en:
           success: Exam Section has been deleted
           error: Exam Section was not deleted
 
+    groups:
+      create:
+        flash:
+          success: Group has been created successfully
+      update:
+        flash:
+          success: Group details have been updated successfully
+      destroy:
+        flash:
+          success: Group has been deleted
+          error: Group was not deleted
+
+
     home_pages:
       create:
         flash:

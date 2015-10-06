@@ -1,0 +1,32 @@
+.row
+  .col-sm-12
+    .page-header
+      %h1
+        =t('views.groups.show.h1')
+        \#
+        =@group.id
+.row
+  .col-sm-12
+    %table.table.table-bordered
+      %tr
+        %td.col-sm-4=t('views.groups.form.name')
+        %td.col-sm-8=@group.name
+      %tr
+        %td.col-sm-4=t('views.groups.form.name_url')
+        %td.col-sm-8=@group.name_url
+      %tr
+        %td.col-sm-4=t('views.groups.form.active')
+        %td.col-sm-8=tick_or_cross(@group.active)
+      %tr
+        %td.col-sm-4=t('views.groups.form.sorting_order')
+        %td.col-sm-8=@group.sorting_order
+      %tr
+        %td.col-sm-4=t('views.groups.form.description')
+        %td.col-sm-8=@group.description
+      %tr
+        %td.col-sm-4=t('views.groups.form.subject_id')
+        %td.col-sm-8=@group.subject.name
+    %p
+      =link_to t('views.general.back'), groups_url
+      |
+      =link_to t('views.general.edit'), edit_group_url(id: @group.id), title: t('views.general.edit_tooltip')

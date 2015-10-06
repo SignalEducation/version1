@@ -96,6 +96,7 @@ Rails.application.routes.draw do
     resources :exam_sections, concerns: :supports_reordering do
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
+    resources :groups
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
     get 'wso', to: 'home_pages#show', first_element: 'wso'
@@ -109,9 +110,9 @@ Rails.application.routes.draw do
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
-
-    get 'library/:subject_course_name_url', to: 'library#show', as: :library_course
     get 'library', to: 'library#index', as: :library
+    get 'group/:group_name_url', to: 'group#show', as: :library_group
+    get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
     #get 'library/:exam_level_name_url', to: 'library#show'
     resources :qualifications, concerns: :supports_reordering do

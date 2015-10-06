@@ -290,10 +290,15 @@ class ApplicationController < ActionController::Base
 
   # customer-facing
   def library_special_link(the_thing)
-    if the_thing.class == SubjectCourse
+    if the_thing.class == Group
+      the_thing = the_thing
+      library_group_url(
+                  the_thing.name_url
+      )
+    elsif the_thing.class == SubjectCourse
       the_thing = the_thing
       library_course_url(
-                  the_thing.name_url
+          the_thing.name_url
       )
     else
       library_url

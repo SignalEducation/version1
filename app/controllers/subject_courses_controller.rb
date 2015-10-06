@@ -86,12 +86,13 @@ class SubjectCoursesController < ApplicationController
     if params[:id].to_i > 0
       @subject_course = SubjectCourse.where(id: params[:id]).first
     end
+    @groups = Group.all_active.all_in_order
     @tutors = User.all_tutors.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :group_id)
   end
 
 end
