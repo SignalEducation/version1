@@ -111,7 +111,7 @@ Rails.application.routes.draw do
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
     get 'library', to: 'library#index', as: :library
-    get 'group/:group_name_url', to: 'group#show', as: :library_group
+    get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
     #get 'library/:exam_level_name_url', to: 'library#show'

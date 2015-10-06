@@ -35,18 +35,9 @@
                     %h3.h4.box-title
                       =group.try(:name)
                     %p.box-desc
-                      -if group.short_description
-                        =group.try(:short_description).to_s.truncate(30)
-                      -else
-                        =group.description.to_s.truncate(15)
-                  .box-labelgroup
-                    -if group.live
-                      -if group.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
-                        =t('views.course_module_elements.show.continue')
-                      -else
-                        =t('views.general.start')
-                    -else
-                      Get Early Access
+                      =group.description.to_s.truncate(15)
+                  .box-label
+                    Explore
 
       -if @courses.present?
         .course-list-wrap

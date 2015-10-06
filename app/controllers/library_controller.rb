@@ -4,6 +4,8 @@ class LibraryController < ApplicationController
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
       @subject_courses = SubjectCourse.all_active.all_live.all_in_order
       @non_restricted_courses = @subject_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
+      #TODO change this once Groups are incorporated into the corporate grants system
+      @groups = Group.all_active.all_in_order
       if current_user.restricted_subject_course_ids.empty?
         @courses = @subject_courses.search(params[:search])
       else
@@ -11,6 +13,7 @@ class LibraryController < ApplicationController
       end
     else
       @subject_courses = SubjectCourse.all_active.all_in_order.all_not_restricted
+      @groups = Group.all_active.all_in_order
       @courses = @subject_courses.search(params[:search])
     end
 

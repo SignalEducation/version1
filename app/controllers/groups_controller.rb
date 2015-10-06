@@ -1,16 +1,17 @@
 class GroupsController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
+  before_action except: [:show] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: [:show]
 
   def index
     @groups = Group.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
+    @group = Group.where(name_url: params[:group_name_url]).first
   end
 
   def new
