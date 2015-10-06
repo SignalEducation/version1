@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151005102207) do
+ActiveRecord::Schema.define(version: 20151006130004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,8 @@ ActiveRecord::Schema.define(version: 20151005102207) do
     t.integer  "seconds_watched",             default: 0
     t.boolean  "is_question_bank",            default: false, null: false
     t.integer  "question_bank_id"
+    t.integer  "count_of_questions_taken"
+    t.integer  "count_of_questions_correct"
   end
 
   add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
@@ -818,6 +820,8 @@ ActiveRecord::Schema.define(version: 20151005102207) do
     t.float    "percentage_complete",             default: 0.0
     t.integer  "count_of_cmes_completed",         default: 0
     t.integer  "subject_course_id"
+    t.integer  "count_of_questions_taken"
+    t.integer  "count_of_questions_correct"
   end
 
   add_index "student_exam_tracks", ["exam_level_id"], name: "index_student_exam_tracks_on_exam_level_id", using: :btree

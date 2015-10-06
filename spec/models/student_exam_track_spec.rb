@@ -16,6 +16,8 @@
 #  percentage_complete             :float            default(0.0)
 #  count_of_cmes_completed         :integer          default(0)
 #  subject_course_id               :integer
+#  count_of_questions_taken        :integer
+#  count_of_questions_correct      :integer
 #
 
 require 'rails_helper'

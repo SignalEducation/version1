@@ -16,9 +16,12 @@
 #  percentage_complete             :float            default(0.0)
 #  count_of_cmes_completed         :integer          default(0)
 #  subject_course_id               :integer
+#  count_of_questions_taken        :integer
+#  count_of_questions_correct      :integer
 #
 
 class StudentExamTrack < ActiveRecord::Base
+  #This should have been called CourseModuleUserLog
 
   include LearnSignalModelExtras
 
@@ -48,6 +51,7 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_save :set_count_of_questions_taken
   after_save :send_cm_complete_to_mixpanel
 
   # scopes
@@ -134,6 +138,12 @@ class StudentExamTrack < ActiveRecord::Base
               self.course_module.course_module_elements.all_active.all_quizzes.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
       )
     end
+  end
+
+  def set_count_of_questions_taken
+    cme_user_logs = CourseModuleElementUserLog.where(course_module_id: self.course_module_id)
+    self.count_of_questions_taken = cme_user_logs.sum(:count_of_questions_taken)
+    self.count_of_questions_correct = cme_user_logs.latest_only.sum(:count_of_questions_correct)
   end
 
 end
