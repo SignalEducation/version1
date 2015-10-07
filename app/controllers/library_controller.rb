@@ -2,19 +2,24 @@ class LibraryController < ApplicationController
 
   def index
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
+      @all_groups = Group.all_active.all_in_order
+      @non_restricted_groups = @all_groups.where('id not in (?)', current_user.restricted_group_ids) unless current_user.restricted_group_ids.empty?
+      if @non_restricted_groups.nil?
+        @groups = @all_groups
+      else
+        @groups = @non_restricted_groups
+      end
       @subject_courses = SubjectCourse.all_active.all_live.all_in_order
       @non_restricted_courses = @subject_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
-      #TODO change this once Groups are incorporated into the corporate grants system
-      @groups = Group.all_active.all_in_order
-      if current_user.restricted_subject_course_ids.empty?
-        @courses = @subject_courses.search(params[:search])
+      if @non_restricted_courses.nil?
+        @no_group_courses = @subject_courses.where(group_id: nil)
       else
-        @courses = @non_restricted_courses.search(params[:search])
+        @no_group_courses = @non_restricted_courses.where(group_id: nil)
       end
+
     else
-      @subject_courses = SubjectCourse.all_active.all_in_order.all_not_restricted
       @groups = Group.all_active.all_in_order
-      @courses = @subject_courses.search(params[:search])
+      @no_group_courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(group_id: nil)
     end
 
     @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)

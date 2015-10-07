@@ -55,32 +55,6 @@
   z-index: 10;
 }
 
-.box-item .panel-icon {
-  background-color: $cyan-1;
-  color: white;
-  display: inline-block;
-  font-size: 12px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  padding-top: 7px;
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  margin-left: -15px;
-  text-align: center;
-}
-
-.box-item.panel {
-  padding-left: 1px;
-  padding-right:1px;
-  padding-top: 35px;
-  padding-bottom: 0px;
-
-}
-
 .one-line-text {
   overflow: hidden;
   white-space: nowrap;

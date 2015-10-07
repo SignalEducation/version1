@@ -881,6 +881,31 @@ a.box-item {
   }
 }
 
+.one-line-text {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#progress_circles {
+  //position: absolute;
+  padding: 0;
+  margin: 0;
+  left: 456px;
+  bottom: 40px;
+  li {
+    list-style: none;
+    display: inline-block;
+    background: #ccc;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin-right: 14px;
+
+  }
+  li.lesson-complete {
+    background: darken($green-1, 45);
+  }
+}
 
 .referral-header {
   border: none;
@@ -1074,45 +1099,181 @@ ol.example li.placeholder:before {
   }
 
 }
+//////////////////////
+a.library-box {
+  text-decoration: none;
 
-//  Debugging
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .library-box-title {
+      //color: $red-1;
+    }
+    .library-box-label {
+      background: shade($red-1, 10%);
+    }
+  }
+}
+.library-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.library-box-course {
+    text-align: center;
+    margin-top: $gutter*1.5;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .library-box-inner {
+      padding-top: $gutter*2.5;
+    }
+  }
+}
+.library-box-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.library-box-inner {
+  padding: $gutter*2 $gutter/2;
+}
+.library-box-desc {
+  margin: $gutter/2 0 0 0;
+}
+.library-box-label {
+  background: $red-1;
+  color: $white;
+  padding: $gutter/1.45;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+a.library-box-item {
+  color: $purple-1;
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+  &:hover, &:active {
+    border: 1px solid $purple-1;
+    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+  }
+}
+.library-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $purple-1;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.library-box-topic-item {
 
-// * { outline: 1px solid red }
+  }
+}
+.library-box-topic-item {
+  padding-right: $gutter*2;
+}
+.library-box-item .panel-icon {
+  background-color: $cyan-1;
+  color: white;
+  display: inline-block;
+  font-size: 12px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  padding-top: 7px;
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  margin-left: -15px;
+  text-align: center;
+}
+.library-box-item .panel-icon.icon-big {
+  width: 40px;
+  height:40px;
+  padding-top: 12px;
+  margin-left: -18px;
+}
+.library-box-item .panel-icon.icon-inner {
+  top: 30px;
+  width: 90px;
+  height: 90px;
+  padding-top: 30px;
+  font-size: 34px;
+  margin-left: -45px;
+}
+.library-box-item .panel-icon.icon-inner.icon-red {
+  background-color: $red-1;
+}
+.library-box-item .panel-icon.icon-inner.icon-cyan {
+  background-color: $cyan-1;
+}
+.library-box-item .panel-icon.icon-inner.icon-purple {
+  background-color: $purple-1;
+}
 
-/*
-@include breakpoint(xs-min) {
-  body {
-    position: relative;
-    &:after {
-      content: "XS";
-      position: fixed;
-      z-index: 10000;
-      display: block;
-      top: 5px;
-      right: 5px;
-      font-size: 8px;
-    }
-  }
+.library-box-item.panel {
+  padding-left: 0px;
+  padding-right:0px;
+  padding-top: 35px;
+  padding-bottom: 0px;
+
 }
-@include breakpoint(sm-min) {
-  body {
-    &:after {
-      content: "SM";
-    }
-  }
-}
-@include breakpoint(md-min) {
-  body {
-    &:after {
-      content: "MD";
-    }
-  }
-}
-@include breakpoint(lg-min) {
-  body {
-    &:after {
-      content: "LG";
-    }
-  }
-}
-*/
+

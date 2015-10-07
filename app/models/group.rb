@@ -41,6 +41,14 @@ class Group < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def active_children
+    children.all_active
+  end
+
+  def children
+    self.subject_courses
+  end
+
   def destroyable?
     false
   end
