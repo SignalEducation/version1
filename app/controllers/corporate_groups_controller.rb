@@ -109,22 +109,39 @@ class CorporateGroupsController < ApplicationController
     # First we will update existing grants or destroy
     # them if flags were cleared.
     subject_course_ids = params[:courses].try(:keys) || []
+    group_ids = params[:groups].try(:keys) || []
     remove_grants = []
     @corporate_group.corporate_group_grants.each do |cgg|
-      if subject_course_ids.include?(cgg.subject_course_id.to_s)
-        cgg.compulsory = params[:courses][cgg.subject_course_id.to_s] == "compulsory"
-        cgg.restricted = params[:courses][cgg.subject_course_id.to_s] == "restricted"
-        subject_course_ids.delete(cgg.subject_course_id.to_s)
-        cgg.save
-      else
-        cgg.destroy
+      if cgg.subject_course_id && cgg.group_id.nil?
+        if subject_course_ids.include?(cgg.subject_course_id.to_s)
+          cgg.compulsory = params[:courses][cgg.subject_course_id.to_s] == "compulsory"
+          cgg.restricted = params[:courses][cgg.subject_course_id.to_s] == "restricted"
+          subject_course_ids.delete(cgg.subject_course_id.to_s)
+          cgg.save
+        else
+          cgg.destroy
         end
+      elsif cgg.subject_course_id.nil? && cgg.group_id
+        if group_ids.include?(cgg.group_id.to_s)
+          cgg.compulsory = params[:groups][cgg.group_id.to_s] == "compulsory"
+          cgg.restricted = params[:groups][cgg.group_id.to_s] == "restricted"
+          group_ids.delete(cgg.group_id.to_s)
+          cgg.save
+        else
+          cgg.destroy
+        end
+      end
     end
     # Now let's add new ones.
-    subject_course_ids.each do |id|
-      @corporate_group.corporate_group_grants.create(subject_course_id: id,
-                                                     compulsory: params[:courses][id] == "compulsory",
-                                                     restricted: params[:courses][id] == "restricted")
+    subject_course_ids.each do |sci|
+      @corporate_group.corporate_group_grants.create(subject_course_id: sci,
+                                                     compulsory: params[:courses][sci] == "compulsory",
+                                                     restricted: params[:courses][sci] == "restricted")
+    end
+    group_ids.each do |gi|
+      @corporate_group.corporate_group_grants.create(group_id: gi,
+                                                     compulsory: params[:groups][gi] == "compulsory",
+                                                     restricted: params[:groups][gi] == "restricted")
     end
   end
 end

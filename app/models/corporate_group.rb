@@ -48,6 +48,14 @@ class CorporateGroup < ActiveRecord::Base
     corporate_group_grants.where(subject_course_id: subject_course_id).first.try(:compulsory)
   end
 
+  def group_restricted?(group_id)
+    corporate_group_grants.where(group_id: group_id).first.try(:restricted)
+  end
+
+  def group_compulsory?(group_id)
+    corporate_group_grants.where(group_id: group_id).first.try(:compulsory)
+  end
+
   def compulsory_subject_course_ids
     corporate_group_grants
       .where("subject_course_id is not null")
@@ -60,6 +68,20 @@ class CorporateGroup < ActiveRecord::Base
       .where("subject_course_id is not null")
       .where(restricted: true)
       .pluck(:subject_course_id)
+  end
+
+  def compulsory_group_ids
+    corporate_group_grants
+      .where("group_id is not null")
+      .where(compulsory: true)
+      .pluck(:group_id)
+  end
+
+  def restricted_group_ids
+    corporate_group_grants
+      .where("group_id is not null")
+      .where(restricted: true)
+      .pluck(:group_id)
   end
 
   protected
