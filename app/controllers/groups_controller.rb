@@ -9,7 +9,12 @@ class GroupsController < ApplicationController
   before_action :get_variables, except: [:show]
 
   def index
-    @groups = Group.paginate(per_page: 50, page: params[:page]).all_in_order
+    if current_user.corporate_customer?
+      @groups = Group.where(corporate_customer_id: current_user.corporate_customer_id)
+    else
+      @groups = Group.paginate(per_page: 50, page: params[:page])
+    end
+
   end
 
   def show
@@ -21,6 +26,16 @@ class GroupsController < ApplicationController
   end
 
   def edit
+  end
+
+  def edit_courses
+    @group = Group.find(params[:group_id]) rescue nil
+    @subject_courses = SubjectCourse.all_active.all_in_order
+    if @group.nil? ||
+        (current_user.corporate_customer? && current_user.corporate_customer_id != @group.corporate_customer_id)
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to groups_url
+    end
   end
 
   def create
@@ -42,6 +57,18 @@ class GroupsController < ApplicationController
       redirect_to groups_url
     else
       render action: :edit
+    end
+  end
+
+  def update_courses
+    @group = Group.find(params[:group_id]) rescue nil
+    if @group &&
+        (current_user.admin? || current_user.corporate_customer_id == @group.corporate_customer_id)
+      @group.subject_course_ids = params[:group][:subject_course_ids]
+      flash[:success] = I18n.t('controllers.groups.update_subjects.flash.success')
+      redirect_to groups_url
+    else
+      render action: :edit_members
     end
   end
 

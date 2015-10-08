@@ -179,6 +179,10 @@ en:
         flash:
           success: Group has been deleted
           error: Group was not deleted
+      update_subjects:
+        flash:
+          success: Course Group courses have been updated successfully
+
 
 
     home_pages:

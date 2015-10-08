@@ -29,6 +29,7 @@ en:
       drag_to_reorder: Drag to reorder
       duration: "Duration: "
       edit: Edit
+      edit_courses: Edit Courses
       show: Show
       edit_tooltip: click to edit
       example: Example
@@ -603,16 +604,20 @@ en:
         subject_id: Subject
 
       index:
-        h1: Groups
+        h1: Course Groups
 
       show:
-        h1: Group
+        h1: Course Group
 
       edit:
-        h1: Edit Group
+        h1: Edit Course Group
 
       new:
-        h1: New Group
+        h1: New Course Group
+
+      manage_courses:
+        course: Courses
+
 
 
     home_pages:
@@ -1530,7 +1535,7 @@ en:
 
       index:
         h1: Corporate Groups
-        corp_h1: Groups
+        corp_h1: User Groups
         exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted

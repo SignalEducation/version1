@@ -97,6 +97,12 @@ Rails.application.routes.draw do
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
     resources :groups
+    resources :groups do
+      get 'edit_courses', action: :edit_courses
+      patch 'update_courses', action: :update_courses
+      put 'update_courses', action: :update_courses
+    end
+
     get 'acca', to: 'home_pages#show', first_element: 'acca'
     get 'cfa', to: 'home_pages#show', first_element: 'cfa'
     get 'wso', to: 'home_pages#show', first_element: 'wso'

@@ -1,0 +1,36 @@
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/corporate_side_bar'
+  .main-content
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                ="#{current_user.corporate_customer.organisation_name} Course Groups"
+        .col-md-12.l-margin-top-big
+          .corporate-box-item.table-box{data: {destination: groups_url}}
+            .table-responsive
+              %table.table.sorted_table{style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th=t('views.groups.form.name')
+                    %th=t('views.groups.form.active')
+                    %th=t('views.groups.form.subject_id')
+                    %th
+                %tbody
+                  -@groups.each do |group|
+                    %tr{id: group.id}
+                      %td=group.name
+                      %td=tick_or_cross(group.active)
+                      %td=#group.subject
+                      %td
+                        =link_to t('views.general.edit_courses'),group_edit_courses_url(group_id: group.id), class: 'btn btn-purple btn-small'
+                        =link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-cyan btn-small'
+
+        .row
+          =link_to t('views.general.new'), new_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+  =render partial: 'layouts/new_footer'
