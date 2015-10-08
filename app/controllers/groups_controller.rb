@@ -1,8 +1,10 @@
 class GroupsController < ApplicationController
 
-  before_action :logged_in_required
   before_action except: [:show] do
-    ensure_user_is_of_type(['admin'])
+    :logged_in_required
+  end
+  before_action except: [:show] do
+    ensure_user_is_of_type(['admin', 'corporate_customer'])
   end
   before_action :get_variables, except: [:show]
 
@@ -23,6 +25,9 @@ class GroupsController < ApplicationController
 
   def create
     @group = Group.new(allowed_params)
+    if current_user.corporate_customer
+      @group.corporate_customer_id = current_user.corporate_customer_id
+    end
     if @group.save
       flash[:success] = I18n.t('controllers.groups.create.flash.success')
       redirect_to groups_url

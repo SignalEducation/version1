@@ -2,15 +2,16 @@
 #
 # Table name: groups
 #
-#  id            :integer          not null, primary key
-#  name          :string
-#  name_url      :string
-#  active        :boolean          default(FALSE), not null
-#  sorting_order :integer
-#  description   :text
-#  subject_id    :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                    :integer          not null, primary key
+#  name                  :string
+#  name_url              :string
+#  active                :boolean          default(FALSE), not null
+#  sorting_order         :integer
+#  description           :text
+#  subject_id            :integer
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  corporate_customer_id :integer
 #
 
 class Group < ActiveRecord::Base
@@ -37,6 +38,8 @@ class Group < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
+  scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
+  scope :for_non_corporates, -> { where(corporate_customer_id: nil) }
 
   # class methods
 

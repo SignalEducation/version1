@@ -52,15 +52,15 @@
                   Start
 
 
+      -if @courses.present?
         %br/
         %hr/
         %br/
-      -if @no_group_courses.present?
         .course-list-wrap
           .row
             %h4.h-separator.h-separator-center.text-center.l-margin-bottom-big
               ='Other Courses'
-            -@no_group_courses.each do |course|
+            -@courses.each do |course|
               .col-sm-6.col-md-4
                 =link_to library_special_link(course), class: 'box box-course' do
                   .box-inner
@@ -80,7 +80,7 @@
                     -else
                       Get Early Access
 
-      -else
+      -#else
         ="Sorry there are no courses containing the terms #{params[:search]}"
 
 =render partial: 'layouts/new_footer'
