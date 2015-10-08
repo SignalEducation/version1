@@ -4,35 +4,17 @@ class LibraryController < ApplicationController
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
       #Filter Groups for corporate students by corporate_customer_id and by restrictions.
       all_groups = Group.all_active.all_in_order
-      all_corporate_groups = all_groups.for_corporates
-      non_corporate_groups = all_groups.for_non_corporates
-      current_users_groups = non_corporate_groups + all_corporate_groups.where(corporate_customer_id: current_user.corporate_customer_id)
-      non_restricted_groups = current_users_groups.where('id not in (?)', current_user.restricted_group_ids) unless current_user.restricted_group_ids.empty?
-      if @non_restricted_groups.nil?
-        @groups = current_users_groups
-      else
-        @groups = non_restricted_groups
-      end
-
-      #Filter Courses for corporate students by corporate_customer_id and by restrictions.
-      all_courses = SubjectCourse.all_active.all_live.all_in_order.where(group_id: nil)
-      all_corporate_courses = all_courses.for_corporates
-      non_corporate_courses = all_courses.for_non_corporates
-      current_users_courses = non_corporate_courses + all_corporate_courses.where(corporate_customer_id: current_user.corporate_customer_id)
-      non_restricted_courses = current_users_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
-      if non_restricted_courses.nil?
-        @courses = current_users_courses
-      else
-        @courses = non_restricted_courses
-      end
-
+      public_groups = all_groups.for_public
+      private_groups = all_groups.for_corporates
+      users_private_groups = private_groups.where(corporate_customer_id: current_user.corporate_customer_id)
+      non_restricted_private_groups = users_private_groups.where.not(id: current_user.restricted_group_ids)
+      non_restricted_public_groups = public_groups.where.not(id: current_user.restricted_group_ids)
+      @groups = (non_restricted_private_groups + non_restricted_public_groups).uniq
+      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(group_id: nil).where(corporate_customer_id: current_user.corporate_customer_id)
     else
-      @groups = Group.all_active.for_non_corporates.all_in_order
-      @no_group_courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(group_id: nil)
+      @groups = Group.all_active.for_public.all_in_order
+      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(group_id: nil)
     end
-
-    @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
-    @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete <= ?', 100)
   end
 
   def show

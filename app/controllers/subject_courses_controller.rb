@@ -87,6 +87,8 @@ class SubjectCoursesController < ApplicationController
       @subject_course = SubjectCourse.where(id: params[:id]).first
     end
     @groups = Group.all_active.all_in_order
+    @non_corporate_groups = @groups.for_public
+    @corporate_groups = @groups.where(corporate_customer_id: current_user.corporate_customer_id)
     @tutors = User.all_tutors.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
   end

@@ -39,7 +39,7 @@ class Group < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
-  scope :for_non_corporates, -> { where(corporate_customer_id: nil) }
+  scope :for_public, -> { where(corporate_customer_id: nil) }
 
   # class methods
 
