@@ -4,7 +4,7 @@ class GroupsController < ApplicationController
     :logged_in_required
   end
   before_action except: [:show] do
-    ensure_user_is_of_type(['admin', 'corporate_customer'])
+    ensure_user_is_of_type(['admin', 'content_manager', 'corporate_customer'])
   end
   before_action :get_variables, except: [:show]
 
@@ -12,13 +12,19 @@ class GroupsController < ApplicationController
     if current_user.corporate_customer?
       @groups = Group.where(corporate_customer_id: current_user.corporate_customer_id)
     else
-      @groups = Group.paginate(per_page: 50, page: params[:page])
+      @groups = Group.where(corporate_customer_id: nil).paginate(per_page: 50, page: params[:page])
     end
 
   end
 
   def show
     @group = Group.where(name_url: params[:group_name_url]).first
+    courses = @group.active_children
+    if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
+      @courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).where.not(id: current_user.restricted_group_ids)
+    else
+      @courses = courses.all_not_restricted      
+    end
   end
 
   def new
@@ -30,7 +36,11 @@ class GroupsController < ApplicationController
 
   def edit_courses
     @group = Group.find(params[:group_id]) rescue nil
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    if current_user.corporate_customer?
+      @subject_courses = SubjectCourse.all_active.all_in_order.where(corporate_customer_id: current_user.corporate_customer_id)
+    elsif
+      @subject_courses = SubjectCourse.all_active.all_in_order.where(corporate_customer_id: nil)
+    end
     if @group.nil? ||
         (current_user.corporate_customer? && current_user.corporate_customer_id != @group.corporate_customer_id)
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')

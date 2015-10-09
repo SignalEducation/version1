@@ -10,7 +10,7 @@
     .container-fluid
       .course-list-wrap
         .row
-          -@group.active_children.all_in_order.each do |course|
+          -@courses.all_in_order.each do |course|
             .col-sm-6.col-md-4
               =link_to library_special_link(course), class: 'box box-course' do
                 .box-inner
@@ -29,3 +29,5 @@
                       =t('views.general.start')
                   -else
                     Get Early Access
+
+=render partial: 'layouts/new_footer'

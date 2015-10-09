@@ -28,8 +28,8 @@
                       %td=tick_or_cross(group.active)
                       %td=#group.subject
                       %td
-                        =link_to t('views.general.edit_courses'),group_edit_courses_url(group_id: group.id), class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.edit_courses'),group_edit_courses_url(group_id: group.id), class: 'btn btn-purple btn-small'
 
         .row
           =link_to t('views.general.new'), new_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')

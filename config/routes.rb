@@ -96,7 +96,7 @@ Rails.application.routes.draw do
     resources :exam_sections, concerns: :supports_reordering do
       get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
     end
-    resources :groups
+    resources :groups, concerns: :supports_reordering
     resources :groups do
       get 'edit_courses', action: :edit_courses
       patch 'update_courses', action: :update_courses

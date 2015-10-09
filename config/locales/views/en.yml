@@ -602,6 +602,7 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         subject_id: Subject
+        course_count: No. of Courses
 
       index:
         h1: Course Groups

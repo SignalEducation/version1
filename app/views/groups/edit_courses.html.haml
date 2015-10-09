@@ -31,7 +31,7 @@
 
 
                   =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-                  =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+                  =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
       =render partial: 'layouts/new_footer'
 -else
   .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
@@ -39,25 +39,25 @@
       .row.l-margin-bottom.l-margin-top
         .col-md-6.col-sm-6.col-xs-6
           %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
-            ="Members of #{@corporate_group.name}"
+            ="Members of #{@group.name}"
 
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top
           .corporate-box-item.table-box
-            = form_for(@corporate_group, url: { action: :update_members }, html: {class: 'form-horizontal', role: 'form', id: 'group-users-form'}) do |f|
+            = form_for(@group, url: { action: :update_courses }, html: {class: 'form-horizontal', role: 'form', id: 'group-courses-form'}) do |f|
               %table
                 %thead
                   %tr
-                    %th{style: 'font-size: 1.6rem;'}= t('views.corporate_groups.manage_members.student')
+                    %th{style: 'font-size: 1.6rem;'}= t('views.groups.manage_courses.course')
                     %th
                 %tbody
-                  - @corporate_group.corporate_customer.students.each do |student|
+                  - @subject_courses.each do |courses|
                     %tr
-                      %td= student.full_name
-                      %td{style: 'width: 5%;'}= check_box_tag "corporate_group[corporate_student_ids][]",
-                            student.id, @corporate_group.users.include?(student)
+                      %td= courses.name
+                      %td{style: 'width: 5%;'}= check_box_tag "group[subject_course_ids][]",
+                            courses.id, @group.subject_courses.include?(courses)
 
 
               =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-              =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+              =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
   =render partial: 'layouts/new_footer'

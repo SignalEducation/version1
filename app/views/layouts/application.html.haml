@@ -75,7 +75,7 @@
         =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'subject_courses' && current_user.corporate_customer?) || (controller_name == 'groups' && current_user.corporate_customer?)
+    -elsif (controller_name == 'subject_courses' && current_user.try(:corporate_customer?)) || (controller_name == 'groups' && current_user.try(:corporate_customer?))
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield

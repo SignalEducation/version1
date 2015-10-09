@@ -15,7 +15,7 @@
                   %tr
                     %th=t('views.groups.form.name')
                     %th=t('views.groups.form.active')
-                    %th=t('views.groups.form.subject_id')
+                    %th=t('views.groups.form.course_count')
                     %th
                     %th
                 %tbody
@@ -23,9 +23,11 @@
                     %tr{id: group.id}
                       %td=group.name
                       %td=tick_or_cross(group.active)
-                      %td=#group.subject
+                      %td=group.subject_courses.count
                       %td
                         =link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.edit_courses'),group_edit_courses_url(group_id: group.id), class: 'btn btn-purple btn-small'
+
                       %td
                         %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 

@@ -10,10 +10,10 @@ class LibraryController < ApplicationController
       non_restricted_private_groups = users_private_groups.where.not(id: current_user.restricted_group_ids)
       non_restricted_public_groups = public_groups.where.not(id: current_user.restricted_group_ids)
       @groups = (non_restricted_private_groups + non_restricted_public_groups).uniq
-      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(corporate_customer_id: current_user.corporate_customer_id)
+      #@courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(corporate_customer_id: current_user.corporate_customer_id)
     else
       @groups = Group.all_active.for_public.all_in_order
-      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted
+      #@courses = SubjectCourse.all_active.all_in_order.all_not_restricted
     end
   end
 
@@ -24,21 +24,20 @@ class LibraryController < ApplicationController
       if current_user.nil? || (@course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id))
         redirect_to library_url
       end
-    else
-      users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
-      user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-      latest_set = user_course_sets.first
-      @latest_element_id = latest_set.try(:latest_course_module_element_id)
-      @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-      if @course.try(:live)
-        render 'live_course'
-      elsif @course.try(:live) == false
-        render 'preview_course'
-      else
-        redirect_to library_url
-      end
-      seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
     end
+    users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
+    user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
+    latest_set = user_course_sets.first
+    @latest_element_id = latest_set.try(:latest_course_module_element_id)
+    @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+    if @course.try(:live)
+      render 'live_course'
+    elsif @course.try(:live) == false
+      render 'preview_course'
+    else
+      redirect_to library_url
+    end
+    seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
   end
 
   def subscribe
