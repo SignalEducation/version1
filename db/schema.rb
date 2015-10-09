@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151008080412) do
+ActiveRecord::Schema.define(version: 20151009094455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -884,8 +884,6 @@ ActiveRecord::Schema.define(version: 20151008080412) do
     t.boolean  "restricted",                              default: false, null: false
     t.integer  "corporate_customer_id"
     t.float    "total_video_duration",                    default: 0.0
-    t.integer  "group_id"
-    t.integer  "subject_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
