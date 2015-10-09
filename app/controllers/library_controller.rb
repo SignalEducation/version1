@@ -10,10 +10,10 @@ class LibraryController < ApplicationController
       non_restricted_private_groups = users_private_groups.where.not(id: current_user.restricted_group_ids)
       non_restricted_public_groups = public_groups.where.not(id: current_user.restricted_group_ids)
       @groups = (non_restricted_private_groups + non_restricted_public_groups).uniq
-      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(group_id: nil).where(corporate_customer_id: current_user.corporate_customer_id)
+      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(corporate_customer_id: current_user.corporate_customer_id)
     else
       @groups = Group.all_active.for_public.all_in_order
-      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(group_id: nil)
+      @courses = SubjectCourse.all_active.all_in_order.all_not_restricted
     end
   end
 

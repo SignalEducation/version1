@@ -32,13 +32,13 @@ class SubjectCourse < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :group_id
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id
 
   # Constants
 
   # relationships
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
-  belongs_to :group
+  has_and_belongs_to_many :groups
   #belongs_to :subject
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
@@ -75,7 +75,6 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
-
 
   # class methods
   def self.get_by_name_url(the_name_url)

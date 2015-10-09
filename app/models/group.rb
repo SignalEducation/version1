@@ -23,7 +23,7 @@ class Group < ActiveRecord::Base
 
   # relationships
   #belongs_to :subject
-  has_many :subject_courses
+  has_and_belongs_to_many :subject_courses
 
   # validation
   validates :name, presence: true
