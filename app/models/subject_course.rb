@@ -39,7 +39,6 @@ class SubjectCourse < ActiveRecord::Base
   # relationships
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   has_and_belongs_to_many :groups
-  #belongs_to :subject
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements

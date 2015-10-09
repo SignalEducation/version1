@@ -1140,23 +1140,6 @@ ActiveRecord::Schema.define(version: 20151009094841) do
   add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
-  create_table "user_profiles", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "tutor_project_id"
-    t.string   "tutor_wistia_url"
-    t.text     "description"
-    t.string   "url"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-  end
-
-  add_index "user_profiles", ["tutor_project_id"], name: "index_user_profiles_on_tutor_project_id", using: :btree
-  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "first_name"

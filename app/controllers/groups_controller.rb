@@ -23,7 +23,7 @@ class GroupsController < ApplicationController
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
       @courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).where.not(id: current_user.restricted_group_ids)
     else
-      @courses = courses.all_not_restricted      
+      @courses = courses.all_not_restricted
     end
   end
 

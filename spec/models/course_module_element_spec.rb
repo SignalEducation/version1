@@ -31,7 +31,7 @@ require 'rails_helper'
 describe CourseModuleElement do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at forum_topic_id forum_topic_id )
+  black_list = %w(id created_at updated_at destroyed_at forum_topic_id forum_topic_id duration)
   CourseModuleElement.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -87,9 +87,9 @@ describe CourseModuleElement do
 
   # callbacks
   it { should callback(:sanitize_name_url).before(:save) }
-  it { should callback(:update_the_module_total_time_and_question_count).after(:save) }
-  it { should callback(:log_question_count).before(:save) }
-  it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:log_question_count_and_duration).before(:save) }
+  it { should callback(:update_parent).after(:save) }
+  it { should callback(:update_student_exam_tracks).after(:save) }
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
@@ -109,7 +109,7 @@ describe CourseModuleElement do
   it { should respond_to(:next_element) }
   it { should respond_to(:parent) }
   it { should respond_to(:previous_element) }
-  it { should respond_to(:update_the_module_total_time_and_question_count) }
-  it { should respond_to(:log_question_count) }
+  it { should respond_to(:update_student_exam_tracks) }
+  it { should respond_to(:type_name) }
 
 end
