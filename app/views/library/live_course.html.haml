@@ -27,7 +27,7 @@
                 %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
                   .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"} }
                     .box-topic-item
-                      =child.try(:name)
+                      =truncate(child.name, length: 70)
                     .time
                       -if child.number_of_questions.to_i > 0
                         -if child.number_of_questions.to_i == 1
