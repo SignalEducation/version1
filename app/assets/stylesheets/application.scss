@@ -522,6 +522,9 @@ a.box {
 .box-inner {
   padding: $gutter*2 $gutter/2;
 }
+.box-pic {
+  padding: $gutter/2 $gutter/2 ;
+}
 .box-desc {
   margin: $gutter/2 0 0 0;
 }
@@ -778,7 +781,12 @@ a.box-item {
 
 .coursebar {
   color: white;
-  padding: 24px
+  padding: 24px;
+  a.btn.btn-purple {
+    @include breakpoint(xs-min) {
+      margin-bottom: $gutter;
+    }
+  }
 }
 .coursebar a:hover {
   color: white;
@@ -787,21 +795,18 @@ a.box-item {
 .coursetype {
   text-decoration: initial;
   padding: 13px;
-  padding-left: 20px;
-  padding-right: 20px;
-  color: rgba(255, 255, 255, 0.9);
+  padding-left: $gutter;
+  padding-right: $gutter;
+  margin-right: $gutter;
   text-transform: uppercase;
   letter-spacing: .2rem;
   text-decoration: none;
   font-size: 12px;
-  //font-size: 1.3rem;
-  &:focus {
-    background-color: $purple-1;
-    border-radius: 5%;
-    border: 0px solid $purple-1;
-    text-decoration: initial;
-    color: rgba(255, 255, 255, 0.9);
-  }
+  background-color: $purple-1;
+  border-radius: 5%;
+  border: 0px solid $purple-1;
+  text-decoration: initial;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 // Dashboard Boxes

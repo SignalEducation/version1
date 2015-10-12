@@ -4,13 +4,11 @@
       .container-fluid
         .row
           .col-md-12{role: 'tablist'}
-            -if current_user.compulsory_subject_course_ids.any?
-              %a.coursetype.l-margin-top{href: '#compulsory', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
-                ='Compulsory Courses'
-            %a.coursetype.l-margin-top{href: '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
-              ='Active Courses'
-            %a.coursetype.l-margin-top{href: '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
-              ='Complete Courses'
+            .l-margin-top-small
+              -if current_user.compulsory_subject_course_ids.any?
+                =link_to 'Compulsory Courses', '#compulsory', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'btn btn-purple'
+              =link_to 'Active Courses', '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'btn btn-purple'
+              =link_to 'Completed Courses', '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}, class: 'btn btn-purple'
 
   .l-section-small.is-bg-asphalt
     .tab-content

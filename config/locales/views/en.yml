@@ -16,7 +16,7 @@ en:
       approve: Approve
       approve_tooltip: click to approve
       at_date_time: At
-      author: "Author: "
+      author: "Author : "
       back: Back
       by: by
       cancel: Cancel
@@ -27,7 +27,7 @@ en:
       delete_confirmation: Are you sure?
       details: Details
       drag_to_reorder: Drag to reorder
-      duration: "Duration: "
+      duration: "Duration : "
       edit: Edit
       edit_courses: Edit Courses
       show: Show
@@ -74,7 +74,7 @@ en:
         click_to_view: click to view
         coming_soon: Coming Soon
       created_at: Created at
-      updated_at: "Last Updated: "
+      updated_at: "Last Updated : "
       credit_card_number_placeholder: Card Number
       expiry_month_prompt: "Exp Mth"
       expiry_year_prompt: "Exp Year"
@@ -1055,6 +1055,8 @@ en:
       show:
         h1: Course
         add_course_module: Please create a Course module to begin
+        description: Description
+        info: More Info
 
       edit:
         h1: Edit Course

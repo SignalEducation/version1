@@ -28,7 +28,7 @@
                   .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"} }
                     .box-topic-item
                       =truncate(child.name, length: 70)
-                    .time
+                    .time.hidden-xs
                       -if child.number_of_questions.to_i > 0
                         -if child.number_of_questions.to_i == 1
                           =child.number_of_questions.to_s + ' ' + t('views.library.show.question')
@@ -69,26 +69,39 @@
 
 
 
-        .col-sm-12.col-md-4
+        .col-sm-12.col-md-4.l-margin-bottom-huge
           %h3
-            Description
+            =t('views.subject_courses.show.description')
           %p
             =@course.try(:description)
           %h3.l-margin-top-big
-            More info
+            =t('views.subject_courses.show.info')
           %ul.lined-list
-            %li
+            %li.lined-list-item
               =t('views.general.duration')
               =humanize_time(@duration)
-            %li
+            %li.lined-list-item
               =t('views.general.updated_at')
               =humanize_datetime(@course.updated_at)
-            %li
-              =t('views.general.author')
-              -if @course.try(:tutor_id)
+            -if @course.try(:tutor_id)
+              -if @course.tutor.profile_image_file_name
+                %br/
+                =t('views.general.author')
                 =@course.tutor.try(:full_name)
+                %br/
+                .col-md-6{style: 'padding-left: 0;'}
+                  =link_to profile_url(@course.tutor), class: 'box'  do
+                    .box-pic
+                      =image_tag @course.tutor.profile_image.url, class: 'profile-pic', style: 'margin-bottom: 10px;'
+
               -else
-                ='Learn Signal'
+                %li.lined-list-item
+                  =t('views.general.author')
+                  =@course.tutor.try(:full_name)
+            -else
+              ='Learn Signal'
+
+
           -#if @course.class == ExamSection
             =link_to t('views.library.show.new_question_bank'), new_section_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
           -#else
