@@ -30,4 +30,5 @@
                   -else
                     Get Early Access
 
-=render partial: 'layouts/new_footer'
+-if current_user && (current_user.corporate_customer?)
+  =render partial: 'layouts/new_footer'
