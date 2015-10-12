@@ -19,9 +19,11 @@
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
 #  is_jumbo_quiz               :boolean          default(FALSE), not null
+#  seconds_watched             :integer          default(0)
 #  is_question_bank            :boolean          default(FALSE), not null
 #  question_bank_id            :integer
-#  seconds_watched             :integer          default(0)
+#  count_of_questions_taken    :integer
+#  count_of_questions_correct  :integer
 #
 
 require 'rails_helper'
@@ -29,7 +31,7 @@ require 'rails_helper'
 describe CourseModuleElementUserLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at latest_attempt)
+  black_list = %w(id created_at updated_at latest_attempt count_of_questions_correct count_of_questions_taken)
   CourseModuleElementUserLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

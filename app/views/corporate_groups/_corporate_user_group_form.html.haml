@@ -26,7 +26,23 @@
                   %table.col-sm-12
                     %thead
                       %tr
-                        %th{style: "width: 70%; font-size: 1.6rem;"}='Course'
+                        %th{style: "width: 70%; font-size: 1.6rem;"}='Groups'
+                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.compulsory')
+                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
+                        %th{style: "width: 4%;"}
+                    %tbody
+                      -Group.all_active.all_in_order.each do |group|
+                        %tr
+                          %td=group.name
+                          %td=radio_button_tag("groups[#{group.id}]", "compulsory", @corporate_group.group_compulsory?(group.id), class: "col-sm-3")
+                          %td=radio_button_tag("groups[#{group.id}]", "restricted", @corporate_group.group_restricted?(group.id), class: "col-sm-3")
+                          %td=link_to('Clear', '#', id: "groups_#{group.id}_clear", class: "clear-radio-lnk col-sm-3")
+                  %hr/
+                  %table.col-sm-12
+                    %thead
+                      %tr
+                      %tr
+                        %th{style: "width: 70%; font-size: 1.6rem;"}='Courses'
                         %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.compulsory')
                         %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
                         %th{style: "width: 4%;"}

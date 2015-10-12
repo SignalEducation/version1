@@ -23,6 +23,7 @@
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
+#  duration                  :float            default(0.0)
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -87,8 +88,8 @@ class CourseModuleElement < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
-  before_save :log_question_count
-  after_save :update_the_module_total_time_and_question_count
+  before_save :log_question_count_and_duration
+  after_save :update_parent
   after_save :update_student_exam_tracks
 
   # scopes
@@ -125,10 +126,6 @@ class CourseModuleElement < ActiveRecord::Base
     the_list
   end
 
-  def log_question_count
-    self.number_of_questions = self.try(:quiz_questions).try(:count)
-  end
-
   def my_position_among_siblings
     self.array_of_sibling_ids.index(self.id)
   end
@@ -138,6 +135,8 @@ class CourseModuleElement < ActiveRecord::Base
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
     elsif self.course_module.course_module_jumbo_quiz
       self.course_module.course_module_jumbo_quiz
+    elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
+      CourseModuleElement.find(self.course_module.parent.first_active_cme)
     else
       next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
       CourseModuleElement.find(next_id) if next_id
@@ -164,12 +163,6 @@ class CourseModuleElement < ActiveRecord::Base
     true
   end
 
-  def update_the_module_total_time_and_question_count
-    self.course_module.try(:recalculate_estimated_time)
-    self.course_module.try(:recalculate_question_count)
-  end
-
-
   def type_name
     if is_quiz
       "Quiz"
@@ -187,6 +180,26 @@ class CourseModuleElement < ActiveRecord::Base
     attributes['description'].blank? &&
     attributes['upload'].blank? &&
     attributes['the_url'].blank?
+  end
+
+  def log_question_count_and_duration
+    if self.is_video
+      self.duration = self.try(:course_module_element_video).try(:duration)
+    elsif self.is_quiz
+        self.number_of_questions = self.try(:course_module_element_quiz).try(:quiz_questions).try(:count)
+    else
+      true
+    end
+  end
+
+  def update_parent
+    if self.is_video
+      self.course_module.try(:recalculate_video_fields)
+    elsif self.is_quiz
+      self.course_module.try(:recalculate_quiz_fields)
+    else
+      true
+    end
   end
 
 end

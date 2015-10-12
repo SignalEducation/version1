@@ -14,7 +14,7 @@ RSpec.describe 'corporate_requests/edit', type: :view do
       assert_select 'input#corporate_request_email[name=?]', 'corporate_request[email]'
       assert_select 'input#corporate_request_phone_number[name=?]', 'corporate_request[phone_number]'
       assert_select 'input#corporate_request_website[name=?]', 'corporate_request[website]'
-      assert_select 'textarea#corporate_request_message[name=?]', 'corporate_request[message]'
+      assert_select 'textarea#corporate_request_personal_message[name=?]', 'corporate_request[personal_message]'
     end
   end
 end

@@ -19,9 +19,11 @@
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
 #  is_jumbo_quiz               :boolean          default(FALSE), not null
+#  seconds_watched             :integer          default(0)
 #  is_question_bank            :boolean          default(FALSE), not null
 #  question_bank_id            :integer
-#  seconds_watched             :integer          default(0)
+#  count_of_questions_taken    :integer
+#  count_of_questions_correct  :integer
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -70,6 +72,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # callbacks
   before_create :set_latest_attempt
   before_create :set_booleans
+  before_save :set_count_of_questions_taken_and_correct
   after_create :calculate_score
   after_create :create_or_update_student_exam_track
   after_update :update_student_exam_track
@@ -175,6 +178,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       self.is_video = true
     end
     true
+  end
+
+  def set_count_of_questions_taken_and_correct
+    self.count_of_questions_taken = self.quiz_attempts.count
+    self.count_of_questions_correct = self.quiz_attempts.all_correct.count
   end
 
   def set_latest_attempt

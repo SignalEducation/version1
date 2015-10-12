@@ -24,6 +24,7 @@
 #  default_number_of_possible_exam_answers :integer
 #  restricted                              :boolean          default(FALSE), not null
 #  corporate_customer_id                   :integer
+#  total_video_duration                    :float            default(0.0)
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -37,6 +38,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # relationships
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  has_and_belongs_to_many :groups
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
@@ -62,7 +64,6 @@ class SubjectCourse < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url) }
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
-  before_save :recalculate_cme_count
   before_destroy :check_dependencies
 
   # scopes
@@ -71,6 +72,8 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_not_live, -> { where(live: false) }
   scope :all_not_restricted, -> { where(restricted: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
+  scope :for_public, -> { where(corporate_customer_id: nil) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
@@ -84,7 +87,6 @@ class SubjectCourse < ActiveRecord::Base
       SubjectCourse.all_active.all_in_order
     end
   end
-
 
   # instance methods
   def active_children
@@ -101,6 +103,10 @@ class SubjectCourse < ActiveRecord::Base
 
   def destroyable?
     !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
+  end
+
+  def estimated_time_in_seconds
+    self.children.sum(:estimated_time_in_seconds)
   end
 
   def first_active_cme
@@ -163,6 +169,15 @@ class SubjectCourse < ActiveRecord::Base
     self.tutor.full_name
   end
 
+  def recalculate_fields
+    recalculate_cme_count
+    recalculate_quiz_count
+    set_question_count
+    recalculate_video_count
+    set_total_video_duration
+    self.save
+  end
+
   protected
 
   def calculate_best_possible_score
@@ -171,6 +186,22 @@ class SubjectCourse < ActiveRecord::Base
 
   def recalculate_cme_count
     self.cme_count = self.active_children.sum(:cme_count)
+  end
+
+  def recalculate_quiz_count
+    self.quiz_count = self.active_children.sum(:quiz_count)
+  end
+
+  def recalculate_video_count
+    self.video_count = self.active_children.sum(:video_count)
+  end
+
+  def set_question_count
+    self.question_count = self.active_children.sum(:number_of_questions)
+  end
+
+  def set_total_video_duration
+    self.total_video_duration = self.active_children.sum(:video_duration)
   end
 
   def check_dependencies

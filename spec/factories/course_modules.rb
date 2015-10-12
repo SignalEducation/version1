@@ -22,6 +22,9 @@
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
 #  subject_course_id         :integer
+#  video_duration            :float            default(0.0)
+#  video_count               :integer          default(0)
+#  quiz_count                :integer          default(0)
 #
 
 FactoryGirl.define do

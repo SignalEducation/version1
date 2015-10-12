@@ -12,7 +12,7 @@
               Learn Signal provides tailored online learning for businesses and individuals, offering a wide portfolio of integrated skills from professional courses to recognised and accredited qualifications.
             %p.h5.h-white.text-center
               Using leading technologies, skilled tutors and bespoke solutions tailored to individuals and organisations, Learn Signal can help increase productivity, improve business outcomes and support greater business agility.
-          .col-md-6.col-md-offset-3
+          -#.col-md-6.col-md-offset-3
             %form.form-horizontal.l-margin-top
               .row
                 .col-sm-12
@@ -25,12 +25,44 @@
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
+      -if @groups.present?
+        .row.l-margin-top-big.l-margin-bottom-huge
+          -@groups.each do |group|
+            .col-md-6.l-margin-top
+              =link_to library_special_link(group), class: 'library-box-item panel text-center' do
+                .panel-icon.icon-big
+                  %i.glyphicon.glyphicon-arrow-right
+                .panel-body.l-margin-bottom
+                  %h3.text-bold.one-line-text.l-margin-bottom
+                    =group.name
+                  %p.l-margin-bottom-big
+                    =group.description.to_s.truncate(25)
+                  -#TODO change this to be subject_course_user_logs.completed.count
+                  - #total_lesson = group.subject_courses.count
+                  - #complete_lesson = group.subject_courses.count
+                  - total_lesson = 10
+                  - complete_lesson = 10
+                  -#if group.subject_courses.count > 0
+                  %ul#progress_circles
+                    -(1..complete_lesson).each do |i|
+                      %li.lesson-complete
+                    -(1..(total_lesson-complete_lesson)).each do |i|
+                      %li
+                .box-label
+                  Start
+
+
       -if @courses.present?
+        %br/
+        %hr/
+        %br/
         .course-list-wrap
           .row
+            %h4.h-separator.h-separator-center.text-center.l-margin-bottom-big
+              ='Other Courses'
             -@courses.each do |course|
               .col-sm-6.col-md-4
-                =link_to library_course_url(course.name_url), class: 'box box-course' do
+                =link_to library_special_link(course), class: 'box box-course' do
                   .box-inner
                     %h3.h4.box-title
                       =course.try(:name)
@@ -48,7 +80,7 @@
                     -else
                       Get Early Access
 
-      -else
+      -#else
         ="Sorry there are no courses containing the terms #{params[:search]}"
 
 =render partial: 'layouts/new_footer'

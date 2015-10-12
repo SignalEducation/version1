@@ -22,6 +22,9 @@
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
 #  subject_course_id         :integer
+#  video_duration            :float            default(0.0)
+#  video_count               :integer          default(0)
+#  quiz_count                :integer          default(0)
 #
 
 class CourseModule < ActiveRecord::Base
@@ -65,7 +68,7 @@ class CourseModule < ActiveRecord::Base
   before_save :set_cme_count
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
-  after_commit :update_parent
+  after_commit :update_parent_and_sets
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :institution_id) }
@@ -157,13 +160,16 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
-  def recalculate_estimated_time
-    calculate_estimated_time
+  def recalculate_video_fields
+    calculate_video_count
+    calculate_video_duration
     self.save
   end
 
-  def recalculate_question_count
+  def recalculate_quiz_fields
+    calculate_estimated_time
     calculate_number_of_questions
+    calculate_quiz_count
     self.save
   end
 
@@ -182,21 +188,27 @@ class CourseModule < ActiveRecord::Base
     self.number_of_questions = self.course_module_elements.sum(:number_of_questions)
   end
 
+  def calculate_quiz_count
+    self.quiz_count = self.course_module_elements.all_quizzes.count
+  end
+
+  def calculate_video_count
+    self.video_count = self.course_module_elements.all_videos.count
+  end
+
+  def calculate_video_duration
+    self.video_duration = self.course_module_elements.sum(:duration)
+  end
+
   def set_cme_count
     self.cme_count = children_available_count
     true
   end
 
-  def update_parent
-    changes_1 = self.previous_changes[:estimated_time_in_seconds] # [prev,new]
-    changes_2 = self.previous_changes[:cme_count] # [prev,new]
-    if (changes_1 && changes_1[0] != changes_1[1]) || (changes_2 && changes_2[0] != changes_2[1])
-      self.parent.save
-      if changes_2 && changes_2[0] != changes_2[1]
-        self.student_exam_tracks.each do |set|
-          set.recalculate_completeness
-        end
-      end
+  def update_parent_and_sets
+    self.parent.recalculate_fields
+    self.student_exam_tracks.each do |set|
+      set.recalculate_completeness
     end
   end
 

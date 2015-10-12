@@ -29,6 +29,7 @@ en:
       drag_to_reorder: Drag to reorder
       duration: "Duration: "
       edit: Edit
+      edit_courses: Edit Courses
       show: Show
       edit_tooltip: click to edit
       example: Example
@@ -589,6 +590,37 @@ en:
       form:
         add_extra_answer: 'Add an extra answer'
 
+    groups:
+      form:
+        name: Name
+        name_placeholder: Name
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        description: Discription
+        description_placeholder: Discription goes here!
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        subject_id: Subject
+        course_count: No. of Courses
+
+      index:
+        h1: Course Groups
+
+      show:
+        h1: Course Group
+
+      edit:
+        h1: Edit Course Group
+
+      new:
+        h1: New Course Group
+
+      manage_courses:
+        course: Courses
+
+
+
     home_pages:
       form:
         seo_title: SEO Title
@@ -741,6 +773,7 @@ en:
         items: items
         jumbo_quiz: Jumbo quiz
         questions: Questions
+        question: Question
         quiz: Quiz
         quizzes: MCQs
         video: Video
@@ -1009,6 +1042,7 @@ en:
         forum_url_placeholder: Forum Course URL
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
+        group_id: Group
 
       index:
         h1: Courses
@@ -1502,7 +1536,7 @@ en:
 
       index:
         h1: Corporate Groups
-        corp_h1: Groups
+        corp_h1: User Groups
         exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted
@@ -1538,7 +1572,7 @@ en:
         add_to_groups: Add to Groups
 
       index:
-        h1: Corporate Students
+        h1: Students
         corp_h1: Users
         corp_managers: Managers
 

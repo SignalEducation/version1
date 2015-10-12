@@ -304,6 +304,17 @@ class User < ActiveRecord::Base
     @mixpanel_alias_id = mixpanel_alias_id
   end
 
+  def compulsory_group_ids
+    @compulsory_group_ids ||=
+      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_group_ids }.flatten.uniq : []
+  end
+
+  def restricted_group_ids
+    @restricted_group_ids ||=
+      corporate_student? ?
+        (corporate_groups.map { |cg| cg.restricted_group_ids }.flatten.uniq - compulsory_group_ids) : []
+  end
+
   def compulsory_subject_course_ids
     @compulsory_subject_course_ids ||=
       corporate_student? ? corporate_groups.map { |cg| cg.compulsory_subject_course_ids }.flatten.uniq : []

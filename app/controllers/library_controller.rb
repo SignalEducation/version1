@@ -2,35 +2,37 @@ class LibraryController < ApplicationController
 
   def index
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-      @subject_courses = SubjectCourse.all_active.all_live.all_in_order
-      @non_restricted_courses = @subject_courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
-      if current_user.restricted_subject_course_ids.empty?
-        @courses = @subject_courses.search(params[:search])
-      else
-        @courses = @non_restricted_courses.search(params[:search])
-      end
+      #Filter Groups for corporate students by corporate_customer_id and by restrictions.
+      all_groups = Group.all_active.all_in_order
+      public_groups = all_groups.for_public
+      private_groups = all_groups.for_corporates
+      users_private_groups = private_groups.where(corporate_customer_id: current_user.corporate_customer_id)
+      non_restricted_private_groups = users_private_groups.where.not(id: current_user.restricted_group_ids)
+      non_restricted_public_groups = public_groups.where.not(id: current_user.restricted_group_ids)
+      @groups = (non_restricted_private_groups + non_restricted_public_groups).uniq
+      #@courses = SubjectCourse.all_active.all_in_order.all_not_restricted.where(corporate_customer_id: current_user.corporate_customer_id)
     else
-      @subject_courses = SubjectCourse.all_active.all_in_order.all_not_restricted
-      @courses = @subject_courses.search(params[:search])
+      @groups = Group.all_active.for_public.all_in_order
+      #@courses = SubjectCourse.all_active.all_in_order.all_not_restricted
     end
-
-    @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).order(updated_at: :desc)
-    @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete <= ?', 100)
   end
 
   def show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    if @course.corporate_customer_id
-      if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
-        redirect_to library_url
-      end
+    if @course.nil?
+      redirect_to library_url
     else
-      users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
+      @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
+      if @course.corporate_customer_id
+        if current_user.nil? || (@course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id))
+          redirect_to library_url
+        end
+      end
+      users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
       user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
       latest_set = user_course_sets.first
-      latest_element_id = latest_set.try(:latest_course_module_element_id)
-      @next_element = CourseModuleElement.where(id: latest_element_id).first.try(:next_element)
-
+      @latest_element_id = latest_set.try(:latest_course_module_element_id)
+      @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
       if @course.try(:live)
         render 'live_course'
       elsif @course.try(:live) == false
@@ -38,8 +40,8 @@ class LibraryController < ApplicationController
       else
         redirect_to library_url
       end
+      seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
     end
-    seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
   end
 
   def subscribe
