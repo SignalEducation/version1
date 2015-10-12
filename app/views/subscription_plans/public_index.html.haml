@@ -37,8 +37,7 @@
                     &#160;
                     &#160;
                     &#160;
-                    =@first_plan.currency.leading_symbol
-                    =@first_plan.price
+                    =number_in_local_currency_no_precision(@first_plan.price, @first_plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{@first_plan.payment_frequency_in_months}")
                 -if @second_plan
@@ -47,8 +46,7 @@
                     &#160;
                     &#160;
                     &#160;
-                    =@second_plan.currency.leading_symbol
-                    =@second_plan.price
+                    =number_in_local_currency_no_precision(@second_plan.price, @second_plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{@second_plan.payment_frequency_in_months}")
                 -if @third_plan
@@ -57,8 +55,7 @@
                     &#160;
                     &#160;
                     &#160;
-                    =@third_plan.currency.leading_symbol
-                    =@third_plan.price
+                    =number_in_local_currency_no_precision(@third_plan.price, @third_plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{@third_plan.payment_frequency_in_months}")
                 -if @fourth_plan
@@ -67,8 +64,7 @@
                     &#160;
                     &#160;
                     &#160;
-                    =@fourth_plan.currency.leading_symbol
-                    =@fourth_plan.price
+                    =number_in_local_currency_no_precision(@fourth_plan.price, @fourth_plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{@fourth_plan.payment_frequency_in_months}")
 
@@ -89,8 +85,7 @@
               -@student_subscription_plans.each do |plan|
                 .l-section-extra-small
                   %h3.plan-text.h-separator.h-separator-white.h-separator-center
-                    =plan.currency.leading_symbol
-                    =plan.price
+                    =number_in_local_currency_no_precision(plan.price, plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
 

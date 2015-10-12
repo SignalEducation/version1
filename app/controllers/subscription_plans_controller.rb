@@ -37,6 +37,8 @@ class SubscriptionPlansController < ApplicationController
     @second_plan = @corporate_subscription_plans[1]
     @third_plan = @corporate_subscription_plans[2]
     @fourth_plan = @corporate_subscription_plans[3]
+
+    seo_title_maker('Pricing', nil, nil)
   end
 
   def show
