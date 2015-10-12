@@ -71,7 +71,9 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_live, -> { where(live: true) }
   scope :all_not_live, -> { where(live: false) }
   scope :all_not_restricted, -> { where(restricted: false) }
+
   scope :all_in_order, -> { order(:sorting_order, :name) }
+
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
 
@@ -115,6 +117,10 @@ class SubjectCourse < ActiveRecord::Base
 
   def number_complete_by_user_or_guid(user_id, session_guid)
     self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
+  end
+
+  def parent
+    self.groups
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
