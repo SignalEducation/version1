@@ -51,7 +51,7 @@ describe SubjectCourse do
   it { should have_many(:course_module_jumbo_quizzes) }
   it { should have_many(:student_exam_tracks) }
   it { should have_many(:corporate_group_grants) }
-  it { should have_and_belongs_to_many(:groups) }
+  it { should have_and_belong_to_many(:groups) }
 
   # validation
   it { should validate_presence_of(:name) }

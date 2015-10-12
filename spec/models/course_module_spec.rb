@@ -32,7 +32,7 @@ require 'rails_helper'
 describe CourseModule do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at exam_section_id exam_level_id institution_id qualification_id)
+  black_list = %w(id created_at updated_at destroyed_at exam_section_id exam_level_id institution_id qualification_id quiz_count video_count video_duration )
   CourseModule.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -45,6 +45,7 @@ describe CourseModule do
   #it { expect()CourseModule.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
+  it { should belong_to(:subject_course) }
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
   it { should have_many(:course_module_element_videos) }
@@ -75,10 +76,10 @@ describe CourseModule do
 
   # callbacks
   it { should callback(:set_sorting_order).before(:create) }
+  it { should callback(:set_cme_count).before(:save) }
   it { should callback(:calculate_estimated_time).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
-  it { should callback(:set_cme_count).before(:save) }
-  it { should callback(:update_parent).after(:commit) }
+  it { should callback(:update_parent_and_sets).after(:commit) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -103,6 +104,8 @@ describe CourseModule do
   it { should respond_to(:parent) }
   it { should respond_to(:previous_module) }
   it { should respond_to(:previous_module_id) }
-  it { should respond_to(:recalculate_estimated_time) }
+  it { should respond_to(:recalculate_video_fields) }
+  it { should respond_to(:recalculate_quiz_fields) }
+  it { should respond_to(:total_time_watched_videos) }
 
 end

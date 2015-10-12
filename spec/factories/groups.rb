@@ -16,12 +16,12 @@
 
 FactoryGirl.define do
   factory :group do
-    name "MyString"
-name_url "MyString"
-active false
-sorting_order 1
-description "MyText"
-subject_id 1
+    sequence(:name)           { |n| "Group #{n}" }
+    sequence(:name_url)           { |n| "group-#{n}" }
+    active false
+    sorting_order 1
+    description 'MyText'
+    subject_id nil
   end
 
 end

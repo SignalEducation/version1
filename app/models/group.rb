@@ -26,8 +26,8 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :subject_courses
 
   # validation
-  validates :name, presence: true
-  validates :name_url, presence: true
+  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
   validates :subject_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}

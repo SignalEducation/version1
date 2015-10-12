@@ -15,6 +15,6 @@ RSpec.describe 'corporate_requests/index', type: :view do
     expect(rendered).to match(/#{@corporate_requests.first.email.to_s}/)
     expect(rendered).to match(/#{@corporate_requests.first.phone_number.to_s}/)
     expect(rendered).to match(/#{@corporate_requests.first.website.to_s}/)
-    expect(rendered).to match(/#{@corporate_requests.first.message.to_s}/)
+    expect(rendered).to match(/#{@corporate_requests.first.personal_message.to_s}/)
   end
 end
