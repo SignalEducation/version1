@@ -45,11 +45,11 @@ class Group < ActiveRecord::Base
 
   # instance methods
   def active_children
-    children.all_active
+    children.try(:all_active)
   end
 
   def children
-    self.subject_courses
+    self.try(:subject_courses)
   end
 
   def destroyable?

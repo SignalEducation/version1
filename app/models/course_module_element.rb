@@ -184,9 +184,9 @@ class CourseModuleElement < ActiveRecord::Base
 
   def log_question_count_and_duration
     if self.is_video
-      self.duration = self.course_module_element_video.duration
+      self.duration = self.try(:course_module_element_video).try(:duration)
     elsif self.is_quiz
-        self.number_of_questions = self.course_module_element_quiz.quiz_questions.count
+        self.number_of_questions = self.try(:course_module_element_quiz).try(:quiz_questions).try(:count)
     else
       true
     end

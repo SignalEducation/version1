@@ -1,13 +1,16 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 describe GroupsController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
 
-  # todo: Try to create children for group_1
   let!(:group_1) { FactoryGirl.create(:group) }
   let!(:group_2) { FactoryGirl.create(:group) }
+  let!(:group_1_subject_course) { [ FactoryGirl.create(:active_subject_course),
+                                    FactoryGirl.create(:active_subject_course) ] }
   let!(:valid_params) { FactoryGirl.attributes_for(:group) }
 
   context 'Not logged in: ' do
@@ -20,9 +23,15 @@ describe GroupsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to sign_in' do
-        get :show, id: 1
-        expect_bounce_as_not_signed_in
+      it 'should see group_1' do
+        get :show, id: group_1.id
+        expect_show_success_with_model('group', group_1.id)
+      end
+
+      # optional - some other object
+      it 'should see group_2' do
+        get :show, id: group_2.id
+        expect_show_success_with_model('group', group_2.id)
       end
     end
 
@@ -80,7 +89,7 @@ describe GroupsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('groups', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -100,71 +109,69 @@ describe GroupsController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('group')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with group_1' do
         get :edit, id: group_1.id
-        expect_edit_success_with_model('group', group_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with group_2' do
         get :edit, id: group_2.id
-        expect_edit_success_with_model('group', group_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, group: valid_params
-        expect_create_success_with_model('group', groups_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, group: {valid_params.keys.first => ''}
-        expect_create_error_with_model('group')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for group_1' do
         put :update, id: group_1.id, group: valid_params
-        expect_update_success_with_model('group', groups_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for group_2' do
         put :update, id: group_2.id, group: valid_params
-        expect_update_success_with_model('group', groups_url)
-        expect(assigns(:group).id).to eq(group_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: group_1.id, group: {valid_params.keys.first => ''}
-        expect_update_error_with_model('group')
-        expect(assigns(:group).id).to eq(group_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [group_2.id, group_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: group_1.id
-        expect_delete_error_with_model('group', groups_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: group_2.id
-        expect_delete_success_with_model('group', groups_url)
+        expect_bounce_as_not_allowed
       end
     end
 

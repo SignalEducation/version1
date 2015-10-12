@@ -1,8 +1,6 @@
 class GroupsController < ApplicationController
 
-  before_action except: [:show] do
-    :logged_in_required
-  end
+  before_action :logged_in_required, except: [:show]
   before_action except: [:show] do
     ensure_user_is_of_type(['admin', 'content_manager', 'corporate_customer'])
   end
@@ -19,11 +17,11 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.where(name_url: params[:group_name_url]).first
-    courses = @group.active_children
+    courses = @group.try(:active_children)
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
       @courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).where.not(id: current_user.restricted_group_ids)
     else
-      @courses = courses.all_not_restricted
+      @courses = courses.try(:all_not_restricted)
     end
   end
 
@@ -38,7 +36,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:group_id]) rescue nil
     if current_user.corporate_customer?
       @subject_courses = SubjectCourse.all_active.all_in_order.where(corporate_customer_id: current_user.corporate_customer_id)
-    elsif
+    else
       @subject_courses = SubjectCourse.all_active.all_in_order.where(corporate_customer_id: nil)
     end
     if @group.nil? ||
