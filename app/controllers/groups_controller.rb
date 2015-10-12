@@ -25,6 +25,11 @@ class GroupsController < ApplicationController
     end
   end
 
+  def admin_show
+    @group = Group.where(id: params[:group_id]).first
+    @courses = @group.try(:active_children)
+  end
+
   def new
     @group = Group.new
   end

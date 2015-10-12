@@ -123,7 +123,7 @@
         $('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).where(tutor: true).first.try(:id)}") {
       $('#corporate-fields').show();
       $('#tutor-fields').hide();
-    } else if ($('#user_user_group_id').val() == "#{UserGroup.where(tutor: true).first.try(:id)}") {
+    } else if ($('#user_user_group_id').val() == "#{UserGroup.where(tutor: true).where(corporate_customer: false).where(corporate_student: false).first.try(:id)}") {
       $('#tutor-fields').show();
       $('#corporate-fields').hide();
     } else {

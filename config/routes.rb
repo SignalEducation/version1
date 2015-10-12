@@ -99,6 +99,7 @@ Rails.application.routes.draw do
     resources :groups, concerns: :supports_reordering
     resources :groups do
       get 'edit_courses', action: :edit_courses
+      get 'admin_show', action: :admin_show
       patch 'update_courses', action: :update_courses
       put 'update_courses', action: :update_courses
     end
