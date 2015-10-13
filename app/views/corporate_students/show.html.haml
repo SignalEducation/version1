@@ -30,6 +30,8 @@
                       %tr
                         %td
                           =course.name
+                        %td
+                          =#tick_or_cross(course.name)
 
         .row
           =link_to t('views.corporate_students.index.h1'), corporate_students_url, class: 'btn btn-cyan'

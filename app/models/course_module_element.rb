@@ -159,8 +159,10 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_student_exam_tracks
-    StudentExamTracksWorker.perform_async(self.course_module_id)
-    true
+    sets = StudentExamTrack.where(course_module_id: self.course_module_id)
+    sets.all.each do |set|
+      set.recalculate_completeness
+    end
   end
 
   def type_name

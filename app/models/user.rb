@@ -224,7 +224,7 @@ class User < ActiveRecord::Base
   end
 
   def assign_anonymous_logs_to_user(session_guid)
-    model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack]
+    model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
       the_model.assign_user_to_session_guid(self.id, session_guid)
     end

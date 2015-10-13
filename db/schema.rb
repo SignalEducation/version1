@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151009094841) do
+ActiveRecord::Schema.define(version: 20151013101836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -869,6 +869,22 @@ ActiveRecord::Schema.define(version: 20151009094841) do
   add_index "subject_areas", ["name_url"], name: "index_subject_areas_on_name_url", using: :btree
   add_index "subject_areas", ["sorting_order"], name: "index_subject_areas_on_sorting_order", using: :btree
 
+  create_table "subject_course_user_logs", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "session_guid"
+    t.integer  "subject_course_id"
+    t.integer  "percentage_complete",             default: 0
+    t.integer  "count_of_cmes_completed",         default: 0
+    t.integer  "latest_course_module_element_id"
+    t.boolean  "completed",                       default: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+  end
+
+  add_index "subject_course_user_logs", ["session_guid"], name: "index_subject_course_user_logs_on_session_guid", using: :btree
+  add_index "subject_course_user_logs", ["subject_course_id"], name: "index_subject_course_user_logs_on_subject_course_id", using: :btree
+  add_index "subject_course_user_logs", ["user_id"], name: "index_subject_course_user_logs_on_user_id", using: :btree
+
   create_table "subject_courses", force: :cascade do |t|
     t.string   "name"
     t.string   "name_url"
@@ -1139,6 +1155,23 @@ ActiveRecord::Schema.define(version: 20151009094841) do
   add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
   add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "tutor_project_id"
+    t.string   "tutor_wistia_url"
+    t.text     "description"
+    t.string   "url"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "user_profiles", ["tutor_project_id"], name: "index_user_profiles_on_tutor_project_id", using: :btree
+  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
