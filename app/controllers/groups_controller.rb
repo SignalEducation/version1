@@ -17,11 +17,15 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.where(name_url: params[:group_name_url]).first
-    courses = @group.try(:active_children)
-    if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-      @courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).where.not(id: current_user.restricted_group_ids)
+    if @group.nil?
+      redirect_to library_url
     else
-      @courses = courses.try(:all_not_restricted)
+      courses = @group.try(:active_children)
+      if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
+        @courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).where.not(id: current_user.restricted_group_ids)
+      else
+        @courses = courses.try(:all_not_restricted)
+      end
     end
   end
 

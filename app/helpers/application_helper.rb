@@ -53,6 +53,11 @@ module ApplicationHelper
     number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
   end
 
+  def number_in_local_currency_no_precision(amount, currency_id)
+    ccy = Currency.find(currency_id)
+    number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 0)
+  end
+
   def sanitizer(some_text)
     sanitize(some_text.to_s.gsub("\r",'<br />'), tags: %w(p strong em br hr table caption tbody thead tfoot tr th td b i u ol ul li), attributes: %w(id class) )
   end
