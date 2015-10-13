@@ -90,6 +90,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_save :sanitize_name_url
   before_save :log_question_count_and_duration
   after_save :update_parent
+  after_update :update_parent
   after_save :update_student_exam_tracks
 
   # scopes

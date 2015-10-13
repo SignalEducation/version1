@@ -18,20 +18,57 @@
               .table-responsive
                 %table.table{style: 'font-size: 18px;'}
                   %thead
+                    .col-md-10.l-margin-bottom
+                      %h2
+                        ='Compulsory Courses'
                     %tr
                       %th
                         Course
                       %th
+                        Videos Watched
+                      %th
                         Completed
                       %th
                   %tbody
-                    -@courses.each do |course|
-                      -course.children.count
+                    -@compulsory_course_logs.each do |log|
                       %tr
                         %td
-                          =course.name
+                          =log.subject_course.name
                         %td
-                          =#tick_or_cross(course.name)
+                          =log.count_of_cmes_completed
+                          &#47;
+                          =log.subject_course.video_count.to_i
+                        %td
+                          =log.subject_course.question_count
+                        %td
+                          =tick_or_cross(log.completed)
+
+            .corporate-box-item.table-box
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    .col-md-10.l-margin-bottom
+                      %h2
+                        ='Other Courses'
+                    %tr
+                      %th
+                        Course
+                      %th
+                        Lessons Completed
+                      %th
+                        Completed
+                      %th
+                  %tbody
+                    -@other_course_logs.each do |log|
+                      %tr
+                        %td
+                          =log.subject_course.name
+                        %td
+                          =log.count_of_cmes_completed
+                        %td
+                          =log.subject_course.question_count
+                        %td
+                          =tick_or_cross(log.completed)
 
         .row
           =link_to t('views.corporate_students.index.h1'), corporate_students_url, class: 'btn btn-cyan'

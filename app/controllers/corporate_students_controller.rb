@@ -37,10 +37,11 @@ class CorporateStudentsController < ApplicationController
   end
 
   def show
-    tracks =  StudentExamTrack.where(user_id: @corporate_student.id)
-    track_ids = tracks.all.map(&:subject_course_id)
-    @courses = SubjectCourse.where(id: track_ids)
+    course_logs = SubjectCourseUserLog.where(user_id: @corporate_student.id)
+    compulsory_course_ids = @corporate_student.compulsory_subject_course_ids
+    @compulsory_course_logs = course_logs.where(subject_course_id: compulsory_course_ids)
 
+    @other_course_logs = course_logs.where.not(subject_course_id: compulsory_course_ids)
   end
 
   def create
