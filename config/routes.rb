@@ -67,7 +67,7 @@ Rails.application.routes.draw do
 
     # general resources
     resources :corporate_customers
-    resources :corporate_groups, except: [:show] do
+    resources :corporate_groups do
       get 'edit_members', action: :edit_members
       patch 'update_members', action: :update_members
       put 'update_members', action: :update_members
