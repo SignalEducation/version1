@@ -22,11 +22,11 @@ class GroupsController < ApplicationController
     else
       courses = @group.try(:active_children)
       if current_user && (current_user.corporate_student?)
-        corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id)
-        non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids)
+        corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).all_in_order
+        non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
         @courses = corporate_courses + non_restricted_courses
       else
-        @courses = courses.try(:all_not_restricted)
+        @courses = courses.try(:all_not_restricted).all_in_oder
       end
     end
   end
