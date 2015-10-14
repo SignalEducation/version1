@@ -10,7 +10,7 @@
     .container-fluid
       .course-list-wrap
         .row
-          -@courses.all_in_order.each do |course|
+          -@courses.each do |course|
             .col-sm-6.col-md-4
               =link_to library_special_link(course), class: 'box box-course' do
                 .box-inner

@@ -21,10 +21,13 @@ class GroupsController < ApplicationController
       redirect_to library_url
     else
       courses = @group.try(:active_children)
-      if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-        @courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).where.not(id: current_user.restricted_group_ids)
+      if current_user && (current_user.corporate_student?)
+        corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).all_in_order
+        non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
+        @courses = corporate_courses + non_restricted_courses
       else
-        @courses = courses.try(:all_not_restricted)
+        courses = courses.try(:all_not_restricted)
+        @courses = courses.all_in_order
       end
     end
   end
