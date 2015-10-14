@@ -26,7 +26,8 @@ class GroupsController < ApplicationController
         non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
         @courses = corporate_courses + non_restricted_courses
       else
-        @courses = courses.try(:all_not_restricted).all_in_oder
+        courses = courses.try(:all_not_restricted)
+        @courses = courses.all_in_order
       end
     end
   end
