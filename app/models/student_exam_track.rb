@@ -163,7 +163,7 @@ class StudentExamTrack < ActiveRecord::Base
 
   def set_count_of_fileds
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
-    self.count_of_questions_correct = completed_cme_user_logs.latest_only.sum(:count_of_questions_correct)
+    self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
 
     self.count_of_videos_taken = completed_cme_user_logs.latest_only.where(is_video: true).count
     self.count_of_quizzes_taken = completed_cme_user_logs.latest_only.where(is_quiz: true).count
