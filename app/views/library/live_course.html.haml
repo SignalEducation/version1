@@ -49,10 +49,10 @@
                         .col-xs-12.col-sm-4
                           .side-meta
                             -if grandchild.is_video
-                              -#if grandchild.try(:duration) > 0
+                              -if grandchild.try(:duration) > 0
                                 =humanize_time(grandchild.duration)
-                              -#else
-                              =humanize_time(grandchild.try(:estimated_time_in_seconds))
+                              -else
+                                =humanize_time(grandchild.try(:estimated_time_in_seconds))
 
                             -elsif grandchild.is_quiz
                               =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')

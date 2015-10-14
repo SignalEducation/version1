@@ -27,18 +27,22 @@
                       %th
                         Videos Watched
                       %th
+                        Questions Correct
+                      %th
                         Completed
                       %th
                   %tbody
-                    -@compulsory_course_logs.each do |log|
+                    -@compulsory_course_logs.all_in_order.each do |log|
                       %tr
                         %td
                           =log.subject_course.name
                         %td
-                          =log.count_of_cmes_completed
+                          =log.try(:count_of_videos_taken)
                           &#47;
                           =log.subject_course.video_count.to_i
                         %td
+                          =log.count_of_questions_correct
+                          &#47;
                           =log.subject_course.question_count
                         %td
                           =tick_or_cross(log.completed)
@@ -54,18 +58,24 @@
                       %th
                         Course
                       %th
-                        Lessons Completed
+                        Videos Watched
+                      %th
+                        Questions Correct
                       %th
                         Completed
                       %th
                   %tbody
-                    -@other_course_logs.each do |log|
+                    -@other_course_logs.all_in_order.each do |log|
                       %tr
                         %td
                           =log.subject_course.name
                         %td
-                          =log.count_of_cmes_completed
+                          =log.try(:count_of_videos_taken)
+                          &#47;
+                          =log.subject_course.video_count.to_i
                         %td
+                          =log.count_of_questions_correct
+                          &#47;
                           =log.subject_course.question_count
                         %td
                           =tick_or_cross(log.completed)

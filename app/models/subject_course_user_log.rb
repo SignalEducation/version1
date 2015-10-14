@@ -12,6 +12,10 @@
 #  completed                       :boolean          default(FALSE)
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
+#  count_of_questions_correct      :integer
+#  count_of_questions_taken        :integer
+#  count_of_videos_taken           :integer
+#  count_of_quizzes_taken          :integer
 #
 
 class SubjectCourseUserLog < ActiveRecord::Base
@@ -94,9 +98,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
   def recalculate_completeness
     self.count_of_cmes_completed = self.student_exam_tracks.sum(:count_of_cmes_completed)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
+    self.count_of_questions_correct = self.student_exam_tracks.sum(:count_of_questions_correct)
+    self.count_of_questions_taken = self.student_exam_tracks.sum(:count_of_questions_taken)
+    self.count_of_videos_taken = self.student_exam_tracks.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken = self.student_exam_tracks.sum(:count_of_quizzes_taken)
     self.completed = true if (self.percentage_complete > 99)
     self.completed = false if (self.percentage_complete < 100)
-    self.save(callbacks: false)
+    self.save
   end
 
   def student_exam_tracks
