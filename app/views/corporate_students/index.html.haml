@@ -12,6 +12,7 @@
             %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
               Users
           .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
+            =link_to t('views.marketing_tokens.index.csv_upload'), '#', data: {toggle: 'modal', target: '#new-upload-modal'}, class: 'btn btn-red'
             =link_to t('views.general.add_user'), new_corporate_student_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
         .row.l-margin-top.l-margin-bottom
           .col-md-4.col-sm-4.l-margin-top
@@ -62,6 +63,7 @@
           .col-md-12.l-margin-bottom-6x
             =will_paginate @corporate_students, renderer: BootstrapPagination::Rails
   =render partial: 'layouts/new_footer'
+  =render partial: 'csv_file_upload'
 
 :javascript
   $(document).ready(function() {

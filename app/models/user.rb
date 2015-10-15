@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image
+                  :name_url, :qualifications, :profile_image, :account_activated_at, :account_activation_code
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -304,6 +304,8 @@ class User < ActiveRecord::Base
     @mixpanel_alias_id = mixpanel_alias_id
   end
 
+  #Corporate Account Methods
+
   def compulsory_group_ids
     @compulsory_group_ids ||=
       corporate_student? ? corporate_groups.map { |cg| cg.compulsory_group_ids }.flatten.uniq : []
@@ -324,6 +326,62 @@ class User < ActiveRecord::Base
     @restricted_subject_course_ids ||=
       corporate_student? ?
         (corporate_groups.map { |cg| cg.restricted_subject_course_ids }.flatten.uniq - compulsory_subject_course_ids) : []
+  end
+
+  def self.parse_csv(csv_content)
+    csv_data = []
+    duplicate_emails = []
+    has_errors = false
+    if csv_content.respond_to?(:each_line)
+      csv_content.each_line do |line|
+        line.strip.split(',').tap do |fields|
+          error_msgs = []
+          if fields.length == 3
+            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+            error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
+            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+            duplicate_emails << fields[0]
+          else
+            error_msgs << I18n.t('models.users.invalid_field_count')
+          end
+          has_errors = true unless error_msgs.empty?
+          csv_data << { values: fields, error_messages: error_msgs }
+        end
+      end
+    else
+      has_errors = true
+    end
+    has_errors = true if csv_data.empty?
+    return csv_data, has_errors
+  end
+
+  def self.bulk_create(csv_data, corporate_manager)
+    users = []
+    used_emails = []
+    if csv_data.is_a?(Hash)
+      self.transaction do
+        csv_data.each do |k,v|
+          user = User.where(email: v['email']).first
+          if user || v['email'].empty?
+            users = []
+            raise ActiveRecord::Rollback
+          end
+          password = SecureRandom.hex(5)
+
+          user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
+          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', active: false, account_activated_at: nil, account_activation_code: ApplicationController::generate_random_code(20))
+
+          if used_emails.include?(v['email']) || !user.valid?
+            users = []
+            raise ActiveRecord::Rollback
+          end
+          users << user
+          used_emails << user.email
+        end
+      end
+    end
+    users
   end
 
   protected
