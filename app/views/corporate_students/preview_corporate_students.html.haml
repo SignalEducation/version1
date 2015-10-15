@@ -33,11 +33,16 @@
                       %tbody
                         -@csv_data.each_with_index do |csd, idx|
                           %tr{id: "csvdata-#{idx}"}
-                            %td=csd[:values][0].to_s
-                            %td=csd[:values][1].to_s
-                            %td=csd[:values][2].to_s
-                            %td{class: csd[:error_messages].empty? ? '' : 'danger'}
-                              =csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
+                            =hidden_field_tag "csvdata[#{idx}][email]", csd[:values][0]
+                            =hidden_field_tag "csvdata[#{idx}][first_name]", csd[:values][1]
+                            =hidden_field_tag "csvdata[#{idx}][last_name]", csd[:values][2]
+                            %td
+                              =csd[:values][0]
+                            %td
+                              =csd[:values][1]
+                            %td
+                              =csd[:values][2]
+                            %td=csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
 
                   .row
                     .col-sm-12
