@@ -77,6 +77,8 @@ class HomePagesController < ApplicationController
                                                         "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
                                                       }))
         @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+        @user.country_id = IpAddress.get_country(request.remote_ip).id
+
         @user.account_activation_code = SecureRandom.hex(10)
         @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
         if cookies.encrypted[:crush_offers]
@@ -87,7 +89,6 @@ class HomePagesController < ApplicationController
           subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
-
         if @user.valid? && @user.save
           clear_mixpanel_initial_id
           MixpanelUserSignUpWorker.perform_async(
@@ -119,7 +120,7 @@ class HomePagesController < ApplicationController
           # are restoring errors to the @user. Otherwise our redirect would destroy errors
           # and sign-up form would not display them properly.
           session[:sign_up_errors] = @user.errors unless @user.errors.empty?
-          redirect_to request.referrer
+          redirect_to root_url
         end
       else
         # This is the way to restore model errors after redirect. In referrer method

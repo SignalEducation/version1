@@ -356,6 +356,8 @@ en:
       create:
         flash:
           success: User has been created successfully
+        flash:
+          error: "Sorry the data entered was not valid. Please ensure the email is valid and the password fields match."
       update:
         flash:
           success: User details have been updated successfully
