@@ -22,6 +22,12 @@ class CorporateGroupsController < ApplicationController
     end
   end
 
+  def show
+    @users = @corporate_group.users
+    @completed_comp_courses = SubjectCourseUserLog.where(completed: true).where(subject_course: @corporate_group.compulsory_subject_course_ids)
+    @other_courses = SubjectCourseUserLog.where.not(subject_course: @corporate_group.compulsory_subject_course_ids)
+  end
+
   def new
     @corporate_group = current_user.admin? ?
                          CorporateGroup.new :

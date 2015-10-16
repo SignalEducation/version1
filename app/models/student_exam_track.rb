@@ -18,10 +18,12 @@
 #  subject_course_id               :integer
 #  count_of_questions_taken        :integer
 #  count_of_questions_correct      :integer
+#  count_of_quizzes_taken          :integer
+#  count_of_videos_taken           :integer
 #
 
+#This should have been called CourseModuleUserLog
 class StudentExamTrack < ActiveRecord::Base
-  #This should have been called CourseModuleUserLog
 
   include LearnSignalModelExtras
 
@@ -51,8 +53,12 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_save :set_count_of_questions_taken
+  before_save :set_count_of_fileds
+  after_save :create_or_update_subject_course_user_log
   after_save :send_cm_complete_to_mixpanel
+  after_update :update_subject_course_user_log
+  after_destroy :update_subject_course_user_log
+
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -86,7 +92,6 @@ class StudentExamTrack < ActiveRecord::Base
       # delete the previous SETs
       duplicate_sets.destroy_all
     end
-    # put on a happy face
     return true
   end
 
@@ -99,8 +104,20 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   # instance methods
+  def create_or_update_subject_course_user_log
+    log = self.subject_course_user_log || SubjectCourseUserLog.new(user_id: self.user_id, session_guid: self.session_guid, subject_course_id: self.subject_course_id)
+    log.subject_course_id ||= self.subject_course.id
+    log.latest_course_module_element_id = self.latest_course_module_element_id
+    log.save!
+    log.recalculate_completeness
+  end
+
   def cme_user_logs
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id)
+  end
+
+  def completed_cme_user_logs
+    cme_user_logs.all_completed
   end
 
   def destroyable?
@@ -125,6 +142,10 @@ class StudentExamTrack < ActiveRecord::Base
     self.save(callbacks: false)
   end
 
+  def subject_course_user_log
+    SubjectCourseUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id).first
+  end
+
   protected
 
   def send_cm_complete_to_mixpanel
@@ -140,10 +161,16 @@ class StudentExamTrack < ActiveRecord::Base
     end
   end
 
-  def set_count_of_questions_taken
-    cme_user_logs = CourseModuleElementUserLog.where(course_module_id: self.course_module_id)
-    self.count_of_questions_taken = cme_user_logs.sum(:count_of_questions_taken)
-    self.count_of_questions_correct = cme_user_logs.latest_only.sum(:count_of_questions_correct)
+  def set_count_of_fileds
+    self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
+    self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
+
+    self.count_of_videos_taken = completed_cme_user_logs.latest_only.where(is_video: true).count
+    self.count_of_quizzes_taken = completed_cme_user_logs.latest_only.where(is_quiz: true).count
+  end
+
+  def update_subject_course_user_log
+    self.subject_course_user_log.try(:recalculate_completeness)
   end
 
 end

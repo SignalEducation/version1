@@ -18,6 +18,7 @@
               %br/
               %br/
               =f.submit t('views.general.save_changes'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+              =link_to(t('views.users.show.change_your_password.link'), '#', data: {toggle: 'modal', target: '#change_password_modal'}, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top')
               =link_to t('views.general.cancel'), corporate_customer_url(current_user.corporate_customer), class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
           .col-md-6.l-margin-bottom-6x
             %br/
@@ -32,3 +33,4 @@
 
   =render partial: 'users/company'
   =render partial: 'layouts/new_footer'
+  =render partial: 'users/change_password'

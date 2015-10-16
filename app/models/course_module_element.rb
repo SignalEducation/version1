@@ -90,6 +90,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_save :sanitize_name_url
   before_save :log_question_count_and_duration
   after_save :update_parent
+  after_update :update_parent
   after_save :update_student_exam_tracks
 
   # scopes
@@ -159,8 +160,10 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_student_exam_tracks
-    StudentExamTracksWorker.perform_async(self.course_module_id)
-    true
+    sets = StudentExamTrack.where(course_module_id: self.course_module_id)
+    sets.all.each do |set|
+      set.recalculate_completeness
+    end
   end
 
   def type_name
@@ -184,9 +187,9 @@ class CourseModuleElement < ActiveRecord::Base
 
   def log_question_count_and_duration
     if self.is_video
-      self.duration = self.try(:course_module_element_video).try(:duration)
+      self.duration = self.course_module_element_video.try(:duration)
     elsif self.is_quiz
-        self.number_of_questions = self.try(:course_module_element_quiz).try(:quiz_questions).try(:count)
+        self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
     else
       true
     end

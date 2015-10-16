@@ -49,7 +49,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # validation
   validates :name, presence: true, length: {maximum: 255}
-  validates :name_url, presence: true,
+  validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
   validates :tutor_id, presence: true,

@@ -18,6 +18,8 @@
 #  subject_course_id               :integer
 #  count_of_questions_taken        :integer
 #  count_of_questions_correct      :integer
+#  count_of_quizzes_taken          :integer
+#  count_of_videos_taken           :integer
 #
 
 require 'rails_helper'
@@ -25,7 +27,7 @@ require 'rails_helper'
 describe StudentExamTrack do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at exam_level_id exam_section_id exam_schedule_id count_of_questions_taken count_of_questions_correct)
+  black_list = %w(id created_at updated_at exam_level_id exam_section_id exam_schedule_id count_of_questions_taken count_of_questions_correct count_of_quizzes_taken count_of_videos_taken)
   StudentExamTrack.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

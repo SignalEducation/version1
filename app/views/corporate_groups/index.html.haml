@@ -11,7 +11,7 @@
           .row.l-margin-bottom.l-margin-top
             .col-md-6.col-sm-6.col-xs-6
               %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
-                Groups
+                =t('views.corporate_groups.index.h1')
             .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
               =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
@@ -21,7 +21,8 @@
                   %table.table{style: 'font-size: 18px;'}
                     %thead
                       %tr
-                        %th Group
+                        %th
+                          =t('views.corporate_groups.show.h1')
                         %th No. of Users
                         %th Edit Members
                         %th
@@ -33,6 +34,7 @@
                           %td
                             =corporate_group.users.count
                           %td
+                            =link_to t('views.general.show'), corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'
                             =link_to t('views.general.edit_group'), edit_corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'
                             =link_to t('views.corporate_groups.index.members'),
                 corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-small btn-purple'
@@ -56,7 +58,8 @@
                   %table.table{style: 'font-size: 18px;'}
                     %thead
                       %tr
-                        %th Group
+                        %th
+                          =t('views.corporate_groups.show.h1')
                         %th No. of Users
                         %th Edit Members
                         %th

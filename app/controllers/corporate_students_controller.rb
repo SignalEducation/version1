@@ -7,24 +7,19 @@ class CorporateStudentsController < ApplicationController
   before_action :get_variables
 
   def index
-    @corporate_students = User
-                          .where(user_group_id: UserGroup.where(corporate_student: true).first.id)
+    @corporate_students = User.where(user_group_id: UserGroup.where(corporate_student: true).first.id)
     if current_user.admin?
       @corporate_students = @corporate_students.where("corporate_customer_id is not null")
     else
       @corporate_students = @corporate_students.where(corporate_customer_id: current_user.corporate_customer_id)
       @corporate_customer = CorporateCustomer.where(id: current_user.corporate_customer_id).first
-
     end
-
     unless params[:search_term].blank?
       @corporate_students = @corporate_students.search_for(params[:search_term])
     end
-
     unless params[:corporate_group].blank?
       @corporate_students = @corporate_students.joins(:corporate_groups).where("corporate_groups_users.corporate_group_id = ?", params[:corporate_group])
     end
-
     @corporate_students = @corporate_students.paginate(per_page: 50, page: params[:page]).all_in_order
     @corporate_student = User.new
   end
@@ -37,10 +32,10 @@ class CorporateStudentsController < ApplicationController
   end
 
   def show
-    tracks =  StudentExamTrack.where(user_id: @corporate_student.id)
-    track_ids = tracks.all.map(&:subject_course_id)
-    @courses = SubjectCourse.where(id: track_ids)
-
+    course_logs = SubjectCourseUserLog.where(user_id: @corporate_student.id)
+    compulsory_course_ids = @corporate_student.compulsory_subject_course_ids
+    @compulsory_course_logs = course_logs.where(subject_course_id: compulsory_course_ids)
+    @other_course_logs = course_logs.where.not(subject_course_id: compulsory_course_ids)
   end
 
   def create
@@ -83,6 +78,31 @@ class CorporateStudentsController < ApplicationController
       flash[:error] = I18n.t('controllers.corporate_students.destroy.flash.error')
     end
     redirect_to corporate_students_url
+  end
+
+  def preview_corporate_students
+    if params[:upload] && params[:upload].respond_to?(:read)
+      @csv_data, @has_errors = User.parse_csv(params[:upload].read)
+    else
+      flash[:error] = t('controllers.corporate_students.preview_csv.flash.error')
+      redirect_to corporate_students_url
+    end
+  end
+
+  def import_corporate_students
+    if params[:csvdata]
+      @corporate_students = User.bulk_create(params[:csvdata], current_user)
+      @corporate_students.each do |user|
+        if user.save
+          MandrillWorker.perform_async(user.id,
+                                       'send_verification_email',
+                                       user_activation_url(activation_code: user.account_activation_code))
+        end
+      end
+    else
+      flash[:error] = t('controllers.corporate_students.import_csv.flash.error')
+      redirect_to corporate_students_url
+    end
   end
 
   protected

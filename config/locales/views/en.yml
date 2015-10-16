@@ -9,9 +9,9 @@ en:
       active: Active
       add_user: Add a user
       add_manager: Add Manager
-      add_group: Add a group
+      add_group: Add Team
       edit_user: Edit user
-      edit_group: Edit Group
+      edit_group: Edit Team
       admin: Admin
       approve: Approve
       approve_tooltip: click to approve
@@ -47,6 +47,7 @@ en:
       or: or
       review: Review
       save: Save
+      upload: Upload
       save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
       search: Search...
@@ -605,7 +606,7 @@ en:
         course_count: No. of Courses
 
       index:
-        h1: Course Groups
+        h1: Subject Areas
 
       show:
         h1: Course Group
@@ -1165,11 +1166,11 @@ en:
         last_name_placeholder: Smith
         full_name: Name
         current_password: Current password
-        current_password_placeholder: "******"
-        password: Password
-        password_placeholder: "******"
+        current_password_placeholder: Current password
+        password: New Password
+        password_placeholder: New Password
         password_confirmation: Password confirmation
-        password_confirmation_placeholder: "******"
+        password_confirmation_placeholder: Password confirmation
         address: Address
         address_placeholder: Your billing address
         first_description: Description 1
@@ -1533,25 +1534,25 @@ en:
     corporate_groups:
       form:
         name: Name
-        name_placeholder: Corporate Group Name
+        name_placeholder: Team Name
         corporate_customer: Corporate Customer
 
       index:
-        h1: Corporate Groups
-        corp_h1: User Groups
+        h1: Teams
+        corp_h1: Teams
         exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted
         members: Members
 
       show:
-        h1: Corporate Group
+        h1: Team
 
       edit:
-        h1: Edit Corporate Group
+        h1: Edit Team
 
       new:
-        h1: New Corporate Group
+        h1: New Team
 
       manage_members:
         student: Students

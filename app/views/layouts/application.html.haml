@@ -56,7 +56,7 @@
     =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
-    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if controller_name == 'home_pages'
       =yield
@@ -141,7 +141,8 @@
 
     =render partial: 'layouts/mixpanel_body_tag'
     =render partial: 'layouts/contact_modal'
-
+    -unless current_user
+      =render partial: 'layouts/sign_up_modal'
 
 :javascript
     var nav = responsiveNav(".nav-collapse");

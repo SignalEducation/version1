@@ -18,6 +18,8 @@
 #  subject_course_id               :integer
 #  count_of_questions_taken        :integer
 #  count_of_questions_correct      :integer
+#  count_of_quizzes_taken          :integer
+#  count_of_videos_taken           :integer
 #
 
 FactoryGirl.define do
