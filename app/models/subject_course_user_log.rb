@@ -21,7 +21,7 @@
 class SubjectCourseUserLog < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :session_guid, :subject_course_id, :percentage_complete, :count_of_cmes_completed, :latest_course_module_element_id, :completed
+  attr_accessible :user_id, :session_guid, :subject_course_id
 
   # Constants
 

@@ -23,7 +23,7 @@ require 'rails_helper'
 describe SubjectCourseUserLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at count_of_questions_taken count_of_questions_correct count_of_course_module_complete count_of_quizzes_taken count_of_videos_taken)
   SubjectCourseUserLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -49,13 +49,6 @@ describe SubjectCourseUserLog do
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
 
-  it { should validate_presence_of(:percentage_complete) }
-
-  it { should validate_presence_of(:count_of_course_module_complete) }
-
-  it { should validate_presence_of(:latest_course_module_element_id) }
-  it { should validate_numericality_of(:latest_course_module_element_id) }
-
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -66,7 +59,5 @@ describe SubjectCourseUserLog do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

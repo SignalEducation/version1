@@ -189,7 +189,7 @@ class CourseModuleElement < ActiveRecord::Base
     if self.is_video
       self.duration = self.course_module_element_video.try(:duration)
     elsif self.is_quiz
-        self.number_of_questions = self.course_module_element_quiz.number_of_questions
+        self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
     else
       true
     end

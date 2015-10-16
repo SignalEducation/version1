@@ -74,7 +74,7 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(email: student.email)
           expect(session[:sign_up_errors].keys).to include(:email)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
+          expect(response).to redirect_to('/en')
         end
 
         it 'does not subscribe user if password is blank' do
@@ -82,7 +82,7 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(password: nil)
           expect(session[:sign_up_errors].keys).to include(:password)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
+          expect(response).to redirect_to('/en')
         end
 
         it 'does not subscribe user if password is not of required length' do
@@ -90,7 +90,7 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(password: '12345')
           expect(session[:sign_up_errors].keys).to include(:password)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
+          expect(response).to redirect_to('/en')
         end
 
         it 'does not subscribe user if password_confirmation is blank' do
@@ -98,7 +98,7 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(password_confirmation: nil)
           expect(session[:sign_up_errors].keys).to include(:password_confirmation)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
+          expect(response).to redirect_to('/en')
         end
 
         it 'does not subscribe user if password_confirmation does not match password' do
@@ -106,13 +106,14 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(password_confirmation: sign_up_params[:password] + "1")
           expect(session[:sign_up_errors].keys).to include(:password_confirmation)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
+          expect(response).to redirect_to('/en')
         end
       end
 
       describe "valid data" do
         it 'signs up new student' do
           post :student_sign_up, user: sign_up_params
+          binding.pry
           expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)
