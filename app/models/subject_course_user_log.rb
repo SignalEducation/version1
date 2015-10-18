@@ -102,8 +102,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.count_of_questions_taken = self.student_exam_tracks.sum(:count_of_questions_taken)
     self.count_of_videos_taken = self.student_exam_tracks.sum(:count_of_videos_taken)
     self.count_of_quizzes_taken = self.student_exam_tracks.sum(:count_of_quizzes_taken)
-    self.completed = true if (self.percentage_complete > 99)
-    self.completed = false if (self.percentage_complete < 100)
+    unless self.percentage_complete.nil?
+      self.completed = true if (self.percentage_complete > 99)
+      self.completed = false if (self.percentage_complete < 100)
+    end
     self.save
   end
 
