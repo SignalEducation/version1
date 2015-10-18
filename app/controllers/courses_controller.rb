@@ -32,12 +32,14 @@ class CoursesController < ApplicationController
       else
         # The URL worked out Okay
         reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
-        if @course_module_element.try(:is_quiz)
-          set_up_quiz
-        elsif @course_module_jumbo_quiz
-          set_up_jumbo_quiz
-        elsif @course_module_element.try(:is_video)
-          @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+        if current_user
+          if @course_module_element.try(:is_quiz)
+            set_up_quiz
+          elsif @course_module_jumbo_quiz
+            set_up_jumbo_quiz
+          elsif @course_module_element.try(:is_video)
+            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+          end
         end
       end
       @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
@@ -49,28 +51,30 @@ class CoursesController < ApplicationController
   end
 
   def create # course_module_element_user_log and children
-    @mathjax_required = true
-    @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
-    @course_module_element_user_log.session_guid = current_session_guid
-    @course_module_element_user_log.corporate_customer_id = current_user.try(:corporate_customer_id)
-    @course_module_element_user_log.element_completed = true
-    @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
-    @course_module_element = @course_module_element_user_log.course_module_element
-    @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
-    @question_bank = @course_module_element_user_log.question_bank
-    @course_module = @course_module_element_user_log.course_module
-    @results = true
-    unless @course_module_element_user_log.save
-      # it did not save
-      Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
-      flash[:error] = I18n.t('controllers.courses.create.flash.error')
-    end
-    if params[:demo_mode] == 'yes'
-      redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-    elsif @question_bank || (@course_module && (@course_module_element || @course_module_jumbo_quiz))
-      render :show
-    else
-      redirect_to library_url
+    if current_user
+      @mathjax_required = true
+      @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
+      @course_module_element_user_log.session_guid = current_session_guid
+      @course_module_element_user_log.corporate_customer_id = current_user.try(:corporate_customer_id)
+      @course_module_element_user_log.element_completed = true
+      @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
+      @course_module_element = @course_module_element_user_log.course_module_element
+      @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
+      @question_bank = @course_module_element_user_log.question_bank
+      @course_module = @course_module_element_user_log.course_module
+      @results = true
+      unless @course_module_element_user_log.save
+        # it did not save
+        Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
+        flash[:error] = I18n.t('controllers.courses.create.flash.error')
+      end
+      if params[:demo_mode] == 'yes'
+        redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
+      elsif @question_bank || (@course_module && (@course_module_element || @course_module_jumbo_quiz))
+        render :show
+      else
+        redirect_to library_url
+      end
     end
   end
 

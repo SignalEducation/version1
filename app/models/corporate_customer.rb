@@ -60,9 +60,7 @@ class CorporateCustomer < ActiveRecord::Base
   def destroyable?
     self.students.empty? &&
       self.managers.empty? &&
-      self.course_module_element_user_logs.empty? &&
-      self.invoices.empty? &&
-      self.subscriptions.empty?
+      self.course_module_element_user_logs.empty?
   end
 
   protected
