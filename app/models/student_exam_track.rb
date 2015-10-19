@@ -53,7 +53,7 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  before_save :set_count_of_fileds
+  before_save :set_count_of_fields
   after_save :create_or_update_subject_course_user_log
   after_save :send_cm_complete_to_mixpanel
   after_update :update_subject_course_user_log
@@ -106,7 +106,7 @@ class StudentExamTrack < ActiveRecord::Base
   # instance methods
   def create_or_update_subject_course_user_log
     log = self.subject_course_user_log || SubjectCourseUserLog.new(user_id: self.user_id, session_guid: self.session_guid, subject_course_id: self.subject_course_id)
-    log.subject_course_id ||= self.subject_course.id
+    log.subject_course_id ||= self.try(:subject_course_id)
     log.latest_course_module_element_id = self.latest_course_module_element_id
     log.save!
     log.recalculate_completeness
@@ -161,7 +161,7 @@ class StudentExamTrack < ActiveRecord::Base
     end
   end
 
-  def set_count_of_fileds
+  def set_count_of_fields
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
     self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
 
