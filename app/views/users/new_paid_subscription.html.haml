@@ -28,7 +28,7 @@
             .plans
               -@subscription_plans.each do |plan|
                 .col-sm-4
-                  .plan.plan-monthly.currency{class: plan.currency.iso_code + (@user.country.try(:currency_id) == plan.currency_id ? '' : ' hide'), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                  .plan.plan-monthly.currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
                     .plan-header{}
                       %h3.h4.plan-title
                         =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")

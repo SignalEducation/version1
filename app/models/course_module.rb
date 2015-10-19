@@ -206,7 +206,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def update_parent_and_sets
-    self.parent.recalculate_fields
+    self.parent.try(:recalculate_fields)
     self.student_exam_tracks.each do |set|
       set.recalculate_completeness
     end

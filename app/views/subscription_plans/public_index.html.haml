@@ -58,15 +58,6 @@
                     =number_in_local_currency_no_precision(@third_plan.price, @third_plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{@third_plan.payment_frequency_in_months}")
-                -if @fourth_plan
-                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
-                    ='100 - 500 Users'
-                    &#160;
-                    &#160;
-                    &#160;
-                    =number_in_local_currency_no_precision(@fourth_plan.price, @fourth_plan.currency)
-                    &#47;
-                    =t("views.general.payment_intervals.a#{@fourth_plan.payment_frequency_in_months}")
 
           .text-center.l-margin-bottom
             %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}MAKE AN ENQUIRY
