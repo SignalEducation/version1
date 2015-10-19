@@ -307,7 +307,7 @@ en:
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
         description: "Description:"
-        description_placeholder: Description
+        description_placeholder: Description (This is optional)
         estimated_time_in_seconds: Estimated time (seconds)
         estimated_time_in_seconds_placeholder: 180
         course_module_id: Course module
@@ -388,7 +388,7 @@ en:
       edit:
 
       index:
-        h1: "Resources: "
+        h1: "Additional Resources: "
 
       new:
 
@@ -403,7 +403,7 @@ en:
         estimated_study_time_seconds: Estimated Time in Seconds
         estimated_study_time_seconds_placeholder: 100
         transcript: Transcript
-        transcript_placeholder: Paste Transcript Here !
+        transcript_placeholder: This is optional
         video_file: Video File
         video_id: Video ID
         video_id_placeholder: Wistia ID
