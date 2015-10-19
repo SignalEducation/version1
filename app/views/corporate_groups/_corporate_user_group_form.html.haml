@@ -22,40 +22,27 @@
                 .input-group.input-group-lg.full-width
                   =f.text_field :name, placeholder: t('views.corporate_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
                 %br/
-                .form-group{style: 'margin-left: 0px;'}
-                  %table.col-sm-12
-                    %thead
-                      %tr
-                        %th{style: "width: 70%; font-size: 1.6rem;"}='Subject Areas'
-                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.compulsory')
-                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
-                        %th{style: "width: 4%;"}
-                    %tbody
-                      -Group.all_active.all_in_order.each do |group|
-                        %tr
-                          %td=group.name
-                          %td=radio_button_tag("groups[#{group.id}]", "compulsory", @corporate_group.group_compulsory?(group.id), class: "col-sm-3")
-                          %td=radio_button_tag("groups[#{group.id}]", "restricted", @corporate_group.group_restricted?(group.id), class: "col-sm-3")
-                          %td=link_to('Clear', '#', id: "groups_#{group.id}_clear", class: "clear-radio-lnk col-sm-3")
-                  %hr/
-                  %table.col-sm-12
-                    %thead
-                      %tr
-                      %tr
-                        %th{style: "width: 70%; font-size: 1.6rem;"}='Courses'
-                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.compulsory')
-                        %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
-                        %th{style: "width: 4%;"}
-                    %tbody
-                      -SubjectCourse.all_active.all_live.all_in_order.each do |course|
-                        %tr
-                          %td=course.name
-                          %td=radio_button_tag("courses[#{course.id}]", "compulsory", @corporate_group.subject_course_compulsory?(course.id), class: "col-sm-3")
-                          %td=radio_button_tag("courses[#{course.id}]", "restricted", @corporate_group.subject_course_restricted?(course.id), class: "col-sm-3")
-                          %td=link_to('Clear', '#', id: "courses_#{course.id}_clear", class: "clear-radio-lnk col-sm-3")
+                .col-md-12.l-margin-top-big.l-margin-bottom-6x
+                  .form-group{style: 'margin-left: 0px;'}
+                    .corporate-box-item.table-box
+                      .table-responsive
+                        %table.table{style: 'font-size: 18px;'}
+                          %thead
+                            %tr
+                              %th{style: "width: 70%; font-size: 1.6rem;"}='Courses'
+                              %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.compulsory')
+                              %th{style: "width: 13%; font-size: 1.6rem;"}=t('views.corporate_groups.index.restricted')
+                              %th{style: "width: 4%;"}
+                          %tbody
+                            -SubjectCourse.all_active.all_live.all_in_order.each do |course|
+                              %tr
+                                %td=course.name
+                                %td=radio_button_tag("courses[#{course.id}]", "compulsory", @corporate_group.subject_course_compulsory?(course.id), class: "col-sm-3")
+                                %td=radio_button_tag("courses[#{course.id}]", "restricted", @corporate_group.subject_course_restricted?(course.id), class: "col-sm-3")
+                                %td=link_to('Clear', '#', id: "courses_#{course.id}_clear", class: "clear-radio-lnk col-sm-3")
 
-                =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-                =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+                      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                      =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
 
 
 
