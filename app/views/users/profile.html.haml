@@ -19,7 +19,7 @@
                 =@tutor.try(:first_description)
               %p
                 =@tutor.try(:second_description)
-              -if @tutor.personal_url
+              -#if @tutor.personal_url
                 %p
                   %a{href: "#{@tutor.personal_url}", target: "_blank"} See #{@tutor.first_name.pluralize} other work
 .l-section-small.is-bg-asphalt
