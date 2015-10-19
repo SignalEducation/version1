@@ -8,7 +8,8 @@
           .row
             .col-md-6.col-md-offset-3
               %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.not_logged_in.sign_up_btn'), root_url
+                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}
+                  =t('views.courses.content_denied.not_logged_in.sign_up_btn')
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.panel.need_to_sign_in')
