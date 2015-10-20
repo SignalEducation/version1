@@ -411,7 +411,7 @@ en:
     course_module_jumbo_quiz:
       form:
         name: Name
-        name_placeholder: Intro to Economics Jumbo Quiz
+        name_placeholder: Final Quiz
         name_url: Name URL
         name_url_placeholder: intro-to-economics-jumbo-quiz
         minimum_question_count_per_quiz: Min Questions from each Quiz
@@ -420,14 +420,14 @@ en:
         course_module_id: Course Module
 
       edit:
-        h1: Edit Jumbo Quiz
+        h1: Edit Final Quiz
 
       new:
-        h1: New Jumbo Quiz
+        h1: New Final Quiz
 
       show:
-        h1: Jumbo Quiz
-        no_jumbo_quizzes_yet: "Sorry, there is no Jumbo Quiz for this Course Module. Why not create one now !"
+        h1: Final Quiz
+        no_jumbo_quizzes_yet: "Sorry, there is no Final Quiz for this Course Module. Why not create one now !"
 
     currencies:
       form:

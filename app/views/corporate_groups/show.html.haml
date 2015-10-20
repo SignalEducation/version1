@@ -31,7 +31,7 @@
                     -@users.all_in_order.each do |user|
                       %tr
                         %td
-                          =user.full_name
+                          =link_to(user.full_name, corporate_student_url(user))
                         %td
                           =@completed_comp_courses.where(user_id: user.id).count
                           &#47;
