@@ -7,6 +7,9 @@
           =f.hidden_field :tutor_id
           =f.hidden_field :corporate_customer_id
           =f.hidden_field :wistia_guid
+          =f.hidden_field :default_number_of_possible_exam_answers, value: 4
+          -if current_user.corporate_customer?
+            =f.hidden_field :tutor_id, value: current_user.id
           =f.label :name, t('views.subject_courses.form.name'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :name, placeholder: t('views.subject_courses.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
@@ -14,13 +17,12 @@
           =f.label :name_url, t('views.subject_courses.form.name_url'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
+          -if current_user.admin? || current_user.content_manager?
             %br/
             =f.label :tutor_id, t('views.subject_courses.form.tutor_id'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
-          %br/
-          -if current_user.admin? || current_user.content_manager?
+            %br/
             =f.label :corporate_customer_id, t('views.subject_courses.form.corporate_customer'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
@@ -61,10 +63,6 @@
             .input-group.input-group-lg.full-width
               =f.text_field :forum_url, placeholder: t('views.subject_courses.form.forum_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
             %br/
-          =f.label :default_number_of_possible_exam_answers, t('views.subject_courses.form.default_number_of_possible_exam_answers'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.select :default_number_of_possible_exam_answers, options_for_select((2..5).to_a, f.object.default_number_of_possible_exam_answers), {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-            %p.help-block=t('views.exam_levels.form.default_number_of_possible_exam_answers_help_text')
 
       .row
         %br/
