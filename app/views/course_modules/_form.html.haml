@@ -5,6 +5,7 @@
       =f.hidden_field :sorting_order
       =f.hidden_field :subject_course_id
       =f.hidden_field :tutor_id
+      =f.hidden_field :name_url
       -if current_user.admin? || current_user.content_manager?
         =f.label :subject_course_id, t('views.course_modules.form.subject_course_id'), class: 'control-label'
         .input-group.input-group-lg.full-width
@@ -18,20 +19,20 @@
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
       %br/
-      =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-    .col-md-6
-      =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
-      %br/
       %br/
       .col-sm-11.col-sm-offset-1
         .checkbox
           %label
             =f.check_box :active
             =t('views.course_modules.form.active')
+
+    .col-md-6
+      =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+
+  %br/
+  %br/
   %br/
   %br/
   .row

@@ -53,7 +53,7 @@ class Group < ActiveRecord::Base
   end
 
   def destroyable?
-    false
+    true
   end
 
   protected
