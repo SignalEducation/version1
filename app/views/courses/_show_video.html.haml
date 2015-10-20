@@ -7,11 +7,11 @@
     #video-window
   .l-margin-bottom.l-margin-top
     .pull-left
-      -if !cme.description.blank?
+      -unless cme.description.blank?
         %h3=t('views.course_module_elements.form.description')
         .pull-left
-          =sanitizer(cme.description)
-      -if @course_module.try(:parent).try(:forum_url)
+          =cme.description.html_safe
+      -#if @course_module.try(:parent).try(:forum_url)
         %br/
         %h6
           .pull-left

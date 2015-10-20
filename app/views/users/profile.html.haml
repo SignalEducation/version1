@@ -16,10 +16,10 @@
           .col-sm-10.col-md-offset-1
             .profile-text
               %p
-                =@tutor.try(:first_description)
+                =@tutor.try(:first_description).html_safe
               %p
-                =@tutor.try(:second_description)
-              -if @tutor.personal_url
+                =@tutor.try(:second_description).html_safe
+              -#if @tutor.personal_url
                 %p
                   %a{href: "#{@tutor.personal_url}", target: "_blank"} See #{@tutor.first_name.pluralize} other work
 .l-section-small.is-bg-asphalt
@@ -27,30 +27,30 @@
     .container-fluid
       .row
         .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Courses by #{@tutor.first_name}
-        -if @courses.present?
-          .course-list-wrap
-            .row
-              -@courses.each do |course|
-                .col-sm-6.col-md-4
-                  =link_to library_course_url(course.name_url), class: 'box box-course' do
-                    .box-inner
-                      %h3.h4.box-title
-                        =course.try(:name)
-                      %p.box-desc
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
+          -if @courses.present?
+            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+              ="Courses by #{@tutor.first_name}"
+            .course-list-wrap
+              .row
+                -@courses.each do |course|
+                  .col-sm-6.col-md-4
+                    =link_to library_course_url(course.name_url), class: 'box box-course' do
+                      .box-inner
+                        %h3.h4.box-title
+                          =course.try(:name)
+                        %p.box-desc
+                          -if course.short_description
+                            =course.try(:short_description).to_s.truncate(30)
+                          -else
+                            =course.parent.try(:name)
+                      .box-label
+                        -if course.live
+                          -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+                            =t('views.course_module_elements.show.continue')
+                          -else
+                            =t('views.general.start')
                         -else
-                          =course.parent.try(:name)
-                    .box-label
-                      -if course.live
-                        -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
-                          =t('views.course_module_elements.show.continue')
-                        -else
-                          =t('views.general.start')
-                      -else
-                        Get Early Access
+                          Get Early Access
 
 
 =render partial: 'layouts/new_footer'

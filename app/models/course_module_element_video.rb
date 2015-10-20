@@ -38,9 +38,8 @@ class CourseModuleElementVideo < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :video_id, presence: true, length: {maximum: 255}
   #validates :duration, presence: true, numericality: true
-  validates :tags, presence: true, length: {maximum: 255}
+  validates :tags, allow_nil: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
-  validates :transcript, presence: true
   #validates :thumbnail, presence: true
 
   # callbacks

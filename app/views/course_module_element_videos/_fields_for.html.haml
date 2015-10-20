@@ -1,5 +1,5 @@
 =f.fields_for :course_module_element_video do |cme_video|
-
+  =cme_video.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first
   =cme_video.label :video, t('views.course_module_element_videos.form.video_file'), class: 'control-label'
   %br/
   -if cme_video.object.thumbnail
@@ -7,7 +7,7 @@
       =image_tag cme_video.object.thumbnail, class: 'img-responsive', style: 'margin-top: 12px;'
     .col-sm-6
       Upload a replacement
-      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
+      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;', required: true
       %br/
   -elsif !cme_video.object.thumbnail && cme_video.object.video_id
     .row
@@ -22,15 +22,6 @@
     .input-group.input-group-lg.full-width
       =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
     %br/
-  %br/
-  =cme_video.label :tags, t('views.course_module_element_videos.form.tags'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =cme_video.text_field :tags, placeholder: t('views.course_module_element_videos.form.tags_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-  %br/
-  =cme_video.label :transcript, t('views.course_module_element_videos.form.transcript'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =cme_video.text_area :transcript, placeholder: t('views.course_module_element_videos.form.transcript_placeholder'), class: 'form-control', rows: 5, style: 'border-radius: 6px;'
-  %br/
-  =cme_video.label :difficulty_level, t('views.course_module_element_videos.form.difficulty_level'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =cme_video.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+    =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'

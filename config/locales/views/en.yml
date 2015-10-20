@@ -23,6 +23,8 @@ en:
       close: Close
       coming_soon: Coming soon
       delete: Delete
+      delete_answer: Delete Answer
+      delete_block: Delete Question
       delete_tooltip: click to delete
       delete_confirmation: Are you sure?
       details: Details
@@ -305,7 +307,7 @@ en:
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
         description: "Description:"
-        description_placeholder: Description
+        description_placeholder: Description (This is optional)
         estimated_time_in_seconds: Estimated time (seconds)
         estimated_time_in_seconds_placeholder: 180
         course_module_id: Course module
@@ -386,7 +388,7 @@ en:
       edit:
 
       index:
-        h1: "Resources: "
+        h1: "Additional Resources: "
 
       new:
 
@@ -401,7 +403,7 @@ en:
         estimated_study_time_seconds: Estimated Time in Seconds
         estimated_study_time_seconds_placeholder: 100
         transcript: Transcript
-        transcript_placeholder: Paste Transcript Here !
+        transcript_placeholder: This is optional
         video_file: Video File
         video_id: Video ID
         video_id_placeholder: Wistia ID
@@ -833,7 +835,7 @@ en:
 
     quiz_answer:
       form:
-        answer_content_placeholder: Fill in the Answer Here
+        answer_content_placeholder: Answer Text
         answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
         answer_text: Answer
         answer_text_placeholder: Fill in the Answer Here
@@ -860,8 +862,8 @@ en:
         answers: Answers
         solutions: Solutions
         degree_of_wrongness: "Right/Wrong"
-        text_content_placeholder: Ask the question
-        solution_to_the_question_placeholder: Enter the Solution
+        text_content_placeholder: Question Text
+        solution_to_the_question_placeholder: Solution Text
         wrong_answer_explanation_text: "Why this answer is wrong?"
         wrong_answer_explanation_text_placeholder: Explain why this answer is incorrect
 

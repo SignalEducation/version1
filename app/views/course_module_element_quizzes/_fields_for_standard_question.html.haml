@@ -1,7 +1,7 @@
 -# =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: flash_quiz, mode: 'flash'}
   - mode can be 'flash' or 'full'
 
-.question-box-item.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id.to_s)}
+-#.question-box-item.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id.to_s)}
   .row
     %div{class: mode == 'full' ? 'col-sm-12' : 'col-sm-6'}
       %h3.no-top-gap=question.object.id.nil? ? t('views.course_module_element_quizzes.form.h3.question_new') : t('views.course_module_element_quizzes.form.h3.question_number') + question.object.id.to_s
@@ -90,3 +90,56 @@
             -elsif question.object.destroyable?
               =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-red'
 
+
+
+.question-box-item.question{id: question.object.id.nil? ? 'the_new_question' : ('question_' + question.object.id.to_s)}
+  .row
+    %h3.no-top-gap=question.object.id.nil? ? t('views.course_module_element_quizzes.form.h3.question_new') : t('views.course_module_element_quizzes.form.h3.question_number') + question.object.id.to_s
+    .col-sm-4
+      .form-group
+        .col-sm-12
+          =question.hidden_field :course_module_element_quiz_id
+          =question.hidden_field :id, class: 'question_id'
+          =question.hidden_field :_destroy, value: false, class: 'destroy_field'
+          =question.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first, class: 'difficulty-level'
+          =question.fields_for :quiz_contents do |content|
+            =content.hidden_field :id, class: 'qc-id'
+            =content.hidden_field :sorting_order, class: 'qc-sorting-order'
+            =content.hidden_field :content_type, class: 'content-type'
+            .quiz-question
+              =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 8
+            %br/
+          -if mode == 'full'
+            =question.fields_for :quiz_solutions do |solution|
+              =solution.hidden_field :sorting_order, class: 'flash_quiz_field'
+              =solution.text_area :text_content, placeholder: t('views.quiz_questions.form.solution_to_the_question_placeholder'), class: 'form-control flash_quiz_field', rows: 7
+    .col-sm-8
+      -counter = 0
+      =question.fields_for :quiz_answers do |answer|
+        .row.quiz_answer
+          .col-sm-8
+            .row
+              .col-sm-1
+                =@letters[counter]
+              .col-sm-10
+                =answer.hidden_field :wrong_answer_video_id, class: 'related_video'
+                =answer.hidden_field :id, class: 'answer-id'
+                =answer.hidden_field :_destroy, class: 'answer-destroy'
+                =answer.fields_for :quiz_contents do |content|
+                  =content.hidden_field :id, class: 'answer-qc-id'
+                  =content.hidden_field :sorting_order, class: 'answer-sorting-order'
+                  =content.hidden_field :content_type, class: 'answer-content-type'
+                  .form-group
+                    .col-sm-12.quiz-answer-text
+                      =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control flash_quiz_field', rows: 3
+          .col-sm-4.text-left
+            .form-group
+              =answer.select :degree_of_wrongness, QuizAnswer::WRONGNESS, {include_blank: t('views.general.select')}, class: 'form-control'
+            =link_to t('views.general.delete_answer') ,'#', class: 'btn btn-red btn-small deleteFlashAnswer'
+        -counter += 1
+
+  .row
+    -if question.object.id.nil?
+      =link_to t('views.general.delete_block'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-cyan'
+    -elsif question.object.destroyable?
+      =link_to t('views.general.delete_block'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-cyan'

@@ -75,7 +75,7 @@
 
               -@student_subscription_plans.each do |plan|
                 .l-section-extra-small
-                  %h3.plan-text.h-separator.h-separator-white.h-separator-center
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
                     =number_in_local_currency_no_precision(plan.price, plan.currency)
                     &#47;
                     =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")

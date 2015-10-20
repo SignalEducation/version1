@@ -1,5 +1,3 @@
--#TODO This is currently duplicate code from individual student partial but it should be changed when Corporate Accounts are ready
-
 -if @latest_course
   %div{role: 'tabpanel'}
     .is-bg-purple-2.coursebar
@@ -23,12 +21,12 @@
                     ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
                   -else
                     ='You are making good progress!'
-                %p{'style'=>'font-size: 24px'}
+                %p{style: 'font-size: 24px'}
                   Your Active Courses
             .row.l-margin-bottom-huge
               -@incomplete_courses.each do |course|
                 .col-md-4.l-margin-top
-                  = link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center', style: 'background-image: 0;' do
+                  = link_to course_special_link(course), class: 'library-box library-box-item panel text-center', style: 'background-image: 0;' do
                     .panel-icon.icon-big
                       %i.glyphicon.glyphicon-pencil
                     .panel-body
@@ -58,12 +56,12 @@
                       ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
                     -else
                       ='You are making good progress!'
-                  %p{'style'=>'font-size: 24px'}
+                  %p{style: 'font-size: 24px'}
                     Your Completed Courses
               .row.l-margin-bottom-huge
                 -@completed_courses.each do |course|
                   .col-md-4.l-margin-top
-                    =link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center' do
+                    =link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
                       .panel-icon.icon-big
                         %i.glyphicon.glyphicon-pencil
                       .panel-body
