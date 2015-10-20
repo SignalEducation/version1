@@ -105,7 +105,7 @@
                     ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
                   -else
                     ='You are making good progress!'
-                %p{'style'=>'font-size: 24px'}
+                %p{style: 'font-size: 24px'}
                   Your Active Courses
             .row.l-margin-bottom-huge
               -@incomplete_courses.each do |course|

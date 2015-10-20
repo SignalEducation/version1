@@ -3,3 +3,7 @@
   =cme_quiz.label :number_of_questions, t('views.course_module_element_quizzes.form.number_of_questions'), class: 'control-label'
   .input-group.input-group-lg.full-width
     =cme_quiz.select :number_of_questions, options_for_select([3, 5, 10, 15, 20, 25, 30], cme_quiz.object.number_of_questions || 20), {}, {class: 'form-control', style: 'border-radius: 6px;'}
+  %br/
+  =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true

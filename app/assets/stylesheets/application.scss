@@ -43,7 +43,7 @@ body {
   color: $gray-1;
   @include breakpoint(md-min) {
     margin: 0 auto;
-    max-width: 1800px;
+    //max-width: 1800px;
   }
 }
 a {

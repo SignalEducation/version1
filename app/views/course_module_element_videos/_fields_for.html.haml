@@ -22,6 +22,6 @@
     .input-group.input-group-lg.full-width
       =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
     %br/
-  =cme_video.label :transcript, t('views.course_module_element_videos.form.transcript'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =cme_video.text_area :transcript, placeholder: t('views.course_module_element_videos.form.transcript_placeholder'), class: 'form-control', rows: 5, style: 'border-radius: 6px;'
+    =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_area :description, placeholder: t('views.course_module_elements.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
