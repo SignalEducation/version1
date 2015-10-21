@@ -7,7 +7,7 @@
       =image_tag cme_video.object.thumbnail, class: 'img-responsive', style: 'margin-top: 12px;'
     .col-sm-6
       Upload a replacement
-      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;', required: true
+      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
       %br/
   -elsif !cme_video.object.thumbnail && cme_video.object.video_id
     .row
