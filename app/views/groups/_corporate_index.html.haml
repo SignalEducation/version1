@@ -10,7 +10,9 @@
           .row.l-margin-bottom
             .col-md-12.text-center
               %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                ="#{current_user.corporate_customer.organisation_name} Course Groups"
+                ="#{current_user.corporate_customer.organisation_name} Subject Areas"
+              %p.h6
+                Subject Areas allow managers to bring together a collection of courses they have internally created so that users can easily find them.  Different areas of training can be separated out such as Sales from Health & Safety.
         .col-md-12.l-margin-top-big
           .corporate-box-item.table-box{data: {destination: groups_url}}
             .table-responsive
