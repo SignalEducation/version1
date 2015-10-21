@@ -14,24 +14,25 @@
                 ="Members of #{@corporate_group.name}"
 
           .row.l-margin-top.l-margin-bottom
-            .col-md-12.l-margin-top
+            .col-md-7.l-margin-top
               .corporate-box-item.table-box
                 = form_for(@corporate_group, url: { action: :update_members }, html: {class: 'form-horizontal', role: 'form', id: 'group-users-form'}) do |f|
-                  %table
-                    %thead
-                      %tr
-                        %th{style: 'font-size: 1.6rem;'}= t('views.corporate_groups.manage_members.student')
-                        %th
-                    %tbody
-                      - @corporate_group.corporate_customer.students.each do |student|
+                  .table-responsive
+                    %table.table{style: 'font-size: 18px;'}
+                      %thead
                         %tr
-                          %td= student.full_name
-                          %td{style: 'width: 5%;'}= check_box_tag "corporate_group[corporate_student_ids][]",
-                          student.id, @corporate_group.users.include?(student)
+                          %th{style: 'font-size: 1.6rem;'}= t('views.corporate_groups.manage_members.student')
+                          %th
+                      %tbody
+                        -@corporate_group.corporate_customer.students.all_in_order.each do |student|
+                          %tr
+                            %td= student.full_name
+                            %td{style: 'width: 5%;'}= check_box_tag "corporate_group[corporate_student_ids][]",
+                            student.id, @corporate_group.users.include?(student)
 
 
-                  =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-                  =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
+                    =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                    =link_to t('views.general.cancel'), corporate_groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
       =render partial: 'layouts/new_footer'
 -else
   .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}

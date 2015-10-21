@@ -104,7 +104,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.active && self.course_modules.empty? && self.student_exam_tracks.empty?
+    self.course_modules.empty? && self.student_exam_tracks.empty?
   end
 
   def estimated_time_in_seconds

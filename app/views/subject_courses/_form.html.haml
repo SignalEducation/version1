@@ -9,8 +9,6 @@
           =f.hidden_field :wistia_guid
           =f.hidden_field :default_number_of_possible_exam_answers, value: 4
           =f.hidden_field :name_url
-          -if current_user.corporate_customer?
-            =f.hidden_field :tutor_id, value: current_user.id
           =f.label :name, t('views.subject_courses.form.name'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :name, placeholder: t('views.subject_courses.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
@@ -20,23 +18,16 @@
             .input-group.input-group-lg.full-width
               =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
             %br/
-            =f.label :corporate_customer_id, t('views.subject_courses.form.corporate_customer'), class: 'control-label'
-            .input-group.input-group-lg.full-width
-              =f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
-            %br/
             .checkbox
               %label
                 =f.check_box :live
                 =t('views.subject_courses.form.live')
             %br/
-          -if current_user.corporate_customer? || current_user.content_manager? || current_user.admin?
-            %br/
-            .checkbox
-              %label
-                =f.check_box :restricted
-                =t('views.subject_courses.form.restricted')
-            %br/
           %br/
+          %br/
+          %br/
+          %p.h6
+            (Check this box when the course is ready to go live)
           .checkbox
             %label
               =f.check_box :active

@@ -10,7 +10,7 @@
         .row.l-margin-bottom.l-margin-top
           .col-md-8
             %h1.h-separator.h-separator-left.l-margin-bottom-big{style: 'letter-spacing:1.5px;'}
-              ='Edit your Details'
+              ='Edit your Personal Details'
           .col-md-6.l-margin-bottom-6x
             =form_for(@user, role: 'form') do |f|
               =render partial: 'users/corporate_details', locals: {f: f}
