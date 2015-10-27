@@ -1,11 +1,11 @@
 IntercomRails.config do |config|
   # == Intercom app_id
   #
-  config.app_id = ENV['intercom_app_id'] || 'yqda78s4'
+  config.app_id = ENV["INTERCOM_APP_ID"] || "df2auyut"
 
   # == Intercom secret key
-  # This is required to enable secure mode, you can find it on your Intercom
-  # "security" configuration page.
+  # This is required to enable secure mode, you can find it on your Setup
+  # guide in the "Secure Mode" step.
   #
   # config.api_secret = "..."
 
@@ -18,13 +18,18 @@ IntercomRails.config do |config|
   # == Enabled Environments
   # Which environments is auto inclusion of the Javascript enabled for
   #
-  config.enabled_environments = %w(development staging production)
-  config.include_for_logged_out_users = true
+  config.enabled_environments = ["development", "staging", "production"]
+
   # == Current user method/variable
   # The method/variable that contains the logged in user in your controllers.
   # If it is `current_user` or `@user`, then you can ignore this
   #
   # config.user.current = Proc.new { current_user }
+
+  # == Include for logged out Users
+  # If set to true, include the Intercom messenger on all pages, regardless of whether
+  # The user model class (set below) is present. Only available for Apps on the Acquire plan.
+  # config.include_for_logged_out_users = true
 
   # == User model class
   # The class which defines your user model
@@ -83,14 +88,11 @@ IntercomRails.config do |config|
   # config.company.monthly_spend = Proc.new { |current_company| current_company.plan.price }
   # config.company.monthly_spend = Proc.new { |current_company| (current_company.plan.price - current_company.subscription.discount) }
 
-  # == Inbox Style
-  # This enables the Intercom inbox which allows your users to read their
-  # past conversations with your app, as well as start new ones. It is
-  # disabled by default.
-  #   * :default shows a small tab with a question mark icon on it
-  #   * :custom attaches the inbox open event to an anchor with an
-  #             id of #Intercom.
+  # == Custom Style
+  # By default, Intercom will add a button that opens the messenger to
+  # the page. If you'd like to use your own link to open the messenger,
+  # uncomment this line and clicks on any element with id 'Intercom' will
+  # open the messenger.
   #
-  # config.inbox.style = :default
   # config.inbox.style = :custom
 end
