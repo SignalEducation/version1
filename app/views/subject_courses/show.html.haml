@@ -30,6 +30,9 @@
                     .table-responsive
                       .col-md-10.l-margin-bottom
                         %h2=course_module.name.to_s.truncate(50)
+                      .col-md-2
+                        .pull-right
+                          =course_module.sorting_order.to_s
                       -#.col-md-2
                         .pull-right
                           %span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
