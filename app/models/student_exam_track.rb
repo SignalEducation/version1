@@ -55,10 +55,7 @@ class StudentExamTrack < ActiveRecord::Base
   # callbacks
   before_save :set_count_of_fields
   after_save :create_or_update_subject_course_user_log
-  after_save :send_cm_complete_to_mixpanel
-  after_update :update_subject_course_user_log
-  after_destroy :update_subject_course_user_log
-
+  #after_save :send_cm_complete_to_mixpanel
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -108,7 +105,7 @@ class StudentExamTrack < ActiveRecord::Base
     log = self.subject_course_user_log || SubjectCourseUserLog.new(user_id: self.user_id, session_guid: self.session_guid, subject_course_id: self.subject_course_id)
     log.subject_course_id ||= self.try(:subject_course_id)
     log.latest_course_module_element_id = self.latest_course_module_element_id
-    log.save!
+    #log.save!
     log.recalculate_completeness
   end
 
@@ -139,7 +136,8 @@ class StudentExamTrack < ActiveRecord::Base
   def recalculate_completeness
     self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    self.save(callbacks: false)
+    #self.save(callbacks: false)
+    self.save
   end
 
   def subject_course_user_log
@@ -167,10 +165,6 @@ class StudentExamTrack < ActiveRecord::Base
 
     self.count_of_videos_taken = completed_cme_user_logs.latest_only.where(is_video: true).count
     self.count_of_quizzes_taken = completed_cme_user_logs.latest_only.where(is_quiz: true).count
-  end
-
-  def update_subject_course_user_log
-    self.subject_course_user_log.try(:recalculate_completeness)
   end
 
 end
