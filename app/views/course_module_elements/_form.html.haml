@@ -2,7 +2,7 @@
   .row
     =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
     .col-md-6
-      =f.hidden_field :sorting_order
+      =#f.hidden_field :sorting_order
       =f.hidden_field :course_module_id
       =f.hidden_field :is_quiz
       =f.hidden_field :is_video
@@ -12,6 +12,10 @@
       =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
+      %br/
+      =f.label :sorting_order, t('views.course_module_elements.form.sorting_order'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :sorting_order, placeholder: t('views.course_module_elements.form.sorting_order'), class: 'form-control', style: 'border-radius: 6px;', required: true
       %br/
       -if f.object.is_cme_flash_card_pack
         .form-group

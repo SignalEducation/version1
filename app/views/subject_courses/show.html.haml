@@ -33,14 +33,14 @@
                       -#.col-md-2
                         .pull-right
                           %span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
-                      %table.table.table-bordered.sorted_table{data: {destination: course_module_elements_url}, style: 'font-size: 18px;'}
+                      %table.table.sorted_table{data: {destination: course_module_elements_url}, style: 'font-size: 18px;'}
                         %thead
                           %tr
                             %th Name
                             %th Active
                             %th Type
                             %th
-                            %th
+                            %th Order
                         %tbody
                           -course_module.children.all_in_order.each do |cme|
                             %tr{id: cme.id}
@@ -56,6 +56,8 @@
                                 -if cme.destroyable?
                                   =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
                               %td
+                                =cme.sorting_order.to_s
+                              -#%td
                                 %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
                           -if course_module.course_module_jumbo_quiz
