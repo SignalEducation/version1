@@ -337,27 +337,4 @@ class ApplicationController < ActionController::Base
     @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
   end
 
-  def initialize_intercom
-    @intercom = Intercom::Client.new(
-        app_id: ENV['intercom_app_id'],
-        api_key: ENV['intercom_api_key']
-    )
-  end
-
-  def create_intercom_event(course)
-    course_log_ids = SubjectCourseUserLog.where(user_id: current_user.id).all.map(&:subject_course_id)
-    unless course_log_ids.include?(course.id)
-      meta_data = {
-          course_name: course.name
-      }
-      event = {
-          event_name: "Started Course",
-          email: current_user.try(:email),
-          created_at: Time.now,
-          metadata: meta_data
-      }
-      @intercom.events.create.event
-    end
-  end
-
 end

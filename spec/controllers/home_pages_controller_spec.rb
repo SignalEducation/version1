@@ -113,7 +113,6 @@ describe HomePagesController, type: :controller do
       describe "valid data" do
         it 'signs up new student' do
           post :student_sign_up, user: sign_up_params
-          binding.pry
           expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)

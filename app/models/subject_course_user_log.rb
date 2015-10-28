@@ -43,6 +43,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  after_create :create_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -111,6 +112,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def student_exam_tracks
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
+  end
+
+  def create_intercom_event
+    IntercomEventWorker.perform_async(self.user.email, self.subject_course.name)
   end
 
   protected
