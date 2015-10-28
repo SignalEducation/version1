@@ -50,6 +50,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:organisation_name, :address) }
+  after_create :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:organisation_name) }
@@ -61,6 +62,11 @@ class CorporateCustomer < ActiveRecord::Base
     self.students.empty? &&
       self.managers.empty? &&
       self.course_module_element_user_logs.empty?
+  end
+
+  def create_on_intercom
+
+    IntercomCreateCompanyWorker.perform_async(self.id, self.organisation_name)
   end
 
   protected

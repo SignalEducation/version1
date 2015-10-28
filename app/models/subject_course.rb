@@ -48,7 +48,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :corporate_group_grants
 
   # validation
-  validates :name, presence: true, length: {maximum: 255}
+  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
