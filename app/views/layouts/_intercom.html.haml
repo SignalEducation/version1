@@ -6,4 +6,6 @@
     created_at: current_user.created_at,
     custom_data: {guid: current_user.guid,
     user_group: current_user.user_group.try(:name),
-    } })
+    },
+    companies: {type: "company.list",
+    companies: [{id: current_user.try(:corporate_customer_id)}]}})

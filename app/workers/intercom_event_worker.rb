@@ -1,4 +1,4 @@
-class IntercomEventWorker
+class IntercomCourseStartedEventWorker
   include Sidekiq::Worker
 
   sidekiq_options queue: 'high'
