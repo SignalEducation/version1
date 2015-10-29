@@ -17,6 +17,17 @@
     }
   }
 }
+.hero-inner-small {
+  padding: 4rem 0;
+  @include breakpoint(md-min) {
+    padding: 10rem 0;
+  }
+  .h1 {
+    @include breakpoint(lg-min) {
+      padding-right: 10%;
+    }
+  }
+}
 .hero-acca {
   background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
   color: $white;

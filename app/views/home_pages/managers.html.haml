@@ -1,0 +1,206 @@
+.hero-acca
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  .header{role: 'banner'}
+    .l-wrap
+      .container-fluid
+        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
+          .navbar-header
+            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            =link_to root_url do
+              =image_tag('ls-logo-red.svg', class: 'logo')
+          #myNavbar.collapse.navbar-collapse
+            %ul.nav.navbar-nav.navbar-right
+              %li
+                =link_to 'Why Learn Signal', why_learn_signal_url
+              %li
+                =link_to 'Pricing', pricing_url
+              %li
+                =link_to 'Courses', library_url
+              %li
+                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
+              %li
+                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+
+  .hero-inner-small
+    .l-wrap
+      .container-fluid
+        .row
+          .col-sm-8.col-md-10.col-lg-10
+            %p.h5.h-white
+              Learned today, applied tomorrow
+            %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
+              Professional online qualifications and training courses at your fingertips
+            %p.h7
+              Online learning is fast becoming the preferred option for skill development across organisations. Investing in workforce skills helps to contribute towards an adaptive, flexible and forward-thinking company. What’s more, online learning is a faster, more efficient and more cost-effective solution for professional development opportunities.
+
+            %p.h7
+              LearnSignal uses smart interactive learning modules for a wide range of courses, qualifications and certifications in both the business and financial environment.
+
+            %br/
+            %br/
+            .col-sm-8{style: 'padding-left: 0px;'}
+              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}MAKE AN ENQUIRY
+
+.course-types
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              Types of courses
+        .row
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Finance
+            %p.p{style: 'color: #fff;'}
+              Become an ACCA, CFA and FRM qualified finance professional, or subsidise existing finance qualifications with peripheral skills
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              IT
+            %p.p{style: 'color: #fff;'}
+              Choose from a wide range of IT skills-based courses including proficiency with Excel, advanced data modelling and analysis, charts and tables, macros and formulas, and more
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Business
+            %p.p{style: 'color: #fff;'}
+              Learn fundamental business skills, from business analysis, project management, critical thinking and problem solving
+
+.business
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              For Businesses
+        .row
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              Increase revenue
+            %p.p
+              Companies that offer training and skill development for their workforces benefit from an average of 26% increased revenue. Investing in people creates a more profitable and agile organisation.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              Improve retention
+            %p.p
+              Providing professional learning and career development for employees improves retention. The LearnSignal management dashboard tracks employee progress to enable rewards and incentives.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              Reduce training costs
+            %p.p
+              With dedicated support provided to all employees enrolled in courses, LearnSignal’s bespoke online modules result in faster learning time and reduced training costs.
+        .row.l-margin-top
+          .col-sm-4.col-sm-offset-4
+            %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}MAKE AN ENQUIRY
+
+.individuals
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              For Individuals
+        .row
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Career development
+            %p.p{style: 'color: #fff;'}
+              Enhance specialist skills to progress your career to the next level, benefitting both your professional development and adding value to your organisation.
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Learning flexibility
+            %p.p{style: 'color: #fff;'}
+              With unlimited access to a wide range of courses and professional qualifications, LearnSignal modules involve interactive learning at your fingertips, accessible via mobile, tablet or desktop.
+          .col-sm-4
+            %h3.h-white.l-margin-bottom-big
+              Measure impact
+            %p.p{style: 'color: #fff;'}
+              Quizzes, challenges and tests throughout the learning experience help you to establish areas of strength and areas which require greater focus, with your own user dashboard to track and measure progress
+
+.features.is-bg-asphalt
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.h-center.h-separator.h-separator-center.l-margin-bottom-huge
+              How it works
+        .row
+          .col-sm-3
+            %h3.h4.l-margin-bottom-big
+              =#image_tag('ico-expert@2x.png', class: 'features-img')
+              Sign up
+            %p.p
+              Simply sign-up as a user, or if you’re a business, make an enquiry
+          .col-sm-3
+            %h3.h4.l-margin-bottom-big
+              =#image_tag('ico-anytime@2x.png', class: 'features-img')
+              Choose a course
+            %p.p
+              Select which course you’re interested in, and click start
+          .col-sm-3
+            %h3.h4.l-margin-bottom-big
+              =#image_tag('ico-test@2x.png', class: 'features-img')
+              Learn
+            %p.p
+              Work your way through the modules in your own time, from any device
+          .col-sm-3
+            %h3.h4.l-margin-bottom-big
+              =#image_tag('ico-test@2x.png', class: 'features-img')
+              Review
+            %p.p
+              View and measure yours or your employee’s progress from your own personal dashboard
+
+.testimonials
+  .l-wrap
+    .l-section
+      .testimonial
+        .container-fluid
+          .row
+            .col-sm-12
+              %h2.h5.text-center
+                Testimonials
+              %p.h2.text-center.h-separator.h-separator-center
+                What your peers are saying
+          .row
+            .col-sm-6.col-sm-offset-3
+              .testimonial
+                .testimonial-pic-wrap
+                  =image_tag('mike-testimonial-pic.jpg', class: 'testimonial-pic')
+                %p.p
+                  When I signed up for Level I, I had 85 days to put in the 300 hours of studying while working full time. I had just finished my undergrad in Math and even though I had no finance background, I was confident that I could handle the material.
+                %p.p
+                  The challenge would be covering everything and having enough time to do mock exams. Learn Signal was the perfect solution.
+
+                %p.p
+                  The videos were quick, very well presented and contained only the essential information. The tests at the end of each section were helpful at highlighting gaps in my knowledge. I'm not sure I would have finished the material in time and passed the exam had I not used Learn Signal.
+                %p.p
+                  %strong.testimonial-sig
+                    Mike Sinclair
+                  %br/
+                  Risk Analyst Architect
+
+:javascript
+    var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });
