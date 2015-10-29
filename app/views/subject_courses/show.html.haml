@@ -33,7 +33,7 @@
                       -#.col-md-2
                         .pull-right
                           %span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
-                      %table.table.sorted_table{data: {destination: course_module_elements_url}, id: "cm-#{course_module.id}", style: 'font-size: 18px;'}
+                      %table.table.sorted_table{data: {destination: course_module_elements_url}, id: course_module.id, style: 'font-size: 18px;'}
                         %thead
                           %tr
                             %th Name
@@ -44,7 +44,7 @@
                             %th
                         %tbody
                           -course_module.children.all_in_order.each do |cme|
-                            %tr{id: cme.id, data: {parent: course_module.id}}
+                            %tr{id: cme.id, data: {parent: course_module.id, destination: course_module_elements_url}}
                               %td
                                 =cme.name.to_s.truncate(30)
                               %td
