@@ -57,8 +57,6 @@
                                 -if cme.destroyable?
                                   =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
                               %td
-                                =cme.sorting_order.to_s
-                              %td
                                 %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
                           -if course_module.course_module_jumbo_quiz
