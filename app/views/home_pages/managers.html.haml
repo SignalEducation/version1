@@ -21,9 +21,11 @@
               %li
                 =link_to 'Courses', library_url
               %li
+                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
+              %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
-  .hero-inner#sign-up
+  .hero-inner-small
     .l-wrap
       .container-fluid
         .row
