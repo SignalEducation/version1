@@ -10,14 +10,7 @@
       =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
       %br/
   -elsif !cme_video.object.thumbnail && cme_video.object.video_id
-    .row
-      .col-sm-6
-        %br/
-        =cme_video.text_field :video_id, class: 'form-control', style: 'border-radius: 6px; height: 45px;', readonly: true
-      .col-sm-6
-        Upload a replacement
-        =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
-        %br/
+    =cme_video.text_field :video_id, class: 'form-control', style: 'border-radius: 6px; height: 45px;', readonly: true
   -else
     .input-group.input-group-lg.full-width
       =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
