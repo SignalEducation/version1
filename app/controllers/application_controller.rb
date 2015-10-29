@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   before_action :process_referral_code # not for Api::
   before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
-  before_action :log_user_activity # not for Api::
+  #before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user
 

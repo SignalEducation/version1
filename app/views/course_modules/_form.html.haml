@@ -2,7 +2,7 @@
   .row
     .col-md-6
       =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
-      =#f.hidden_field :sorting_order
+      =f.hidden_field :sorting_order
       =f.hidden_field :subject_course_id
       =f.hidden_field :tutor_id
       =f.hidden_field :name_url
@@ -18,10 +18,6 @@
       =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
-      %br/
-      =f.label :sorting_order, t('views.course_modules.form.sorting_order'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :sorting_order, placeholder: t('views.course_modules.form.sorting_order'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
       %br/
       .col-sm-11.col-sm-offset-1

@@ -34,11 +34,7 @@ $(document).on('ready page:load', function() {
   });
 
   function sendDataToServer(theItem) {
-    var parentTable = $('#' + theItem.attr('data-parent')).first();
-    if (parentTable.length == 0) {
-      console.log('parent table was null');
-      parentTable = $('.sorted_table').first();
-    }
+    var parentTable = theItem.parent().parent();
     var rows = parentTable.find(" tbody > tr"),
       arrayOfIds = [],
       theUrl = parentTable.attr('data-destination');
@@ -47,6 +43,8 @@ $(document).on('ready page:load', function() {
         arrayOfIds.push(rows[counter].id);
       }
     }
+
+
     $.ajax({
       type: 'POST',
       url: (theUrl || window.location.href) + '/reorder',
