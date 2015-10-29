@@ -30,23 +30,21 @@
                     .table-responsive
                       .col-md-10.l-margin-bottom
                         %h2=course_module.name.to_s.truncate(50)
-                      .col-md-2
-                        .pull-right
-                          =course_module.sorting_order.to_s
                       -#.col-md-2
                         .pull-right
                           %span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
-                      %table.table.sorted_table{data: {destination: course_module_elements_url}, style: 'font-size: 18px;'}
+                      %table.table.sorted_table{data: {destination: course_module_elements_url}, id: "cm-#{course_module.id}", style: 'font-size: 18px;'}
                         %thead
                           %tr
                             %th Name
                             %th Active
                             %th Type
                             %th
-                            %th Order
+                            %th
+                            %th
                         %tbody
                           -course_module.children.all_in_order.each do |cme|
-                            %tr{id: cme.id}
+                            %tr{id: cme.id, data: {parent: course_module.id}}
                               %td
                                 =cme.name.to_s.truncate(30)
                               %td
@@ -60,7 +58,7 @@
                                   =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
                               %td
                                 =cme.sorting_order.to_s
-                              -#%td
+                              %td
                                 %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
                           -if course_module.course_module_jumbo_quiz

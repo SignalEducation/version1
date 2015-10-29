@@ -41,7 +41,7 @@ $(document).on('ready page:load', function() {
     }
     var rows = parentTable.find(" tbody > tr"),
       arrayOfIds = [],
-      theUrl = parentTable.attr('data-destination');
+      theUrl = '/course_module_elements/' + parentTable.attr('data-destination');
     for (var counter = 0; counter < rows.length; counter++) {
       if (rows[counter].id != '') {
         arrayOfIds.push(rows[counter].id);
