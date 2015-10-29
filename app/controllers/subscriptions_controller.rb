@@ -41,7 +41,6 @@ class SubscriptionsController < ApplicationController
   def destroy
     if @subscription
       if @subscription.cancel(account_url)
-        MixpanelSubscriptionCancelWorker.perform_async(@subscription.id)
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else
         Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"

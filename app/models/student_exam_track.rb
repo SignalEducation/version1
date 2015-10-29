@@ -55,7 +55,6 @@ class StudentExamTrack < ActiveRecord::Base
   # callbacks
   before_save :set_count_of_fields
   after_save :create_or_update_subject_course_user_log
-  #after_save :send_cm_complete_to_mixpanel
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -145,19 +144,6 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   protected
-
-  def send_cm_complete_to_mixpanel
-    percent_changes = self.changes[:percentage_complete]
-    if percent_changes && percent_changes[0].to_f.round(2) < 99 && percent_changes[1].to_f.round(2) >= 99
-      MixpanelCourseModuleCompleteWorker.perform_async(
-              self.user_id,
-              self.course_module.name,
-              self.subject_course.name,
-              self.course_module.course_module_elements.all_active.all_videos.count,
-              self.course_module.course_module_elements.all_active.all_quizzes.count + (self.course_module.course_module_jumbo_quiz ? 1 : 0)
-      )
-    end
-  end
 
   def set_count_of_fields
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
