@@ -133,7 +133,12 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
+    active_cmes = CourseModuleElement.where(course_module_id: self.course_module_id).all_active
+    ids = active_cmes.all.map(&:id)
+    logs = self.cme_user_logs.latest_only.all_completed
+    active_logs = logs.where(course_module_element_id: ids)
+
+    self.count_of_cmes_completed = active_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     #self.save(callbacks: false)
     self.save
