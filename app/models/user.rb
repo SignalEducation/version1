@@ -136,8 +136,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
-  after_create :set_stripe_customer_id, :alias_on_mixpanel
-  after_save :create_on_mixpanel, if: '!Rails.env.test?'
+  after_create :set_stripe_customer_id
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -391,23 +390,6 @@ class User < ActiveRecord::Base
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
-  def create_on_mixpanel
-    plan_name = 'none'
-    if self.subscriptions.last
-      if ['canceled', 'canceled-pending'].include?(self.subscriptions.last.current_status)
-        plan_name = 'Cancelled'
-      else
-        plan_name = self.subscriptions.last.subscription_plan.description.strip.gsub("\r\n",', ')
-      end
-    end
-    MixpanelUserUpdateWorker.perform_async(
-      self.id, self.first_name, self.last_name, self.email,
-      self.user_group.try(:name),
-      plan_name,
-      self.guid, self.country.iso_code
-    )
-  end
-
   def set_defaults
     Rails.logger.debug "DEBUG: User#set_defaults - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
@@ -428,14 +410,4 @@ class User < ActiveRecord::Base
     Rails.logger.debug "DEBUG: User#set_stripe_customer_id - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
-  def alias_on_mixpanel
-    return unless @mixpanel_alias_id
-    tracker = Mixpanel::Tracker.new(ENV['mixpanel_key'])
-    tracker.alias(self.id, @mixpanel_alias_id)
-    # Alias is synchronous call and, as suggested by Mixpanel support team, we should
-    # wait after calling alias with other calls to Mixpanel that will use new user id.
-    # Since this model calls Mixpanel on each change in order to prevent data mess onblur
-    # Mixpanel side we are waiting 1 second here before we go on.
-    sleep(1)
-  end
 end

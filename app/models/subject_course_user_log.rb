@@ -43,7 +43,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_intercom_event
+  after_create :create_intercom_event unless Rails.env.development?
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }

@@ -89,7 +89,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
   before_save :log_question_count_and_duration
-  after_save :update_parent
+  after_create :update_parent
   after_update :update_parent
   after_save :update_student_exam_tracks
 
@@ -160,10 +160,11 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_student_exam_tracks
-    sets = StudentExamTrack.where(course_module_id: self.course_module_id)
-    sets.all.each do |set|
-      set.recalculate_completeness
-    end
+    #sets = StudentExamTrack.where(course_module_id: self.course_module_id)
+    #sets.all.each do |set|
+    #  set.recalculate_completeness
+    #end
+    StudentExamTracksWorker.perform_async(self.course_module_id)
   end
 
   def type_name

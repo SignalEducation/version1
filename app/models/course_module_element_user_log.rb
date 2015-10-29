@@ -76,7 +76,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   after_create :calculate_score
   after_create :create_or_update_student_exam_track
   after_update :update_student_exam_track
-  after_destroy :update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -162,8 +161,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       set.subject_course_id ||= self.course_module.subject_course.id
       set.latest_course_module_element_id = self.course_module_element_id
       set.jumbo_quiz_taken = true if self.is_jumbo_quiz
-      set.save!
+      #set.save!
       set.recalculate_completeness
+    end
+  end
+
+  def update_student_exam_track
+    unless self.is_question_bank
+      self.student_exam_track.try(:recalculate_completeness)
     end
   end
 
@@ -190,12 +195,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
     true
-  end
-
-  def update_student_exam_track
-    unless self.is_question_bank
-      self.student_exam_track.try(:recalculate_completeness)
-    end
   end
 
 end

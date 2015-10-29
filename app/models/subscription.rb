@@ -58,7 +58,6 @@ class Subscription < ActiveRecord::Base
   after_create :create_on_stripe_platform
   after_create :create_a_subscription_transaction
   after_update :update_on_stripe_platform
-  after_update :send_update_event_to_mixpanel
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -228,7 +227,6 @@ class Subscription < ActiveRecord::Base
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
       self.update_attribute(:current_status, 'active')
-      MixpanelSubscriptionCancelWorker.perform_async(self.id)
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
@@ -412,17 +410,6 @@ class Subscription < ActiveRecord::Base
     else # development and all others
       "Dev-#{rand(9999)}: "
     end
-  end
-
-  def send_update_event_to_mixpanel
-    if self.changes[:subscription_plan_id]
-      MixpanelSubscriptionUpdateWorker.perform_async(
-              self.user_id,
-              SubscriptionPlan.find(self.changes[:subscription_plan_id].first).description.strip.gsub("\r\n",', '),
-              self.subscription_plan.description.strip.gsub("\r\n",', ')
-      )
-    end
-    true
   end
 
   def update_on_stripe_platform
