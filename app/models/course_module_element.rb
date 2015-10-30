@@ -89,6 +89,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url
   before_save :log_question_count_and_duration
+  before_save :populate_estimated_time
   after_create :update_parent
   after_update :update_parent
   after_save :update_student_exam_tracks
@@ -174,6 +175,14 @@ class CourseModuleElement < ActiveRecord::Base
       "Video"
     else
       "Unknown"
+    end
+  end
+
+  def populate_estimated_time
+    if self.is_quiz && self.estimated_time_in_seconds.nil?
+      self.estimated_time_in_seconds = (self.number_of_questions * 120)
+    else
+      true
     end
   end
 
