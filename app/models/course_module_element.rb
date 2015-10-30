@@ -92,7 +92,6 @@ class CourseModuleElement < ActiveRecord::Base
   before_save :populate_estimated_time
   after_create :update_parent
   after_update :update_parent
-  after_save :update_student_exam_tracks
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
@@ -135,13 +134,20 @@ class CourseModuleElement < ActiveRecord::Base
   def next_element
     if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
-    elsif self.course_module.course_module_jumbo_quiz
+    elsif self.course_module.course_module_jumbo_quiz && self.course_module.course_module_jumbo_quiz.active
       self.course_module.course_module_jumbo_quiz
     elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
-      CourseModuleElement.find(self.course_module.parent.first_active_cme)
+
+      if self.course_module.next_module.nil?
+
+        CourseModule.where(id: self.course_module_id).first
+
+      else
+        next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
+        CourseModuleElement.find(next_id) if next_id
+      end
     else
-      next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
-      CourseModuleElement.find(next_id) if next_id
+      CourseModule.where(id: self.course_module_id).first
     end
   end
 
@@ -158,14 +164,6 @@ class CourseModuleElement < ActiveRecord::Base
       prev_id = self.course_module.previous_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:last).try(:id)
       CourseModuleElement.find(prev_id) if prev_id
     end
-  end
-
-  def update_student_exam_tracks
-    #sets = StudentExamTrack.where(course_module_id: self.course_module_id)
-    #sets.all.each do |set|
-    #  set.recalculate_completeness
-    #end
-    StudentExamTracksWorker.perform_async(self.course_module_id)
   end
 
   def type_name

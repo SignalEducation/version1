@@ -308,9 +308,8 @@ class ApplicationController < ActionController::Base
 
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
-      course_url(
-              the_thing.subject_course.name_url,
-              the_thing.name_url
+      library_course_url(
+              the_thing.subject_course.name_url
       )
     elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
