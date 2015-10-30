@@ -308,7 +308,8 @@ en:
         name_url_placeholder: auto-populated-for-you
         description: "Description:"
         description_placeholder: Description (This is optional)
-        estimated_time_in_seconds: Estimated time (seconds)
+        estimated_time_in_seconds: Estimated overall time in seconds
+        estimated_time_in_seconds_tag: (If blank this will be auto-populated with 120 seconds per question)
         estimated_time_in_seconds_placeholder: 180
         course_module_id: Course module
         course_module_element_video_id: Course module element video id
