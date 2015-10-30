@@ -92,7 +92,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def elements_total
-    self.subject_course.cme_count
+    self.subject_course.try(:cme_count) || 0
   end
 
 
