@@ -157,12 +157,19 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def create_or_update_student_exam_track
     unless self.is_question_bank
-      set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-      set.subject_course_id ||= self.course_module.subject_course.id
-      set.latest_course_module_element_id = self.course_module_element_id
-      set.jumbo_quiz_taken = true if self.is_jumbo_quiz
-      #set.save!
-      set.recalculate_completeness
+      if self.student_exam_track
+        set = self.student_exam_track
+        set.subject_course_id ||= self.course_module.subject_course.id
+        set.latest_course_module_element_id = self.course_module_element_id
+        set.jumbo_quiz_taken = true if self.is_jumbo_quiz
+        set.recalculate_completeness
+      else
+        set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
+        set.subject_course_id ||= self.course_module.subject_course.id
+        set.latest_course_module_element_id = self.course_module_element_id
+        set.jumbo_quiz_taken = true if self.is_jumbo_quiz
+        set.calculate_completeness
+      end
     end
   end
 
