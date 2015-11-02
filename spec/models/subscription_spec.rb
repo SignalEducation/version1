@@ -64,7 +64,6 @@ describe Subscription do
   it { should callback(:create_on_stripe_platform).after(:create) }
   it { should callback(:create_a_subscription_transaction).after(:create) }
   it { should callback(:update_on_stripe_platform).after(:update) }
-  it { should callback(:send_update_event_to_mixpanel).after(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
