@@ -165,7 +165,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
         set.recalculate_completeness
       else
         set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-        set.subject_course_id ||= self.course_module.subject_course.id
+        set.subject_course_id ||= self.course_module.try(:subject_course_id)
         set.latest_course_module_element_id = self.course_module_element_id
         set.jumbo_quiz_taken = true if self.is_jumbo_quiz
         set.calculate_completeness

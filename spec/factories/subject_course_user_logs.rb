@@ -24,7 +24,6 @@ FactoryGirl.define do
     session_guid "MyString"
     subject_course_id 1
     percentage_complete 1
-    count_of_course_module_complete 1
     latest_course_module_element_id 1
     completed false
   end
