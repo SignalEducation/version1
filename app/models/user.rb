@@ -97,6 +97,7 @@ class User < ActiveRecord::Base
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
+  has_many :subject_course_user_logs
   has_many :user_activity_logs
   belongs_to :user_group
   has_many :user_notifications

@@ -28,6 +28,7 @@ class LibraryController < ApplicationController
           redirect_to library_url
         end
       end
+      @users_cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user.try(:id), current_session_guid).all_completed
       users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
       user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
       latest_set = user_course_sets.first

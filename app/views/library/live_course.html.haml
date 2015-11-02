@@ -44,8 +44,17 @@
                   -child.children.all_in_order.all_active.each do |grandchild|
                     =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
                       .row
-                        .col-xs-12.col-sm-8
-                          =grandchild.name
+                        .col-xs-12.col-sm-1
+                          .left-side-meta
+                            -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                              %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
+                                %i.glyphicon.glyphicon-check{style: 'font-size: large'}
+                            -else
+                              %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
+                                %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
+                        .col-xs-12.col-sm-7{style: 'padding-left: 0px;'}
+                          .pull-left
+                            =grandchild.name
                         .col-xs-12.col-sm-4
                           .side-meta
                             -if grandchild.is_video
