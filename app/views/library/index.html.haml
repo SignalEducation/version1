@@ -37,20 +37,19 @@
                   %h3.text-bold.one-line-text.l-margin-bottom
                     =group.name
                   %p.l-margin-bottom-big
-                    =group.description.to_s.truncate(25)
-                  -#TODO change this to be subject_course_user_logs.completed.count
-                  - #total_lesson = group.subject_courses.count
-                  - #complete_lesson = group.subject_courses.count
-                  - total_lesson = 10
-                  - complete_lesson = 10
+                    =group.description.to_s.truncate(55)
+                  -#total_lesson = group.subject_courses.count
+                  -#complete_lesson = group.subject_courses.count
+                  -#total_lesson = 10
+                  -#complete_lesson = 10
                   -#if group.subject_courses.count > 0
-                  %ul#progress_circles
+                  -#%ul#progress_circles
                     -(1..complete_lesson).each do |i|
                       %li.lesson-complete
                     -(1..(total_lesson-complete_lesson)).each do |i|
                       %li
                 .box-label
-                  Start
+                  Browse
 
 
       -if @courses.present?
