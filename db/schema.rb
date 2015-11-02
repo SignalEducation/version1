@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151014110716) do
+ActiveRecord::Schema.define(version: 20151102105030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -435,6 +435,7 @@ ActiveRecord::Schema.define(version: 20151014110716) do
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.integer  "corporate_customer_id"
+    t.datetime "destroyed_at"
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
@@ -914,6 +915,7 @@ ActiveRecord::Schema.define(version: 20151014110716) do
     t.boolean  "restricted",                              default: false, null: false
     t.integer  "corporate_customer_id"
     t.float    "total_video_duration",                    default: 0.0
+    t.datetime "destroyed_at"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
