@@ -21,9 +21,13 @@
                       =course.try(:short_description).to_s.truncate(30)
                     -else
                       =course.description.to_s.truncate(15)
+                  -if course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) > 0
+                    %h5.h4{style: 'margin-top: 20px; margin-bottom: 0px;'}
+                      =course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
+                      &#37;
                 .box-label
                   -if course.live
-                    -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+                    -if course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 0
                       =t('views.course_module_elements.show.continue')
                     -else
                       =t('views.general.start')

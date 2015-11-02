@@ -45,6 +45,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_jumbo_quizzes, through: :course_modules
   has_many :question_banks
   has_many :student_exam_tracks
+  has_many :subject_course_user_logs
   has_many :corporate_group_grants
 
   # validation
@@ -116,7 +117,8 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def number_complete_by_user_or_guid(user_id, session_guid)
-    self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
+    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).last
+    log.try(:count_of_cmes_completed)
   end
 
   def parent
