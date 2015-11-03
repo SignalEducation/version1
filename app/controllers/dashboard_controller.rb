@@ -34,14 +34,7 @@ class DashboardController < ApplicationController
     @compulsory_courses = []
 
     if @dashboard_type.include?('admin')
-      @all_users = User.all
-      @new_users = @all_users.where('created_at > ?', Proc.new{Time.now - 7.days}.call)
-      @all_courses = SubjectCourse.all_in_order
-      @course_modules = CourseModule.all_in_order.where(subject_course_id: @all_courses)
-      @cmeuls = CourseModuleElementUserLog.where(course_module_id: @course_modules)
-      @monthly_cmeuls = CourseModuleElementUserLog.this_month.where(course_module_id: @course_modules)
-      @total_seconds = @cmeuls.sum(:seconds_watched)
-      @monthly_total_seconds = @monthly_cmeuls.sum(:seconds_watched)
+
     end
 
     if @dashboard_type.include?('corporate_student')
