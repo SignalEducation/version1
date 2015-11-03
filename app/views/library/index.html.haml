@@ -49,7 +49,7 @@
                     -(1..(total_lesson-complete_lesson)).each do |i|
                       %li
                 .box-label
-                  Browse
+                  =t('views.general.browse')
 
 
       -if @no_grouped_courses.present?
@@ -72,13 +72,7 @@
                       -else
                         =course.description.to_s.truncate(15)
                   .box-label
-                    -if course.live
-                      -if course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) > 0
-                        =t('views.course_module_elements.show.continue')
-                      -else
-                        =t('views.general.start')
-                    -else
-                      Get Early Access
+                    =t('views.general.browse')
 
       -#else
         ="Sorry there are no courses containing the terms #{params[:search]}"
