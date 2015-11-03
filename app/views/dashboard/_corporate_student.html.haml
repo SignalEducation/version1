@@ -26,6 +26,7 @@
                   Your Compulsory Courses
             .row.l-margin-bottom-huge
               -@compulsory_courses.each do |course|
+                -log = @compulsory_logs.where(subject_course_id: course.id).first
                 .col-md-4.l-margin-top
                   =link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
                     .panel-icon.icon-big
@@ -33,15 +34,15 @@
                     .panel-body
                       %h4.text-bold.one-line-text
                         =course.try(:name)
-                      %p
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.parent.try(:name)
-
+                      - total_lesson = course.try(:cme_count)
+                      - complete_lesson = log.try(:count_of_cmes_completed) || 0
+                      - complete_percent = log.try(:percentage_complete)
+                      %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
+                      .progress.l-margin-top-big
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                     .box-label continue
 
-        .tab-pane.fade#active{role: 'tabpanel'}
+        .l-wrap.tab-pane.fade#active{role: 'tabpanel'}
           .container-fluid
             .row
               .col-md-12.text-center
@@ -54,18 +55,20 @@
                   Your Active Courses
             .row.l-margin-bottom-huge
               -@incomplete_courses.each do |course|
+                -log = @active_logs.where(subject_course_id: course.id).first
                 .col-md-4.l-margin-top
-                  = link_to course_special_link(course), class: 'library-box library-box-item panel text-center', style: 'background-image: 0;' do
+                  = link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
                     .panel-icon.icon-big
                       %i.glyphicon.glyphicon-pencil
                     .panel-body
                       %h4.text-bold.one-line-text
                         =course.try(:name)
-                      %p
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.parent.try(:name)
+                      - total_lesson = course.try(:cme_count)
+                      - complete_lesson = log.try(:count_of_cmes_completed) || 0
+                      - complete_percent = log.try(:percentage_complete)
+                      %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
+                      .progress.l-margin-top-big
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                     .box-label continue
 
         .tab-pane.fade#completed{role: 'tabpanel'}
@@ -82,6 +85,7 @@
                     Your Completed Courses
               .row.l-margin-bottom-huge
                 -@completed_courses.each do |course|
+                  -log = @completed_logs.where(subject_course_id: course.id).first
                   .col-md-4.l-margin-top
                     =link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
                       .panel-icon.icon-big
@@ -89,11 +93,12 @@
                       .panel-body
                         %h4.text-bold.one-line-text
                           =course.try(:name)
-                        %p
-                          -if course.short_description
-                            =course.try(:short_description).to_s.truncate(30)
-                          -else
-                            =course.parent.try(:name)
+                        - total_lesson = course.try(:cme_count)
+                        - complete_lesson = log.try(:count_of_cmes_completed) || 0
+                        - complete_percent = log.try(:percentage_complete)
+                        %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
+                        .progress.l-margin-top-big
+                          .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                       .box-label continue
       -else
         .l-wrap.active.tab-pane.fade.in#active{role: 'tabpanel'}

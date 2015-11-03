@@ -611,6 +611,14 @@ a.box-item {
     text-align: right;
   }
 }
+.left-side-meta {
+  color: tint($purple-1, 50%);
+  display: block;
+  text-align: left;
+  @include breakpoint(sm-min) {
+    text-align: left;
+  }
+}
 .lined-list {
   border-top: 1px solid rgba($gray-1, .15);
   padding: 0;

@@ -11,19 +11,27 @@
       .course-list-wrap
         .row
           -@courses.each do |course|
+            -log = @logs.where(subject_course_id: course.id).first
             .col-sm-6.col-md-4
               =link_to library_special_link(course), class: 'box box-course' do
                 .box-inner
                   %h3.h4.box-title
                     =course.try(:name)
                   %p.box-desc
-                    -if course.short_description
-                      =course.try(:short_description).to_s.truncate(30)
-                    -else
-                      =course.description.to_s.truncate(15)
+                  -if course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) > 0
+                    -total_lesson = course.cme_count
+                    -complete_lesson = log.count_of_cmes_completed
+                    -complete_percent = log.percentage_complete
+                    %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                    .progress.l-margin-top-big
+                      .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                  -else
+                    %h5.h4{style: 'margin-top: 20px; margin-bottom: 0px;'}
+                      0
+                      &#37;
                 .box-label
                   -if course.live
-                    -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+                    -if course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 0
                       =t('views.course_module_elements.show.continue')
                     -else
                       =t('views.general.start')

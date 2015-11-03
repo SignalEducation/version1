@@ -47,6 +47,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_jumbo_quizzes, through: :course_modules
   has_many :question_banks
   has_many :student_exam_tracks
+  has_many :subject_course_user_logs
   has_many :corporate_group_grants
 
   # validation
@@ -73,9 +74,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_live, -> { where(live: true) }
   scope :all_not_live, -> { where(live: false) }
   scope :all_not_restricted, -> { where(restricted: false) }
-
   scope :all_in_order, -> { order(:sorting_order, :name) }
-
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
 
@@ -130,7 +129,8 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def number_complete_by_user_or_guid(user_id, session_guid)
-    self.student_exam_tracks.for_user_or_session(user_id, session_guid).sum(:count_of_cmes_completed)
+    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+    log.try(:count_of_cmes_completed)
   end
 
   def parent

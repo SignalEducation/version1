@@ -92,6 +92,7 @@ class CourseModuleElement < ActiveRecord::Base
   before_save :populate_estimated_time
   after_create :update_parent
   after_update :update_parent
+  after_destroy :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }

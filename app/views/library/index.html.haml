@@ -37,31 +37,30 @@
                   %h3.text-bold.one-line-text.l-margin-bottom
                     =group.name
                   %p.l-margin-bottom-big
-                    =group.description.to_s.truncate(25)
-                  -#TODO change this to be subject_course_user_logs.completed.count
-                  - #total_lesson = group.subject_courses.count
-                  - #complete_lesson = group.subject_courses.count
-                  - total_lesson = 10
-                  - complete_lesson = 10
+                    =group.description.to_s.truncate(55)
+                  -#total_lesson = group.subject_courses.count
+                  -#complete_lesson = group.subject_courses.count
+                  -#total_lesson = 10
+                  -#complete_lesson = 10
                   -#if group.subject_courses.count > 0
-                  %ul#progress_circles
+                  -#%ul#progress_circles
                     -(1..complete_lesson).each do |i|
                       %li.lesson-complete
                     -(1..(total_lesson-complete_lesson)).each do |i|
                       %li
                 .box-label
-                  Start
+                  Browse
 
 
-      -if @courses.present?
+      -if @no_grouped_courses.present?
         %br/
         %hr/
         %br/
         .course-list-wrap
           .row
-            %h4.h-separator.h-separator-center.text-center.l-margin-bottom-big
+            %h2.h-separator.h-separator-center.text-center.l-margin-bottom-big
               ='Other Courses'
-            -@courses.each do |course|
+            -@no_grouped_courses.each do |course|
               .col-sm-6.col-md-4
                 =link_to library_special_link(course), class: 'box box-course' do
                   .box-inner
@@ -74,7 +73,7 @@
                         =course.description.to_s.truncate(15)
                   .box-label
                     -if course.live
-                      -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
+                      -if course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) > 0
                         =t('views.course_module_elements.show.continue')
                       -else
                         =t('views.general.start')

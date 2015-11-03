@@ -60,7 +60,7 @@ class StudentExamTrack < ActiveRecord::Base
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
-  scope :with_active_cmes, -> { includes(:course_module).where('course_modules.cme_count > 0').references(:course_module) }
+  scope :with_active_cmes, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
 
@@ -84,7 +84,7 @@ class StudentExamTrack < ActiveRecord::Base
               course_module_id: duplicate_cm_id,
               jumbo_quiz_taken: duplicate_sets.map(&:jumbo_quiz_taken).any?,
       )
-      new_one.recalculate_completeness # includes a 'save'
+      new_one.calculate_completeness # includes a 'save'
       # delete the previous SETs
       duplicate_sets.destroy_all
     end
@@ -142,6 +142,7 @@ class StudentExamTrack < ActiveRecord::Base
   def recalculate_completeness
     self.update_columns(count_of_cmes_completed: self.cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0))
     self.update_columns(percentage_complete: (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100)
+
     self.create_or_update_subject_course_user_log
   end
 

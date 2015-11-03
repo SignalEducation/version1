@@ -30,9 +30,10 @@
                     .table-responsive
                       .col-md-10.l-margin-bottom
                         %h2=course_module.name.to_s.truncate(50)
-                      -#.col-md-2
+                      .col-md-2
                         .pull-right
-                          %span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
+                          =tick_or_cross(course_module.active)
+                          -#%span.glyphicon.glyphicon-align-justify{title: t('views.general.drag_to_reorder')}
                       %table.table.sorted_table{data: {destination: course_module_elements_url}, id: course_module.id, style: 'font-size: 18px;'}
                         %thead
                           %tr
