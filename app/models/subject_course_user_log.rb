@@ -95,14 +95,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.subject_course.try(:cme_count) || 0
   end
 
-
   def recalculate_completeness
-    self.count_of_cmes_completed = self.student_exam_tracks.sum(:count_of_cmes_completed)
+    self.count_of_cmes_completed = self.student_exam_tracks.with_active_cmes.sum(:count_of_cmes_completed)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    self.count_of_questions_correct = self.student_exam_tracks.sum(:count_of_questions_correct)
-    self.count_of_questions_taken = self.student_exam_tracks.sum(:count_of_questions_taken)
-    self.count_of_videos_taken = self.student_exam_tracks.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken = self.student_exam_tracks.sum(:count_of_quizzes_taken)
+    self.count_of_questions_correct = self.student_exam_tracks.with_active_cmes.sum(:count_of_questions_correct)
+    self.count_of_questions_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_questions_taken)
+    self.count_of_videos_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_quizzes_taken)
     unless self.percentage_complete.nil?
       self.completed = true if (self.percentage_complete > 99)
       self.completed = false if (self.percentage_complete < 100)

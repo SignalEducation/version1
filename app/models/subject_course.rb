@@ -131,7 +131,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def number_complete_by_user_or_guid(user_id, session_guid)
-    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).last
+    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
     log.try(:count_of_cmes_completed)
   end
 

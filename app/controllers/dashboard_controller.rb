@@ -22,8 +22,14 @@ class DashboardController < ApplicationController
     incomplete_set_ids = @incomplete_student_exam_tracks.all.map(&:subject_course_id)
     completed_set_ids = @completed_student_exam_tracks.all.map(&:subject_course_id)
 
-    @incomplete_courses = @courses.where(id: incomplete_set_ids)
-    @completed_courses = @courses.where(id: completed_set_ids)
+    logs = SubjectCourseUserLog.where(user_id: current_user.id)
+    @active_logs = logs.where('percentage_complete < ?', 100)
+    active_logs_ids = @active_logs.all.map(&:subject_course_id)
+    @completed_logs = logs.where('percentage_complete > ?', 99)
+    completed_logs_ids = @completed_logs.all.map(&:subject_course_id)
+
+    @incomplete_courses = @courses.where(id: active_logs_ids)
+    @completed_courses = @courses.where(id: completed_logs_ids)
     @compulsory_courses = []
 
     if @dashboard_type.include?('admin')

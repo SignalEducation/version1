@@ -28,6 +28,7 @@ class GroupsController < ApplicationController
         courses = courses.try(:all_not_restricted)
         @courses = courses.all_in_order
       end
+      @logs = SubjectCourseUserLog.where(user_id: current_user.id)
     end
   end
 
