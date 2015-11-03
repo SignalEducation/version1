@@ -84,7 +84,7 @@ class StudentExamTrack < ActiveRecord::Base
               course_module_id: duplicate_cm_id,
               jumbo_quiz_taken: duplicate_sets.map(&:jumbo_quiz_taken).any?,
       )
-      new_one.recalculate_completeness # includes a 'save'
+      new_one.calculate_completeness # includes a 'save'
       # delete the previous SETs
       duplicate_sets.destroy_all
     end
