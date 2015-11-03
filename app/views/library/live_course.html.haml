@@ -7,15 +7,20 @@
         .col-md-12.text-center
           %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
             =@course.try(:name)
-          -if @course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
-            -if @course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) > 0
-              =link_to course_special_link(@next_element) do
-                .btn.btn-red
-                  =t('views.library.index.continue_course')
+          -if current_user
+            -if @course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
+              -if @course.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid) > 0
+                =link_to course_special_link(@next_element) do
+                  .btn.btn-red
+                    =t('views.library.index.continue_course')
+              -else
+                =link_to course_special_link(@course.first_active_cme) do
+                  .btn.btn-red
+                    =t('views.library.index.start_course')
             -else
               =link_to course_special_link(@course.first_active_cme) do
                 .btn.btn-red
-                  =t('views.library.index.start_course')
+                  =t('views.general.browse')
           -else
             =link_to course_special_link(@course.first_active_cme) do
               .btn.btn-red
