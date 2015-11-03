@@ -44,13 +44,7 @@
                           -else
                             =course.parent.try(:name)
                       .box-label
-                        -if course.live
-                          -if course.number_complete_by_user_or_guid(current_user.try(:id), current_session_guid) >= 1
-                            =t('views.course_module_elements.show.continue')
-                          -else
-                            =t('views.general.start')
-                        -else
-                          Get Early Access
+                        =t('views.general.browse')
 
 
 =render partial: 'layouts/new_footer'
