@@ -44,9 +44,8 @@ describe CourseModuleElementVideo do
 
   it { should_not validate_presence_of(:raw_video_file_id) }
   it { should validate_numericality_of(:raw_video_file_id) }
-  #it { should validate_uniqueness_of(:raw_video_file_id) }
 
-  it { should validate_presence_of(:tags) }
+  it { should_not validate_presence_of(:tags) }
   it { should validate_length_of(:tags).is_at_most(255) }
 
   it { should validate_presence_of(:video_id) }
@@ -55,7 +54,7 @@ describe CourseModuleElementVideo do
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES) }
   it { should validate_length_of(:difficulty_level).is_at_most(255) }
 
-  it { should validate_presence_of(:transcript) }
+  it { should_not validate_presence_of(:transcript) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -68,5 +67,6 @@ describe CourseModuleElementVideo do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:parent) }
 
 end

@@ -100,7 +100,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def destroyable?
-    !self.active
+    true
   end
 
   def destroyable_children

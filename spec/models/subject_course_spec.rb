@@ -25,6 +25,7 @@
 #  restricted                              :boolean          default(FALSE), not null
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
+#  destroyed_at                            :datetime
 #
 
 require 'rails_helper'

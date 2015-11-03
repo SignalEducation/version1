@@ -25,11 +25,13 @@
 #  restricted                              :boolean          default(FALSE), not null
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
+#  destroyed_at                            :datetime
 #
 
 class SubjectCourse < ActiveRecord::Base
 
   include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id
@@ -105,7 +107,19 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def destroyable?
-    self.course_modules.empty? && self.student_exam_tracks.empty?
+    true
+  end
+
+  def destroyable_children
+    # not destroyable:
+    # - self.course_module_element_user_logs
+    # - self.student_exam_tracks.empty?
+    the_list = []
+    the_list += self.course_modules.to_a
+    the_list << self.question_banks if self.question_banks
+    the_list << self.corporate_group_grants if self.corporate_group_grants
+    the_list << self.student_exam_tracks if self.student_exam_tracks
+    the_list
   end
 
   def estimated_time_in_seconds

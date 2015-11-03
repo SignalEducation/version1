@@ -12,9 +12,13 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  corporate_customer_id :integer
+#  destroyed_at          :datetime
 #
 
 class Group < ActiveRecord::Base
+
+  include LearnSignalModelExtras
+  include Archivable
 
   # attr-accessible
   attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id
@@ -54,6 +58,15 @@ class Group < ActiveRecord::Base
 
   def destroyable?
     true
+  end
+
+  def destroyable_children
+    # not destroyable:
+    # - self.course_module_element_user_logs
+    # - self.student_exam_tracks.empty?
+    the_list = []
+    the_list += self.subject_courses.to_a
+    the_list
   end
 
   protected

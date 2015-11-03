@@ -65,8 +65,9 @@ class CorporateCustomer < ActiveRecord::Base
   end
 
   def create_on_intercom
-
-    IntercomCreateCompanyWorker.perform_async(self.id, self.organisation_name)
+    unless Rails.env.test?
+      IntercomCreateCompanyWorker.perform_async(self.id, self.organisation_name)
+    end
   end
 
   protected

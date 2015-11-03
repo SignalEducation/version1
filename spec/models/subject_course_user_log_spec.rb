@@ -23,7 +23,7 @@ require 'rails_helper'
 describe SubjectCourseUserLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at count_of_questions_taken count_of_questions_correct count_of_course_module_complete count_of_quizzes_taken count_of_videos_taken)
+  black_list = %w(id created_at updated_at count_of_questions_taken count_of_questions_correct count_of_course_module_complete count_of_quizzes_taken count_of_videos_taken latest_course_module_element_id percentage_complete completed)
   SubjectCourseUserLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -49,15 +49,33 @@ describe SubjectCourseUserLog do
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
 
+  it { should_not validate_presence_of(:latest_course_module_element_id) }
+  it { should validate_numericality_of(:latest_course_module_element_id) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:create_intercom_event).after(:create) }
 
   # scopes
   it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }
+  it { expect(SubjectCourseUserLog).to respond_to(:for_session_guid) }
+  it { expect(SubjectCourseUserLog).to respond_to(:for_unknown_users) }
+  it { expect(SubjectCourseUserLog).to respond_to(:all_complete) }
+  it { expect(SubjectCourseUserLog).to respond_to(:all_incomplete) }
 
-  # class methods
+  # class methods.
+  it { expect(SubjectCourseUserLog).to respond_to(:assign_user_to_session_guid) }
+  it { expect(SubjectCourseUserLog).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+
+  it { should respond_to(:elements_total) }
+
+  it { should respond_to(:recalculate_completeness) }
+
+  it { should respond_to(:student_exam_tracks) }
+
+  it { should respond_to(:create_intercom_event) }
 
 end
