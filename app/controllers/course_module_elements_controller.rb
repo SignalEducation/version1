@@ -53,26 +53,30 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def edit
-    if @course_module_element.is_quiz
-      @course_module_element.course_module_element_quiz.add_an_empty_question
-    elsif @course_module_element.is_video
-      @course_module_element.course_module_element_resources.build
-    elsif @course_module_element.is_cme_flash_card_pack
-      # edit_empty_cme_flash_card_pack
-      if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
-        # @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
-        # @quiz_question = @flash_quiz.quiz_questions.build
-        # @quiz_question.quiz_contents.build(sorting_order: 0)
+    if @course_module_element
+      if @course_module_element.is_quiz
+        @course_module_element.course_module_element_quiz.add_an_empty_question
+      elsif @course_module_element.is_video
+        @course_module_element.course_module_element_resources.build
+      elsif @course_module_element.is_cme_flash_card_pack
+        # edit_empty_cme_flash_card_pack
+        if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
+          # @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
+          # @quiz_question = @flash_quiz.quiz_questions.build
+          # @quiz_question.quiz_contents.build(sorting_order: 0)
 
 
-      else
-        # flash_card = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
-        # flash_card.quiz_contents.build(sorting_order: 0)
+        else
+          # flash_card = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
+          # flash_card.quiz_contents.build(sorting_order: 0)
+
+        end
 
       end
-
+      set_related_cmes
+    else
+      redirect_to subject_course_url(@course_module_element.parent.parent)
     end
-    set_related_cmes
   end
 
   def create

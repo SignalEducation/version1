@@ -4,7 +4,7 @@ class GroupsController < ApplicationController
   before_action except: [:show] do
     ensure_user_is_of_type(['admin', 'content_manager', 'corporate_customer'])
   end
-  before_action :get_variables, except: [:show]
+  before_action :get_variables
 
   def index
     if current_user.corporate_customer?
@@ -16,7 +16,6 @@ class GroupsController < ApplicationController
   end
 
   def show
-    @group = Group.where(name_url: params[:group_name_url]).first
     if @group.nil?
       redirect_to library_url
     else
@@ -112,10 +111,7 @@ class GroupsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @group = Group.where(id: params[:id]).first
-    end
-    #@subjects = Subject.all_in_order
+    @group = Group.where(name_url: params[:group_name_url]).first || Group.where(id: params[:id]).first
   end
 
   def allowed_params

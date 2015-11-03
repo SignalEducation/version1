@@ -88,8 +88,9 @@ describe CourseModuleElement do
   # callbacks
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:log_question_count_and_duration).before(:save) }
-  it { should callback(:update_parent).after(:save) }
-  it { should callback(:update_student_exam_tracks).after(:save) }
+  it { should callback(:populate_estimated_time).before(:save) }
+  it { should callback(:update_parent).after(:create) }
+  it { should callback(:update_parent).after(:update) }
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
@@ -109,7 +110,6 @@ describe CourseModuleElement do
   it { should respond_to(:next_element) }
   it { should respond_to(:parent) }
   it { should respond_to(:previous_element) }
-  it { should respond_to(:update_student_exam_tracks) }
   it { should respond_to(:type_name) }
 
 end

@@ -118,11 +118,6 @@ describe HomePagesController, type: :controller do
           expect(response).to redirect_to(personal_sign_up_complete_url)
         end
 
-        it 'sends sign-up event to Mixpanel' do
-          expect(MixpanelUserSignUpWorker).to receive(:perform_async).with(User.last.id + 1, request.remote_ip)
-          post :student_sign_up, user: sign_up_params
-        end
-
         it 'sends verification email to the user' do
           # We do not know in advance what will be user's activation
           # code so we have to capture its value. That's why we are
