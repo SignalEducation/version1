@@ -138,10 +138,15 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
-    if self.cme_count > 0
-      (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
-    else
+    if cme_count.nil?
       0
+    else
+      if self.cme_count > 0
+        (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
+      else
+        0
+      end
+
     end
   end
 
