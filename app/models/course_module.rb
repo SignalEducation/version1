@@ -207,10 +207,10 @@ class CourseModule < ActiveRecord::Base
 
   def update_parent_and_sets
     self.parent.try(:recalculate_fields)
-    StudentExamTrack.where(course_module_id: self.id).each do |set|
-      set.recalculate_completeness
-    end
-    #StudentExamTracksWorker.perform_async(self.id)
+    #StudentExamTrack.where(course_module_id: self.id).each do |set|
+    #  set.recalculate_completeness
+    #end
+    StudentExamTracksWorker.perform_async(self.id)
   end
 
 end

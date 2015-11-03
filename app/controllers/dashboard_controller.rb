@@ -27,6 +27,7 @@ class DashboardController < ApplicationController
     active_logs_ids = @active_logs.all.map(&:subject_course_id)
     @completed_logs = logs.where('percentage_complete > ?', 99)
     completed_logs_ids = @completed_logs.all.map(&:subject_course_id)
+    @compulsory_logs = SubjectCourseUserLog.where(user_id: current_user.id)
 
     @incomplete_courses = @courses.where(id: active_logs_ids)
     @completed_courses = @courses.where(id: completed_logs_ids)
