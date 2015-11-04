@@ -7,12 +7,13 @@
 #  name                  :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  corporate_manager_id  :integer
 #
 
 class CorporateGroup < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :corporate_customer_id, :name
+  attr_accessible :corporate_customer_id, :name, :corporate_manager_id
 
   # Constants
 

@@ -1540,6 +1540,7 @@ en:
         name: Name
         name_placeholder: Team Name
         corporate_customer: Corporate Customer
+        corporate_managers: Corporate Managers
 
       index:
         h1: Teams

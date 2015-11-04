@@ -8,6 +8,12 @@
             { include_blank: t('views.general.select') },
             { class: 'form-control', style: 'border-radius: 6px;'}
       %br/
+      =f.label :corporate_manager_id, t('views.corporate_groups.form.corporate_managers'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        = f.collection_select :corporate_manager_id, @corporate_managers, :id, :full_name,
+            { include_blank: t('views.general.select') },
+            { class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
       =f.label :name, t('views.corporate_groups.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.corporate_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
