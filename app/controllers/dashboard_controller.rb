@@ -1,5 +1,7 @@
 class DashboardController < ApplicationController
 
+  before_action :logged_in_required
+
   def index
     seo_title_maker('Dashboard - Personalised to you', 'Your progress through all courses will be recorded here.', false)
     @dashboard_type = []
