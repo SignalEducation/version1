@@ -81,6 +81,7 @@ Rails.application.routes.draw do
     end
 
     resources :corporate_requests
+    get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]

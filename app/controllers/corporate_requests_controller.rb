@@ -1,7 +1,7 @@
 class CorporateRequestsController < ApplicationController
 
-  before_action :logged_in_required, except: [:new, :create]
-  before_action except: [:new, :create] do
+  before_action :logged_in_required, except: [:new, :create, :submission_complete]
+  before_action except: [:new, :create, :submission_complete] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -11,6 +11,9 @@ class CorporateRequestsController < ApplicationController
   end
 
   def show
+  end
+
+  def submission_complete
   end
 
   def new
@@ -23,7 +26,7 @@ class CorporateRequestsController < ApplicationController
   def create
     @corporate_request = CorporateRequest.new(allowed_params)
     if @corporate_request.save
-      redirect_to request.referrer
+      redirect_to submission_complete_url
       Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request.id)
     else
       redirect_to request.referrer
