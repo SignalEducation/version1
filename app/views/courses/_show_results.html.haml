@@ -7,7 +7,11 @@
     Results Summary
   #results
     %h3.l-margin-top-big.l-margin-bottom-big
-      Summary
+      ='Score:'
+      &#160;
+      =@course_module_element_user_log.quiz_attempts.where(correct: true).count
+      &#47;
+      =@course_module_element_user_log.quiz_attempts.count
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
       .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
