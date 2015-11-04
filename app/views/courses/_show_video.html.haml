@@ -6,8 +6,21 @@
   -else
     #video-window
   .l-margin-bottom.l-margin-top
+    .col-xs-4.text-left
+      =link_to course_special_link(cme.previous_element), class: 'btn btn-red text-bold' do
+        .glyphicon.glyphicon-arrow-left
+        =t('views.course_module_elements.show.previous_step')
+    .col-xs-4.text-center
+      -if current_user.try(:admin?)
+        =link_to t('views.general.edit'), course_module_special_link(cme), target: '_blank', class: 'btn btn-red text-bold'
+    .col-xs-4.text-right
+      =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
+        =t('views.course_module_elements.show.next_step')
+        .glyphicon.glyphicon-arrow-right
+
     .pull-left
       -unless cme.description.blank?
+        %br/
         %h3=t('views.course_module_elements.form.description')
         .pull-left
           =cme.description.html_safe
@@ -17,7 +30,7 @@
           .pull-left
             =link_to "Discuss #{cme.name} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
 
-.box-item.question-box.border-same-backcolor.width-bigger
+-#.box-item.question-box.border-same-backcolor.width-bigger
   .cme-nav
     =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
 
