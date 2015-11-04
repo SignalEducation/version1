@@ -27,6 +27,7 @@
                       %tr
                         %th
                           =t('views.corporate_groups.show.h1')
+                        %th Manager
                         %th No. of Users
                         %th Edit Members
                         %th
@@ -36,6 +37,8 @@
                           %td
                             =corporate_group.name
                           %td
+                            =User.where(id: corporate_group.corporate_manager_id).first.try(:full_name)
+                          %td
                             =corporate_group.users.count
                           %td
                             =link_to t('views.general.show'), corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'
@@ -44,7 +47,7 @@
                 corporate_group_edit_members_url(corporate_group_id: corporate_group.id), class: 'btn btn-small btn-purple'
                             -if corporate_group.destroyable?
                               =link_to t('views.general.delete'), corporate_group,
-                  method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-purple'
+                  method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-red'
     =render partial: 'layouts/new_footer'
 -else
   .l-section-small.is-bg-asphalt
@@ -64,6 +67,7 @@
                       %tr
                         %th
                           =t('views.corporate_groups.show.h1')
+                        %th Manager
                         %th No. of Users
                         %th Edit Members
                         %th
@@ -72,6 +76,8 @@
                         %tr
                           %td
                             =corporate_group.name
+                          %td
+                            =User.where(id: corporate_group.corporate_manager_id).first.try(:full_name)
                           %td
                             =corporate_group.users.count
                           %td

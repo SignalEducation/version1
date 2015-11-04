@@ -67,8 +67,10 @@ class CorporateGroupsController < ApplicationController
 
   def update
     name = allowed_params[:name]
+    id = allowed_params[:corporate_manager_id]
     if (current_user.admin? || current_user.corporate_customer_id == @corporate_group.corporate_customer_id) &&
        @corporate_group.update_attributes(name: name)
+       @corporate_group.update_attributes(corporate_manager_id: id)
       process_grants
       flash[:success] = I18n.t('controllers.corporate_groups.update.flash.success')
       redirect_to corporate_groups_url
@@ -111,7 +113,7 @@ class CorporateGroupsController < ApplicationController
 
   def allowed_params
     params.require(:corporate_group).permit(:corporate_customer_id,
-                                            :name)
+                                            :name, :corporate_manager_id)
   end
 
   def process_grants
