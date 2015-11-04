@@ -23,12 +23,9 @@
                       %tr
                         %th Name
                         %th Active
-                        -if current_user.corporate_customer? && current_user.tutor?
-                          %th Restricted
-                        -else
+                        -if current_user.admin? || current_user.content_manager?
                           %th Live
                           %th Wistia ID
-                        -if current_user.admin? || current_user.content_manager?
                           %th Tutor
                           %th
                         %th
@@ -38,7 +35,6 @@
                         %tr{id: subject_course.id}
                           %td=subject_course.name
                           %td=tick_or_cross(subject_course.active)
-                          %td=tick_or_cross(subject_course.restricted)
                           %td
                             =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
                             -if subject_course.destroyable?
