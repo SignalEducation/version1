@@ -25,11 +25,9 @@ class CorporateRequest < ActiveRecord::Base
 
   # validation
   validates :name, presence: true
-  validates :title, presence: true
   validates :company, presence: true
   validates :email, presence: true
   validates :phone_number, presence: true
-  validates :website, presence: true
 
   # callbacks
   before_destroy :check_dependencies
