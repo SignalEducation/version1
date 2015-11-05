@@ -50,7 +50,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:organisation_name, :address) }
-  after_create :create_on_intercom
+  #after_create :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:organisation_name) }
