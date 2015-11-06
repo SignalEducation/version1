@@ -35,8 +35,8 @@ class HomePagesController < ApplicationController
           render :cfa
         elsif @home_page.public_url == '/wso'
           render :wso
-        elsif @home_page.public_url == '/managers'
-          render :managers
+        elsif @home_page.public_url == '/business'
+          render :business
         end
       end
     end
