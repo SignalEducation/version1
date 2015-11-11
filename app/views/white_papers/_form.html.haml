@@ -1,17 +1,20 @@
-.row
-  .col-sm-8.col-sm-offset-2
+.row.l-margin-top.l-margin-bottom
+  .col-md-12.l-margin-top
     =form_for(@white_paper, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @white_paper, message: nil}
-        .form-group
-          =f.label :title, t('views.white_papers.form.title'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :title, placeholder: t('views.white_papers.form.title_placeholder'), class: 'form-control', autofocus: true
-        .form-group
-          =f.label :description, t('views.white_papers.form.description'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_area :description, placeholder: t('views.white_papers.form.description_placeholder'), rows: 4, class: 'form-control'
+      =render partial: '/layouts/error_messages', locals: {thing: @white_paper, message: nil}
+      .row
+        .col-md-6.col-md-offset-3
+          =f.label :title, t('views.white_papers.form.title'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :title, placeholder: t('views.white_papers.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          =f.label :description, t('views.white_papers.form.description'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_area :description, placeholder: t('views.white_papers.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
 
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), white_papers_path
+          .row
+            %br/
+            %br/
+            %br/
+            =f.submit t('views.general.save'), class: 'btn btn-red'
+            =link_to t('views.general.cancel'), white_papers_path, class: 'btn btn-cyan'

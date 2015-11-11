@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :white_papers
   concern :supports_reordering do
     post :reorder, on: :collection
   end
@@ -163,6 +162,7 @@ Rails.application.routes.draw do
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
+    resources :white_papers
 
     # home page
     root 'home_pages#show'

@@ -1,8 +1,8 @@
 class WhitePapersController < ApplicationController
 
-  before_action :logged_in_required
+  before_action :logged_in_required, except: [:index, :show]
   before_action do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action :get_variables
 
@@ -58,7 +58,7 @@ class WhitePapersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:white_paper).permit(:title, :description)
+    params.require(:white_paper).permit(:title, :description, :file, :sorting_order)
   end
 
 end

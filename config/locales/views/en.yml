@@ -1637,3 +1637,23 @@ en:
         website_placeholder: Company Website or Linkedin
         message: Message
         message_placeholder: Message (optional)
+
+    white_papers:
+      form:
+        title: Title
+        title_placeholder: Title of White Paper
+        description: Description
+        description_placeholder: Enter description here
+
+      index:
+        h1: White Papers
+
+      show:
+        h1: White Paper
+
+      edit:
+        h1: Edit White Paper
+
+      new:
+        h1: New White Paper
+

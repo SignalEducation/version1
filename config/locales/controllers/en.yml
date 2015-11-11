@@ -540,3 +540,16 @@ en:
         flash:
           success: Corporate manager user has been deactivated
           error: Corporate manager user was not deactivated
+
+    white_papers:
+      create:
+        flash:
+          success: White Paper has been created successfully
+      update:
+        flash:
+          success: White Paper details have been updated successfully
+      destroy:
+        flash:
+          success: White Paper has been deleted
+          error: White Paper was not deleted
+

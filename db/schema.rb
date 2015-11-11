@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104142937) do
+ActiveRecord::Schema.define(version: 20151111193331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1268,5 +1268,19 @@ ActiveRecord::Schema.define(version: 20151104142937) do
   end
 
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
+
+  create_table "white_papers", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.integer  "sorting_order"
+  end
+
+  add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree
 
 end
