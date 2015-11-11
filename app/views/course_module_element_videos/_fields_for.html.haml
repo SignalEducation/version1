@@ -13,7 +13,7 @@
     =cme_video.text_field :video_id, class: 'form-control', style: 'border-radius: 6px; height: 45px;', readonly: true
   -else
     .input-group.input-group-lg.full-width
-      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;'
+      =cme_video.file_field :video, class: 'form-control', style: 'border-radius: 6px; height: 45px;', required: true
     %br/
     =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
     .input-group.input-group-lg.full-width
