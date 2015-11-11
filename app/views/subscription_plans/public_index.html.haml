@@ -73,11 +73,11 @@
               %h5.h5.plan-text
                 Per User
               .l-section-extra-small
-              -@student_subscription_plans.each do |plan|
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
-                  =number_in_local_currency_no_precision(plan.price, plan.currency)
-                  &#47;
-                  =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+                -@student_subscription_plans.each do |plan|
+                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
+                    =number_in_local_currency_no_precision(plan.price, plan.currency)
+                    &#47;
+                    =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
 
           .text-center.l-margin-bottom
             %a.signupModal{href: '#', class: 'btn btn-red btn-wide', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
