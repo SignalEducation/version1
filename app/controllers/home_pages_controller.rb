@@ -73,7 +73,7 @@ class HomePagesController < ApplicationController
       redirect_to dashboard_url
     else
       currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
-      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).first
+      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).all_active.first
       if subscription_plan
         @user = User.new(student_allowed_params.merge({
                                                         "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
