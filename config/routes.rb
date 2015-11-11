@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :white_papers
   concern :supports_reordering do
     post :reorder, on: :collection
   end
