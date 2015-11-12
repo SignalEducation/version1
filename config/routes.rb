@@ -162,7 +162,8 @@ Rails.application.routes.draw do
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
-    resources :white_papers
+    resources :white_papers, concerns: :supports_reordering
+    get 'media', to: 'white_papers#public_index', as: :media
 
     # home page
     root 'home_pages#show'

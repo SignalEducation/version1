@@ -10,6 +10,10 @@ class WhitePapersController < ApplicationController
     @white_papers = WhitePaper.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
+  def public_index
+    @white_papers = WhitePaper.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
   def show
   end
 
