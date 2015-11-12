@@ -21,7 +21,7 @@
 class WhitePaper < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :title, :description, :file, :cover_image
+  attr_accessible :title, :description, :file, :cover_image, :sorting_order
 
   # Constants
 
@@ -41,7 +41,7 @@ class WhitePaper < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:title) }
+  scope :all_in_order, -> { order(:sorting_order, :title) }
 
   # class methods
 

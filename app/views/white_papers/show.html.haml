@@ -10,7 +10,8 @@
           %p
             =@white_paper.description.html_safe
         .col-md-5.l-margin-top
-          =image_tag @white_paper.cover_image.url
+          .box-inner
+            =image_tag @white_paper.cover_image.url
 
         .col-md-2.l-margin-top
           %p

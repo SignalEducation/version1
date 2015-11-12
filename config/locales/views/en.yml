@@ -1650,16 +1650,19 @@ en:
         file_updated_at: File updated at
         file: Upload the White Paper File
         file_replacement: Upload replacement if you want
+        file_title: White Paper File
         cover_image_file_name: Cover Image name
         cover_image_content_type: Cover Image content type
         cover_image_file_size: Cover Image size
         cover_image_updated_at: Cover Image updated at
         cover_image: Upload the Cover Image
         cover_image_replacement: Upload replacement if you want
+        cover_image_title: Cover Image
 
 
       index:
         h1: White Papers
+        library: Media Library
 
       show:
         h1: White Paper

@@ -10,8 +10,8 @@ class WhitePapersController < ApplicationController
     @white_papers = WhitePaper.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def public_index
-    @white_papers = WhitePaper.paginate(per_page: 50, page: params[:page]).all_in_order
+  def media_library
+    @white_papers = WhitePaper.all_in_order
   end
 
   def show
@@ -43,6 +43,13 @@ class WhitePapersController < ApplicationController
     end
   end
 
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      WhitePaper.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
+  end
 
   def destroy
     if @white_paper.destroy

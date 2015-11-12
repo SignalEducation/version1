@@ -163,7 +163,7 @@ Rails.application.routes.draw do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
     resources :white_papers, concerns: :supports_reordering
-    get 'media', to: 'white_papers#public_index', as: :media
+    get 'media_library', to: 'white_papers#media_library', as: :media_library
 
     # home page
     root 'home_pages#show'

@@ -1106,6 +1106,13 @@ ol.example li.placeholder:before {
   }
 
 }
+.media-pic {
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+  margin: 0 auto $gutter auto;
+}
+
 //////////////////////
 a.library-box {
   text-decoration: none;
