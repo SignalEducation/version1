@@ -2,33 +2,40 @@
 #
 # Table name: white_papers
 #
-#  id                :integer          not null, primary key
-#  title             :string
-#  description       :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  file_file_name    :string
-#  file_content_type :string
-#  file_file_size    :integer
-#  file_updated_at   :datetime
-#  sorting_order     :integer
+#  id                       :integer          not null, primary key
+#  title                    :string
+#  description              :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  file_file_name           :string
+#  file_content_type        :string
+#  file_file_size           :integer
+#  file_updated_at          :datetime
+#  sorting_order            :integer
+#  cover_image_file_name    :string
+#  cover_image_content_type :string
+#  cover_image_file_size    :integer
+#  cover_image_updated_at   :datetime
 #
 
 class WhitePaper < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :title, :description, :file
+  attr_accessible :title, :description, :file, :cover_image
 
   # Constants
 
   # relationships
-  has_attached_file :file
+  has_attached_file :file, default_url: '/assets/images/missing.png'
+  has_attached_file :cover_image, default_url: '/assets/images/missing.png'
 
   # validation
   validates :title, presence: true
   validates :description, presence: true
   validates_attachment_content_type :file,
                                     content_type: %w(application/pdf)
+  validates_attachment_content_type :cover_image,
+                                    content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_destroy :check_dependencies

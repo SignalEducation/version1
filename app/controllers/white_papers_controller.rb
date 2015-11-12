@@ -62,7 +62,7 @@ class WhitePapersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:white_paper).permit(:title, :description, :file, :sorting_order)
+    params.require(:white_paper).permit(:title, :description, :file, :sorting_order, :cover_image)
   end
 
 end

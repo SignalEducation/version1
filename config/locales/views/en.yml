@@ -1642,8 +1642,21 @@ en:
       form:
         title: Title
         title_placeholder: Title of White Paper
-        description: Description
+        description: Description(This accepts html tags)
         description_placeholder: Enter description here
+        file_file_name: File name
+        file_content_type: File content type
+        file_file_size: File size
+        file_updated_at: File updated at
+        file: Upload the White Paper File
+        file_replacement: Upload replacement if you want
+        cover_image_file_name: Cover Image name
+        cover_image_content_type: Cover Image content type
+        cover_image_file_size: Cover Image size
+        cover_image_updated_at: Cover Image updated at
+        cover_image: Upload the Cover Image
+        cover_image_replacement: Upload replacement if you want
+
 
       index:
         h1: White Papers

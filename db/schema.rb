@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151111193331) do
+ActiveRecord::Schema.define(version: 20151112130424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1272,13 +1272,17 @@ ActiveRecord::Schema.define(version: 20151111193331) do
   create_table "white_papers", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.integer  "sorting_order"
+    t.string   "cover_image_file_name"
+    t.string   "cover_image_content_type"
+    t.integer  "cover_image_file_size"
+    t.datetime "cover_image_updated_at"
   end
 
   add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree

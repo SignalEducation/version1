@@ -1,20 +1,17 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.white_papers.show.h1')
-        \#
-        =@white_paper.id
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.white_papers.form.title')
-        %td.col-sm-8=@white_paper.title
-      %tr
-        %td.col-sm-4=t('views.white_papers.form.description')
-        %td.col-sm-8=@white_paper.description
-    %p
-      =link_to t('views.general.back'), white_papers_url
-      |
-      =link_to t('views.general.edit'), edit_white_paper_url(id: @white_paper.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@white_paper.title
+      .row.l-margin-top.l-margin-bottom
+        .col-md-5.l-margin-top
+          %p
+            =@white_paper.description.html_safe
+        .col-md-5.l-margin-top
+          =image_tag @white_paper.cover_image.url
+
+        .col-md-2.l-margin-top
+          %p
+            Form Will Go Here!

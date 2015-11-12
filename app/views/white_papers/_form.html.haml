@@ -3,7 +3,7 @@
     =form_for(@white_paper, html: {class: 'form-horizontal', role: 'form'}) do |f|
       =render partial: '/layouts/error_messages', locals: {thing: @white_paper, message: nil}
       .row
-        .col-md-6.col-md-offset-3
+        .col-md-6
           =f.label :title, t('views.white_papers.form.title'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :title, placeholder: t('views.white_papers.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
@@ -11,10 +11,38 @@
           =f.label :description, t('views.white_papers.form.description'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_area :description, placeholder: t('views.white_papers.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+        .col-md-6
+          -if f.object.file_file_name
+            %br/
+            .form-control-static
+              =link_to f.object.file_file_name, f.object.file.url, target: '_blank'
+              =number_to_human_size(f.object.file_file_size)
+              %br/
+              =f.label :file, t('views.white_papers.form.file_replacement'), class: 'control-label'
+          -else
+            =f.label :file, t('views.white_papers.form.file'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.file_field :file, class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          -if f.object.cover_image_file_name
+            %br/
+            .form-control-static
+              =link_to f.object.cover_image_file_name, f.object.cover_image.url, target: '_blank'
+              =number_to_human_size(f.object.cover_image_file_size)
+              %br/
+              =f.label :cover_image, t('views.white_papers.form.cover_image_replacement'), class: 'control-label'
+          -else
+            =f.label :cover_image, t('views.white_papers.form.cover_image'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.file_field :cover_image, class: 'form-control', style: 'border-radius: 6px;'
 
-          .row
-            %br/
-            %br/
-            %br/
-            =f.submit t('views.general.save'), class: 'btn btn-red'
-            =link_to t('views.general.cancel'), white_papers_path, class: 'btn btn-cyan'
+
+
+
+
+      .row
+        %br/
+        %br/
+        %br/
+        =f.submit t('views.general.save'), class: 'btn btn-red'
+        =link_to t('views.general.cancel'), white_papers_path, class: 'btn btn-cyan'
