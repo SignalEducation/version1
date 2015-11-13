@@ -13,28 +13,6 @@ class WhitePaperRequestsController < ApplicationController
   def show
   end
 
-  def edit
-  end
-
-  def create
-    @white_paper_request = WhitePaperRequest.new(allowed_params)
-    if @white_paper_request.save
-      flash[:success] = I18n.t('controllers.white_paper_requests.create.flash.success')
-      redirect_to white_paper_requests_url
-    else
-      render action: :new
-    end
-  end
-
-  def update
-    if @white_paper_request.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.white_paper_requests.update.flash.success')
-      redirect_to white_paper_requests_url
-    else
-      render action: :edit
-    end
-  end
-
 
   def destroy
     if @white_paper_request.destroy

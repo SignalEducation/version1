@@ -13,6 +13,18 @@ class OperationalMailer < ActionMailer::Base
     )
   end
 
+  def send_white_paper(request, white_paper, file) # backgrounded
+    @request = request
+    @white_paper = white_paper
+    @file = file
+    emails = ["#{@request.email}"]
+    #attachments.inline["#{@white_paper.title}"] = File.read("#{@white_paper.file}")
+    attachments.inline["#{@file}"] = File.read("#{@file}")
+    mail(to: emails,
+         subject: 'Your Requested Media Download - from LearnSignal'
+    )
+  end
+
   def signup_completed(user) # backgrounded
     @user = user
     mail(to: @user.email,

@@ -34,7 +34,6 @@ class WhitePaperRequest < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_save :send_email
 
   # scopes
   scope :all_in_order, -> { order(:name) }
@@ -44,10 +43,6 @@ class WhitePaperRequest < ActiveRecord::Base
   # instance methods
   def destroyable?
     false
-  end
-
-  def send_email
-
   end
 
   protected

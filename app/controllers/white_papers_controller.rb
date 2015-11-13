@@ -65,6 +65,7 @@ class WhitePapersController < ApplicationController
     @white_paper_request = WhitePaperRequest.new(request_allowed_params)
     if @white_paper_request.save
       flash[:success] = I18n.t('controllers.white_paper_requests.create.flash.success')
+      Mailers::OperationalMailers::SendWhitePaperWorker.perform_async(@white_paper_request.id)
       redirect_to request.referrer
     else
       render action: :new
