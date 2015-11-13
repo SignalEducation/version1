@@ -26,6 +26,7 @@ class WhitePaper < ActiveRecord::Base
   # Constants
 
   # relationships
+  has_many :white_paper_requests
   has_attached_file :file, default_url: '/assets/images/missing.png'
   has_attached_file :cover_image, default_url: '/assets/images/missing.png'
 

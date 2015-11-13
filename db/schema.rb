@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151112130424) do
+ActiveRecord::Schema.define(version: 20151113091911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1268,6 +1268,23 @@ ActiveRecord::Schema.define(version: 20151112130424) do
   end
 
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
+
+  create_table "white_paper_requests", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "number"
+    t.string   "web_url"
+    t.string   "company_name"
+    t.integer  "white_paper_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "white_paper_requests", ["company_name"], name: "index_white_paper_requests_on_company_name", using: :btree
+  add_index "white_paper_requests", ["email"], name: "index_white_paper_requests_on_email", using: :btree
+  add_index "white_paper_requests", ["name"], name: "index_white_paper_requests_on_name", using: :btree
+  add_index "white_paper_requests", ["number"], name: "index_white_paper_requests_on_number", using: :btree
+  add_index "white_paper_requests", ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id", using: :btree
 
   create_table "white_papers", force: :cascade do |t|
     t.string   "title"

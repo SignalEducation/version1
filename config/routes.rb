@@ -164,6 +164,8 @@ Rails.application.routes.draw do
     end
     resources :white_papers, concerns: :supports_reordering
     get 'media_library', to: 'white_papers#media_library', as: :media_library
+    resources :white_paper_requests
+    post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
     # home page
     root 'home_pages#show'

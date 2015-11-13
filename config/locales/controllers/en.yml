@@ -553,3 +553,15 @@ en:
           success: White Paper has been deleted
           error: White Paper was not deleted
 
+    white_paper_requests:
+      create:
+        flash:
+          success: Your submission was successful. Please check your email for your download.
+      update:
+        flash:
+          success: Request details have been updated successfully
+      destroy:
+        flash:
+          success: Request has been deleted
+          error: Request was not deleted
+

@@ -1,6 +1,6 @@
 class WhitePapersController < ApplicationController
 
-  before_action :logged_in_required, except: [:index, :show]
+  before_action :logged_in_required, except: [:index, :show, :create_request]
   before_action do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
@@ -15,6 +15,7 @@ class WhitePapersController < ApplicationController
   end
 
   def show
+    @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
   end
 
   def new
@@ -60,6 +61,17 @@ class WhitePapersController < ApplicationController
     redirect_to white_papers_url
   end
 
+  def create_request
+    @white_paper_request = WhitePaperRequest.new(request_allowed_params)
+    if @white_paper_request.save
+      flash[:success] = I18n.t('controllers.white_paper_requests.create.flash.success')
+      redirect_to request.referrer
+    else
+      render action: :new
+    end
+
+  end
+
   protected
 
   def get_variables
@@ -70,6 +82,10 @@ class WhitePapersController < ApplicationController
 
   def allowed_params
     params.require(:white_paper).permit(:title, :description, :file, :sorting_order, :cover_image)
+  end
+
+  def request_allowed_params
+    params.require(:white_paper_request).permit(:name, :email, :number, :web_url, :company_name, :white_paper_id)
   end
 
 end

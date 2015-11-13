@@ -50,6 +50,7 @@ en:
       or: or
       review: Review
       save: Save
+      download: Download Now
       upload: Upload
       save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
@@ -1672,4 +1673,29 @@ en:
 
       new:
         h1: New White Paper
+
+    white_paper_requests:
+      form:
+        name: Name
+        name_placeholder: Enter Full Name
+        email: Email
+        email_placeholder: Enter Email Here
+        number: Phone Number
+        number_placeholder: Enter a Contact Number
+        web_url: Website URL
+        web_url_placeholder: Website URL
+        company_name: Compant Name
+        company_name_placeholder: Compant Name
+
+      index:
+        h1: White Paper Requests
+
+      show:
+        h1: White Paper Request
+
+      edit:
+        h1: Edit White Paper Request
+
+      new:
+        h1: New White Paper Request
 

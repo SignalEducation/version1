@@ -1,0 +1,27 @@
+=form_for @white_paper_request, url: request_white_paper_url do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @white_paper_request, message: nil}
+  .col-md-12
+    =f.hidden_field :white_paper_id
+    =f.label :name, t('views.white_paper_requests.form.name'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_field :name, placeholder: t('views.white_paper_requests.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    %br/
+    =f.label :email, t('views.white_paper_requests.form.email'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_field :email, placeholder: t('views.white_paper_requests.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    %br/
+    =f.label :number, t('views.white_paper_requests.form.number'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_field :number, placeholder: t('views.white_paper_requests.form.number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    %br/
+    =f.label :web_url, t('views.white_paper_requests.form.web_url'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_field :web_url, placeholder: t('views.white_paper_requests.form.web_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    %br/
+    =f.label :company_name, t('views.white_paper_requests.form.company_name'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_field :company_name, placeholder: t('views.white_paper_requests.form.company_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    %br/
+    %br/
+
+    =f.submit t('views.general.download'), class: 'btn btn-red full-width'

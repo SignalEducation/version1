@@ -1,0 +1,36 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.white_paper_requests.index.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+
+              =will_paginate @white_paper_requests, renderer: BootstrapPagination::Rails
+              %table.table.sorted_table{style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th=t('views.white_paper_requests.form.name')
+                    %th=t('views.white_paper_requests.form.email')
+                    %th=t('views.white_paper_requests.form.number')
+                    %th=t('views.white_paper_requests.form.web_url')
+                    %th=t('views.white_paper_requests.form.company_name')
+                    %th
+                    %th
+                %tbody
+                  -@white_paper_requests.each do |white_paper_request|
+                    %tr{id: white_paper_request.id}
+                      %td=white_paper_request.name
+                      %td=white_paper_request.email
+                      %td=white_paper_request.number
+                      %td=white_paper_request.web_url
+                      %td=white_paper_request.company_name
+                      %td
+                        =link_to t('views.general.view'), white_paper_request, class: 'btn btn-purple btn-small'
+                        -if white_paper_request.destroyable?
+                          =link_to t('views.general.delete'), white_paper_request, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+
