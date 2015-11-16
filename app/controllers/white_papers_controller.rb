@@ -73,7 +73,7 @@ class WhitePapersController < ApplicationController
                                    'send_white_paper_email',
                                    white_paper.title,
                                    file.url)
-      
+      Mailers::OperationalMailers::send_white_paper_downloaded_email.perform_async(@white_paper_request.id)
       redirect_to request.referrer
     else
       render action: :new

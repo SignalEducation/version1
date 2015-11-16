@@ -5,7 +5,7 @@ en:
     general:
       salutation: "Hi %{fname},"
       closing: "Best regards,"
-      signature: "Philip @ learnsignal"
+      signature: "team@learnsignal.com"
 
     operational:
       activate_account:
@@ -43,4 +43,7 @@ en:
 
       corporate_enquiry:
         subject_line: This is a new enquiry for a corporate account.
+
+      white_paper_request:
+        subject_line: A user has requested a white paper download.
 
