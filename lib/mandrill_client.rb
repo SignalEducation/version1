@@ -153,7 +153,7 @@ class MandrillClient
         { "name" => "FNAME", "content" => @user.first_name },
         { "name" => "LNAME", "content" => @user.last_name },
         { "name" => "COMPANY", "content" => "Signal Education" },
-        { "name" => "COMPANYURL", "content" => "http://learnsignal.com" }
+        { "name" => "COMPANYURL", "content" => "https://learnsignal.com" }
       ],
       "merge_vars" => [
         # { "rcpt" => "some.email@example.com",
@@ -212,7 +212,7 @@ class MandrillClient
         "global_merge_vars" => [
             { "name" => "FNAME", "content" => @request.name },
             { "name" => "COMPANY", "content" => "Signal Education" },
-            { "name" => "COMPANYURL", "content" => "http://learnsignal.com" }
+            { "name" => "COMPANYURL", "content" => "https://learnsignal.com" }
         ],
         "merge_vars" => [
             # { "rcpt" => "some.email@example.com",
