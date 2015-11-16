@@ -58,6 +58,7 @@ class UsersController < ApplicationController
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
       MandrillWorker.perform_async(@user.id,
+                                   nil,
                                    'send_verification_email',
                                    user_activation_url(activation_code: @user.account_activation_code))
       flash[:success] = 'User has been created successfully'

@@ -479,6 +479,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   le
+  mail
   mailchimp-api (~> 2.0.4)
   mandrill-api
   mathjax-rails

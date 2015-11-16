@@ -51,6 +51,7 @@ class CorporateStudentsController < ApplicationController
     if @corporate_student.save
       @corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
       MandrillWorker.perform_async(@corporate_student.id,
+                                   nil,
                                    'send_verification_email',
                                    user_activation_url(activation_code: @corporate_student.account_activation_code))
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
@@ -95,6 +96,7 @@ class CorporateStudentsController < ApplicationController
       @corporate_students.each do |user|
         if user.save
           MandrillWorker.perform_async(user.id,
+                                       nil,
                                        'send_verification_email',
                                        user_activation_url(activation_code: user.account_activation_code))
         end

@@ -1,7 +1,7 @@
 class WhitePapersController < ApplicationController
 
-  before_action :logged_in_required, except: [:index, :show, :create_request]
-  before_action do
+  before_action :logged_in_required, except: [:index, :show, :create_request, :media_library]
+  before_action except: [:show, :create_request, :media_library] do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action :get_variables
@@ -65,7 +65,16 @@ class WhitePapersController < ApplicationController
     @white_paper_request = WhitePaperRequest.new(request_allowed_params)
     if @white_paper_request.save
       flash[:success] = I18n.t('controllers.white_paper_requests.create.flash.success')
-      Mailers::OperationalMailers::SendWhitePaperWorker.perform_async(@white_paper_request.id)
+      white_paper = WhitePaper.where(id: @white_paper_request.white_paper.id).first
+      file  = white_paper.file
+
+      MandrillWorker.perform_async(nil,
+                                   @white_paper_request.id,
+                                   'send_white_paper_email',
+                                   white_paper.title,
+                                   file.url)
+
+
       redirect_to request.referrer
     else
       render action: :new

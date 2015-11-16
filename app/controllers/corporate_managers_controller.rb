@@ -49,6 +49,7 @@ class CorporateManagersController < ApplicationController
     @corporate_manager.locale = 'en'
     if @corporate_manager.save
       MandrillWorker.perform_async(@corporate_manager.id,
+                                   nil,
                                    'send_verification_email',
                                    user_activation_url(activation_code: @corporate_manager.account_activation_code))
       flash[:success] = I18n.t('controllers.corporate_managers.create.flash.success')
