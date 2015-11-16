@@ -210,7 +210,7 @@ class MandrillClient
         "merge" => true,
         "merge_language" => "mailchimp",
         "global_merge_vars" => [
-            { "name" => "FNAME", "content" => @user.name },
+            { "name" => "FNAME", "content" => @request.name },
             { "name" => "COMPANY", "content" => "Signal Education" },
             { "name" => "COMPANYURL", "content" => "http://learnsignal.com" }
         ],

@@ -73,8 +73,7 @@ class WhitePapersController < ApplicationController
                                    'send_white_paper_email',
                                    white_paper.title,
                                    file.url)
-
-
+      
       redirect_to request.referrer
     else
       render action: :new
