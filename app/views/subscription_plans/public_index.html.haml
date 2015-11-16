@@ -69,12 +69,11 @@
             .plan-header
               %h5.h5.plan-title
                 Access all courses
-            .plan-inner{style: 'min-height: 463px;'}
+            .plan-inner
               %h5.h5.plan-text
                 Per User
-
-              -@student_subscription_plans.each do |plan|
-                .l-section-extra-small
+              .l-section-extra-small
+                -@student_subscription_plans.each do |plan|
                   %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
                     =number_in_local_currency_no_precision(plan.price, plan.currency)
                     &#47;
