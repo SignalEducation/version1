@@ -25,7 +25,7 @@ class WhitePaperRequest < ActiveRecord::Base
 
   # validation
   validates :name, presence: true
-  validates :email, presence: true
+  validates :email, presence: true, length: {within: 7..40}
   validates :number, presence: true
   validates :web_url, presence: true
   validates :company_name, presence: true
