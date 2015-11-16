@@ -31,7 +31,7 @@ class WhitePaper < ActiveRecord::Base
   has_attached_file :cover_image, default_url: '/assets/images/missing.png'
 
   # validation
-  validates :title, presence: true
+  validates :title, presence: true, uniqueness: true
   validates :description, presence: true
   validates_attachment_content_type :file,
                                     content_type: %w(application/pdf)
