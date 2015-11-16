@@ -112,7 +112,6 @@ class UsersController < ApplicationController
     if current_user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
                                 .where('price > 0.0')
-                                .includes(:currency)
                                 .for_students
                                 .in_currency(1)
                                 .generally_available
