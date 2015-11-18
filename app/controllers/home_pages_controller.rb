@@ -151,6 +151,7 @@ class HomePagesController < ApplicationController
           :email, :first_name, :last_name,
           :country_id, :locale,
           :password, :password_confirmation,
+          :phone_number
     )
   end
 end
