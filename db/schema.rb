@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104142937) do
+ActiveRecord::Schema.define(version: 20151118155947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1236,6 +1236,7 @@ ActiveRecord::Schema.define(version: 20151104142937) do
     t.string   "profile_image_content_type"
     t.integer  "profile_image_file_size"
     t.datetime "profile_image_updated_at"
+    t.string   "phone_number"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
@@ -1268,5 +1269,40 @@ ActiveRecord::Schema.define(version: 20151104142937) do
   end
 
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
+
+  create_table "white_paper_requests", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "number"
+    t.string   "web_url"
+    t.string   "company_name"
+    t.integer  "white_paper_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "white_paper_requests", ["company_name"], name: "index_white_paper_requests_on_company_name", using: :btree
+  add_index "white_paper_requests", ["email"], name: "index_white_paper_requests_on_email", using: :btree
+  add_index "white_paper_requests", ["name"], name: "index_white_paper_requests_on_name", using: :btree
+  add_index "white_paper_requests", ["number"], name: "index_white_paper_requests_on_number", using: :btree
+  add_index "white_paper_requests", ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id", using: :btree
+
+  create_table "white_papers", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.integer  "sorting_order"
+    t.string   "cover_image_file_name"
+    t.string   "cover_image_content_type"
+    t.integer  "cover_image_file_size"
+    t.datetime "cover_image_updated_at"
+  end
+
+  add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree
 
 end
