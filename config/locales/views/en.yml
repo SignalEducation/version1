@@ -1165,6 +1165,8 @@ en:
       form:
         email: Email
         email_placeholder: user@example.com
+        phone_number: Phone Number
+        phone_number_placeholder: Phone Number
         first_name: First name
         first_name_placeholder: Jay
         last_name: Last name

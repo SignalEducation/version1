@@ -12,6 +12,7 @@ gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk-v1' # enables AWS functionality - use with AWS::...
 gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 #gem 'aws-s3' # grants timeout-able URLs
+gem 'basecrm' #GetBase API wrapper
 gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection

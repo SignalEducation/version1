@@ -24,6 +24,8 @@
                 .form-group
                   =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
                 .form-group
+                  =f.text_field :phone_number, placeholder: t('views.users.form.phone_number'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+                .form-group
                   =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
                 .form-group
                   =f.password_field :password_confirmation, placeholder: t('views.home_pages.sign_up_form.confirm_password'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
