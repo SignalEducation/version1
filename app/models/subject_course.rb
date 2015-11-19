@@ -26,6 +26,9 @@
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -34,7 +37,8 @@ class SubjectCourse < ActiveRecord::Base
   #include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
+ :cpd_hours, :cpd_pass_rate
 
   # Constants
 
