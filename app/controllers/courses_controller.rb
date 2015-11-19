@@ -5,12 +5,14 @@ class CoursesController < ApplicationController
   def show
     @mathjax_required = true
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+
     if @course
       if @course.corporate_customer_id
         if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
           redirect_to library_url
         end
       end
+
       if @course
         @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
       end
@@ -25,10 +27,16 @@ class CoursesController < ApplicationController
 
       if @course_module_element.nil? && @course_module.nil?
 
-        # The URL is out of date or wrong.
-        flash[:warning] = t('controllers.courses.show.warning')
-        Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-        redirect_to library_special_link(@course)
+        @question_bank = @course.try(:question_bank)
+        if @question_bank.nil?
+          # The URL is out of date or wrong.
+          flash[:warning] = t('controllers.courses.show.warning')
+          Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+          redirect_to library_special_link(@course)
+        else
+          set_up_question_bank
+
+        end
       else
         # The URL worked out Okay
         reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user

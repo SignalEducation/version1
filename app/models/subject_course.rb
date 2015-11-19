@@ -49,7 +49,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
-  has_many :question_banks
+  has_one :question_bank
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :corporate_group_grants

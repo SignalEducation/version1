@@ -834,7 +834,7 @@ en:
         hard_questions: No. of Difficult Questions
         save: Create
       new:
-        h1: Create Custom Quiz
+        h1: Final Exam
 
     quiz_answer:
       form:

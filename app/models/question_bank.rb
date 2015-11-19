@@ -20,18 +20,18 @@ class QuestionBank < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :user_id, :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy, :subject_course_id
+  attr_accessible :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy, :subject_course_id
 
   # Constants
-  STRATEGIES = %w(random progressive)
+  STRATEGIES = %w(random)
 
   # relationships
-  belongs_to :user
+  #belongs_to :user
   belongs_to :subject_course
   has_many :course_module_element_user_logs
 
   # validation
-  validates :user_id, presence: true,
+  validates :user_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
