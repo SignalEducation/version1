@@ -41,7 +41,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   validates :course_module_element_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :number_of_questions, presence: true, numericality:
-            {greater_than_or_equal_to: 3, less_than_or_equal_to: 30,
+            {greater_than_or_equal_to: 3, less_than_or_equal_to: 80,
              only_integer: true}, on: :update
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
