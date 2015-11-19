@@ -98,14 +98,16 @@ class HomePagesController < ApplicationController
           MandrillWorker.perform_async(@user.id,
                                        'send_verification_email',
                                        user_activation_url(activation_code: @user.account_activation_code))
-          @base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
-          @base.leads.create(first_name: @user.first_name,
-                               last_name: @user.last_name,
-                               phone: @user.phone_number,
-                               email: @user.email,
-                               address: {
-                                 country: @user.country.name}
-          )
+          if Rails.env.production?
+            @base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
+            @base.leads.create(first_name: @user.first_name,
+                                 last_name: @user.last_name,
+                                 phone: @user.phone_number,
+                                 email: @user.email,
+                                 address: {
+                                   country: @user.country.name}
+            )
+          end
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
             if code
