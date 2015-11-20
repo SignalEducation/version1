@@ -12,6 +12,7 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  destroyed_at                      :datetime
+#  is_final_quiz                     :boolean          default(FALSE)
 #
 
 class CourseModuleElementQuiz < ActiveRecord::Base
@@ -26,7 +27,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_id,
                   :number_of_questions, :quiz_questions_attributes,
-                  :question_selection_strategy
+                  :question_selection_strategy, :is_final_quiz
 
   # Constants
 
@@ -52,6 +53,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
+  scope :all_for_final_quiz, -> { where(is_final_quiz: true) }
 
   # class methods
 

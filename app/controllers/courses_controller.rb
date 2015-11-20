@@ -243,15 +243,15 @@ class CoursesController < ApplicationController
 
     @strategy = @question_bank.question_selection_strategy
     all_questions = QuizQuestion.where(subject_course_id: @question_bank.subject_course_id)
-    final_quiz_quizzes = CourseModuleElementQuiz.where(is_final_quiz: true)
+    final_quiz_quizzes = CourseModuleElementQuiz.all_for_final_quiz
     final_quiz_questions = all_questions.where(course_module_element_quiz_id: final_quiz_quizzes)
 
     all_easy_ids = final_quiz_questions.all_easy.map(&:id)
     all_medium_ids = final_quiz_questions.all_medium.map(&:id)
     all_difficult_ids = final_quiz_questions.all_difficult.map(&:id)
-    @easy_ids = all_easy_ids.sample(@number_of_easy_questions)
-    @medium_ids = all_medium_ids.sample(@number_of_medium_questions)
-    @difficult_ids = all_difficult_ids.sample(@number_of_hard_questions)
+    @easy_ids = all_easy_ids.sample(@number_of_questions)
+    @medium_ids = all_medium_ids.sample(@number_of_questions)
+    @difficult_ids = all_difficult_ids.sample(@number_of_questions)
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0

@@ -3,17 +3,6 @@
     .col-md-6.col-md-offset-3
       =render partial: '/layouts/error_messages', locals: {thing: @question_bank, message: nil}
       =f.hidden_field :subject_course_id, value: @subject_course.id
-      =f.label :easy_questions, t('views.question_banks.form.easy_questions'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.select :easy_questions, options_for_select(@easy_array), {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-      %br/
-      =f.label :medium_questions, t('views.question_banks.form.medium_questions'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.select :medium_questions, options_for_select(@medium_array), {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-      %br/
-      =f.label :hard_questions, t('views.question_banks.form.hard_questions'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.select :hard_questions, options_for_select(@hard_array), {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
       %br/
       %br/

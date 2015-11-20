@@ -12,6 +12,7 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  destroyed_at                      :datetime
+#  is_final_quiz                     :boolean          default(FALSE)
 #
 
 require 'rails_helper'

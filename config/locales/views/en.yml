@@ -366,6 +366,7 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
+        is_final_quiz: Use these questions for Final Quiz
         advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
@@ -835,6 +836,7 @@ en:
         save: Create
       new:
         h1: Final Exam
+        edit: Edit Final Exam
 
     quiz_answer:
       form:

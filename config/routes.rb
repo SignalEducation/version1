@@ -132,7 +132,7 @@ Rails.application.routes.draw do
     resources :qualifications, concerns: :supports_reordering do
       get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
     end
-    resources :question_banks, only: [:new, :create,:edit, :update, :destroy]
+    resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
