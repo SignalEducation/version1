@@ -85,7 +85,7 @@
                           .side-meta
                             =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
-              -unless @course.question_bank.nil?
+              -if @course.question_bank && @course.question_bank.active?
                 =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'no-image-box-item lib-panel', style: '' do
                   .box-topic-item
                     Final Quiz

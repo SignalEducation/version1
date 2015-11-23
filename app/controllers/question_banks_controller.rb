@@ -44,7 +44,7 @@ class QuestionBanksController < ApplicationController
   def update
     if @question_bank.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.question_banks.update.flash.success')
-      redirect_to subject_course_url(@subject_course)
+      redirect_to subject_course_url(@question_bank.subject_course)
     else
       render action: :edit
     end
@@ -67,7 +67,7 @@ class QuestionBanksController < ApplicationController
  end
 
   def allowed_params
-    params.require(:question_bank).permit(:subject_course_id, :number_of_questions)
+    params.require(:question_bank).permit(:subject_course_id, :number_of_questions, :name, :active)
   end
 
 end

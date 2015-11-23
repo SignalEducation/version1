@@ -829,6 +829,8 @@ en:
 
     question_banks:
       form:
+        name: Name
+        active: Active
         number_of_questions: No. of Questions
         save: Create
       new:

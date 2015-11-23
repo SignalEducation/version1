@@ -8,6 +8,8 @@
 #  updated_at                  :datetime         not null
 #  subject_course_id           :integer
 #  number_of_questions         :integer
+#  name                        :string
+#  active                      :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

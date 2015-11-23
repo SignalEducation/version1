@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123135306) do
+ActiveRecord::Schema.define(version: 20151123180316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -628,10 +628,12 @@ ActiveRecord::Schema.define(version: 20151123135306) do
 
   create_table "question_banks", force: :cascade do |t|
     t.string   "question_selection_strategy"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "subject_course_id"
     t.integer  "number_of_questions"
+    t.string   "name"
+    t.boolean  "active",                      default: false
   end
 
   create_table "quiz_answers", force: :cascade do |t|
