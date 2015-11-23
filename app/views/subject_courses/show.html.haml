@@ -23,7 +23,7 @@
             -if @subject_course.question_bank.nil?
               =link_to t('views.question_banks.new.h1'), new_question_bank_url(sc_id: @subject_course.id), class: 'btn btn-red'
             -else
-              =link_to t('views.question_banks.new.edit'), edit_question_bank_url(@subject_course.question_bank), class: 'btn btn-red'
+              =link_to t('views.question_banks.new.edit'), edit_question_bank_url(@subject_course.question_bank, sc_id: @subject_course.id), class: 'btn btn-red'
             =link_to t('views.course_modules.new.h1'), course_module_special_link(@subject_course), class: 'btn btn-red'
         .row.l-margin-top.l-margin-bottom
           .col-md-12.l-margin-top

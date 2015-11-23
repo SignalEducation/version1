@@ -9,17 +9,12 @@ class QuestionBanksController < ApplicationController
   def new
     @question_bank = QuestionBank.new
     @subject_course = SubjectCourse.where(id: params[:sc_id].to_s).first
-  end
-
-  def edit
-  end
-
-  def update
-    if @question_bank.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.question_banks.update.flash.success')
-      redirect_to subject_course_url(@subject_course)
-    else
-      render action: :edit
+    if @subject_course
+      n = 5
+      quizzes = CourseModuleElementQuiz.where(is_final_quiz: true).all.map(&:id)
+      max_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(course_module_element_quiz_id: quizzes).count
+      array = Array(1..max_questions)
+      @question_array = (1.. array.length).select{ |x| x%n == n-1 }.map { |y| array[y] }
     end
   end
 
@@ -31,6 +26,27 @@ class QuestionBanksController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.question_banks.create.flash.error')
       render action: :new
+    end
+  end
+
+  def edit
+    @subject_course = SubjectCourse.where(id: params[:sc_id].to_s).first
+    if @subject_course
+      n = 5
+      quizzes = CourseModuleElementQuiz.where(is_final_quiz: true).all.map(&:id)
+      max_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(course_module_element_quiz_id: quizzes).count
+      array = Array(1..max_questions)
+      @question_array = (1.. array.length).select{ |x| x%n == n-1 }.map { |y| array[y] }
+    end
+
+  end
+
+  def update
+    if @question_bank.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.question_banks.update.flash.success')
+      redirect_to subject_course_url(@subject_course)
+    else
+      render action: :edit
     end
   end
 
@@ -51,7 +67,7 @@ class QuestionBanksController < ApplicationController
  end
 
   def allowed_params
-    params.require(:question_bank).permit(:easy_questions, :medium_questions, :hard_questions, :subject_course_id)
+    params.require(:question_bank).permit(:subject_course_id, :number_of_questions)
   end
 
 end

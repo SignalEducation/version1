@@ -3,16 +3,11 @@
 # Table name: question_banks
 #
 #  id                          :integer          not null, primary key
-#  user_id                     :integer
-#  exam_level_id               :integer
-#  easy_questions              :integer
-#  medium_questions            :integer
-#  hard_questions              :integer
 #  question_selection_strategy :string
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  exam_section_id             :integer
 #  subject_course_id           :integer
+#  number_of_questions         :integer
 #
 
 require 'rails_helper'

@@ -830,9 +830,6 @@ en:
     question_banks:
       form:
         number_of_questions: No. of Questions
-        easy_questions: No. of Easy Questions
-        medium_questions: No. of Normal Questions
-        hard_questions: No. of Difficult Questions
         save: Create
       new:
         h1: Final Exam

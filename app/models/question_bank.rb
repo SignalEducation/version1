@@ -3,16 +3,11 @@
 # Table name: question_banks
 #
 #  id                          :integer          not null, primary key
-#  user_id                     :integer
-#  exam_level_id               :integer
-#  easy_questions              :integer
-#  medium_questions            :integer
-#  hard_questions              :integer
 #  question_selection_strategy :string
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  exam_section_id             :integer
 #  subject_course_id           :integer
+#  number_of_questions         :integer
 #
 
 class QuestionBank < ActiveRecord::Base
@@ -20,7 +15,7 @@ class QuestionBank < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy, :subject_course_id
+  attr_accessible :question_selection_strategy, :subject_course_id, :number_of_questions
 
   # Constants
   STRATEGIES = %w(random)
@@ -31,12 +26,11 @@ class QuestionBank < ActiveRecord::Base
   has_many :course_module_element_user_logs
 
   # validation
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :number_of_questions, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
-  validate :at_least_one_question_set
 
   # callbacks
   before_destroy :check_dependencies
@@ -49,10 +43,6 @@ class QuestionBank < ActiveRecord::Base
   # instance methods
   def destroyable?
     true
-  end
-
-  def number_of_questions
-    ([self.easy_questions].compact + [self.medium_questions].compact + [self.hard_questions].compact).sum
   end
 
   protected

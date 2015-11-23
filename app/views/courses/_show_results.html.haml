@@ -68,9 +68,9 @@
 
   -if @course_module_element_user_log.is_question_bank
     .col-xs-4.text-left
-      =link_to question_bank_url(@question_bank.subject_course.name_url, @question_bank.try(:subject_course).try(:name_url), @question_bank.id), class: 'btn btn-red text-bold' do
+      =link_to library_special_link(@question_bank.subject_course), class: 'btn btn-red text-bold' do
         .glyphicon.glyphicon-arrow-left
-        Restart Quiz
+        =@question_bank.subject_course.name
     .col-xs-4.text-right
       =link_to library_url, class: 'btn btn-red text-bold' do
         Return to Library
