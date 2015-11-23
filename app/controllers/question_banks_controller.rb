@@ -52,9 +52,9 @@ class QuestionBanksController < ApplicationController
 
   def destroy
     if @question_bank.destroy
-      redirect_to library_special_link(@question_bank.subject_course)
+      redirect_to subject_course_url(@question_bank.subject_course)
     else
-      redirect_to library_special_link(@question_bank.subject_course)
+      redirect_to subject_course_url(@question_bank.subject_course)
     end
   end
 

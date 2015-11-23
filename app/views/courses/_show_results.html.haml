@@ -1,7 +1,7 @@
 .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents
   %h2
     =t('views.courses.show_results.h1')
-    =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || 'Custom Quiz'
+    =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.question_bank.try(:name)
 
   .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary
     Results Summary
@@ -67,9 +67,10 @@
         .glyphicon.glyphicon-arrow-right
 
   -if @course_module_element_user_log.is_question_bank
-    .col-xs-4.text-left
+    .row.pull-left
       =link_to library_special_link(@question_bank.subject_course), class: 'btn btn-red text-bold' do
         .glyphicon.glyphicon-arrow-left
+        ='Return to '
         =@question_bank.subject_course.name
 
 

@@ -88,9 +88,9 @@
               -if @course.question_bank && @course.question_bank.active?
                 =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'no-image-box-item lib-panel', style: '' do
                   .box-topic-item
-                    Final Quiz
+                    =@course.question_bank.name
                   .time.hidden-xs
-                    65%
+                    =@course.question_bank.number_of_questions.to_s + ' Questions'
 
 
         .col-sm-12.col-md-4.l-margin-bottom-huge

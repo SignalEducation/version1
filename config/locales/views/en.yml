@@ -832,7 +832,7 @@ en:
         name: Name
         active: Active
         number_of_questions: No. of Questions
-        save: Create
+        save: Save
       new:
         h1: Final Exam
         edit: Edit Final Exam
