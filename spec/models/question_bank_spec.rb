@@ -30,27 +30,28 @@ describe QuestionBank do
   it { expect(QuestionBank.const_defined?(:STRATEGIES)).to eq(true) }
 
   # relationships
-  it { should belong_to(:user) }
   it { should belong_to(:subject_course) }
   it { should have_many(:course_module_element_user_logs) }
 
   # validation
-  it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
+  it { should validate_presence_of(:number_of_questions) }
+  it { should validate_numericality_of(:number_of_questions) }
 
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
+
+  it { should validate_presence_of(:name) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(QuestionBank).to respond_to(:all_in_order) }
+  it { expect(QuestionBank).to respond_to(:all_active) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:number_of_questions) }
 
 end

@@ -36,7 +36,7 @@ describe CorporateRequest do
   # validation
   it { should validate_presence_of(:name) }
 
-  it { should validate_presence_of(:title) }
+  it { should_not validate_presence_of(:title) }
 
   it { should validate_presence_of(:company) }
 
@@ -44,7 +44,7 @@ describe CorporateRequest do
 
   it { should validate_presence_of(:phone_number) }
 
-  it { should validate_presence_of(:website) }
+  it { should_not validate_presence_of(:website) }
 
   it { should_not validate_presence_of(:personal_message) }
 
