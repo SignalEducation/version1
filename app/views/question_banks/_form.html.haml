@@ -2,7 +2,7 @@
   .row
     .col-md-6.col-md-offset-3
       =render partial: '/layouts/error_messages', locals: {thing: @question_bank, message: nil}
-      =f.hidden_field :subject_course_id, value: @subject_course.id
+      =#f.hidden_field :subject_course_id, value: @subject_course.id
       =f.label :name, t('views.question_banks.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, {placeholder: t('views.question_banks.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'}

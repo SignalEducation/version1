@@ -23,8 +23,8 @@ class QuestionBanksController < ApplicationController
     @question_bank.question_selection_strategy = 'random'
     if @question_bank.save
       redirect_to subject_course_url(@question_bank.subject_course)
+      flash[:success] = I18n.t('controllers.question_banks.create.flash.success')
     else
-      flash[:error] = I18n.t('controllers.question_banks.create.flash.error')
       render action: :new
     end
   end
