@@ -830,6 +830,7 @@ en:
     question_banks:
       form:
         name: Name
+        name_placeholder: Give the quiz a name
         active: Active
         number_of_questions: No. of Questions
         save: Save
