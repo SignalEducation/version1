@@ -60,7 +60,7 @@ class UsersController < ApplicationController
       MandrillWorker.perform_async(@user.id,
                                    'send_verification_email',
                                    user_activation_url(activation_code: @user.account_activation_code))
-      flash[:success] = 'User has been created successfully'
+      flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
       render action: :new
