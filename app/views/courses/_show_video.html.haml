@@ -14,9 +14,14 @@
       -if current_user.try(:admin?)
         =link_to t('views.general.edit'), course_module_special_link(cme), target: '_blank', class: 'btn btn-red text-bold'
     .col-xs-4.text-right
-      =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
-        =t('views.course_module_elements.show.next_step')
-        .glyphicon.glyphicon-arrow-right
+      -if cme.course_module.subject_course.is_cpd
+        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
+          =t('views.course_module_elements.show.next_step')
+          .glyphicon.glyphicon-arrow-right
+      -else
+        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold mark-as-complete' do
+          =t('views.course_module_elements.show.mark_complete')
+          .glyphicon.glyphicon-arrow-right
 
     .pull-left
       -unless cme.description.blank?
@@ -46,16 +51,30 @@
           -else
             %li
               =link_to r.name, r.upload.url, target: '_blank'
--if @video_cme_user_log
-  :javascript
 
-    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
-      videoFoam: true,
-      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
+
+:javascript
+  var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+
+  $(document).on('click', '.mark-as-complete', function(ajax) {
+    $.ajax({
+      url: '#{video_watched_data_courses_path}',
+      dataType: 'json',
+      data: JSON.stringify({'videoLogId': videoCmeUserLog}),
+      method: 'PATCH',
+      contentType: "application/json; charset=utf-8"
     });
+  });
 
-    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
-    wistiaEmbed.bind('play', function() {
+  wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
+    videoFoam: true,
+    stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
+  });
+
+  wistiaEmbed.bind("secondchange", function() {
+    var time1 = (wistiaEmbed.duration()/100*75);
+    var time2 = time1 + 2;
+    if (wistiaEmbed.secondsWatched() > time1 && wistiaEmbed.secondsWatched() < time2) {
       $.ajax({
         url: '#{video_watched_data_courses_path}',
         dataType: 'json',
@@ -63,12 +82,6 @@
         method: 'PATCH',
         contentType: "application/json; charset=utf-8"
       });
-      return this.unbind;
-    });
--else
-  :javascript
+    }
+  })
 
-    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
-      videoFoam: true,
-      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
-    });

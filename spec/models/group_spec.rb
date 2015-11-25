@@ -20,7 +20,7 @@ require 'rails_helper'
 describe Group do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at corporate_customer_id )
+  black_list = %w(id created_at updated_at corporate_customer_id destroyed_at)
   Group.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

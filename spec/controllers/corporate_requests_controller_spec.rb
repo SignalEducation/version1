@@ -42,12 +42,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -124,12 +123,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -228,12 +226,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -332,12 +329,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -436,12 +432,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -540,12 +535,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -644,12 +638,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -748,12 +741,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -852,12 +844,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end

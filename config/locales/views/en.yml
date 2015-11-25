@@ -346,6 +346,7 @@ en:
         quiz_preview: Quiz Preview
         video_preview: Video Preview
         next_step: Next
+        mark_complete: Mark as Complete
         previous_step: Previous
         preview: Preview
         continue: Continue
@@ -365,6 +366,7 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
+        is_final_quiz: Use these questions for Final Quiz
         advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
@@ -827,13 +829,14 @@ en:
 
     question_banks:
       form:
+        name: Name
+        name_placeholder: Give the quiz a name
+        active: Active
         number_of_questions: No. of Questions
-        easy_questions: No. of Easy Questions
-        medium_questions: No. of Normal Questions
-        hard_questions: No. of Difficult Questions
-        save: Create
+        save: Save
       new:
-        h1: Create Custom Quiz
+        h1: Final Exam
+        edit: Edit Final Exam
 
     quiz_answer:
       form:
@@ -1048,6 +1051,11 @@ en:
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
+        is_cpd: Is this a CPD course?
+        cpd_hours: CPD Hours
+        cpd_hours_placeholder: Required CPD Hours
+        cpd_pass_rate: Pass Rate for this course
+        cpd_pass_rate_placeholder: CPD Pass Rate
 
       index:
         h1: Courses

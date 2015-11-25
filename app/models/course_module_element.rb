@@ -108,10 +108,11 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def completed_by_user_or_guid(user_id, session_guid)
-    cmeul = user_id ?
-            self.course_module_element_user_logs.where(user_id: user_id).latest_only.first :
-            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid).latest_only.first
-    cmeul.try(:element_completed)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    array = cmeuls.all.map(&:element_completed)
+    array.include? true
   end
 
   def destroyable?

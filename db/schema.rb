@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118155947) do
+ActiveRecord::Schema.define(version: 20151123180316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 20151118155947) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
+    t.boolean  "is_final_quiz",                     default: false
   end
 
   add_index "course_module_element_quizzes", ["course_module_element_id"], name: "cme_quiz_cme_id", using: :btree
@@ -626,23 +627,14 @@ ActiveRecord::Schema.define(version: 20151118155947) do
   add_index "qualifications", ["sorting_order"], name: "index_qualifications_on_sorting_order", using: :btree
 
   create_table "question_banks", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "exam_level_id"
-    t.integer  "easy_questions"
-    t.integer  "medium_questions"
-    t.integer  "hard_questions"
     t.string   "question_selection_strategy"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "exam_section_id"
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "subject_course_id"
+    t.integer  "number_of_questions"
+    t.string   "name"
+    t.boolean  "active",                      default: false
   end
-
-  add_index "question_banks", ["easy_questions"], name: "index_question_banks_on_easy_questions", using: :btree
-  add_index "question_banks", ["exam_level_id"], name: "index_question_banks_on_exam_level_id", using: :btree
-  add_index "question_banks", ["hard_questions"], name: "index_question_banks_on_hard_questions", using: :btree
-  add_index "question_banks", ["medium_questions"], name: "index_question_banks_on_medium_questions", using: :btree
-  add_index "question_banks", ["user_id"], name: "index_question_banks_on_user_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
@@ -917,6 +909,9 @@ ActiveRecord::Schema.define(version: 20151118155947) do
     t.integer  "corporate_customer_id"
     t.float    "total_video_duration",                    default: 0.0
     t.datetime "destroyed_at"
+    t.boolean  "is_cpd",                                  default: false
+    t.float    "cpd_hours"
+    t.integer  "cpd_pass_rate"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -1165,23 +1160,6 @@ ActiveRecord::Schema.define(version: 20151118155947) do
   add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
-  create_table "user_profiles", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "tutor_project_id"
-    t.string   "tutor_wistia_url"
-    t.text     "description"
-    t.string   "url"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-  end
-
-  add_index "user_profiles", ["tutor_project_id"], name: "index_user_profiles_on_tutor_project_id", using: :btree
-  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "first_name"
@@ -1269,40 +1247,5 @@ ActiveRecord::Schema.define(version: 20151118155947) do
   end
 
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
-
-  create_table "white_paper_requests", force: :cascade do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "number"
-    t.string   "web_url"
-    t.string   "company_name"
-    t.integer  "white_paper_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  add_index "white_paper_requests", ["company_name"], name: "index_white_paper_requests_on_company_name", using: :btree
-  add_index "white_paper_requests", ["email"], name: "index_white_paper_requests_on_email", using: :btree
-  add_index "white_paper_requests", ["name"], name: "index_white_paper_requests_on_name", using: :btree
-  add_index "white_paper_requests", ["number"], name: "index_white_paper_requests_on_number", using: :btree
-  add_index "white_paper_requests", ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id", using: :btree
-
-  create_table "white_papers", force: :cascade do |t|
-    t.string   "title"
-    t.text     "description"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.string   "file_file_name"
-    t.string   "file_content_type"
-    t.integer  "file_file_size"
-    t.datetime "file_updated_at"
-    t.integer  "sorting_order"
-    t.string   "cover_image_file_name"
-    t.string   "cover_image_content_type"
-    t.integer  "cover_image_file_size"
-    t.datetime "cover_image_updated_at"
-  end
-
-  add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree
 
 end

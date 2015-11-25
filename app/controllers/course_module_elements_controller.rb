@@ -293,6 +293,7 @@ class CourseModuleElementsController < ApplicationController
             # :best_possible_score_retry,
             # :course_module_jumbo_quiz_id,
             :question_selection_strategy,
+            :is_final_quiz,
             quiz_questions_attributes: [
                 :id,
                 :course_module_element_quiz_id,
