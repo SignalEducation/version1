@@ -52,8 +52,10 @@ class QuestionBanksController < ApplicationController
 
   def destroy
     if @question_bank.destroy
+      flash[:success] = I18n.t('controllers.question_banks.destroy.flash.success')
       redirect_to subject_course_url(@question_bank.subject_course)
     else
+      flash[:error] = I18n.t('controllers.question_banks.destroy.flash.error')
       redirect_to subject_course_url(@question_bank.subject_course)
     end
   end
