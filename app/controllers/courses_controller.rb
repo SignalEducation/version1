@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
 
-  before_action :check_for_old_url_format, only: :show
+  #before_action :check_for_old_url_format, only: :show
 
   def show
     @mathjax_required = true
