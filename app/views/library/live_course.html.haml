@@ -87,11 +87,25 @@
 
               -if @course.question_bank && @course.question_bank.active?
                 %hr/
-                =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
-                  .box-topic-item
-                    =@course.question_bank.name
-                  .time.hidden-xs
-                    =@course.question_bank.number_of_questions.to_s + ' Questions'
+                -if @question_bank_passed
+                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      .question-bank-passed
+                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                        Passed
+                  -pdf = Prawn::Document.new
+                  -pdf.text 'Hello World!'
+                  =pdf.render_file 'assignment.pdf'
+
+
+                -else
+                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      =@course.question_bank.number_of_questions.to_s + ' Questions'
 
 
         .col-sm-12.col-md-4.l-margin-bottom-huge
