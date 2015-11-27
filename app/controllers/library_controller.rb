@@ -74,10 +74,7 @@ class LibraryController < ApplicationController
         scores.each { |score| score >= pass_rate ? array << true : array << false }
         array2 = array.uniq
         @question_bank_passed = array2.include? true
-
-        pdf = Prawn::Document.new
-        pdf.text 'Hello World!'
-        pdf.render_file 'assignment.pdf'
+        @cert = SubjectCourseUserLog.where(user_id: current_user.id).where(subject_course_id: @course.id).first
 
         if @course.try(:live)
           render 'live_course'
@@ -88,6 +85,17 @@ class LibraryController < ApplicationController
         end
         seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
 
+      end
+    end
+  end
+
+  def cert
+    @cert = SubjectCourseUserLog.where(id: params[:id]).first
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf = CompletionCertificate.new(@cert, view_context)
+        send_data pdf.render, filename: "certificate_#{@cert.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", page_layout: 'landscape', page_size: '2A0'
       end
     end
   end

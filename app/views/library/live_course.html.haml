@@ -95,9 +95,8 @@
                       .question-bank-passed
                         %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
                         Passed
-                  -pdf = Prawn::Document.new
-                  -pdf.text 'Hello World!'
-                  =pdf.render_file 'assignment.pdf'
+                  =link_to completion_certs_url(@cert.id, format: 'pdf') do
+                    Download invoice
 
 
                 -else
