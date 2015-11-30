@@ -1,11 +1,11 @@
 class CompletionCertificate < Prawn::Document
 
   def initialize(cert, view)
-    super(page_layout: :landscape, page_size: "B5")
+    super(page_layout: :landscape, page_size: [560, 834], background: "#{Rails.root}/app/assets/images/cert_background.png", :margin => [20, 100])
     @cert = cert
     @view = view
-    logo
-    content
+    user_name
+    course_name
   end
 
   def logo
@@ -14,8 +14,12 @@ class CompletionCertificate < Prawn::Document
     move_down 10
   end
 
-  def content
-    text "This is to certify that #{@cert.user.full_name} has fulfilled all the requirements for the completion of #{@cert.subject_course.name}"
+  def user_name
+    text_box "#{@cert.user.full_name}", at: [280, 290], height: 20, width: 200, align: :center
+  end
+
+  def course_name
+    text_box "#{@cert.subject_course.name}", at: [280, 200], height: 20, width: 200, align: :center
   end
 
 end
