@@ -26,7 +26,7 @@ class CompletionCertificate < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :guid, presence: true
+  validates :guid, presence: true, uniqueness: true
 
   # callbacks
   before_destroy :check_dependencies

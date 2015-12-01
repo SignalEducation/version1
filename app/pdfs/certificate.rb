@@ -17,11 +17,11 @@ class Certificate < Prawn::Document
     move_down 80
     logopath =  "#{Rails.root}/app/assets/images/logo_withtext+thin.png"
     y_position = cursor
-    image logopath, :width => 250, :height => 40, at: [200, y_position]
+    image logopath, width: 275, height: 40, at: [200, y_position]
   end
 
   def line_1
-    move_down 112
+    move_down 115
     font_size 16
     text "This is to certify that", align: :center, style: :italic
   end
@@ -48,8 +48,8 @@ class Certificate < Prawn::Document
     move_down 75
     font_size 10
     y_position = cursor
-    draw_text "Date issued: #{@cert.created_at}", at: [60, y_position]
-
+    draw_text "Certificate ID: #{@cert.guid}", at: [60, y_position]
+    draw_text "Date issued: #{@cert.created_at.strftime("%d %b. %Y")}", at: [60, (y_position + 18)]
   end
 
   def signature

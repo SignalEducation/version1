@@ -84,18 +84,29 @@ class LibraryController < ApplicationController
           redirect_to library_url
         end
         seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
-
       end
     end
   end
 
   def cert
     log = SubjectCourseUserLog.where(id: params[:id]).first
-    guid = SecureRandom.hex(10)
-    @cert = CompletionCertificate.new(user_id: log.user_id)
-    @cert.subject_course_user_log_id = log.id
-    @cert.guid = guid
-    if @cert.valid? && @cert.save
+    certificate = CompletionCertificate.where(subject_course_user_log_id: log.id, user_id: current_user.id).first
+    if certificate.nil?
+      guid = SecureRandom.hex(10)
+      @cert = CompletionCertificate.new(user_id: log.user_id)
+      @cert.subject_course_user_log_id = log.id
+      @cert.guid = guid
+      if @cert.valid? && @cert.save
+        respond_to do |format|
+          format.html
+          format.pdf do
+            pdf = Certificate.new(@cert, view_context)
+            send_data pdf.render, filename: "certificate_#{@cert.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", page_layout: 'landscape', page_size: '2A0'
+          end
+        end
+      end
+    else
+      @cert = certificate
       respond_to do |format|
         format.html
         format.pdf do
