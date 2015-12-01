@@ -87,6 +87,7 @@ class User < ActiveRecord::Base
              # employed by the corporate customer
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
+  has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :subject_courses, foreign_key: :tutor_id
   has_many :invoices

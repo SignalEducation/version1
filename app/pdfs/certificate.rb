@@ -1,4 +1,4 @@
-class CompletionCertificate < Prawn::Document
+class Certificate < Prawn::Document
 
   def initialize(cert, view)
     super(page_layout: :landscape, page_size: [560, 852], background: "#{Rails.root}/app/assets/images/cert_background.png", :margin => [20, 100])
@@ -29,8 +29,7 @@ class CompletionCertificate < Prawn::Document
   def user_name
     move_down 17
     font_size 24
-    #text "#{@cert.user.full_name}", align: :center
-    text "Johnny Meagher", align: :center
+    text "#{@cert.user.full_name}", align: :center
   end
 
   def line_2
@@ -42,15 +41,14 @@ class CompletionCertificate < Prawn::Document
   def course_name
     move_down 20
     font_size 24
-    #text "#{@cert.subject_course.name}", align: :center
-    text "Risk Management in Investment Management", align: :center
+    text "#{@cert.subject_course_user_log.subject_course.name}", align: :center
   end
 
   def date
     move_down 75
     font_size 10
     y_position = cursor
-    #draw_text "Date issued: #{@cert.completion_certificate.created_at}", at: [60, y_position]
+    draw_text "Date issued: #{@cert.created_at}", at: [60, y_position]
 
   end
 

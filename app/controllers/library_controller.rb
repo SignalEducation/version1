@@ -90,12 +90,18 @@ class LibraryController < ApplicationController
   end
 
   def cert
-    @cert = SubjectCourseUserLog.where(id: params[:id]).first
-    respond_to do |format|
-      format.html
-      format.pdf do
-        pdf = CompletionCertificate.new(@cert, view_context)
-        send_data pdf.render, filename: "certificate_#{@cert.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", page_layout: 'landscape', page_size: '2A0'
+    log = SubjectCourseUserLog.where(id: params[:id]).first
+    guid = SecureRandom.hex(10)
+    @cert = CompletionCertificate.new(user_id: log.user_id)
+    @cert.subject_course_user_log_id = log.id
+    @cert.guid = guid
+    if @cert.valid? && @cert.save
+      respond_to do |format|
+        format.html
+        format.pdf do
+          pdf = Certificate.new(@cert, view_context)
+          send_data pdf.render, filename: "certificate_#{@cert.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", page_layout: 'landscape', page_size: '2A0'
+        end
       end
     end
   end
