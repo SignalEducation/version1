@@ -66,7 +66,7 @@ class LibraryController < ApplicationController
         latest_set = user_course_sets.first
         @latest_element_id = latest_set.try(:latest_course_module_element_id)
         @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-        @subject_course_user_log = SubjectCourseUserLog.where(user_id: current_user.id).where(subject_course_id: @course.id).all_in_order.first
+        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
         cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
         scores = cmeuls.all.map(&:quiz_score_actual)
         pass_rate = @course.cpd_pass_rate || 65
@@ -74,7 +74,7 @@ class LibraryController < ApplicationController
         scores.each { |score| score >= pass_rate ? array << true : array << false }
         array2 = array.uniq
         @question_bank_passed = array2.include? true
-        @cert = SubjectCourseUserLog.where(user_id: current_user.id).where(subject_course_id: @course.id).first
+        @cert = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).first
 
         if @course.try(:live)
           render 'live_course'
