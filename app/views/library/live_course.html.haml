@@ -86,7 +86,6 @@
                             =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
               -if @course.question_bank && @course.question_bank.active?
-
                 -if @question_bank_passed
                   =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
                     .box-topic-item
@@ -95,18 +94,25 @@
                       .question-bank-passed
                         %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
                         Passed
-                  %hr/
-                  =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                    .box-topic-item
-                      Click here to download your completion certificate
-
-
+                  -if @subject_course_user_log.completed
+                    %hr/
+                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                      .box-topic-item
+                        Click here to download your completion certificate
                 -else
                   =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
                     .box-topic-item
                       =@course.question_bank.name
                     .time.hidden-xs
                       =@course.question_bank.number_of_questions.to_s + ' Questions'
+              -else
+                -if @subject_course_user_log.completed
+                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      =@course.question_bank.number_of_questions.to_s + ' Questions'
+
 
 
         .col-sm-12.col-md-4.l-margin-bottom-huge
