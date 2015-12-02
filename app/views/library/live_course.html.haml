@@ -106,7 +106,7 @@
                     .time.hidden-xs
                       =@course.question_bank.number_of_questions.to_s + ' Questions'
               -else
-                -if @subject_course_user_log.completed
+                -if @subject_course_user_log && @subject_course_user_log.completed
                   %hr/
                   =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
                     .box-topic-item
