@@ -86,7 +86,7 @@
                             =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
               -if @course.question_bank && @course.question_bank.active?
-                %hr/
+
                 -if @question_bank_passed
                   =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
                     .box-topic-item
@@ -95,8 +95,10 @@
                       .question-bank-passed
                         %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
                         Passed
-                  =link_to completion_certs_url(@cert.id, format: 'pdf') do
-                    Download invoice
+                  %hr/
+                  =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      Click here to download your completion certificate
 
 
                 -else
