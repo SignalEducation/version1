@@ -107,11 +107,10 @@
                       =@course.question_bank.number_of_questions.to_s + ' Questions'
               -else
                 -if @subject_course_user_log.completed
-                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
+                  %hr/
+                  =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
                     .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      =@course.question_bank.number_of_questions.to_s + ' Questions'
+                      Click here to download your completion certificate
 
 
 
