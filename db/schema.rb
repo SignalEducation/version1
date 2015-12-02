@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123180316) do
+ActiveRecord::Schema.define(version: 20151201131832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "completion_certificates", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "subject_course_user_log_id"
+    t.string   "guid"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "completion_certificates", ["guid"], name: "index_completion_certificates_on_guid", using: :btree
+  add_index "completion_certificates", ["subject_course_user_log_id"], name: "index_completion_certificates_on_subject_course_user_log_id", using: :btree
+  add_index "completion_certificates", ["user_id"], name: "index_completion_certificates_on_user_id", using: :btree
 
   create_table "corporate_customers", force: :cascade do |t|
     t.string   "organisation_name"

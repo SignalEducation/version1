@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'mailchimp'
+require 'prawn'
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.

@@ -66,6 +66,16 @@ class LibraryController < ApplicationController
         latest_set = user_course_sets.first
         @latest_element_id = latest_set.try(:latest_course_module_element_id)
         @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+        @subject_course_user_log = SubjectCourseUserLog.where(user_id: current_user.id).where(subject_course_id: @course.id).all_in_order.first
+        cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
+        scores = cmeuls.all.map(&:quiz_score_actual)
+        pass_rate = @course.cpd_pass_rate || 65
+        array = []
+        scores.each { |score| score >= pass_rate ? array << true : array << false }
+        array2 = array.uniq
+        @question_bank_passed = array2.include? true
+        @cert = SubjectCourseUserLog.where(user_id: current_user.id).where(subject_course_id: @course.id).first
+
         if @course.try(:live)
           render 'live_course'
         elsif @course.try(:live) == false
@@ -74,7 +84,35 @@ class LibraryController < ApplicationController
           redirect_to library_url
         end
         seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
+      end
+    end
+  end
 
+  def cert
+    log = SubjectCourseUserLog.where(id: params[:id]).first
+    certificate = CompletionCertificate.where(subject_course_user_log_id: log.id, user_id: current_user.id).first
+    if certificate.nil?
+      guid = SecureRandom.hex(10)
+      @cert = CompletionCertificate.new(user_id: log.user_id)
+      @cert.subject_course_user_log_id = log.id
+      @cert.guid = guid
+      if @cert.valid? && @cert.save
+        respond_to do |format|
+          format.html
+          format.pdf do
+            pdf = Certificate.new(@cert, view_context)
+            send_data pdf.render, filename: "certificate_#{@cert.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", page_layout: 'landscape', page_size: '2A0'
+          end
+        end
+      end
+    else
+      @cert = certificate
+      respond_to do |format|
+        format.html
+        format.pdf do
+          pdf = Certificate.new(@cert, view_context)
+          send_data pdf.render, filename: "certificate_#{@cert.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", page_layout: 'landscape', page_size: '2A0'
+        end
       end
     end
   end

@@ -94,6 +94,7 @@ Rails.application.routes.draw do
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
+    get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
     resources :exam_levels, concerns: :supports_reordering do
