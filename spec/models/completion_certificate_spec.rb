@@ -24,19 +24,16 @@ describe CompletionCertificate do
     end
   end
 
-  # Constants
-  #it { expect(CompletionCertificate.const_defined?(:CONSTANT_NAME)).to eq(true) }
-
   # relationships
   it { should belong_to(:user) }
-  it { should belong_to(:subject_course_userLog) }
+  it { should belong_to(:subject_course_user_log) }
 
   # validation
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:subject_course_userLog_id) }
-  it { should validate_numericality_of(:subject_course_userLog_id) }
+  it { should validate_presence_of(:subject_course_user_log_id) }
+  it { should validate_numericality_of(:subject_course_user_log_id) }
 
   it { should validate_presence_of(:guid) }
 
@@ -50,7 +47,5 @@ describe CompletionCertificate do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

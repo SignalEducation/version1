@@ -69,7 +69,7 @@ class LibraryController < ApplicationController
 
         cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
         scores = cmeuls.all.map(&:quiz_score_actual)
-        pass_rate = @course.cpd_pass_rate
+        pass_rate = @course.cpd_pass_rate || 65
         array = []
         scores.each { |score| score >= pass_rate ? array << true : array << false }
         array2 = array.uniq
