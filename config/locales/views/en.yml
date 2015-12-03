@@ -392,7 +392,6 @@ en:
 
     course_module_element_videos:
       form:
-        raw_video_file_id: Video File
         tags: "Tags (separate with commas)"
         tags_placeholder: "economics, macro-economics"
         difficulty_level: Difficulty Level
