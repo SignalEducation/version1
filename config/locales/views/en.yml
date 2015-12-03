@@ -1195,8 +1195,6 @@ en:
         destroyed_at_placeholder: Destroyed at
         message_type: Message type
         message_type_placeholder: Blog, study plan, forum, marketing etc
-        forum_topic_id: Forum topic
-        forum_post_id: Forum post
         tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
@@ -1213,8 +1211,6 @@ en:
         unread: Unread
         destroyed_at: Destroyed at
         message_type: Type
-        forum_topic_id: Forum topic
-        forum_post_id: Forum post
         tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
