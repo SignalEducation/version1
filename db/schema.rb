@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203104156) do
+ActiveRecord::Schema.define(version: 20151203110620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1051,18 +1051,6 @@ ActiveRecord::Schema.define(version: 20151203104156) do
   add_index "user_activity_logs", ["session_guid"], name: "index_user_activity_logs_on_session_guid", using: :btree
   add_index "user_activity_logs", ["user_id"], name: "index_user_activity_logs_on_user_id", using: :btree
 
-  create_table "user_exam_levels", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "exam_level_id"
-    t.integer  "exam_schedule_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_exam_levels", ["exam_level_id"], name: "index_user_exam_levels_on_exam_level_id", using: :btree
-  add_index "user_exam_levels", ["exam_schedule_id"], name: "index_user_exam_levels_on_exam_schedule_id", using: :btree
-  add_index "user_exam_levels", ["user_id"], name: "index_user_exam_levels_on_user_id", using: :btree
-
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -1079,17 +1067,6 @@ ActiveRecord::Schema.define(version: 20151203104156) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "user_likes", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "likeable_type"
-    t.integer  "likeable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_likes", ["likeable_id"], name: "index_user_likes_on_likeable_id", using: :btree
-  add_index "user_likes", ["user_id"], name: "index_user_likes_on_user_id", using: :btree
 
   create_table "user_notifications", force: :cascade do |t|
     t.integer  "user_id"
