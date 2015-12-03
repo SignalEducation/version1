@@ -261,11 +261,7 @@ en:
     course_modules:
       form:
         course_module_elements: Course Module Elements
-        institution_id: Institution
-        qualification_id: Qualification
-        exam_level_id: Exam level
         subject_course_id: Course
-        exam_section_id: Exam section
         name: Name
         name_placeholder: Course Module Name
         name_url: Name URL
@@ -287,10 +283,6 @@ en:
 
       index:
         h1: Course Modules
-        lead: You can manage Course Modules for any of the Qualifications and Exam levels shown below, or create a new Qualification or Exam Level.
-        new_qualification: New Qualification
-        new_exam_level: New Exam Level
-        new_exam_section: New Exam Section
 
       new:
         h1: New Course Module
@@ -486,10 +478,6 @@ en:
         users: Users
         user_groups: User Groups
         course_content_data: Courses Data
-        subject_areas: Subject Areas
-        institutions: Institutions
-        qualifications: Qualifications
-        exam_levels: Exam Levels
 
       content_manager:
         edited_in_last_3_days: Edited in the last 3 days
@@ -498,89 +486,6 @@ en:
         published_in_last_3_days: Published in the last 3 days
         publishes_in_next_3_days: Publishes in the next 3 days
         see_all_static_pages: See All Static Pages
-
-    exam_levels:
-      form:
-        qualification_id: Qualification
-        name: Name
-        name_placeholder: First exam level
-        name_url: Name URL
-        name_url_placeholder: first-exam-level
-        description: Description
-        description_placeholder: Description for this Exam Level
-        short_description: Short Description
-        short_description_placeholder: This appears only on landing page for this course
-        duration: Duration
-        is_cpd: 'is CPD?'
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: 'Active?'
-        live: Live Mode
-        best_possible_first_attempt_score: 'Best-possible first attempt score'
-        best_possible_first_attempt_score_placeholder: 200
-        default_number_of_possible_exam_answers: Default Number of Exam Answers
-        default_number_of_possible_exam_answers_placeholder: 4
-        default_number_of_possible_exam_answers_help_text: "When creating quizzes, this is the default number of answers that will be created"
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        mailchimp_list_id: Mailchimp List ID
-        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
-        forum_url: Forum URL
-        forum_url_placeholder: This is the Forum URL
-        seo_no_index: "SEO no-index flag"
-
-      index:
-        h1: Exam Levels
-        new: New Exam Level
-        exam_sections: "Exam sections?"
-
-      show:
-        h1: Exam Level
-
-      edit:
-        h1: Edit Exam Level
-
-      new:
-        h1: New Exam Level
-
-    exam_sections:
-      form:
-        name: Name
-        name_placeholder: Economics
-        name_url: Name URL
-        name_url_placeholder: economics
-        exam_level_id: Exam level
-        category_id: Category
-        active: Active
-        live: Live Mode
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        best_possible_first_attempt_score: Best-possible first attempt score
-        best_possible_first_attempt_score_placeholder: 100
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        short_description: Short description
-        short_description_placeholder: Description that will appear on library landing page for this course
-        mailchimp_list_id: Mailchimp List ID
-        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
-        description: Description
-        description_placeholder: Description text of the course
-        seo_no_index: "SEO no-index flag"
-        forum_url: Forum URL
-        forum_url_placeholder: This is the Forum URL
-
-
-      index:
-        h1: Exam Sections
-
-      show:
-        h1: Exam Section
-
-      edit:
-        h1: Edit Exam Section
-
-      new:
-        h1: New Exam Section
 
     flash_cards:
       form:
@@ -656,42 +561,6 @@ en:
         sign_up_for_free_trial: Sign up for your 7-day free trial
         no_credit_card_needed: No credit card needed
         error_panel_caption: "prevented your Sign-Up from being completed:"
-
-    institutions:
-      form:
-        name: Name
-        name_placeholder: Institute of eTeaching
-        short_name: Short name
-        short_name_placeholder: iet
-        name_url: Name URL
-        name_url_placeholder: institute-of-eteaching
-        description: Description
-        description_placeholder: Add some text that describes the institution
-        feedback_url: Feedback URL
-        feedback_url_placeholder: http://iet.com/feedback
-        help_desk_url: Help desk URL
-        help_desk_url_placeholder: http://help.iet.com
-        subject_area_id: Subject area
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: Active
-        background_colour_code: Background colour code
-        background_colour_code_placeholder: 'FFEE99 (no need for #)'
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        seo_no_index: "SEO no-index flag"
-
-      edit:
-        h1: Edit Institution
-
-      index:
-        h1: Institutions
-
-      new:
-        h1: New Institution
-
-      show:
-        h1: Institution
 
     invoices:
       form:
@@ -786,10 +655,6 @@ en:
         video: Video
         number_of_videos: Videos
         videos: of Video
-        institution: Institution
-        qualification: Qualification
-        exam_level: Exam Level
-        exam_section: Exam Section
         course_module: Course Module
         course_module_element: Step
         new_question_bank: Create a Custom Quiz
@@ -797,35 +662,6 @@ en:
       index:
         continue_course: Continue Course
         start_course: Start Course
-
-    qualifications:
-      form:
-        name: Name
-        name_placeholder: CFA qualification
-        institution_id: Institution
-        name_url: Name URL
-        name_url_placeholder: cfa-qualification
-        cpd_hours_required_per_year: Required CPD hours per year
-        cpd_hours_required_per_year_placeholder: 100
-        category_id: Category
-        active: Active
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        seo_no_index: "SEO no-index flag"
-
-      index:
-        h1: Qualifications
-
-      show:
-        h1: Qualification
-
-      edit:
-        h1: Edit Qualification
-
-      new:
-        h1: New Qualification
 
     question_banks:
       form:
@@ -992,31 +828,6 @@ en:
       show:
         h1: "Thanks for joining us!"
         sub-head: "E-mail with activation link has been sent. Please check your inbox and click on the link to activate your LearnSignal account."
-
-    subject_areas:
-      form:
-        name: Name
-        name_placeholder: Human resources
-        name_url: Name URL
-        name_url_placeholder: "human-resources"
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        seo_no_index: "SEO no-index flag"
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: Active
-
-      edit:
-        h1: Edit Subject Area
-
-      index:
-        h1: Subject Areas
-
-      new:
-        h1: New Subject Area
-
-      show:
-        h1: Subject Area
 
     subscription_payment_cards:
       form:
@@ -1384,8 +1195,6 @@ en:
         destroyed_at_placeholder: Destroyed at
         message_type: Message type
         message_type_placeholder: Blog, study plan, forum, marketing etc
-        forum_topic_id: Forum topic
-        forum_post_id: Forum post
         tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
@@ -1402,8 +1211,6 @@ en:
         unread: Unread
         destroyed_at: Destroyed at
         message_type: Type
-        forum_topic_id: Forum topic
-        forum_post_id: Forum post
         tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
@@ -1555,7 +1362,6 @@ en:
       index:
         h1: Teams
         corp_h1: Teams
-        exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted
         members: Members

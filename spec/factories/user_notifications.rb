@@ -27,8 +27,6 @@ FactoryGirl.define do
     email_sent_at { Time.now - 1.day }
     unread false
     message_type 'blog'
-    forum_topic_id 1
-    forum_post_id 1
     tutor_id 1
     falling_behind false
     blog_post_id 1
