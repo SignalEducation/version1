@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201131832) do
+ActiveRecord::Schema.define(version: 20151203104156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -210,7 +210,6 @@ ActiveRecord::Schema.define(version: 20151201131832) do
     t.integer  "estimated_time_in_seconds"
     t.integer  "course_module_id"
     t.integer  "sorting_order"
-    t.integer  "forum_topic_id"
     t.integer  "tutor_id"
     t.integer  "related_quiz_id"
     t.integer  "related_video_id"
@@ -228,7 +227,6 @@ ActiveRecord::Schema.define(version: 20151201131832) do
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
-  add_index "course_module_elements", ["forum_topic_id"], name: "index_course_module_elements_on_forum_topic_id", using: :btree
   add_index "course_module_elements", ["name_url"], name: "index_course_module_elements_on_name_url", using: :btree
   add_index "course_module_elements", ["related_quiz_id"], name: "index_course_module_elements_on_related_quiz_id", using: :btree
   add_index "course_module_elements", ["related_video_id"], name: "index_course_module_elements_on_related_video_id", using: :btree
@@ -384,60 +382,6 @@ ActiveRecord::Schema.define(version: 20151201131832) do
   end
 
   add_index "flash_quizzes", ["flash_card_stack_id"], name: "index_flash_quizzes_on_flash_card_stack_id", using: :btree
-
-  create_table "forum_post_concerns", force: :cascade do |t|
-    t.integer  "forum_post_id"
-    t.integer  "user_id"
-    t.string   "reason"
-    t.boolean  "live",          default: true, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "forum_post_concerns", ["forum_post_id"], name: "index_forum_post_concerns_on_forum_post_id", using: :btree
-  add_index "forum_post_concerns", ["user_id"], name: "index_forum_post_concerns_on_user_id", using: :btree
-
-  create_table "forum_posts", force: :cascade do |t|
-    t.integer  "user_id"
-    t.text     "content"
-    t.integer  "forum_topic_id"
-    t.boolean  "blocked",                   default: false, null: false
-    t.integer  "response_to_forum_post_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "forum_posts", ["forum_topic_id"], name: "index_forum_posts_on_forum_topic_id", using: :btree
-  add_index "forum_posts", ["response_to_forum_post_id"], name: "index_forum_posts_on_response_to_forum_post_id", using: :btree
-  add_index "forum_posts", ["user_id"], name: "index_forum_posts_on_user_id", using: :btree
-
-  create_table "forum_topic_users", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "forum_topic_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "forum_topic_users", ["forum_topic_id"], name: "index_forum_topic_users_on_forum_topic_id", using: :btree
-  add_index "forum_topic_users", ["user_id"], name: "index_forum_topic_users_on_user_id", using: :btree
-
-  create_table "forum_topics", force: :cascade do |t|
-    t.integer  "forum_topic_id"
-    t.integer  "course_module_element_id"
-    t.string   "heading"
-    t.text     "description"
-    t.boolean  "active",                   default: true, null: false
-    t.datetime "publish_from"
-    t.datetime "publish_until"
-    t.integer  "reviewed_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "created_by"
-  end
-
-  add_index "forum_topics", ["course_module_element_id"], name: "index_forum_topics_on_course_module_element_id", using: :btree
-  add_index "forum_topics", ["forum_topic_id"], name: "index_forum_topics_on_forum_topic_id", using: :btree
-  add_index "forum_topics", ["reviewed_by"], name: "index_forum_topics_on_reviewed_by", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
@@ -1156,8 +1100,6 @@ ActiveRecord::Schema.define(version: 20151201131832) do
     t.boolean  "unread",         default: true,  null: false
     t.datetime "destroyed_at"
     t.string   "message_type"
-    t.integer  "forum_topic_id"
-    t.integer  "forum_post_id"
     t.integer  "tutor_id"
     t.boolean  "falling_behind",                 null: false
     t.integer  "blog_post_id"
@@ -1166,11 +1108,26 @@ ActiveRecord::Schema.define(version: 20151201131832) do
   end
 
   add_index "user_notifications", ["blog_post_id"], name: "index_user_notifications_on_blog_post_id", using: :btree
-  add_index "user_notifications", ["forum_post_id"], name: "index_user_notifications_on_forum_post_id", using: :btree
-  add_index "user_notifications", ["forum_topic_id"], name: "index_user_notifications_on_forum_topic_id", using: :btree
   add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
   add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "tutor_project_id"
+    t.string   "tutor_wistia_url"
+    t.text     "description"
+    t.string   "url"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "user_profiles", ["tutor_project_id"], name: "index_user_profiles_on_tutor_project_id", using: :btree
+  add_index "user_profiles", ["user_id"], name: "index_user_profiles_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
@@ -1259,5 +1216,40 @@ ActiveRecord::Schema.define(version: 20151201131832) do
   end
 
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
+
+  create_table "white_paper_requests", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "number"
+    t.string   "web_url"
+    t.string   "company_name"
+    t.integer  "white_paper_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "white_paper_requests", ["company_name"], name: "index_white_paper_requests_on_company_name", using: :btree
+  add_index "white_paper_requests", ["email"], name: "index_white_paper_requests_on_email", using: :btree
+  add_index "white_paper_requests", ["name"], name: "index_white_paper_requests_on_name", using: :btree
+  add_index "white_paper_requests", ["number"], name: "index_white_paper_requests_on_number", using: :btree
+  add_index "white_paper_requests", ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id", using: :btree
+
+  create_table "white_papers", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.integer  "sorting_order"
+    t.string   "cover_image_file_name"
+    t.string   "cover_image_content_type"
+    t.integer  "cover_image_file_size"
+    t.datetime "cover_image_updated_at"
+  end
+
+  add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree
 
 end

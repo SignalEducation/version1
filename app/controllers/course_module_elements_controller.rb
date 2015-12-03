@@ -266,7 +266,6 @@ class CourseModuleElementsController < ApplicationController
         # :course_module_element_video_id,
         # :course_module_element_quiz_id,
         :sorting_order,
-        :forum_topic_id,
         :tutor_id,
         :active,
         :related_quiz_id,

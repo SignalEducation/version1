@@ -75,8 +75,6 @@ class UserNotificationsController < ApplicationController
       redirect_to root_url
       return false
     end
-    #@forum_topics = ForumTopic.all_in_order
-    #@forum_posts = ForumPost.all_in_order
     #@tutors = Tutor.all_in_order
     #@blog_posts = BlogPost.all_in_order
     seo_title_maker(@user_notification.try(:subject_line) || 'User Notifications', '', true)
@@ -86,7 +84,6 @@ class UserNotificationsController < ApplicationController
     params.require(:user_notification).permit(:user_id, :subject_line, :content,
                                               :email_required, :email_sent_at,
                                               :unread, :destroyed_at, :message_type,
-                                              :forum_topic_id, :forum_post_id,
                                               :tutor_id, :falling_behind,
                                               :blog_post_id)
   end
