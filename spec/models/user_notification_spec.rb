@@ -54,10 +54,6 @@ describe UserNotification do
   it { should validate_inclusion_of(:message_type).in_array(UserNotification::MESSAGE_TYPES) }
   it { should validate_length_of(:message_type).is_at_most(255) }
 
-  it { should validate_numericality_of(:forum_topic_id) }
-
-  it { should validate_numericality_of(:forum_post_id) }
-
   it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_numericality_of(:blog_post_id) }
