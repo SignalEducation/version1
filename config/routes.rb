@@ -19,18 +19,6 @@ Rails.application.routes.draw do
     resources :user_activities, only: :create
   end
 
-  # unscoped routes - to support incoming traffic from v2 cached pages
-  get '/courses/:subject_area_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
-
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
@@ -97,12 +85,6 @@ Rails.application.routes.draw do
     get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
-    resources :exam_levels, concerns: :supports_reordering do
-      get  '/filter/:qualification_url', on: :collection, action: :index, as: :filtered
-    end
-    resources :exam_sections, concerns: :supports_reordering do
-      get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
-    end
     resources :groups, concerns: :supports_reordering
     resources :groups do
       get 'edit_courses', action: :edit_courses
@@ -118,9 +100,6 @@ Rails.application.routes.draw do
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
-    resources :institutions, concerns: :supports_reordering do
-      get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
-    end
     resources :invoices, only: [:index, :show]
 
     post '/subscribe', to: 'library#subscribe'
@@ -129,18 +108,12 @@ Rails.application.routes.draw do
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
-    #get 'library/:exam_level_name_url', to: 'library#show'
-    resources :qualifications, concerns: :supports_reordering do
-      get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
-    end
-    #resources :question_banks, except: [:index]
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
     resources :stripe_developer_calls
     get 'acca-schedule', to: 'study_schedules#acca_schedule'
-    resources :subject_areas, concerns: :supports_reordering
     resources :subject_courses, concerns: :supports_reordering
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]

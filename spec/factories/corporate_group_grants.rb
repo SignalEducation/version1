@@ -15,8 +15,6 @@
 FactoryGirl.define do
   factory :corporate_group_grant do
     corporate_group_id 1
-    exam_level_id nil
-    exam_section_id nil
     compulsory false
     restricted false
     subject_course_id 1

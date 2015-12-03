@@ -67,7 +67,7 @@ class CourseModule < ActiveRecord::Base
   after_update :update_parent_and_sets
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :institution_id) }
+  scope :all_in_order, -> { order(:sorting_order) }
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }

@@ -107,8 +107,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   def set_ancestors_best_scores
     changes = self.previous_changes[:best_possible_score_first_attempt] # [prev,new]
     if changes && changes[0] != changes[1]
-      self.course_module_element.course_module.exam_section.try(:save)
-      self.course_module_element.course_module.subject_course.save
+      self.course_module_element.course_module.subject_course.try(:save)
     end
     true
   end

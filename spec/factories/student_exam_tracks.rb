@@ -23,8 +23,6 @@
 FactoryGirl.define do
   factory :student_exam_track do
     user_id 1
-    exam_level_id 1
-    exam_section_id 1
     latest_course_module_element_id 1
     exam_schedule_id 1
   end
