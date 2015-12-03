@@ -11,8 +11,6 @@
 #  unread         :boolean          default(TRUE), not null
 #  destroyed_at   :datetime
 #  message_type   :string
-#  forum_topic_id :integer
-#  forum_post_id  :integer
 #  tutor_id       :integer
 #  falling_behind :boolean          not null
 #  blog_post_id   :integer
@@ -27,16 +25,14 @@ class UserNotification < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :subject_line, :content, :email_required, :email_sent_at,
-                  :unread, :destroyed_at, :message_type, :forum_topic_id,
-                  :forum_post_id, :tutor_id, :falling_behind, :blog_post_id
+                  :unread, :destroyed_at, :message_type,
+                  :tutor_id, :falling_behind, :blog_post_id
 
   # Constants
-  MESSAGE_TYPES = %w(blog forum marketing study_plan system_alert)
+  MESSAGE_TYPES = %w(blog marketing study_plan system_alert)
 
   # relationships
   belongs_to :user
-  belongs_to :forum_topic
-  belongs_to :forum_post
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   # todo belongs_to :blog_post
 
@@ -46,10 +42,6 @@ class UserNotification < ActiveRecord::Base
   validates :subject_line, presence: true, length: { maximum: 255 }
   validates :content, presence: true
   validates :message_type, inclusion: {in: MESSAGE_TYPES}, length: { maximum: 255 }
-  validates :forum_topic_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :forum_post_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :tutor_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :blog_post_id, allow_nil: true,

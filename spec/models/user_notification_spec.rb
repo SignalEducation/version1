@@ -11,8 +11,6 @@
 #  unread         :boolean          default(TRUE), not null
 #  destroyed_at   :datetime
 #  message_type   :string
-#  forum_topic_id :integer
-#  forum_post_id  :integer
 #  tutor_id       :integer
 #  falling_behind :boolean          not null
 #  blog_post_id   :integer
