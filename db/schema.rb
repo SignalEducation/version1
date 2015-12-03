@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203133032) do
+ActiveRecord::Schema.define(version: 20151203161158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -183,7 +183,6 @@ ActiveRecord::Schema.define(version: 20151203133032) do
 
   create_table "course_module_element_videos", force: :cascade do |t|
     t.integer  "course_module_element_id"
-    t.integer  "raw_video_file_id"
     t.string   "tags"
     t.string   "difficulty_level"
     t.integer  "estimated_study_time_seconds"
@@ -197,7 +196,6 @@ ActiveRecord::Schema.define(version: 20151203133032) do
   end
 
   add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree
-  add_index "course_module_element_videos", ["raw_video_file_id"], name: "index_course_module_element_videos_on_raw_video_file_id", using: :btree
 
   create_table "course_module_elements", force: :cascade do |t|
     t.string   "name"
@@ -545,22 +543,6 @@ ActiveRecord::Schema.define(version: 20151203133032) do
   add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree
   add_index "quiz_questions", ["course_module_element_quiz_id"], name: "index_quiz_questions_on_course_module_element_quiz_id", using: :btree
   add_index "quiz_questions", ["difficulty_level"], name: "index_quiz_questions_on_difficulty_level", using: :btree
-
-  create_table "raw_video_files", force: :cascade do |t|
-    t.string   "file_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "transcode_requested_at"
-    t.string   "transcode_request_guid"
-    t.string   "transcode_result"
-    t.datetime "transcode_completed_at"
-    t.datetime "raw_file_modified_at"
-    t.string   "aws_etag"
-    t.integer  "duration_in_seconds",    default: 0
-    t.string   "guid_prefix"
-  end
-
-  add_index "raw_video_files", ["file_name"], name: "index_raw_video_files_on_file_name", using: :btree
 
   create_table "referral_codes", force: :cascade do |t|
     t.integer  "user_id"

@@ -226,12 +226,6 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element = CourseModuleElement.where(id: params[:id]).first
     end
     @tutors = User.all_tutors.all_in_order
-    # todo reverse this when Philip asks for it
-    #if action_name == 'new' || action_name == 'create'
-    #  @raw_video_files = RawVideoFile.not_yet_assigned.all_in_order
-    #else
-      @raw_video_files = RawVideoFile.all_in_order
-    #end
     @letters = ('A'..'Z').to_a
     @mathjax_required = true
   end
@@ -279,7 +273,6 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
-            :raw_video_file_id,
             :tags,
             :difficulty_level,
             # :estimated_study_time_seconds,
