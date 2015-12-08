@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
 
   # validation
   validates :email, presence: true, uniqueness: true,
-            length: {within: 7..40}
+            length: {within: 7..50}
             #TODO
             #format: {with:  /^([^\s]+)((?:[-a-z0-9]\.)[a-z]{2,})$/i,
             #         message: 'must be a valid email address.'}
