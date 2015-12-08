@@ -83,6 +83,7 @@ describe Subscription do
   it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
+  it { should respond_to(:upgrade_from_free_plan) }
   it { should respond_to(:free_trial?) }
 
 end
