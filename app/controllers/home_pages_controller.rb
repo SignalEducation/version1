@@ -97,6 +97,7 @@ class HomePagesController < ApplicationController
         end
 
         if @user.valid? && @user.save
+          clear_mixpanel_initial_id
           # Send User Activation email through Mandrill
           MandrillWorker.perform_async(@user.id,
                                        'send_verification_email',
