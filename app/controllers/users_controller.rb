@@ -109,6 +109,7 @@ class UsersController < ApplicationController
   def new_paid_subscription
     redirect_to account_url if current_user.subscriptions.count > 1
     @user = current_user
+    @currency = current_user.subscriptions.first.subscription_plan.currency.iso_code
     if current_user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
                                 .where('price > 0.0')
