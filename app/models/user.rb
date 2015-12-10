@@ -386,6 +386,17 @@ class User < ActiveRecord::Base
     users
   end
 
+  # Should only be used from the console, it is to fix issues where free_trial subscriptions were canceled but no new plan was created
+  def create_free_trial_subscription
+    if self.subscriptions.first.free_trial? && self.subscriptions.first.current_status == 'canceled'
+      previous_free_trial_sub = self.subscriptions.first
+      currency = previous_free_trial_sub.subscription_plan.currency_id
+      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
+      new_sub = self.subscriptions.new(subscription_plan_id: subscription_plan.id, stripe_customer_id: self.stripe_customer_id, user_id: self.id)
+      new_sub.save
+    end
+  end
+
   protected
 
   def add_guid
