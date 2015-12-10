@@ -83,11 +83,14 @@ class HomePagesController < ApplicationController
 
         @user.account_activation_code = SecureRandom.hex(10)
         @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
+
+        # Check for CrushOffers cookie and assign it to the User
         if cookies.encrypted[:crush_offers]
           @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
           cookies.delete(:crush_offers)
         end
 
+        # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
         if cookies.encrypted[:latest_subscription_plan_category_guid]
           subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
@@ -95,9 +98,12 @@ class HomePagesController < ApplicationController
 
         if @user.valid? && @user.save
           clear_mixpanel_initial_id
+          # Send User Activation email through Mandrill
           MandrillWorker.perform_async(@user.id,
                                        'send_verification_email',
                                        user_activation_url(activation_code: @user.account_activation_code))
+
+          # Sends info of User to getbase.com which is used by the sales team.
           if Rails.env.production?
             @base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
             @base.leads.create(first_name: @user.first_name,
@@ -108,6 +114,7 @@ class HomePagesController < ApplicationController
                                    country: @user.country.name}
             )
           end
+          # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
             if code

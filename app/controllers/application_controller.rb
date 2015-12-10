@@ -170,6 +170,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_session_guid
 
+
   def clear_mixpanel_initial_id
     cookies.delete :mixpanel_initial_id
   end

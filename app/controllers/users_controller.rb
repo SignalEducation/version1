@@ -145,12 +145,12 @@ class UsersController < ApplicationController
   end
 
   def upgrade_from_free_trial
+    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
     if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial? &&
-       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"]
-      current_user.subscriptions[0].cancel
+       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       subscription_params = params[:user][:subscriptions_attributes]["0"]
-      current_user.subscriptions.create(subscription_plan_id: subscription_params["subscription_plan_id"],
-                                        stripe_token: subscription_params["stripe_token"])
+      current_subscription = current_user.subscriptions[0]
+      current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"])
       redirect_to dashboard_url
     else
       redirect_to account_url
