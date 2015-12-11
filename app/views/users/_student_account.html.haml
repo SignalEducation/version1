@@ -114,7 +114,7 @@
                                     %p=t('views.users.show.no_upgrade_options_available')
                                   -if @current_subscription.current_status == 'active'
                                     =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
-                                  -elsif !@current_subscription.current_status.include?('cancel')
+                                  -elsif !@current_subscription.current_status.include?('canceled')
                                     =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
 
 
