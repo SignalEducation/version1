@@ -69,7 +69,7 @@
 
   function showPlans() {
     var country_id = $('#user_country_id').val();
-    var currency = #{@currency};
+    var currency = 'EUR';
     $('.currency').addClass('hide');
     for (var i = 0; i < countries.length; i++) {
       if (countries[i][0] == country_id) {
