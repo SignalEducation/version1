@@ -40,10 +40,6 @@
     =f.label :address, t('views.users.form.address'), class: 'control-label'
     .input-group.input-group-lg.full-width
       =f.text_field :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-    %br/
-    =f.label :country_id, t('views.users.form.country_id'), class: 'control-label'
-    .input-group.input-group-lg.full-width
-      =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
     -if current_user && current_user.tutor?
       %br/
       .col-sm-8
