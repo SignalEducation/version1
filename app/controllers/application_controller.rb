@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'mailchimp'
+require 'prawn'
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -168,6 +169,7 @@ class ApplicationController < ActionController::Base
     cookies.permanent.encrypted[:session_guid]
   end
   helper_method :current_session_guid
+
 
   def clear_mixpanel_initial_id
     cookies.delete :mixpanel_initial_id

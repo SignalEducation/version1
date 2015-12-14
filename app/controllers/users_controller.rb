@@ -60,7 +60,7 @@ class UsersController < ApplicationController
       MandrillWorker.perform_async(@user.id,
                                    'send_verification_email',
                                    user_activation_url(activation_code: @user.account_activation_code))
-      flash[:success] = 'User has been created successfully'
+      flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
       render action: :new
@@ -109,6 +109,8 @@ class UsersController < ApplicationController
   def new_paid_subscription
     redirect_to account_url if current_user.subscriptions.count > 1
     @user = current_user
+    currency_id = current_user.subscriptions.first.subscription_plan.currency_id
+    @country = Country.where(currency_id: currency_id).first
     if current_user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
                                 .where('price > 0.0')
@@ -145,12 +147,12 @@ class UsersController < ApplicationController
   end
 
   def upgrade_from_free_trial
+    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
     if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial? &&
-       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"]
-      current_user.subscriptions[0].cancel
+       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       subscription_params = params[:user][:subscriptions_attributes]["0"]
-      current_user.subscriptions.create(subscription_plan_id: subscription_params["subscription_plan_id"],
-                                        stripe_token: subscription_params["stripe_token"])
+      current_subscription = current_user.subscriptions[0]
+      current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"])
       redirect_to dashboard_url
     else
       redirect_to account_url
@@ -179,7 +181,7 @@ class UsersController < ApplicationController
     if current_user.admin?
       params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image)
+      params.require(:user).permit(:email, :first_name, :last_name, :operational_email_frequency, :study_plan_notifications_email_frequency, :falling_behind_email_alert_frequency, :marketing_email_frequency, :blog_notification_email_frequency, :forum_notification_email_frequency, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :phone_number)
     end
   end
 

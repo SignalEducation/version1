@@ -23,7 +23,7 @@ require 'rails_helper'
 describe SubjectCourseUserLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at count_of_questions_taken count_of_questions_correct count_of_course_module_complete count_of_quizzes_taken count_of_videos_taken latest_course_module_element_id percentage_complete completed)
+  black_list = %w(id created_at updated_at count_of_questions_taken count_of_questions_correct count_of_cmes_completed count_of_quizzes_taken count_of_videos_taken latest_course_module_element_id percentage_complete completed)
   SubjectCourseUserLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -54,7 +54,7 @@ describe SubjectCourseUserLog do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:create_intercom_event).after(:create) }
+  xit { should callback(:create_intercom_event).after(:create) }
 
   # scopes
   it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }

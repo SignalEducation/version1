@@ -26,6 +26,9 @@
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
 #
 
 FactoryGirl.define do

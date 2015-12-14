@@ -70,7 +70,7 @@
                       - @compulsory_courses.each do |cc|
                         %tr
                           %td= cc.name
-                          -if cc.class == ExamSection
+                          -if cc.class == SubjectCourse
                             -ids = cc.children.all.map(&:id)
                           -else
                             -ids = cc.course_modules.all.map(&:id)
@@ -91,7 +91,7 @@
                       - @started_courses.each do |sc|
                         %tr
                           %td= sc.name
-                          -if sc.class == ExamSection
+                          -if sc.class == SubjectCourse
                             -ids = sc.children.all.map(&:id)
                           -else
                             -ids = sc.course_modules.all.map(&:id)
@@ -173,7 +173,7 @@
                   - @compulsory_courses.each do |cc|
                     %tr
                       %td= cc.name
-                      -if cc.class == ExamSection
+                      -if cc.class == SubjectCourse
                         -ids = cc.children.all.map(&:id)
                       -else
                         -ids = cc.course_modules.all.map(&:id)
@@ -194,7 +194,7 @@
                   - @started_courses.each do |sc|
                     %tr
                       %td= sc.name
-                      -if sc.class == ExamSection
+                      -if sc.class == SubjectCourse
                         -ids = sc.children.all.map(&:id)
                       -else
                         -ids = sc.course_modules.all.map(&:id)

@@ -56,6 +56,7 @@
 #  profile_image_content_type               :string
 #  profile_image_file_size                  :integer
 #  profile_image_updated_at                 :datetime
+#  phone_number                             :string
 #
 
 class User < ActiveRecord::Base
@@ -74,7 +75,7 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :account_activated_at, :account_activation_code
+                  :name_url, :qualifications, :profile_image, :account_activated_at, :account_activation_code, :phone_number
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -86,6 +87,7 @@ class User < ActiveRecord::Base
              # employed by the corporate customer
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
+  has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :subject_courses, foreign_key: :tutor_id
   has_many :invoices
@@ -111,7 +113,7 @@ class User < ActiveRecord::Base
 
   # validation
   validates :email, presence: true, uniqueness: true,
-            length: {within: 7..40}
+            length: {within: 7..50}
             #TODO
             #format: {with:  /^([^\s]+)((?:[-a-z0-9]\.)[a-z]{2,})$/i,
             #         message: 'must be a valid email address.'}
@@ -382,6 +384,17 @@ class User < ActiveRecord::Base
       end
     end
     users
+  end
+
+  # Should only be used from the console, it is to fix issues where free_trial subscriptions were canceled but no new plan was created
+  def create_free_trial_subscription
+    if self.subscriptions.first.free_trial? && self.subscriptions.first.current_status == 'canceled'
+      previous_free_trial_sub = self.subscriptions.first
+      currency = previous_free_trial_sub.subscription_plan.currency_id
+      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
+      new_sub = self.subscriptions.new(subscription_plan_id: subscription_plan.id, stripe_customer_id: self.stripe_customer_id, user_id: self.id)
+      new_sub.save
+    end
   end
 
   protected

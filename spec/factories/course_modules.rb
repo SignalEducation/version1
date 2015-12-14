@@ -3,10 +3,6 @@
 # Table name: course_modules
 #
 #  id                        :integer          not null, primary key
-#  institution_id            :integer
-#  qualification_id          :integer
-#  exam_level_id             :integer
-#  exam_section_id           :integer
 #  name                      :string
 #  name_url                  :string
 #  description               :text

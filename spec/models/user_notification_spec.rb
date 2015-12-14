@@ -11,8 +11,6 @@
 #  unread         :boolean          default(TRUE), not null
 #  destroyed_at   :datetime
 #  message_type   :string
-#  forum_topic_id :integer
-#  forum_post_id  :integer
 #  tutor_id       :integer
 #  falling_behind :boolean          not null
 #  blog_post_id   :integer
@@ -55,10 +53,6 @@ describe UserNotification do
 
   it { should validate_inclusion_of(:message_type).in_array(UserNotification::MESSAGE_TYPES) }
   it { should validate_length_of(:message_type).is_at_most(255) }
-
-  it { should validate_numericality_of(:forum_topic_id) }
-
-  it { should validate_numericality_of(:forum_post_id) }
 
   it { should validate_numericality_of(:tutor_id) }
 

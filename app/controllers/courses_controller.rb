@@ -1,16 +1,18 @@
 class CoursesController < ApplicationController
 
-  before_action :check_for_old_url_format, only: :show
+  #before_action :check_for_old_url_format, only: :show
 
   def show
     @mathjax_required = true
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+
     if @course
       if @course.corporate_customer_id
         if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
           redirect_to library_url
         end
       end
+
       if @course
         @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
       end
@@ -25,10 +27,16 @@ class CoursesController < ApplicationController
 
       if @course_module_element.nil? && @course_module.nil?
 
-        # The URL is out of date or wrong.
-        flash[:warning] = t('controllers.courses.show.warning')
-        Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-        redirect_to library_special_link(@course)
+        @question_bank = @course.try(:question_bank)
+        if @question_bank.nil?
+          # The URL is out of date or wrong.
+          flash[:warning] = t('controllers.courses.show.warning')
+          Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+          redirect_to library_special_link(@course)
+        else
+          set_up_question_bank
+
+        end
       else
         # The URL worked out Okay
         reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
@@ -225,9 +233,6 @@ class CoursesController < ApplicationController
         corporate_customer_id: current_user.try(:corporate_customer_id)
     )
     @number_of_questions = @question_bank.number_of_questions
-    @number_of_easy_questions = @question_bank.easy_questions.to_i
-    @number_of_medium_questions = @question_bank.medium_questions.to_i
-    @number_of_hard_questions = @question_bank.hard_questions.to_i
 
     @number_of_questions.times do
       @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
@@ -235,12 +240,15 @@ class CoursesController < ApplicationController
 
     @strategy = @question_bank.question_selection_strategy
     all_questions = QuizQuestion.where(subject_course_id: @question_bank.subject_course_id)
-    all_easy_ids = all_questions.all_easy.map(&:id)
-    all_medium_ids = all_questions.all_medium.map(&:id)
-    all_difficult_ids = all_questions.all_difficult.map(&:id)
-    @easy_ids = all_easy_ids.sample(@number_of_easy_questions)
-    @medium_ids = all_medium_ids.sample(@number_of_medium_questions)
-    @difficult_ids = all_difficult_ids.sample(@number_of_hard_questions)
+    final_quiz_quizzes = CourseModuleElementQuiz.all_for_final_quiz
+    final_quiz_questions = all_questions.where(course_module_element_quiz_id: final_quiz_quizzes)
+
+    all_ids = final_quiz_questions.map(&:id)
+
+    @ids = all_ids.sample(@number_of_questions)
+    @easy_ids = @ids
+    @medium_ids = []
+    @difficult_ids = []
     @all_ids = @easy_ids + @medium_ids + @difficult_ids
     @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
     @first_attempt = @course_module_element_user_log.recent_attempts.length == 0

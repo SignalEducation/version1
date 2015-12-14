@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  forum_topic_id            :integer
 #  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
@@ -34,7 +33,6 @@ FactoryGirl.define do
     estimated_time_in_seconds   1
     course_module_id            1
     sorting_order               1
-    forum_topic_id              1
     tutor_id                    1
     related_quiz_id             nil
     related_video_id            1
