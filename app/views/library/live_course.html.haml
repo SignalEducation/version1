@@ -118,7 +118,7 @@
           %h3
             =t('views.subject_courses.show.description')
           %p
-            =@course.try(:description)
+            =@course.try(:description).html_safe
           %h3.l-margin-top-big
             =t('views.subject_courses.show.info')
           %ul.lined-list
