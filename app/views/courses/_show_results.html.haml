@@ -3,8 +3,8 @@
     =t('views.courses.show_results.h1')
     =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.question_bank.try(:name)
 
-  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary
-    Results Summary
+  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary{style: 'border: 2px solid #4ACF4D;'}
+    &#60; Back to Results
   #results
     %h3.l-margin-top-big.l-margin-bottom-big
       ='Score:'
