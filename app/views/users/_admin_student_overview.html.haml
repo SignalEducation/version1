@@ -1,0 +1,70 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .corporate-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered
+                %tbody
+                  %tr
+                    %td.col-sm-4=t('views.users.form.guid')
+                    %td.col-sm-8=@user.guid
+                  %tr
+                    %td.col-sm-4=t('views.users.form.login_count')
+                    %td.col-sm-8=@user.login_count
+                  %tr
+                    %td.col-sm-4=t('views.users.form.failed_login_count')
+                    %td.col-sm-8=@user.failed_login_count
+                  %tr
+                    %td.col-sm-4=t('views.users.form.last_request_at')
+                    %td.col-sm-8
+                      -if @user.last_request_at
+                        =@user.last_request_at.to_s(:standard)
+                  %tr
+                    %td.col-sm-4=t('views.users.form.current_login_at')
+                    %td.col-sm-8
+                      -if @user.current_login_at
+                        =@user.current_login_at.to_s(:standard)
+                  %tr
+                    %td.col-sm-4=t('views.users.form.last_login_at')
+                    %td.col-sm-8
+                      -if @user.last_login_at
+                        =@user.last_login_at.to_s(:standard)
+                  %tr
+                    %td.col-sm-4=t('views.users.form.current_login_ip')
+                    %td.col-sm-8=@user.current_login_ip
+                  %tr
+                    %td.col-sm-4=t('views.users.form.last_login_ip')
+                    %td.col-sm-8=@user.last_login_ip
+                  %tr
+                    %td.col-sm-4=t('views.users.form.active')
+                    %td.col-sm-8=tick_or_cross(@user.active)
+                  %tr
+                    %td.col-sm-4=t('views.users.form.user_group_id')
+                    %td.col-sm-8=link_to @user.user_group.name, @user.user_group
+                  %tr
+                    %td.col-sm-4=t('views.users.form.password_reset_requested_at')
+                    %td.col-sm-8
+                      -if @user.password_reset_requested_at
+                        =@user.password_reset_requested_at.to_s(:standard)
+                  %tr
+                    %td.col-sm-4=t('views.users.form.password_reset_at')
+                    %td.col-sm-8
+                      -if @user.password_reset_at
+                        =@user.password_reset_at.to_s(:standard)
+                  %tr
+                    %td.col-sm-4=t('views.users.form.stripe_customer_id')
+                    %td.col-sm-8=@user.stripe_customer_id
+                  -if @user.corporate_customer_id
+                    %tr
+                      %td.col-sm-4=t('views.users.form.corporate_customer_id')
+                      %td.col-sm-8=# todo @user.corporate_customer.try(:name)
+              %p
+                -if current_user.admin?
+                  =link_to sanitize('&larr; ' + t('views.users.index.h1')), users_url
+=render partial: 'layouts/new_footer'

@@ -1,5 +1,7 @@
 -if current_user && current_user.corporate_customer?
   =render partial: 'corporate_customer_account'
+-elsif current_user.admin?
+  =render partial: 'admin_student_overview'
 -else
   =render partial: 'student_account'
 
