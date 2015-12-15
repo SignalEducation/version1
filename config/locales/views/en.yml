@@ -804,24 +804,6 @@ en:
       modal:
         h1: Upload A File
 
-    stripe_developer_calls:
-      form:
-        user_id: User
-        params_received: Params received
-        params_received_placeholder: '{"name":"something","amount":123}'
-        prevent_delete: Prevent deletion
-
-      edit:
-        h1: Edit Stripe Developer Call
-
-      index:
-        h1: Stripe Developer Calls
-
-      new:
-        h1: New Stripe Developer Call
-
-      show:
-        h1: Stripe Developer Call
 
     student_sign_ups:
       show:
