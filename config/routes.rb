@@ -12,10 +12,7 @@ Rails.application.routes.draw do
   get '500' => redirect('500-page')
 
   namespace :api do
-    get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
-    get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
     post 'stripe_v01', to: 'stripe_v01#create'
-    post 'stripe_dev/:dev_name', to: 'stripe_dev#create'
     resources :user_activities, only: :create
   end
 
