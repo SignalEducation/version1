@@ -1032,12 +1032,12 @@ en:
       show:
         h1: Account
         edit: Edit Account
-        add_new_card: "Add New Card"
+        add_new_card: Update Card Info
         change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
           h4: Change your password
-        cancel_your_subscription_plan: "Would you like to cancel your subscription?"
+        cancel_your_subscription_plan: Cancel Recurring Payments
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
@@ -1063,15 +1063,15 @@ en:
           referral_code: Referral Code
           your_referral_code: Your Referral Code
         upgrade_now: Upgrade Now
-        upgrade_subscription_plan: Edit Your Subscription
+        upgrade_subscription_plan: Upgrade Subscription
         use_this_card: "Use this card"
         your_card_details: Update Payment Info
         your_invoices: Your Invoices
-        your_next_payment_will_be_on: "Your next payment will be processed on"
+        your_next_payment_will_be_on: "Next Bill Due: "
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
         your_plan_will_expire_on: "Your plan is set to expire on"
-        your_subscription: Current Subscription
+        your_subscription: My Subscription
         you_dont_have_referral_code: "You don't have a referral code Yet."
         total_number_of_referred_users: Total number of referred users
         number_of_referred_users_this_month: Number of referred users this month
