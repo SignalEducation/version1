@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203161158) do
+ActiveRecord::Schema.define(version: 20151215134206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -633,17 +633,6 @@ ActiveRecord::Schema.define(version: 20151203161158) do
   add_index "stripe_api_events", ["guid"], name: "index_stripe_api_events_on_guid", using: :btree
   add_index "stripe_api_events", ["processed"], name: "index_stripe_api_events_on_processed", using: :btree
   add_index "stripe_api_events", ["processed_at"], name: "index_stripe_api_events_on_processed_at", using: :btree
-
-  create_table "stripe_developer_calls", force: :cascade do |t|
-    t.integer  "user_id"
-    t.text     "params_received"
-    t.boolean  "prevent_delete",  default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "stripe_developer_calls", ["prevent_delete"], name: "index_stripe_developer_calls_on_prevent_delete", using: :btree
-  add_index "stripe_developer_calls", ["user_id"], name: "index_stripe_developer_calls_on_user_id", using: :btree
 
   create_table "student_exam_tracks", force: :cascade do |t|
     t.integer  "user_id"
