@@ -1071,7 +1071,7 @@ en:
           h3: "Undo Your Account Cancellation"
           features_and_benefits: "Don't give up! You can do it, and the whole Learn Signal community are here to help. It's not too late to keep uninterrupted access to your account."
           button_call_to_action: 'Un-cancel Now'
-        re_subscribe_plan: 'Thank you for reactivating'
+        re_subscribe_plan: Select a Plan below to reactivate your account
         tabs:
           personal_details: Personal details
           corporation: Corporation
