@@ -35,7 +35,7 @@
                             .col-sm-10.col-sm-offset-1.l-margin-top-big.l-margin-bottom-big
                               .col-sm-6
                                 -#%h4=t("views.general.sibscription_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}") + " - #{number_in_local_currency(@current_subscription.subscription_plan.price, @current_subscription.subscription_plan.currency_id)}"
-                                .row.l-margin-bottom-big
+                                .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
                                   %h4
                                     ="Memeber since: "
                                     &nbsp;
@@ -77,41 +77,29 @@
                                   %h3=t('views.users.show.un_cancel_subscription.h3')
                                   =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
 
+
                                 -else
-                                  -if @current_subscription.upgrade_options.count > 0
-                                    .row
-                                      .col-sm-12
-                                        =link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-purple  l-margin-bottom', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
-                                        =link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-cyan  l-margin-bottom'
-                                    %br/
-                                  -else
-                                    %p=t('views.users.show.no_upgrade_options_available')
-                                  -if @current_subscription.current_status == 'active'
-                                    =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}, class: 'btn btn-red l-margin-top'
-                                  -elsif !@current_subscription.current_status.include?('canceled')
-                                    =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
+                                  .row
+                                    .col-sm-10.col-md-offset-2
+                                      =link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-purple  l-margin-bottom', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
+                                      =link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-cyan l-margin-bottom'
+                                      -if @current_subscription.current_status == 'active'
+                                        =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}, class: 'btn btn-red l-margin-bottom'
+                                      -elsif !@current_subscription.current_status.include?('canceled')
+                                        =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
 
 
                     .row
                       .col-md-12
-                        .no-image-box-item
-                          .col-md-8#invoices-panel
-                            %h2.l-margin-bottom
-                              =t('views.users.show.your_invoices')
-                            -if Rails.env.development? || Rails.env.test? || current_user.admin?
-                              .pull-right
-                                -if @user.id == current_user.id
-                                  =link_to account_url(anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                                    %span.glyphicon.glyphicon-refresh
-                                    Refresh
-                                -else
-                                  =link_to user_url(id: @user.id, anchor: 'subscriptions', update: 'invoices'), title: t('views.general.tooltips.click_to_refresh'), class: 'btn btn-xs' do
-                                    %span.glyphicon.glyphicon-refresh
-                                    Refresh
-
-                            -@invoices = @user.invoices.paginate(page: 1, per_page: 50).all_in_order
+                        .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
+                          %h2.l-margin-bottom-big.text-center
+                            =t('views.users.show.your_invoices')
+                          .table-responsive
+                            -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
                             =render partial: 'invoices/index'
-                          -unless @current_subscription.current_status.include?('cancel')
+
+
+                          -#unless @current_subscription.current_status.include?('cancel')
                             .col-md-4#credit-cards-panel
                               %h2
                                 =t('views.users.show.your_card_details')

@@ -579,6 +579,7 @@ en:
         status: 'Status'
         vat_rate_id: "VAT rated"
         issued_at: "Issued at"
+        date: Date
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"
@@ -1066,7 +1067,7 @@ en:
         upgrade_subscription_plan: Upgrade Subscription
         use_this_card: "Use this card"
         your_card_details: Update Payment Info
-        your_invoices: Your Invoices
+        your_invoices: Payment History
         your_next_payment_will_be_on: "Next Bill Due: "
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
