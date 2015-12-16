@@ -264,6 +264,8 @@ GEM
     prawn (2.0.2)
       pdf-core (~> 0.6.0)
       ttfunk (~> 1.4.0)
+    prawn-table (0.2.2)
+      prawn (>= 1.3.0, < 3.0.0)
     protected_attributes (1.1.3)
       activemodel (>= 4.0.1, < 5.0)
     pry (0.10.1)
@@ -500,6 +502,7 @@ DEPENDENCIES
   pg
   poltergeist
   prawn
+  prawn-table
   protected_attributes
   pry-byebug
   pry-stack_explorer

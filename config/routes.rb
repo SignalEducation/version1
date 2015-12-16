@@ -98,6 +98,7 @@ Rails.application.routes.draw do
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     resources :invoices, only: [:index, :show]
+    get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'

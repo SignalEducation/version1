@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:profile, :profile_index]
@@ -158,6 +158,19 @@ class UsersController < ApplicationController
       redirect_to account_url
     end
   end
+
+  def subscription_invoice
+    invoice = Invoice.where(id: params[:id]).first
+    @invoice = invoice
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf = SubscriptionInvoice.new(@invoice, view_context)
+        send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
+      end
+    end
+  end
+
 
   protected
 

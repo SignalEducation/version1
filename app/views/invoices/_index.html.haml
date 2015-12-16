@@ -18,4 +18,6 @@
         %td
           =invoice.status
         %td
-          =link_to 'Print', invoice, class: 'btn btn-purple btn-small pull-right'
+          =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+            .btn.btn-purple.btn-small.pull-right
+              View
