@@ -161,13 +161,17 @@ class UsersController < ApplicationController
 
   def subscription_invoice
     invoice = Invoice.where(id: params[:id]).first
-    @invoice = invoice
-    respond_to do |format|
-      format.html
-      format.pdf do
-        pdf = SubscriptionInvoice.new(@invoice, view_context)
-        send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
+    if current_user.id == invoice.user_id
+      @invoice = invoice
+      respond_to do |format|
+        format.html
+        format.pdf do
+          pdf = SubscriptionInvoice.new(@invoice, view_context)
+          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
+        end
       end
+    else
+      redirect_to account_url
     end
   end
 
