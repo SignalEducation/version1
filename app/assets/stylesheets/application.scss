@@ -255,6 +255,24 @@ hr {
     max-width: 1200px;
   }
 }
+.l-wrap-medium {
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/1;
+  }
+  margin: 0 auto;
+  @include breakpoint(md-min) {
+    max-width: 1400px;
+  }
+}
+.l-wrap-big {
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+  margin: 0 auto;
+  @include breakpoint(md-min) {
+    max-width: 1600px;
+  }
+}
 .l-section {
   padding: 5rem 0;
   @include breakpoint(md-min) {
@@ -400,7 +418,14 @@ label, .label {
 .features-img {
   display: block;
   max-width: 110px;
+  max-height: 110px;
   margin: $gutter*2 auto;
+}
+.padded-features-img {
+  display: block;
+  max-width: 110px;
+  max-height: 110px;
+  margin: $gutter*2.5 auto;
 }
 .profile-single {
   padding-bottom: $gutter*2;
@@ -1381,3 +1406,4 @@ a.library-box-item {
 .selected {
   background: $green-1;
 }
+
