@@ -28,6 +28,17 @@
     }
   }
 }
+.hero-inner-wide {
+  padding: 2rem 2rem;
+  @include breakpoint(md-min) {
+    padding: 5rem 1rem;
+  }
+  .h1 {
+    @include breakpoint(lg-min) {
+      padding-right: 10%;
+    }
+  }
+}
 .hero-acca {
   background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
   color: $white;
@@ -66,5 +77,78 @@
   @include breakpoint(md-min) {
     background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-library.jpg") no-repeat;
     background-size: cover;
+  }
+}
+// Landing Page Images
+.home-image-1 {
+  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1002.png") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 500px;
+  @include breakpoint(md-min) {
+    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1002.png") 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 500px;
+  }
+}
+.home-image-2 {
+  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1001+(1).png") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 500px;
+  @include breakpoint(md-min) {
+    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1001+(1).png") 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 500px;
+  }
+}
+.home-image-3 {
+  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1003.png") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 500px;
+  @include breakpoint(md-min) {
+    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1003.png") 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 500px;
+  }
+}
+.blog-image-1 {
+  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/rsz_2t1nuhz0su7.jpg") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 250px;
+  @include breakpoint(md-min) {
+    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/rsz_2t1nuhz0su7.jpg") 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 250px;
+  }
+}
+.blog-image-2 {
+  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/RHCVE50EJR.jpg") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 250px;
+  @include breakpoint(md-min) {
+    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/RHCVE50EJR.jpg") 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 250px;
+  }
+}
+.blog-image-3 {
+  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/0E0M5W9O3V.jpg") 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 250px;
+  @include breakpoint(md-min) {
+    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/0E0M5W9O3V.jpg") 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 250px;
   }
 }
