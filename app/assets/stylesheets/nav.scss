@@ -46,12 +46,14 @@
       background: transparent;
     }
   }
-  &.sign-in-link {
+  &.sign-up-link {
     @include breakpoint(sm-min) {
       @include border-radius(3px);
-      border: 1px solid rgba($white, 0.2);
+      border: 1px solid $red-1;
+      color: $red-1;
       &:hover {
-        border: 1px solid rgba($white, 0.5);
+        border: 1px solid darken($red-1, 15%);
+        color: $red-1 darken($red-1, 15%);
       }
     }
   }

@@ -1,4 +1,4 @@
-.hero-acca
+.hero-business
   -if flash[:success] || flash[:error] || flash[:warning]
     =render partial: 'layouts/flash_messages'
   .header{role: 'banner'}
@@ -21,27 +21,28 @@
               %li
                 =link_to 'Courses', library_url
               %li
-                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
+                =link_to 'Sign In', sign_in_url
               %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+                %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
 
   .hero-inner-small
     .l-wrap
       .container-fluid
         .row
-          .col-sm-8.col-md-10.col-lg-10
-            %p.h5.h-white
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white.l-margin-bottom-huge
               ANYWHERE, ANYTIME
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
               Unleash your team’s potential
             %p.h7
-              Give your staff access to a library of on-demand courses. Taught by experts. Delivered online to put the learner in control.
+              Give your staff access to a library of on-demand courses. Taught by experts.
 
 
             %br/
             %br/
-            .col-sm-8{style: 'padding-left: 0px;'}
-              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}Request Demo
+            .col-sm-6{style: 'padding-left: 0px; padding-bottom: 200px;'}
+              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}
+                ='Start Free Trial'
 
 .course-types
   .l-wrap-big
@@ -49,7 +50,7 @@
       .container-fluid
         .row
           .col-sm-12
-            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
               Browse Courses
         .row
           .col-sm-4
@@ -83,7 +84,7 @@
       .container-fluid
         .row
           .col-sm-12
-            %h2.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
               For Businesses
         .row
           .col-sm-4
@@ -113,7 +114,7 @@
             %p.h5.text-center
               Become a member
             %p.h2.text-center
-              Start your Free Business Account
+              Start Your Free Business Account
               %span.ico-arrow-right-r
 
 :javascript
