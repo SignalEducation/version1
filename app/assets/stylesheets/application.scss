@@ -177,6 +177,9 @@ p, .p, ol, .ol, ul, .ul, address, dl {
   &.p-white {
     color: lighten($purple-1, 40%);
   }
+  &.big {
+    font-size: large;
+  }
 }
 hr {
   border-color: lighten($purple-1, 60%);
