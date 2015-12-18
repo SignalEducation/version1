@@ -22,6 +22,9 @@ class SubscriptionPlansController < ApplicationController
                                                             .in_currency(@currency_id)
                                                             .all_active
                                                             .all_in_order
+    @student_plan_1 = @student_subscription_plans[0]
+    @student_plan_2 = @student_subscription_plans[1]
+    @student_plan_3 = @student_subscription_plans[2]
 
     @corporate_subscription_plans = SubscriptionPlan
                                         .where('price > 0.0')
@@ -33,10 +36,10 @@ class SubscriptionPlansController < ApplicationController
                                         .all_active
                                         .all_in_display_order
 
-    @first_plan = @corporate_subscription_plans[0]
-    @second_plan = @corporate_subscription_plans[1]
-    @third_plan = @corporate_subscription_plans[2]
-    @fourth_plan = @corporate_subscription_plans[3]
+    @corp_plan_1 = @corporate_subscription_plans[0]
+    @corp_plan_2 = @corporate_subscription_plans[1]
+    @corp_plan_3 = @corporate_subscription_plans[2]
+    @corp_plan_4 = @corporate_subscription_plans[3]
 
     seo_title_maker('Pricing', nil, nil)
   end
