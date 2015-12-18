@@ -1,8 +1,8 @@
 .hero-home {
-  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") 50% 0 no-repeat;
+  background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/home-page-1003.png") 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/hero-bg.jpg") no-repeat;
+    background: $purple-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/home-page-1003.png") no-repeat;
     background-size: cover;
   }
 }
@@ -44,6 +44,14 @@
   color: $white;
   @include breakpoint(md-min) {
     background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
+    background-size: cover;
+  }
+}
+.hero-business {
+  background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/business-home-1001.png") 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/business-home-1001.png") no-repeat;
     background-size: cover;
   }
 }
@@ -116,6 +124,10 @@
     min-height: 500px;
   }
 }
+
+
+
+
 .blog-image-1 {
   background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/rsz_2t1nuhz0su7.jpg") 50% 0 no-repeat;
   color: $white;

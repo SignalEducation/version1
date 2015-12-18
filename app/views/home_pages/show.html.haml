@@ -23,23 +23,25 @@
               %li
                 =link_to 'Courses', library_url
               %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+                =link_to 'Sign In', sign_in_url
+              %li
+                %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
 
   .hero-inner#sign-up
     .l-wrap-medium
       .container-fluid
         .row
           .col-sm-6.col-md-8.col-lg-8
-            %p.h5.h-white
+            %p.h5.h-white.l-margin-bottom-huge
               Anywhere, Anytime
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
               The First Ever On-Demand training library for business professionals
             -country_count = '83 Countries'
 
             %p.h7
-              ="Students in "
+              ="Learners in "
               =link_to country_count, '#', class: 'no-link-style'
-              ="are using our platform to progress their careers."
+              ="are using our platform to progress their careers"
           .col-sm-6.col-md-4.col-lg-4
             %p.h5.h-white.l-margin-bottom
               ='Sign Up for your 7-day free trial'
@@ -52,7 +54,7 @@
       .container-fluid
         .row
           .col-sm-12
-            %h2.h2.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
               Browse Courses
         .row
           .col-sm-4
@@ -78,7 +80,7 @@
                   %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
                     Business Professionals
                   %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Learn fundamental business skills, from business analysis, project management, critical thinking and problem solving.
+                    Leadership, Management and Communication skills to prepare your future business leaders.
 
 .business
   .l-wrap
@@ -86,8 +88,8 @@
       .container-fluid
         .row
           .col-sm-12
-            %h2.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big
-              For Individuals
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              Features
         .row
           .col-sm-4
             %h3.l-margin-bottom-big
@@ -114,7 +116,7 @@
       .container-fluid
         .row
           .col-sm-12
-            %h2.h2.h-center.h-separator.h-separator-center
+            %h2.h2.upcase.h-center.h-separator.h-separator-center
               What's New
         .row
           .col-sm-4
@@ -122,25 +124,34 @@
               %h3.h4.l-margin-bottom-big
                 %a{href: 'http://blog.learnsignal.com/on-demand/maximise-employee-memory-retention-with-on-demand-training', target: '_blank'}
                   .blog-image-1
-
                   %br/
-                  ='Maximise employee memory retention with on-demand training'
+                  %br/
+                  %br/
+                  %h3.h3.text-center
+                    ='Maximise employee memory retention with on-demand training'
+
           .col-sm-4
             .hero-inner-wide
               %h3.h4.l-margin-bottom-big
                 %a{href: 'http://blog.learnsignal.com/on-demand/meeting-millennials-needs-with-on-demand-learning', target: '_blank'}
                   .blog-image-2
-
                   %br/
-                  ='Meeting millennials’ needs with on-demand learning'
+                  %br/
+                  %br/
+                  %h3.h3.text-center
+                    ='Meeting millennials’ needs with on-demand learning'
+
           .col-sm-4
             .hero-inner-wide
               %h3.h4.l-margin-bottom-big
                 %a{href: 'http://blog.learnsignal.com/on-demand/can-e-learning-really-improve-employee-retention', target: '_blank'}
                   .blog-image-3
-
                   %br/
-                  ='Can e-learning really improve employee retention?'
+                  %br/
+                  %br/
+                  %h3.h3.text-center
+                    ='Can e-learning really improve employee retention?'
+
 
 .testimonials
   .l-wrap
@@ -151,7 +162,7 @@
             .col-sm-12
               %h2.h5.text-center
                 Testimonials
-              %p.h2.text-center.h-separator.h-separator-center
+              %p.h2.upcase.text-center.h-separator.h-separator-center
                 What your peers are saying
           .row
             .col-sm-6.col-sm-offset-3
