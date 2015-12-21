@@ -54,7 +54,7 @@
               Browse Courses
         .row
           .col-sm-4
-            =link_to library_url do
+            =link_to library_url, class: 'image-link' do
               .home-image-1
                 .hero-inner-wide
                   %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
@@ -62,7 +62,7 @@
                   %p.p{style: 'padding-top: 50px; color: #fff;'}
                     Revision courses for ACCA, CFA and FRM professional exams.
           .col-sm-4
-            =link_to library_special_link(@group2) do
+            =link_to library_special_link(@group2), class: 'image-link' do
               .home-image-2
                 .hero-inner-wide
                   %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
@@ -70,7 +70,7 @@
                   %p.p{style: 'padding-top: 50px; color: #fff;'}
                     Develop your team's skills in Excel, Access and Tableau.
           .col-sm-4
-            =link_to library_special_link(@group3) do
+            =link_to library_special_link(@group3), class: 'image-link' do
               .home-image-3
                 .hero-inner-wide
                   %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}

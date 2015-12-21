@@ -2,7 +2,7 @@
   background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/home-page-1003.png") 20% 0 no-repeat;
   color: $white;
   background-size: cover;
-  min-height: 1000px;
+  min-height: 1100px;
   @include breakpoint(md-min) {
     background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/home-page-1003.png") no-repeat;
     background-size: cover;
@@ -52,6 +52,7 @@
 .hero-business {
   background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/business-home-1001.png") 50% 0 no-repeat;
   color: $white;
+  min-height: 1100px;
   @include breakpoint(md-min) {
     background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/business-home-1001.png") no-repeat;
     background-size: cover;
