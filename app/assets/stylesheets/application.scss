@@ -360,7 +360,7 @@ hr {
   height: 40px;
   line-height: 40px;
   text-transform: none;
-  padding: 0 $gutter;
+  padding: 0;
   text-align: center;
   display: block;
   @include opacity(0.6);
@@ -1489,4 +1489,9 @@ a.library-box-item {
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
   }
+}
+
+a.image-link {
+  color: $white;
+
 }
