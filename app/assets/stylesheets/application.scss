@@ -1100,7 +1100,6 @@ a.box-item {
 #referral-link {
   a:hover {
     text-decoration: underline;
-
   }
 }
 
@@ -1131,7 +1130,6 @@ a.box-item {
 .account-tab {
   padding: 13px;
   padding-left:0px;
-  //text-decoration: underline;
   border-bottom: 4px solid gainsboro ;
   a {
     color: $gray-1;
@@ -1143,7 +1141,6 @@ a.box-item {
     }
     text-decoration: initial;
     margin-right: 20px;
-
     &:hover {
       padding-bottom: 15px;
       //border-bottom: 4px solid;

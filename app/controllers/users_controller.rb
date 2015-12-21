@@ -161,13 +161,19 @@ class UsersController < ApplicationController
 
   def subscription_invoice
     invoice = Invoice.where(id: params[:id]).first
+    Payday::Config.default.invoice_logo = "#{Rails.root}/app/assets/images/ls-logo-red.svg"
+    Payday::Config.default.company_name = "LearnSignal"
+    Payday::Config.default.company_details = "27 South Frederick Street, Dublin 2, Ireland"
+
     if current_user.id == invoice.user_id
       @invoice = invoice
       respond_to do |format|
         format.html
         format.pdf do
-          pdf = SubscriptionInvoice.new(@invoice, view_context)
-          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
+          Payday::Config.default.currency = "#{@invoice.currency.iso_code.downcase}"
+          pdf = Payday::Invoice.new(invoice_number: @invoice.id)
+          pdf.line_items << Payday::LineItem.new(price: @invoice.total, quantity: 1, description: "LearnSignal Quaterly Subscription")
+          send_data pdf.render_pdf, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
         end
       end
     else

@@ -34,11 +34,10 @@
                           .row
                             .col-sm-10.col-sm-offset-1.l-margin-top-big.l-margin-bottom-big
                               .col-sm-6
-                                -#%h4=t("views.general.sibscription_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}") + " - #{number_in_local_currency(@current_subscription.subscription_plan.price, @current_subscription.subscription_plan.currency_id)}"
                                 .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
                                   %h4
                                     ="Memeber since: "
-                                    &nbsp;
+                                    &nbsp;og
                                     =humanize_datetime(@user.created_at)
                                   %br/
                                   %h4

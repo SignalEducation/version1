@@ -29,8 +29,8 @@ gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'prawn' # PDF creator
-gem 'prawn-table'
 gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
+gem 'payday' #Invoice PDF's
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
 gem 'multipart-post' #To allow uploading wistia api
