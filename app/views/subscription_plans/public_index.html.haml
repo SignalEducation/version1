@@ -108,12 +108,12 @@
               -if @corp_plan_1
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
                   &#160;
-                  =number_in_local_currency_no_precision(@corp_plan_1.price, @corp_plan_1.currency)
+                  =number_in_local_currency_no_precision(@corp_plan_1.try(:price), @corp_plan_1.try(:currency))
                   &#47;
                   User
               .l-margin-bottom.l-margin-top-big
                 %h5.plan-title
-                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_1.payment_frequency_in_months}")}"
+                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_1.try(:payment_frequency_in_months) || 1}")}"
                 %br/
                 %h5.plan-title
                   Reporting & Analytics
@@ -151,12 +151,12 @@
               -if @corp_plan_2
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
                   &#160;
-                  =number_in_local_currency_no_precision(@corp_plan_2.price, @corp_plan_2.currency)
+                  =number_in_local_currency_no_precision(@corp_plan_2.try(:price), @corp_plan_2.try(:currency))
                   &#47;
                   User
               .l-margin-bottom.l-margin-top-big
                 %h5.plan-title
-                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_2.payment_frequency_in_months}")}"
+                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_2.try(:payment_frequency_in_months) || 3}")}"
                 %br/
                 %h5.plan-title
                   Reporting & Analytics
@@ -193,12 +193,12 @@
               -if @corp_plan_3
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
                   &#160;
-                  =number_in_local_currency_no_precision(@corp_plan_3.price, @corp_plan_3.currency)
+                  =number_in_local_currency_no_precision(@corp_plan_3.try(:price), @corp_plan_3.try(:currency))
                   &#47;
                   User
               .l-margin-bottom.l-margin-top-big
                 %h5.plan-title
-                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_3.payment_frequency_in_months}")}"
+                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_3.try(:payment_frequency_in_months) || 12}")}"
                 %br/
                 %h5.plan-title
                   Reporting & Analytics
