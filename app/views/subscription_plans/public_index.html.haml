@@ -2,82 +2,225 @@
   .container-fluid
     .row.l-margin-bottom
       .col-md-12.text-center
-        %h1.h1.l-margin-bottom.l-margin-top.text-center{style: 'letter-spacing:1.5px; '}
+        %h1.h1.bold.h-separator.h-separator-center.l-margin-bottom.l-margin-top.text-center{style: 'letter-spacing:1.5px; '}
           =t('views.subscription_plans.public_index.h1')
 
     .row.l-margin-top.l-margin-bottom
-      .col-md-10.col-md-offset-1
-        .col-md-6
-          %h2.text-center.h-separator.h-separator-center
-            For businesses
-          .l-wrap
-            %p.text-center
-              Learn Signal provides flexible pricing options for organisations, with a range of tailored options to suit small teams or entire organisations. Realtime reporting and full content control is available through management dashboards, providing the ability to track, measure and record employee progress rates.
-        .col-md-6
-          %h2.text-center.h-separator.h-separator-center
-            For individuals
-          .l-wrap
-            %p.text-center
-              With a whole host of courses to choose from to enhance your professional development, there are a range of subscription options available to suit your specific needs. Your own personalised dashboard enables you to track and measure your progress along each learning module.
+
+      .col-md-10.col-md-offset-1.l-margin-bottom-big
+
+        %h2.upcase.text-center
+          =image_tag('icon-man.png', class: 'features-img')
+          Individual Plans
+        .col-md-4
+          .pricing-box-purple.l-margin-top-big
+            .plan-header{style: 'background: #6E6D75;'}
+              %h3.h3.plan-title{style: 'color: #fff;'}
+                Monthly
+            .plan-inner{style: 'background: #6E6D75;'}
+              -if @student_plan_1
+                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
+                  =number_in_local_currency_no_precision(@student_plan_1.price, @student_plan_1.currency)
+                  &#47;
+                  =t("views.general.payment_intervals.a#{@student_plan_1.payment_frequency_in_months}")
+              .l-margin-bottom.l-margin-top-big
+                %h5.plan-title
+                  Reporting & Analytics
+                %br/
+                %h5.plan-title
+                  Expert Author Network
+                %br/
+                %h5.plan-title
+                  Course Completion Certificates
 
 
-      .col-md-10.col-md-offset-1
-        .col-md-6
-          .plan.plan-yearly
-            .plan-header
-              %h5.h5.plan-title
-                Access all courses
-            .plan-inner
-              %h5.h5.plan-text
-                Per User
-              .l-section-extra-small
-                -if @first_plan
-                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
-                    = '1 - 24 Users'
-                    &#160;
-                    &#160;
-                    &#160;
-                    =number_in_local_currency_no_precision(@first_plan.price, @first_plan.currency)
-                    &#47;
-                    =t("views.general.payment_intervals.a#{@first_plan.payment_frequency_in_months}")
-                -if @second_plan
-                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
-                    ='25 - 49 Users'
-                    &#160;
-                    &#160;
-                    &#160;
-                    =number_in_local_currency_no_precision(@second_plan.price, @second_plan.currency)
-                    &#47;
-                    =t("views.general.payment_intervals.a#{@second_plan.payment_frequency_in_months}")
-                -if @third_plan
-                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
-                    ='50 - 99 Users'
-                    &#160;
-                    &#160;
-                    &#160;
-                    =number_in_local_currency_no_precision(@third_plan.price, @third_plan.currency)
-                    &#47;
-                    =t("views.general.payment_intervals.a#{@third_plan.payment_frequency_in_months}")
+            .plan-footer
+              %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}, style: 'text-decoration: none;'}
+                %h4.h4.plan-title
+                  ='Sign Up Now'
 
-          .text-center.l-margin-bottom
-            %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}MAKE AN ENQUIRY
+        .col-md-4
+          .pricing-box-cyan.l-margin-top-big
+            .plan-header{style: 'background: #6E6D75;'}
+              %h3.h3.plan-title{style: 'color: #fff;'}
+                Quarterly
+            .plan-inner{style: 'background: #6E6D75;'}
+              -if @student_plan_2
+                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
+                  =number_in_local_currency_no_precision(@student_plan_2.price, @student_plan_2.currency)
+                  &#47;
+                  =t("views.general.payment_intervals.a#{@student_plan_2.payment_frequency_in_months}")
+              .l-margin-bottom.l-margin-top-big
+                %h5.plan-title
+                  Reporting & Analytics
+                %br/
+                %h5.plan-title
+                  Expert Author Network
+                %br/
+                %h5.plan-title
+                  Course Completion Certificates
 
 
+            .plan-footer
+              %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}, style: 'text-decoration: none;'}
+                %h4.h4.plan-title
+                  ='Sign Up Now'
 
-        .col-md-6
-          .plan.plan-monthly
-            .plan-header
-              %h5.h5.plan-title
-                Access all courses
-            .plan-inner
-              %h5.h5.plan-text
-                Per User
-              .l-section-extra-small
-                -@student_subscription_plans.each do |plan|
-                  %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big
-                    =number_in_local_currency_no_precision(plan.price, plan.currency)
-                    &#47;
-                    =t("views.general.payment_intervals.a#{plan.payment_frequency_in_months}")
+        .col-md-4
+          .pricing-box-red.l-margin-top-big
+            .plan-header{style: 'background: #6E6D75;'}
+              %h3.h3.plan-title{style: 'color: #fff;'}
+                Yearly
+            .plan-inner{style: 'background: #6E6D75;'}
+              -if @student_plan_3
+                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
+                  =number_in_local_currency_no_precision(@student_plan_3.price, @student_plan_3.currency)
+                  &#47;
+                  =t("views.general.payment_intervals.a#{@student_plan_3.payment_frequency_in_months}")
+              .l-margin-bottom.l-margin-top-big
+                %h5.plan-title
+                  Reporting & Analytics
+                %br/
+                %h5.plan-title
+                  Expert Author Network
+                %br/
+                %h5.plan-title
+                  Course Completion Certificates
 
-          .text-center.l-margin-bottom
-            %a.signupModal{href: '#', class: 'btn btn-red btn-wide', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
+
+            .plan-footer
+              %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}, style: 'text-decoration: none;'}
+                %h4.h4.plan-title
+                  ='Sign Up Now'
+
+      .col-md-10.col-md-offset-1.l-margin-top
+        %hr/
+        %h2.upcase.text-center
+          =image_tag('building-icon.png', class: 'features-img')
+          Business Plans
+
+        .col-md-4
+          .pricing-box-purple.l-margin-top-big
+            .plan-header{style: 'background: #6E6D75;'}
+              %h4.h4.plan-title{style: 'color: #fff;'}
+                = '1 - 24 Users'
+            .plan-inner{style: 'background: #6E6D75;'}
+              -if @corp_plan_1
+                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
+                  &#160;
+                  =number_in_local_currency_no_precision(@corp_plan_1.try(:price), @corp_plan_1.try(:currency))
+                  &#47;
+                  User
+              .l-margin-bottom.l-margin-top-big
+                %h5.plan-title
+                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_1.try(:payment_frequency_in_months) || 1}")}"
+                %br/
+                %h5.plan-title
+                  Reporting & Analytics
+                %br/
+                %h5.plan-title
+                  Easy Registration
+                %br/
+                %h5.plan-title
+                  Learning Paths
+                %br/
+                %h5.plan-title
+                  Expert Author Network
+                %br/
+                %h5.plan-title
+                  Course Completion Certificates
+                %br/
+                %h5.plan-title
+                  Control Member Access
+                %br/
+                %h5.plan-title
+                  Upload your own content
+            .plan-footer
+              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, style: 'text-decoration: none;'}
+
+                %h4.h4.plan-title
+                  ='Contact Us'
+
+
+        .col-md-4
+          .pricing-box-cyan.l-margin-top-big
+            .plan-header{style: 'background: #6E6D75;'}
+              %h4.h4.plan-title{style: 'color: #fff;'}
+                ='25 - 49 Users'
+            .plan-inner{style: 'background: #6E6D75;'}
+              -if @corp_plan_2
+                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
+                  &#160;
+                  =number_in_local_currency_no_precision(@corp_plan_2.try(:price), @corp_plan_2.try(:currency))
+                  &#47;
+                  User
+              .l-margin-bottom.l-margin-top-big
+                %h5.plan-title
+                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_2.try(:payment_frequency_in_months) || 3}")}"
+                %br/
+                %h5.plan-title
+                  Reporting & Analytics
+                %br/
+                %h5.plan-title
+                  Easy Registration
+                %br/
+                %h5.plan-title
+                  Learning Paths
+                %br/
+                %h5.plan-title
+                  Expert Author Network
+                %br/
+                %h5.plan-title
+                  Course Completion Certificates
+                %br/
+                %h5.plan-title
+                  Control Member Access
+                %br/
+                %h5.plan-title
+                  Upload your own content
+            .plan-footer
+              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, style: 'text-decoration: none;'}
+                %h4.h4.plan-title
+                  ='Contact Us'
+
+
+        .col-md-4
+          .pricing-box-red.l-margin-top-big
+            .plan-header{style: 'background: #6E6D75;'}
+              %h4.h4.plan-title{style: 'color: #fff;'}
+                ='50 - 99 Users'
+            .plan-inner{style: 'background: #6E6D75;'}
+              -if @corp_plan_3
+                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
+                  &#160;
+                  =number_in_local_currency_no_precision(@corp_plan_3.try(:price), @corp_plan_3.try(:currency))
+                  &#47;
+                  User
+              .l-margin-bottom.l-margin-top-big
+                %h5.plan-title
+                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_3.try(:payment_frequency_in_months) || 12}")}"
+                %br/
+                %h5.plan-title
+                  Reporting & Analytics
+                %br/
+                %h5.plan-title
+                  Easy Registration
+                %br/
+                %h5.plan-title
+                  Learning Paths
+                %br/
+                %h5.plan-title
+                  Expert Author Network
+                %br/
+                %h5.plan-title
+                  Course Completion Certificates
+                %br/
+                %h5.plan-title
+                  Control Member Access
+                %br/
+                %h5.plan-title
+                  Upload your own content
+            .plan-footer
+              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, style: 'text-decoration: none;'}
+                %h4.h4.plan-title
+                  ='Contact Us'

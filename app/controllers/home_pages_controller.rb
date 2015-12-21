@@ -25,7 +25,9 @@ class HomePagesController < ApplicationController
       session.delete(:sign_up_errors)
       @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
       # @user.subscriptions.build(subscription_plan_id: SubscriptionPlan.where(price: 0.0).pluck(:id).first)
-
+      @group1 = Group.where(name_url: 'it-skills').first
+      @group2 = Group.where(name_url: 'it-skills').first
+      @group3 = Group.where(name_url: 'business').first
       if @home_page
         seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
         cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}

@@ -16,6 +16,7 @@ $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
 $purple-3: rgb(83, 84, 112);
 $purple-4: #9E9FAD;
+$purple-5: lighten($purple-1, 5%);
 $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
@@ -71,6 +72,15 @@ a.link-purple {
     color: $cyan-1;
   }
 }
+a.no-link-style {
+  color: $red-1;
+  text-decoration: underline;
+  &:hover {
+    color: $red-1;
+    text-decoration: underline;
+    cursor: default;
+  }
+}
 h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   position: relative;
   margin-top: 0;
@@ -91,6 +101,9 @@ h1, .h1 {
   @include breakpoint(md-min) {
     @include font-size(3.6);
   }
+  &.bold {
+    text-transform: uppercase;
+  }
 }
 .h1 {
   @extend .animated;
@@ -103,6 +116,9 @@ h2, .h2 {
   @include font-size(2.6);
   @include breakpoint(md-min) {
     @include font-size(3.0);
+  }
+  &.upcase {
+    text-transform: uppercase;
   }
 }
 h3, .h3 {
@@ -161,6 +177,9 @@ p, .p, ol, .ol, ul, .ul, address, dl {
   }
   &.p-white {
     color: lighten($purple-1, 40%);
+  }
+  &.big {
+    font-size: large;
   }
 }
 hr {
@@ -244,6 +263,24 @@ hr {
     max-width: 1200px;
   }
 }
+.l-wrap-medium {
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/1;
+  }
+  margin: 0 auto;
+  @include breakpoint(md-min) {
+    max-width: 1400px;
+  }
+}
+.l-wrap-big {
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+  margin: 0 auto;
+  @include breakpoint(md-min) {
+    max-width: 1600px;
+  }
+}
 .l-section {
   padding: 5rem 0;
   @include breakpoint(md-min) {
@@ -323,7 +360,7 @@ hr {
   height: 40px;
   line-height: 40px;
   text-transform: none;
-  padding: 0 $gutter;
+  padding: 0;
   text-align: center;
   display: block;
   @include opacity(0.6);
@@ -389,7 +426,14 @@ label, .label {
 .features-img {
   display: block;
   max-width: 110px;
+  max-height: 110px;
   margin: $gutter*2 auto;
+}
+.padded-features-img {
+  display: block;
+  max-width: 110px;
+  max-height: 110px;
+  margin: $gutter*2.5 auto;
 }
 .profile-single {
   padding-bottom: $gutter*2;
@@ -1353,7 +1397,6 @@ a.library-box-item {
 .library-box-item .panel-icon.icon-inner.icon-purple {
   background-color: $purple-1;
 }
-
 .library-box-item.panel {
   padding-left: 0px;
   padding-right:0px;
@@ -1361,7 +1404,6 @@ a.library-box-item {
   padding-bottom: 0px;
 
 }
-
 .question-bank-passed {
   color: green;
   //margin-bottom: 0px;
@@ -1369,4 +1411,87 @@ a.library-box-item {
 
 .selected {
   background: $green-1;
+}
+
+.pricing-box-purple {
+  display: block;
+  background: $purple-1;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.box-course {
+    text-align: center;
+    margin-top: $gutter*1.5;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .box-inner {
+      padding-top: $gutter*2.5;
+    }
+  }
+}
+.pricing-box-red {
+  display: block;
+  background: $red-1;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.box-course {
+    text-align: center;
+    margin-top: $gutter*1.5;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .box-inner {
+      padding-top: $gutter*2.5;
+    }
+  }
+}
+.pricing-box-cyan {
+  display: block;
+  background: $cyan-1;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+}
+
+a.image-link {
+  color: $white;
+
 }
