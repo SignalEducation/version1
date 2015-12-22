@@ -97,6 +97,11 @@ en:
         a3: Quarterly subscription
         a6: Half-yearly subscription
         a12: Yearly subscription
+      subscription_in_months:
+        a1: LearnSignal Monthly Subscription
+        a3: LearnSignal Quarterly Subscription
+        a6: LearnSignal Half-yearly Subscription
+        a12: Yearly subscription
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"

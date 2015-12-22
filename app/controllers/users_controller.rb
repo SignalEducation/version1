@@ -170,10 +170,11 @@ class UsersController < ApplicationController
       respond_to do |format|
         format.html
         format.pdf do
+          user = @invoice.user
           Payday::Config.default.currency = "#{@invoice.currency.iso_code.downcase}"
           sub_plan = @invoice.subscription.subscription_plan
-          pdf = Payday::Invoice.new(invoice_number: @invoice.id)
-          pdf.line_items << Payday::LineItem.new(price: @invoice.total, quantity: 1, description: "LearnSignal #{sub_plan} Subscription")
+          pdf = Payday::Invoice.new(invoice_number: @invoice.id, bill_to: "#{user.full_name}")
+          pdf.line_items << Payday::LineItem.new(price: @invoice.total, quantity: 1, description: t("views.general.subscription_in_months.a#{sub_plan.payment_frequency_in_months}"))
           send_data pdf.render_pdf, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
         end
       end
