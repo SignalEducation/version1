@@ -144,6 +144,8 @@
     =render partial: 'layouts/contact_modal'
     -unless current_user
       =render partial: 'layouts/sign_up_modal'
+    -if Rails.env.production?
+      =render partial: 'layouts/adroll'
 
 :javascript
     var nav = responsiveNav(".nav-collapse");
