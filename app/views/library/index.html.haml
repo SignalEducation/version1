@@ -27,11 +27,11 @@
               =link_to library_special_link(group), class: 'library-box-item panel text-center' do
                 .panel-icon.icon-big
                   %i.glyphicon.glyphicon-arrow-right
-                .panel-body.l-margin-bottom
+                .l-margin-bottom-big{style: 'min-height: 110px'}
                   %h3.text-bold.one-line-text.l-margin-bottom
                     =group.name
                   %p.l-margin-bottom-big
-                    =group.description.to_s.truncate(55)
+                    =group.description.to_s.truncate(100)
                   -#total_lesson = group.subject_courses.count
                   -#complete_lesson = group.subject_courses.count
                   -#total_lesson = 10
