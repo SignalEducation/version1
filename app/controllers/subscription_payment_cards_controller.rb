@@ -15,8 +15,8 @@ class SubscriptionPaymentCardsController < ApplicationController
     redirect_to account_url(anchor: 'subscriptions')
   end
 
-  def show
-    @cards = SubscriptionPaymentCard.where(user_id: current_user.id).all_in_order
+  def edit
+
   end
 
   def update

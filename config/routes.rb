@@ -34,7 +34,6 @@ Rails.application.routes.draw do
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'account', to: 'users#show', as: :account
-    get 'account/cards', to: 'subscription_payment_cards#show', as: :account_cards
     get 'profile/:id', to: 'users#profile', as: :profile
     get 'profiles', to: 'users#profile_index', as: :tutors
     post 'change_password', to: 'users#change_password', as: :change_password
@@ -114,7 +113,7 @@ Rails.application.routes.draw do
     get 'acca-schedule', to: 'study_schedules#acca_schedule'
     resources :subject_courses, concerns: :supports_reordering
     resources :subscriptions, only: [:create, :update, :destroy]
-    resources :subscription_payment_cards, only: [:create, :update]
+    resources :subscription_payment_cards, only: [:create, :update, :edit]
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :tutor_applications

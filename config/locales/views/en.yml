@@ -818,7 +818,7 @@ en:
 
     subscription_payment_cards:
       show:
-        h1: Your Payment Details
+        h1: Your Card Details
 
       form:
         make_default_card: Use this as your default Card
