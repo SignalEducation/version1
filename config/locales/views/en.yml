@@ -817,6 +817,9 @@ en:
         sub-head: "E-mail with activation link has been sent. Please check your inbox and click on the link to activate your LearnSignal account."
 
     subscription_payment_cards:
+      show:
+        h1: Your Payment Details
+
       form:
         make_default_card: Use this as your default Card
 
