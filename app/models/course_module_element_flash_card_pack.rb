@@ -28,8 +28,7 @@ class CourseModuleElementFlashCardPack < ActiveRecord::Base
   accepts_nested_attributes_for :flash_card_stacks, allow_destroy: true
 
   # validation
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :course_module_element_id, presence: true, on: :update
   validates :background_color, presence: true, length: {maximum: 255}
   validates :foreground_color, presence: true, length: {maximum: 255}
 

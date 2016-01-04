@@ -50,10 +50,8 @@ describe SubscriptionPlan do
   it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
 
   it { should validate_presence_of(:currency_id) }
-  it { should validate_numericality_of(:currency_id) }
 
   it { should validate_presence_of(:price) }
-  it { should validate_numericality_of(:price) }
 
   it { should validate_presence_of(:available_from) }
 
@@ -62,10 +60,8 @@ describe SubscriptionPlan do
   it { should_not allow_value(Proc.new{Time.now.gmtime.to_date }.call).for(:available_to) }
 
   it { should validate_presence_of(:trial_period_in_days) }
-  it { should validate_numericality_of(:trial_period_in_days) }
 
   it { should_not validate_presence_of(:subscription_plan_category_id) }
-  it { should validate_numericality_of(:subscription_plan_category_id) }
 
   it { should validate_length_of(:stripe_guid).is_at_most(255) }
 

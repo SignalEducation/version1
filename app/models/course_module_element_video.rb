@@ -30,8 +30,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   belongs_to :course_module_element
 
   # validation
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :course_module_element_id, presence: true, on: :update
   validates :video_id, presence: true, length: {maximum: 255}, on: :create
   #validates :duration, presence: true, numericality: true
   validates :tags, allow_nil: true, length: {maximum: 255}

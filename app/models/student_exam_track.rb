@@ -40,15 +40,9 @@ class StudentExamTrack < ActiveRecord::Base
              foreign_key: :latest_course_module_element_id
 
   # validation
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :latest_course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
   validates :session_guid, presence: true, length: { maximum: 255 }
-  validates :course_module_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_id, presence: true
 
   # callbacks
   before_save :set_count_of_fields

@@ -37,15 +37,10 @@ class UserNotification < ActiveRecord::Base
   # todo belongs_to :blog_post
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
   validates :subject_line, presence: true, length: { maximum: 255 }
   validates :content, presence: true
   validates :message_type, inclusion: {in: MESSAGE_TYPES}, length: { maximum: 255 }
-  validates :tutor_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :blog_post_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_validation { squish_fields(:subject_line, :content) }

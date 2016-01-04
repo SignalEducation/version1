@@ -42,10 +42,7 @@ class QuizQuestion < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_solutions, allow_destroy: true
 
   # validation
-  validates :course_module_element_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :course_module_element_id, presence: true, on: :update
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: { maximum: 255}
   validates :hints, allow_nil: true, length: {maximum: 65535}
   # todo validate :at_least_one_answer_is_correct

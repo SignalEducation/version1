@@ -52,20 +52,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_attempts
 
   # validation
-  validates :course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_jumbo_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true, length: {maximum: 255}
   validates :time_taken_in_seconds, presence: true
-  validates :course_module_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :question_bank_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 

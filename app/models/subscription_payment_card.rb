@@ -58,16 +58,13 @@ class SubscriptionPaymentCard < ActiveRecord::Base
              foreign_key: :account_country_id
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
   validates :stripe_card_guid, presence: true, length: { maximum: 255 }
   validates :status, inclusion: {in: STATUSES}, length: { maximum: 255 }
   validates :brand, presence: true, length: { maximum: 255 }
   validates :last_4, presence: true, length: { maximum: 255 }
   validates :expiry_month, presence: true
   validates :expiry_year, presence: true
-  validates :account_country_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates_length_of :address_line1, maximum: 255, allow_blank: true
   validates_length_of :account_country, maximum: 255, allow_blank: true
   validates_length_of :stripe_object_name, maximum: 255, allow_blank: true

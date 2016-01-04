@@ -22,10 +22,8 @@ class CompletionCertificate < ActiveRecord::Base
   belongs_to :subject_course_user_log
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
+  validates :subject_course_user_log_id, presence: true
   validates :guid, presence: true, uniqueness: true
 
   # callbacks

@@ -36,10 +36,6 @@ describe HomePage do
 
   it { should validate_presence_of(:seo_description) }
 
-
-  it { should_not validate_presence_of(:subscription_plan_category_id) }
-  it { should validate_numericality_of(:subscription_plan_category_id) }
-
   it { should validate_presence_of(:public_url) }
 
 

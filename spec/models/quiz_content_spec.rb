@@ -72,18 +72,14 @@ describe QuizContent do
   end
 
   it { should_not validate_presence_of(:quiz_question_id) }
-  it { should validate_numericality_of(:quiz_question_id) }
 
   it { should_not validate_presence_of(:quiz_answer_id) }
-  it { should validate_numericality_of(:quiz_answer_id) }
 
   it { should_not validate_presence_of(:quiz_solution_id) }
-  it { should validate_numericality_of(:quiz_solution_id) }
 
   it { should validate_presence_of(:text_content) }
 
   it { should validate_presence_of(:sorting_order) }
-  it { should validate_numericality_of(:sorting_order) }
 
   # callbacks
   it { should callback(:set_default_values).after(:initialize) }

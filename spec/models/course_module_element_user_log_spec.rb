@@ -53,13 +53,10 @@ describe CourseModuleElementUserLog do
 
   # validation
   it { should_not validate_presence_of(:course_module_element_id) }
-  it { should validate_numericality_of(:course_module_element_id) }
 
   it { should_not validate_presence_of(:course_module_jumbo_quiz_id) }
-  it { should validate_numericality_of(:course_module_jumbo_quiz_id) }
 
   it { should_not validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
@@ -73,12 +70,6 @@ describe CourseModuleElementUserLog do
     it { should validate_presence_of(:quiz_score_actual).on(:update) }
     it { should validate_presence_of(:quiz_score_potential).on(:update) }
   end
-
-  it { should_not validate_presence_of(:course_module_id) }
-  it { should validate_numericality_of(:course_module_id) }
-
-  it { should_not validate_presence_of(:corporate_customer_id) }
-  it { should validate_numericality_of(:corporate_customer_id) }
 
   # callbacks
   it { should callback(:set_latest_attempt).before(:create) }

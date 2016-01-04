@@ -39,16 +39,12 @@ describe QuizAttempt do
 
   # validation
   it { should_not validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:quiz_question_id) }
-  it { should validate_numericality_of(:quiz_question_id) }
 
   it { should validate_presence_of(:quiz_answer_id) }
-  it { should validate_numericality_of(:quiz_answer_id) }
 
   it { should validate_presence_of(:course_module_element_user_log_id).on(:update) }
-  it { should validate_numericality_of(:course_module_element_user_log_id) }
 
   it { should validate_presence_of(:answer_array).on(:update) }
 

@@ -53,7 +53,6 @@ describe CourseModule do
   # validation
 
   it { should validate_presence_of(:subject_course_id)}
-  it { should validate_numericality_of(:subject_course_id)}
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name).scoped_to(:subject_course_id) }
@@ -64,7 +63,6 @@ describe CourseModule do
   it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:sorting_order) }
 

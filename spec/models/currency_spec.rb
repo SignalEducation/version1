@@ -54,7 +54,6 @@ describe Currency do
   it { should validate_length_of(:trailing_symbol).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
-  it { should validate_numericality_of(:sorting_order) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

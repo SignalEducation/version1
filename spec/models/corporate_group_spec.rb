@@ -33,7 +33,6 @@ describe CorporateGroup do
 
   # validation
   it { should validate_presence_of(:corporate_customer_id) }
-  it { should validate_numericality_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name).scoped_to(:corporate_customer_id) }

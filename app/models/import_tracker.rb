@@ -24,11 +24,9 @@ class ImportTracker < ActiveRecord::Base
 
   # validation
   validates :old_model_name, presence: true
-  validates :old_model_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :old_model_id, presence: true
   validates :new_model_name, presence: true
-  validates :new_model_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :new_model_id, presence: true
   validates :imported_at, presence: true
   validates :original_data, presence: true
 

@@ -54,7 +54,6 @@ describe UserActivityLog do
 
   # validation
   it { should_not validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
@@ -74,7 +73,6 @@ describe UserActivityLog do
   it { should validate_length_of(:post_sign_up_redirect_url).is_at_most(255) }
 
   # it { should validate_presence_of(:alert_level) }
-  # it { should validate_numericality_of(:alert_level) }
 
   it { should validate_presence_of(:guid) }
   it { should validate_uniqueness_of(:guid) }

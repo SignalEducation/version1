@@ -68,19 +68,14 @@ describe CourseModuleElement do
   # it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:course_module_id) }
-  it { should validate_numericality_of(:course_module_id) }
 
   it { should validate_presence_of(:sorting_order) }
-  it { should validate_numericality_of(:sorting_order) }
 
   it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
 
   it { should_not validate_presence_of(:related_quiz_id) }
-  it { should validate_numericality_of(:related_quiz_id) }
 
   it { should_not validate_presence_of(:related_video_id) }
-  it { should validate_numericality_of(:related_video_id) }
 
   it { should validate_length_of(:seo_description).is_at_most(255) }
 

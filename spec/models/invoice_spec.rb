@@ -63,26 +63,14 @@ describe Invoice do
 
   # validation
   it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
-
-  it { should_not validate_presence_of(:corporate_customer_id) }
-  it { should validate_numericality_of(:corporate_customer_id) }
-
-  it { should_not validate_presence_of(:subscription_transaction_id) }
-  it { should validate_numericality_of(:subscription_transaction_id) }
 
   it { should validate_presence_of(:subscription_id) }
-  it { should validate_numericality_of(:subscription_id) }
 
   it { should validate_presence_of(:number_of_users) }
 
   it { should validate_presence_of(:currency_id) }
-  it { should validate_numericality_of(:currency_id) }
 
   it { should validate_presence_of(:total) }
-
-  it { should_not validate_presence_of(:vat_rate_id) }
-  it { should validate_numericality_of(:vat_rate_id) }
 
   it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
 

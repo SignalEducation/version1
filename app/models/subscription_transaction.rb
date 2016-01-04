@@ -39,12 +39,9 @@ class SubscriptionTransaction < ActiveRecord::Base
   belongs_to :user # the person that owns the transaction
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_payment_card_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
+  validates :subscription_id, presence: true
+  validates :subscription_payment_card_id, presence: true
   validates :stripe_transaction_guid, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :transaction_type, inclusion: {in: TRANSACTION_TYPES}, length: { maximum: 255 }
   validates :amount, presence: true, numericality: true

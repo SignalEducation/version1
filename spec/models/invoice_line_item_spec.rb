@@ -41,22 +41,18 @@ describe InvoiceLineItem do
 
   # validation
   it { should validate_presence_of(:invoice_id) }
-  it { should validate_numericality_of(:invoice_id) }
 
   it { should validate_presence_of(:amount) }
 
   it { should validate_presence_of(:currency_id) }
-  it { should validate_numericality_of(:currency_id) }
 
   it { should validate_presence_of(:period_start_at) }
 
   it { should validate_presence_of(:period_end_at) }
 
   it { should validate_presence_of(:subscription_id) }
-  it { should validate_numericality_of(:subscription_id) }
 
   it { should validate_presence_of(:subscription_plan_id) }
-  it { should validate_numericality_of(:subscription_plan_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

@@ -45,13 +45,10 @@ describe Subscription do
 
   # validation
   it { should validate_presence_of(:user_id).on(:update) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should_not validate_presence_of(:corporate_customer_id) }
-  it { should validate_numericality_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:subscription_plan_id) }
-  it { should validate_numericality_of(:subscription_plan_id) }
 
   it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES).on(:update) }
 

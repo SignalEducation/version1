@@ -70,18 +70,9 @@ class CourseModuleElement < ActiveRecord::Base
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :estimated_time_in_seconds, allow_nil: true,
-            numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :course_module_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :sorting_order, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :related_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :related_video_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_id, presence: true
+  validates :sorting_order, presence: true
+  validates :tutor_id, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks

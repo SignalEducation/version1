@@ -34,7 +34,6 @@ describe CourseModuleElementFlashCardPack do
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:background_color) }
   it { should validate_length_of(:background_color).is_at_most(255) }

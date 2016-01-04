@@ -35,10 +35,6 @@ describe CorporateGroupGrant do
 
   # validation
   it { should validate_presence_of(:corporate_group_id) }
-  it { should validate_numericality_of(:corporate_group_id) }
-
-
-  it { should validate_numericality_of(:subject_course_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

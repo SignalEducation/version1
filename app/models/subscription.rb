@@ -41,12 +41,7 @@ class Subscription < ActiveRecord::Base
 
   # validation
   validates :user_id, presence: true, on: :update
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_plan_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subscription_plan_id, presence: true
   validates :next_renewal_date, presence: true, on: :update
   validates :current_status, inclusion: {in: STATUSES}, on: :update
   validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, on: :update

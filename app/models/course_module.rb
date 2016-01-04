@@ -47,14 +47,12 @@ class CourseModule < ActiveRecord::Base
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
   validates :name, presence: true,
             uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :name_url, presence: true,
             uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :tutor_id, presence: true
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 

@@ -82,8 +82,6 @@ class StaticPage < ActiveRecord::Base
   validates :language, presence: true, length: { maximum: 255 }
   validates :seo_title, presence: true, length: { maximum: 255 }
   validates :seo_description, presence: true, length: { maximum: 255 }
-  validates :subscription_plan_category_id, allow_blank: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates_length_of :post_sign_up_redirect_url, maximum: 255, allow_blank: true
   validates_length_of :student_sign_up_h1, maximum: 255, allow_blank: true
   validates_length_of :student_sign_up_sub_head, maximum: 255, allow_blank: true

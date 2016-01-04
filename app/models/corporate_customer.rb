@@ -44,8 +44,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}
-  validates :country_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :country_id, presence: true
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   # callbacks

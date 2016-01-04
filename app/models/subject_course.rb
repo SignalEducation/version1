@@ -59,13 +59,12 @@ class SubjectCourse < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :tutor_id, presence: true
   validates :description, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :forum_url, allow_nil: true, length: {maximum: 255}
-  validates :default_number_of_possible_exam_answers, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :default_number_of_possible_exam_answers, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

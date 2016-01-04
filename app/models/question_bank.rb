@@ -27,10 +27,8 @@ class QuestionBank < ActiveRecord::Base
   has_many :course_module_element_user_logs
 
   # validation
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :number_of_questions, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
+  validates :number_of_questions, presence: true
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
   validates :name, presence: true
 

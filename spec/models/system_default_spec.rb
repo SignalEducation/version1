@@ -34,13 +34,10 @@ describe SystemDefault do
 
   # validation
   it { should validate_presence_of(:individual_student_user_group_id) }
-  it { should validate_numericality_of(:individual_student_user_group_id) }
 
   it { should validate_presence_of(:corporate_student_user_group_id) }
-  it { should validate_numericality_of(:corporate_student_user_group_id) }
 
   it { should validate_presence_of(:corporate_customer_user_group_id) }
-  it { should validate_numericality_of(:corporate_customer_user_group_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

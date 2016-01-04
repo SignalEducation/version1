@@ -29,8 +29,6 @@ class FlashQuiz < ActiveRecord::Base
 
   # validation
   validates :flash_card_stack_id, presence: true, on: :update
-  validates :flash_card_stack_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :background_color, presence: true, length: {maximum: 255}
   validates :foreground_color, presence: true, length: {maximum: 255}
 

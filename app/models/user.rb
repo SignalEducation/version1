@@ -122,10 +122,7 @@ class User < ActiveRecord::Base
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
-  validates :country_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :user_group_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_group_id, presence: true
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }

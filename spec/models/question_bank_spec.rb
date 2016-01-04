@@ -35,10 +35,8 @@ describe QuestionBank do
 
   # validation
   it { should validate_presence_of(:number_of_questions) }
-  it { should validate_numericality_of(:number_of_questions) }
 
   it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
 
   it { should validate_presence_of(:name) }
 
