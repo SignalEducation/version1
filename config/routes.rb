@@ -113,7 +113,7 @@ Rails.application.routes.draw do
     get 'acca-schedule', to: 'study_schedules#acca_schedule'
     resources :subject_courses, concerns: :supports_reordering
     resources :subscriptions, only: [:create, :update, :destroy]
-    resources :subscription_payment_cards, only: [:create, :update, :edit]
+    resources :subscription_payment_cards, only: [:index, :new, :create, :update]
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :tutor_applications

@@ -819,6 +819,10 @@ en:
     subscription_payment_cards:
       show:
         h1: Your Card Details
+      index:
+        h1: Your Payment Details
+        h4: Card Details
+        status: Status
 
       form:
         make_default_card: Use this as your default Card
@@ -1042,6 +1046,7 @@ en:
         h1: Account
         edit: Edit Account
         add_new_card: Update Card Info
+        new_card: Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password

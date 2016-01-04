@@ -22,7 +22,7 @@
                     -total_lesson = course.cme_count
                     -complete_lesson = log.try(:count_of_cmes_completed) || 0
                     -complete_percent = log.try(:percentage_complete)
-                    %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                    %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
                     .progress.l-margin-top-big
                       .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                   .box-label

@@ -4,6 +4,11 @@ class SubscriptionPaymentCardsController < ApplicationController
   before_action do
     ensure_user_is_of_type(%w(individual_student corporate_customer admin))
   end
+  before_action :get_variables
+
+  def index
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: current_user.id).all_in_order
+  end
 
   def create
     @subscription_payment_card = SubscriptionPaymentCard.new(create_params)
@@ -12,11 +17,8 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
-  end
-
-  def edit
-
+    #redirect_to account_url(anchor: 'subscriptions')
+    redirect_to subscription_payment_cards_url
   end
 
   def update
@@ -26,7 +28,8 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.update.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
+    #redirect_to account_url(anchor: 'subscriptions')
+    redirect_to subscription_payment_cards_url
   end
 
   protected
@@ -41,6 +44,10 @@ class SubscriptionPaymentCardsController < ApplicationController
               SubscriptionPaymentCard.find_by_id(params[:id]) :
               current_user.subscription_payment_cards.find_by_id(params[:id])
     end
+    @user = params[:id].to_i > 0 && current_user.admin? ?
+        @user = User.where(id: params[:id]).first :
+        current_user
+    @current_subscription = @user.subscriptions.all_in_order.last
   end
 
   def update_params

@@ -1,7 +1,7 @@
 =form_for(SubscriptionPaymentCard.new(make_default_card: true), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}) do |f|
   =f.hidden_field :user_id, value: @current_subscription.user_id
   =f.hidden_field :stripe_token
-  =f.hidden_field :make_default_card, value: false
+  =f.hidden_field :make_default_card, value: true
 
   .modal.fade#new-subscription-payment-card-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'newSubscriptionPaymentCardLabel', hidden: 'true'}}
     .modal-dialog
@@ -9,7 +9,7 @@
         .modal-body
           %h4.modal-title#newSubscriptionPaymentCardLabel=t('views.subscription_payment_cards.modal.h4')
           =render partial: 'users/new_card_form', locals: {f: f}
-          .form-group
+          -#.form-group
             .col-sm-8.col-sm-offset-4
               .checkbox
                 %label

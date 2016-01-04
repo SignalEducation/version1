@@ -82,7 +82,7 @@
                                     .col-sm-10.col-md-offset-2
                                       =link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-purple  l-margin-bottom', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
                                       -#=link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-cyan l-margin-bottom'
-                                      =link_to t('views.users.show.add_new_card'), edit_subscription_payment_card_url(current_user.subscription_payment_cards.all_default_cards.first), class: 'btn btn-cyan l-margin-bottom'
+                                      =link_to t('views.users.show.add_new_card'), subscription_payment_cards_url, class: 'btn btn-cyan l-margin-bottom'
                                       -if @current_subscription.current_status == 'active'
                                         =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}, class: 'btn btn-red l-margin-bottom'
                                       -elsif !@current_subscription.current_status.include?('canceled')
