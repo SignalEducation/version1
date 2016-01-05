@@ -1079,6 +1079,7 @@ en:
           your_referral_code: Your Referral Code
         upgrade_now: Upgrade Now
         upgrade_subscription_plan: Upgrade Subscription
+        change_subscription_plan: Change Subscription
         use_this_card: "Use this card"
         your_card_details: Update Payment Info
         your_invoices: Payment History

@@ -232,7 +232,6 @@ class Subscription < ActiveRecord::Base
              available_to_corporates: self.subscription_plan.available_to_corporates)
       .generally_available
       .all_active
-      .where('payment_frequency_in_months >= ?', self.subscription_plan.payment_frequency_in_months)
       .where('price > 0.0')
       .all_in_order
   end
