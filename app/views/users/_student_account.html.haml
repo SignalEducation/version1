@@ -13,6 +13,7 @@
             %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
             -if @current_subscription
               %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
+              %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.payments')
 
       .row
         .l-margin-top-big
@@ -97,33 +98,11 @@
                           .table-responsive
                             -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
                             =render partial: 'invoices/index'
+                .tab-pane.fade#payment-details{role: 'tabpanel'}
+                  .row
+                    .col-md-12{style: 'padding-bottom: 50px;'}
+                      =render partial: 'users/payment_details', locals: {f: f}
 
-
-                          -#unless @current_subscription.current_status.include?('cancel')
-                            .col-md-4#credit-cards-panel
-                              %h2
-                                =t('views.users.show.your_card_details')
-                              %table.table.table-striped#cards-table
-                                %tbody
-                                  -@user.subscription_payment_cards.all_in_order.each do |card|
-                                    %tr{class: card.status == 'expired' ? 'text-muted' : ''}
-                                      %td
-                                        ='xxxx-xxxx-xxxx-' + card.last_4
-                                        %br/
-                                        =t('views.users.show.card_expires')
-                                        =card.expiry_month
-                                        \/
-                                        =card.expiry_year
-                                      %td{id: "card-#{card.last_4}"}
-                                        -if card.status == 'card-live'
-                                          .fake-btn.btn-cyan.btn-small
-                                            =t('views.users.show.card_live')
-                                        -elsif card.status == 'not-live'
-                                          =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-purple btn-small'
-                                        -elsif card.status == 'expired'
-                                          =t('views.users.show.card_expired')
-                              %p
-                                =link_to t('views.users.show.add_new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 
 
   -if @user.id == current_user.id

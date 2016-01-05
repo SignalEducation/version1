@@ -6,10 +6,6 @@ class SubscriptionPaymentCardsController < ApplicationController
   end
   before_action :get_variables
 
-  def index
-    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: current_user.id).all_in_order
-  end
-
   def create
     @subscription_payment_card = SubscriptionPaymentCard.new(create_params)
     if @subscription_payment_card.save
@@ -44,10 +40,6 @@ class SubscriptionPaymentCardsController < ApplicationController
               SubscriptionPaymentCard.find_by_id(params[:id]) :
               current_user.subscription_payment_cards.find_by_id(params[:id])
     end
-    @user = params[:id].to_i > 0 && current_user.admin? ?
-        @user = User.where(id: params[:id]).first :
-        current_user
-    @current_subscription = @user.subscriptions.all_in_order.last
   end
 
   def update_params

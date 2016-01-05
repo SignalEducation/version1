@@ -1072,6 +1072,7 @@ en:
           personal_details: Personal details
           corporation: Corporation
           subscriptions: Subscriptions
+          payments: Payment Information
           notifications: Notifications
           admin: Admin
           referral_code: Referral Code
