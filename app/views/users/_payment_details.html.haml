@@ -26,9 +26,8 @@
             .btn.btn-green.btn-secondary.l-margin-bottom.l-margin-top-big.full-width{style: 'cursor: default;'}
               Active Card
           -else
-            =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-red btn-small l-margin-bottom l-margin-top'
-            .btn.btn-purple.btn-small
-              Remove this Card
+            =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-cyan l-margin-bottom l-margin-top-big full-width'
+
 .col-md-6.l-margin-top-big.text-center
   =link_to t('views.users.show.new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 

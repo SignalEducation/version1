@@ -1045,8 +1045,8 @@ en:
       show:
         h1: Account
         edit: Edit Account
-        add_new_card: Update Card Info
-        new_card: Add New Card
+        add_new_card: Update Payment Info
+        new_card: Click Here To Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
