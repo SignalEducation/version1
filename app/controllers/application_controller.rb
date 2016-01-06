@@ -328,8 +328,8 @@ class ApplicationController < ActionController::Base
 
   def seo_title_maker(last_element, seo_description, seo_no_index)
     @seo_title = last_element ?
-            "LearnSignal – #{last_element.to_s.truncate(46)}" :
-            'LearnSignal'
+            "#{last_element.to_s.truncate(60)} | LearnSignal" :
+            'Business Training Library | LearnSignal'
     @seo_description = seo_description
     @seo_no_index = seo_no_index
   end
