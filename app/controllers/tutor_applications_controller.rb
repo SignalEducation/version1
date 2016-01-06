@@ -15,6 +15,7 @@ class TutorApplicationsController < ApplicationController
 
   def new
     @tutor_application = TutorApplication.new
+    seo_title_maker('Teach', nil, nil)
   end
 
   def edit
