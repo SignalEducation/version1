@@ -657,6 +657,8 @@ en:
         course_module: Course Module
         course_module_element: Step
         new_question_bank: Create a Custom Quiz
+        table_of_contents: Table of contents
+        description: Description
 
       index:
         continue_course: Continue Course
@@ -861,7 +863,7 @@ en:
         h1: Course
         add_course_module: Please create a Course module to begin
         description: Description
-        info: More Info
+        info: Course Info
 
       edit:
         h1: Edit Course
