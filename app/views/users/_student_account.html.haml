@@ -43,11 +43,12 @@
                                   %br/
                                   %h4
                                     -last_invoice = @user.invoices.all_in_order.last
-                                    ="Last Payment: "
-                                    &nbsp;
-                                    =number_in_local_currency(last_invoice.total, last_invoice.currency_id)
-                                    =" on "
-                                    =humanize_datetime(last_invoice.created_at)
+                                    -if last_invoice
+                                      ="Last Payment: "
+                                      &nbsp;
+                                      =number_in_local_currency(last_invoice.total, last_invoice.currency_id)
+                                      =" on "
+                                      =humanize_datetime(last_invoice.created_at)
                                   %br/
                                   %h4
                                     =t('views.users.show.your_next_payment_will_be_on')
