@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :change_plan] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:profile, :profile_index]
@@ -157,6 +157,10 @@ class UsersController < ApplicationController
     else
       redirect_to account_url
     end
+  end
+
+  def change_plan
+    @current_subscription = @user.subscriptions.all_in_order.last
   end
 
   def subscription_invoice
