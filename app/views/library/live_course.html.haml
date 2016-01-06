@@ -122,7 +122,7 @@
                             Click here to download your completion certificate
               .tab-pane.fade#description{role: 'tabpanel'}
                 %p.big
-                  =@course.try(:description).html_safe
+                  =@course.try(:description).try(:html_safe)
 
 
         .col-sm-12.col-md-4.l-margin-bottom-huge
@@ -153,7 +153,7 @@
                   =t('views.general.author')
                   =@course.tutor.try(:full_name)
               %p{style: 'margin-top: 5px;'}
-                =@course.tutor.first_description.html_safe
+                =@course.tutor.try(:first_description).try(:html_safe)
             -else
               ='Learn Signal'
 
