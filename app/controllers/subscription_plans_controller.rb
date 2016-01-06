@@ -41,7 +41,7 @@ class SubscriptionPlansController < ApplicationController
     @corp_plan_3 = @corporate_subscription_plans[2]
     @corp_plan_4 = @corporate_subscription_plans[3]
 
-    seo_title_maker('Pricing', nil, nil)
+    seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds. Choose from our personal and business plans.', nil)
   end
 
   def show
