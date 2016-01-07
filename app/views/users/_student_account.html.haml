@@ -11,7 +11,7 @@
         .col-md-12{role: 'tablist'}
           .account-tab
             %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
-            -if @current_subscription
+            -if @current_subscription && !@current_subscription.free_trial?
               %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
               %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.payments')
 
@@ -60,15 +60,15 @@
                                     &nbsp;
                                     =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
 
-                                  -unless @current_subscription.current_status == 'active'
-                                    %h3
-                                      =t('views.users.show.your_plans_current_status')
-                                      ="#{@current_subscription.current_status}."
-                                      %br/
-                                      -if @current_subscription.current_status == 'canceled'
-                                        =t('views.users.show.your_plan_expired_on')
-                                      -elsif @current_subscription.current_status == 'canceled-pending'
-                                        =t('views.users.show.your_plan_will_expire_on')
+                                  -#unless @current_subscription.current_status == 'active'
+                                  %br/
+                                  %h4
+                                    -if @current_subscription.current_status == 'canceled'
+                                      =t('views.users.show.your_plan_expired_on')
+                                    -elsif @current_subscription.current_status == 'canceled-pending'
+                                      =t('views.users.show.your_plan_will_expire_on')
+                                      &nbsp;
+                                      =@current_subscription.next_renewal_date.to_s + '.'
 
                               .col-sm-6
                                 -if @current_subscription.current_status == 'canceled'
@@ -82,7 +82,6 @@
                                 -else
                                   .row
                                     .col-sm-10.col-md-offset-2
-                                      =#link_to t('views.users.show.upgrade_subscription_plan'), '#', class: 'btn btn-purple  l-margin-bottom', data: {toggle: 'modal', target: '#upgrade-subscription-modal'}
                                       =link_to t('views.users.show.change_subscription_plan'), account_change_plan_url, class: 'btn btn-purple  l-margin-bottom'
                                       %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', class: 'btn btn-cyan l-margin-bottom', data: {toggle: 'tab'}}=t('views.users.show.add_new_card')
                                       -if @current_subscription.current_status == 'active'
