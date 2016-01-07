@@ -27,13 +27,22 @@ describe Api::StripeV01Controller, type: :controller do
                                              subscription_plan_id: subscription_plan_m.id,
                                              current_status: 'active',
                                              stripe_token: card_token_2.id) }
+  let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: student.id,
+                                             subscription_plan_id: subscription_plan_m.id) }
+  let!(:subscription_4) { FactoryGirl.create(:subscription, user_id: student.id,
+                                             subscription_plan_id: subscription_plan_m.id,
+                                             current_status: 'trialing') }
+  let!(:subscription_5) { FactoryGirl.create(:subscription, user_id: referred_student.id,
+                                             subscription_plan_id: subscription_plan_m.id,
+                                             current_status: 'active') }
+
   let!(:referred_signup) { FactoryGirl.create(:referred_signup,
                                               referral_code_id: referral_code.id,
                                               subscription_id: free_subscription_2.id) }
 
   let!(:invoice_created_event) {
     StripeMock.mock_webhook_event('invoice.created',
-                                  subscription: subscription_1.stripe_guid,
+                                  subscription: subscription_3.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
   let!(:invoice_payment_failed_event) {
     StripeMock.mock_webhook_event('invoice.payment_failed',
@@ -62,7 +71,7 @@ describe Api::StripeV01Controller, type: :controller do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
           subscription_plan_m.stripe_guid = invoice_created_event.data.object.lines.data[0].plan.id
           subscription_plan_m.save
-          subscription_1.update_attribute(:stripe_guid, invoice_created_event.data.object.subscription)
+          subscription_3.update_attribute(:stripe_guid, invoice_created_event.data.object.subscription)
         end
 
         it 'created' do
@@ -218,12 +227,12 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.error).to eq(true)
           expect(sae.error_message).to start_with("Error updating subscription")
 
-          expect(subscription_1.reload.current_status).to eq('trialing')
+          expect(subscription_4.reload.current_status).to eq('trialing')
         end
 
         it 'with valid data' do
           evt = StripeMock.mock_webhook_event("customer.subscription.updated", status: 'trialing')
-          subscription_1.update_attribute(:stripe_guid, evt.data.object.id)
+          subscription_3.update_attribute(:stripe_guid, evt.data.object.id)
 
           expect(MandrillClient).not_to receive(:new)
           post :create, evt.to_json
@@ -234,14 +243,14 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
 
-          expect(subscription_1.reload.next_renewal_date).to eq(Time.at(evt.data.object.current_period_end.to_i).to_date)
-          expect(subscription_1.current_status).to eq(evt.data.object.status)
+          expect(subscription_3.reload.next_renewal_date).to eq(Time.at(evt.data.object.current_period_end.to_i).to_date)
+          expect(subscription_3.current_status).to eq(evt.data.object.status)
         end
       end
 
       describe 'customer.subscription.created' do
         it 'does not update referred_signup if previous subscription is not cancelled' do
-          subscription_2.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
+          subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
 
           post :create, customer_subscription_created_event.to_json
 
@@ -255,11 +264,11 @@ describe Api::StripeV01Controller, type: :controller do
 
         it 'does not update referred_signup if previous subscription is not free trial subscription' do
           card_token_3 = Stripe::Token.create(card: card_details_2)
-          subscription_3 = FactoryGirl.create(:subscription, user_id: referred_student.id,
+          subscription_6 = FactoryGirl.create(:subscription, user_id: referred_student.id,
                                               subscription_plan_id: subscription_plan_q.id,
-                                              current_status: 'active',
-                                              stripe_token: card_token_3.id)
-          subscription_3.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
+                                              current_status: 'active'
+                                              )
+          subscription_6.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
 
           post :create, customer_subscription_created_event.to_json
 
@@ -272,7 +281,7 @@ describe Api::StripeV01Controller, type: :controller do
         end
 
         it 'updates maturing_on and subscription_id in referred signup' do
-          subscription_2.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
+          subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
           free_subscription_2.update_attribute(:current_status, 'canceled')
 
           post :create, customer_subscription_created_event.to_json
@@ -284,7 +293,7 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.error_message).to eq(nil)
 
           expect(referred_signup.reload.maturing_on).to eq(40.days.from_now.utc.beginning_of_day)
-          expect(referred_signup.subscription_id).to eq(subscription_2.id)
+          expect(referred_signup.subscription_id).to eq(subscription_5.id)
         end
       end
     end
