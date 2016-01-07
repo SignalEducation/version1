@@ -1,15 +1,19 @@
 class FooterPagesController < ApplicationController
 
   def why_learn_signal
+    @seo_title = 'Why LearnSignal'
   end
 
   def careers
+    seo_title_maker('Careers', nil, nil)
   end
 
   def contact
+    seo_title_maker('Contact', nil, nil)
   end
 
   def terms_and_conditions
+    seo_title_maker('Terms & Conditions', nil, nil)
   end
 
   def info_subscribe

@@ -31,6 +31,7 @@ class GroupsController < ApplicationController
       if current_user
         @logs = SubjectCourseUserLog.where(user_id: current_user.id)
       end
+      seo_title_maker(@group.try(:name), @group.try(:description), nil)
     end
   end
 

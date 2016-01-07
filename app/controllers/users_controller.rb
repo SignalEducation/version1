@@ -136,6 +136,7 @@ class UsersController < ApplicationController
     @tutor = User.all_tutors.where(id: params[:id]).first
     if @tutor
       @courses = SubjectCourse.where(tutor_id: @tutor.id)
+      seo_title_maker(@tutor.full_name, @tutor.first_description, nil)
     else
       redirect_to root_url
     end
@@ -144,6 +145,7 @@ class UsersController < ApplicationController
   def profile_index
     #/profiles
     @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
+    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
   end
 
   def upgrade_from_free_trial

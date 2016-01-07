@@ -33,6 +33,7 @@ class LibraryController < ApplicationController
       ids = grouped_courses.uniq
       @no_grouped_courses = SubjectCourse.where.not(id: ids).for_public.all_active.all_live.all_not_restricted
     end
+    seo_title_maker('Library', nil, nil)
   end
 
   def show
@@ -58,7 +59,6 @@ class LibraryController < ApplicationController
             redirect_to library_url
           end
           seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
-
         end
       else
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
@@ -83,7 +83,7 @@ class LibraryController < ApplicationController
         else
           redirect_to library_url
         end
-        seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
+        seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
       end
     end
   end
