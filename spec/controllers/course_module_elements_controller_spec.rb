@@ -139,7 +139,7 @@ describe CourseModuleElementsController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1_1.id, course_module_element: {estimated_time_in_seconds: 'abc'}
+        put :update, id: course_module_element_1_1.id, course_module_element: {name_url: ''}
         expect_update_error_with_model('course_module_element')
         expect(assigns(:course_module_element).id).to eq(course_module_element_1_1.id)
       end
@@ -159,11 +159,6 @@ describe CourseModuleElementsController, type: :controller do
       end
 
       describe "DELETE 'destroy'" do
-        it 'should be ERROR as children exist' do
-          delete :destroy, id: course_module_element_1_1.id
-          expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_1.course_module))
-        end
-
         it 'should be OK as no dependencies exist' do
           #course_module_element_2_2
           delete :destroy, id: course_module_element_2_2.id
@@ -403,7 +398,7 @@ describe CourseModuleElementsController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1_1.id, course_module_element: {estimated_time_in_seconds: 'ABC'}
+        put :update, id: course_module_element_1_1.id, course_module_element: {name_url: ''}
         expect_update_error_with_model('course_module_element')
         expect(assigns(:course_module_element).id).to eq(course_module_element_1_1.id)
       end
@@ -420,11 +415,6 @@ describe CourseModuleElementsController, type: :controller do
 
       before(:each) do
         x = course_module_element_quiz_1_1.id
-      end
-
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: course_module_element_1_1.id
-        expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_1.course_module))
       end
 
       it 'should be OK as no dependencies exist' do
@@ -488,7 +478,7 @@ describe CourseModuleElementsController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, id: course_module_element_1_1.id, course_module_element: {estimated_time_in_seconds: 'ABC'}
+        put :update, id: course_module_element_1_1.id, course_module_element: {name_url: ''}
         expect_update_error_with_model('course_module_element')
         expect(assigns(:course_module_element).id).to eq(course_module_element_1_1.id)
       end
@@ -505,11 +495,6 @@ describe CourseModuleElementsController, type: :controller do
 
       before(:each) do
         x = course_module_element_quiz_1_1.id
-      end
-
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: course_module_element_1_1.id
-        expect_delete_error_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_1.course_module))
       end
 
       it 'should be OK as no dependencies exist' do
