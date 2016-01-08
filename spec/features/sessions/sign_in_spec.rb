@@ -14,7 +14,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -25,7 +25,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -36,7 +36,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -47,7 +47,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'as a non-active user' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: inactive_individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: inactive_individual_student_user.password
         click_button I18n.t('views.general.sign_in')
@@ -57,13 +57,12 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
         click_button I18n.t('views.general.sign_in')
       end
-      expect(page).to have_content 'Welcome back!'
-      click_link('navbar-cog')
+      click_on('dropdown.dropdown-toggle')
       click_link('Sign out')
     end
 
@@ -78,7 +77,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -89,7 +88,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -100,7 +99,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -112,7 +111,7 @@ describe 'The sign in process.', type: :feature do
     #TODO When the corporate_student_user dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
-    #  within('.well.well-sm') do
+    #  within('.sign-in-modal') do
     #    fill_in I18n.t('views.user_sessions.form.email'), with: corporate_student_user.email
     #    fill_in I18n.t('views.user_sessions.form.password'), with: corporate_student_user.password
     #    click_button I18n.t('views.general.go')
@@ -134,7 +133,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -145,7 +144,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -156,7 +155,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -167,7 +166,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: tutor_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
         click_button I18n.t('views.general.sign_in')
@@ -192,7 +191,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -203,7 +202,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -214,7 +213,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -225,7 +224,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: content_manager_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
         click_button I18n.t('views.general.sign_in')
@@ -248,7 +247,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -259,7 +258,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -270,7 +269,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -282,7 +281,7 @@ describe 'The sign in process.', type: :feature do
     #TODO When the blogger dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
-    #  within('.well.well-sm') do
+    #  within('.sign-in-modal') do
     #    fill_in I18n.t('views.user_sessions.form.email'), with: blogger_user.email
     #    fill_in I18n.t('views.user_sessions.form.password'), with: blogger_user.password
     #    click_button I18n.t('views.general.go')
@@ -303,7 +302,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -314,7 +313,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -325,7 +324,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -337,7 +336,7 @@ describe 'The sign in process.', type: :feature do
     #TODO When the corporate customer dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
-    #  within('.well.well-sm') do
+    #  within('.sign-in-modal') do
     #    fill_in I18n.t('views.user_sessions.form.email'), with: corporate_customer_user.email
     #    fill_in I18n.t('views.user_sessions.form.password'), with: corporate_customer_user.password
     #    click_button I18n.t('views.general.go')
@@ -358,7 +357,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -369,7 +368,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -380,7 +379,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -392,7 +391,7 @@ describe 'The sign in process.', type: :feature do
     #TODO When the forum manager dashboard partial is built this needs to test for it.
     #scenario 'with correct details and then sign out' do
     #  visit sign_in_path
-    #  within('.well.well-sm') do
+    #  within('.sign-in-modal') do
     #    fill_in I18n.t('views.user_sessions.form.email'), with: forum_manager_user.email
     #    fill_in I18n.t('views.user_sessions.form.password'), with: forum_manager_user.password
     #    click_button I18n.t('views.general.go')
@@ -413,7 +412,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -424,7 +423,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -435,7 +434,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -446,7 +445,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.well.well-sm') do
+      within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: admin_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: admin_user.password
         click_button I18n.t('views.general.sign_in')

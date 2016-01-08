@@ -8,18 +8,18 @@
         .col-md-8.col-md-offset-2.l-margin-bottom-6x
           =form_for(@user_session, html: {role: 'form'}) do |f|
             =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
-
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
-              %br/
-              %div#validation-div
-                =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control', autofocus: true
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
-              %br/
-              %div#validation-div-password
-                =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off'
-            .col-md-8.col-md-offset-2.l-margin-top-big
-              =f.submit t('views.general.sign_in'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
-              .pull-right
-                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: 'forgot-password-link'
+            .sign-in-modal
+              .col-md-8.col-md-offset-2.l-margin-top-small
+                =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
+                %br/
+                %div#validation-div
+                  =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control', autofocus: true
+              .col-md-8.col-md-offset-2.l-margin-top-small
+                =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
+                %br/
+                %div#validation-div-password
+                  =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off'
+              .col-md-8.col-md-offset-2.l-margin-top-big
+                =f.submit t('views.general.sign_in'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+                .pull-right
+                  =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: 'forgot-password-link'
