@@ -20,6 +20,12 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe 'POST create' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(individual_student_user)
+    end
+
     it 'should report OK for valid params' do
       post :create, course_module_element_user_log: valid_params
       expect(response.status).to eq(200)
