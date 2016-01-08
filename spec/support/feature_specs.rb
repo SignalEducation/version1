@@ -14,44 +14,24 @@ end
 
 #### Signing in and out, and 'my profile'
 
-def sign_in_via_navbar(user)
-  visit root_path
-  within('.nav #login_form') do
-    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
-    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
-    click_button I18n.t('views.general.go')
-  end
-  expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
-end
-
 def sign_in_via_sign_in_page(user)
-  visit root_path
-  within('.navbar-main') do
-    click_link 'Sign In'
-  end
-  within('.well.well-sm') do
-    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
-    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
+  visit sign_in_path
+  within('.sign-in-modal') do
+    fill_in I18n.t('views.user_sessions.form.email'), with: ''
+    fill_in I18n.t('views.user_sessions.form.password'), with: ''
     click_button I18n.t('views.general.sign_in')
   end
-  expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
 end
 
 def sign_out
-  click_link('navbar-cog')
+  find('.dropdown').click
   click_link(I18n.t('views.general.sign_out'))
 end
 
 def visit_my_profile
-  click_link('navbar-cog')
+  find('.dropdown').click
   click_link(I18n.t('views.users.show.h1'))
   expect(page).to have_content maybe_upcase I18n.t('views.users.show.h1')
-end
-
-def edit_my_profile
-  visit_my_profile
-  click_link I18n.t('views.general.edit')
-  expect(page).to have_content maybe_upcase I18n.t('views.users.edit.h1')
 end
 
 #### Student sign_up process
