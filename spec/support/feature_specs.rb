@@ -17,21 +17,22 @@ end
 def sign_in_via_sign_in_page(user)
   visit sign_in_path
   within('.sign-in-modal') do
-    fill_in I18n.t('views.user_sessions.form.email'), with: ''
-    fill_in I18n.t('views.user_sessions.form.password'), with: ''
+    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
+    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
     click_button I18n.t('views.general.sign_in')
   end
 end
 
 def sign_out
-  find('.dropdown').click
+  find('.dropdown.dropdown-normal').click
   click_link(I18n.t('views.general.sign_out'))
 end
 
 def visit_my_profile
-  find('.dropdown').click
-  click_link(I18n.t('views.users.show.h1'))
-  expect(page).to have_content maybe_upcase I18n.t('views.users.show.h1')
+  within('.navbar.navbar-default') do
+    find('.dropdown-normal').click
+    click_link(I18n.t('views.users.show.h1'))
+  end
 end
 
 #### Student sign_up process
