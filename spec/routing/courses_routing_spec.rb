@@ -23,12 +23,7 @@ RSpec.describe CoursesController, type: :request do
     get '/en/courses/abc'
     expect(response).to redirect_to('/en/library/abc')
   end
-
-  it 'redirects to /library' do
-    get '/courses/abc'
-    expect(response).to redirect_to('/en/library/abc')
-  end
-
+  
   it 'redirects to /library' do
     get '/en/courses/abc/def'
     expect(response).to redirect_to('/en/library')
@@ -36,7 +31,7 @@ RSpec.describe CoursesController, type: :request do
 
   it 'redirects to /library' do
     get '/courses/abc/def'
-    expect(response).to redirect_to('/en/library/abc/def')
+    expect(response).to redirect_to('/en/library')
   end
 
   it 'redirects to /library' do
@@ -46,6 +41,6 @@ RSpec.describe CoursesController, type: :request do
 
   it 'redirects to /library' do
     get '/courses/abc/def/ghi'
-    expect(response).to redirect_to('/en/library/abc/def/ghi')
+    expect(response).to redirect_to('/en/library')
   end
 end
