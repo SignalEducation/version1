@@ -488,7 +488,7 @@ describe CorporateCustomersController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('corporate_customers', 2)
+        expect_index_success_with_model('corporate_customers', 3)
       end
     end
 
