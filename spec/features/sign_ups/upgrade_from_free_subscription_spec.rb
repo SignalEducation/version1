@@ -28,8 +28,8 @@ describe 'The student sign-up process', type: :feature do
     within('#heading-message') do
       expect(page).to have_content 'Your Learn Signal Dashboard'
     end
-
   end
+
   #Todo This needs to be replicated for EUR and GBP
   describe 'sign-up with to free trial valid details:' do
     describe 'and upgrade to paying plan' do
