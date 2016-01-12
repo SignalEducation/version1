@@ -23,7 +23,7 @@ RSpec.describe CoursesController, type: :request do
     get '/en/courses/abc'
     expect(response).to redirect_to('/en/library/abc')
   end
-  
+
   it 'redirects to /library' do
     get '/en/courses/abc/def'
     expect(response).to redirect_to('/en/library')

@@ -15,11 +15,11 @@ describe 'Course content Vs Paywall', type: :feature do
     scenario 'can see free content and cannot see protected content', js: true do
       expect(individual_student_user_group.id).to be > 0
       visit library_path
-      click_link('ACA1')
-      click_link('Start')
+      click_link('Group 1')
+      click_link('Subject Course 1')
+      click_link('Browse')
       expect(page).to have_content(course_module_1.name)
       expect(page).to have_css('.no-content-well')
-      # click_link(course_module_element_1_3.name)
       expect(page).to have_content I18n.t('views.courses.content_denied.panel.need_to_sign_in')
     end
   end
@@ -27,14 +27,12 @@ describe 'Course content Vs Paywall', type: :feature do
   describe 'signed in as a student student' do
     before(:each) do
       activate_authlogic
-      visit root_path
-      click_link 'Sign Up'
-      expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
-      student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
-      visit library_path
-      click_link institution_1.short_name
-      click_link I18n.t('views.general.start')
-      expect(page).to have_content course_module_1.name
+      sign_in_via_sign_in_page(individual_student_user)
+      click_link 'Courses'
+      click_link('Group 1')
+      click_link('Subject Course 1')
+      click_link('Start Course')
+      expect(page).to have_content(course_module_1.name)
     end
 
     scenario 'should see all content', js: true do

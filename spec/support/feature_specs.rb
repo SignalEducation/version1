@@ -37,18 +37,18 @@ end
 
 #### Student sign_up process
 
-def student_sign_up_as(user_first_name, user_second_name, user_email, card_type, currency, country, subscription_months, expect_sign_up)
-  enter_user_details(user_first_name, user_second_name, user_email, country)
-  expect(page).to have_content currency.leading_symbol
-  student_picks_a_subscription_plan(currency, subscription_months)
-  enter_credit_card_details(card_type)
-  click_button I18n.t('views.general.submit')
+def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, country, expect_sign_up)
+  enter_user_details(user_first_name, user_second_name, user_email, user_password, country)
+  expect(page).to have_content 'SIGN UP FOR YOUR 7-DAY FREE TRIAL'
+  click_button I18n.t('views.home_pages.sign_up_form.submit')
   sleep 1
   if expect_sign_up
-    sleep 2
-    expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
+    #within('#thank-you-message') do
+    #  expect(page).to have_content 'Thanks for joining us!'
+    #end
   else
-    expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
+    expect(page).to_not have_content 'Thanks for joining us!'
+    expect(page).to_not have_content 'An E-mail with your activation code has been sent. Please check your inbox and click on the link to activate your LearnSignal account.'
   end
 end
 
@@ -84,17 +84,20 @@ def enter_credit_card_details(card_type='valid')
   end
 end
 
-def enter_user_details(first_name, last_name, email=nil, country)
+def enter_user_details(first_name, last_name, email=nil, user_password, country)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  page.execute_script("$('#user_country_id').val(#{country.id}); clearPlans(); showPlans(); return false;")
-  temp_password = ApplicationController.generate_random_code(10)
-  fill_in('user_password', with: temp_password)
-  fill_in('user_password_confirmation', with: temp_password)
+  phone_number = ApplicationController.generate_random_code(10)
+  fill_in('user_phone_number', with: phone_number)
+  fill_in('user_password', with: user_password)
+  fill_in('user_password_confirmation', with: user_password)
 end
 
 def student_picks_a_subscription_plan(currency, payment_frequency)
   expect([1,3,12].include?(payment_frequency)).to eq(true)
-  find("#sub-#{currency.iso_code}-#{payment_frequency}").click
+  find("#sub-#{currency.iso_code.upcase}-#{payment_frequency}").click
+  within("#sub-#{currency.iso_code.upcase}-#{payment_frequency}") do
+    find('.plan-option').click
+  end
 end
