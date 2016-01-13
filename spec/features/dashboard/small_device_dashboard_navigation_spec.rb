@@ -39,6 +39,7 @@ describe 'User navigating through the dashboard:', type: :feature do
         find('.navbar-toggle').click
         click_link 'Courses'
       end
+      sleep(1)
       click_link('Group 1')
       click_link('Subject Course 1')
       click_link('Start Course')

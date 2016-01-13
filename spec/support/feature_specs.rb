@@ -37,8 +37,8 @@ end
 
 #### Student sign_up process
 
-def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, country, expect_sign_up)
-  enter_user_details(user_first_name, user_second_name, user_email, user_password, country)
+def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
+  enter_user_details(user_first_name, user_second_name, user_email, user_password)
   expect(page).to have_content 'SIGN UP FOR YOUR 7-DAY FREE TRIAL'
   click_button I18n.t('views.home_pages.sign_up_form.submit')
   sleep 1
@@ -84,7 +84,7 @@ def enter_credit_card_details(card_type='valid')
   end
 end
 
-def enter_user_details(first_name, last_name, email=nil, user_password, country)
+def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
@@ -107,7 +107,7 @@ def sign_up_and_upgrade_from_free_trial
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
-    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, ireland, true)
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
   user = User.where(email: 'john@example.com').last
   user.active = true
@@ -141,7 +141,7 @@ def sign_up_and_upgrade_from_free_trial_small_device
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
-    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, ireland, true)
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
   user = User.where(email: 'john@example.com').last
   user.active = true
