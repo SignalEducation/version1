@@ -14,7 +14,7 @@ describe 'The student sign-up process', type: :feature do
     visit root_path
     user_password = ApplicationController.generate_random_code(10)
     within('#sign-up-form') do
-      student_sign_up_as('John', 'Smith', 'john@example.com', user_password, ireland, true)
+      student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
     end
     user = User.where(email: 'john@example.com').last
     user.active = true

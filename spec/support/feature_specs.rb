@@ -102,7 +102,6 @@ def student_picks_a_subscription_plan(currency, payment_frequency)
   end
 end
 
-
 def sign_up_and_upgrade_from_free_trial
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
@@ -159,12 +158,12 @@ def sign_up_and_upgrade_from_free_trial_small_device
     find('.navbar-toggle').click
     click_link 'Upgrade your account'
   end
-  sleep(3)
+  sleep(5)
   expect(page).to have_content 'Upgrade your membership'
   student_picks_a_subscription_plan(usd, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
-  sleep(3)
+  sleep(5)
   within('#heading-message') do
     expect(page).to have_content 'Your Learn Signal Dashboard'
   end

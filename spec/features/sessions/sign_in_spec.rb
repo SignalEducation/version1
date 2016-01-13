@@ -330,7 +330,7 @@ describe 'The sign in process.', type: :feature do
       page.has_selector?('form_for')
     end
 
-    scenario 'with correct details and then sign out' do
+    xit scenario 'with correct details and then sign out' do
       visit sign_in_path
       within('.sign-in-modal') do
         fill_in I18n.t('views.user_sessions.form.email'), with: corporate_customer_user.email

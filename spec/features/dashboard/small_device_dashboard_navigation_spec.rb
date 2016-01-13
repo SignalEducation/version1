@@ -46,10 +46,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       expect(page).to have_content course_module_element_1_1.name
       page.all('.quiz-answer-clickable').first.click
       expect(page).to have_content I18n.t('views.courses.show_results.h1')
-      within('.navbar.navbar-default') do
-        find('.navbar-toggle').click
-        click_link 'Dashboard'
-      end
+      visit dashboard_path
       expect(page).to have_content subject_course_1.name
       expect(page).to have_css('.progress')
       expect(page).to have_css('.panel')

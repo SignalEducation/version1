@@ -20,7 +20,7 @@ describe 'The student sign-up process', type: :feature do
       scenario 'Free Plan', js: true do
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
-          student_sign_up_as('John', 'Smith', nil, user_password, ireland, true)
+          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
         end
       end
     end
@@ -29,7 +29,7 @@ describe 'The student sign-up process', type: :feature do
       scenario 'Free Plam', js: true do
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
-          student_sign_up_as('John', 'Smith', nil, user_password, uk, true)
+          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
         end
       end
     end
@@ -38,7 +38,7 @@ describe 'The student sign-up process', type: :feature do
       scenario 'Free Plan', js: true do
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
-          student_sign_up_as('John', 'Smith', nil, user_password, usa, true)
+          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
         end
       end
     end
@@ -50,20 +50,20 @@ describe 'The student sign-up process', type: :feature do
       scenario 'bad first name', js: true do
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
-          student_sign_up_as('D', 'Smith', nil, user_password, ireland, false)
+          student_sign_up_as('D', 'Smith', nil, user_password,  false)
         end
       end
 
       scenario 'bad last name', js: true do
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
-          student_sign_up_as('Dan', 'S', nil, user_password, ireland, false)
+          student_sign_up_as('Dan', 'S', nil, user_password, false)
         end
       end
 
       scenario 'bad email', js: true do
         user_password = ApplicationController.generate_random_code(10)
-        student_sign_up_as('Jo', 'Ng', 'a@bcd', user_password, ireland, false)
+        student_sign_up_as('Jo', 'Ng', 'a@bcd', user_password, false)
       end
     end
 

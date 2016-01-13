@@ -55,5 +55,5 @@ describe 'User navigating through the library:', type: :feature do
     end
 
   end
-  
+
 end
