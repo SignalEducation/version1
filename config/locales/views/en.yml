@@ -464,7 +464,8 @@ en:
         completed: Completed
         none_in_progress: "Remember, you can study multiple modules at the same time."
         none_completed: "This panel will show you the modules that you have completed. Keep going!"
-        no_content_right_now: "This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started, choose a course form our library."
+        no_content_right_now_h1: Your Learn Signal Dashboard
+        no_content_right_now_h5: Your progress through all courses will be recorded here.
         overview: Overview
 
       tutor:
