@@ -128,12 +128,47 @@ def sign_up_and_upgrade_from_free_trial
   student_picks_a_subscription_plan(usd, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
-  sleep(10)
+  sleep(3)
   within('#heading-message') do
     expect(page).to have_content 'Your Learn Signal Dashboard'
   end
   visit_my_profile
   click_on 'Subscriptions'
   expect(page).to have_content 'Billing Interval:   Monthly'
+  end
 
+def sign_up_and_upgrade_from_free_trial_small_device
+  visit root_path
+  user_password = ApplicationController.generate_random_code(10)
+  within('#sign-up-form') do
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, ireland, true)
+  end
+  user = User.where(email: 'john@example.com').last
+  user.active = true
+  user.save
+  visit sign_in_path
+  within('.sign-in-modal') do
+    fill_in I18n.t('views.user_sessions.form.email'), with: 'john@example.com'
+    fill_in I18n.t('views.user_sessions.form.password'), with: user_password
+    click_button I18n.t('views.general.sign_in')
+  end
+  within('#heading-message') do
+    expect(page).to have_content 'Your Learn Signal Dashboard'
+  end
+  within('.navbar.navbar-default') do
+    find('.navbar-toggle').click
+    click_link 'Upgrade your account'
+  end
+  sleep(3)
+  expect(page).to have_content 'Upgrade your membership'
+  student_picks_a_subscription_plan(usd, 1)
+  enter_credit_card_details('valid')
+  find('.upgrade-sub').click
+  sleep(3)
+  within('#heading-message') do
+    expect(page).to have_content 'Your Learn Signal Dashboard'
+  end
+  visit account_path
+  click_on 'Subscriptions'
+  expect(page).to have_content 'Billing Interval:   Monthly'
 end
