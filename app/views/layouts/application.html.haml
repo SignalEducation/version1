@@ -55,7 +55,7 @@
     =render partial: '/layouts/mixpanel_head_tag'
 
   %body{ontouchstart: ''}
-    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if Rails.env.production?
       =render partial: 'layouts/hubspot'
