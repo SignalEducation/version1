@@ -71,7 +71,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should be OK locally and on Stripe' do
+      xit 'should be OK locally and on Stripe' do
         put :update, id: subscription_1.id, subscription: valid_params
         expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
@@ -86,7 +86,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond with OK' do
+      xit 'should respond with OK' do
         delete :destroy, id: subscription_1.id
         expect(flash[:error]).to eq(nil)
         expect(response.status).to eq(302)
@@ -180,7 +180,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should be OK locally and on Stripe' do
+      xit 'should be OK locally and on Stripe' do
         put :update, id: subscription_2.id, subscription: valid_params
         expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
@@ -195,7 +195,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond with OK' do
+      xit 'should respond with OK' do
         delete :destroy, id: subscription_2.id
         expect(flash[:error]).to eq(nil)
         expect(response.status).to eq(302)
@@ -319,7 +319,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params' do
+      xit 'should respond OK to valid params' do
         put :update, id: subscription_1.id, subscription: valid_params
         expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
         expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
@@ -327,7 +327,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond with OK' do
+      xit 'should respond with OK' do
         delete :destroy, id: subscription_1.id
         expect(flash[:error]).to eq(nil)
         expect(response.status).to eq(302)

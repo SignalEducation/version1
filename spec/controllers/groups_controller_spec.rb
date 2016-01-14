@@ -675,7 +675,7 @@ describe GroupsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('groups', 2)
+        expect_index_success_with_model('groups', 4)
       end
     end
 
@@ -770,7 +770,7 @@ describe GroupsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('groups', 2)
+        expect_index_success_with_model('groups', 4)
       end
     end
 

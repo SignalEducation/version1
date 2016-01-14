@@ -101,7 +101,7 @@ describe User do
 
   # validation
   it { should validate_presence_of(:email) }
-  xit { should validate_uniqueness_of(:email) }
+  it { should validate_uniqueness_of(:email).case_insensitive }
   it { should validate_length_of(:email).is_at_least(7).is_at_most(50) }
 
   it { should validate_presence_of(:first_name) }
@@ -125,7 +125,7 @@ describe User do
     end
 
     it "validates uniqueness of email" do
-      expect(@user).to validate_uniqueness_of(:email)
+      expect(@user).to validate_uniqueness_of(:email).case_insensitive
     end
   end
 

@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :account_activated_at, :account_activation_code, :phone_number
+                  :name_url, :qualifications, :profile_image, :phone_number
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -114,9 +114,6 @@ class User < ActiveRecord::Base
   # validation
   validates :email, presence: true, uniqueness: true,
             length: {within: 7..50}
-            #TODO
-            #format: {with:  /^([^\s]+)((?:[-a-z0-9]\.)[a-z]{2,})$/i,
-            #         message: 'must be a valid email address.'}
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
