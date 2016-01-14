@@ -136,7 +136,7 @@
               =t('views.general.updated_at')
               =humanize_datetime(@course.updated_at)
             -if @course.try(:tutor_id)
-              -if @course.tutor.profile_image_file_name
+              -if @course.tutor.try(:profile_image_file_name)
                 %br/
                 %h6
                   =t('views.general.author')
