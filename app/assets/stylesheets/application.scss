@@ -21,6 +21,7 @@ $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
 $green-1: #D0F6BD;
+$green-2: #00cc66;
 $pink-1: #FED4CD;
 
 $sans-font: "proxima-nova-soft", Arial, sans-serif;
@@ -1112,7 +1113,6 @@ a.box-item {
 #referral-link {
   a:hover {
     text-decoration: underline;
-
   }
 }
 
@@ -1143,7 +1143,6 @@ a.box-item {
 .account-tab {
   padding: 13px;
   padding-left:0px;
-  //text-decoration: underline;
   border-bottom: 4px solid gainsboro ;
   a {
     color: $gray-1;
@@ -1155,7 +1154,6 @@ a.box-item {
     }
     text-decoration: initial;
     margin-right: 20px;
-
     &:hover {
       padding-bottom: 15px;
       //border-bottom: 4px solid;
@@ -1215,6 +1213,11 @@ a.box-item {
 
 .selected {
   background: $green-1;
+  color: $white;
+}
+
+.chosen-plan {
+  background: $red-1;
   color: $white;
 }
 

@@ -24,89 +24,41 @@ describe 'User navigating through the dashboard:', type: :feature do
 
   describe 'navigates to first cmes' do
 
-    scenario 'not logged-in user', js: true  do
+    scenario 'not logged-in user will be redirected as not allowed', js: true  do
       visit root_path
-      within('#navbar') do
-        find('.nav-toggle').click
-        click_link 'Browse Courses'
-      end
-      within('#navbar') do
-        click_button 'Toggle navigation'
-        click_link 'Dashboard'
-      end
-      expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now')
-      within('#navbar') do
-        click_button 'Toggle navigation'
-        click_link 'Library'
-      end
-      expect(page).to have_content maybe_upcase institution_1.short_name
-      expect(page).to have_content institution_1.description
-      click_link institution_1.short_name
-      click_link 'Start'
-      expect(page).to have_content course_module_1.name
-      expect(page).to have_content course_module_element_1_1.name
-      #expect(page).to have_content quiz_content_1.text_content
-      #page.all('.quiz-answer-clickable').first.click
-      #expect(page).to have_content I18n.t('views.courses.show_results.h1')
-      #within('#navbar') do
-       # click_link '#navbar-logo'
-        #click_button 'Toggle navigation'
-        #click_link 'Dashboard'
-      #end
-      #expect(page).to have_content exam_section_1.name
-      #expect(page).to have_css('.progress')
-      #expect(page).to have_css('.panel')
-      #click_link 'Continue'
-      #expect(page).to have_content course_module_element_1_2.name
-      #expect(page).to have_content course_module_element_1_2.description
-      #click_link 'Next'
-      #expect(page).to have_content I18n.t('views.courses.content_denied.not_logged_in.h2')
+      visit dashboard_path
+      expect(page).to have_content 'You must be signed in to access that page - please sign in'
     end
 
     scenario 'when logged in as an individual user', js: true do
       visit root_path
-      within('#navbar') do
-        find('.nav-toggle').click
-        click_link 'Sign Up'
+      sign_up_and_upgrade_from_free_trial_small_device
+      visit dashboard_path
+      expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now_h1')
+      within('.navbar.navbar-default') do
+        find('.navbar-toggle').click
+        click_link 'Courses'
       end
-      expect(page).to have_content maybe_upcase I18n.t('views.student_sign_ups.new.h1')
-      student_sign_up_as('Dan', 'Murphy', nil, 'valid', eur, ireland, 1, true)
-      within('#navbar') do
-        click_button 'Toggle navigation'
-        click_link 'Dashboard'
-      end
-      expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now')
-      within('#navbar') do
-        click_button 'Toggle navigation'
-        click_link 'Library'
-      end
-      expect(page).to have_content maybe_upcase institution_1.short_name
-      expect(page).to have_content institution_1.description
-      click_link institution_1.short_name
-      expect(page).to have_content exam_section_1.name
-      click_link 'Start'
+      sleep(1)
+      click_link('Group 1')
+      click_link('Subject Course 1')
+      click_link('Start Course')
       expect(page).to have_content course_module_element_1_1.name
       page.all('.quiz-answer-clickable').first.click
       expect(page).to have_content I18n.t('views.courses.show_results.h1')
-      within('#navbar') do
-        click_link '#navbar-logo'
-      end
-      expect(page).to have_content exam_section_1.name
-      expect(page).to have_css('.progress')
-      within('.progress-bar'){ expect(page).to have_content('1 / 3') }
-      expect(page).to have_css('.panel')
-      click_link 'Continue'
-      expect(page).to have_content course_module_element_1_2.name
-      within('#navbar') do
-        click_link '#navbar-logo'
-      end
-      expect(page).to have_content exam_section_1.name
+      visit dashboard_path
+      expect(page).to have_content subject_course_1.name
       expect(page).to have_css('.progress')
       expect(page).to have_css('.panel')
-      click_link 'Continue'
-      expect(page).to have_content course_module_element_1_3.name
-      click_button 'Toggle navigation'
-      sign_out
+      within('.panel-body') do
+        expect(page).to have_content('1 out of 3 lessons completed')
+      end
+      find('.panel-body').click
+      expect(page).to have_content subject_course_1.name
+      visit dashboard_path
+      expect(page).to have_content subject_course_1.name
+      expect(page).to have_css('.progress')
+      expect(page).to have_css('.panel')
     end
 
   end

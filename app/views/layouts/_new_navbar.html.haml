@@ -27,7 +27,7 @@
 
               -#Admin Dropdown
               -if current_user.admin?
-                %li.dropdown
+                %li.dropdown.dropdown-admin
                   %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                     Admin
                     -#Todo when user notifications are reactivated
@@ -47,7 +47,7 @@
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
 
                 -#Student/Tutor/Content Manager Dropdown
-              %li.dropdown
+              %li.dropdown.dropdown-normal
                 %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   =t('views.general.user_name') + current_user.first_name.to_s
                   -#Todo when user notifications are reactivated

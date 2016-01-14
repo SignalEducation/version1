@@ -50,10 +50,8 @@ describe Country do
   it { should validate_length_of(:country_tld).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
-  it { should validate_numericality_of(:sorting_order) }
 
   it { should validate_presence_of(:currency_id) }
-  it { should validate_numericality_of(:currency_id) }
 
   it { should validate_inclusion_of(:continent).in_array(Country::CONTINENTS) }
   it { should validate_length_of(:continent).is_at_most(255) }

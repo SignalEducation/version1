@@ -85,6 +85,10 @@
         border: 1px solid shade($red-1, 20%);
       }
     }
+    &.btn-green {
+      color: $green-2;
+      border: 1px solid $green-2;
+    }
     &.btn-purple {
       color: $purple-1;
       border: 1px solid $purple-1;

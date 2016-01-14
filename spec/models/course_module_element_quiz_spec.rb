@@ -40,10 +40,8 @@ describe CourseModuleElementQuiz do
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_id).on(:update) }
 
   it { should validate_presence_of(:number_of_questions).on(:update) }
-  xit { should validate_numericality_of(:number_of_questions).on(:update) }
 
   it { should_not validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
 

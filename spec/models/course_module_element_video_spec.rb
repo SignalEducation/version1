@@ -38,7 +38,6 @@ describe CourseModuleElementVideo do
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should_not validate_presence_of(:tags) }
   it { should validate_length_of(:tags).is_at_most(255) }

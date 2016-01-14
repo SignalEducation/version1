@@ -33,8 +33,6 @@ class Group < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
-  validates :subject_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
   before_destroy :check_dependencies

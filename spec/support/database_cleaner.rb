@@ -17,8 +17,13 @@ RSpec.configure do |config|
     end
   end
 
+  #config.before(:each, :js => true) do
+  #  DatabaseCleaner.strategy = :truncation, {except: %w[marketing_tokens]}
+  #  FactoryGirl.reload
+  #end
+
   config.before(:each, :js => true) do
-    DatabaseCleaner.strategy = :truncation, {except: %w[marketing_tokens]}
+    DatabaseCleaner.strategy = :truncation
     FactoryGirl.reload
   end
 

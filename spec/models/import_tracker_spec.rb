@@ -36,12 +36,10 @@ describe ImportTracker do
   it { should validate_presence_of(:old_model_name) }
 
   it { should validate_presence_of(:old_model_id) }
-  it { should validate_numericality_of(:old_model_id) }
 
   it { should validate_presence_of(:new_model_name) }
 
   it { should validate_presence_of(:new_model_id) }
-  it { should validate_numericality_of(:new_model_id) }
 
   it { should validate_presence_of(:imported_at) }
 

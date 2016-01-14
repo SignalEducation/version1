@@ -26,8 +26,7 @@ class FlashCard < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_contents, allow_destroy: true
 
   # validation
-  validates :flash_card_stack_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :flash_card_stack_id, presence: true, on: :update
   validates :sorting_order, presence: true
 
   # callbacks

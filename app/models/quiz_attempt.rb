@@ -33,17 +33,10 @@ class QuizAttempt < ActiveRecord::Base
   belongs_to :user
 
   # validation
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_question_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_answer_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :quiz_question_id, presence: true
+  validates :quiz_answer_id, presence: true
   validates :course_module_element_user_log_id, presence: true,
             on: :update
-  validates :course_module_element_user_log_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0},
-            on: :create
   validates :answer_array, presence: true, on: :update
 
   # callbacks

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :change_plan] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:profile, :profile_index]
@@ -161,6 +161,35 @@ class UsersController < ApplicationController
     end
   end
 
+  def change_plan
+    @current_subscription = @user.subscriptions.all_in_order.last
+  end
+
+  def subscription_invoice
+    invoice = Invoice.where(id: params[:id]).first
+    Payday::Config.default.invoice_logo = "#{Rails.root}/app/assets/images/invoice-logo.svg"
+    Payday::Config.default.company_name = "LearnSignal"
+    Payday::Config.default.company_details = "27 South Frederick Street, Dublin 2, Ireland"
+
+    if current_user.id == invoice.user_id
+      @invoice = invoice
+      respond_to do |format|
+        format.html
+        format.pdf do
+          user = @invoice.user
+          Payday::Config.default.currency = "#{@invoice.currency.iso_code.downcase}"
+          sub_plan = @invoice.subscription.subscription_plan
+          pdf = Payday::Invoice.new(invoice_number: @invoice.id, bill_to: "#{user.full_name}")
+          pdf.line_items << Payday::LineItem.new(price: @invoice.total, quantity: 1, description: t("views.general.subscription_in_months.a#{sub_plan.payment_frequency_in_months}"))
+          send_data pdf.render_pdf, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
+        end
+      end
+    else
+      redirect_to account_url
+    end
+  end
+
+
   protected
 
   def get_variables
@@ -177,6 +206,7 @@ class UsersController < ApplicationController
       seo_title_maker(@user.try(:full_name), '', true)
       @current_subscription = @user.subscriptions.all_in_order.last
       @corporate_customers = CorporateCustomer.all_in_order
+      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 
   def allowed_params

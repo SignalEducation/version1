@@ -25,12 +25,9 @@ class SystemDefault < ActiveRecord::Base
   # todo belongs_to :corporate_customer_user_group
 
   # validation
-  validates :individual_student_user_group_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_student_user_group_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_user_group_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :individual_student_user_group_id, presence: true
+  validates :corporate_student_user_group_id, presence: true
+  validates :corporate_customer_user_group_id, presence: true
 
   # callbacks
 

@@ -41,12 +41,7 @@ class Subscription < ActiveRecord::Base
 
   # validation
   validates :user_id, presence: true, on: :update
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_plan_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subscription_plan_id, presence: true
   validates :next_renewal_date, presence: true, on: :update
   validates :current_status, inclusion: {in: STATUSES}, on: :update
   validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, on: :update
@@ -237,7 +232,6 @@ class Subscription < ActiveRecord::Base
              available_to_corporates: self.subscription_plan.available_to_corporates)
       .generally_available
       .all_active
-      .where('payment_frequency_in_months >= ?', self.subscription_plan.payment_frequency_in_months)
       .where('price > 0.0')
       .all_in_order
   end

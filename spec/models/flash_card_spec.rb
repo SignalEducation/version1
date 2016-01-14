@@ -33,7 +33,6 @@ describe FlashCard do
 
   # validation
   it { should validate_presence_of(:flash_card_stack_id).on(:update) }
-  xit { should validate_numericality_of(:flash_card_stack_id) }
 
   it { should validate_presence_of(:sorting_order) }
 

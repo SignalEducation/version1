@@ -44,7 +44,6 @@ describe UserNotification do
 
   # validation
   it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:subject_line) }
   it { should validate_length_of(:subject_line).is_at_most(255) }
@@ -53,10 +52,6 @@ describe UserNotification do
 
   it { should validate_inclusion_of(:message_type).in_array(UserNotification::MESSAGE_TYPES) }
   it { should validate_length_of(:message_type).is_at_most(255) }
-
-  it { should validate_numericality_of(:tutor_id) }
-
-  it { should validate_numericality_of(:blog_post_id) }
 
   # callbacks
   it { should callback(:send_email_if_needed).after(:create) }

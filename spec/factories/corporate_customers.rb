@@ -21,7 +21,7 @@ FactoryGirl.define do
     sequence(:organisation_name)  {|n| "Customer #{n}"}
     address                       'MyText'
     country_id                    1 # todo { Country.first.try(:id) || 1 }
-    payments_by_card              true
+    payments_by_card              false
     stripe_customer_guid          'MyString'
   end
 

@@ -22,7 +22,6 @@ class ReferralCode < ActiveRecord::Base
 
   # validation
   validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0},
             uniqueness: true
   validates :code, presence: true,
             uniqueness: true

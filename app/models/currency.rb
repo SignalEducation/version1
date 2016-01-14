@@ -36,7 +36,7 @@ class Currency < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :leading_symbol, presence: true, length: {maximum: 255}
   validates :trailing_symbol, presence: true, length: {maximum: 255}
-  validates :sorting_order, presence: true, numericality: true
+  validates :sorting_order, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :iso_code, :leading_symbol, :trailing_symbol) }

@@ -39,13 +39,9 @@ describe QuizAnswer do
 
   # validation
   it { should validate_presence_of(:quiz_question_id).on(:update) }
-  xit { should validate_numericality_of(:quiz_question_id) }
 
   it { should validate_inclusion_of(:degree_of_wrongness).in_array(QuizAnswer::WRONGNESS) }
   it { should validate_length_of(:degree_of_wrongness).is_at_most(255) }
-
-  it { should_not validate_presence_of(:wrong_answer_video_id).on(:update) }
-  xit { should validate_numericality_of(:wrong_answer_video_id) }
 
   # callbacks
   it { should callback(:set_the_field_correct).before(:save) }

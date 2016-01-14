@@ -24,8 +24,6 @@ class HomePage < ActiveRecord::Base
   # validation
   validates :seo_title, presence: true, length: {maximum: 255}
   validates :seo_description, allow_nil: true, length: {maximum: 255}
-  validates :subscription_plan_category_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :public_url, presence: true, length: {maximum: 255},
             uniqueness: true
 

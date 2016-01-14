@@ -55,16 +55,12 @@ class UserActivityLog < ActiveRecord::Base
   belongs_to :marketing_token
 
   # validation
-  validates :user_id, allow_blank: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true, length: { maximum: 255 }
   validates :original_uri, presence: true
   validates :controller_name, presence: true, length: { maximum: 255 }
   validates :action_name, presence: true, length: { maximum: 255 }
   validates :ip_address, presence: true, length: { maximum: 255 }
-  validates :alert_level, presence: true,
-            numericality: {only_integer: true, greater_than_or_equal_to: 0,
-                           less_than_or_equal_to: 3}
+  validates :alert_level, presence: true
   validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
   validates_length_of :raw_user_agent, maximum: 255, allow_blank: true
   validates_length_of :post_sign_up_redirect_url, maximum: 255, allow_blank: true

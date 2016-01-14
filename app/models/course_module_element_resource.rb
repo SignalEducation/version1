@@ -31,8 +31,6 @@ class CourseModuleElementResource < ActiveRecord::Base
   has_attached_file :upload, default_url: '/assets/images/missing.png'
 
   # validation
-  validates :course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_id, presence: true, on: :update
   validates :name, presence: true, length: {maximum: 255}
   validates_attachment_content_type :upload,

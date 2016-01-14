@@ -39,11 +39,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }
 
   # validation
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :number_of_questions, presence: true, numericality:
-            {greater_than_or_equal_to: 3, less_than_or_equal_to: 80,
-             only_integer: true}, on: :update
+  validates :course_module_element_id, presence: true, on: :update
+  validates :number_of_questions, presence: true, on: :update
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
   # callbacks

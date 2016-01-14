@@ -14,7 +14,7 @@ describe 'Admin/Tutor uploading flash card packs:', type: :feature do
 
   describe 'Uploading flash cards/quizzes' do
 
-    scenario 'uploading card and quiz content', js: true  do
+    xit scenario 'uploading card and quiz content', js: true  do
       visit root_path
       click_link 'Sign In'
       within('.well.well-sm') do

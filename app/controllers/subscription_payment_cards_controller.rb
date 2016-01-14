@@ -4,6 +4,7 @@ class SubscriptionPaymentCardsController < ApplicationController
   before_action do
     ensure_user_is_of_type(%w(individual_student corporate_customer admin))
   end
+  before_action :get_variables
 
   def create
     @subscription_payment_card = SubscriptionPaymentCard.new(create_params)
@@ -12,7 +13,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'payment-details')
   end
 
   def update
@@ -22,7 +23,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.update.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'payment-details')
   end
 
   protected

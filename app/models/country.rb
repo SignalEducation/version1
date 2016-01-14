@@ -36,10 +36,8 @@ class Country < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :iso_code, presence: true, length: {maximum: 255}
   validates :country_tld, presence: true, length: {maximum: 255}
-  validates :sorting_order, presence: true,
-            numericality: {only_integer: true}
-  validates :currency_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :sorting_order, presence: true
+  validates :currency_id, presence: true
   validates :continent, inclusion: {in: CONTINENTS}, length: {maximum: 255}
 
   # callbacks

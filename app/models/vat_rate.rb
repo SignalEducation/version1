@@ -24,9 +24,7 @@ class VatRate < ActiveRecord::Base
   belongs_to :vat_code, inverse_of: :vat_rates
 
   # validation
-  validates :vat_code_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0},
-            on: :update
+  validates :vat_code_id, presence: true, on: :update
   validates :percentage_rate, presence: true
   validates :effective_from, presence: true
 

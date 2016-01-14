@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'account', to: 'users#show', as: :account
+    get 'account/change_plan', to: 'users#change_plan', as: :account_change_plan
     get 'profile/:id', to: 'users#profile', as: :profile
     get 'profiles', to: 'users#profile_index', as: :tutors
     post 'change_password', to: 'users#change_password', as: :change_password
@@ -98,6 +99,7 @@ Rails.application.routes.draw do
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     resources :invoices, only: [:index, :show]
+    get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'

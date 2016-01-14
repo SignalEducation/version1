@@ -37,16 +37,12 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   has_many :course_module_element_user_logs
 
   # validation
-  validates :course_module_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_id, presence: true
   validates :name, presence: true, length: {maximum: 255}
   validates :name_url, presence: true, length: { maximum: 255 }
-  validates :minimum_question_count_per_quiz, presence: true,
-            numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :maximum_question_count_per_quiz, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :total_number_of_questions, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :minimum_question_count_per_quiz, presence: true
+  validates :maximum_question_count_per_quiz, presence: true
+  validates :total_number_of_questions, presence: true
 
   # callbacks
   before_validation { squish_fields(:name) }

@@ -33,7 +33,6 @@ describe VatRate do
 
   # validation
   it { should validate_presence_of(:vat_code_id).on(:update) }
-  xit { should validate_numericality_of(:vat_code_id).on(:update) }
 
   it { should validate_presence_of(:percentage_rate) }
 

@@ -97,6 +97,11 @@ en:
         a3: Quarterly subscription
         a6: Half-yearly subscription
         a12: Yearly subscription
+      subscription_in_months:
+        a1: LearnSignal Monthly Subscription
+        a3: LearnSignal Quarterly Subscription
+        a6: LearnSignal Half-yearly Subscription
+        a12: Yearly subscription
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
@@ -459,7 +464,8 @@ en:
         completed: Completed
         none_in_progress: "Remember, you can study multiple modules at the same time."
         none_completed: "This panel will show you the modules that you have completed. Keep going!"
-        no_content_right_now: "This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started, choose a course form our library."
+        no_content_right_now_h1: Your Learn Signal Dashboard
+        no_content_right_now_h5: Your progress through all courses will be recorded here.
         overview: Overview
 
       tutor:
@@ -579,6 +585,7 @@ en:
         status: 'Status'
         vat_rate_id: "VAT rated"
         issued_at: "Issued at"
+        date: Date
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"
@@ -813,6 +820,13 @@ en:
         sub-head: "E-mail with activation link has been sent. Please check your inbox and click on the link to activate your LearnSignal account."
 
     subscription_payment_cards:
+      show:
+        h1: Your Card Details
+      index:
+        h1: Your Payment Details
+        h4: Card Details
+        status: Status
+
       form:
         make_default_card: Use this as your default Card
 
@@ -1034,12 +1048,13 @@ en:
       show:
         h1: Account
         edit: Edit Account
-        add_new_card: "Add New Card"
+        add_new_card: Update Payment Info
+        new_card: Click Here To Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
           h4: Change your password
-        cancel_your_subscription_plan: "Would you like to cancel your subscription?"
+        cancel_your_subscription_plan: Cancel Recurring Payments
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
@@ -1060,20 +1075,22 @@ en:
           personal_details: Personal details
           corporation: Corporation
           subscriptions: Subscriptions
+          payments: Payment Information
           notifications: Notifications
           admin: Admin
           referral_code: Referral Code
           your_referral_code: Your Referral Code
         upgrade_now: Upgrade Now
-        upgrade_subscription_plan: Edit Your Subscription
+        upgrade_subscription_plan: Upgrade Subscription
+        change_subscription_plan: Change Subscription
         use_this_card: "Use this card"
         your_card_details: Update Payment Info
-        your_invoices: Your Invoices
-        your_next_payment_will_be_on: "Your next payment will be processed on"
+        your_invoices: Payment History
+        your_next_payment_will_be_on: "Next Bill Due: "
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
-        your_plan_will_expire_on: "Your plan is set to expire on"
-        your_subscription: Current Subscription
+        your_plan_will_expire_on: "Your subscription is cancelled, you will continue to have access until: "
+        your_subscription: My Subscription
         you_dont_have_referral_code: "You don't have a referral code Yet."
         total_number_of_referred_users: Total number of referred users
         number_of_referred_users_this_month: Number of referred users this month

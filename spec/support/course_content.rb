@@ -5,7 +5,8 @@ shared_context 'course_content' do
   # Courses Structure
 
   # first set
-  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course) }
+  let!(:course_group_1) { FactoryGirl.create(:group) }
+  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course, groups: [course_group_1]) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
                            subject_course_id: subject_course_1.id,
                            tutor_id: tutor_user.id) }
@@ -25,7 +26,8 @@ shared_context 'course_content' do
                                                                 video_id: '123abc') }
 
   # Second set
-  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course) }
+  let!(:course_group_2) { FactoryGirl.create(:group) }
+  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, groups: [course_group_2]) }
 
   let!(:course_module_2) { FactoryGirl.create(:active_course_module,
                                               subject_course_id: subject_course_2.id,

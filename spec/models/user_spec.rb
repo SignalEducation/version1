@@ -101,7 +101,7 @@ describe User do
 
   # validation
   it { should validate_presence_of(:email) }
-  it { should validate_uniqueness_of(:email) }
+  it { should validate_uniqueness_of(:email).case_insensitive }
   it { should validate_length_of(:email).is_at_least(7).is_at_most(50) }
 
   it { should validate_presence_of(:first_name) }
@@ -114,11 +114,20 @@ describe User do
   it { should validate_confirmation_of(:password).on(:create) }
   it { should validate_length_of(:password).is_at_least(6).is_at_most(255) }
 
-  it { should validate_presence_of(:country_id) }
-  it { should validate_numericality_of(:country_id) }
+  it { should_not validate_presence_of(:country_id) }
 
   it { should validate_presence_of(:user_group_id) }
-  it { should validate_numericality_of(:user_group_id) }
+
+  context "user email validation" do
+    before do
+      user_group = FactoryGirl.create(:individual_student_user_group)
+      @user = FactoryGirl.create(:user, user_group_id: user_group.id)
+    end
+
+    it "validates uniqueness of email" do
+      expect(@user).to validate_uniqueness_of(:email).case_insensitive
+    end
+  end
 
   context "corporate_customer_id validation" do
     before do
@@ -142,13 +151,11 @@ describe User do
     it "requires corporate_customer_id for corporate customer" do
       user = FactoryGirl.create(:user, user_group_id: @corporate_customer_group.id, corporate_customer_id: 1)
       expect(user).to validate_presence_of(:corporate_customer_id)
-      expect(user).to validate_numericality_of(:corporate_customer_id)
     end
 
     it "requires corporate_customer_id for corporate student" do
       user = FactoryGirl.create(:user, user_group_id: @corporate_student_group.id, corporate_customer_id: 1)
       expect(user).to validate_presence_of(:corporate_customer_id)
-      expect(user).to validate_numericality_of(:corporate_customer_id)
     end
   end
 

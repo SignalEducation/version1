@@ -68,7 +68,6 @@ describe SubjectCourse do
   xit { should validate_length_of(:wistia_guid).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:description) }
 
@@ -82,7 +81,6 @@ describe SubjectCourse do
   it { should validate_length_of(:forum_url).is_at_most(255) }
 
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
-  it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

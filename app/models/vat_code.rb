@@ -27,8 +27,7 @@ class VatCode < ActiveRecord::Base
   accepts_nested_attributes_for :vat_rates
 
   # validation
-  validates :country_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :country_id, presence: true
   validates :name, presence: true, length: { maximum: 255 }
   validates :label, presence: true, length: { maximum: 255 }
   validates_length_of :wiki_url, maximum: 255, allow_blank: true

@@ -30,10 +30,8 @@ describe CompletionCertificate do
 
   # validation
   it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:subject_course_user_log_id) }
-  it { should validate_numericality_of(:subject_course_user_log_id) }
 
   it { should validate_presence_of(:guid) }
 

@@ -39,10 +39,8 @@ describe IpAddress do
   it { should validate_length_of(:ip_address).is_at_most(255) }
 
   it { should validate_presence_of(:latitude) }
-  it { should validate_numericality_of(:latitude) }
 
   it { should validate_presence_of(:longitude) }
-  it { should validate_numericality_of(:longitude) }
 
   # callbacks
   it { should callback(:geo_locate).before(:validation).on(:create) }

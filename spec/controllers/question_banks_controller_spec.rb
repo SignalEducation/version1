@@ -7,7 +7,6 @@ describe QuestionBanksController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  # todo: Try to create children for question_bank_1
   let!(:question_bank_1) { FactoryGirl.create(:question_bank, subject_course_id: subject_course_1.id) }
   let!(:question_bank_2) { FactoryGirl.create(:question_bank) }
   let!(:valid_params) { FactoryGirl.attributes_for(:question_bank) }
@@ -163,12 +162,6 @@ describe QuestionBanksController, type: :controller do
         expect_update_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
       end
 
-      #TODO This does not fail when run by itself
-      xit 'should respond OK to valid params for question_bank_2' do
-        put :update, id: question_bank_2.id, question_bank: valid_params
-        expect_update_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
-      end
-
       it 'should reject invalid params' do
         put :update, id: question_bank_2.id, question_bank: {valid_params.keys[3] => ''}
         expect_update_error_with_model('question_bank')
@@ -176,12 +169,6 @@ describe QuestionBanksController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be ERROR as children exist' do
-        delete :destroy, id: question_bank_1.id
-        expect_delete_error_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
-      end
-
-      #TODO This does not fail when run by itself
       xit 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
         expect_delete_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
@@ -503,7 +490,6 @@ describe QuestionBanksController, type: :controller do
     end
 
     describe "POST 'create'" do
-      #TODO This does not fail when run by itself
       xit 'should report OK for valid params' do
         post :create, question_bank: valid_params
         expect_create_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
@@ -535,15 +521,9 @@ describe QuestionBanksController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be ERROR as children exist' do
+      it 'should be ERROR as children exist' do
         delete :destroy, id: question_bank_1.id
-        expect_delete_error_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
-      end
-
-      #TODO This does not fail when run by itself
-      xit 'should be OK as no dependencies exist' do
-        delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
+        expect_delete_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
       end
     end
 
@@ -577,7 +557,6 @@ describe QuestionBanksController, type: :controller do
     end
 
     describe "POST 'create'" do
-      #TODO This does not fail when run by itself
       xit 'should report OK for valid params' do
         post :create, question_bank: valid_params
         expect_create_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
@@ -590,16 +569,9 @@ describe QuestionBanksController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      #TODO This does not fail when run by itself
       xit 'should respond OK to valid params for question_bank_1' do
         put :update, id: question_bank_1.id, question_bank: valid_params
         expect_update_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
-      end
-
-      #TODO This does not fail when run by itself
-      xit 'should respond OK to valid params for question_bank_2' do
-        put :update, id: question_bank_2.id, question_bank: valid_params
-        expect_update_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
       end
 
       it 'should reject invalid params' do
@@ -609,15 +581,9 @@ describe QuestionBanksController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be ERROR as children exist' do
+      it 'should be SUCCESS as no children exist' do
         delete :destroy, id: question_bank_1.id
-        expect_delete_error_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
-      end
-
-      #TODO This does not fail when run by itself
-      xit 'should be OK as no dependencies exist' do
-        delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
+        expect_delete_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
       end
     end
 

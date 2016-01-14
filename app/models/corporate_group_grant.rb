@@ -25,12 +25,9 @@ class CorporateGroupGrant < ActiveRecord::Base
   belongs_to :group
 
   # validation
-  validates :corporate_group_id, presence: true,
-            numericality: { only_integer: true, greater_than: 0 }
-  validates :subject_course_id, allow_nil: true,
-            numericality: { only_integer: true, greater_than: 0 }
-  validates :group_id, allow_nil: true,
-            numericality: { only_integer: true, greater_than: 0 }
+  validates :corporate_group_id, presence: true
+  #validates :subject_course_id, allow_nil: true
+  #validates :group_id, allow_nil: true
 
   # callbacks
   before_destroy :check_dependencies

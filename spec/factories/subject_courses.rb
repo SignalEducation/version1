@@ -52,6 +52,7 @@ FactoryGirl.define do
 
     factory :active_subject_course do
       active                       true
+      live                         true
     end
 
     factory :inactive_subject_course do

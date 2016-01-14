@@ -5,7 +5,6 @@ class CoursesController < ApplicationController
   def show
     @mathjax_required = true
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-
     if @course
       if @course.corporate_customer_id
         if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
@@ -83,6 +82,8 @@ class CoursesController < ApplicationController
       else
         redirect_to library_url
       end
+    else
+      redirect_to library_url
     end
   end
 
