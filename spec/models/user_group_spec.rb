@@ -33,6 +33,8 @@ describe UserGroup do
     end
   end
 
+  subject { FactoryGirl.build(:user_group) }
+
   # Constants
   it { expect(UserGroup.const_defined?(:FEATURES)).to eq(true) }
   it { expect(UserGroup.const_defined?(:CORPORATE_STUDENTS)).to eq(true) }

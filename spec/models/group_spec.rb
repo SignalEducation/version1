@@ -29,6 +29,8 @@ describe Group do
     end
   end
 
+  subject { FactoryGirl.build(:group) }
+
   # Constants
   #it { expect(Group.const_defined?(:CONSTANT_NAME)).to eq(true) }
 

@@ -49,6 +49,8 @@ describe StaticPage do
     end
   end
 
+  subject { FactoryGirl.build(:static_page) }
+
   # Constants
   #it { expect(StaticPage.const_defined?(:CONSTANT_NAME)).to eq(true) }
 

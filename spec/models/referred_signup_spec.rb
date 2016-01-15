@@ -27,6 +27,8 @@ describe ReferredSignup do
     end
   end
 
+  subject { FactoryGirl.build(:referred_signup) }
+
   # Constants
   #it { expect(ReferredSignup.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
