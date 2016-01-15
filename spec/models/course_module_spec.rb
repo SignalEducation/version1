@@ -37,6 +37,8 @@ describe CourseModule do
     end
   end
 
+  subject { FactoryGirl.build(:course_module) }
+
   # Constants
   #it { expect()CourseModule.const_defined?(:CONSTANT_NAME)).to eq(true) }
 

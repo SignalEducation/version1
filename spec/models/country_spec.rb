@@ -28,6 +28,8 @@ describe Country do
     end
   end
 
+  subject { FactoryGirl.build(:usa) }
+
   # Constants
   it { expect(Country.const_defined?(:CONTINENTS)).to eq(true) }
 

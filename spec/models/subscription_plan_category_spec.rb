@@ -26,6 +26,8 @@ describe SubscriptionPlanCategory do
     end
   end
 
+  subject { FactoryGirl.build(:subscription_plan_category) }
+
   # Constants
   #it { expect(SubscriptionPlanCategory.const_defined?(:CONSTANT_NAME)).to eq(true) }
 

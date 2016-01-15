@@ -44,6 +44,8 @@ describe UserActivityLog do
     end
   end
 
+  subject { FactoryGirl.build(:user_activity_log) }
+
   # Constants
   it { expect(UserActivityLog.const_defined?(:ALERT_LEVELS)).to eq(true) }
 

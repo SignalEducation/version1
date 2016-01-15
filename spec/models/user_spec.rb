@@ -62,7 +62,7 @@
 require 'rails_helper'
 
 describe User do
-
+  subject { FactoryGirl.build(:individual_student_user) }
   # attr-accessible
   black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key forum_notification_email_frequency falling_behind_email_alert_frequency marketing_email_frequency study_plan_notifications_email_frequency operational_email_frequency marketing_email_permission_given_at blog_notification_email_frequency profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name)
   User.column_names.each do |column_name|

@@ -24,6 +24,8 @@ describe CorporateGroup do
     end
   end
 
+  subject { FactoryGirl.build(:corporate_group) }
+
   # Constants
 
   # relationships
