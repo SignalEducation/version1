@@ -91,9 +91,9 @@ Rails.application.routes.draw do
       put 'update_courses', action: :update_courses
     end
 
-    get 'acca', to: 'home_pages#show', first_element: 'acca'
-    get 'cfa', to: 'home_pages#show', first_element: 'cfa'
-    get 'wso', to: 'home_pages#show', first_element: 'wso'
+    get 'acca', to: 'home_pages#show', first_element: 'acca', as: :acca
+    get 'cfa', to: 'home_pages#show', first_element: 'cfa', as: :cfa
+    get 'wso', to: 'home_pages#show', first_element: 'wso', as: :wso
     get 'business', to: 'home_pages#show', first_element: 'business', as: :business
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
