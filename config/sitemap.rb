@@ -2,9 +2,7 @@
 # for examples of multiple hosts and folders.
 host 'learnsignal.com'
 
-
 sitemap :site do
-
 
   #Landing Pages
   url root_url, last_mod: Time.now, change_freq: 'weekly', priority: 1.0
@@ -31,7 +29,6 @@ sitemap :site do
   url contact_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url terms_and_conditions_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
-
   #Library
   def library_special_link(the_thing)
     if the_thing.class == Group
@@ -50,7 +47,6 @@ sitemap :site do
       library_url
     end
   end
-
   url library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   Group.all_active.for_public.each do |group|
     url library_special_link(group), last_mod: group.updated_at, change_freq: 'weekly', priority: 1.0
@@ -58,7 +54,6 @@ sitemap :site do
   SubjectCourse.all_active.all_live.all_not_restricted.for_public.each do |course|
     url library_special_link(course), last_mod: course.updated_at, change_freq: 'weekly', priority: 1.0
   end
-
   #Sign In, Forgot Password
   url sign_in_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url forgot_password_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
