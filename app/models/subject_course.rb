@@ -71,6 +71,7 @@ class SubjectCourse < ActiveRecord::Base
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
   before_destroy :check_dependencies
+  after_commit :update_sitemap
 
   # scopes
   scope :all_active, -> { where(active: true) }

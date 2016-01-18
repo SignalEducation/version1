@@ -134,6 +134,7 @@ class User < ActiveRecord::Base
   # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
+  after_commit :update_sitemap
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }

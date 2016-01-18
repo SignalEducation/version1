@@ -13,6 +13,8 @@
 
 class HomePage < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+
   # attr-accessible
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id, :public_url
 
@@ -29,6 +31,7 @@ class HomePage < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  after_commit :update_sitemap
 
   # scopes
   scope :all_in_order, -> { order(:seo_title) }
