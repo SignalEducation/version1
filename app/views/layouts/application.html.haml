@@ -23,7 +23,6 @@
     %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
     %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
-
     %script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -51,6 +50,7 @@
 
     =render partial: 'layouts/favicon'
     =render partial: '/layouts/mixpanel_head_tag'
+    =render partial: 'layouts/cookie_banner'
 
   %body{ontouchstart: ''}
     -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)

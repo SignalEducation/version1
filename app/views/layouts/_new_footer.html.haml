@@ -3,6 +3,8 @@
     .container-fluid
       %ul.foot-nav
         %li
+          =render partial: 'layouts/privacy_policy'
+        %li
           =link_to 'Lecturers', tutors_url
         %li
           =link_to 'Teach', new_tutor_application_url
