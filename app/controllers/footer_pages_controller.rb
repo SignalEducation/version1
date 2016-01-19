@@ -4,6 +4,10 @@ class FooterPagesController < ApplicationController
     @seo_title = 'Why LearnSignal'
   end
 
+  def privacy_policy
+    @seo_title = 'Privacy Policy'
+  end
+
   def careers
     seo_title_maker('Careers', nil, nil)
   end
