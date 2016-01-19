@@ -3,7 +3,7 @@
     .container-fluid
       %ul.foot-nav
         %li
-          %a{href: "//www.iubenda.com/privacy-policy/7779613", class: "iubenda-nostyle no-brand iubenda-embed", title: "Privacy Policy"}Privacy Policy
+          =render partial: 'layouts/privacy_policy'
         %li
           =link_to 'Lecturers', tutors_url
         %li
