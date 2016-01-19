@@ -122,6 +122,7 @@ Rails.application.routes.draw do
     get 'careers', to: 'footer_pages#careers'
     get 'contact', to: 'footer_pages#contact'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
+    get 'privacy_policy', to: 'footer_pages#privacy_policy'
     resources :user_activity_logs
     resources :user_notifications
     resources :vat_codes
