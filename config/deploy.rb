@@ -43,6 +43,13 @@ namespace :deploy do
       # within release_path do
       #   execute :rake, 'cache:clear'
       # end
+      namespace :symlinks do
+        desc "generate and copy the symlink"
+        task :generate_sitemap do
+          run " cd #{release_path} && RAILS_ENV=production bundle exec rake sitemap:generate"
+          run " cd #{release_path} &&  RAILS_ENV=production bundle exec rake sitemap:symlink"
+        end
+      end
     end
   end
 

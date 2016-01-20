@@ -6,48 +6,6 @@ module ApplicationHelper
             "<span style='color: #eb4242;' class='glyphicon glyphicon-remove'></span>".html_safe
   end
 
-  def completion_circle(hierarchy_thing)
-    if hierarchy_thing.class == CourseModuleElement || hierarchy_thing.class == CourseModuleJumboQuiz
-      percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
-    elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
-      percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
-    else
-      percentage = nil
-    end
-
-    if percentage == 100
-      "<span style='color: green;' class='glyphicon glyphicon-ok-sign'></span>".html_safe
-    elsif percentage == 0
-      "<span style='color: green; font-size: 107%;'>&#9711;</span>".html_safe
-    elsif percentage.nil?
-      #Do Nothing
-    else
-      "<span style='color: green; font-size: 122%;' title='#{percentage}%'>&#9680;</span>".html_safe
-    end
-  end
-
-  def completion_label(hierarchy_thing)
-    if hierarchy_thing.class == CourseModuleElement
-      percentage = hierarchy_thing.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 100 : 0
-    elsif [ExamLevel, ExamSection, CourseModule].include?(hierarchy_thing.class)
-      percentage = hierarchy_thing.percentage_complete_by_user_or_guid(current_user.try(:id), current_session_guid)
-    else
-      percentage = nil
-    end
-
-    if percentage == 100
-      "<span style='background-color: green;' class='label label-default'>Done</span>".html_safe
-    elsif percentage == 0
-      if hierarchy_thing.try(:first_active_cme)
-        "<a href='#{course_special_link(hierarchy_thing.first_active_cme)}'><span style='background-color: green;' class='label label-default'>Start</span></a>".html_safe
-      end
-    elsif percentage.nil?
-      #Do Nothing
-    else
-      "<span style='background-color: #428BCA;' class='label label-default'>#{percentage}%</span>".html_safe
-    end
-  end
-
   def number_in_local_currency(amount, currency_id)
     ccy = Currency.find(currency_id)
     number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
@@ -69,15 +27,6 @@ module ApplicationHelper
   def body_sanitizer(some_text)
     raw(some_text)
     # sanitize(some_text, tags: %w(br hr table tbody thead tfoot tr th td b i u h1 h2 h3 h4 h5 h6 p div a img button span ul ol li nav header), attributes: %w(id class style href src url data-toggle data-target data-ride data-slide-to role aria-hidden aria-expanded aria-controls), css: %w(url) )
-  end
-
-  def breadcrumb_builder(the_thing)
-    # This builds an array of objects starting at subject_area and ending at whatever the_thing is.
-    if the_thing.parent
-      breadcrumb_builder(the_thing.parent) + [the_thing]
-    else
-      [the_thing]
-    end
   end
 
   def seconds_to_time(seconds)
