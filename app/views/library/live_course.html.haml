@@ -110,23 +110,23 @@
                                       ='Flash Card'
 
 
-                          -if child.course_module_jumbo_quiz && child.course_module_jumbo_quiz.active
-                            -if current_user
-                              =link_to course_special_link(child.course_module_jumbo_quiz), class: 'list-group-item link-purple box-topic-item' do
-                                .row
-                                  .col-xs-12.col-sm-8
-                                    =child.course_module_jumbo_quiz.name
-                                  .col-xs-12.col-sm-4
-                                    .side-meta
-                                      =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                            -else
-                              =link_to '#restrictedAccess', class: 'list-group-item link-purple box-topic-item', data: {toggle: 'modal', target: '#restrictedAccess'} do
-                                .row
-                                  .col-xs-12.col-sm-8
-                                    =child.course_module_jumbo_quiz.name
-                                  .col-xs-12.col-sm-4
-                                    .side-meta
-                                      =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                        -if child.course_module_jumbo_quiz && child.course_module_jumbo_quiz.active
+                          -if current_user
+                            =link_to course_special_link(child.course_module_jumbo_quiz), class: 'list-group-item link-purple box-topic-item' do
+                              .row
+                                .col-xs-12.col-sm-8
+                                  =child.course_module_jumbo_quiz.name
+                                .col-xs-12.col-sm-4
+                                  .side-meta
+                                    =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                          -else
+                            =link_to '#restrictedAccess', class: 'list-group-item link-purple box-topic-item', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                              .row
+                                .col-xs-12.col-sm-8
+                                  =child.course_module_jumbo_quiz.name
+                                .col-xs-12.col-sm-4
+                                  .side-meta
+                                    =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
                     -if @course.question_bank && @course.question_bank.active?
                       -if @question_bank_passed
