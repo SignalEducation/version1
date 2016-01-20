@@ -1,23 +1,23 @@
 class FooterPagesController < ApplicationController
 
   def why_learn_signal
-    @seo_title = 'Why LearnSignal'
+    seo_title_maker('Why LearnSignal Training', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
   end
 
   def privacy_policy
-    @seo_title = 'Privacy Policy'
+    seo_title_maker('Privacy Policy', 'Privacy Policy of learnsignal.com. This Application collects some Personal Data from its Users.', nil)
   end
 
   def careers
-    seo_title_maker('Careers', nil, nil)
+    seo_title_maker('Careers', 'Here at LearnSignal, we like proactive innovators who produce great work and play an impactful role in interesting projects.', nil)
   end
 
   def contact
-    seo_title_maker('Contact', nil, nil)
+    seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
   end
 
   def terms_and_conditions
-    seo_title_maker('Terms & Conditions', nil, nil)
+    seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
   end
 
   def info_subscribe
