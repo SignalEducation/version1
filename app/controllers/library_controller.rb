@@ -33,7 +33,7 @@ class LibraryController < ApplicationController
       ids = grouped_courses.uniq
       @no_grouped_courses = SubjectCourse.where.not(id: ids).for_public.all_active.all_live.all_not_restricted
     end
-    seo_title_maker('Library', nil, nil)
+    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
   def show
