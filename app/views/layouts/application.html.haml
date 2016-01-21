@@ -14,13 +14,14 @@
       -else
         LearnSignal
     =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
-    -# Bootstrap DateTimePicker
-    %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
-
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
-    -# Bootstrap DateTimePicker
-    %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
-    %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
+
+    -if current_user && current_user.admin?
+      %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
+      -# Bootstrap DateTimePicker
+      %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
+      %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
+
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
     %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
     %script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
