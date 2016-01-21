@@ -72,21 +72,22 @@ class StaticPagesController < ApplicationController
     elsif params[:first_element].to_s == '500-page'
       render file: 'public/500.html', layout: nil, status: 500
     else
-      first_element = '/' + params[:first_element].to_s
-      @delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
-      if @delivered_page
-        cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @delivered_page.subscription_plan_category.try(:guid), httponly: true}
+      redirect_to root_url, status: 301
+      #first_element = '/' + params[:first_element].to_s
+      #@delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
+      #if @delivered_page
+      #  cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @delivered_page.subscription_plan_category.try(:guid), httponly: true}
 
-        if @delivered_page.use_standard_page_template
-          reset_latest_session_landing_url
-          reset_post_sign_up_redirect_path(@delivered_page.post_sign_up_redirect_url)
-          render 'static_pages/deliver_page/with_layout'
-        else
-          render 'static_pages/deliver_page/without_layout', layout: nil
-        end
-      else
-        render 'static_pages/deliver_page/404_page.html.haml', status: 404
-      end
+      #  if @delivered_page.use_standard_page_template
+      #    reset_latest_session_landing_url
+      #    reset_post_sign_up_redirect_path(@delivered_page.post_sign_up_redirect_url)
+      #    render 'static_pages/deliver_page/with_layout'
+      #  else
+      #    render 'static_pages/deliver_page/without_layout', layout: nil
+      #  end
+      #else
+      #  render 'static_pages/deliver_page/404_page.html.haml', status: 404
+      #end
     end
   end
 

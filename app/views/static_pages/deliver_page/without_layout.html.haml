@@ -22,8 +22,6 @@
 
     =csrf_meta_tags
 
-    -if Rails.env.production? && (!current_user || current_user.try(:individual_student?))
-      =render partial: 'layouts/google_analytics'
     =head_sanitizer(@delivered_page.head_content)
     -if @delivered_page.mark_as_nofollow
       %meta{name: 'robots', content: 'nofollow'}
@@ -38,7 +36,7 @@
       =render partial: 'layouts/google_tag_manager'
     =body_sanitizer(@delivered_page.body_content)
     -if @delivered_page.show_standard_footer
-      =render partial: 'layouts/footer'
+      =render partial: 'layouts/new_footer'
       =render partial: 'layouts/misc_javascript'
     =render partial: 'static_pages/deliver_page/scroller'
     =render partial: 'layouts/flash_messages'
