@@ -51,7 +51,7 @@
       %meta{name: 'robots', content: 'noindex'}
 
     =render partial: 'layouts/favicon'
-    =render partial: 'layouts/mixpanel_head_tag'
+    =#render partial: 'layouts/mixpanel_head_tag'
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/facebook_pixel'
@@ -142,7 +142,7 @@
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
 
-    =render partial: 'layouts/mixpanel_body_tag'
+    =#render partial: 'layouts/mixpanel_body_tag'
     =render partial: 'layouts/contact_modal'
     =render partial: 'layouts/restricted_access'
     -unless current_user
