@@ -49,11 +49,11 @@
         %br/
         =f.label :available_from, t('views.subscription_plans.form.available_from'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.text_field :available_from, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control datepicker', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}
+          =f.text_field :available_from, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
       %br/
       =f.label :available_to, t('views.subscription_plans.form.available_to'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control datepicker', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}
+        =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker2'
       %br/
       =f.label :subscription_plan_category_id, t('views.subscription_plans.form.subscription_plan_category_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
@@ -62,3 +62,13 @@
   .row
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), subscription_plans_path, class: 'btn btn-cyan'
+
+
+
+
+:javascript
+
+  $(function () {
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker2').datetimepicker();
+  });
