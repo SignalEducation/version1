@@ -1,10 +1,10 @@
 .hero-home {
-  background: $purple-5 asset-asset-url('home-page-1003.png') 20% 0 no-repeat;
+  background: $purple-5 asset-url('home-page-1003.png') 20% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 1100px;
   @include breakpoint(md-min) {
-    background: $purple-5 asset-asset-url('home-page-1003.png') no-repeat;
+    background: $purple-5 asset-url('home-page-1003.png') no-repeat;
     background-size: cover;
   }
 }
