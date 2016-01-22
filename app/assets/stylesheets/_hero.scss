@@ -1,10 +1,10 @@
 .hero-home {
-  background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/home-page-1003.png") 20% 0 no-repeat;
+  background: $purple-5 url("home-page-1003.png") 20% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 1100px;
   @include breakpoint(md-min) {
-    background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/home-page-1003.png") no-repeat;
+    background: $purple-5 url("home-page-1003.png") no-repeat;
     background-size: cover;
   }
 }
@@ -42,86 +42,86 @@
   }
 }
 .hero-acca {
-  background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") 50% 0 no-repeat;
+  background: $purple-2 url("bg-acca.jpg") 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-acca.jpg") no-repeat;
+    background: $purple-2 url("bg-acca.jpg") no-repeat;
     background-size: cover;
   }
 }
 .hero-business {
-  background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/business-home-1001.png") 50% 0 no-repeat;
+  background: $purple-5 url("business-home-1001.png") 50% 0 no-repeat;
   color: $white;
   min-height: 1100px;
   @include breakpoint(md-min) {
-    background: $purple-5 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/business-home-1001.png") no-repeat;
+    background: $purple-5 url("business-home-1001.png") no-repeat;
     background-size: cover;
   }
 }
 .hero-upcoming {
-  background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-upcoming.jpg") 50% 0 no-repeat;
+  background: $purple-2 url("bg-upcoming.jpg") 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-upcoming.jpg") no-repeat;
+    background: $purple-2 url("bg-upcoming.jpg") no-repeat;
     background-size: cover;
   }
 }
 .hero-cfa {
-  background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") 50% 0 no-repeat;
+  background: $purple-2 url("bg-cfa.jpg") 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-cfa.jpg") no-repeat;
+    background: $purple-2 url("bg-cfa.jpg") no-repeat;
     background-size: cover;
   }
 }
 .hero-sign-up {
-  background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-sign-up.jpg") 50% 0 no-repeat;
+  background: $purple-2 url("bg-sign-up.jpg") 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-sign-up.jpg") no-repeat;
+    background: $purple-2 url("bg-sign-up.jpg") no-repeat;
     background-size: cover;
   }
 }
 .hero-library {
-  background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-library.jpg") 50% 0 no-repeat;
+  background: $purple-2 url("bg-library.jpg") 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/bg-library.jpg") no-repeat;
+    background: $purple-2 url("bg-library.jpg") no-repeat;
     background-size: cover;
   }
 }
 // Landing Page Images
 .home-image-1 {
-  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1002.png") 50% 0 no-repeat;
+  background: lighten($purple-1, 5%) url("professional-qualifications.png") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 500px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1002.png") 50% 25 no-repeat;
+    background: lighten($purple-1, 5%) url("professional-qualifications.png") 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     //min-height: 500px;
   }
 }
 .home-image-2 {
-  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1001+(1).png") 50% 0 no-repeat;
+  background: lighten($purple-1, 5%) url("it-perations.png") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 500px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1001+(1).png") 50% 25 no-repeat;
+    background: lighten($purple-1, 5%) url("it-perations.png") 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 500px;
   }
 }
 .home-image-3 {
-  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1003.png") 50% 0 no-repeat;
+  background: lighten($purple-1, 5%) url("business-professionals.png") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 500px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/1003.png") 50% 25 no-repeat;
+    background: lighten($purple-1, 5%) url("business-professionals.png") 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 500px;
@@ -132,36 +132,36 @@
 
 
 .blog-image-1 {
-  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/Maximise+employee+memory-retention-with-on-demand-training.jpg") 50% 0 no-repeat;
+  background: lighten($purple-1, 5%) url("maximise-employee-memory-retention-with-on-demand-training.jpg") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 250px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/Maximise+employee+memory-retention-with-on-demand-training.jpg") 50% 25 no-repeat;
+    background: lighten($purple-1, 5%) url("maximise-employee-memory-retention-with-on-demand-training.jpg") 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 250px;
   }
 }
 .blog-image-2 {
-  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/meeting-millennials-needs-with-on-demand-learning.jpg") 50% 0 no-repeat;
+  background: lighten($purple-1, 5%) url("meeting-millennials-needs-with-on-demand-learning.jpg") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 250px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/meeting-millennials-needs-with-on-demand-learning.jpg") 50% 25 no-repeat;
+    background: lighten($purple-1, 5%) url("meeting-millennials-needs-with-on-demand-learning.jpg") 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 250px;
   }
 }
 .blog-image-3 {
-  background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/elearning-employee-retention.jpg") 50% 0 no-repeat;
+  background: lighten($purple-1, 5%) url("elearning-employee-retention.jpg") 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 250px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/elearning-employee-retention.jpg") 50% 25 no-repeat;
+    background: lighten($purple-1, 5%) url("elearning-employee-retention.jpg") 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 250px;
