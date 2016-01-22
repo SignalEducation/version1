@@ -75,6 +75,8 @@ GEM
     bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    bootstrap3-datetimepicker-rails (4.14.30)
+      momentjs-rails (>= 2.8.1)
     browser (1.1.0)
     builder (3.2.2)
     bullet (5.0.0)
@@ -231,6 +233,8 @@ GEM
     mini_portile2 (2.0.0)
     minitest (5.8.3)
     mixpanel-ruby (2.2.0)
+    momentjs-rails (2.11.0)
+      railties (>= 3.1)
     money (6.6.1)
       i18n (>= 0.6.4, <= 0.7.0)
     multi_json (1.11.2)
@@ -464,6 +468,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.3.2)
+  bootstrap3-datetimepicker-rails (~> 4.14.30)
   browser
   bullet
   capistrano (~> 3.4.0)
@@ -494,6 +499,7 @@ DEPENDENCIES
   mandrill-api
   mathjax-rails
   mixpanel-ruby (~> 2.1)
+  momentjs-rails (>= 2.9.0)
   multipart-post
   newrelic_rpm
   paperclip (~> 4.2.1)
