@@ -142,9 +142,8 @@ Rails.application.routes.draw do
     root 'home_pages#show'
 
     # Catch-all
-    get '404', to: 'static_pages#deliver_page', first_element: '404-page'
-    get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
-        as: :deliver_static_pages
+    get '404', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end
 
   # Catch-all
