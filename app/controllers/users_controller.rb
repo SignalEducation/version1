@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :change_plan] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:profile, :profile_index]
@@ -155,10 +155,14 @@ class UsersController < ApplicationController
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       current_subscription = current_user.subscriptions[0]
       current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"])
-      redirect_to dashboard_url
+      redirect_to personal_upgrade_complete_url
     else
       redirect_to account_url
     end
+  end
+
+  def personal_upgrade_complete
+    @subscription = current_user.subscriptions[1]
   end
 
   def change_plan
