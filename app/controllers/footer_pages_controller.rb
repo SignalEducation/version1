@@ -20,6 +20,18 @@ class FooterPagesController < ApplicationController
     seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
   end
 
+  def missing_page
+    if params[:first_element].to_s == '' && current_user
+      redirect_to dashboard_url
+    elsif params[:first_element].to_s == '500-page'
+      render file: 'public/500.html', layout: nil, status: 500
+    else
+      render 'footer_pages/404_page.html.haml', status: 404
+    end
+    seo_title_maker('404 Page', "Sorry, we couldn't find what you are looking for. We missed the mark!
+      but don't worry. We're working on fixing this link.", nil)
+  end
+
   def info_subscribe
     email = params[:email][:address]
     list_id = params[:list_id]
