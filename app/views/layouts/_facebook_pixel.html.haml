@@ -1,19 +1,62 @@
-<!-- Facebook Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','//connect.facebook.net/en_US/fbevents.js');
+-if controller_name == 'student_sign_ups'
 
-fbq('init', '1664734670449045');
-fbq('track', "PageView");
-fbq('track', 'ViewContent');
-fbq('track', 'AddPaymentInfo');
-fbq('track', 'Lead');
-fbq('track', 'CompleteRegistration');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1664734670449045&ev=PageView&noscript=1"/>
-</noscript>
-<!-- End Facebook Pixel Code -->
+  :javascript
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '1664734670449045');
+    fbq('track', "PageView");
+    fbq('track', 'CompleteRegistration');
+
+  %noscript
+    %img{:height => "1", :src => "https://www.facebook.com/tr?id=1664734670449045&ev=PageView&noscript=1", :style => "display:none", :width => "1"}/
+
+-elsif current_user && controller_name == 'users' && action_name == 'new_paid_subscription'
+
+  :javascript
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '1664734670449045');
+    fbq('track', "PageView");
+    fbq('track', 'InitiateCheckout');
+
+  %noscript
+    %img{:height => "1", :src => "https://www.facebook.com/tr?id=1664734670449045&ev=PageView&noscript=1", :style => "display:none", :width => "1"}/
+
+
+-elsif current_user && controller_name == 'users' && action_name == 'personal_upgrade_complete'
+
+  :javascript
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '1664734670449045');
+    fbq('track', "PageView");
+    fbq('track', 'Purchase', {value: "#{current_user.subscriptions.all_in_order.last.subscription_plan.price}", currency: "#{current_user.subscriptions.all_in_order.last.subscription_plan.currency.leading_symbol}"});
+
+  %noscript
+    %img{:height => "1", :src => "https://www.facebook.com/tr?id=1664734670449045&ev=PageView&noscript=1", :style => "display:none", :width => "1"}/
+
+-else
+
+  :javascript
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '1664734670449045');
+    fbq('track', "PageView");
+  %noscript
+    %img{:height => "1", :src => "https://www.facebook.com/tr?id=1664734670449045&ev=PageView&noscript=1", :style => "display:none", :width => "1"}/
