@@ -147,6 +147,6 @@ Rails.application.routes.draw do
   end
 
   # Catch-all
-  get '(:first_element(/:second_element))', to: 'static_pages#deliver_page'
+  get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
 
 end
