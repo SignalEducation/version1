@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: home_pages
+#
+#  id                            :integer          not null, primary key
+#  seo_title                     :string
+#  seo_description               :string
+#  subscription_plan_category_id :integer
+#  public_url                    :string
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#
+
 class HomePagesController < ApplicationController
 
   before_action :logged_in_required, except: [:show, :student_sign_up]

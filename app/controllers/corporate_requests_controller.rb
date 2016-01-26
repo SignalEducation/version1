@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: corporate_requests
+#
+#  id               :integer          not null, primary key
+#  name             :string
+#  title            :string
+#  company          :string
+#  email            :string
+#  phone_number     :string
+#  website          :string
+#  personal_message :text
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 class CorporateRequestsController < ApplicationController
 
   before_action :logged_in_required, except: [:new, :create, :submission_complete]

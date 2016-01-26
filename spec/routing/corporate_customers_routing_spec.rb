@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: corporate_customers
+#
+#  id                   :integer          not null, primary key
+#  organisation_name    :string
+#  address              :text
+#  country_id           :integer
+#  payments_by_card     :boolean          default(FALSE), not null
+#  stripe_customer_guid :string
+#  created_at           :datetime
+#  updated_at           :datetime
+#  logo_file_name       :string
+#  logo_content_type    :string
+#  logo_file_size       :integer
+#  logo_updated_at      :datetime
+#
+
 require 'rails_helper'
 
 RSpec.describe CorporateCustomersController, type: :routing do
