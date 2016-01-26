@@ -46,7 +46,7 @@ class StudentExamTrack < ActiveRecord::Base
 
   # callbacks
   before_save :set_count_of_fields
-  after_save :create_or_update_subject_course_user_log
+  after_commit :create_or_update_subject_course_user_log
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
