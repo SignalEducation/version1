@@ -147,9 +147,12 @@ class StudentExamTrack < ActiveRecord::Base
   def set_count_of_fields
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
     self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
-
-    self.count_of_videos_taken = completed_cme_user_logs.latest_only.where(is_video: true).count
-    self.count_of_quizzes_taken = completed_cme_user_logs.latest_only.where(is_quiz: true).count
+    video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
+    unique_video_ids = video_ids.uniq
+    quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
+    unique_quiz_ids = quiz_ids.uniq
+    self.count_of_videos_taken = unique_video_ids.count
+    self.count_of_quizzes_taken = unique_quiz_ids.count
   end
 
 end
