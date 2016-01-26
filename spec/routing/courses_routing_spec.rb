@@ -26,21 +26,21 @@ RSpec.describe CoursesController, type: :request do
 
   it 'redirects to /library' do
     get '/en/courses/abc/def'
-    expect(response).to redirect_to('/en/library')
+    expect(response).to redirect_to('/en/sign_in')
   end
 
   it 'redirects to /library' do
     get '/courses/abc/def'
-    expect(response).to redirect_to('/en/library')
+    expect(response).to redirect_to('/en/sign_in')
   end
 
   it 'redirects to /library' do
     get '/en/courses/abc/def/ghi'
-    expect(response).to redirect_to('/en/library')
+    expect(response).to redirect_to('/en/sign_in')
   end
 
   it 'redirects to /library' do
     get '/courses/abc/def/ghi'
-    expect(response).to redirect_to('/en/library')
+    expect(response).to redirect_to('/en/sign_in')
   end
 end
