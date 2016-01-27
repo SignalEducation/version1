@@ -45,7 +45,7 @@
       %h2=t('views.course_module_element_resources.index.h1')
       %ul
         -cme.course_module_element_resources.all_in_order.each do |r|
-          -if r.web_url.length > 0
+          -if r.web_url && r.web_url.length > 0
             %li
               =link_to r.name, r.web_url, target: '_blank'
           -else
@@ -53,28 +53,20 @@
               =link_to r.name, r.upload.url, target: '_blank'
 
 
-:javascript
-  var videoCmeUserLog = #{@video_cme_user_log.id || 0};
 
-  $(document).on('click', '.mark-as-complete', function(ajax) {
-    $.ajax({
-      url: '#{video_watched_data_courses_path}',
-      dataType: 'json',
-      data: JSON.stringify({'videoLogId': videoCmeUserLog}),
-      method: 'PATCH',
-      contentType: "application/json; charset=utf-8"
+-if @demo_mode = true
+  :javascript
+
+    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
+      videoFoam: true,
+      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
     });
-  });
 
-  wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
-    videoFoam: true,
-    stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
-  });
+-else
+  :javascript
+    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
 
-  wistiaEmbed.bind("secondchange", function() {
-    var time1 = (wistiaEmbed.duration()/100*75);
-    var time2 = time1 + 2;
-    if (wistiaEmbed.secondsWatched() > time1 && wistiaEmbed.secondsWatched() < time2) {
+    $(document).on('click', '.mark-as-complete', function(ajax) {
       $.ajax({
         url: '#{video_watched_data_courses_path}',
         dataType: 'json',
@@ -82,6 +74,24 @@
         method: 'PATCH',
         contentType: "application/json; charset=utf-8"
       });
-    }
-  })
+    });
+
+    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
+      videoFoam: true,
+      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
+    });
+
+    wistiaEmbed.bind("secondchange", function() {
+      var time1 = (wistiaEmbed.duration()/100*75);
+      var time2 = time1 + 2;
+      if (wistiaEmbed.secondsWatched() > time1 && wistiaEmbed.secondsWatched() < time2) {
+        $.ajax({
+          url: '#{video_watched_data_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'videoLogId': videoCmeUserLog}),
+          method: 'PATCH',
+          contentType: "application/json; charset=utf-8"
+        });
+      }
+    })
 
