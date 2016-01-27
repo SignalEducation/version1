@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151215134206) do
+ActiveRecord::Schema.define(version: 20160127140127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -979,6 +979,7 @@ ActiveRecord::Schema.define(version: 20151215134206) do
     t.integer  "profile_image_file_size"
     t.datetime "profile_image_updated_at"
     t.string   "phone_number"
+    t.string   "topic_interest"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

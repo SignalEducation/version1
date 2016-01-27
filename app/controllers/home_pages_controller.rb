@@ -32,6 +32,7 @@ class HomePagesController < ApplicationController
       first_element = '/' + params[:first_element].to_s
       @home_page = HomePage.where(public_url: first_element).first
       @user = User.new
+      @topic_interests = Group.all_active.all_in_order.for_public
       session[:sign_up_errors].each do |k, v|
         v.each { |err| @user.errors.add(k, err) }
       end if session[:sign_up_errors]
@@ -182,7 +183,7 @@ class HomePagesController < ApplicationController
           :email, :first_name, :last_name,
           :country_id, :locale,
           :password, :password_confirmation,
-          :phone_number
+          :topic_interest
     )
   end
 end
