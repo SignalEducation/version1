@@ -28,6 +28,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
+  has_one :video_resource
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
