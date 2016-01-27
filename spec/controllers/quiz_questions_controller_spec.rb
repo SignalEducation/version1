@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: quiz_questions
+#
+#  id                            :integer          not null, primary key
+#  course_module_element_quiz_id :integer
+#  course_module_element_id      :integer
+#  difficulty_level              :string
+#  hints                         :text
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  flash_quiz_id                 :integer
+#  destroyed_at                  :datetime
+#  subject_course_id             :integer
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'

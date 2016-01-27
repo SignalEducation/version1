@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: marketing_categories
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 

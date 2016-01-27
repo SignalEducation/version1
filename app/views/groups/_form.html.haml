@@ -22,7 +22,7 @@
       %br/
       =f.label :description, t('views.groups.form.description'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.text_area :description, placeholder: t('views.groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+        =f.text_area :description, as: :summernote, placeholder: t('views.groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
       %br/
 
   %br/
@@ -31,3 +31,10 @@
   .row
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan'
+
+
+:javascript
+
+  $('#editor').summernote({
+    height: 150
+  });

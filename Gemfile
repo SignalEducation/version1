@@ -47,7 +47,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
 gem 'stripe', '=1.16.0' #, git: 'https://github.com/stripe/stripe-ruby'
-# support for Stripe.com payment processing
+gem 'summernote-rails'
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
 gem 'utf8-cleaner' # removes illegal characters from inbound requests

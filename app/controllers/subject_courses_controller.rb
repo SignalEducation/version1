@@ -1,3 +1,36 @@
+# == Schema Information
+#
+# Table name: subject_courses
+#
+#  id                                      :integer          not null, primary key
+#  name                                    :string
+#  name_url                                :string
+#  sorting_order                           :integer
+#  active                                  :boolean          default(FALSE), not null
+#  live                                    :boolean          default(FALSE), not null
+#  wistia_guid                             :string
+#  tutor_id                                :integer
+#  cme_count                               :integer
+#  video_count                             :integer
+#  quiz_count                              :integer
+#  question_count                          :integer
+#  description                             :text
+#  short_description                       :string
+#  mailchimp_guid                          :string
+#  forum_url                               :string
+#  created_at                              :datetime         not null
+#  updated_at                              :datetime         not null
+#  best_possible_first_attempt_score       :float
+#  default_number_of_possible_exam_answers :integer
+#  restricted                              :boolean          default(FALSE), not null
+#  corporate_customer_id                   :integer
+#  total_video_duration                    :float            default(0.0)
+#  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
+#
+
 class SubjectCoursesController < ApplicationController
 
   before_action :logged_in_required

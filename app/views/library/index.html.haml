@@ -33,7 +33,7 @@
                   %h3.text-bold.one-line-text
                     =group.name
                   %p.l-margin-bottom-big
-                    =group.description.to_s.truncate(170)
+                    =group.description.to_s.truncate(170).html_safe
                   -#total_lesson = group.subject_courses.count
                   -#complete_lesson = group.subject_courses.count
                   -#total_lesson = 10
@@ -66,7 +66,7 @@
                       -if course.short_description
                         =course.try(:short_description).to_s.truncate(30)
                       -else
-                        =course.description.to_s.truncate(15)
+                        =course.description.to_s.truncate(15).html_safe
                   .box-label
                     =t('views.general.browse')
 

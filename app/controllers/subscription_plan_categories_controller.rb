@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: subscription_plan_categories
+#
+#  id                   :integer          not null, primary key
+#  name                 :string
+#  available_from       :datetime
+#  available_to         :datetime
+#  guid                 :string
+#  created_at           :datetime
+#  updated_at           :datetime
+#  trial_period_in_days :integer
+#
+
 class SubscriptionPlanCategoriesController < ApplicationController
 
   before_action :logged_in_required

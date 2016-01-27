@@ -581,11 +581,22 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   if Rails.env.development?
     puts 'Building simple framework'
 
-    HomePage.where(id: 1).first_or_create(seo_title: 'ACCA and CFA Online Courses | Learn Signal', seo_description: 'The home of the ACCA and CFA. Study with online video lectures, interactive quizzes and an online community to be a part of. Start the path to your professional certification.', public_url: '/')
-    HomePage.where(id: 2).first_or_create(seo_title: 'Pass the ACCA with our online course', seo_description: 'Learn Signal makes it easy to grasp difficult course topics and practice exam questions to ensure you are fully prepared to pass your exams.')
-    HomePage.where(id: 3).first_or_create(seo_title: 'Pass the CFA with our online course | Learn Signal', seo_description: 'CFA online courses, containing interactive quizzes, video lectures, and forums. Study at your own pace, and have it all in one place.', public_url: 'cfa')
+    HomePage.where(id: 1).first_or_create(seo_title: 'Business Training Library', seo_description: 'The first ever on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device.', public_url: '/')
+    HomePage.where(id: 2).first_or_create(seo_title: 'Business', seo_description: "'Unleash your team's potential. Give your staff access to a library of on-demand courses. Keep your staff focused with customized learning paths.'", public_url: 'business')
+    HomePage.where(id: 3).first_or_create(seo_title: 'ACCA', seo_description: 'Learn Signal makes it easy to grasp difficult course topics and practice exam questions to ensure you are fully prepared to pass your exams.', public_url: 'acca')
+    HomePage.where(id: 4).first_or_create(seo_title: 'CFA', seo_description: 'CFA online courses, containing interactive quizzes, video lectures, and forums. Study at your own pace, and have it all in one place.', public_url: 'cfa')
 
-    StaticPage.where(id: 1).first_or_create!(name: 'Default landing page', publish_from: '2015-02-10 10:02:00', publish_to: nil, allow_multiples: false, public_url: '/', use_standard_page_template: true, head_content: '', body_content: "<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"col-sm-12 text-center\">\r\n      <h1>Welcome to Learn Signal</h1>\r\n    </div>\r\n  </div>\r\n</div>", created_by: 8, updated_by: 8, add_to_navbar: false, add_to_footer: false, menu_label: '', tooltip_text: '', language: 'en', mark_as_noindex: false, mark_as_nofollow: false, seo_title: 'Hello', seo_description: 'Learnsignal', approved_country_ids: [], default_page_for_this_url: false, make_this_page_sticky: false, logged_in_required: false, show_standard_footer: true)
+    SubjectCourse.where(id: 1).first_or_create(name: 'Course 1', name_url: 'course-1', sorting_order: 1, active: true,
+    live: true, wistia_guid: 'abc123', tutor_id: 4, description: 'Course 1 description', default_number_of_possible_exam_answers: 4)
+    SubjectCourse.where(id: 2).first_or_create(name: 'Course 2', name_url: 'course-2', sorting_order: 2, active: true,
+    live: true, wistia_guid: 'abc1234', tutor_id: 4, description: 'Course 2 description', default_number_of_possible_exam_answers: 4)
+    SubjectCourse.where(id: 3).first_or_create(name: 'Course 3', name_url: 'course-3', sorting_order: 3, active: true,
+    live: false, wistia_guid: 'abc1235', tutor_id: 4, description: 'Course 3 description', default_number_of_possible_exam_answers: 4)
+    SubjectCourse.where(id: 4).first_or_create(name: 'Course 4', name_url: 'course-4', sorting_order: 4, active: false,
+    live: false, wistia_guid: 'abc1236', tutor_id: 4, description: 'Course 4 description', default_number_of_possible_exam_answers: 3)
+    SubjectCourse.where(id: 5).first_or_create(name: 'Course 5', name_url: 'course-5', sorting_order: 5, active: true,
+    live: true, wistia_guid: 'abc1237', tutor_id: 4, description: 'Course 5 description', default_number_of_possible_exam_answers: 4)
+
 
   end
 

@@ -6,7 +6,7 @@
           %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
             =@group.name
           %h6.text-center
-            =@group.description.to_s.truncate(200)
+            =@group.description.to_s.truncate(200).html_safe
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
