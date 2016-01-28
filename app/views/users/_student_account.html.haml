@@ -9,11 +9,14 @@
             =t('views.users.show.h1')
       .row.l-margin-bottom
         .col-md-12{role: 'tablist'}
-          .account-tab
-            %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.personal_details')
+          .signal-tabs
+            %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'underline'}
+              =t('views.users.show.tabs.personal_details')
             -if @current_subscription && !@current_subscription.free_trial?
-              %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.subscriptions')
-              %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}=t('views.users.show.tabs.payments')
+              %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
+                =t('views.users.show.tabs.subscriptions')
+              %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
+                =t('views.users.show.tabs.payments')
 
       .row
         .l-margin-top-big

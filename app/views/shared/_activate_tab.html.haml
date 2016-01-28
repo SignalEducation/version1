@@ -6,3 +6,7 @@
       $("a[href='#" + stripped_url[1]+"']").first().tab('show');
     }
   })
+
+  $('.signal-tabs a').on('click', function(){
+    $(this).addClass('underline').siblings().removeClass('underline');
+  });

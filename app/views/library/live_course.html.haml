@@ -28,8 +28,8 @@
     .container-fluid
       .row.l-margin-bottom
         .col-sm-12.col-md-8{role: 'tablist'}
-          .course-tabs
-            %a{href: '#table-of-contents', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
+          .signal-tabs
+            %a{href: '#table-of-contents', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'underline'}
               =t('views.library.show.table_of_contents')
             %a{href: '#description', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
               =t('views.library.show.description')
@@ -217,3 +217,4 @@
             =link_to t('views.library.show.new_question_bank'), new_level_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
 
   =render partial: 'layouts/new_footer'
+  =render partial: 'shared/activate_tab'

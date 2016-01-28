@@ -298,6 +298,7 @@ en:
         link_to_student_ui: "View in the student-facing UI"
         add_more_questions: More questions needed
 
+
     course_module_elements:
       form:
         name: Name
@@ -342,11 +343,19 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
-        next_step: Next
+        next: Next
+        next_step: Next Lesson
         mark_complete: Mark as Complete
-        previous_step: Previous
+        previous: Previous
+        previous_step: Previous Lesson
         preview: Preview
         continue: Continue
+
+        tabs:
+          description: Description
+          question: Question
+          answer: Answer
+          notes: Notes
 
     course_module_element_flash_card_packs:
       form:

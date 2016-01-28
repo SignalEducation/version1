@@ -1,46 +1,43 @@
--if !@demo_mode = true
-  .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
-    %h2
-      =cme.name
-    -if cme.course_module_element_video.try(:video_id)
-      %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
-    -else
-      #video-window
-    .l-margin-bottom.l-margin-top
-      .col-xs-4.text-left
-        =link_to course_special_link(cme.previous_element), class: 'btn btn-red text-bold' do
-          .glyphicon.glyphicon-arrow-left
-          =t('views.course_module_elements.show.previous_step')
-      .col-xs-4.text-center
-        -if current_user.try(:admin?)
-          =link_to t('views.general.edit'), course_module_special_link(cme), target: '_blank', class: 'btn btn-red text-bold'
-      .col-xs-4.text-right
-        -if cme.course_module.subject_course.is_cpd
-          =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
-            =t('views.course_module_elements.show.next_step')
-            .glyphicon.glyphicon-arrow-right
-        -else
-          =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold mark-as-complete' do
-            =t('views.course_module_elements.show.mark_complete')
-            .glyphicon.glyphicon-arrow-right
+-if !@demo_mode
+  %h2
+    =cme.name
+  %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
+  .l-margin-bottom.l-margin-top
+    .pull-left
+      =link_to course_special_link(cme.previous_element), class: 'btn btn-red text-bold' do
+        .glyphicon.glyphicon-arrow-left
+        =t('views.course_module_elements.show.previous_step')
+    .pull-right
+      -if cme.course_module.subject_course.is_cpd
+        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
+          =t('views.course_module_elements.show.next_step')
+          .glyphicon.glyphicon-arrow-right
+      -else
+        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold mark-as-complete' do
+          =t('views.course_module_elements.show.mark_complete')
+          .glyphicon.glyphicon-arrow-right
 
-      .pull-left
-        -unless cme.description.blank?
-          %br/
-          %h3=t('views.course_module_elements.form.description')
+
+
+
+  -#.row
+    .pull-left
+      -unless cme.description.blank?
+        %br/
+        %h3=t('views.course_module_elements.form.description')
+        .pull-left
+          =cme.description.html_safe
+      -#if @course_module.try(:parent).try(:forum_url)
+        %br/
+        %h6
           .pull-left
-            =cme.description.html_safe
-        -#if @course_module.try(:parent).try(:forum_url)
-          %br/
-          %h6
-            .pull-left
-              =link_to "Discuss #{cme.name} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
+            =link_to "Discuss #{cme.name} in the Forum", @course_module.parent.try(:forum_url), target: '_blank'
 
   -#.box-item.question-box.border-same-backcolor.width-bigger
     .cme-nav
       =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
 
-  -if cme.course_module_element_resources.all_in_order.count > 0
+  -#if cme.course_module_element_resources.all_in_order.count > 0
     .row
       .col-sm-12
         %h2=t('views.course_module_element_resources.index.h1')
@@ -52,7 +49,6 @@
             -else
               %li
                 =link_to r.name, r.upload.url, target: '_blank'
-
   :javascript
     var videoCmeUserLog = #{@video_cme_user_log.id || 0};
 
@@ -129,7 +125,6 @@
             -else
               %li
                 =link_to r.name, r.upload.url, target: '_blank'
-
   :javascript
 
     $(document).on('click', '.mark-as-complete', function(ajax) {

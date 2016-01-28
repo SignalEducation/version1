@@ -1142,7 +1142,7 @@ a.box-item {
   padding-top: $gutter;
 }
 
-.account-tab {
+.signal-tabs {
   padding: 13px;
   padding-left:0px;
   border-bottom: 4px solid gainsboro ;
@@ -1172,37 +1172,12 @@ a.box-item {
     }
   }
 }
-
-.course-tabs {
-  padding: 13px;
-  padding-left:0px;
-  border-bottom: 4px solid gainsboro ;
-  a {
-    color: $gray-1;
-    margin-bottom: $gutter;
-    letter-spacing: .1rem;
-    @include font-size(1.4);
-    @include breakpoint(md-min) {
-      @include font-size(1.6);
-    }
-    text-decoration: initial;
-    margin-right: 20px;
-
-    &:hover {
-      padding-bottom: 15px;
-      //border-bottom: 4px solid;
-      box-sizing: content-box;
-      color: $purple-1;
-      font-weight: bold;
-    }
-    &:focus {
-      padding-bottom: 15px;
-      border-bottom: 4px solid;
-      box-sizing: content-box;
-      color: $purple-1;
-      font-weight: bold;
-    }
-  }
+.signal-tabs .underline {
+  padding-bottom: 15px;
+  border-bottom: 4px solid;
+  box-sizing: content-box;
+  color: $purple-1;
+  font-weight: bold;
 }
 
 .change-password {
