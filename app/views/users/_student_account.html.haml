@@ -10,7 +10,7 @@
       .row.l-margin-bottom
         .col-md-12{role: 'tablist'}
           .signal-tabs
-            %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'underline'}
+            %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.personal_details')
             -if @current_subscription && !@current_subscription.free_trial?
               %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}

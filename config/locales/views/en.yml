@@ -383,7 +383,7 @@ en:
     course_module_element_resources:
       form:
         course_module_element_id: Course module element
-        name: Name
+        name: File Name
         name_placeholder: Name that users will see
         description: Description
         description_placeholder: Description of your resource
@@ -393,12 +393,12 @@ en:
         upload_content_type: Upload content type
         upload_file_size: Upload file size
         upload_updated_at: Upload updated at
-        upload: Upload a file
+        upload: Upload file
 
       edit:
 
       index:
-        h1: Additional Information
+        h1: File Uploads
 
       new:
 

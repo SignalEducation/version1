@@ -42,7 +42,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :seo_description, :seo_no_index,
                   :course_module_element_flash_card_pack_attributes,
                   :is_cme_flash_card_pack, :number_of_questions,
-                  :video_resource_attributes
+                  :video_resource_attributes, :delete_upload
 
   # Constants
 
