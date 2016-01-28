@@ -75,7 +75,7 @@
                                 .col-xs-12.col-sm-4
                                   .side-meta
                                     -if grandchild.is_video
-                                      -if grandchild.course_module_element_video.duration
+                                      -if grandchild.course_module_element_video.try(:duration)
                                         =humanize_time(grandchild.course_module_element_video.duration)
                                       -elsif grandchild.try(:estimated_time_in_seconds)
                                         =humanize_time(grandchild.try(:estimated_time_in_seconds))

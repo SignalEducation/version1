@@ -1014,15 +1014,15 @@ ActiveRecord::Schema.define(version: 20160127214427) do
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
 
   create_table "video_resources", force: :cascade do |t|
-    t.integer  "course_module_element_video_id"
+    t.integer  "course_module_element_id"
     t.text     "question"
     t.text     "answer"
     t.text     "notes"
     t.datetime "destroyed_at"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
-  add_index "video_resources", ["course_module_element_video_id"], name: "index_video_resources_on_course_module_element_video_id", using: :btree
+  add_index "video_resources", ["course_module_element_id"], name: "index_video_resources_on_course_module_element_id", using: :btree
 
 end

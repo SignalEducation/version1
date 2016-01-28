@@ -22,13 +22,12 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id
+  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
-  has_one :video_resource
 
   # validation
   validates :course_module_element_id, presence: true, on: :update

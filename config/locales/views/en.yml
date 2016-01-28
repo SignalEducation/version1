@@ -405,6 +405,7 @@ en:
         transcript: Transcript
         transcript_placeholder: This is optional
         video_file: Video File
+        duration: Duration
         video_id: Video ID
         video_id_placeholder: Wistia ID
 
@@ -1454,3 +1455,22 @@ en:
         website_placeholder: Company Website or Linkedin
         message: Message
         message_placeholder: Message (optional)
+
+
+    video_resource:
+      form:
+        question: Question
+        answer: Answer
+        notes: Notes
+
+      show:
+        question: Question
+        answer: Answer
+        notes: Notes
+
+      edit:
+        h1: Video Resources
+
+      new:
+        h1: Video Resources
+

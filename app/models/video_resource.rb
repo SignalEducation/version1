@@ -2,14 +2,14 @@
 #
 # Table name: video_resources
 #
-#  id                             :integer          not null, primary key
-#  course_module_element_video_id :integer
-#  question                       :text
-#  answer                         :text
-#  notes                          :text
-#  destroyed_at                   :datetime
-#  created_at                     :datetime         not null
-#  updated_at                     :datetime         not null
+#  id                       :integer          not null, primary key
+#  course_module_element_id :integer
+#  question                 :text
+#  answer                   :text
+#  notes                    :text
+#  destroyed_at             :datetime
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
 #
 
 class VideoResource < ActiveRecord::Base
@@ -18,14 +18,16 @@ class VideoResource < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :question, :answer, :notes
+  attr_accessible :question, :answer, :notes, :course_module_element_id
 
   # Constants
 
   # relationships
-  belongs_to :course_module_element_video
+  belongs_to :course_module_element
 
   # validation
+  validates  :course_module_element_id, presence: true
+  validate  :one_field_set
 
   # callbacks
   before_destroy :check_dependencies
