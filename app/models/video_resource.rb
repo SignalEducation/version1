@@ -52,7 +52,7 @@ class VideoResource < ActiveRecord::Base
   end
 
   def one_field_set
-    if self.question.blank? && self.answer.blank? && self.note.blank?
+    if self.question.blank? && self.answer.blank? && self.notes.blank?
       errors.add(:base, I18n.t('models.video_resources.must_populate_one'))
     end
   end

@@ -29,8 +29,11 @@ describe VideoResource do
   # Constants
 
   # relationships
+  it { should belong_to :course_module_element }
 
   # validation
+  it { should validate_presence_of(:course_module_element_id) }
+
   it { should_not validate_presence_of(:question) }
 
   it { should_not validate_presence_of(:answer) }
