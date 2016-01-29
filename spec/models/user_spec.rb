@@ -111,6 +111,8 @@ describe User do
   it { should validate_presence_of(:last_name) }
   it { should validate_length_of(:last_name).is_at_least(2).is_at_most(30) }
 
+  it { should validate_presence_of(:topic_interest) }
+
   it { should validate_presence_of(:password).on(:create) }
   it { should validate_confirmation_of(:password).on(:create) }
   it { should validate_length_of(:password).is_at_least(6).is_at_most(255) }

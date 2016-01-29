@@ -15,7 +15,7 @@ RSpec.describe CoursesController, type: :controller do
     it 'returns http success' do
       get :show, subject_course_name_url: subject_course.name_url,
           course_module_name_url: course_module_1.name_url
-      expect_show_success_with_model('course_module', course_module_1.id)
+      expect_bounce_as_not_signed_in
     end
   end
 
