@@ -57,6 +57,7 @@
 #  profile_image_file_size                  :integer
 #  profile_image_updated_at                 :datetime
 #  phone_number                             :string
+#  topic_interest                           :string
 #
 
 class User < ActiveRecord::Base
@@ -75,7 +76,7 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :phone_number
+                  :name_url, :qualifications, :profile_image, :topic_interest
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)

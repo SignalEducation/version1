@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151215134206) do
+ActiveRecord::Schema.define(version: 20160127214427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -979,6 +979,7 @@ ActiveRecord::Schema.define(version: 20151215134206) do
     t.integer  "profile_image_file_size"
     t.datetime "profile_image_updated_at"
     t.string   "phone_number"
+    t.string   "topic_interest"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
@@ -1011,5 +1012,17 @@ ActiveRecord::Schema.define(version: 20151215134206) do
   end
 
   add_index "vat_rates", ["vat_code_id"], name: "index_vat_rates_on_vat_code_id", using: :btree
+
+  create_table "video_resources", force: :cascade do |t|
+    t.integer  "course_module_element_id"
+    t.text     "question"
+    t.text     "answer"
+    t.text     "notes"
+    t.datetime "destroyed_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "video_resources", ["course_module_element_id"], name: "index_video_resources_on_course_module_element_id", using: :btree
 
 end

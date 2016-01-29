@@ -68,7 +68,6 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
-      @course_module_element.course_module_element_resources.build
       @course_module_element.is_video = true
     elsif params[:type] == 'quiz'
       spawn_quiz_children
@@ -85,6 +84,9 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
         @course_module_element.course_module_element_resources.build
+        if !@course_module_element.video_resource
+          @course_module_element.build_video_resource
+        end
       elsif @course_module_element.is_cme_flash_card_pack
         # edit_empty_cme_flash_card_pack
         if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
@@ -302,7 +304,7 @@ class CourseModuleElementsController < ApplicationController
             :id,
             :tags,
             :difficulty_level,
-            # :estimated_study_time_seconds,
+            :duration,
             :transcript,
             :video_id],
         course_module_element_quiz_attributes: [
@@ -384,6 +386,13 @@ class CourseModuleElementsController < ApplicationController
                 :upload_content_type,
                 :upload_file_size,
                 :upload_updated_at
+        ],
+        video_resource_attributes:  [
+            :id,
+            :course_module_element_id,
+            :question,
+            :answer,
+            :notes,
         ],
         course_module_element_flash_card_pack_attributes: [
                 :id,

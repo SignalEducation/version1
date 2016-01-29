@@ -22,7 +22,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id
+  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration
 
   # Constants
 
