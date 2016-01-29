@@ -7,7 +7,7 @@
             =link_to library_special_link(@course_module.parent) do
               %p.text-left{style: 'color: #333149'}
                 &#60;
-                ="Back To #{@course.name}"
+                ="Back To #{@course_module.try(:subject_course).try(:name)}"
         =render 'side_nav_xs'
         .row
           %div
