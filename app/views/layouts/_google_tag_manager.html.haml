@@ -1,3 +1,35 @@
+-if (controller_name == 'groups' && action_name == 'show') || (controller_name == 'library' && action_name == 'show') || (controller_name == 'subscription_plans' && action_name == 'public_index') || (controller_name == 'users' && action_name == 'new_paid_subscription')
+  -if current_user
+
+    -if @free_trial
+      -if @free_trial <= 1
+        -visitor = 'FreeTrial'
+      -elsif @free_trial >= 2
+        -visitor = 'Paying'
+    -elsif @free_trial == nil
+      -visitor = 'NotSignedIn'
+  -else
+    -visitor = 'NotSignedIn'
+
+
+  -if @tag_manager_course_topic
+    -topic = @tag_manager_course_topic
+  -if @tag_manager_course
+    -course = @tag_manager_course
+  -if @view_pricing_page
+    -viewedPricing = 'ViewedPricing'
+  -if @view_upgrade_page
+    -viewedUpgrade = 'ViewedUpgrade'
+
+  :javascript
+    dataLayer = [{
+      "visitorType": "#{visitor}",
+      "courseTopic": "#{topic}",
+      "course": "#{course}",
+      "viewedPricing": "#{viewedPricing}",
+      "viewedUpgrade": "#{viewedUpgrade}"
+    }];
+
 -# Google Tag Manager
 %noscript
   %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',

@@ -41,6 +41,8 @@ class LibraryController < ApplicationController
     if @course.nil?
       redirect_to library_url
     else
+      free_trial = current_user.try(:subscriptions).try(:count) || nil
+      tag_manager_data_layer(free_trial, nil, @course.try(:name), nil, nil)
       @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
       if @course.corporate_customer_id
         if current_user.nil? || (@course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id))

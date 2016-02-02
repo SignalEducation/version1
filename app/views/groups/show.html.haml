@@ -37,8 +37,8 @@
                     %h3.h4.box-title
                       =course.try(:name)
                     %p.box-desc
-                      -if course.short_description
-                        =course.short_description.truncate(15)
+                      -if course.try(:short_description)
+                        =course.try(:short_description).truncate(15)
                   .box-label
                     =t('views.general.browse')
 
