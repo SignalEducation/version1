@@ -50,8 +50,9 @@
       =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/facebook_pixel'
 
-  %body{ontouchstart: ''}
-    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+  %body
+    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    -if current_user.nil? || current_user.individual_student?
       =render partial: 'layouts/google_tag_manager'
     -if Rails.env.production?
       =render partial: 'layouts/hubspot'

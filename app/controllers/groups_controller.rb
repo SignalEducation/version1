@@ -32,6 +32,8 @@ class GroupsController < ApplicationController
         @logs = SubjectCourseUserLog.where(user_id: current_user.id)
       end
       seo_title_maker(@group.try(:name), @group.try(:description), nil)
+      free_trial = current_user.try(:subscriptions).try(:count) || nil
+      tag_manager_data_layer(free_trial, @group.try(:name), nil, nil, nil)
     end
   end
 

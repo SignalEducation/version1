@@ -129,6 +129,8 @@ class UsersController < ApplicationController
                             .all_active
                             .all_in_order
     end
+    free_trial = current_user.try(:subscriptions).try(:count) || nil
+    tag_manager_data_layer(free_trial, nil, nil, nil, true)
   end
 
   def profile
