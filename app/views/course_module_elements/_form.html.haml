@@ -48,38 +48,15 @@
 
   -elsif @course_module_element.course_module_element_video
     %br/
+    =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =f.text_area :description, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
     %br/
     %hr/
     %br/
-    %br/
+    =render partial: 'course_module_element_videos/fields_for_video_resources', locals: {f: f}
     -if @course_module_element.course_module_element_resources.size > 0
-      %h2=t('views.course_module_element_resources.index.h1')
-      %p=t('views.general.these_are_optional')
-      =f.fields_for :course_module_element_resources do |cme_resource|
-        .col-md-12
-          .question-box-item.l-margin-bottom-big
-            =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
-            .input-group.input-group-lg.full-width
-              =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-            %br/
-            %br/
-            .col-md-5
-              =cme_resource.label :web_url, t('views.course_module_element_resources.form.web_url'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =cme_resource.url_field :web_url, placeholder: t('views.course_module_element_resources.form.web_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-            .col-md-2
-              %h2.text-center.l-margin-top.text-uppercase
-                =t('views.general.or')
-            .col-md-5
-              =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                -if cme_resource.object.upload_file_name
-                  .form-control-static
-                    =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
-                    =number_to_human_size(cme_resource.object.upload_file_size)
-                    %br/
-                    Upload a replacement if you wish
-                =cme_resource.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
+      =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
   -elsif @course_module_element.course_module_element_flash_card_pack
     =render partial: 'course_module_element_flash_card_packs/form', locals: {f: f}
@@ -95,3 +72,9 @@
         =t('views.general.or')
         =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
       =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module), class: 'btn btn-cyan'
+
+
+:javascript
+
+  $('#description').summernote({
+  });

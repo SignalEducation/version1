@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: course_modules
+#
+#  id                        :integer          not null, primary key
+#  name                      :string
+#  name_url                  :string
+#  description               :text
+#  tutor_id                  :integer
+#  sorting_order             :integer
+#  estimated_time_in_seconds :integer
+#  active                    :boolean          default(FALSE), not null
+#  created_at                :datetime
+#  updated_at                :datetime
+#  cme_count                 :integer          default(0)
+#  seo_description           :string
+#  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
+#  subject_course_id         :integer
+#  video_duration            :float            default(0.0)
+#  video_count               :integer          default(0)
+#  quiz_count                :integer          default(0)
+#
+
 require 'rails_helper'
 
 RSpec.describe CourseModulesController, type: :routing do

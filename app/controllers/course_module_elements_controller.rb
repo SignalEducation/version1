@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: course_module_elements
+#
+#  id                        :integer          not null, primary key
+#  name                      :string
+#  name_url                  :string
+#  description               :text
+#  estimated_time_in_seconds :integer
+#  course_module_id          :integer
+#  sorting_order             :integer
+#  tutor_id                  :integer
+#  related_quiz_id           :integer
+#  related_video_id          :integer
+#  created_at                :datetime
+#  updated_at                :datetime
+#  is_video                  :boolean          default(FALSE), not null
+#  is_quiz                   :boolean          default(FALSE), not null
+#  active                    :boolean          default(TRUE), not null
+#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
+#  seo_description           :string
+#  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
+#  duration                  :float            default(0.0)
+#
+
 class CourseModuleElementsController < ApplicationController
 
   before_action :logged_in_required
@@ -41,7 +68,6 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
-      @course_module_element.course_module_element_resources.build
       @course_module_element.is_video = true
     elsif params[:type] == 'quiz'
       spawn_quiz_children
@@ -58,6 +84,9 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
         @course_module_element.course_module_element_resources.build
+        if !@course_module_element.video_resource
+          @course_module_element.build_video_resource
+        end
       elsif @course_module_element.is_cme_flash_card_pack
         # edit_empty_cme_flash_card_pack
         if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
@@ -275,7 +304,7 @@ class CourseModuleElementsController < ApplicationController
             :id,
             :tags,
             :difficulty_level,
-            # :estimated_study_time_seconds,
+            :duration,
             :transcript,
             :video_id],
         course_module_element_quiz_attributes: [
@@ -357,6 +386,13 @@ class CourseModuleElementsController < ApplicationController
                 :upload_content_type,
                 :upload_file_size,
                 :upload_updated_at
+        ],
+        video_resource_attributes:  [
+            :id,
+            :course_module_element_id,
+            :question,
+            :answer,
+            :notes,
         ],
         course_module_element_flash_card_pack_attributes: [
                 :id,

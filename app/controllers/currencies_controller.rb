@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: currencies
+#
+#  id              :integer          not null, primary key
+#  iso_code        :string
+#  name            :string
+#  leading_symbol  :string
+#  trailing_symbol :string
+#  active          :boolean          default(FALSE), not null
+#  sorting_order   :integer
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class CurrenciesController < ApplicationController
 
   before_action :logged_in_required

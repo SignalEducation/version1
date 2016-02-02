@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: vat_codes
+#
+#  id         :integer          not null, primary key
+#  country_id :integer
+#  name       :string
+#  label      :string
+#  wiki_url   :string
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 

@@ -298,6 +298,7 @@ en:
         link_to_student_ui: "View in the student-facing UI"
         add_more_questions: More questions needed
 
+
     course_module_elements:
       form:
         name: Name
@@ -342,11 +343,19 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
-        next_step: Next
+        next: Next
+        next_step: Next Lesson
         mark_complete: Mark as Complete
-        previous_step: Previous
+        previous: Previous
+        previous_step: Previous Lesson
         preview: Preview
         continue: Continue
+
+        tabs:
+          description: Description
+          question: Question
+          answer: Answer
+          notes: Notes
 
     course_module_element_flash_card_packs:
       form:
@@ -374,7 +383,7 @@ en:
     course_module_element_resources:
       form:
         course_module_element_id: Course module element
-        name: Name
+        name: File Name
         name_placeholder: Name that users will see
         description: Description
         description_placeholder: Description of your resource
@@ -384,12 +393,12 @@ en:
         upload_content_type: Upload content type
         upload_file_size: Upload file size
         upload_updated_at: Upload updated at
-        upload: Upload a file
+        upload: Upload file
 
       edit:
 
       index:
-        h1: "Additional Resources: "
+        h1: File Uploads
 
       new:
 
@@ -405,6 +414,7 @@ en:
         transcript: Transcript
         transcript_placeholder: This is optional
         video_file: Video File
+        duration: Duration
         video_id: Video ID
         video_id_placeholder: Wistia ID
 
@@ -981,6 +991,7 @@ en:
         email: Email
         email_placeholder: user@example.com
         phone_number: Phone Number
+        topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
         first_name: First name
         first_name_placeholder: Jay
@@ -1453,3 +1464,22 @@ en:
         website_placeholder: Company Website or Linkedin
         message: Message
         message_placeholder: Message (optional)
+
+
+    video_resource:
+      form:
+        question: Question
+        answer: Answer
+        notes: Notes
+
+      show:
+        question: Question
+        answer: Answer
+        notes: Notes
+
+      edit:
+        h1: Video Resources
+
+      new:
+        h1: Video Resources
+

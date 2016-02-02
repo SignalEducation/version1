@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: home_pages
+#
+#  id                            :integer          not null, primary key
+#  seo_title                     :string
+#  seo_description               :string
+#  subscription_plan_category_id :integer
+#  public_url                    :string
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe HomePagesController, type: :routing do

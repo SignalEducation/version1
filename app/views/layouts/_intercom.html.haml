@@ -6,6 +6,7 @@
     created_at: current_user.created_at,
     custom_data: {guid: current_user.guid,
     user_group: current_user.user_group.try(:name),
+    topic_interest: current_user.topic_interest,
     company: {id: current_user.try(:corporate_customer_id),
     name: current_user.try(:corporate_customer).try(:organisation_name),
     created_at: current_user.try(:corporate_customer).try(:created_at),

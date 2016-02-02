@@ -57,6 +57,7 @@
 #  profile_image_file_size                  :integer
 #  profile_image_updated_at                 :datetime
 #  phone_number                             :string
+#  topic_interest                           :string
 #
 
 FactoryGirl.define do

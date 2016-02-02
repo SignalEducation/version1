@@ -6,7 +6,8 @@
           .col-sm-4.col-md-4
             =link_to library_special_link(@course_module.parent) do
               %p.text-left{style: 'color: #333149'}
-                &#60; Back To Library
+                &#60;
+                ="Back To #{@course_module.try(:subject_course).try(:name)}"
         =render 'side_nav_xs'
         .row
           %div
@@ -35,6 +36,80 @@
                 %h3=t('views.general.coming_soon')
                 %p=t('views.courses.show.coming_soon')
 
+        -# Tabs for Question, Answer, Notes and Description
+        -if @course_module_element.try(:is_video)
+          .row
+            .col-md-12{role: 'tablist'}
+              .signal-tabs
+                -unless @course_module_element.description.empty?
+                  %a{href: '#description', aria: {controls: 'active'}, role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.course_module_elements.show.tabs.description')
+                -if @course_module_element.try(:video_resource)
+                  -unless @course_module_element.video_resource.question.empty?
+                    %a{href: '#question', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                      =t('views.course_module_elements.show.tabs.question')
+                  -unless @course_module_element.video_resource.answer.empty?
+                    %a{href: '#answer', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                      =t('views.course_module_elements.show.tabs.answer')
+                  -unless @course_module_element.video_resource.notes.empty? && @course_module_element.course_module_element_resources.count < 1
+                    %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                      =t('views.course_module_elements.show.tabs.notes')
+                -else
+                  -unless @course_module_element.course_module_element_resources.count < 1
+                    %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                      =t('views.course_module_elements.show.tabs.notes')
+
+          -if @course_module_element.try(:video_resource)
+            .row
+              .l-margin-top-big
+                .l-margin-bottom
+                  .tab-content
+                    .tab-pane.fade.in.active#description{role: 'tabpanel'}
+                      .col-md-12
+                        .l-margin-bottom-huge
+                          %p.big
+                            =@course_module_element.description.html_safe
+
+                    .tab-pane.fade#question{role: 'tabpanel'}
+                      .col-md-12
+                        .l-margin-bottom-huge
+                          %p.big
+                            =@course_module_element.video_resource.question.html_safe
+
+
+                    .tab-pane.fade#answer{role: 'tabpanel'}
+                      .col-md-12
+                        .l-margin-bottom-huge
+                          %p.big
+                            =@course_module_element.video_resource.answer.html_safe
+
+                    .tab-pane.fade#notes{role: 'tabpanel'}
+                      .col-md-12
+                        .l-margin-bottom-huge
+                          %p.big
+                            =@course_module_element.video_resource.notes.html_safe
+                          %p.big
+                            -@course_module_element.course_module_element_resources.each do |r|
+                              -if r.web_url && r.web_url.length > 0
+                                %li
+                                  =link_to r.name, r.web_url, target: '_blank'
+                              -else
+                                %li
+                                  =link_to r.name, r.upload.url, target: '_blank'
+          -else
+            .tab-pane.fade#notes{role: 'tabpanel'}
+              .col-md-12
+                .l-margin-bottom-huge
+                  %p.big
+                    -@course_module_element.course_module_element_resources.each do |r|
+                      -if r.web_url && r.web_url.length > 0
+                        %li
+                          =link_to r.name, r.web_url, target: '_blank'
+                      -else
+                        %li
+                          =link_to r.name, r.upload.url, target: '_blank'
+
+
 -else
   %br/
   .row
@@ -48,3 +123,5 @@
       -else
         %h2 Course module element - type unknown
         -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
+
+=render partial: 'shared/activate_tab'

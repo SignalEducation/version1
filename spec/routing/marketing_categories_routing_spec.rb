@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: marketing_categories
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 require 'rails_helper'
 
 RSpec.describe MarketingCategoriesController, type: :routing do

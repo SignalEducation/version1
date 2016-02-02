@@ -41,7 +41,8 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
                   :course_module_element_flash_card_pack_attributes,
-                  :is_cme_flash_card_pack, :number_of_questions
+                  :is_cme_flash_card_pack, :number_of_questions,
+                  :video_resource_attributes, :delete_upload
 
   # Constants
 
@@ -50,6 +51,7 @@ class CourseModuleElement < ActiveRecord::Base
   has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
   has_many :course_module_element_resources
+  has_one :video_resource
   has_many :course_module_element_user_logs
   has_one :course_module_element_video
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
@@ -64,7 +66,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   accepts_nested_attributes_for :course_module_element_flash_card_pack
   accepts_nested_attributes_for :course_module_element_quiz
-  accepts_nested_attributes_for :course_module_element_video, update_only: true
+  accepts_nested_attributes_for :course_module_element_video
+  accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }
 
   # validation
@@ -183,6 +186,12 @@ class CourseModuleElement < ActiveRecord::Base
     attributes['description'].blank? &&
     attributes['upload'].blank? &&
     attributes['the_url'].blank?
+  end
+
+  def self.nested_video_resource_is_blank?(attributes)
+    attributes['question'].blank? &&
+    attributes['name'].blank? &&
+    attributes['notes'].blank?
   end
 
   def log_question_count_and_duration

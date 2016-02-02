@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: subscription_plans
+#
+#  id                            :integer          not null, primary key
+#  available_to_students         :boolean          default(FALSE), not null
+#  available_to_corporates       :boolean          default(FALSE), not null
+#  all_you_can_eat               :boolean          default(TRUE), not null
+#  payment_frequency_in_months   :integer          default(1)
+#  currency_id                   :integer
+#  price                         :decimal(, )
+#  available_from                :date
+#  available_to                  :date
+#  stripe_guid                   :string
+#  trial_period_in_days          :integer          default(0)
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  name                          :string
+#  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'stripe_mock'

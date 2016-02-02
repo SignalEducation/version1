@@ -28,7 +28,7 @@
     .container-fluid
       .row.l-margin-bottom
         .col-sm-12.col-md-8{role: 'tablist'}
-          .course-tabs
+          .signal-tabs
             %a{href: '#table-of-contents', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
               =t('views.library.show.table_of_contents')
             %a{href: '#description', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
@@ -75,7 +75,7 @@
                                 .col-xs-12.col-sm-4
                                   .side-meta
                                     -if grandchild.is_video
-                                      -if grandchild.course_module_element_video.duration
+                                      -if grandchild.course_module_element_video.try(:duration)
                                         =humanize_time(grandchild.course_module_element_video.duration)
                                       -elsif grandchild.try(:estimated_time_in_seconds)
                                         =humanize_time(grandchild.try(:estimated_time_in_seconds))
@@ -217,3 +217,4 @@
             =link_to t('views.library.show.new_question_bank'), new_level_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
 
   =render partial: 'layouts/new_footer'
+  =render partial: 'shared/activate_tab'

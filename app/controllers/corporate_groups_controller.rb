@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: corporate_groups
+#
+#  id                    :integer          not null, primary key
+#  corporate_customer_id :integer
+#  name                  :string
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  corporate_manager_id  :integer
+#
+
 class CorporateGroupsController < ApplicationController
 
   before_action :logged_in_required

@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: question_banks
+#
+#  id                          :integer          not null, primary key
+#  question_selection_strategy :string
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  subject_course_id           :integer
+#  number_of_questions         :integer
+#  name                        :string
+#  active                      :boolean          default(FALSE)
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
