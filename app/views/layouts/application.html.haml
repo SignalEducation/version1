@@ -51,8 +51,8 @@
       =render partial: 'layouts/facebook_pixel'
 
   %body
-    -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
-      =render partial: 'layouts/google_tag_manager'
+    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+    =render partial: 'layouts/google_tag_manager'
     -if Rails.env.production?
       =render partial: 'layouts/hubspot'
     -if controller_name == 'home_pages'

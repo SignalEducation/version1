@@ -33,9 +33,27 @@
 :javascript
   dataLayer = [];
 
--if current_user
+-if current_user && (controller_name == 'users' && action_name == 'personal_upgrade_complete')
+
+  :javascript
+    dataLayer.push({
+      'user_id': "#{current_user.id}",
+      'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'products': [{
+            'name': "#{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan",
+            'id': "#{@subscription.subscription_plan.id}",
+            'price': "#{@subscription.subscription_plan.price}",
+          }]
+        }
+      }
+    });
+
+-elsif current_user
   :javascript
     dataLayer.push({'user_id': "#{current_user.id}"});
+
 
 -# Google Tag Manager
 %noscript
