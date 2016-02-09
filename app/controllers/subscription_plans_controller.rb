@@ -64,8 +64,6 @@ class SubscriptionPlansController < ApplicationController
     @corp_plan_4 = @corporate_subscription_plans[3]
 
     seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds. Choose from our personal and business pricing plans.', nil)
-    free_trial = current_user.try(:subscriptions).try(:count) || nil
-    tag_manager_data_layer(free_trial, nil, nil, true, nil)
   end
 
   def show
