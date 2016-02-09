@@ -51,6 +51,14 @@
     background-size: cover;
   }
 }
+.hero-why-learn {
+  background: $purple-2 asset-url('bg-acca.jpg') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $purple-2 asset-url('bg-acca.jpg') no-repeat;
+    background-size: cover;
+  }
+}
 .hero-business {
   background: $purple-5 asset-url('business-home-1001.png') 50% 0 no-repeat;
   color: $white;
