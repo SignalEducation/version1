@@ -334,12 +334,8 @@ class ApplicationController < ActionController::Base
     @seo_no_index = seo_no_index
   end
 
-  def tag_manager_data_layer(free_trial, course_topic, course, pricing_page_viewed, viewed_upgrade_page)
-    @free_trial = free_trial
-    @tag_manager_course_topic = course_topic
+  def tag_manager_data_layer(course)
     @tag_manager_course = course
-    @view_pricing_page = pricing_page_viewed
-    @view_upgrade_page = viewed_upgrade_page
   end
   helper_method :tag_manager_data_layer
 
