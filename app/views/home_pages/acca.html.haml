@@ -87,7 +87,7 @@
       .course-list-wrap
         .row
           .col-sm-12.col-md-12
-            -@group4.try(:active_children).each do |course|
+            -@group4.try(:active_children).all_in_order.each do |course|
               .col-md-4.l-margin-top
                 =link_to library_special_link(course), class: 'library-box-item panel text-center' do
                   .panel-icon.icon-big
