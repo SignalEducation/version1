@@ -39,6 +39,7 @@ class UserSessionsController < ApplicationController
 
   def set_variables
     @seo_title = 'LearnSignal - Sign In'
+    @seo_description = "Sign In here to access LearnSignal's online courses"
   end
 
 end

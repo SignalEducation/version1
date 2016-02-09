@@ -52,6 +52,6 @@ class UserPasswordResetsController < ApplicationController
   protected
 
   def get_variables
-    seo_title_maker('Reset your password', '', true)
+    seo_title_maker('Reset your password', 'Forgot password? No problem! Enter your email address and we will send you further instructions.', true)
   end
 end

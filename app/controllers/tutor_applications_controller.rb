@@ -29,7 +29,7 @@ class TutorApplicationsController < ApplicationController
 
   def new
     @tutor_application = TutorApplication.new
-    seo_title_maker('Teach', nil, nil)
+    seo_title_maker('Teach', 'As a dedicated training resource we are always on the lookout for talent. If you possess the required qualifications along with extensive experience in finance, IT or business, and are passionate about teaching, we’d love to hear from you.', nil)
   end
 
   def edit
