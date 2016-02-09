@@ -78,13 +78,14 @@ class LibraryController < ApplicationController
         @cert = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).first
 
         if @course.try(:live)
+          seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
           render 'live_course'
         elsif @course.try(:live) == false
+          seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
           render 'preview_course'
         else
           redirect_to library_url
         end
-        seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
       end
     end
   end
