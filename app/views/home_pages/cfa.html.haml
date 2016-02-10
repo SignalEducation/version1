@@ -23,107 +23,76 @@
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
-  .l-section#sign-up
-    .l-wrap
+  .hero-inner#sign-up
+    .l-wrap-medium
       .container-fluid
         .row
-          .col-sm-6.col-md-8.col-lg-6
-            %p.h5.h-white
-              Practice is key to passing the CFA exams
-            %h1.h1.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              Take the quick prep course for the CFA level 1
-          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white.l-margin-bottom-huge
+              Prepare for your CFA exams with an online revision course
+            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
+              CFA exam revision courses online for a small monthly subscription
+            -country_count = '83 Countries'
+            %p.h7
+              ="Learners in "
+              =link_to country_count, '#', class: 'no-link-style'
+              ="are using our platform to progress their careers"
+
+          .col-sm-6.col-md-4.col-lg-4#sign-up-form
             %p.h5.h-white.l-margin-bottom
               ='Sign Up for your 7-day free trial'
-
             =render partial: 'sign_up_form'
 
-.l-section
+.business
   .l-wrap
-    .container-fluid
-      .row
-        .col-sm-12
-          %h2.h5.text-center
-            Work through our extensive question bank with summary videos to fill in the gaps
-          %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
-            Qbank of 1500 exam quality questions with solutions
-      .row
-        .col-sm-4
-          %h3.h4.text-center
-            Practice
-          %p.p.text-center
-            Prepare with 1500 exam standard questions and worked solutions.
-        .col-sm-4
-          %h3.h4.text-center
-            Learn
-          %p.p.text-center
-            Over 140 summary videos to understand the difficult topics.
-        .col-sm-4
-          %h3.h4.text-center
-            Support
-          %p.p.text-center
-            Get help from our team of dedicated tutors whenever you get stuck.
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              Features to support your CFA study
+        .row
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('phone-icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
+              Anywhere, Anytime
+            %p.p
+              Study for your specific topics anytime, anywhere, on any device.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
+              Small Monthly Subscription
+            %p.p
+              Our subscription model offers you more flexibility than fixed price providers.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
+              Expert Author Network
+            %p.p
+              Learn from the best with training designed and developed by industry experts.
 
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
+      .row
+        .col-sm-12
+          %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
+            Access all CFA Courses
       .course-list-wrap
         .row
-          .col-sm-6.col-md-4
-            %a.box.box-course{href: '#sign-up'}
-              .box-inner
-                %h3.h4.box-title
-                  CFA Level 1
-                %p.box-desc
-                  £25/Month
-              .box-label
-                7-day free trial
-          .col-sm-6.col-md-4
-            %a.box.box-course
-              .box-inner
-                %h3.h4.box-title.is-text-disabled
-                  CFA Level 2
-                %p.box-desc
-                  Coming soon...
-              .box-label
-                Coming Soon
-          .col-sm-6.col-md-4
-            %a.box.box-course
-              .box-inner
-                %h3.h4.box-title.is-text-disabled
-                  CFA Level 3
-                %p.box-desc
-                  Coming soon...
-              .box-label
-                Coming Soon
-.testimonials.testimonials-alt
-  .l-wrap
-    .l-section
-      .testimonial
-        .container-fluid
-          .row
-            .col-sm-12
-              %h2.h5.text-center
-                Testimonials
-              %p.h2.text-center.h-separator.h-separator-center
-                What your peers are saying
-          .row
-            .col-sm-12.col-md-6.col-md-offset-3
-              .testimonial
-                .testimonial-pic-wrap
-                  =image_tag('testimonial-mike-pic.jpg', class: 'testimonial-pic')
-                %p.p
-                  When I signed up for Level I, I had 85 days to put in the 300 hours of studying while working full time. I had just finished my undergrad in Math and even though I had no finance background, I was confident that I could handle the material.
-                %p.p
-                  The challenge would be covering everything and having enough time to do mock exams. Learn Signal was the perfect solution.
-
-                %p.p
-                  The videos were quick, very well presented and contained only the essential information. The tests at the end of each section were helpful at highlighting gaps in my knowledge. I'm not sure I would have finished the material in time and passed the exam had I not used Learn Signal.
-                %p.p
-                  %strong.testimonial-sig
-                    Mike Sinclair
-                  %br/
-                  Risk Analyst Architect
+          .col-sm-12.col-md-12
+            -@group5.try(:active_children).all_in_order.each do |course|
+              .col-md-4.l-margin-top
+                =link_to library_special_link(course), class: 'library-box-item panel text-center' do
+                  .panel-icon.icon-big
+                    %i.glyphicon.glyphicon-arrow-right
+                  .l-margin-bottom.l-margin-top{style: 'min-height: 110px'}
+                    %h3.text-bold
+                      =course.name
+                    %p.l-margin-bottom-big
+                      Now available
+                  .box-label
+                    Browse
 
 .start-trial
   %a.btn-block.btn-block-red{href: '#sign-up'}
@@ -134,11 +103,12 @@
             %p.h5.text-center
               Become a member
             %p.h2.text-center
-              Start your 7-day free trial &rarr;
+              Start your 7-day free trial
+              %span.ico-arrow-right-r
 
 
 :javascript
-    var nav = responsiveNav(".nav-collapse");
+  var nav = responsiveNav(".nav-collapse");
 
   // Smooth scroll to top
   $(document).ready(function(){

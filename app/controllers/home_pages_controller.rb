@@ -43,6 +43,7 @@ class HomePagesController < ApplicationController
       @group2 = Group.where(name_url: 'it-operations').first
       @group3 = Group.where(name_url: 'business').first
       @group4 = Group.where(name_url: 'acca-revision').first
+      @group5 = Group.where(name_url: 'cfa-revision').first
       if @home_page
         seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
         cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
