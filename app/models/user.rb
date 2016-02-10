@@ -221,6 +221,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:site_admin)
   end
 
+  def free_member?
+    self.subscriptions.last.try(:free_trial?)
+  end
+
   def assign_anonymous_logs_to_user(session_guid)
     model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
