@@ -668,6 +668,8 @@ en:
         question: Question
         quiz: Quiz
         quizzes: MCQs
+        mcq: MCQ
+        mcqs: MCQs
         video: Video
         number_of_videos: Videos
         videos: of Video
