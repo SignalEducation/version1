@@ -45,16 +45,19 @@
                           .box-topic-item
                             =truncate(child.name, length: 70)
                           .time.hidden-xs
-                            -if child.number_of_questions.to_i > 0
-                              -if child.number_of_questions.to_i == 1
-                                =child.number_of_questions.to_s + ' ' + t('views.library.show.question')
-                              -elsif child.number_of_questions.to_i > 1
-                                =child.number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                              |
-                            -if child.video_duration > 0
-                              =humanize_time(child.video_duration)
-                            -else
-                              =humanize_time(child.estimated_time_in_seconds)
+                            -if child.quiz_count.to_i > 0
+                              -if child.quiz_count.to_i == 1
+                                =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
+                              -elsif child.quiz_count.to_i > 1
+                                =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
+                              -if child.video_count > 0
+                                |
+                            -if child.video_count == 1
+                              =#humanize_time(child.video_duration)
+                              =child.video_count.to_s + ' ' + t('views.library.show.video')
+                            -elsif child.video_count > 1
+                              =#humanize_time(child.estimated_time_in_seconds)
+                              =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
 
                       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
                         -child.children.all_in_order.all_active.each do |grandchild|
@@ -100,7 +103,7 @@
                                 .col-xs-12.col-sm-4
                                   .side-meta
                                     -if grandchild.is_video
-                                      -if grandchild.course_module_element_video.duration
+                                      -if grandchild.try(:course_module_element_video).try(:duration)
                                         =humanize_time(grandchild.course_module_element_video.duration)
                                       -elsif grandchild.try(:estimated_time_in_seconds)
                                         =humanize_time(grandchild.try(:estimated_time_in_seconds))
