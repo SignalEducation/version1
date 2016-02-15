@@ -4,7 +4,14 @@
   .l-wrap
     .container-fluid
       .row
-        .col-md-12.text-center
+        .col-sm-4.col-md-4
+          =link_to library_url do
+            %p.text-left{style: 'color: #333149'}
+              &#60;
+              ="Library"
+
+      .row
+        .col-md-12
           %h1.h1.l-margin-bottom-big.text-center.h-separator.h-separator-center
             =@course.try(:name)
           -if current_user
