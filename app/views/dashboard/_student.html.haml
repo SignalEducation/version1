@@ -79,31 +79,48 @@
     .l-wrap
       .container-fluid
         .row
-          .col-md-6.col-md-offset-3#heading-message
+          .col-md-10.col-md-offset-1#heading-message
             %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-              =t('views.dashboard.individual_student.no_content_right_now_h1')
-            %p.h5.h-white.text-center.l-margin-bottom-big
-              =t('views.dashboard.individual_student.no_content_right_now_h5')
+              Welcome to LearnSignal
+            %p.h4.text-center
+              Your account has been successfully activated.
+            %br/
+            %p.h3.text-center
+              Please select one of the course below to get started!
 
-  .l-section.is-bg-asphalt
+
+  .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
-        .row
-          .col-md-6.col-md-offset-3
-            %h5.h6.h-white.text-center.l-margin-bottom-big
-              Here are some of our most popular courses to get you started:
         .course-list-wrap
           .row
-            -@courses.each do |course|
-              .col-sm-6.col-md-4
-                =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
-                  .box-inner
-                    %h3.h4.box-title
-                      =course.try(:name)
-                    %p.box-desc
-                      -if course.short_description
-                        =course.try(:short_description).to_s.truncate(30)
-                      -else
-                        =course.description.to_s.truncate(30)
-                  .box-label
-                    =t('views.general.start')
+            -if current_user.try(:topic_interest)
+              -interest = current_user.topic_interest
+              -group = Group.where('name ILIKE ?', "#{interest}").try(:last) || Group.first
+              -group.children.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'box box-course ' do
+                    .box-inner{style: 'height: 163px'}
+                      %h3.h4.box-title
+                        =course.try(:name)
+                      %p.box-desc
+                        -if course.short_description
+                          =course.try(:short_description).to_s.truncate(30)
+                        -else
+                          =course.description.to_s.truncate(30)
+                    .box-label
+                      =t('views.general.start')
+            -else
+              -@courses.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
+                    .box-inner
+                      %h3.h4.box-title
+                        =course.try(:name)
+                      %p.box-desc
+                        -if course.short_description
+                          =course.try(:short_description).to_s.truncate(30)
+                        -else
+                          =course.description.to_s.truncate(30)
+                    .box-label
+                      =t('views.general.start')
