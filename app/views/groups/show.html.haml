@@ -33,12 +33,14 @@
             -@courses.each do |course|
               .col-sm-6.col-md-4
                 =link_to library_special_link(course), class: 'box box-course' do
-                  .box-inner
+                  .box-inner{style: 'height: 163px'}
                     %h3.h4.box-title
                       =course.try(:name)
                     %p.box-desc
                       -if course.try(:short_description)
-                        =course.try(:short_description).truncate(15)
+                        =course.try(:short_description).truncate(100)
+                      -else
+                        =course.try(:description).truncate(60)
                   .box-label
                     =t('views.general.browse')
 
