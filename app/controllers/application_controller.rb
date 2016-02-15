@@ -136,7 +136,7 @@ class ApplicationController < ActionController::Base
     elsif !current_user.user_group.subscription_required_to_see_content
       result = allowed
     elsif subscription_in_charge && subscription_in_charge.free_trial? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
-      result = not_allowed
+      result = allowed
       result[:course_content][:reason] = 'free_trial'
     elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
       result = not_allowed
