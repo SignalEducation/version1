@@ -112,7 +112,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def start_course_intercom_event
-    IntercomCourseStartedEventWorker.perform_async(self.user.id, self.subject_course.name)
+    IntercomCourseStartedEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
   end
 
   protected
