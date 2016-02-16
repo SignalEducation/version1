@@ -3,7 +3,7 @@ class IntercomCourseStartedEventWorker
 
   sidekiq_options queue: 'high'
 
-  def perform(email, course_name)
+  def perform(user_id, course_name)
     intercom = Intercom::Client.new(
         app_id: ENV['intercom_app_id'],
         api_key: ENV['intercom_api_key']
@@ -12,7 +12,7 @@ class IntercomCourseStartedEventWorker
     intercom.events.create(
         :event_name => "Started Course",
         :created_at => Time.now.to_i,
-        :email => email,
+        :user_id => user_id,
         :metadata => {
             "course_name" => course_name
         }
