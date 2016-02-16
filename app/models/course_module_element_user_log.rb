@@ -62,6 +62,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_booleans
   before_save :set_count_of_questions_taken_and_correct
   after_create :calculate_score
+  after_create :create_lesson_intercom_event
+  #after_create :create_lesson_intercom_event if Rails.env.production?
   after_create :create_or_update_student_exam_track
   after_update :update_student_exam_track
 
@@ -190,6 +192,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
     true
+  end
+
+  def create_lesson_intercom_event
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.course_module.subject_course.name, self.course_module.name, self.is_video ? 'Video' : 'Quiz', self.course_module_element.name, self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct))
   end
 
 end

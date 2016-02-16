@@ -8,7 +8,7 @@ RSpec.describe CoursesController, type: :controller do
   let!(:subject_course) { FactoryGirl.create(:active_subject_course) }
   let!(:course_module_1) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element)}
-  let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id)}
+  let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id, user_id: individual_student_user.id)}
   let!(:valid_params) { course_module_element_user_log.attributes.merge({time_taken_in_seconds: (Time.now.to_i * -1)}) }
 
   describe 'GET show' do
