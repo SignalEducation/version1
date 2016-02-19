@@ -119,7 +119,7 @@ class HomePagesController < ApplicationController
           # Send User Activation email through Mandrill
           MandrillWorker.perform_async(@user.id,
                                        'send_verification_email',
-                                       user_activation_url(activation_code: @user.account_activation_code))
+                                       user_verification_url(email_verification_code: @user.email_verification_code))
 
           # Sends info of User to getbase.com which is used by the sales team.
           #if Rails.env.production?

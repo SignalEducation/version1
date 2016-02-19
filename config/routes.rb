@@ -27,8 +27,8 @@ Rails.application.routes.draw do
       patch 'upgrade_from_free_trial', to: 'users#upgrade_from_free_trial', as: :upgrade_from_free_trial
     end
 
-    get 'user_activate/:activation_code', to: 'user_activations#update',
-        as: :user_activation
+    get 'user_verification/:email_verification_code', to: 'user_verifications#update',
+        as: :user_verification
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]

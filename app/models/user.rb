@@ -2,62 +2,58 @@
 #
 # Table name: users
 #
-#  id                                       :integer          not null, primary key
-#  email                                    :string
-#  first_name                               :string
-#  last_name                                :string
-#  address                                  :text
-#  country_id                               :integer
-#  crypted_password                         :string(128)      default(""), not null
-#  password_salt                            :string(128)      default(""), not null
-#  persistence_token                        :string
-#  perishable_token                         :string(128)
-#  single_access_token                      :string
-#  login_count                              :integer          default(0)
-#  failed_login_count                       :integer          default(0)
-#  last_request_at                          :datetime
-#  current_login_at                         :datetime
-#  last_login_at                            :datetime
-#  current_login_ip                         :string
-#  last_login_ip                            :string
-#  account_activation_code                  :string
-#  account_activated_at                     :datetime
-#  active                                   :boolean          default(FALSE), not null
-#  user_group_id                            :integer
-#  password_reset_requested_at              :datetime
-#  password_reset_token                     :string
-#  password_reset_at                        :datetime
-#  stripe_customer_id                       :string
-#  corporate_customer_id                    :integer
-#  operational_email_frequency              :string
-#  study_plan_notifications_email_frequency :string
-#  falling_behind_email_alert_frequency     :string
-#  marketing_email_frequency                :string
-#  marketing_email_permission_given_at      :datetime
-#  blog_notification_email_frequency        :string
-#  forum_notification_email_frequency       :string
-#  created_at                               :datetime
-#  updated_at                               :datetime
-#  locale                                   :string
-#  guid                                     :string
-#  trial_ended_notification_sent_at         :datetime
-#  crush_offers_session_id                  :string
-#  subscription_plan_category_id            :integer
-#  employee_guid                            :string
-#  password_change_required                 :boolean
-#  session_key                              :string
-#  first_description                        :text
-#  second_description                       :text
-#  wistia_url                               :text
-#  personal_url                             :text
-#  name_url                                 :string
-#  qualifications                           :text
-#  profile_image_file_name                  :string
-#  profile_image_content_type               :string
-#  profile_image_file_size                  :integer
-#  profile_image_updated_at                 :datetime
-#  phone_number                             :string
-#  topic_interest                           :string
+#  id                               :integer          not null, primary key
+#  email                            :string
+#  first_name                       :string
+#  last_name                        :string
+#  address                          :text
+#  country_id                       :integer
+#  crypted_password                 :string(128)      default(""), not null
+#  password_salt                    :string(128)      default(""), not null
+#  persistence_token                :string
+#  perishable_token                 :string(128)
+#  single_access_token              :string
+#  login_count                      :integer          default(0)
+#  failed_login_count               :integer          default(0)
+#  last_request_at                  :datetime
+#  current_login_at                 :datetime
+#  last_login_at                    :datetime
+#  current_login_ip                 :string
+#  last_login_ip                    :string
+#  account_activation_code          :string
+#  account_activated_at             :datetime
+#  active                           :boolean          default(FALSE), not null
+#  user_group_id                    :integer
+#  password_reset_requested_at      :datetime
+#  password_reset_token             :string
+#  password_reset_at                :datetime
+#  stripe_customer_id               :string
+#  corporate_customer_id            :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  locale                           :string
+#  guid                             :string
+#  trial_ended_notification_sent_at :datetime
+#  crush_offers_session_id          :string
+#  subscription_plan_category_id    :integer
+#  employee_guid                    :string
+#  password_change_required         :boolean
+#  session_key                      :string
+#  first_description                :text
+#  second_description               :text
+#  wistia_url                       :text
+#  personal_url                     :text
+#  name_url                         :string
+#  qualifications                   :text
+#  profile_image_file_name          :string
+#  profile_image_content_type       :string
+#  profile_image_file_size          :integer
+#  profile_image_updated_at         :datetime
+#  phone_number                     :string
+#  topic_interest                   :string
+#  email_verification_code          :string
+#  email_verified_at                :datetime
+#  email_verified                   :boolean          default(FALSE), not null
 #
 
 class User < ActiveRecord::Base
@@ -130,7 +126,6 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
-  before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name) }
   # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
@@ -159,6 +154,17 @@ class User < ActiveRecord::Base
       user.account_activated_at = Proc.new{Time.now}.call
       user.account_activation_code = nil
       user.active = true
+      user.save!
+    end
+    return user
+  end
+
+  def self.get_and_verify(email_verification_code)
+    user = User.where(active: true).where(email_verification_code: email_verification_code, email_verified_at: nil).first
+    if user
+      user.email_verified_at = Proc.new{Time.now}.call
+      user.email_verification_code = nil
+      user.email_verified = true
       user.save!
     end
     return user
@@ -402,18 +408,6 @@ class User < ActiveRecord::Base
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-  end
-
-  def set_defaults
-    Rails.logger.debug "DEBUG: User#set_defaults - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-    self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
-    self.operational_email_frequency ||= 'weekly'
-    self.study_plan_notifications_email_frequency ||= 'off'
-    self.falling_behind_email_alert_frequency ||= 'off'
-    self.marketing_email_frequency ||= 'off'
-    self.blog_notification_email_frequency ||= 'off'
-    self.forum_notification_email_frequency ||= 'off'
-    Rails.logger.debug "DEBUG: User#set_defaults - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
   def set_stripe_customer_id
