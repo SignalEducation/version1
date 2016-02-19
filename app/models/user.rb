@@ -280,6 +280,12 @@ class User < ActiveRecord::Base
     self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
+  def generate_email_verification_code
+    self.email_verified = false
+    self.email_verified_at = nil
+    self.email_verification_code = ApplicationController::generate_random_code(20)
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&
@@ -378,7 +384,7 @@ class User < ActiveRecord::Base
           password = SecureRandom.hex(5)
 
           user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', active: false, account_activated_at: nil, account_activation_code: ApplicationController::generate_random_code(20))
+          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', active: true, account_activated_at: Time.now, account_activation_code: nil, email_verified: false, email_verified_at: nil, email_verification_code: ApplicationController::generate_random_code(20))
 
           if used_emails.include?(v['email']) || !user.valid?
             users = []

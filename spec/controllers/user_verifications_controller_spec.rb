@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'authlogic/test_case'
 require 'support/users_and_groups_setup'
 
-RSpec.describe UserActivationsController, :type => :controller do
+RSpec.describe UserVerificationsController, :type => :controller do
 
   include_context 'users_and_groups_setup'
 
@@ -11,15 +11,14 @@ RSpec.describe UserActivationsController, :type => :controller do
   context 'Nobody logged in...' do
     describe "Get 'update'" do
       it 'returns success when given a valid code' do
-        get :update, activation_code: new_user.account_activation_code
-        expect(controller.params[:activation_code]).to eq(new_user.account_activation_code)
+        get :update, email_verification_code: new_user.email_verification_code
+        expect(controller.params[:email_verification_code]).to eq(new_user.email_verification_code)
         expect(response.status).to eq(302)
         expect(flash[:error]).to be_nil
-        expect(flash[:success]).to eq(I18n.t('controllers.user_activations.update.success'))
       end
 
       it 'returns error when given an invalid code' do
-        get :update, activation_code: 'XYZ123'
+        get :update, email_verification_code: 'XYZ123'
         expect(response.status).to eq(302)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.user_activations.update.error'))
@@ -38,7 +37,7 @@ RSpec.describe UserActivationsController, :type => :controller do
 
     describe "GET 'update'" do
       it 'should result in error despite valid code' do
-        get :update, activation_code: new_user.account_activation_code
+        get :update, email_verification_code: new_user.email_verification_code
         expect(response.status).to eq(302)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.application.logged_out_required.flash_error'))

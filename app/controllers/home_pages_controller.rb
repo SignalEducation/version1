@@ -100,6 +100,7 @@ class HomePagesController < ApplicationController
         @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
 
         @user.account_activation_code = SecureRandom.hex(10)
+        @user.email_verification_code = SecureRandom.hex(10)
         @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
 
         # Check for CrushOffers cookie and assign it to the User

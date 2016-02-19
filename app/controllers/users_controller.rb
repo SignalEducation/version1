@@ -103,6 +103,7 @@ class UsersController < ApplicationController
   def edit
   end
 
+  # Admins new tutors, content managers or admins
   def create
     if Rails.env.production?
       password = SecureRandom.hex(5)
@@ -113,11 +114,13 @@ class UsersController < ApplicationController
                                            password_confirmation: password,
                                            password_change_required: true}))
     @user.de_activate_user
+    @user.generate_email_verification_code
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
-      MandrillWorker.perform_async(@user.id,
+      user = User.get_and_activate(@user.account_activation_code)
+      MandrillWorker.perform_async(user.id,
                                    'send_verification_email',
-                                   user_activation_url(activation_code: @user.account_activation_code))
+                                   user_verification_url(email_verification_code: user.email_verification_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
