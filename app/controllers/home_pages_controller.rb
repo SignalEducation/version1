@@ -122,16 +122,17 @@ class HomePagesController < ApplicationController
                                        user_activation_url(activation_code: @user.account_activation_code))
 
           # Sends info of User to getbase.com which is used by the sales team.
-          if Rails.env.production?
-            @base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
-            @base.leads.create(first_name: @user.first_name,
-                                 last_name: @user.last_name,
-                                 phone: @user.phone_number,
-                                 email: @user.email,
-                                 address: {
-                                   country: @user.country.name}
-            )
-          end
+          #if Rails.env.production?
+            #@base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
+            #@base.leads.create(first_name: @user.first_name,
+                                 #last_name: @user.last_name,
+                                 #phone: @user.phone_number,
+                                 #email: @user.email,
+                                 #address: {
+                                   #country: @user.country.name}
+            #)
+          #end
+
           # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
@@ -145,7 +146,8 @@ class HomePagesController < ApplicationController
           end
 
           @user.assign_anonymous_logs_to_user(current_session_guid)
-          flash[:success] = I18n.t('controllers.home_pages.student_sign_up.flash.success')
+          user = User.get_and_activate(@user.account_activation_code)
+          UserSession.create(user)
           redirect_to personal_sign_up_complete_url
         else
           # This is the way to restore model errors after redirect. In referrer method
