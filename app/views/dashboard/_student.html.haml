@@ -66,7 +66,7 @@
                         -total_lesson = course.cme_count
                         -complete_lesson = log.count_of_cmes_completed
                         -complete_percent = log.percentage_complete
-                        %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                        %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
                         .progress.l-margin-top-big
                           .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                       .box-label continue
@@ -81,10 +81,7 @@
         .row
           .col-md-10.col-md-offset-1#heading-message
             %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-              Welcome to LearnSignal
-            %p.h4.text-center
-              Your account has been successfully activated.
-            %br/
+              Welcome to your Dashboard
             %p.h3.text-center
               Please select one of the courses below to get started!
 

@@ -456,6 +456,16 @@ label, .label {
     max-width: 170px;
   }
 }
+.email-pic-padding {
+  padding-bottom: $gutter/2;
+}
+
+.email-pic {
+  display: block;
+  max-width: 75px;
+  margin: 0 auto $gutter auto;
+  @include border-radius(100%);
+}
 .second-profile-pic {
   display: block;
   max-width: 120px;

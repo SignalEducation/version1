@@ -1,11 +1,13 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/subscription_plans_setup'
+require 'support/course_content'
 
 describe 'The student sign-up process', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup'
+  include_context 'course_content'
 
   after { StripeMock.stop }
 
@@ -16,17 +18,8 @@ describe 'The student sign-up process', type: :feature do
     within('#sign-up-form') do
       student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
     end
-    user = User.where(email: 'john@example.com').last
-    user.active = true
-    user.save
-    visit sign_in_path
-    within('.sign-in-modal') do
-      fill_in I18n.t('views.user_sessions.form.email'), with: 'john@example.com'
-      fill_in I18n.t('views.user_sessions.form.password'), with: user_password
-      click_button I18n.t('views.general.sign_in')
-    end
-    within('#heading-message') do
-      expect(page).to have_content 'Your Learn Signal Dashboard'
+    within('#thank-you-message') do
+      expect(page).to have_content 'Final Step!'
     end
   end
 
@@ -42,8 +35,8 @@ describe 'The student sign-up process', type: :feature do
         enter_credit_card_details('valid')
         find('.upgrade-sub').click
         sleep(10)
-        within('#heading-message') do
-          expect(page).to have_content 'Your Learn Signal Dashboard'
+        within('#thank-you-message') do
+          expect(page).to have_content 'Thanks for upgrading your subscription!'
         end
         visit_my_profile
         click_on 'Subscriptions'
@@ -59,8 +52,8 @@ describe 'The student sign-up process', type: :feature do
         enter_credit_card_details('valid')
         find('.upgrade-sub').click
         sleep(10)
-        within('#heading-message') do
-          expect(page).to have_content 'Your Learn Signal Dashboard'
+        within('#thank-you-message') do
+          expect(page).to have_content 'Thanks for upgrading your subscription!'
         end
         visit_my_profile
         click_on 'Subscriptions'
@@ -76,8 +69,8 @@ describe 'The student sign-up process', type: :feature do
         enter_credit_card_details('valid')
         find('.upgrade-sub').click
         sleep(10)
-        within('#heading-message') do
-          expect(page).to have_content 'Your Learn Signal Dashboard'
+        within('#thank-you-message') do
+          expect(page).to have_content 'Thanks for upgrading your subscription!'
         end
         visit_my_profile
         click_on 'Subscriptions'
