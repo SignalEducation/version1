@@ -73,6 +73,6 @@ describe SubjectCourseUserLog do
 
   it { should respond_to(:student_exam_tracks) }
 
-  it { should respond_to(:create_intercom_event) }
+  it { should respond_to(:start_course_intercom_event) }
 
 end

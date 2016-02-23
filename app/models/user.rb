@@ -167,6 +167,7 @@ class User < ActiveRecord::Base
       user.email_verified = true
       user.save!
     end
+
     return user
   end
 

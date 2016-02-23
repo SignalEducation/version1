@@ -82,6 +82,16 @@ FactoryGirl.define do
         account_activated_at            nil
       end
 
+      factory :active_individual_student_user do
+        sequence(:email)                { |n| "active-student-#{n}@example.com" }
+        active                          true
+        account_activation_code         'abcde12345'
+        account_activated_at            Time.now
+        email_verified                          false
+        email_verification_code         'abcde12345'
+        email_verified_at               nil
+      end
+
       factory :user_with_reset_requested do
         sequence(:email)                { |n| "reset.me-#{n}@example.com" }
         active                          false

@@ -3,7 +3,6 @@ class UserVerificationsController < ApplicationController
   before_action :check_if_password_change_is_required
 
   def update # responds to 'get'
-    @user = User.get_and_verify(params[:email_verification_code])
     if @user
       UserSession.create(@user)
     else

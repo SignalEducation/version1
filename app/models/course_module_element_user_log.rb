@@ -62,8 +62,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_booleans
   before_save :set_count_of_questions_taken_and_correct
   after_create :calculate_score
-  after_create :create_lesson_intercom_event
-  #after_create :create_lesson_intercom_event if Rails.env.production?
+  after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
   after_create :create_or_update_student_exam_track
   after_update :update_student_exam_track
 

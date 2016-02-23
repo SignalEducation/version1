@@ -59,9 +59,12 @@
 require 'rails_helper'
 
 describe User do
+  #Makes test - user_spec.rb:102 # User should validate that :email is case-insensitively unique pass but causes test - user_spec.rb:114 # User should validate that :password cannot be empty/falsy to fail cause it's populating the passwrd field overriding the test pre-populations
   subject { FactoryGirl.build(:individual_student_user) }
+
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key forum_notification_email_frequency falling_behind_email_alert_frequency marketing_email_frequency study_plan_notifications_email_frequency operational_email_frequency marketing_email_permission_given_at blog_notification_email_frequency profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key forum_notification_email_frequency falling_behind_email_alert_frequency marketing_email_frequency study_plan_notifications_email_frequency operational_email_frequency marketing_email_permission_given_at blog_notification_email_frequency profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name email_verification_code email_verified_at email_verified phone_number)
+
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -107,7 +110,7 @@ describe User do
   it { should validate_presence_of(:last_name) }
   it { should validate_length_of(:last_name).is_at_least(2).is_at_most(30) }
 
-  it { should validate_presence_of(:topic_interest) }
+  it { should_not validate_presence_of(:topic_interest) }
 
   it { should validate_presence_of(:password).on(:create) }
   it { should validate_confirmation_of(:password).on(:create) }
@@ -164,7 +167,6 @@ describe User do
   xit { should validate_uniqueness_of(:employee_guid).scoped_to(:corporate_customer_id) }
 
   # callbacks
-  it { should callback(:set_defaults).before(:validation).on(:create) }
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
 
