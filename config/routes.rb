@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
+    get 'send_verification', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
     get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
