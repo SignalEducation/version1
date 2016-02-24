@@ -1,5 +1,5 @@
 require 'mandrill'
-
+#None of these mails should be sending anymore; replaced by intercom messages
 class MandrillClient
   def initialize(user)
     @user = user
@@ -51,58 +51,6 @@ class MandrillClient
     msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
     send_template('password-reset', msg)
-  end
-
-  def send_study_streak_email(continue_url)
-    msg = message_stub.merge({"subject" => "9 Day Study Streak"})
-    msg["global_merge_vars"] << { "name" => "CONTINUEURL", "content" => continue_url }
-    send_template('study-streak', msg)
-  end
-
-  def send_we_havent_seen_you_in_a_while_email(n_days_since_last_seen, subscribed_course,
-                                               cme_one, cme_one_n_videos, cme_one_n_quizzes,
-                                               cme_two, cme_two_n_videos, cme_two_n_quizzes,
-                                               cme_three, cme_three_n_videos, cme_three_n_quizzes)
-    msg = message_stub.merge({"subject" => "We havent seen you in a while!"})
-    msg["global_merge_vars"] << { "name" => "N_DAYS_SINCE_LAST_SEEN", "content" => n_days_since_last_seen }
-    msg["global_merge_vars"] << { "name" => "SUBSCRIBED_COURSE", "content" => subscribed_course }
-    msg["global_merge_vars"] << { "name" => "CME_ONE", "content" => cme_one }
-    msg["global_merge_vars"] << { "name" => "CME_ONE_N_VIDEOS", "content" => cme_one_n_videos }
-    msg["global_merge_vars"] << { "name" => "CME_ONE_N_QUIZZES", "content" => cme_one_n_quizzes }
-    msg["global_merge_vars"] << { "name" => "CME_TWO", "content" => cme_two }
-    msg["global_merge_vars"] << { "name" => "CME_TWO_N_VIDEOS", "content" => cme_two_n_videos }
-    msg["global_merge_vars"] << { "name" => "CME_TWO_N_QUIZZES", "content" => cme_two_n_quizzes }
-    msg["global_merge_vars"] << { "name" => "CME_THREE", "content" => cme_three }
-    msg["global_merge_vars"] << { "name" => "CME_THREE_N_VIDEOS", "content" => cme_three_n_videos }
-    msg["global_merge_vars"] << { "name" => "CME_THREE_N_QUIZZES", "content" => cme_three_n_quizzes }
-    send_template('we-havent-seen-you-in-a-while', msg)
-  end
-
-  def send_congrats_on_finishing_the_course_learn_again_email(course_name, course_survey_url,
-                                                              course_1, course_1_url, course_1_author, course_1_description,
-                                                              course_2, course_2_url, course_2_author, course_2_description,
-                                                              course_3, course_3_url, course_3_author, course_3_description,
-                                                              course_4, course_4_url, course_4_author, course_4_description)
-    msg = message_stub.merge({"subject" => "Congratulations on completing the #{course_name} course! Why not keep on learning?"})
-    msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
-    msg["global_merge_vars"] << { "name" => "COURSE_SURVEY_URL", "content" => course_survey_url }
-    msg["global_merge_vars"] << { "name" => "COURSE_1", "content" => course_1 }
-    msg["global_merge_vars"] << { "name" => "COURSE_1_URL", "content" => course_1_url }
-    msg["global_merge_vars"] << { "name" => "COURSE_1_AUTHOR", "content" => course_1_author }
-    msg["global_merge_vars"] << { "name" => "COURSE_1_DESCRIPTION", "content" => course_1_description }
-    msg["global_merge_vars"] << { "name" => "COURSE_2", "content" => course_2 }
-    msg["global_merge_vars"] << { "name" => "COURSE_2_URL", "content" => course_2_url }
-    msg["global_merge_vars"] << { "name" => "COURSE_2_AUTHOR", "content" => course_2_author }
-    msg["global_merge_vars"] << { "name" => "COURSE_2_DESCRIPTION", "content" => course_2_description }
-    msg["global_merge_vars"] << { "name" => "COURSE_3", "content" => course_3 }
-    msg["global_merge_vars"] << { "name" => "COURSE_3_URL", "content" => course_3_url }
-    msg["global_merge_vars"] << { "name" => "COURSE_3_AUTHOR", "content" => course_3_author }
-    msg["global_merge_vars"] << { "name" => "COURSE_3_DESCRIPTION", "content" => course_3_description }
-    msg["global_merge_vars"] << { "name" => "COURSE_4", "content" => course_4 }
-    msg["global_merge_vars"] << { "name" => "COURSE_4_URL", "content" => course_4_url }
-    msg["global_merge_vars"] << { "name" => "COURSE_4_AUTHOR", "content" => course_4_author }
-    msg["global_merge_vars"] << { "name" => "COURSE_4_DESCRIPTION", "content" => course_4_description }
-    send_template('congrats-on-finishing-the-course-learn-again', msg)
   end
 
   private

@@ -119,7 +119,7 @@ class HomePagesController < ApplicationController
           clear_mixpanel_initial_id
           # Send User Activation email through Mandrill
           #MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-          IntercomVerificationMessageWorker.perform_at(30.seconds.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code))
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code))
           # Sends info of User to getbase.com which is used by the sales team.
           #if Rails.env.production?
             #@base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])

@@ -48,9 +48,8 @@ class CorporateManagersController < ApplicationController
     @corporate_manager.de_activate_user
     @corporate_manager.locale = 'en'
     if @corporate_manager.save
-      MandrillWorker.perform_async(@corporate_manager.id,
-                                   'send_verification_email',
-                                   user_activation_url(activation_code: @corporate_manager.account_activation_code))
+      #MandrillWorker.perform_async(@corporate_manager.id, 'send_verification_email', user_activation_url(activation_code: @corporate_manager.account_activation_code))
+      IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @corporate_manager.id,user_verification_url(email_verification_code: @corporate_manager.email_verification_code))
       flash[:success] = I18n.t('controllers.corporate_managers.create.flash.success')
       redirect_to corporate_managers_url
     else
