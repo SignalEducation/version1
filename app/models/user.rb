@@ -179,7 +179,8 @@ class User < ActiveRecord::Base
                 password_reset_requested_at: Proc.new{Time.now}.call,
                 password_reset_token: ApplicationController::generate_random_code(20),
                 active: false)
-        MandrillWorker.perform_async(user.id, 'send_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        #MandrillWorker.perform_async(user.id, 'send_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        IntercomPasswordResetEmailWorker.perform_async(user.id, "#{root_url}/reset_password/#{user.password_reset_token}")
       end
     end
   end
