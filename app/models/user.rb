@@ -188,11 +188,11 @@ class User < ActiveRecord::Base
   def self.finish_password_reset_process(reset_token, new_password,
           new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
-      user = User.where(password_reset_token: reset_token.to_s, active: false).first
+      user = User.where(password_reset_token: reset_token.to_s).first
       if user
         if user.update_attributes(password: new_password.to_s,
                                   password_confirmation: new_password_confirmation.to_s,
-                                  active: true, password_reset_token: nil,
+                                  password_reset_token: nil,
                                   password_reset_requested_at: nil,
                                   password_reset_at: Time.now)
           user # return this
@@ -266,6 +266,10 @@ class User < ActiveRecord::Base
 
   def corporate_customer?
     self.user_group.try(:corporate_customer)
+  end
+
+  def corporate_manager?
+    self.user_group.try(:corporate_manager)
   end
 
   def corporate_student?

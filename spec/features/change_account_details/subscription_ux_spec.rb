@@ -37,7 +37,6 @@ describe 'Subscription UX:', type: :feature do
     expect(page).to have_content 'Select a new plan'
     #click_on(".plans").("#subscription-panel-8")
     page.evaluate_script('$("#plans .subscription-panel").last().attr("id")').click
-    binding.pry
     click_button(I18n.t('views.general.save'))
     # page should reload
     expect(page).to have_content(I18n.t('controllers.subscriptions.update.flash.success'))
