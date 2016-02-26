@@ -156,7 +156,7 @@ class UsersController < ApplicationController
     @user = current_user
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-      Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
+      #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
     end
