@@ -72,7 +72,8 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :topic_interest
+                  :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
+                  :email_verified_at, :email_verified
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -388,10 +389,10 @@ class User < ActiveRecord::Base
             raise ActiveRecord::Rollback
           end
           password = SecureRandom.hex(5)
-
+          verification_code = ApplicationController::generate_random_code(20)
+          time_now = Proc.new{Time.now}.call
           user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', active: true, account_activated_at: Time.now, account_activation_code: nil, email_verified: false, email_verified_at: nil, email_verification_code: ApplicationController::generate_random_code(20))
-
+          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
           if used_emails.include?(v['email']) || !user.valid?
             users = []
             raise ActiveRecord::Rollback

@@ -97,6 +97,7 @@ class CorporateStudentsController < ApplicationController
       @corporate_students.each do |user|
         if user.save
           #MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))
+          IntercomCreateCorporateStudentWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.name, user.corporate_customer_id, user.corporate_customer.organisation_name)
           IntercomVerificationMessageWorker.perform_at(1.minute.from_now, user.id, user_verification_url(email_verification_code: user.email_verification_code))
         end
       end
