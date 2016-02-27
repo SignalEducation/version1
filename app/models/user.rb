@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
-                  :email_verified_at, :email_verified
+                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -112,8 +112,8 @@ class User < ActiveRecord::Base
   # validation
   validates :email, presence: true, uniqueness: true,
             length: {within: 7..50}
-  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
+  validates :first_name, presence: true, length: {minimum: 1, maximum: 20}
+  validates :last_name, presence: true, length: {minimum: 1, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
