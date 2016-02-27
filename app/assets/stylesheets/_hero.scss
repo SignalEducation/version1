@@ -71,8 +71,6 @@
 .hero-upcoming {
   background: $purple-2 asset-url('bg-upcoming.jpg') 50% 0 no-repeat;
   color: $white;
-  background-size: cover;
-  min-height: 1100px;
   @include breakpoint(md-min) {
     background: $purple-2 asset-url('bg-upcoming.jpg') no-repeat;
     background-size: cover;

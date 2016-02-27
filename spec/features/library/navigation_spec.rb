@@ -26,11 +26,6 @@ describe 'User navigating through the library:', type: :feature do
       expect(page).to have_content subject_course_1.name
       click_link("#{subject_course_1.name}")
       expect(page).to have_content subject_course_1.name
-      click_link('Browse')
-      expect(page).to have_content course_module_element_1_1.name
-      expect(page).to have_content(course_module_1.name)
-      expect(page).to have_css('.no-content-well')
-      expect(page).to have_content I18n.t('views.courses.content_denied.panel.need_to_sign_in')
     end
 
     scenario 'when logged in as one of the users', js: true do

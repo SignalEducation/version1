@@ -8,7 +8,8 @@
             %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
               =@course.try(:name)
             %p.h5.h-white.text-center.l-margin-bottom-big
-              =@course.try(:short_description)
+              =#@course.try(:short_description)
+              This course is not live yet. Please provided your email below to be notified when it is released.
             #response
             =form_tag('/subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
               .form-horizontal
@@ -27,7 +28,7 @@
         .container-fluid
           .row.l-margin-bottom
             .col-sm-12.col-md-8{role: 'tablist'}
-              .course-tabs
+              .signal-tabs
                 %a{href: '#table-of-contents', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
                   =t('views.library.show.table_of_contents')
                 %a{href: '#description', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
@@ -74,24 +75,29 @@
               -else
                 ='Learn Signal'
 -else
-  .row
-    .col-sm-8.col-sm-offset-2
-      .col-sm-8
-        %h3.l-margin-top-big
-          =t('views.subject_courses.form.description')
-        %p
-          -if @course.try(:description)
-            =@course.try(:description)
-          -else
-            =@course.parent.try(:description)
-      .col-sm-4
-        %h3.l-margin-top-big
-          =t('views.general.author')
-        %p
-          -if @course.tutor
-            =@course.tutor.try(:name)
-          -else
-            ='Learn Signal'
+  .l-asphalt
+    .l-section
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom-huge
+            .col-sm-12.col-md-8
+              %h3.l-margin-top-big
+                =t('views.subject_courses.form.description')
+              %p
+                -if @course.try(:description)
+                  =@course.try(:description).try(:html_safe)
+                -else
+                  =@course.try(:description).try(:html_safe)
+            .col-sm-4
+              %h3.l-margin-top-big
+                =t('views.general.author')
+              %p
+                -if @course.tutor
+                  =@course.tutor.try(:name)
+                -else
+                  ='Learn Signal'
 
-
+%br/
+%br/
+%br/
 =render partial: 'layouts/new_footer'

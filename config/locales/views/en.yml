@@ -1035,13 +1035,6 @@ en:
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID
         corporate_customer_id: Corporate customer
-        operational_email_frequency: Operational email frequency
-        study_plan_notifications_email_frequency: Study plan notifications email frequency
-        falling_behind_email_alert_frequency: Falling behind email alert frequency
-        marketing_email_frequency: Marketing email frequency
-        marketing_email_permission_given_at: Marketing email permission given at
-        blog_notification_email_frequency: Blog notification email frequency
-        forum_notification_email_frequency: Forum notification email frequency
         created_at: Created at
         updated_at: Updated at
         guid: GUID

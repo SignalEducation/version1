@@ -1,10 +1,12 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/subscription_plans_setup'
+require 'support/course_content'
 
 describe 'Subscription UX:', type: :feature do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
   include_context 'subscription_plans_setup' # starts StripeMock up for us.
 
   let!(:subscription_1) { x = FactoryGirl.create(:subscription,
@@ -35,7 +37,6 @@ describe 'Subscription UX:', type: :feature do
     expect(page).to have_content 'Select a new plan'
     #click_on(".plans").("#subscription-panel-8")
     page.evaluate_script('$("#plans .subscription-panel").last().attr("id")').click
-    binding.pry
     click_button(I18n.t('views.general.save'))
     # page should reload
     expect(page).to have_content(I18n.t('controllers.subscriptions.update.flash.success'))

@@ -34,7 +34,8 @@ describe 'User navigating through the dashboard:', type: :feature do
       visit root_path
       sign_up_and_upgrade_from_free_trial_small_device
       visit dashboard_path
-      expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now_h1')
+      expect(page).to have_content 'Welcome to your Dashboard'
+      expect(page).to have_content 'Please select one of the courses below to get started!'
       within('.navbar.navbar-default') do
         find('.navbar-toggle').click
         click_link 'Courses'

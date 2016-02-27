@@ -8,7 +8,7 @@
         .col-md-8.col-md-offset-2.l-margin-bottom-6x
           =form_for(@user_session, html: {role: 'form'}) do |f|
             =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
-            .sign-in-modal
+            .sign-in-modal#sign-in
               .col-md-8.col-md-offset-2.l-margin-top-small
                 =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
                 %br/

@@ -92,7 +92,8 @@ class StripeApiEvent < ActiveRecord::Base
         when 'invoice.payment_failed'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           if user
-            MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.account_url)
+            #MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.account_url)
+            IntercomPaymentFailedWorker.perform_async(user.id, self.account_url) unless Rails.env.test?
             self.processed = true
             self.processed_at = Time.now
           else

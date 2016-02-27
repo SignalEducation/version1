@@ -100,7 +100,7 @@ class HomePagesController < ApplicationController
         @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
 
         @user.account_activation_code = SecureRandom.hex(10)
-        @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
+        @user.email_verification_code = SecureRandom.hex(10)
 
         # Check for CrushOffers cookie and assign it to the User
         if cookies.encrypted[:crush_offers]
@@ -115,23 +115,9 @@ class HomePagesController < ApplicationController
         end
 
         if @user.valid? && @user.save
-          clear_mixpanel_initial_id
-          # Send User Activation email through Mandrill
-          MandrillWorker.perform_async(@user.id,
-                                       'send_verification_email',
-                                       user_activation_url(activation_code: @user.account_activation_code))
+          # Send User Activation email through Intercom
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
 
-          # Sends info of User to getbase.com which is used by the sales team.
-          if Rails.env.production?
-            @base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
-            @base.leads.create(first_name: @user.first_name,
-                                 last_name: @user.last_name,
-                                 phone: @user.phone_number,
-                                 email: @user.email,
-                                 address: {
-                                   country: @user.country.name}
-            )
-          end
           # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
@@ -145,7 +131,8 @@ class HomePagesController < ApplicationController
           end
 
           @user.assign_anonymous_logs_to_user(current_session_guid)
-          flash[:success] = I18n.t('controllers.home_pages.student_sign_up.flash.success')
+          user = User.get_and_activate(@user.account_activation_code)
+          UserSession.create(user)
           redirect_to personal_sign_up_complete_url
         else
           # This is the way to restore model errors after redirect. In referrer method

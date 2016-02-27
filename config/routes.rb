@@ -27,8 +27,10 @@ Rails.application.routes.draw do
       patch 'upgrade_from_free_trial', to: 'users#upgrade_from_free_trial', as: :upgrade_from_free_trial
     end
 
-    get 'user_activate/:activation_code', to: 'user_activations#update',
-        as: :user_activation
+    get 'user_verification/:email_verification_code', to: 'user_verifications#update',
+        as: :user_verification
+    get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
+        as: :old_user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
@@ -44,6 +46,7 @@ Rails.application.routes.draw do
 
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
+    get 'send_verification', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
     get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course

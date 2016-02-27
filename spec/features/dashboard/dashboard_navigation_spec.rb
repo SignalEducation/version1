@@ -34,7 +34,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       within('.navbar.navbar-default') do
         click_link 'Dashboard'
       end
-      expect(page).to have_content I18n.t('views.dashboard.individual_student.no_content_right_now_h1')
+      expect(page).to have_content 'Welcome to your Dashboard'
       within('.navbar.navbar-default') do
         click_link 'Courses'
       end

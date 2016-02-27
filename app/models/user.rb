@@ -2,62 +2,58 @@
 #
 # Table name: users
 #
-#  id                                       :integer          not null, primary key
-#  email                                    :string
-#  first_name                               :string
-#  last_name                                :string
-#  address                                  :text
-#  country_id                               :integer
-#  crypted_password                         :string(128)      default(""), not null
-#  password_salt                            :string(128)      default(""), not null
-#  persistence_token                        :string
-#  perishable_token                         :string(128)
-#  single_access_token                      :string
-#  login_count                              :integer          default(0)
-#  failed_login_count                       :integer          default(0)
-#  last_request_at                          :datetime
-#  current_login_at                         :datetime
-#  last_login_at                            :datetime
-#  current_login_ip                         :string
-#  last_login_ip                            :string
-#  account_activation_code                  :string
-#  account_activated_at                     :datetime
-#  active                                   :boolean          default(FALSE), not null
-#  user_group_id                            :integer
-#  password_reset_requested_at              :datetime
-#  password_reset_token                     :string
-#  password_reset_at                        :datetime
-#  stripe_customer_id                       :string
-#  corporate_customer_id                    :integer
-#  operational_email_frequency              :string
-#  study_plan_notifications_email_frequency :string
-#  falling_behind_email_alert_frequency     :string
-#  marketing_email_frequency                :string
-#  marketing_email_permission_given_at      :datetime
-#  blog_notification_email_frequency        :string
-#  forum_notification_email_frequency       :string
-#  created_at                               :datetime
-#  updated_at                               :datetime
-#  locale                                   :string
-#  guid                                     :string
-#  trial_ended_notification_sent_at         :datetime
-#  crush_offers_session_id                  :string
-#  subscription_plan_category_id            :integer
-#  employee_guid                            :string
-#  password_change_required                 :boolean
-#  session_key                              :string
-#  first_description                        :text
-#  second_description                       :text
-#  wistia_url                               :text
-#  personal_url                             :text
-#  name_url                                 :string
-#  qualifications                           :text
-#  profile_image_file_name                  :string
-#  profile_image_content_type               :string
-#  profile_image_file_size                  :integer
-#  profile_image_updated_at                 :datetime
-#  phone_number                             :string
-#  topic_interest                           :string
+#  id                               :integer          not null, primary key
+#  email                            :string
+#  first_name                       :string
+#  last_name                        :string
+#  address                          :text
+#  country_id                       :integer
+#  crypted_password                 :string(128)      default(""), not null
+#  password_salt                    :string(128)      default(""), not null
+#  persistence_token                :string
+#  perishable_token                 :string(128)
+#  single_access_token              :string
+#  login_count                      :integer          default(0)
+#  failed_login_count               :integer          default(0)
+#  last_request_at                  :datetime
+#  current_login_at                 :datetime
+#  last_login_at                    :datetime
+#  current_login_ip                 :string
+#  last_login_ip                    :string
+#  account_activation_code          :string
+#  account_activated_at             :datetime
+#  active                           :boolean          default(FALSE), not null
+#  user_group_id                    :integer
+#  password_reset_requested_at      :datetime
+#  password_reset_token             :string
+#  password_reset_at                :datetime
+#  stripe_customer_id               :string
+#  corporate_customer_id            :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  locale                           :string
+#  guid                             :string
+#  trial_ended_notification_sent_at :datetime
+#  crush_offers_session_id          :string
+#  subscription_plan_category_id    :integer
+#  employee_guid                    :string
+#  password_change_required         :boolean
+#  session_key                      :string
+#  first_description                :text
+#  second_description               :text
+#  wistia_url                       :text
+#  personal_url                     :text
+#  name_url                         :string
+#  qualifications                   :text
+#  profile_image_file_name          :string
+#  profile_image_content_type       :string
+#  profile_image_file_size          :integer
+#  profile_image_updated_at         :datetime
+#  phone_number                     :string
+#  topic_interest                   :string
+#  email_verification_code          :string
+#  email_verified_at                :datetime
+#  email_verified                   :boolean          default(FALSE), not null
 #
 
 class User < ActiveRecord::Base
@@ -76,7 +72,8 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :topic_interest
+                  :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
+                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -115,8 +112,8 @@ class User < ActiveRecord::Base
   # validation
   validates :email, presence: true, uniqueness: true,
             length: {within: 7..50}
-  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
+  validates :first_name, presence: true, length: {minimum: 1, maximum: 20}
+  validates :last_name, presence: true, length: {minimum: 1, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
@@ -130,9 +127,7 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
-  before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name) }
-  # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
   after_create :update_sitemap, if: :tutor?
@@ -164,15 +159,24 @@ class User < ActiveRecord::Base
     return user
   end
 
+  def self.get_and_verify(email_verification_code)
+    user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
+    if user
+      user.email_verified_at = Proc.new{Time.now}.call
+      user.email_verification_code = nil
+      user.email_verified = true
+      user.save!
+    end
+    return user
+  end
+
   def self.start_password_reset_process(the_email_address, root_url)
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user
-        user.update_attributes(
-                password_reset_requested_at: Proc.new{Time.now}.call,
-                password_reset_token: ApplicationController::generate_random_code(20),
-                active: false)
-        MandrillWorker.perform_async(user.id, 'send_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        #Send reset password email from Intercom
+        IntercomPasswordResetEmailWorker.perform_async(user.id, "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
       end
     end
   end
@@ -180,11 +184,11 @@ class User < ActiveRecord::Base
   def self.finish_password_reset_process(reset_token, new_password,
           new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
-      user = User.where(password_reset_token: reset_token.to_s, active: false).first
+      user = User.where(password_reset_token: reset_token.to_s).first
       if user
         if user.update_attributes(password: new_password.to_s,
                                   password_confirmation: new_password_confirmation.to_s,
-                                  active: true, password_reset_token: nil,
+                                  password_reset_token: nil,
                                   password_reset_requested_at: nil,
                                   password_reset_at: Time.now)
           user # return this
@@ -260,6 +264,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_customer)
   end
 
+  def corporate_manager?
+    self.user_group.try(:corporate_manager)
+  end
+
   def corporate_student?
     self.user_group.try(:corporate_student)
   end
@@ -272,6 +280,12 @@ class User < ActiveRecord::Base
     self.active = false
     self.account_activated_at = nil
     self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
+  def generate_email_verification_code
+    self.email_verified = false
+    self.email_verified_at = nil
+    self.email_verification_code = ApplicationController::generate_random_code(20)
   end
 
   def destroyable?
@@ -370,10 +384,10 @@ class User < ActiveRecord::Base
             raise ActiveRecord::Rollback
           end
           password = SecureRandom.hex(5)
-
+          verification_code = ApplicationController::generate_random_code(20)
+          time_now = Proc.new{Time.now}.call
           user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', active: false, account_activated_at: nil, account_activation_code: ApplicationController::generate_random_code(20))
-
+          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
           if used_emails.include?(v['email']) || !user.valid?
             users = []
             raise ActiveRecord::Rollback
@@ -402,18 +416,6 @@ class User < ActiveRecord::Base
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-  end
-
-  def set_defaults
-    Rails.logger.debug "DEBUG: User#set_defaults - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-    self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
-    self.operational_email_frequency ||= 'weekly'
-    self.study_plan_notifications_email_frequency ||= 'off'
-    self.falling_behind_email_alert_frequency ||= 'off'
-    self.marketing_email_frequency ||= 'off'
-    self.blog_notification_email_frequency ||= 'off'
-    self.forum_notification_email_frequency ||= 'off'
-    Rails.logger.debug "DEBUG: User#set_defaults - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
   def set_stripe_customer_id

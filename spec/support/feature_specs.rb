@@ -16,7 +16,7 @@ end
 
 def sign_in_via_sign_in_page(user)
   visit sign_in_path
-  within('.sign-in-modal') do
+  within('#sign-in') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password
     click_button I18n.t('views.general.sign_in')
@@ -40,7 +40,8 @@ end
 def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
   expect(page).to have_content 'SIGN UP FOR YOUR 7-DAY FREE TRIAL'
-  click_button I18n.t('views.home_pages.sign_up_form.submit')
+  page.all(:css, '#signUp').first.click
+  #click_button I18n.t('views.home_pages.sign_up_form.submit')
   sleep 1
   if expect_sign_up
     #within('#thank-you-message') do
@@ -88,8 +89,7 @@ def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  phone_number = ApplicationController.generate_random_code(10)
-  fill_in('user_phone_number', with: phone_number)
+  page.all(:css, '#topic-interest').first.select('Group 1')
   fill_in('user_password', with: user_password)
   fill_in('user_password_confirmation', with: user_password)
 end
@@ -108,17 +108,9 @@ def sign_up_and_upgrade_from_free_trial
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
-  user = User.where(email: 'john@example.com').last
-  user.active = true
-  user.save
-  visit sign_in_path
-  within('.sign-in-modal') do
-    fill_in I18n.t('views.user_sessions.form.email'), with: 'john@example.com'
-    fill_in I18n.t('views.user_sessions.form.password'), with: user_password
-    click_button I18n.t('views.general.sign_in')
-  end
-  within('#heading-message') do
-    expect(page).to have_content 'Your Learn Signal Dashboard'
+  within('#thank-you-message') do
+    expect(page).to have_content 'Final Step!'
+    expect(page).to have_content "To complete your membership we need to verifying that we're sending emails to the correct address."
   end
   within('.navbar.navbar-default') do
     find('.days-left').click
@@ -127,9 +119,9 @@ def sign_up_and_upgrade_from_free_trial
   student_picks_a_subscription_plan(usd, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
-  sleep(3)
-  within('#heading-message') do
-    expect(page).to have_content 'Your Learn Signal Dashboard'
+  sleep(5)
+  within('#thank-you-message') do
+    expect(page).to have_content 'Thanks for upgrading your subscription!'
   end
   visit_my_profile
   click_on 'Subscriptions'
@@ -142,17 +134,9 @@ def sign_up_and_upgrade_from_free_trial_small_device
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
-  user = User.where(email: 'john@example.com').last
-  user.active = true
-  user.save
-  visit sign_in_path
-  within('.sign-in-modal') do
-    fill_in I18n.t('views.user_sessions.form.email'), with: 'john@example.com'
-    fill_in I18n.t('views.user_sessions.form.password'), with: user_password
-    click_button I18n.t('views.general.sign_in')
-  end
-  within('#heading-message') do
-    expect(page).to have_content 'Your Learn Signal Dashboard'
+  within('#thank-you-message') do
+    expect(page).to have_content 'Final Step!'
+    expect(page).to have_content "To complete your membership we need to verifying that we're sending emails to the correct address."
   end
   within('.navbar.navbar-default') do
     find('.navbar-toggle').click
@@ -164,8 +148,8 @@ def sign_up_and_upgrade_from_free_trial_small_device
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
   sleep(5)
-  within('#heading-message') do
-    expect(page).to have_content 'Your Learn Signal Dashboard'
+  within('#thank-you-message') do
+    expect(page).to have_content 'Thanks for upgrading your subscription!'
   end
   visit account_path
   click_on 'Subscriptions'
