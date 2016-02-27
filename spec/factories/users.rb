@@ -92,9 +92,29 @@ FactoryGirl.define do
         email_verified_at               nil
       end
 
+      factory :unverified_user do
+        sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
+        active                          false
+        account_activation_code         'abcde12345'
+        account_activated_at            nil
+        email_verified                  false
+        email_verification_code         'abc123456'
+        email_verified_at               nil
+      end
+
+      factory :verified_user do
+        sequence(:email)                { |n| "active-student-#{n}@example.com" }
+        active                          true
+        account_activation_code         'abcde12345'
+        account_activated_at            Time.now
+        email_verified                  true
+        email_verification_code         nil
+        email_verified_at               Time.now
+      end
+
       factory :user_with_reset_requested do
         sequence(:email)                { |n| "reset.me-#{n}@example.com" }
-        active                          false
+        active                          true
         password_reset_token            'A1234567890123456789'
         password_reset_requested_at     { Time.now - 1.day }
       end

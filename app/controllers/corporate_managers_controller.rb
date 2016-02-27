@@ -51,9 +51,9 @@ class CorporateManagersController < ApplicationController
     if @corporate_manager.save
       @corporate_manager = User.get_and_activate(@corporate_manager.account_activation_code)
       #MandrillWorker.perform_async(@corporate_manager.id, 'send_verification_email', user_activation_url(activation_code: @corporate_manager.account_activation_code))
-      IntercomCreateCorporateManagerWorker.perform_async(@corporate_manager.id, @corporate_manager.email, @corporate_manager.full_name, @corporate_manager.created_at, @corporate_manager.guid, @corporate_manager.user_group.name, @corporate_manager.corporate_customer_id, @corporate_manager.corporate_customer.organisation_name)
+      IntercomCreateCorporateManagerWorker.perform_async(@corporate_manager.id, @corporate_manager.email, @corporate_manager.full_name, @corporate_manager.created_at, @corporate_manager.guid, @corporate_manager.user_group.name, @corporate_manager.corporate_customer_id, @corporate_manager.corporate_customer.organisation_name) unless Rails.env.test?
 
-      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, @corporate_manager.email, user_verification_url(email_verification_code: @corporate_manager.email_verification_code))
+      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, @corporate_manager.email, user_verification_url(email_verification_code: @corporate_manager.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.corporate_managers.create.flash.success')
       redirect_to corporate_managers_url
     else

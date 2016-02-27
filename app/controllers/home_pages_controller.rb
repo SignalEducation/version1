@@ -101,7 +101,6 @@ class HomePagesController < ApplicationController
 
         @user.account_activation_code = SecureRandom.hex(10)
         @user.email_verification_code = SecureRandom.hex(10)
-        @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
 
         # Check for CrushOffers cookie and assign it to the User
         if cookies.encrypted[:crush_offers]
@@ -116,21 +115,8 @@ class HomePagesController < ApplicationController
         end
 
         if @user.valid? && @user.save
-          clear_mixpanel_initial_id
-          # Send User Activation email through Mandrill
-          #MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code))
-          # Sends info of User to getbase.com which is used by the sales team.
-          #if Rails.env.production?
-            #@base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
-            #@base.leads.create(first_name: @user.first_name,
-                                 #last_name: @user.last_name,
-                                 #phone: @user.phone_number,
-                                 #email: @user.email,
-                                 #address: {
-                                   #country: @user.country.name}
-            #)
-          #end
+          # Send User Activation email through Intercom
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
 
           # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]

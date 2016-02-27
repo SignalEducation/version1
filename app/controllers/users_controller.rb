@@ -118,9 +118,10 @@ class UsersController < ApplicationController
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
       user = User.get_and_activate(@user.account_activation_code)
-      #MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))
-      IntercomCreateUserWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.try(:name))
-      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, user.email, user_verification_url(email_verification_code: user.email_verification_code))
+      #Send create user event to intercom
+      IntercomCreateUserWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.try(:name)) unless Rails.env.test?
+      #Send invite email to user from intercom, delayed for 1 minute to ensure the intercom create user event has finished
+      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, user.email, user_verification_url(email_verification_code: user.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else

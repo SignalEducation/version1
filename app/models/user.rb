@@ -161,14 +161,13 @@ class User < ActiveRecord::Base
   end
 
   def self.get_and_verify(email_verification_code)
-    user = User.where(active: true).where(email_verification_code: email_verification_code, email_verified_at: nil).first
+    user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
     if user
       user.email_verified_at = Proc.new{Time.now}.call
       user.email_verification_code = nil
       user.email_verified = true
       user.save!
     end
-
     return user
   end
 
@@ -176,12 +175,9 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user
-        user.update_attributes(
-                password_reset_requested_at: Proc.new{Time.now}.call,
-                password_reset_token: ApplicationController::generate_random_code(20),
-                active: false)
-        #MandrillWorker.perform_async(user.id, 'send_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
-        IntercomPasswordResetEmailWorker.perform_async(user.id, "#{root_url}/reset_password/#{user.password_reset_token}")
+        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        #Send reset password email from Intercom
+        IntercomPasswordResetEmailWorker.perform_async(user.id, "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
       end
     end
   end

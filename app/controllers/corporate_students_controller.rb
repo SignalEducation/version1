@@ -53,8 +53,8 @@ class CorporateStudentsController < ApplicationController
       corporate_student = User.get_and_activate(@corporate_student.account_activation_code)
       corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
       #MandrillWorker.perform_async(@corporate_student.id, 'send_verification_email', user_verification_url(email_verification_code: @corporate_student.email_verification_code))
-      IntercomCreateCorporateStudentWorker.perform_async(@corporate_student.id, @corporate_student.email, @corporate_student.full_name, @corporate_student.created_at, @corporate_student.guid, @corporate_student.user_group.name, @corporate_student.corporate_customer_id, @corporate_student.corporate_customer.organisation_name)
-      IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @corporate_student.id,user_verification_url(email_verification_code: @corporate_student.email_verification_code))
+      IntercomCreateCorporateStudentWorker.perform_async(@corporate_student.id, @corporate_student.email, @corporate_student.full_name, @corporate_student.created_at, @corporate_student.guid, @corporate_student.user_group.name, @corporate_student.corporate_customer_id, @corporate_student.corporate_customer.organisation_name) unless Rails.env.test?
+      IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @corporate_student.id,user_verification_url(email_verification_code: @corporate_student.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
@@ -98,7 +98,7 @@ class CorporateStudentsController < ApplicationController
         if user.save
           #MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))
           IntercomCreateCorporateStudentWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.name, user.corporate_customer_id, user.corporate_customer.organisation_name)
-          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, user.id, user_verification_url(email_verification_code: user.email_verification_code))
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, user.id, user_verification_url(email_verification_code: user.email_verification_code)) unless Rails.env.test?
         end
       end
     else
