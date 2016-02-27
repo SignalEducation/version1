@@ -128,7 +128,6 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
-  # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
   after_create :update_sitemap, if: :tutor?
