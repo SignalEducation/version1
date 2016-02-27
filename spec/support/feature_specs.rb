@@ -16,7 +16,7 @@ end
 
 def sign_in_via_sign_in_page(user)
   visit sign_in_path
-  within('.sign-in-modal') do
+  within('#sign-in') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password
     click_button I18n.t('views.general.sign_in')
@@ -134,8 +134,9 @@ def sign_up_and_upgrade_from_free_trial_small_device
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
-  within('#heading-message') do
-    expect(page).to have_content 'Your Learn Signal Dashboard'
+  within('#thank-you-message') do
+    expect(page).to have_content 'Final Step!'
+    expect(page).to have_content "To complete your membership we need to verifying that we're sending emails to the correct address."
   end
   within('.navbar.navbar-default') do
     find('.navbar-toggle').click
@@ -147,8 +148,8 @@ def sign_up_and_upgrade_from_free_trial_small_device
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
   sleep(5)
-  within('#heading-message') do
-    expect(page).to have_content 'Your Learn Signal Dashboard'
+  within('#thank-you-message') do
+    expect(page).to have_content 'Thanks for upgrading your subscription!'
   end
   visit account_path
   click_on 'Subscriptions'
