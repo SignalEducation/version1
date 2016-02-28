@@ -20,10 +20,19 @@ class IntercomVerificationMessageWorker
              :from => {:type => "admin",
                        :id   => "34061"},
              :to => {:type => "user",
-                     :user_id => user_id} })
+                     :email => user.email} })
 
     if event == nil
-      IntercomCreateUserWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.try(:name)) unless Rails.env.test?
+      intercom.messages.create({
+               :message_type => 'email',
+               :subject  => 'Verify Your Email for LearnSignal',
+               :body     => content,
+               :template => 'personal',
+               :from => {:type => "admin",
+                         :id   => "34061"},
+               :to => {:type => "user",
+                       :user_id => user_id} })
+
     else
       return event
     end
