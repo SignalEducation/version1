@@ -7,6 +7,7 @@
     custom_data: {guid: current_user.guid,
     user_group: current_user.user_group.try(:name),
     free_trial: current_user.try(:free_member?),
+    email_verified: current_user.try(:email_verified),
     topic_interest: current_user.try(:topic_interest),
     company: {id: current_user.try(:corporate_customer_id),
     name: current_user.try(:corporate_customer).try(:organisation_name),

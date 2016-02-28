@@ -4,12 +4,13 @@ class IntercomLessonStartedWorker
   sidekiq_options queue: 'high'
 
   def perform(user_id, course_name, module_name, type, lesson_name, wistia_id, quiz_score)
+    user = User.where(id: user_id).first
     intercom = Intercom::Client.new(
         app_id: ENV['intercom_app_id'],
         api_key: ENV['intercom_api_key']
     )
 
-    intercom.events.create(
+    event = intercom.events.create(
         :event_name => "Lesson Event",
         :created_at => Time.now.to_i,
         :user_id => user_id,
@@ -22,6 +23,13 @@ class IntercomLessonStartedWorker
             "quiz_score" => quiz_score
         }
     )
+
+    if event == nil
+      IntercomCreateUserWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.try(:name)) unless Rails.env.test?
+    else
+      return event
+    end
+
   end
 
 end
