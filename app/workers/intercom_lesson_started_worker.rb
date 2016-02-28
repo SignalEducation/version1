@@ -13,7 +13,7 @@ class IntercomLessonStartedWorker
     event = intercom.events.create(
         :event_name => "Lesson Event",
         :created_at => Time.now.to_i,
-        :user_id => user_id,
+        :email => user.email,
         :metadata => {
             "lesson_name" => lesson_name,
             "lesson_type" => type,
@@ -25,7 +25,19 @@ class IntercomLessonStartedWorker
     )
 
     if event == nil
-      IntercomCreateUserWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.try(:name)) unless Rails.env.test?
+      intercom.events.create(
+          :event_name => "Lesson Event",
+          :created_at => Time.now.to_i,
+          :user_id => user_id,
+          :metadata => {
+              "lesson_name" => lesson_name,
+              "lesson_type" => type,
+              "module_name" => module_name,
+              "course_name" => course_name,
+              "wistia_id" => wistia_id,
+              "quiz_score" => quiz_score
+          }
+      )
     else
       return event
     end
