@@ -171,22 +171,11 @@ class ApplicationController < ActionController::Base
   helper_method :current_session_guid
 
 
-  def clear_mixpanel_initial_id
-    cookies.delete :mixpanel_initial_id
-  end
-
-  def mixpanel_initial_id
-    cookies.encrypted[:mixpanel_initial_id] ||= { value: SecureRandom.hex(32), httponly: true }
-  end
-  helper_method :mixpanel_initial_id
-
   def set_session_stuff
     cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
     cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
-    @mathjax_required = false # default
-    @show_mixpanel = (Rails.env.staging? || Rails.env.production?) && (!current_user || current_user.try(:individual_student?))
   end
 
   def reset_latest_session_landing_url

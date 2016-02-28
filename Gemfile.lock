@@ -232,7 +232,6 @@ GEM
     mime-types (2.99)
     mini_portile2 (2.0.0)
     minitest (5.8.3)
-    mixpanel-ruby (2.2.0)
     momentjs-rails (2.11.0)
       railties (>= 3.1)
     money (6.6.1)
@@ -500,7 +499,6 @@ DEPENDENCIES
   mailchimp-api (~> 2.0.4)
   mandrill-api
   mathjax-rails
-  mixpanel-ruby (~> 2.1)
   momentjs-rails (>= 2.9.0)
   multipart-post
   newrelic_rpm
