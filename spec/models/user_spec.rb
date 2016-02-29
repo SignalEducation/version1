@@ -63,7 +63,7 @@ describe User do
   subject { FactoryGirl.build(:individual_student_user) }
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip account_activated_at account_activation_code guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key forum_notification_email_frequency falling_behind_email_alert_frequency marketing_email_frequency study_plan_notifications_email_frequency operational_email_frequency marketing_email_permission_given_at blog_notification_email_frequency profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name email_verification_code email_verified_at email_verified phone_number)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number)
 
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
@@ -105,10 +105,10 @@ describe User do
   it { should validate_length_of(:email).is_at_least(7).is_at_most(50) }
 
   it { should validate_presence_of(:first_name) }
-  it { should validate_length_of(:first_name).is_at_least(2).is_at_most(20) }
+  it { should validate_length_of(:first_name).is_at_least(1).is_at_most(20) }
 
   it { should validate_presence_of(:last_name) }
-  it { should validate_length_of(:last_name).is_at_least(2).is_at_most(30) }
+  it { should validate_length_of(:last_name).is_at_least(1).is_at_most(30) }
 
   it { should_not validate_presence_of(:topic_interest) }
 
