@@ -1,7 +1,7 @@
 class IntercomPaymentFailedWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: 'high'
+  sidekiq_options queue: 'medium'
 
   def perform(user_id, url)
     intercom = Intercom::Client.new(
