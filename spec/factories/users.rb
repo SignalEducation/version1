@@ -114,7 +114,7 @@ FactoryGirl.define do
 
       factory :user_with_reset_requested do
         sequence(:email)                { |n| "reset.me-#{n}@example.com" }
-        active                          true
+        active                          false
         password_reset_token            'A1234567890123456789'
         password_reset_requested_at     { Time.now - 1.day }
       end
