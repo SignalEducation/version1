@@ -121,3 +121,10 @@
                           =course.description.to_s.truncate(30)
                     .box-label
                       =t('views.general.start')
+-if current_user && current_user.free_member? && flash[:just_signed_in]
+  =render partial: 'layouts/free_trial_modal'
+
+  :javascript
+    $(document).on('ready', function() {
+      $('#freeTrialModal').modal('show');
+    });

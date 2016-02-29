@@ -112,6 +112,11 @@
     line-height: 28px;
     height: 28px;
   }
+  &.btn-lg {
+    width: 50%;
+    height: 60px;
+    line-height: 60px;
+  }
 }
 .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
   margin-left: 0; // for horizontal forms and .input-group
