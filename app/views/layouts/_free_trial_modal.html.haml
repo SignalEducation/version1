@@ -1,0 +1,24 @@
+.modal.fade#freeTrialModal{tabindex:'-1', role:'dialog', 'aria-labelledby':'freeTrialModalLabel'}
+  .modal-dialog
+    .modal-content.is-bg-asphalt.l-padding-side-15
+      .container-fluid
+        .modal-header
+          .row
+            .col-md-12.l-margin-top
+              %button{type: "button", class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
+              %h2.text-center.modal-title{style: 'width: 95%'}Free Trial is Ending Soon!
+          %hr/
+          .row.l-margin-top
+            .col-md-12.text-center
+              %p.h4
+                -if current_user && current_user.subscriptions[0].days_left.to_i < 1
+                  ="Hi #{current_user.first_name}, Just a reminder that your Free Trial has ended."
+                -else
+                  ="Hi #{current_user.first_name}, Just a reminder that your Free Trial ends in #{current_user.subscriptions[0].days_left} days."
+              %br/
+              %p.h4
+                ='To upgrade to a Full Membership just visit the Upgrade page.'
+              .l-margin-top-big.l-margin-bottom
+                =link_to 'Upgrade Now', user_new_paid_subscription_url(current_user.id), class: 'btn btn-red btn-lg'
+
+

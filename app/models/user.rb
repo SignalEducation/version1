@@ -317,10 +317,6 @@ class User < ActiveRecord::Base
     self.user_group.try(:tutor)
   end
 
-  def set_original_mixpanel_alias_id(mixpanel_alias_id)
-    @mixpanel_alias_id = mixpanel_alias_id
-  end
-
   #Corporate Account Methods
 
   def compulsory_group_ids

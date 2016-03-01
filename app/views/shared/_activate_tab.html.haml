@@ -5,7 +5,7 @@
     if (stripped_url.length > 1) {
       $("a[href='#" + stripped_url[1]+"']").first().tab('show');
     }
-    $('.signal-tabs a:first').addClass('underline').siblings().removeClass('underline');
+    $('.signal-tabs a:first').click();
   })
 
   $('.signal-tabs a').on('click', function(){

@@ -1034,6 +1034,7 @@ en:
         password_reset_requested_at: Password reset requested at
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID
+        email_verified: Email Verified
         corporate_customer_id: Corporate customer
         created_at: Created at
         updated_at: Updated at

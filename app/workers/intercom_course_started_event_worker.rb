@@ -10,27 +10,15 @@ class IntercomCourseStartedEventWorker
         api_key: ENV['intercom_api_key']
     )
 
-    event = intercom.events.create(
+    intercom.events.create(
         :event_name => "Started Course",
         :created_at => Time.now.to_i,
+        :user_id => user_id,
         :email => user.email,
         :metadata => {
             "course_name" => course_name
         }
     )
-
-    if event == nil
-      intercom.events.create(
-          :event_name => "Started Course",
-          :created_at => Time.now.to_i,
-          :user_id => user_id,
-          :metadata => {
-              "course_name" => course_name
-          }
-      )
-    else
-      return event
-    end
   end
 
 end

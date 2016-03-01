@@ -18,8 +18,10 @@ class UserSessionsController < ApplicationController
         redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer)
       elsif @user_session.user.corporate_student?
         redirect_back_or_default library_url
-      else
+      elsif session[:return_to]
         redirect_back_or_default root_url
+      else
+        redirect_to root_url, flash: { just_signed_in: true }
       end
     else
       render action: :new

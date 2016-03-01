@@ -119,5 +119,17 @@
   -if current_user.corporate_customer?
     =render partial: 'users/company'
 
-  =render partial: 'shared/activate_tab'
+
   =render partial: 'layouts/new_footer'
+  :javascript
+    $(document).on('ready', function() {
+      var stripped_url = document.location.toString().split("#");
+      if (stripped_url.length > 1) {
+        $("a[href='#" + stripped_url[1]+"']").first().tab('show');
+      }
+      $('.signal-tabs a:first').addClass('underline').siblings().removeClass('underline');
+    })
+    $('.signal-tabs a').on('click', function(){
+      $(this).addClass('underline').siblings().removeClass('underline');
+    });
+
