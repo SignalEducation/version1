@@ -17,7 +17,7 @@ class IntercomUserInviteEmailWorker
                                  :body     => content,
                                  :template => 'personal',
                                  :from => {:type => "admin",
-                                           :id   => "34061"},
+                                           :id   => "35759"},
                                  :to => {:type => "user",
                                          :email => email} })
   end

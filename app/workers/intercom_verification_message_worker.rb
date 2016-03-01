@@ -18,7 +18,7 @@ class IntercomVerificationMessageWorker
              :body     => content,
              :template => 'personal',
              :from => {:type => "admin",
-                       :id   => "34061"},
+                       :id   => "35759"},
              :to => {:type => "user",
                      :user_id => user_id,
                      :email => user.email} })
