@@ -1,6 +1,7 @@
 !!! 5
 %html{lang: params[:locale] || @delivered_page.try(:language) || 'en'}
   %head
+    %script{src: '//cdn.optimizely.com/js/5168310932.js'}
     -if @delivered_page
       <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
