@@ -49,6 +49,7 @@
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/facebook_pixel'
+      =render partial: 'layouts/hotjar'
 
   %body
     -if (Rails.env.production?) && (current_user.nil? || current_user.individual_student?)
