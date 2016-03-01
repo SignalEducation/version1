@@ -116,7 +116,7 @@ class HomePagesController < ApplicationController
 
         if @user.valid? && @user.save
           # Send User Activation email through Intercom
-          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
 
           # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
