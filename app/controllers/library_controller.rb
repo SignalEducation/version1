@@ -92,7 +92,7 @@ class LibraryController < ApplicationController
 
   def cert
     log = SubjectCourseUserLog.where(id: params[:id]).first
-    certificate = CompletionCertificate.where(subject_course_user_log_id: log.id, user_id: log.id).first
+    certificate = CompletionCertificate.where(subject_course_user_log_id: log.id, user_id: log.user_id).first
     if certificate.nil?
       guid = SecureRandom.hex(10)
       @cert = CompletionCertificate.new(user_id: log.user_id)
