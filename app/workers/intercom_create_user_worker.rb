@@ -12,7 +12,7 @@ class IntercomCreateUserWorker
 
     intercom.users.create(user_id: user_id,
                           email: user.email,
-                          name: user.name,
+                          name: user.full_name,
                           created_at: user.created_at,
                           custom_data: {guid: user.guid,
                                         user_group: user.user_group,
