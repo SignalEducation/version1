@@ -110,8 +110,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :subscriptions
 
   # validation
-  validates :email, presence: true, uniqueness: true,
-            length: {within: 7..50}
+  validates :email, presence: true, uniqueness: true, length: {within: 7..50}
   validates :first_name, presence: true, length: {minimum: 1, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 1, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
@@ -150,7 +149,13 @@ class User < ActiveRecord::Base
 
   def self.get_and_activate(activation_code)
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
-    if user
+    duplicate_users = User.where(email: user.email)
+    if duplicate_users.count > 1
+      duplicate_user = users.last
+      duplicate_user.active = false
+      duplicate_user.email = user.email << '-duplicate'
+      duplicate_user.save!
+    else
       user.account_activated_at = Proc.new{Time.now}.call
       user.account_activation_code = nil
       user.active = true

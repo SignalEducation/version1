@@ -1,5 +1,6 @@
 class StudentSignUpsController < ApplicationController
 
+  before_action :logged_in_required
   before_action :get_variables
 
   def show
