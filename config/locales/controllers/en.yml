@@ -171,6 +171,10 @@ en:
         flash:
           success: "Welcome aboard! Your sign-up was completed successfully"
 
+      resend_verification_mail:
+        flash:
+          success: "Your verification email has been resent!"
+
     invoices:
       create:
         flash:
