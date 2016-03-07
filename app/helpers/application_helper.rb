@@ -55,11 +55,11 @@ module ApplicationHelper
 
   def plan_interval(interval)
     if interval == 1
-      "plan-monthly"
+      "plan-monthly l-margin-top-big"
     elsif interval == 3
-      "plan-quarterly"
+      "plan-quarterly blue-border"
     elsif interval == 12
-      "plan-yearly"
+      "plan-yearly l-margin-top-big"
     end
   end
 end

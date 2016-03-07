@@ -20,6 +20,11 @@
   background: rgba(#000, .05);
   padding: $gutter/2 $gutter;
 }
+.plan-popular {
+  background: $blue-1;
+  padding: $gutter/2 $gutter;
+  //border: 5px solid $yellow-2;
+}
 .plan-title, .plan-price {
   color: $white;
   margin: 0;
@@ -58,4 +63,7 @@
     color: $white;
     text-decoration: none;
   }
+}
+.blue-border {
+  border: 2px solid $blue-1 ;
 }

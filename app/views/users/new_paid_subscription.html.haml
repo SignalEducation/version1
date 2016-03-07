@@ -30,6 +30,10 @@
                 .col-sm-4
                   .plan{class: plan_interval(plan.payment_frequency_in_months)}
                     .currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                      -if plan.payment_frequency_in_months == 3
+                        .plan-popular
+                          %h3.h4.plan-title{class: 'color: #1c2324;'}
+                            Most Popular
                       .plan-header
                         %h3.h4.plan-title
                           =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")

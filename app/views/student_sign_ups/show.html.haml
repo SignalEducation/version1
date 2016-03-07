@@ -22,7 +22,7 @@
               .row
                 .col-md-12
                   %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                    ="To complete your membership we need to verifying that we're sending emails to the correct address. To do this click on the verification email we just sent to #{current_user.email}. Didn't get the email? Please check your spam folder or "
+                    ="To complete your membership we need to verify that we're sending emails to the correct address. To do this click on the verification email we just sent to #{current_user.email}. Didn't get the email? Please check your spam folder or "
                     =link_to 'click here', resend_verification_mail_url
                     =" to resend it."
         %hr/
