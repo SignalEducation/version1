@@ -52,6 +52,16 @@ module ApplicationHelper
   def referral_code_sharing_url(referral_code)
     "#{library_url}/?ref_code=#{referral_code.code}"
   end
+
+  def plan_interval(interval)
+    if interval == 1
+      "plan-monthly"
+    elsif interval == 3
+      "plan-quarterly"
+    elsif interval == 12
+      "plan-yearly"
+    end
+  end
 end
 
 class DanFormBuilder < ActionView::Helpers::FormBuilder
