@@ -151,9 +151,9 @@ class User < ActiveRecord::Base
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
     duplicate_users = User.where(email: user.email)
     if duplicate_users.count > 1
-      duplicate_user = users.last
+      duplicate_user = duplicate_users.last
       duplicate_user.active = false
-      duplicate_user.email = user.email << '-duplicate'
+      duplicate_user.email = duplicate_user.email << '-duplicate'
       duplicate_user.save!
     else
       user.account_activated_at = Proc.new{Time.now}.call
