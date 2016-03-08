@@ -1,0 +1,20 @@
+.tab-pane.fade#referral-code{role: 'tabpanel'}
+  .rows
+    .col-sm-8.col-sm-offset-2
+      -if current_user.referral_code.nil?
+        .row
+          %h2=t('views.users.show.you_dont_have_referral_code')
+          %a.refer-a-friend-lnk#referral-link{href: '#', data: {toggle: 'modal', target: '#refer-a-friend-dialog'}}Click here to create one
+      -else
+        %h2="#{t('views.users.show.tabs.referral_code')}: #{current_user.referral_code.code}"
+        .well.well-sm
+          .row
+            .col-sm-10
+              %p=t('views.users.show.total_number_of_referred_users')
+            .col-sm-2
+              %p.pull-right=current_user.referral_code.referred_signups.count
+          .row
+            .col-sm-10
+              %p=t('views.users.show.number_of_referred_users_this_month')
+            .col-sm-2
+              %p.pull-right=current_user.referral_code.referred_signups.where("created_at >= ? and created_at <= ?", Time.now.beginning_of_month, Time.now.end_of_month).count

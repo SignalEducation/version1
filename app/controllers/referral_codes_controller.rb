@@ -17,7 +17,7 @@ class ReferralCodesController < ApplicationController
     ensure_user_is_of_type(['admin'])
   end
   before_action only: [:create] do
-    ensure_user_is_of_type(['individual_student', 'corporate_student', 'tutor', 'blogger'])
+    ensure_user_is_of_type(['individual_student', 'tutor', 'blogger'])
   end
 
   def index
