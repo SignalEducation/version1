@@ -28,18 +28,23 @@
             .plans
               -@subscription_plans.each do |plan|
                 .col-sm-4
-                  .plan.plan-monthly.currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
-                    .plan-header{}
-                      %h3.h4.plan-title
-                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                    .plan-inner
-                      %h4.h3.plan-price
-                        =plan.currency.format_number(plan.price)
-                      %p.plan-text
-                        =plan.description.lines[1]
-                    %label.plan-option
-                      %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                      Choose this plan
+                  .plan{class: plan_interval(plan.payment_frequency_in_months)}
+                    .currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                      -if plan.payment_frequency_in_months == 3
+                        .plan-popular
+                          %h3.h4.plan-title{class: 'color: #1c2324;'}
+                            Most Popular
+                      .plan-header
+                        %h3.h4.plan-title
+                          =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                      .plan-inner
+                        %h4.h3.plan-price
+                          =plan.currency.format_number(plan.price)
+                        %p.plan-text
+                          =plan.description.lines[1]
+                      %label.plan-option
+                        %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
+                        Choose this plan
 
               =f.fields_for :subscriptions do |sub|
                 =sub.hidden_field :subscription_plan_id
