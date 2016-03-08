@@ -19,7 +19,7 @@
             .plan-inner{style: 'background: #6E6D75;'}
               -if @student_plan_1
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  =number_in_local_currency_no_precision(@student_plan_1.price, @student_plan_1.currency)
+                  =number_in_local_currency(@student_plan_1.price, @student_plan_1.currency)
                   &#47;
                   =t("views.general.payment_intervals.a#{@student_plan_1.payment_frequency_in_months}")
               .l-margin-bottom.l-margin-top-big
@@ -46,7 +46,7 @@
             .plan-inner{style: 'background: #6E6D75;'}
               -if @student_plan_2
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  =number_in_local_currency_no_precision(@student_plan_2.price, @student_plan_2.currency)
+                  =number_in_local_currency(@student_plan_2.price, @student_plan_2.currency)
                   &#47;
                   =t("views.general.payment_intervals.a#{@student_plan_2.payment_frequency_in_months}")
               .l-margin-bottom.l-margin-top-big
@@ -73,7 +73,7 @@
             .plan-inner{style: 'background: #6E6D75;'}
               -if @student_plan_3
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  =number_in_local_currency_no_precision(@student_plan_3.price, @student_plan_3.currency)
+                  =number_in_local_currency(@student_plan_3.price, @student_plan_3.currency)
                   &#47;
                   =t("views.general.payment_intervals.a#{@student_plan_3.payment_frequency_in_months}")
               .l-margin-bottom.l-margin-top-big
@@ -106,7 +106,7 @@
               -if @corp_plan_1
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
                   &#160;
-                  =number_in_local_currency_no_precision(@corp_plan_1.try(:price), @corp_plan_1.try(:currency))
+                  =number_in_local_currency(@corp_plan_1.try(:price), @corp_plan_1.try(:currency))
                   &#47;
                   User
               .l-margin-bottom.l-margin-top-big
@@ -149,7 +149,7 @@
               -if @corp_plan_2
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
                   &#160;
-                  =number_in_local_currency_no_precision(@corp_plan_2.try(:price), @corp_plan_2.try(:currency))
+                  =number_in_local_currency(@corp_plan_2.try(:price), @corp_plan_2.try(:currency))
                   &#47;
                   User
               .l-margin-bottom.l-margin-top-big
@@ -191,7 +191,7 @@
               -if @corp_plan_3
                 %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
                   &#160;
-                  =number_in_local_currency_no_precision(@corp_plan_3.try(:price), @corp_plan_3.try(:currency))
+                  =number_in_local_currency(@corp_plan_3.try(:price), @corp_plan_3.try(:currency))
                   &#47;
                   User
               .l-margin-bottom.l-margin-top-big
