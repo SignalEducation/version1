@@ -77,6 +77,9 @@ class UsersController < ApplicationController
 
   def show
     # account page
+    if @user.referral_code.nil?
+      @user.create_referral_code
+    end
     if params[:update].to_s.length > 0
       case params[:update]
         when 'invoices'

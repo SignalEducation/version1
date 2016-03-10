@@ -17,6 +17,8 @@
                 =t('views.users.show.tabs.subscriptions')
               %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
                 =t('views.users.show.tabs.payments')
+            %a{href: '#referral-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
+              =t('views.users.show.tabs.referral_code')
 
       .row
         .l-margin-top-big
@@ -107,6 +109,10 @@
                       =render partial: 'users/payment_details', locals: {f: f}
 
 
+                .tab-pane.fade#referral-details{role: 'tabpanel'}
+                  .row
+                    .col-md-12{style: 'padding-bottom: 50px;'}
+                      =render partial: 'users/referral_data', locals: {f: f}
 
   -if @user.id == current_user.id
     =render partial: 'users/change_password'

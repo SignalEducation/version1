@@ -123,15 +123,14 @@ class HomePagesController < ApplicationController
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
             if code
               referral_code = ReferralCode.find_by_code(code)
-              @user.create_referred_signup(referral_code_id: referral_code.id,
-                                           subscription_id: @user.subscriptions.first.id,
-                                           referrer_url: referrer_url) if referral_code
+              @user.create_referred_signup(referral_code_id: referral_code.id, subscription_id: @user.subscriptions.first.id, referrer_url: referrer_url) if referral_code
               cookies.delete(:referral_data)
             end
           end
 
           @user.assign_anonymous_logs_to_user(current_session_guid)
           user = User.get_and_activate(@user.account_activation_code)
+          @user.create_referral_code
           UserSession.create(user)
           redirect_to personal_sign_up_complete_url
         else
