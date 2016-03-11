@@ -40,8 +40,13 @@
                       .plan-inner
                         %h4.h3.plan-price
                           =plan.currency.format_number(plan.price)
+                        %br/
                         %p.plan-text
-                          =plan.description.lines[1]
+                          =plan.unlimited_access
+                        %p.plan-text
+                          &middot;
+                        %p.plan-text
+                          =plan.cancel_anytime
                       %label.plan-option
                         %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
                         Choose this plan
