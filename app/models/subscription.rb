@@ -376,12 +376,12 @@ class Subscription < ActiveRecord::Base
       new_sub.next_renewal_date = Time.at(result[:current_period_end])
       new_sub.stripe_customer_id = self.stripe_customer_id
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-
       new_sub.save(validate: false) # see "sample_response_from_stripe" above
-
       self.update_attribute(:current_status, 'previous')
       self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
-
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      user = new_sub.user
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
       return new_sub
     end
   rescue ActiveRecord::RecordInvalid => exception

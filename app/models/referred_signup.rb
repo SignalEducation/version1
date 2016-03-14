@@ -67,6 +67,7 @@ class ReferredSignup < ActiveRecord::Base
     stripe_customer = Stripe::Customer.retrieve(self.referral_code.user.stripe_customer_id)
     stripe_customer.account_balance = price_in_cents * (-1)
     stripe_customer.save
+    referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
   end
 
   def check_dependencies
