@@ -33,20 +33,42 @@ class ReferredSignup < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  after_save :check_conversion_count
 
   # scopes
   scope :all_in_order, -> { order(:referral_code_id) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
   scope :last_month, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
+  scope :all_payed, -> { where.not(payed_at: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   protected
+
+  def check_conversion_count
+    current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id).count
+    if payed_at && current_referrals == 5
+      credit_stripe_account
+    end
+  end
+
+  def credit_stripe_account
+    binding.pry
+    referrer_user = self.referral_code.user
+    referrer_subscription_plan = referrer_user.subscriptions.first.subscription_plan
+    sub_plan_currency = referrer_subscription_plan.currency
+    monthly_plan = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
+    monthly_plan_price = monthly_plan.price
+    price_in_cents = (monthly_plan_price.to_d * 100).to_i
+    stripe_customer = Stripe::Customer.retrieve(self.referral_code.user.stripe_customer_id)
+    stripe_customer.account_balance = price_in_cents * (-1)
+    stripe_customer.save
+  end
 
   def check_dependencies
     unless self.destroyable?
