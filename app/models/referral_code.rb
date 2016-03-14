@@ -48,10 +48,6 @@ class ReferralCode < ActiveRecord::Base
     referred_signups.where(payed_at: nil)
   end
 
-  def referred_signups_ready_for_paying
-    unpayed_referred_signups.where("maturing_on <= ?", Time.now.utc.end_of_day)
-  end
-
   protected
 
   def check_dependencies

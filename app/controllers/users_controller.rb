@@ -220,6 +220,7 @@ class UsersController < ApplicationController
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       current_subscription = current_user.subscriptions[0]
       current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"])
+      current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
       redirect_to personal_upgrade_complete_url
     else
       redirect_to account_url

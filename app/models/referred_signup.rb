@@ -36,6 +36,8 @@ class ReferredSignup < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:referral_code_id) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :last_month, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
 
   # class methods
 
