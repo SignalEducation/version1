@@ -54,6 +54,7 @@
 #  email_verification_code          :string
 #  email_verified_at                :datetime
 #  email_verified                   :boolean          default(FALSE), not null
+#  stripe_account_balance           :integer          default(0)
 #
 
 class UsersController < ApplicationController
