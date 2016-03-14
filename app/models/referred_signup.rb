@@ -58,7 +58,6 @@ class ReferredSignup < ActiveRecord::Base
   end
 
   def credit_stripe_account
-    binding.pry
     referrer_user = self.referral_code.user
     referrer_subscription_plan = referrer_user.subscriptions.first.subscription_plan
     sub_plan_currency = referrer_subscription_plan.currency
