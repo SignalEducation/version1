@@ -1,20 +1,20 @@
 .rows
   .col-sm-8.col-sm-offset-2
-    %h2="#{t('views.users.show.tabs.referral_code')}: #{current_user.referral_code.code}"
+    %h2="#{t('views.users.show.tabs.referral_code')}: #{@user.referral_code.code}"
     .well.well-sm
       .row
         .col-sm-10
           %p=t('views.users.show.number_of_referred_users_last_month')
         .col-sm-2
           %p.pull-right
-            =current_user.referral_code.payed_referred_signups.last_month.count
+            =@user.referral_code.payed_referred_signups.last_month.count
 
       .row
         .col-sm-10
           %p=t('views.users.show.number_of_referred_users_this_month')
         .col-sm-2
           %p.pull-right
-            =current_user.referral_code.payed_referred_signups.this_month.count
+            =@user.referral_code.payed_referred_signups.this_month.count
 
   .container-fluid
     .row.l-margin-bottom#thank-you-message
@@ -31,7 +31,7 @@
                 =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
                   .row
                     .col-sm-10.col-sm-offset-1
-                      =text_field_tag :code, current_user.referral_code ? referral_code_sharing_url(current_user.referral_code) : '', class: 'form-control', readonly: true
+                      =text_field_tag :code, @user.referral_code ? referral_code_sharing_url(@user.referral_code) : '', class: 'form-control', readonly: true
                     %br/
                     .col-sm-4
                       %a.btn

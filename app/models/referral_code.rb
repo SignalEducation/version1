@@ -34,6 +34,18 @@ class ReferralCode < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id) }
 
   # class methods
+  def generate_referral_code(user_id)
+    usr = User.find(user_id)
+    if usr
+      new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}")[0..6]
+      while ReferralCode.where(code: new_code).count > 0
+        new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}#{Time.now.to_i}")[0..6]
+      end
+      self.user_id = user_id
+      self.code = new_code
+      self.save!
+    end
+  end
 
   # instance methods
   def destroyable?

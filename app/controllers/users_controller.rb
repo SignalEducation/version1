@@ -122,6 +122,8 @@ class UsersController < ApplicationController
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
       user = User.get_and_activate(@user.account_activation_code)
+      new_referral_code = ReferralCode.new
+      new_referral_code.generate_referral_code(user.id)
       #Send create user event to intercom
       IntercomCreateUserWorker.perform_async(user.id) unless Rails.env.test?
       #Send invite email to user from intercom, delayed for 1 minute to ensure the intercom create user event has finished

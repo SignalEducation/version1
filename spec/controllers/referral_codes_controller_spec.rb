@@ -30,13 +30,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "POST 'create'" do
-      it 'should redirect to sign_in' do
-        post :create
-        expect_bounce_as_not_signed_in
-      end
-    end
-
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
@@ -60,37 +53,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "POST 'create'" do
-      it 'should redirect to root URL for plain HTML request' do
-        post :create
-        expect(response).to redirect_to(root_url)
-      end
-
-      it 'should respond with referral sharing URL for Ajax request' do
-        xhr :post, :create
-        expect(response.headers['Content-Type']).to include("text/javascript")
-        expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
-        expect(json['url']).to end_with(ReferralCode.last.code)
-      end
-
-      it 'should report error for Ajax request if student already has referral code' do
-        individual_student_user.create_referral_code
-        xhr :post, :create
-        expect(response.status).to eq(422)
-        json = JSON.parse(response.body)
-        expect(json["message"]).to eq(I18n.t('controllers.referral_codes.create.flash.error'))
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        ref_code = individual_student_user.create_referral_code
-        delete :destroy, id: ref_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
   end
 
   context 'Logged in as a tutor_user: ' do
@@ -104,29 +66,6 @@ describe ReferralCodesController, type: :controller do
       it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to root URL for plain HTML request' do
-        post :create
-        expect(response).to redirect_to(root_url)
-      end
-
-      it 'should respond with referral sharing URL for Ajax request' do
-        xhr :post, :create
-        expect(response.headers['Content-Type']).to include("text/javascript")
-        expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
-        expect(json['url']).to end_with(ReferralCode.last.code)
-      end
-
-      it 'should report error for Ajax request if student already has referral code' do
-        tutor_user.create_referral_code
-        xhr :post, :create
-        expect(response.status).to eq(422)
-        json = JSON.parse(response.body)
-        expect(json["message"]).to eq(I18n.t('controllers.referral_codes.create.flash.error'))
       end
     end
 
@@ -176,18 +115,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "POST 'create'" do
-      it 'should bounce as not allowed' do
-        post :create
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should bounce as not allowed' do
-        post :create
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
         delete :destroy, id: tutor_referral_code.id
@@ -208,29 +135,6 @@ describe ReferralCodesController, type: :controller do
       it 'should bounce as not allowed' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to root URL for plain HTML request' do
-        post :create
-        expect(response).to redirect_to(root_url)
-      end
-
-      it 'should respond with referral sharing URL for Ajax request' do
-        xhr :post, :create
-        expect(response.headers['Content-Type']).to include("text/javascript")
-        expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
-        expect(json['url']).to end_with(ReferralCode.last.code)
-      end
-
-      it 'should report error for Ajax request if student already has referral code' do
-        blogger_user.create_referral_code
-        xhr :post, :create
-        expect(response.status).to eq(422)
-        json = JSON.parse(response.body)
-        expect(json["message"]).to eq(I18n.t('controllers.referral_codes.create.flash.error'))
       end
     end
 
@@ -264,18 +168,6 @@ describe ReferralCodesController, type: :controller do
       end
     end
 
-    describe "POST 'create'" do
-      it 'should bounce as not allowed' do
-        post :create
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should bounce as not allowed' do
-        post :create
-        expect_bounce_as_not_allowed
-      end
-    end
-
     describe "DELETE 'destroy'" do
       it 'should bounce as not allowed' do
         delete :destroy, id: tutor_referral_code.id
@@ -295,18 +187,6 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should bounce as not allowed' do
         get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should bounce as not allowed' do
-        post :create
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should bounce as not allowed' do
-        post :create
         expect_bounce_as_not_allowed
       end
     end
@@ -333,20 +213,7 @@ describe ReferralCodesController, type: :controller do
         expect_index_success_with_model('referral_codes', 2)
       end
     end
-
-    describe "POST 'create'" do
-      it 'should redirect to root URL for pain HTML request' do
-        post :create
-        expect(response).to redirect_to(root_url)
-      end
-
-      it 'should return Unprocessible entity (422) with appropriate message' do
-        xhr :post, :create
-        expect(response.headers['Content-Type']).to include("text/javascript")
-        expect(response.status).to eq(422)
-      end
-    end
-
+    
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         individual_student_user = FactoryGirl.create(:individual_student_user)
