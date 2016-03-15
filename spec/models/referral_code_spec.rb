@@ -45,12 +45,12 @@ describe ReferralCode do
   it { expect(ReferralCode).to respond_to(:all_in_order) }
 
   # class methods
+  it { should respond_to(:generate_referral_code) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:payed_referred_signups) }
   it { should respond_to(:unpayed_referred_signups) }
-  it { should respond_to(:referred_signups_ready_for_paying) }
 
   describe "user groups" do
     it "should create valid referral code for students, corporate students and tutors" do

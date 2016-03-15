@@ -125,7 +125,7 @@ describe Api::StripeV01Controller, type: :controller do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
         end
 
-        it 'does not send data to CrushOffers if their session ID is not set' do
+        it 'does not send data to CrushOffers if their session ID is not set but does mark event as processed' do
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                               customer: student.stripe_customer_id)
           uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
@@ -135,9 +135,23 @@ describe Api::StripeV01Controller, type: :controller do
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+        end
+
+        it 'does not send data to CrushOffers if their session ID is not set and does not mark as processed because user is not found'  do
+          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                              customer: 'fake_user_123')
+          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
+          expect(Net::HTTP).not_to receive(:get)
+
+          post :create, evt.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or price not greater than 0")
+          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or the user could not be found")
         end
 
         it 'does not send data to CrushOffers if price is not greater than 0' do
@@ -154,7 +168,7 @@ describe Api::StripeV01Controller, type: :controller do
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or price not greater than 0")
+          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or the user could not be found")
         end
 
         it 'should not process invoice.created event if user with given GUID does not exist' do

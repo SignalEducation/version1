@@ -89,10 +89,12 @@ class StripeApiEvent < ActiveRecord::Base
           elsif user && price > 0
             self.processed = true
             self.processed_at = Time.now
-            stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-            user.update_attribute(stripe_account_balance, stripe_customer.account_balance)
+            unless Rails.env.test?
+              stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+              user.update_attribute(stripe_account_balance, stripe_customer.account_balance)
+            end
           else
-            set_process_error "Unknown user, CrushOffers session id or price not greater than 0"
+            set_process_error "Unknown user, CrushOffers session id or the user could not be found"
           end
         when 'invoice.payment_failed'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])

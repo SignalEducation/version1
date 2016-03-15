@@ -204,6 +204,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    #Todo test for this and all other methods in the users controller
+    describe "upgrade_from_free_trial" do
+      xit 'allow upgrade as all necessary params are present' do
+
+      end
+    end
+
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
