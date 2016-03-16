@@ -27,26 +27,30 @@ class ReferralCodesController < ApplicationController
   def show
     @referral_code = ReferralCode.find(params[:id])
     @user = User.find(@referral_code.user_id)
-    #Graph Dates Data
-    date_to  = Date.parse("#{Proc.new{Time.now}.call}")
-    date_from = date_to - 3.months
-    date_range = date_from..date_to
-    date_months = date_range.map {|d| Date.new(d.year, d.month, 1) }.uniq
-    @labels = date_months.map {|d| d.strftime "%B" }
+    if current_user == @user
+      #Graph Dates Data
+      date_to  = Date.parse("#{Proc.new{Time.now}.call}")
+      date_from = date_to - 2.months
+      date_range = date_from..date_to
+      date_months = date_range.map {|d| Date.new(d.year, d.month, 1) }.uniq
+      @labels = date_months.map {|d| d.strftime "%B" }
 
-    #Referral Data
-    referral_code = ReferralCode.where(user_id: @user.id).last
-    total_referrals = ReferredSignup.where(referral_code_id: referral_code.id)
-    initial_referrals = total_referrals.where(payed_at: nil)
-    converted_referrals = total_referrals.where.not(payed_at: nil)
-    @initial_referrals_this_month = initial_referrals.this_month.count
-    @initial_referrals_one_month_ago = initial_referrals.one_month_ago.count
-    @initial_referrals_two_months_ago = initial_referrals.two_months_ago.count
-    @initial_referrals_three_months_ago = initial_referrals.three_months_ago.count
-    @converted_referrals_this_month = converted_referrals.this_month.count
-    @converted_referrals_one_month_ago = converted_referrals.one_month_ago.count
-    @converted_referrals_two_months_ago = converted_referrals.two_months_ago.count
-    @converted_referrals_three_months_ago = converted_referrals.three_months_ago.count
+      #Referral Data
+      referral_code = ReferralCode.where(user_id: @user.id).last
+      total_referrals = ReferredSignup.where(referral_code_id: referral_code.id)
+      initial_referrals = total_referrals.where(payed_at: nil)
+      converted_referrals = total_referrals.where.not(payed_at: nil)
+      @initial_referrals_this_month = initial_referrals.this_month.count
+      @initial_referrals_one_month_ago = initial_referrals.one_month_ago.count
+      @initial_referrals_two_months_ago = initial_referrals.two_months_ago.count
+      @initial_referrals_three_months_ago = initial_referrals.three_months_ago.count
+      @converted_referrals_this_month = converted_referrals.this_month.count
+      @converted_referrals_one_month_ago = converted_referrals.one_month_ago.count
+      @converted_referrals_two_months_ago = converted_referrals.two_months_ago.count
+      @converted_referrals_three_months_ago = converted_referrals.three_months_ago.count
+    else
+      redirect_to root_url
+    end
   end
 
   def destroy

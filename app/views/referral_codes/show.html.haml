@@ -1,84 +1,61 @@
 -if @referral_code.referred_signups.count >= 1
-
-  .corporate-box-item.chart-box
-    .row.l-margin-bottom-big
-      .col-md-6
-        %h2.letter-space-wide Referral Program
-      .col-md-6.chart-legend.text-right
-        .color-circle.color-red.text-inline
-        %p.text-inline.font-small Initial Referrals
-        .color-circle.color-cyan.text-inline
-        %p.text-inline.font-small Paying Referrals
-    .row.l-margin-bottom
-      %canvas#canvas{height:"300", width:"790"}
-
-
-
-
-  .rows
-    .col-sm-8.col-sm-offset-2
-      %h2="#{t('views.users.show.tabs.referral_code')}: #{@user.referral_code.code}"
-      .well.well-sm
-        .row
-          .col-sm-10
-            %p=t('views.users.show.number_of_referred_users_last_month')
-          .col-sm-2
-            %p.pull-right
-              =@user.referral_code.payed_referred_signups.last_month.count
-
-        .row
-          .col-sm-10
-            %p=t('views.users.show.number_of_referred_users_this_month')
-          .col-sm-2
-            %p.pull-right
-              =@user.referral_code.payed_referred_signups.this_month.count
-
-    .container-fluid
-      .row.l-margin-bottom#thank-you-message
-        .col-md-12.text-center
-          %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Invite friends to LearnSignal and get a discount off your subscription enrollment
-        .col-md-10.col-md-offset-1.l-margin-bottom-6x
-          .corporate-box-item
-            .row
-              .col-md-12
-                %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                  Refer 5 new paying users to LearnSignal each month, we will give you a months free subscription.
-                .form-group
-                  =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
-                    .row
-                      .col-sm-10.col-sm-offset-1
-                        =text_field_tag :code, @user.referral_code ? referral_code_sharing_url(@user.referral_code) : '', class: 'form-control', readonly: true
-                      %br/
-                      .col-sm-4
-                        %a.btn
-                          =t('views.referral_codes.modal.copy')
-                      .col-sm-4
-                        %a.btn.btn-secondary{ href: "#"}
-                          =t('views.referral_codes.modal.share')
-                      .col-sm-4
-                        %a.btn{href: "#"}
-                          =t('views.referral_codes.modal.tweet')
-
-
-
--else
   .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.l-margin-bottom-6x
-            .corporate-box-item
-              .container-fluid
-                .row
-                  .col-md-12
-                    %p.h4.text-center.l-margin-bottom-big
-                      Invite friends to LearnSignal and get a discount off you subscription!
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center.text-center
+            ="Referral Program"
 
-                .row
-                  .col-md-12
-                    %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                      If you refer 5 friends each month you will earn €29.99 off your next subscription fee
+
+        .col-md-10.col-md-offset-1.l-margin-top-big
+          .corporate-box-item
+            .container-fluid
+              .row
+                .col-md-12
+                  %p.h4.text-center.l-margin-bottom-big
+                    Invite friends to LearnSignal and get a discount off you subscription!
+
+              .row
+                .col-md-12
+                  %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                    If you refer 5 friends each month you will earn €29.99 off your next subscription fee.
+          %br/
+          %br/
+          .corporate-box-item.chart-box
+            .row.l-margin-bottom-big
+              .col-md-6.l-margin-bottom-big
+                %h2.l-margin-bottom.text-center
+                  Ways to refer
+                .form-group
+                  .col-sm-12.text-center
+                    %p
+                      Use this link to invite friends to LearnSignal and receive a discounted rate.
+                  .col-sm-8
+                    =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
+
+                      =text_field_tag :code, current_user.referral_code ? referral_code_sharing_url(current_user.referral_code) : '', class: 'form-control', id: 'fe_text'
+                  .col-sm-4
+                    .btn.btn-red#copy_button.my_clip_button{"data-clipboard-target" => "fe_text", "data-clipboard-text" => "Default clipboard text from attribute", :title => "Click me to copy to clipboard."}
+                      %b Copy
+                  .col-sm-12.l-margin-top-big
+                    %p.text-center
+                      Or use these buttons to invite followers and friends
+                    -post = "Come learn with me at @LearnSignal, the on-demand training library for business professionals. #{referral_code_sharing_url(current_user.referral_code)}"
+                    =link_to "Refer on Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan'
+
+
+              .col-md-6
+                %h2.l-margin-bottom.text-center
+                  Referral Stats
+                .col-md-6.col-md-offset-6.chart-legend.text-right
+                  .color-circle.color-red.text-inline
+                  %p.text-inline.font-small Initial Referrals
+                  .color-circle.color-cyan.text-inline
+                  %p.text-inline.font-small Paying Referrals
+                .row.l-margin-bottom
+                  %canvas#canvas{height:"300", width:"790"}
+
+
 
 :javascript
     var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
@@ -89,8 +66,7 @@
         initial_referrals_three_months_ago = #{@initial_referrals_three_months_ago},
         converted_referrals_this_month = #{@converted_referrals_this_month},
         converted_referrals_one_month_ago = #{@converted_referrals_one_month_ago},
-        converted_referrals_two_months_ago = #{@converted_referrals_two_months_ago},
-        converted_referrals_three_months_ago = #{@converted_referrals_three_months_ago};
+        converted_referrals_two_months_ago = #{@converted_referrals_two_months_ago};
 
     var lineChartData = {
       labels : months,
@@ -103,7 +79,7 @@
           pointStrokeColor : "#EE5457",
           pointHighlightFill : "#fff",
           pointHighlightStroke : "rgba(220,220,220,1)",
-          data : [initial_referrals_three_months_ago,initial_referrals_two_months_ago,initial_referrals_one_month_ago,initial_referrals_this_month]
+          data : [initial_referrals_two_months_ago,initial_referrals_one_month_ago,initial_referrals_this_month]
         },
         {
           label: "Paying Referrals",
@@ -113,7 +89,7 @@
           //pointStrokeColor : "#fff",
           pointHighlightFill : "#fff",
           pointHighlightStroke : "rgba(151,187,205,1)",
-          data : [converted_referrals_three_months_ago,converted_referrals_two_months_ago,converted_referrals_one_month_ago,converted_referrals_this_month]
+          data : [converted_referrals_two_months_ago,converted_referrals_one_month_ago,converted_referrals_this_month]
         }
       ]
     }
@@ -122,11 +98,20 @@
       var ctx = document.getElementById("canvas").getContext("2d");
       window.myLine = new Chart(ctx).Line(lineChartData, {
         responsive: true,scaleShowVerticalLines: false,datasetStrokeWidth : 3,scaleGridLineColor : "rgba(0,0,0,.1)",
-        scaleOverride: true, scaleStartValue: 0, scaleStepWidth: 10, scaleSteps: 10,scaleShowLabels: true
+        scaleOverride: true, scaleStartValue: 0, scaleStepWidth: 10, scaleSteps: 3,scaleShowLabels: true
       });
     }
 
     $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
+    });
+
+    $(document).ready(function() {
+      var clip = new ZeroClipboard($("#copy_button"))
+    });
+
+    $("#clear-test").on("click", function(){
+      $("#fe_text").val("Copy me!");
+      $("#testarea").val("");
     });
