@@ -83,6 +83,8 @@
                   %li
                     %li=link_to t('views.users.show.h1'), account_url
                   %li
+                    %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
+                  %li
                     =link_to t('views.general.sign_out'), sign_out_url
 
             -else
