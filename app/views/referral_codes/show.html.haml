@@ -41,13 +41,13 @@
                     %p.text-center
                       Or use these buttons to invite followers and friends
                     -post = "Come learn with me at @LearnSignal, the on-demand training library for business professionals. #{referral_code_sharing_url(current_user.referral_code)}"
-                    =link_to "Refer on Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan'
+                    =link_to "Refer on Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan', target: '_blank'
 
 
               .col-md-6
                 %h2.l-margin-bottom.text-center
                   Referral Stats
-                .col-md-6.col-md-offset-6.chart-legend.text-right
+                .col-md-10.col-md-offset-1.chart-legend.text-right
                   .color-circle.color-red.text-inline
                   %p.text-inline.font-small Initial Referrals
                   .color-circle.color-cyan.text-inline
