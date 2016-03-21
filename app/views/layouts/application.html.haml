@@ -56,6 +56,8 @@
       =render partial: 'layouts/google_tag_manager'
     -if Rails.env.production?
       =render partial: 'layouts/hubspot'
+    -if controller_name == 'referral_codes' && action_name == 'show'
+      =render partial: 'layouts/facebook_sdk'
     -if controller_name == 'home_pages'
       =yield
       =render partial: 'layouts/new_footer'

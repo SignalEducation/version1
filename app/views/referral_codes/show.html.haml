@@ -42,7 +42,9 @@
                       Or use these buttons to invite followers and friends
                     -post = "Come learn with me at @LearnSignal, the on-demand training library for business professionals. #{referral_code_sharing_url(current_user.referral_code)}"
                     =link_to "Refer on Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan', target: '_blank'
-
+                    =#link_to 'Refer on Facebook', "https://www.facebook.com/dialog/feed?link=#{link}&app_id='286733434867035'&redirect_uri=#{request.referrer}", class: 'btn btn-red', target: "_blank"
+                    .btn.btn-red{onclick: "fbPost()"}
+                      Refer on Facebook
 
               .col-md-6
                 %h2.l-margin-bottom.text-center
@@ -56,7 +58,6 @@
                   %canvas#canvas{height:"300", width:"790"}
 
 
-
 :javascript
     var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
     var months = #{@labels},
@@ -66,7 +67,11 @@
         initial_referrals_three_months_ago = #{@initial_referrals_three_months_ago},
         converted_referrals_this_month = #{@converted_referrals_this_month},
         converted_referrals_one_month_ago = #{@converted_referrals_one_month_ago},
-        converted_referrals_two_months_ago = #{@converted_referrals_two_months_ago};
+        converted_referrals_two_months_ago = #{@converted_referrals_two_months_ago},
+        ref_link = "www.learnsignal.com/en/library/?ref_code=",
+        ref_code = "#{@referral_code.code}",
+        redirect_link = "#{@ref_page}";
+
 
     var lineChartData = {
       labels : months,
@@ -115,3 +120,15 @@
       $("#fe_text").val("Copy me!");
       $("#testarea").val("");
     });
+
+
+    function fbPost() {
+      FB.ui({
+        method: 'feed',
+        redirect_uri: redirect_link,
+        link: ref_link.concat(ref_code),
+        picture: 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/LS_Only_Logo.png',
+        name: 'LearnSignal Referral',
+        description: 'The first ever on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device. Access a library of business-focused courses taught by expert tutors. Learn from the best with training designed and developed by industry experts.'
+      });
+    }

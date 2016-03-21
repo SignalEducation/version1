@@ -27,6 +27,8 @@ class ReferralCodesController < ApplicationController
   def show
     @referral_code = ReferralCode.find(params[:id])
     @user = User.find(@referral_code.user_id)
+    @ref_page = request.original_url
+    @referral_url = referral_code_sharing_url(current_user.referral_code)
     if current_user == @user
       #Graph Dates Data
       date_to  = Date.parse("#{Proc.new{Time.now}.call}")
