@@ -73,6 +73,9 @@ class ReferredSignup < ActiveRecord::Base
     stripe_customer.account_balance = price_in_cents * (-1)
     stripe_customer.save
     referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+    user = User.find(user_id)
+    amount = monthly_plan.currency.format_number(monthly_plan.price)
+    IntercomReferralsWorker.perform_async(user.email, amount) unless Rails.env.test?
   end
 
   def check_dependencies
