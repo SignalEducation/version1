@@ -18,7 +18,7 @@
               .row
                 .col-md-12
                   %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                    If you refer 5 friends each month you will earn €29.99 off your next subscription fee.
+                    If you refer 5 friends each month you will earn #{@current_monthly_sub.currency.format_number(@current_monthly_sub.price)} off your next subscription fee.
           %br/
           %br/
           .corporate-box-item.chart-box
@@ -37,14 +37,19 @@
                   .col-sm-4
                     .btn.btn-red#copy_button.my_clip_button{"data-clipboard-target" => "fe_text", "data-clipboard-text" => "Default clipboard text from attribute", :title => "Click me to copy to clipboard."}
                       %b Copy
-                  .col-sm-12.l-margin-top-big
+                  .col-md-12.l-margin-top-big
                     %p.text-center
                       Or use these buttons to invite followers and friends
                     -post = "Come learn with me at @LearnSignal, the on-demand training library for business professionals. #{referral_code_sharing_url(current_user.referral_code)}"
-                    =link_to "Refer on Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan', target: '_blank'
-                    =#link_to 'Refer on Facebook', "https://www.facebook.com/dialog/feed?link=#{link}&app_id='286733434867035'&redirect_uri=#{request.referrer}", class: 'btn btn-red', target: "_blank"
-                    .btn.btn-red{onclick: "fbPost()"}
-                      Refer on Facebook
+                    .col-md-4
+                      =link_to "Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan', target: '_blank'
+
+                    .col-md-4
+                      .btn.btn-red{onclick: "fbPost()"}
+                        Facebook
+                    -summary = "The%20first%20ever%20ondemand%20training%20library%20for%20business%20professionals.%20Learn%20the%20skills%20you%20need%20anytime,%20anywhere,%20on%20any%20device.%20Access%20a%20library%20of%20business-focused%20courses%20taught%20by%20expert%20tutors.%20Learn%20from%20the%20best%20with%20training%20designed%20and%20developed%20by%20industry%20experts"
+                    .col-md-4
+                      =link_to "linkedin", "https://www.linkedin.com/shareArticle?mini=true&url=#{@referral_url}&title=Come%20learn%20with%20me%20at%20LearnSignal.com,%20the%20ondemand%20training%20library%20for%20business%20professionals&summary=#{summary}&source=www.learnsignal.com", class: 'btn btn-purple', target: '_blank'
 
               .col-md-6
                 %h2.l-margin-bottom.text-center
