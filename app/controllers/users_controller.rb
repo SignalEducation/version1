@@ -224,9 +224,15 @@ class UsersController < ApplicationController
        params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       current_subscription = current_user.subscriptions[0]
-      current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"])
-      current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-      redirect_to personal_upgrade_complete_url
+      coupon = params[:coupon] unless params[:coupon].empty?
+      verified_coupon = verify_coupon(coupon) if coupon
+      if coupon && verified_coupon == 'bad_coupon'
+        redirect_to user_new_paid_subscription_url(current_user.id)
+      else
+        current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], verified_coupon)
+        current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+        redirect_to personal_upgrade_complete_url
+      end
     else
       redirect_to account_url
     end
@@ -238,6 +244,17 @@ class UsersController < ApplicationController
 
   def change_plan
     @current_subscription = @user.subscriptions.all_in_order.last
+  end
+
+  def verify_coupon(coupon)
+    begin
+      verified_coupon = Stripe::Coupon.retrieve(coupon)
+    rescue Stripe::InvalidRequestError => e
+      flash[:error] = 'The coupon code entered is not valid'
+      verified_coupon = 'bad_coupon'
+    end
+
+    return verified_coupon
   end
 
   def subscription_invoice

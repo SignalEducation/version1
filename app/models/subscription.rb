@@ -328,7 +328,7 @@ class Subscription < ActiveRecord::Base
     false
   end
 
-  def upgrade_from_free_plan(new_plan_id, stripe_token, new_paid_subscription_url = nil)
+  def upgrade_from_free_plan(new_plan_id, stripe_token, new_paid_subscription_url = nil, verified_coupon)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     # compare the currencies of the old and new plans,
     unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -356,6 +356,7 @@ class Subscription < ActiveRecord::Base
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     stripe_subscription.plan = new_subscription_plan.stripe_guid
     stripe_subscription.prorate = true
+    stripe_subscription.verified_coupon = verified_coupon if verified_coupon
     stripe_subscription.source = stripe_token
     stripe_subscription.trial_end = 'now'
     result = stripe_subscription.save # saves it at stripe.com, not in our DB

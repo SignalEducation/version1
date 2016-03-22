@@ -60,6 +60,20 @@
                   2
                 Payment details
           =render partial: 'subscription_payment_cards/form', locals: {f: f}
+          .l-margin-top
+            .row
+              .col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+                .form-group
+                  %label
+                    Coupon Code
+                  =text_field_tag :coupon, nil, placeholder: 'Valid Coupon Code', class: 'form-control', default: nil
+
+
+                .form-group
+                  -if current_user == @user
+                    =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
+                  -else
+                    =link_to t('views.users.upgrade_subscription.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
 
 :javascript
 
