@@ -282,6 +282,12 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
   end
 
+  def activate_user
+    self.active = true
+    self.account_activated_at = Proc.new{Time.now}.call
+    self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
   def de_activate_user
     self.active = false
     self.account_activated_at = nil
