@@ -75,7 +75,6 @@
     //$('#new_user').submit(function(event) {
     $('.payment-errors').closest("form").submit(function(event) {
       var $form = $(this);
-      console.log('Happy Friday Dan!');
       console.log($form);
       // If we're in the student-signups page, make sure we have a subscription plan chosen
       if ((window.location.pathname == '/en/student_sign_ups' || window.location.pathname == '/en/student_sign_up') && isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {

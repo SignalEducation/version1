@@ -224,12 +224,12 @@ class UsersController < ApplicationController
        params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       current_subscription = current_user.subscriptions[0]
-      coupon = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon) if coupon
-      if coupon && verified_coupon == 'bad_coupon'
+      coupon_code = params[:coupon] unless params[:coupon].empty?
+      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_new_paid_subscription_url(current_user.id)
       else
-        current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], verified_coupon)
+        current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], coupon_code)
         current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
         redirect_to personal_upgrade_complete_url
       end
