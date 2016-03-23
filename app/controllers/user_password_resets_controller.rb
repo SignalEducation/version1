@@ -12,7 +12,7 @@ class UserPasswordResetsController < ApplicationController
 
   def edit
     if params[:id].to_s.length == 20
-      @user = User.where(password_reset_token: params[:id].to_s, active: false).first
+      @user = User.where(password_reset_token: params[:id].to_s, active: true).first
       if @user
         render :edit
       else

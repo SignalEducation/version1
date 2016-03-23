@@ -154,7 +154,7 @@ class User < ActiveRecord::Base
     if duplicate_users.count > 1
       duplicate_user = duplicate_users.last
       duplicate_user.active = false
-      duplicate_user.email = duplicate_user.email << '-duplicate'
+      duplicate_user.email = duplicate_user.prepend('copy-')
       duplicate_user.save!
     else
       user.account_activated_at = Proc.new{Time.now}.call

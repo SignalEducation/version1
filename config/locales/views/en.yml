@@ -105,6 +105,8 @@ en:
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
+      all_courses: "Unlimited Courses"
+      cancel_anytime: "Cancel Anytime"
       submit: Sign Up Now
       actual_submit: Submit
       user_name: "Hi, "
