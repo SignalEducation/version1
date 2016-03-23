@@ -355,7 +355,7 @@ en:
           error: Sorry, that reset request is invalid. Please start again.
       update:
         flash:
-          success: Your password has been successsfully reset; welcome back!
+          success: Your password has been successsfully set!
           error: Your password has not been reset. Please start again.
           password_and_confirmation_do_not_match: Password and password confirmation do not match. Please try again.
 
