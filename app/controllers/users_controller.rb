@@ -247,13 +247,15 @@ class UsersController < ApplicationController
   end
 
   def verify_coupon(coupon)
-    begin
-      verified_coupon = Stripe::Coupon.retrieve(coupon)
-    rescue Stripe::InvalidRequestError => e
-      flash[:error] = 'The coupon code entered is not valid'
+    verified_coupon = Stripe::Coupon.retrieve(coupon)
+    unless verified_coupon.valid
+      flash[:error] = 'Sorry! The coupon code you entered has expired'
       verified_coupon = 'bad_coupon'
+      return verified_coupon
     end
-
+  rescue Stripe::InvalidRequestError => e
+    flash[:error] = 'The coupon code entered is not valid'
+    verified_coupon = 'bad_coupon'
     return verified_coupon
   end
 
