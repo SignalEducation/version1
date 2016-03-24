@@ -19,7 +19,6 @@
                 method: @corporate_manager.new_record? ? 'POST' : 'PATCH',
                 html: {class: 'form-horizontal', role: 'form'}) do |f|
                 =render partial: '/layouts/error_messages', locals: {thing: @corporate_manager, message: nil}
-                =f.hidden_field :country_id, value: current_user.country_id
                 .row
                   .col-md-6
                     =f.label :first_name, t('views.corporate_managers.form.first_name'), class: 'control-label'

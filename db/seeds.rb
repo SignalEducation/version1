@@ -33,7 +33,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   UserGroup.where(id: 3).first_or_create!(
           name: 'Corporate customers',
           description: 'Administrative users on behalf of a corporate customer',
-          individual_student: false, tutor: false, content_manager: false,
+          individual_student: false, tutor: true, content_manager: false,
           blogger: false, corporate_customer: true, site_admin: false,
           subscription_required_at_sign_up: true,
           subscription_required_to_see_content: true, forum_manager: false

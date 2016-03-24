@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
-                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code
+                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -280,6 +280,12 @@ class User < ActiveRecord::Base
 
   def corporate_tutor?
     self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
+  end
+
+  def activate_user
+    self.active = true
+    self.account_activated_at = Proc.new{Time.now}.call
+    self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
   def de_activate_user

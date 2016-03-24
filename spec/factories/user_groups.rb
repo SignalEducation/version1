@@ -50,6 +50,7 @@ FactoryGirl.define do
     factory :corporate_customer_user_group do
       name 'Corporate Customer Group'
       corporate_customer true
+      tutor   true
       subscription_required_at_sign_up false
       subscription_required_to_see_content false
     end
