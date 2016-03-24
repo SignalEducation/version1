@@ -167,11 +167,18 @@
                               .box-topic-item
                                 Click here to download your completion certificate
                       -else
-                        =link_to '#restrictedAccess', class: 'cert-box-item lib-panel', style: 'text-decoration: none;', data: {toggle: 'modal', target: '#restrictedAccess'} do
-                          .box-topic-item
-                            =@course.question_bank.name
-                          .time.hidden-xs
-                            =@course.question_bank.number_of_questions.to_s + ' Questions'
+                        -if current_user
+                          =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                            .box-topic-item
+                              =@course.question_bank.name
+                            .time.hidden-xs
+                              =@course.question_bank.number_of_questions.to_s + ' Questions'
+                        -else
+                          =link_to '#restrictedAccess', class: 'cert-box-item lib-panel', style: 'text-decoration: none;', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                            .box-topic-item
+                              =@course.question_bank.name
+                            .time.hidden-xs
+                              =@course.question_bank.number_of_questions.to_s + ' Questions'
                     -else
                       -if @subject_course_user_log && @subject_course_user_log.completed
                         %hr/

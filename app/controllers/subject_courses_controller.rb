@@ -71,6 +71,7 @@ class SubjectCoursesController < ApplicationController
     if current_user.corporate_customer?
       @subject_course.corporate_customer_id = current_user.corporate_customer_id
       @subject_course.live = true
+      @subject_course.active = true
       @subject_course.restricted = true
       @subject_course.tutor_id = current_user.id
     end
