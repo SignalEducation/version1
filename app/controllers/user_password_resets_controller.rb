@@ -12,7 +12,7 @@ class UserPasswordResetsController < ApplicationController
 
   def edit
     if params[:id].to_s.length == 20
-      @user = User.where(password_reset_token: params[:id].to_s, active: true).first
+      @user = User.where(password_reset_token: params[:id].to_s, active: false).first
       if @user
         render :edit
       else
@@ -29,7 +29,12 @@ class UserPasswordResetsController < ApplicationController
     if params[:password] == params[:password_confirmation]
       # in the params, params[:id] holds the reset_token.
       @user = User.finish_password_reset_process(params[:id], params[:password], params[:password_confirmation])
-      if @user
+      if @user && @user.corporate_customer?
+        @user_session = UserSession.create(@user)
+        flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
+        @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
+        redirect_back_or_default corporate_customer_url(@user.corporate_customer)
+      elsif @user
         UserSession.create!(@user)
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
         #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id) unless @user.password_change_required

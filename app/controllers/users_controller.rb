@@ -119,17 +119,16 @@ class UsersController < ApplicationController
     @user = User.new(allowed_params.merge({password: password,
                                            password_confirmation: password,
                                            password_change_required: true}))
-    @user.de_activate_user
+    @user.activate_user
     @user.generate_email_verification_code
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
-      user = User.get_and_activate(@user.account_activation_code)
       new_referral_code = ReferralCode.new
-      new_referral_code.generate_referral_code(user.id)
+      new_referral_code.generate_referral_code(@user.id)
       #Send create user event to intercom
-      IntercomCreateUserWorker.perform_async(user.id) unless Rails.env.test?
+      IntercomCreateUserWorker.perform_async(@user.id) unless Rails.env.test?
       #Send invite email to user from intercom, delayed for 1 minute to ensure the intercom create user event has finished
-      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, user.email, user_verification_url(email_verification_code: user.email_verification_code)) unless Rails.env.test?
+      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, @user.email, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else

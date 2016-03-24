@@ -30,22 +30,23 @@ class CorporateManagersController < ApplicationController
   end
 
   def create
+
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else
       password = '123123123'
     end
+
     @corporate_manager = User.new(allowed_params.merge({password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_customer: true).first.id, password_change_required: true}))
 
     @corporate_manager.corporate_customer_id = current_user.corporate_customer_id if current_user.corporate_customer?
-    @corporate_manager.de_activate_user
+    @corporate_manager.activate_user
+    @corporate_manager.country_id = current_user.corporate_customer.country_id  if current_user.corporate_customer?
     @corporate_manager.generate_email_verification_code
     @corporate_manager.locale = 'en'
     if @corporate_manager.save
-      corporate_manager = User.get_and_activate(@corporate_manager.account_activation_code)
-      IntercomCreateCorporateManagerWorker.perform_async(corporate_manager.id, corporate_manager.email, corporate_manager.full_name, corporate_manager.created_at, corporate_manager.guid, corporate_manager.user_group.name, corporate_manager.corporate_customer_id, corporate_manager.corporate_customer.organisation_name) unless Rails.env.test?
-
-      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, corporate_manager.email, user_verification_url(email_verification_code: corporate_manager.email_verification_code)) unless Rails.env.test?
+      IntercomCreateCorporateManagerWorker.perform_async(@corporate_manager.id, @corporate_manager.email, @corporate_manager.full_name, @corporate_manager.created_at, @corporate_manager.guid, @corporate_manager.user_group.name, @corporate_manager.corporate_customer_id, @corporate_manager.corporate_customer.organisation_name) unless Rails.env.test?
+      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, @corporate_manager.email, user_verification_url(email_verification_code: @corporate_manager.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.corporate_managers.create.flash.success')
       redirect_to corporate_managers_url
     else

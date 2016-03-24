@@ -64,7 +64,7 @@ describe User do
   subject { FactoryGirl.build(:individual_student_user) }
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id session_key profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number stripe_account_balance)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number stripe_account_balance)
 
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
