@@ -306,7 +306,7 @@ class UsersController < ApplicationController
     end
       seo_title_maker(@user.try(:full_name), '', true)
       @current_subscription = @user.subscriptions.all_in_order.last
-      @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code
+      @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code if @user.individual_student?
       @corporate_customers = CorporateCustomer.all_in_order
       @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
