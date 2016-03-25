@@ -254,9 +254,15 @@ class UsersController < ApplicationController
       verified_coupon = 'bad_coupon'
       return verified_coupon
     end
-  rescue Stripe::InvalidRequestError => e
+    unless verified_coupon.currency == @user_sub_currency_code.downcase
+      flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
+      verified_coupon = 'bad_coupon'
+      return verified_coupon
+    end
+  rescue => e
     flash[:error] = 'The coupon code entered is not valid'
     verified_coupon = 'bad_coupon'
+    Rails.logger.error("ERROR: UsersController#verify_coupon - failed to apply Stripe Coupon.  Details: #{e.inspect}")
     return verified_coupon
   end
 
@@ -300,6 +306,7 @@ class UsersController < ApplicationController
     end
       seo_title_maker(@user.try(:full_name), '', true)
       @current_subscription = @user.subscriptions.all_in_order.last
+      @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code
       @corporate_customers = CorporateCustomer.all_in_order
       @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
