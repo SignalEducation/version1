@@ -50,21 +50,28 @@ class ReferredSignup < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    false
+  end
+
+  def referrer_user
+    self.referral_code.user
   end
 
   protected
 
   def check_conversion_count
-    current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id)
-    current_payed_referrals = current_referrals.where.not(payed_at: nil)
-    if current_payed_referrals.count == 5
-      credit_stripe_account
+    if referrer_user.individual_student?
+      current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id)
+      current_payed_referrals = current_referrals.where.not(payed_at: nil)
+      if current_payed_referrals.count == 5
+        credit_stripe_account
+      end
+    else
+      return nil
     end
   end
 
   def credit_stripe_account
-    referrer_user = self.referral_code.user
     referrer_subscription_plan = referrer_user.subscriptions.first.subscription_plan
     sub_plan_currency = referrer_subscription_plan.currency
     monthly_plan = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
@@ -74,9 +81,8 @@ class ReferredSignup < ActiveRecord::Base
     stripe_customer.account_balance = price_in_cents * (-1)
     stripe_customer.save
     referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
-    user = User.find(referrer_user.id)
     amount = monthly_plan.currency.format_number(monthly_plan.price)
-    IntercomReferralsWorker.perform_async(user.email, amount) unless Rails.env.test?
+    IntercomReferralsWorker.perform_async(referrer_user.email, amount) unless Rails.env.test?
   end
 
   def check_dependencies
