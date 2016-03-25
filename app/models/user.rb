@@ -305,6 +305,13 @@ class User < ActiveRecord::Base
     self.email_verification_code = ApplicationController::generate_random_code(20)
   end
 
+  def create_referral
+    unless self.referral_code
+      new_referral_code = ReferralCode.new
+      new_referral_code.generate_referral_code(self.id)
+    end
+  end
+
   def destroyable?
     !self.admin? &&
         self.course_modules.empty? &&

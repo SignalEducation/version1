@@ -33,7 +33,7 @@ class ReferredSignup < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_save :check_conversion_count
+  after_update :check_conversion_count
 
   # scopes
   scope :all_in_order, -> { order(:referral_code_id) }
@@ -56,8 +56,9 @@ class ReferredSignup < ActiveRecord::Base
   protected
 
   def check_conversion_count
-    current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id).count
-    if payed_at && current_referrals == 5
+    current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id)
+    current_payed_referrals = current_referrals.where.not(payed_at: nil)
+    if current_payed_referrals.count == 5
       credit_stripe_account
     end
   end
@@ -73,7 +74,7 @@ class ReferredSignup < ActiveRecord::Base
     stripe_customer.account_balance = price_in_cents * (-1)
     stripe_customer.save
     referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
-    user = User.find(user_id)
+    user = User.find(referrer_user.id)
     amount = monthly_plan.currency.format_number(monthly_plan.price)
     IntercomReferralsWorker.perform_async(user.email, amount) unless Rails.env.test?
   end
