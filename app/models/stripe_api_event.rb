@@ -91,7 +91,11 @@ class StripeApiEvent < ActiveRecord::Base
             self.processed_at = Time.now
             unless Rails.env.test?
               stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-              user.update_attribute(stripe_account_balance, stripe_customer.account_balance)
+              balance = stripe_customer.account_balance
+              Rails.logger.error "Notice: User Stripe balance #{balance}"
+              Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
+              user.update_attributes(stripe_account_balance: balance)
+              Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
             end
           else
             set_process_error "Unknown user, CrushOffers session id or the user could not be found"
