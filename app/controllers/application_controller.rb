@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_mcapi
 
   def use_basic_auth_for_staging
-    if Rails.env.staging? && !request.original_fullpath.include?('/api/')
+    if Rails.env.staging? && params[:first_element] != 'api'
       ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
     end
   end
