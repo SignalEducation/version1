@@ -75,7 +75,7 @@
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), account_url
-                  -if current_user.blogger? || current_user.individual_student?
+                  -#if current_user.blogger? || current_user.individual_student?
                     %li
                       %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
                   %li
