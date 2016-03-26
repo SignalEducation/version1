@@ -181,7 +181,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-
       it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
         expect(flash[:success]).to be_nil
@@ -191,7 +190,6 @@ describe HomePagesController, type: :controller do
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
-
     end
 
     describe "GET 'new'" do

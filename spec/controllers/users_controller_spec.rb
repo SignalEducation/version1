@@ -211,6 +211,24 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "upgrade_from_free_trial with valid coupon" do
+      xit 'allow upgrade as all necessary params are present' do
+
+      end
+    end
+
+    describe "upgrade_from_free_trial with invalid coupon" do
+      xit 'allow upgrade as all necessary params are present' do
+
+      end
+    end
+
+    describe "upgrade_from_free_trial with wrong currency coupon" do
+      xit 'deny upgrade as currency of coupon and current sub dont match' do
+
+      end
+    end
+
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
