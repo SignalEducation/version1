@@ -254,7 +254,7 @@ class UsersController < ApplicationController
       verified_coupon = 'bad_coupon'
       return verified_coupon
     end
-    unless verified_coupon.currency == @user_sub_currency_code.downcase
+    if verified_coupon.currency && verified_coupon.currency != @user_sub_currency_code.downcase
       flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
       verified_coupon = 'bad_coupon'
       return verified_coupon
