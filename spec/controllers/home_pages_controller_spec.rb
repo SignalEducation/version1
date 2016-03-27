@@ -125,10 +125,12 @@ describe HomePagesController, type: :controller do
 
       describe "valid data" do
         it 'signs up new student' do
+          referral_codes = ReferralCode.count
           post :student_sign_up, user: sign_up_params
           #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(ReferralCode.count).to eq(referral_codes + 1)
         end
 
         #TODO Repurpose this to test for immediate activation of user and sending of verification mail
@@ -179,7 +181,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-
       it 'should redirect to dashboard' do
         get :show, id: home_page_1.id
         expect(flash[:success]).to be_nil
@@ -189,7 +190,6 @@ describe HomePagesController, type: :controller do
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
-
     end
 
     describe "GET 'new'" do

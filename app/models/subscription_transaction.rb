@@ -41,7 +41,7 @@ class SubscriptionTransaction < ActiveRecord::Base
   # validation
   validates :user_id, presence: true
   validates :subscription_id, presence: true
-  validates :subscription_payment_card_id, presence: true
+  #validates :subscription_payment_card_id, presence: true
   validates :stripe_transaction_guid, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :transaction_type, inclusion: {in: TRANSACTION_TYPES}, length: { maximum: 255 }
   validates :amount, presence: true, numericality: true
@@ -69,6 +69,14 @@ class SubscriptionTransaction < ActiveRecord::Base
     else
       tran_type = 'failed_payment'
     end
+    if subscription.free_trial?
+      card_id = nil
+    elsif !subscription.free_trial? && default_card
+      card_id = default_card.try(:id)
+    else
+      new_card = SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
+      card_id = new_card.try(:id)
+    end
     SubscriptionTransaction.create!(
             user_id: subscription.user_id,
             subscription_id: subscription.id,
@@ -79,7 +87,8 @@ class SubscriptionTransaction < ActiveRecord::Base
             alarm: 1,
             live_mode: (Rails.env.production? ? true : false),
             original_data: stripe_sub_data.to_hash,
-            subscription_payment_card_id: default_card.try(:id) || SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
+
+            subscription_payment_card_id: card_id
     )
   rescue => e
     Rails.logger.error "ERROR: SubscriptionTransaction#create_from_stripe_data failed to save. Error:#{e.inspect}"

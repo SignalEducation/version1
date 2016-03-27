@@ -54,6 +54,7 @@
 #  email_verification_code          :string
 #  email_verified_at                :datetime
 #  email_verified                   :boolean          default(FALSE), not null
+#  stripe_account_balance           :integer          default(0)
 #
 
 class User < ActiveRecord::Base
@@ -235,6 +236,10 @@ class User < ActiveRecord::Base
     self.subscriptions.last.try(:free_trial?)
   end
 
+  def referred_user
+    self.referred_signup
+  end
+
   def assign_anonymous_logs_to_user(session_guid)
     model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
@@ -298,6 +303,13 @@ class User < ActiveRecord::Base
     self.email_verified = false
     self.email_verified_at = nil
     self.email_verification_code = ApplicationController::generate_random_code(20)
+  end
+
+  def create_referral
+    unless self.referral_code
+      new_referral_code = ReferralCode.new
+      new_referral_code.generate_referral_code(self.id)
+    end
   end
 
   def destroyable?

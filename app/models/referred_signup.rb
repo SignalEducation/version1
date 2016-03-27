@@ -33,9 +33,18 @@ class ReferredSignup < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  after_update :check_conversion_count
 
   # scopes
   scope :all_in_order, -> { order(:referral_code_id) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :last_month, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
+  scope :all_payed, -> { where.not(payed_at: nil) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :one_month_ago, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
+  scope :two_months_ago, -> { where(created_at: 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
+  scope :three_months_ago, -> { where(created_at: 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
+
 
   # class methods
 
@@ -44,7 +53,37 @@ class ReferredSignup < ActiveRecord::Base
     false
   end
 
+  def referrer_user
+    self.referral_code.user
+  end
+
   protected
+
+  def check_conversion_count
+    if referrer_user.individual_student?
+      current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id)
+      current_payed_referrals = current_referrals.where.not(payed_at: nil)
+      if current_payed_referrals.count == 5
+        credit_stripe_account
+      end
+    else
+      return nil
+    end
+  end
+
+  def credit_stripe_account
+    referrer_subscription_plan = referrer_user.subscriptions.first.subscription_plan
+    sub_plan_currency = referrer_subscription_plan.currency
+    monthly_plan = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
+    monthly_plan_price = monthly_plan.price
+    price_in_cents = (monthly_plan_price.to_d * 100).to_i
+    stripe_customer = Stripe::Customer.retrieve(self.referral_code.user.stripe_customer_id)
+    stripe_customer.account_balance = price_in_cents * (-1)
+    stripe_customer.save
+    referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+    amount = monthly_plan.currency.format_number(monthly_plan.price)
+    IntercomReferralsWorker.perform_async(referrer_user.email, amount) unless Rails.env.test?
+  end
 
   def check_dependencies
     unless self.destroyable?

@@ -34,6 +34,18 @@ class ReferralCode < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id) }
 
   # class methods
+  def generate_referral_code(user_id)
+    usr = User.find(user_id)
+    if usr
+      new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}")[0..6]
+      while ReferralCode.where(code: new_code).count > 0
+        new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}#{Time.now.to_i}")[0..6]
+      end
+      self.user_id = user_id
+      self.code = new_code
+      self.save!
+    end
+  end
 
   # instance methods
   def destroyable?
@@ -46,10 +58,6 @@ class ReferralCode < ActiveRecord::Base
 
   def unpayed_referred_signups
     referred_signups.where(payed_at: nil)
-  end
-
-  def referred_signups_ready_for_paying
-    unpayed_referred_signups.where("maturing_on <= ?", Time.now.utc.end_of_day)
   end
 
   protected
@@ -72,7 +80,7 @@ class ReferralCode < ActiveRecord::Base
 
     usr = User.find(self.user_id)
     return false if usr.nil?
-    return false unless usr.individual_student? || usr.corporate_student? || usr.tutor? || usr.blogger?
+    return false unless usr.individual_student? || usr.blogger?
 
     if usr
       new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}")[0..6]

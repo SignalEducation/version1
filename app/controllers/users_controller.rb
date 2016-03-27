@@ -54,6 +54,7 @@
 #  email_verification_code          :string
 #  email_verified_at                :datetime
 #  email_verified                   :boolean          default(FALSE), not null
+#  stripe_account_balance           :integer          default(0)
 #
 
 class UsersController < ApplicationController
@@ -77,6 +78,10 @@ class UsersController < ApplicationController
 
   def show
     # account page
+    if @user.referral_code.nil?
+      @user.create_referral_code
+    end
+
     if params[:update].to_s.length > 0
       case params[:update]
         when 'invoices'
@@ -94,6 +99,7 @@ class UsersController < ApplicationController
     if current_user.corporate_customer?
       @corporate_customer = current_user.corporate_customer
     end
+
   end
 
   def new
@@ -117,6 +123,10 @@ class UsersController < ApplicationController
     @user.generate_email_verification_code
     @user.locale = 'en'
     if @user.user_group.try(:site_admin) == false && @user.save
+      if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
+        new_referral_code = ReferralCode.new
+        new_referral_code.generate_referral_code(@user.id)
+      end
       #Send create user event to intercom
       IntercomCreateUserWorker.perform_async(@user.id) unless Rails.env.test?
       #Send invite email to user from intercom, delayed for 1 minute to ensure the intercom create user event has finished
@@ -215,8 +225,15 @@ class UsersController < ApplicationController
        params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       current_subscription = current_user.subscriptions[0]
-      current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"])
-      redirect_to personal_upgrade_complete_url
+      coupon_code = params[:coupon] unless params[:coupon].empty?
+      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      if coupon_code && verified_coupon == 'bad_coupon'
+        redirect_to user_new_paid_subscription_url(current_user.id)
+      else
+        current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], coupon_code)
+        current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+        redirect_to personal_upgrade_complete_url
+      end
     else
       redirect_to account_url
     end
@@ -228,6 +245,25 @@ class UsersController < ApplicationController
 
   def change_plan
     @current_subscription = @user.subscriptions.all_in_order.last
+  end
+
+  def verify_coupon(coupon)
+    verified_coupon = Stripe::Coupon.retrieve(coupon)
+    unless verified_coupon.valid
+      flash[:error] = 'Sorry! The coupon code you entered has expired'
+      verified_coupon = 'bad_coupon'
+      return verified_coupon
+    end
+    if verified_coupon.currency && verified_coupon.currency != @user_sub_currency_code.downcase
+      flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
+      verified_coupon = 'bad_coupon'
+      return verified_coupon
+    end
+  rescue => e
+    flash[:error] = 'The coupon code entered is not valid'
+    verified_coupon = 'bad_coupon'
+    Rails.logger.error("ERROR: UsersController#verify_coupon - failed to apply Stripe Coupon.  Details: #{e.inspect}")
+    return verified_coupon
   end
 
   def subscription_invoice
@@ -270,6 +306,7 @@ class UsersController < ApplicationController
     end
       seo_title_maker(@user.try(:full_name), '', true)
       @current_subscription = @user.subscriptions.all_in_order.last
+      @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code if @user.individual_student?
       @corporate_customers = CorporateCustomer.all_in_order
       @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end

@@ -328,7 +328,7 @@ class Subscription < ActiveRecord::Base
     false
   end
 
-  def upgrade_from_free_plan(new_plan_id, stripe_token, new_paid_subscription_url = nil)
+  def upgrade_from_free_plan(new_plan_id, stripe_token, new_paid_subscription_url = nil, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     # compare the currencies of the old and new plans,
     unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -356,6 +356,7 @@ class Subscription < ActiveRecord::Base
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     stripe_subscription.plan = new_subscription_plan.stripe_guid
     stripe_subscription.prorate = true
+    stripe_subscription.coupon = coupon_code if coupon_code
     stripe_subscription.source = stripe_token
     stripe_subscription.trial_end = 'now'
     result = stripe_subscription.save # saves it at stripe.com, not in our DB
@@ -376,12 +377,12 @@ class Subscription < ActiveRecord::Base
       new_sub.next_renewal_date = Time.at(result[:current_period_end])
       new_sub.stripe_customer_id = self.stripe_customer_id
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-
       new_sub.save(validate: false) # see "sample_response_from_stripe" above
-
       self.update_attribute(:current_status, 'previous')
       self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
-
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      user = new_sub.user
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
       return new_sub
     end
   rescue ActiveRecord::RecordInvalid => exception

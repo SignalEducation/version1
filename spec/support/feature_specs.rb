@@ -136,7 +136,7 @@ def sign_up_and_upgrade_from_free_trial_small_device
   end
   within('#thank-you-message') do
     expect(page).to have_content 'Final Step!'
-    expect(page).to have_content "To complete your membership we need to verifying that we're sending emails to the correct address."
+    expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
   end
   within('.navbar.navbar-default') do
     find('.navbar-toggle').click

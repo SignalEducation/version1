@@ -1087,7 +1087,7 @@ en:
           payments: Payment Information
           notifications: Notifications
           admin: Admin
-          referral_code: Referral Code
+          referral_code: Referrals
           your_referral_code: Your Referral Code
         upgrade_now: Upgrade Now
         upgrade_subscription_plan: Upgrade Subscription
@@ -1103,6 +1103,7 @@ en:
         you_dont_have_referral_code: "You don't have a referral code Yet."
         total_number_of_referred_users: Total number of referred users
         number_of_referred_users_this_month: Number of referred users this month
+        number_of_referred_users_last_month: Number of referred users last month
       upgrade_subscription:
         error_panel_caption: "prevented your subscription upgrade from being completed"
         stripe_com_logo: "Stripe.com logo"

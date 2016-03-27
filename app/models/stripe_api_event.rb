@@ -86,13 +86,23 @@ class StripeApiEvent < ActiveRecord::Base
               Rails.logger.error "ERROR: Notifying CrushOffers fails - response is #{resp}"
               set_process_error "Error notifying CrushOffers"
             end
+          elsif user && price > 0
+            self.processed = true
+            self.processed_at = Time.now
+            unless Rails.env.test?
+              stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+              balance = stripe_customer.account_balance
+              Rails.logger.error "Notice: User Stripe balance #{balance}"
+              Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
+              user.update_attributes(stripe_account_balance: balance)
+              Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
+            end
           else
-            set_process_error "Unknown user, CrushOffers session id or price not greater than 0"
+            set_process_error "Unknown user, CrushOffers session id or the user could not be found"
           end
         when 'invoice.payment_failed'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           if user
-            #MandrillWorker.perform_async(user.id, "send_card_payment_failed_email", self.account_url)
             IntercomPaymentFailedWorker.perform_async(user.id, self.account_url) unless Rails.env.test?
             self.processed = true
             self.processed_at = Time.now

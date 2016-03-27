@@ -17,12 +17,20 @@ class ApplicationController < ActionController::Base
         DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
-  before_action :use_basic_auth_for_staging
+  before_action :authenticate_if_staging
   before_action :setup_mcapi
 
   def use_basic_auth_for_staging
-    if Rails.env.staging? && !request.original_fullpath.include?('/api/')
+    if Rails.env.staging? && params[:first_element] != 'api'
       ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
+    end
+  end
+
+  def authenticate_if_staging
+    if Rails.env.staging? && params[:first_element] != 'api'
+      authenticate_or_request_with_http_basic 'Staging' do |name, password|
+        name == 'signal' && password == '27(South!)'
+      end
     end
   end
 
