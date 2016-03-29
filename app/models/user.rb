@@ -368,9 +368,9 @@ class User < ActiveRecord::Base
     csv_data = []
     duplicate_emails = []
     has_errors = false
-    if csv_content.respond_to?(:each_line)
-      csv_content.each_line do |line|
-        line.strip.split(',').tap do |fields|
+    if csv_content.lines.count == 1 && csv_content.include?("\r")
+      csv_content.strip.split("\r").each do |line|
+        line.to_s.strip.split(',').tap do |fields|
           error_msgs = []
           if fields.length == 3
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
@@ -386,7 +386,27 @@ class User < ActiveRecord::Base
         end
       end
     else
-      has_errors = true
+      if csv_content.respond_to?(:each_line)
+        csv_content.each_line do |line|
+          line.strip.split(',').tap do |fields|
+            error_msgs = []
+            if fields.length == 3
+              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+              error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+              duplicate_emails << fields[0]
+            else
+              error_msgs << I18n.t('models.users.invalid_field_count')
+            end
+            has_errors = true unless error_msgs.empty?
+            csv_data << { values: fields, error_messages: error_msgs }
+          end
+        end
+      else
+        has_errors = true
+      end
+
     end
     has_errors = true if csv_data.empty?
     return csv_data, has_errors
