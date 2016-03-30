@@ -143,6 +143,22 @@ class Subscription < ActiveRecord::Base
     errors.messages.count == 0
   end
 
+  def immediately_cancel(account_url = nil)
+    # call stripe and cancel the subscription
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    response = stripe_subscription.delete.to_hash
+    if response[:status] == 'canceled' && response[:cancel_at_period_end] == false
+      self.update_attribute(:current_status, 'canceled')
+      Rails.logger.info "INFO: Subscription#immediately_cancel has been triggered by repeated failed charge attempts to charge the users card therefore cancellation status updated to canceled for subscription ##{self.id}."
+    else
+      Rails.logger.error "ERROR: Subscription#immediately_cancel failed to cancel an the sub. Self:#{self}. StripeResponse:#{response}."
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    end
+    # return true or false - if everything went well
+    errors.messages.count == 0
+  end
+
   def compare_to_stripe_details(stripe_subscription_hash, stripe_customer_hash)
     if self.stripe_guid != stripe_subscription_hash[:id]
       Subscription.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)

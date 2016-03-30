@@ -103,9 +103,28 @@ class StripeApiEvent < ActiveRecord::Base
         when 'invoice.payment_failed'
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           if user
-            IntercomPaymentFailedWorker.perform_async(user.id, self.account_url) unless Rails.env.test?
-            self.processed = true
-            self.processed_at = Time.now
+            if self.payload[:data][:object][:next_payment_attempt] == 'null'
+              #Final payment attempt has failed on stripe so we cancel the current subscription
+              text = 'The third attempt to charge your card has failed. We will no longer attempt to charge your card, your account has now been suspended. If you wish to reactivate your account please please follow the link below to your account page and add a new valid payment card.'
+
+              self.processed = true
+              self.processed_at = Time.now
+              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
+              subscription.immediately_cancel
+              IntercomPaymentFailedWorker.perform_async(user.id, self.account_url, text) unless Rails.env.test?
+
+            else
+              #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due,
+              #allowing access to course content until the retry window has expired.
+
+              text = 'The latest attempt to charge your card has failed. We will attempt to charge the card again tomorrow, if you need to update your payment card please follow the link below to your account page: '
+              IntercomPaymentFailedWorker.perform_async(user.id, self.account_url, text) unless Rails.env.test?
+              self.processed = true
+              self.processed_at = Time.now
+              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
+              subscription.update_attribute(:current_status, 'past_due')
+
+            end
           else
             Rails.logger.error "ERROR: User with Stripe id #{payload[:data][:object][:customer]} does not exist."
             set_process_error "User with given Stripe ID does not exist"
@@ -127,16 +146,6 @@ class StripeApiEvent < ActiveRecord::Base
             if user_subscriptions.count == 2 &&
                user_subscriptions.first.free_trial? &&
                user_subscriptions.first.current_status == 'canceled'
-              # If this is first subscriptiona after user's free trial subscription
-              # we have to check referred signups. Since referred signups are related
-              # to original, free trial, subscription we will redirect it to new
-              # subscription. This will enable us to double check (if needed) maturong on
-              # value since we can compare it with subscription's created_at value.
-              if user_subscriptions.first.referred_signup
-                user_subscriptions.first.referred_signup.update_attributes(maturing_on: 40.days.from_now.utc.beginning_of_day,
-                                                                           subscription_id: subscription.id)
-                Rails.logger.debug "DEBUG: Set maturing date for referred signup #{subscription.referred_signup.id}"
-              end
 
               self.processed = true
               self.processed_at = Time.now
