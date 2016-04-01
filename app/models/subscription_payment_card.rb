@@ -87,6 +87,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   after_create :update_as_the_default_card, if: :is_default_card
 
   # scopes
+
   scope :all_in_order, -> { order(:user_id, :status) }
   scope :all_default_cards, -> { where(is_default_card: true) }
 
@@ -123,7 +124,8 @@ class SubscriptionPaymentCard < ActiveRecord::Base
               is_default_card: true,
               status: 'card-live'
       )
-      unless x.save
+
+      unless x.save(callbacks: false)
         Rails.logger.error "SubscriptionPaymentCard#build_from_stripe_data - failed to save a new record. Errors: #{x.errors.inspect}"
       end
     else

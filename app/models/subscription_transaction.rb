@@ -74,7 +74,8 @@ class SubscriptionTransaction < ActiveRecord::Base
     elsif !subscription.free_trial? && default_card
       card_id = default_card.try(:id)
     else
-      new_card = SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
+      new_card_id = SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
+      new_card = SubscriptionPaymentCard.find(new_card_id)
       card_id = new_card.try(:id)
     end
     SubscriptionTransaction.create!(
@@ -87,7 +88,6 @@ class SubscriptionTransaction < ActiveRecord::Base
             alarm: 1,
             live_mode: (Rails.env.production? ? true : false),
             original_data: stripe_sub_data.to_hash,
-
             subscription_payment_card_id: card_id
     )
   rescue => e

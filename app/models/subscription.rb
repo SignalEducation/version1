@@ -432,34 +432,52 @@ class Subscription < ActiveRecord::Base
         stripe_customer.save
         stripe_subscription = stripe_customer.try(:subscriptions).try(:data).try(:first)
       end
+
+      if stripe_customer && stripe_subscription
+        self.update_columns(stripe_guid: stripe_subscription.id,
+                            next_renewal_date: Time.at(stripe_subscription.current_period_end),
+                            livemode: stripe_subscription[:plan][:livemode],
+                            current_status: stripe_subscription.status,
+                            stripe_customer_id: stripe_customer.id,
+                            stripe_customer_data: stripe_customer.to_hash.deep_dup)
+
+        if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
+          errors.add(:base, I18n.t('models.general.live_mode_error'))
+          Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+          false
+        else
+          true
+        end
+      end
+
     elsif self.stripe_guid.blank?
-      #### Existing customer that is reactivating
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.create(plan: self.subscription_plan.stripe_guid, trial_end: 'now')
       # refresh...
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    else
-      # self.stripe_guid and self.stripe_customer_id are both provided;
-      # this means that the subscription is being imported from v2.
-      # In this case we do NOT call Stripe.com.
-    end
 
-    if stripe_customer && stripe_subscription
-      self.update_columns(stripe_guid: stripe_subscription.id,
-            next_renewal_date: Time.at(stripe_subscription.current_period_end),
-            livemode: stripe_subscription[:plan][:livemode],
-            current_status: stripe_subscription.status,
-            stripe_customer_id: stripe_customer.id,
-            stripe_customer_data: stripe_customer.to_hash.deep_dup)
+      if stripe_customer && stripe_subscription
+        self.update_columns(stripe_guid: stripe_subscription.id,
+                            next_renewal_date: Time.at(stripe_subscription.current_period_end),
+                            livemode: stripe_subscription[:plan][:livemode],
+                            current_status: stripe_subscription.status,
+                            stripe_customer_id: stripe_customer.id,
+                            stripe_customer_data: stripe_customer.to_hash.deep_dup)
 
-      if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
-        errors.add(:base, I18n.t('models.general.live_mode_error'))
-        Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
-        false
-      else
-        true
+        if Invoice::STRIPE_LIVE_MODE != stripe_customer[:livemode]
+          errors.add(:base, I18n.t('models.general.live_mode_error'))
+          Rails.logger.fatal 'FATAL: Subscription#create_on_stripe_platform - live-mode mismatch with Stripe.com. StripeCustomer: ' + stripe_customer.inspect + '. Self: ' + self.inspect
+          false
+        else
+          true
+        end
       end
+
+    else
+      # Existing customer that is reactivating
+      # In this case we do NOT call Stripe
     end
+
     Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform completed at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
 
   rescue => e
