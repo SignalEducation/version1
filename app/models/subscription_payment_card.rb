@@ -125,7 +125,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
               status: 'card-live'
       )
 
-      unless x.save(callbacks: false)
+      unless x.save
         Rails.logger.error "SubscriptionPaymentCard#build_from_stripe_data - failed to save a new record. Errors: #{x.errors.inspect}"
       end
     else
