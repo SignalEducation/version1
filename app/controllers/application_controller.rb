@@ -149,7 +149,7 @@ class ApplicationController < ActionController::Base
     elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
       result = not_allowed
       result[:course_content][:reason] = "free_trial_expired"
-    elsif %w(trialing active canceled-pending).include?(subscription_in_charge.try(:current_status) || 'canceled')
+    elsif %w(active past_due canceled-pending).include?(subscription_in_charge.try(:current_status) || 'canceled')
       result = allowed
     else
       result = not_allowed
