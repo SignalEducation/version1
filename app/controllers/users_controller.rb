@@ -60,7 +60,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:profile, :profile_index]
@@ -259,19 +259,22 @@ class UsersController < ApplicationController
       else
         #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
         @user.resubscribe_account(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i, params[:subscription]["stripe_token"], coupon_code)
-        #Todo make new page for this - redirect_to reactivation_complete_url
-        redirect_to personal_upgrade_complete_url
+        redirect_to reactivation_complete_url
       end
     elsif params[:subscription] && params[:subscription]["subscription_plan_id"] && !params[:subscription]["stripe_token"]
       @user.resubscribe_account_without_token(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i)
-      redirect_to personal_upgrade_complete_url
+      redirect_to reactivation_complete_url
     else
       redirect_to account_url
     end
   end
 
   def personal_upgrade_complete
-    @subscription = current_user.subscriptions[1]
+    @subscription = current_user.subscriptions.all_of_status('active').last
+  end
+
+  def reactivation_complete
+    @subscription = current_user.subscriptions.all_of_status('active').last
   end
 
   def change_plan
