@@ -243,6 +243,7 @@ class UsersController < ApplicationController
     @user = User.where(id: params[:user_id]).first
     @subscription = @user.subscriptions.last
     redirect_to account_url unless @subscription.current_status == 'canceled'
+    @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
     currency_id = @subscription.subscription_plan.currency_id
     @country = Country.where(currency_id: currency_id).first
     @subscription_plans = @subscription.reactivation_options
@@ -251,7 +252,6 @@ class UsersController < ApplicationController
 
   def reactivate_account_subscription
     if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"]
-
       coupon_code = params[:coupon] unless params[:coupon].empty?
       verified_coupon = verify_coupon(coupon_code) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
@@ -259,8 +259,12 @@ class UsersController < ApplicationController
       else
         #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
         @user.resubscribe_account(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i, params[:subscription]["stripe_token"], coupon_code)
+        #Todo make new page for this - redirect_to reactivation_complete_url
         redirect_to personal_upgrade_complete_url
       end
+    elsif params[:subscription] && params[:subscription]["subscription_plan_id"] && !params[:subscription]["stripe_token"]
+      @user.resubscribe_account_without_token(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i)
+      redirect_to personal_upgrade_complete_url
     else
       redirect_to account_url
     end
