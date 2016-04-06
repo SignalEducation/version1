@@ -282,6 +282,7 @@ class UsersController < ApplicationController
   end
 
   def verify_coupon(coupon)
+    @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code
     verified_coupon = Stripe::Coupon.retrieve(coupon)
     unless verified_coupon.valid
       flash[:error] = 'Sorry! The coupon code you entered has expired'
@@ -338,11 +339,10 @@ class UsersController < ApplicationController
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-      seo_title_maker(@user.try(:full_name), '', true)
-      @current_subscription = @user.subscriptions.all_in_order.last
-      @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code if @user.individual_student?
-      @corporate_customers = CorporateCustomer.all_in_order
-      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    seo_title_maker(@user.try(:full_name), '', true)
+    @current_subscription = @user.subscriptions.all_in_order.last
+    @corporate_customers = CorporateCustomer.all_in_order
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 
   def allowed_params
