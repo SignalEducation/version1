@@ -263,40 +263,9 @@ describe Api::StripeV01Controller, type: :controller do
       end
 
       describe 'customer.subscription.created' do
-        it 'does not update referred_signup if previous subscription is not cancelled' do
+        it 'marks api event as processed since users has reactivated account by subscribing to a new subscription plan' do
           subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-
-          post :create, customer_subscription_created_event.to_json
-
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Subscription with Stripe ID created #{customer_subscription_created_event.data.object.id} but it is not the first one after free trial.")
-          expect(referred_signup.maturing_on).to eq(nil)
-        end
-
-        it 'does not update referred_signup if previous subscription is not free trial subscription' do
-          card_token_3 = Stripe::Token.create(card: card_details_2)
-          subscription_6 = FactoryGirl.create(:subscription, user_id: referred_student.id,
-                                              subscription_plan_id: subscription_plan_q.id,
-                                              current_status: 'active'
-                                              )
-          subscription_6.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-
-          post :create, customer_subscription_created_event.to_json
-
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Subscription with Stripe ID created #{customer_subscription_created_event.data.object.id} but it is not the first one after free trial.")
-          expect(referred_signup.maturing_on).to eq(nil)
-        end
-
-        it 'updates maturing_on and subscription_id in referred signup' do
-          subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-          free_subscription_2.update_attribute(:current_status, 'canceled')
+          free_subscription_2.update_attribute(:current_status, 'previous')
 
           post :create, customer_subscription_created_event.to_json
 
@@ -305,10 +274,21 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
-
-          expect(referred_signup.reload.maturing_on).to eq(40.days.from_now.utc.beginning_of_day)
-          expect(referred_signup.subscription_id).to eq(subscription_5.id)
         end
+
+
+        it 'does not marks api event as processed because users old plan is still valid' do
+          subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
+
+          post :create, customer_subscription_created_event.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("API Event with Stripe ID #{customer_subscription_created_event.data.object.id} was created but the necessary conditions for the user were not met.")
+        end
+
       end
     end
 

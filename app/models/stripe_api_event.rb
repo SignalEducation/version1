@@ -71,6 +71,7 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error (invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
           end
         when 'invoice.payment_succeeded'
+          #Latest attempt to charge a user has succeeded so we check if it was a crushoffers referral
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           price = self.payload[:data][:object][:total].to_f / 100.0
           curr = self.payload[:data][:object][:currency].upcase
@@ -101,6 +102,7 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error "Unknown user, CrushOffers session id or the user could not be found"
           end
         when 'invoice.payment_failed'
+          #Latest attempt to charge a user has failed
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           if user
             if self.payload[:data][:object][:next_payment_attempt] == 'null'
@@ -109,19 +111,18 @@ class StripeApiEvent < ActiveRecord::Base
 
               self.processed = true
               self.processed_at = Time.now
-              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
+              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription])
               subscription.immediately_cancel
               IntercomPaymentFailedWorker.perform_async(user.id, self.account_url, text) unless Rails.env.test?
 
             else
               #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due,
               #allowing access to course content until the retry window has expired.
-
               text = 'The latest attempt to charge your card has failed. We will attempt to charge the card again tomorrow, if you need to update your payment card please follow the link below to your account page: '
               IntercomPaymentFailedWorker.perform_async(user.id, self.account_url, text) unless Rails.env.test?
               self.processed = true
               self.processed_at = Time.now
-              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
+              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription])
               subscription.update_attribute(:current_status, 'past_due')
 
             end
@@ -130,6 +131,7 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error "User with given Stripe ID does not exist"
           end
         when 'customer.subscription.updated'
+            #User upgrading from a free_trial subscription to a paying subscription
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
           if subscription &&
              subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
@@ -140,17 +142,19 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error("Error updating subscription #{subscription.try(:id)} with Stripe ID #{self.payload[:data][:object][:id]}")
           end
         when 'customer.subscription.created'
+          #User reactivating their account after it was canceled due to repeated failed charges
+
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
           if subscription
             user_subscriptions = subscription.user.subscriptions.all_in_order
             if user_subscriptions.count == 2 &&
                user_subscriptions.first.free_trial? &&
-               user_subscriptions.first.current_status == 'canceled'
+               user_subscriptions.first.current_status == 'previous'
 
               self.processed = true
               self.processed_at = Time.now
             else
-              set_process_error "Subscription with Stripe ID created #{self.payload[:data][:object][:id]} but it is not the first one after free trial."
+              set_process_error "API Event with Stripe ID #{self.payload[:data][:object][:id]} was created but the necessary conditions for the user were not met."
             end
           else
             set_process_error "Unknown subscription with Stripe ID #{self.payload[:data][:object][:id]}"

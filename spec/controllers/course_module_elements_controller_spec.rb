@@ -248,81 +248,63 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
-        get :new
-        expect_bounce_as_not_allowed
+      it 'should respond OK' do
+        get :new, cm_id: course_module_1.id
+        expect_new_success_with_model('course_module_element')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK with course_module_element_1' do
+        get :edit, id: course_module_element_2_1.id
+        expect_edit_success_with_model('course_module_element', course_module_element_2_1.id)
       end
     end
 
     describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
+      it 'should report OK for valid params' do
         post :create, course_module_element: valid_params
-        expect_bounce_as_not_allowed
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+      end
+
+      it 'should report error for invalid params' do
+        post :create, course_module_element: {valid_params.keys.first => ''}
+        expect_create_error_with_model('course_module_element')
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, course_module_element: valid_params
-        expect_bounce_as_not_allowed
+      it 'should respond OK to valid params for course_module_element_1' do
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: course_module_element_1_1.id, course_module_element: {name_url: ''}
+        expect_update_error_with_model('course_module_element')
+        expect(assigns(:course_module_element).id).to eq(course_module_element_1_1.id)
+      end
+    end
+
+    describe "POST 'reorder'" do
+      it 'should be OK with valid_array' do
+        post :reorder, array_of_ids: [course_module_element_2_1.id, course_module_element_2_2.id]
+        expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+
+      before(:each) do
+        x = course_module_element_quiz_1_1.id
       end
-    end
 
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, course_module_element: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, course_module_element: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
+      describe "DELETE 'destroy'" do
+        it 'should be OK as no dependencies exist' do
+          #course_module_element_2_2
+          delete :destroy, id: course_module_element_2_2.id
+          expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_2_2.course_module))
+        end
       end
     end
 

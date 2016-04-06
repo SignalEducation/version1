@@ -12,6 +12,8 @@
 #  active                      :boolean          default(FALSE)
 #
 
+
+#This model serves as the final quiz in a subject course
 class QuestionBanksController < ApplicationController
 
   before_action :logged_in_required

@@ -377,15 +377,21 @@ describe UserNotificationsController, type: :controller do
     end
 
     describe "GET 'new'" do
-      it 'should bounce as not allowed' do
+      it 'should respond OK' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_new_success_with_model('user_notification')
       end
     end
 
     describe "GET 'edit/x'" do
-      it 'should respond OK with user_notification_4' do
+      it 'should respond OK with user_notification_2' do
         get :edit, id: user_notification_4.id
+        expect_edit_success_with_model('user_notification', user_notification_4.id)
+      end
+
+      # optional
+      it 'should expect bounce as not allowed' do
+        get :edit, id: user_notification_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -393,7 +399,12 @@ describe UserNotificationsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, user_notification: valid_params
-        expect_bounce_as_not_allowed
+        expect_create_success_with_model('user_notification', user_notifications_url)
+      end
+
+      it 'should report error for invalid params' do
+        post :create, user_notification: {valid_params.keys.first => ''}
+        expect_create_error_with_model('user_notification')
       end
     end
 
