@@ -80,14 +80,12 @@ class StripeApiEvent < ActiveRecord::Base
             resp = Net::HTTP.get(uri)
             xml_doc = Nokogiri::XML(resp)
             result = xml_doc.at_xpath('//msg').content
-            if result == 'SUCCESS'
-              self.processed = true
-              self.processed_at = Time.now
-            else
+            if result != 'SUCCESS'
               Rails.logger.error "ERROR: Notifying CrushOffers fails - response is #{resp}"
               set_process_error "Error notifying CrushOffers"
             end
-          elsif user && price > 0
+          end
+          if user && price > 0
             self.processed = true
             self.processed_at = Time.now
             unless Rails.env.test?
@@ -96,6 +94,8 @@ class StripeApiEvent < ActiveRecord::Base
               Rails.logger.error "Notice: User Stripe balance #{balance}"
               Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
               user.update_attributes(stripe_account_balance: balance)
+              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:lines][:data][0][:id])
+              subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
               Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
             end
           else
