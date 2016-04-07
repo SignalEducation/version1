@@ -204,21 +204,25 @@ describe UsersController, type: :controller do
       end
     end
 
-    #Todo test for this and all other methods in the users controller
-    describe "upgrade_from_free_trial" do
-      xit 'allow upgrade as all necessary params are present' do
+    describe "new_paid_subscription" do
+      xit 'should respond OK and render upgrade page' do
+        get :new_paid_subscription, id: individual_student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response).to render_template(:new_paid_subscription)
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new_paid_subscription)
 
       end
     end
 
-    describe "upgrade_from_free_trial with valid coupon" do
+    describe "upgrade_from_free_trial as a referred sign_up user" do
       xit 'allow upgrade as all necessary params are present' do
+        post :create, user: valid_params
+        expect_create_success_with_model('user', users_url)
+        expect(assigns(:user).password_change_required).to eq(true)
+        expect(ReferralCode.count).to eq(referral_codes + 1)
 
-      end
-    end
-
-    describe "upgrade_from_free_trial with invalid coupon" do
-      xit 'allow upgrade as all necessary params are present' do
 
       end
     end

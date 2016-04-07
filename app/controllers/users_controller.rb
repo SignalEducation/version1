@@ -60,7 +60,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan] do
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:profile, :profile_index]
@@ -239,8 +239,42 @@ class UsersController < ApplicationController
     end
   end
 
+  def reactivate_account
+    @user = User.where(id: params[:user_id]).first
+    @subscription = @user.subscriptions.last
+    redirect_to account_url unless @subscription.current_status == 'canceled'
+    @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
+    currency_id = @subscription.subscription_plan.currency_id
+    @country = Country.where(currency_id: currency_id).first
+    @subscription_plans = @subscription.reactivation_options
+    @new_subscription = Subscription.new
+  end
+
+  def reactivate_account_subscription
+    if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"]
+      coupon_code = params[:coupon] unless params[:coupon].empty?
+      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      if coupon_code && verified_coupon == 'bad_coupon'
+        redirect_to user_reactivate_account_url(current_user.id)
+      else
+        #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
+        @user.resubscribe_account(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i, params[:subscription]["stripe_token"], coupon_code)
+        redirect_to reactivation_complete_url
+      end
+    elsif params[:subscription] && params[:subscription]["subscription_plan_id"] && !params[:subscription]["stripe_token"]
+      @user.resubscribe_account_without_token(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i)
+      redirect_to reactivation_complete_url
+    else
+      redirect_to account_url
+    end
+  end
+
   def personal_upgrade_complete
-    @subscription = current_user.subscriptions[1]
+    @subscription = current_user.subscriptions.all_of_status('active').last
+  end
+
+  def reactivation_complete
+    @subscription = current_user.subscriptions.all_of_status('active').last
   end
 
   def change_plan
@@ -248,6 +282,7 @@ class UsersController < ApplicationController
   end
 
   def verify_coupon(coupon)
+    @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code
     verified_coupon = Stripe::Coupon.retrieve(coupon)
     unless verified_coupon.valid
       flash[:error] = 'Sorry! The coupon code you entered has expired'
@@ -304,11 +339,10 @@ class UsersController < ApplicationController
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-      seo_title_maker(@user.try(:full_name), '', true)
-      @current_subscription = @user.subscriptions.all_in_order.last
-      @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code if @user.individual_student?
-      @corporate_customers = CorporateCustomer.all_in_order
-      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    seo_title_maker(@user.try(:full_name), '', true)
+    @current_subscription = @user.subscriptions.all_in_order.last
+    @corporate_customers = CorporateCustomer.all_in_order
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 
   def allowed_params

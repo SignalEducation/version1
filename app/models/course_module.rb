@@ -184,11 +184,11 @@ class CourseModule < ActiveRecord::Base
   end
 
   def calculate_quiz_count
-    self.quiz_count = self.course_module_elements.all_quizzes.count
+    self.quiz_count = self.course_module_elements.all_active.all_quizzes.count
   end
 
   def calculate_video_count
-    self.video_count = self.course_module_elements.all_videos.count
+    self.video_count = self.course_module_elements.all_active.all_videos.count
   end
 
   def calculate_video_duration

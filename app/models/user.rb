@@ -368,9 +368,9 @@ class User < ActiveRecord::Base
     csv_data = []
     duplicate_emails = []
     has_errors = false
-    if csv_content.respond_to?(:each_line)
-      csv_content.each_line do |line|
-        line.strip.split(',').tap do |fields|
+    if csv_content.lines.count == 1 && csv_content.include?("\r")
+      csv_content.strip.split("\r").each do |line|
+        line.to_s.strip.split(',').tap do |fields|
           error_msgs = []
           if fields.length == 3
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
@@ -386,7 +386,27 @@ class User < ActiveRecord::Base
         end
       end
     else
-      has_errors = true
+      if csv_content.respond_to?(:each_line)
+        csv_content.each_line do |line|
+          line.strip.split(',').tap do |fields|
+            error_msgs = []
+            if fields.length == 3
+              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+              error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+              duplicate_emails << fields[0]
+            else
+              error_msgs << I18n.t('models.users.invalid_field_count')
+            end
+            has_errors = true unless error_msgs.empty?
+            csv_data << { values: fields, error_messages: error_msgs }
+          end
+        end
+      else
+        has_errors = true
+      end
+
     end
     has_errors = true if csv_data.empty?
     return csv_data, has_errors
@@ -429,6 +449,135 @@ class User < ActiveRecord::Base
       new_sub = self.subscriptions.new(subscription_plan_id: subscription_plan.id, stripe_customer_id: self.stripe_customer_id, user_id: self.id)
       new_sub.save
     end
+  end
+
+  #User reactivating their account by adding a new subscription and card
+  def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, coupon_code)
+    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
+    user = User.find_by_id(user_id)
+    old_sub = user.subscriptions.first
+
+    # compare the currencies of the old and new plans,
+    unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
+    end
+    # make sure new plan is active
+    unless new_subscription_plan.active?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
+    end
+    # make sure the current subscription is in "good standing"
+    unless %w(active).include?(old_sub.current_status)
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
+    end
+    # only individual students are allowed to upgrade their plan
+    unless user.individual_student?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
+    end
+
+    #### if we're here, then we're good to go.
+    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+    stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid, source: stripe_token)
+
+    stripe_subscription.prorate = true
+    stripe_subscription.coupon = coupon_code if coupon_code
+    stripe_subscription.trial_end = 'now'
+    result = stripe_subscription.save # saves it on stripe
+
+    #### if we are here, the subscription creation on Stripe was successful
+    #### Now we need to create a new Subscription in our DB.
+    ActiveRecord::Base.transaction do
+      new_sub = Subscription.new(
+          user_id: user_id,
+          corporate_customer_id: user.corporate_customer_id,
+          subscription_plan_id: new_subscription_plan.id,
+          complimentary: false,
+          livemode: (result[:livemode] == 'live'),
+          current_status: result[:status],
+      )
+      # mass-assign-protected attributes
+      new_sub.stripe_guid = result[:id]
+      new_sub.next_renewal_date = Time.at(result[:current_period_end])
+      new_sub.stripe_customer_id = user.stripe_customer_id
+      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
+      new_sub.save(validate: false)
+
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+      return new_sub
+    end
+  rescue ActiveRecord::RecordInvalid => exception
+    Rails.logger.error("ERROR: Subscription#reactivation - AR.Transaction failed.  Details: #{exception.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+  rescue => e
+    Rails.logger.error("ERROR: Subscription#reactivation - failed to create Subscription at Stripe.  Details: #{e.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+
+  end
+
+  #User reactivating their account by adding a new subscription and no card
+  def resubscribe_account_without_token(user_id, new_plan_id, reactivate_account_url = nil)
+    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
+    user = User.find_by_id(user_id)
+    old_sub = user.subscriptions.first
+
+    # compare the currencies of the old and new plans,
+    unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
+    end
+    # make sure new plan is active
+    unless new_subscription_plan.active?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
+    end
+    # make sure the current subscription is in "good standing"
+    unless %w(active).include?(old_sub.current_status)
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
+    end
+    # only individual students are allowed to upgrade their plan
+    unless user.individual_student?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
+    end
+
+    #### if we're here, then we're good to go.
+    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+    stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid)
+
+    stripe_subscription.prorate = true
+    stripe_subscription.trial_end = 'now'
+    result = stripe_subscription.save # saves it on stripe
+
+    #### if we are here, the subscription creation on Stripe was successful
+    #### Now we need to create a new Subscription in our DB.
+    ActiveRecord::Base.transaction do
+      new_sub = Subscription.new(
+          user_id: user_id,
+          corporate_customer_id: user.corporate_customer_id,
+          subscription_plan_id: new_subscription_plan.id,
+          complimentary: false,
+          livemode: (result[:livemode] == 'live'),
+          current_status: result[:status],
+      )
+      # mass-assign-protected attributes
+      new_sub.stripe_guid = result[:id]
+      new_sub.next_renewal_date = Time.at(result[:current_period_end])
+      new_sub.stripe_customer_id = user.stripe_customer_id
+      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
+      new_sub.save(validate: false)
+
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+      return new_sub
+    end
+  rescue ActiveRecord::RecordInvalid => exception
+    Rails.logger.error("ERROR: Subscription#reactivation - AR.Transaction failed.  Details: #{exception.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+  rescue => e
+    Rails.logger.error("ERROR: Subscription#reactivation - failed to create Subscription at Stripe.  Details: #{e.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+
   end
 
   protected

@@ -83,6 +83,7 @@ group :development, :test do
   gem 'rspec-rails' # our core testing environment
   gem 'selenium-webdriver', '>=2.45.0'
   gem 'thin' # new web server
+  gem 'ultrahook' # allows incoming webhooks from stripe
 end
 
 group :test do

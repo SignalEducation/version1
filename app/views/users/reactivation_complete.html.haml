@@ -1,0 +1,16 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom#thank-you-message
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Thanks for reactivating your membership!
+        .col-md-8.col-md-offset-2.l-margin-bottom-6x
+          .col-md-10.col-md-offset-1.l-margin-top.text-center
+            %p.h3.h-separator.h-separator-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+              ="You have been resubscribed to our #{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan. Please visit your"
+              =link_to 'account page', account_url(anchor: 'subscriptions')
+              ="to view your subscription details."
+            %p.h3.l-margin-top-big{style: 'text-align: center;  letter-spacing: 0.5px;'}
+              =link_to 'Or continue on to our courses.', library_url
+=render partial: 'layouts/new_footer'

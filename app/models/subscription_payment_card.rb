@@ -87,6 +87,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   after_create :update_as_the_default_card, if: :is_default_card
 
   # scopes
+
   scope :all_in_order, -> { order(:user_id, :status) }
   scope :all_default_cards, -> { where(is_default_card: true) }
 
@@ -123,6 +124,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
               is_default_card: true,
               status: 'card-live'
       )
+
       unless x.save
         Rails.logger.error "SubscriptionPaymentCard#build_from_stripe_data - failed to save a new record. Errors: #{x.errors.inspect}"
       end
@@ -133,7 +135,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   def self.create_cards_from_stripe_array(stripe_card_array, user_id, default_card_guid)
     this_customers_cards = SubscriptionPaymentCard.where(user_id: user_id)
-
     card_guid_list = this_customers_cards.map(&:stripe_card_guid)
     stripe_card_array.each do |data_item|
       if data_item[:object] == 'card' && !card_guid_list.include?(data_item[:id])
@@ -145,13 +146,9 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     this_customers_cards.reload
     the_default_card = this_customers_cards.where(stripe_card_guid: default_card_guid).first
     the_default_card.update_as_the_default_card
-    if this_customers_cards.length > 1
-      this_customers_cards.update_all(is_default_card: false, status: 'not-live')
-      the_default_card.update_attributes(is_default_card: true, status: 'card-live')
-      return the_default_card.id
-    else
-      this_customers_cards.first.id
-    end
+
+    return the_default_card.id || this_customers_cards.last.try(:id)
+
   end
 
   def self.get_updates_for_user(stripe_customer_guid)
@@ -232,6 +229,16 @@ class SubscriptionPaymentCard < ActiveRecord::Base
       end
     end
     self.read_attribute(:status)
+  end
+
+  def check_valid_dates
+    unless self.status == 'expired'
+      if self.expiry_year && self.expiry_month
+        expires_on = Date.new(self.expiry_year, self.expiry_month, 1) + 1.month
+        self.update_column(:status, 'expired') if expires_on < Proc.new{Time.now}.call
+        return expires_on < Proc.new{Time.now}.call ? 'false' : 'true'
+      end
+    end
   end
 
   def stripe_token=(t)
