@@ -140,7 +140,8 @@
         converted_referrals_this_month = #{@converted_referrals_this_month},
         converted_referrals_one_month_ago = #{@converted_referrals_one_month_ago},
         converted_referrals_two_months_ago = #{@converted_referrals_two_months_ago},
-        ref_link = "www.learnsignal.com/en/library/?ref_code=",
+        //ref_link = "www.learnsignal.com/en/library/?ref_code=",
+        ref_link = "#{@ref_page}",
         ref_code = "#{@referral_code.code}",
         redirect_link = "#{@ref_page}";
 
