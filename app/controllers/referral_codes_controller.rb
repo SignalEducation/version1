@@ -31,7 +31,9 @@ class ReferralCodesController < ApplicationController
       sub_plan_currency = @user.subscriptions.first.subscription_plan.currency
       @current_monthly_sub = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
     end
-    @ref_page = request.original_url
+    url = request.original_url.split("/")
+    new_url = url[2] + "/" + url[3] + "/"
+    @ref_page = new_url + "library/?ref_code="
     @referral_url = referral_code_sharing_url(current_user.referral_code)
     if current_user == @user
       #Graph Dates Data
