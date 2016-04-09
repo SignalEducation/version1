@@ -10,7 +10,7 @@
             -if course_module_element.id == @course_module_element.try(:id)
               .list-group-item.current-cme
                 %p
-                  =course_module_element.name
+                  =course_module_element.name.html_safe
                 %h5.text-active.text-bold
                   %i.glyphicon.glyphicon-circle-arrow-right{style: 'font-size: large'}
                   Active
@@ -18,13 +18,13 @@
               =link_to course_special_link(course_module_element), title: t('views.courses.show.h1'), class: 'list-group-item' do
                 -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
                   %p
-                    =course_module_element.name
+                    =course_module_element.name.html_safe
                   %h5.text-passed.text-bold
                     %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
                     Completed
                 -else
                   %p
-                    =course_module_element.name
+                    =course_module_element.name.html_safe
                   %h5.text-failed.text-bold
                     %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
                     Start

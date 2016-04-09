@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h1=cme.name
+    %h1=cme.name.html_safe
 
 -cme.course_module_element_flash_card_pack.flash_card_stacks.each_with_index do |stack, stack_counter|
 
