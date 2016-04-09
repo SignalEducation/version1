@@ -1,25 +1,29 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.<%= table_name %>.show.h1')
-        \#
-        =@<%= singular_table_name %>.id
-.row
-  .col-sm-12
-    %table.table.table-bordered
-    <%- attributes.each do |attribute| -%>
-      %tr
-        %td.col-sm-4=t('views.<%= table_name -%>.form.<%= attribute.name %>')
-        <%- if attribute.type.to_s == 'boolean' -%>
-        %td.col-sm-8=tick_or_cross(@<%= singular_table_name %>.<%= attribute.name %>)
-        <%- elsif attribute.name[-3..-1] == '_id' -%>
-        %td.col-sm-8=@<%= singular_table_name %>.<%= attribute.name[0..-4] %>.name
-        <%- else -%>
-        %td.col-sm-8=@<%= singular_table_name %>.<%= attribute.name %><%= attribute.type.to_s == 'datetime' ? '.to_s(:standard)' : '' %>
-        <%- end -%>
-      <%- end -%>
-    %p
-      =link_to t('views.general.back'), <%= table_name -%>_url
-      |
-      =link_to t('views.general.edit'), edit_<%= singular_table_name -%>_url(id: @<%= singular_table_name -%>.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.<%= table_name %>.show.h1')
+            \#
+            =@<%= singular_table_name %>.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+              <%- attributes.each do |attribute| -%>
+                %tr
+                  %td.col-sm-4=t('views.<%= table_name -%>.form.<%= attribute.name %>')
+                  <%- if attribute.type.to_s == 'boolean' -%>
+                  %td.col-sm-8=tick_or_cross(@<%= singular_table_name %>.<%= attribute.name %>)
+                  <%- elsif attribute.name[-3..-1] == '_id' -%>
+                  %td.col-sm-8=@<%= singular_table_name %>.<%= attribute.name[0..-4] %>.name
+                  <%- else -%>
+                  %td.col-sm-8=@<%= singular_table_name %>.<%= attribute.name %><%= attribute.type.to_s == 'datetime' ? '.to_s(:standard)' : '' %>
+                  <%- end -%>
+                <%- end -%>
+              %p
+                =link_to t('views.general.back'), <%= table_name -%>_url
+                |
+                =link_to t('views.general.edit'), edit_<%= singular_table_name -%>_url(id: @<%= singular_table_name -%>.id), title: t('views.general.edit_tooltip')
