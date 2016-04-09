@@ -48,7 +48,7 @@
                   %ul.course-topics-list
                     -@course.children.all_active.all_in_order.each_with_index do |child, counter|
                       %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
-                        .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"} }
+                        .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"}, style: "background-color: #{child.is_past_paper ? child.try(:highlight_colour) : ""}"}
                           .box-topic-item
                             =truncate(child.name, length: 70)
                           .time.hidden-xs
@@ -81,7 +81,7 @@
                                         %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
                                 .col-xs-12.col-sm-7{style: 'padding-left: 0px;'}
                                   .pull-left
-                                    =grandchild.name
+                                    =grandchild.name.html_safe
                                 .col-xs-12.col-sm-4
                                   .side-meta
                                     -if grandchild.is_video
@@ -202,9 +202,6 @@
             %li.lined-list-item
               =t('views.general.duration')
               =humanize_time(@duration)
-            %li.lined-list-item
-              =t('views.general.updated_at')
-              =humanize_datetime(@course.updated_at)
             -if @course.try(:tutor_id)
               -if @course.tutor.try(:profile_image_file_name)
                 %br/

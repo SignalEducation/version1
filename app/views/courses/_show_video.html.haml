@@ -1,6 +1,6 @@
 -if !@demo_mode
   %h2
-    =cme.name
+    =cme.name.html_safe
   %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
   .l-margin-bottom.l-margin-top
     .pull-left
@@ -73,7 +73,7 @@
 
   .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
     %h2
-      =cme.name
+      =cme.name.html_safe
     -if cme.course_module_element_video.try(:video_id)
       %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
     -else

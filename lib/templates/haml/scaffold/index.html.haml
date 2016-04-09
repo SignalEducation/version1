@@ -1,38 +1,43 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.<%= table_name %>.index.h1')
-.row
-  .col-sm-12
-    =will_paginate @<%= table_name %>, renderer: BootstrapPagination::Rails
-    %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table{data: {destination: #{table_name}_url}}' end %>
-      %thead
-        %tr
-        <%- attributes.each do |attribute| -%>
-          %th<%= attribute.type.to_s == 'decimal' ? '.text-right' : '' -%>=t('views.<%= table_name %>.form.<%= attribute.name %>')
-        <%- end -%>
-          %th
-          %th
-      %tbody
-        -@<%= table_name %>.each do |<%= singular_table_name %>|
-          %tr{id: <%= singular_table_name -%>.id}
-            <%- attributes.each do |attribute| -%>
-            <%- if attribute.type.to_s == 'boolean' -%>
-            %td=link_to(tick_or_cross(<%= singular_table_name %>.<%= attribute.name %>), <%= singular_table_name %>, title: t('views.general.view_tooltip'))
-            <%- elsif attribute.name[-3..-1] == '_id' -%>
-            %td=link_to(<%= singular_table_name %>.<%= attribute.name[0..-4] %>.name, <%= singular_table_name %>, title: t('views.general.view_tooltip'))
-            <%- else -%>
-            %td<%= attribute.type.to_s == 'decimal' ? '.text-right' : '' -%>=link_to(<%= singular_table_name %>.<%= attribute.name %><%= '.to_s(:standard)' if attribute.type.to_s == 'datetime' %>, <%= singular_table_name %>, title: t('views.general.view_tooltip'))
-            <%- end -%>
-            <%- end -%>
-            %td
-              -#=link_to t('views.general.view'), <%= singular_table_name %>
-              =link_to t('views.general.edit'), edit_<%= singular_table_name %>_url(<%= singular_table_name %>), class: 'btn btn-info btn-xs'
-              -if <%= singular_table_name %>.destroyable?
-                =link_to t('views.general.delete'), <%= singular_table_name %>, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
-            %td
-              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.<%= table_name %>.index.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              =will_paginate @<%= table_name %>, renderer: BootstrapPagination::Rails
+              %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table{data: {destination: #{table_name}_url}}' end %>
+                %thead
+                  %tr
+                  <%- attributes.each do |attribute| -%>
+                    %th<%= attribute.type.to_s == 'decimal' ? '.text-right' : '' -%>=t('views.<%= table_name %>.form.<%= attribute.name %>')
+                  <%- end -%>
+                    %th
+                    %th
+                %tbody
+                  -@<%= table_name %>.each do |<%= singular_table_name %>|
+                    %tr{id: <%= singular_table_name -%>.id}
+                      <%- attributes.each do |attribute| -%>
+                      <%- if attribute.type.to_s == 'boolean' -%>
+                      %td=link_to(tick_or_cross(<%= singular_table_name %>.<%= attribute.name %>), <%= singular_table_name %>, title: t('views.general.view_tooltip'))
+                      <%- elsif attribute.name[-3..-1] == '_id' -%>
+                      %td=link_to(<%= singular_table_name %>.<%= attribute.name[0..-4] %>.name, <%= singular_table_name %>, title: t('views.general.view_tooltip'))
+                      <%- else -%>
+                      %td<%= attribute.type.to_s == 'decimal' ? '.text-right' : '' -%>=link_to(<%= singular_table_name %>.<%= attribute.name %><%= '.to_s(:standard)' if attribute.type.to_s == 'datetime' %>, <%= singular_table_name %>, title: t('views.general.view_tooltip'))
+                      <%- end -%>
+                      <%- end -%>
+                      %td
+                        -#=link_to t('views.general.view'), <%= singular_table_name %>
+                        =link_to t('views.general.edit'), edit_<%= singular_table_name %>_url(<%= singular_table_name %>), class: 'btn btn-info btn-xs'
+                        -if <%= singular_table_name %>.destroyable?
+                          =link_to t('views.general.delete'), <%= singular_table_name %>, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
-.row
-  .col-sm-12
-    =link_to t('views.general.new'), new_<%= singular_table_name %>_url, class: 'btn btn-success', title: t('views.general.new_tooltip')
+      .row
+        .col-sm-12
+          =link_to t('views.general.new'), new_<%= singular_table_name %>_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
