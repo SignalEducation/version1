@@ -1530,3 +1530,8 @@ a.image-link {
   color: $white;
 
 }
+
+// This hides the image upload BTN on the summernote modal so that only image urls can be entered
+.note-group-select-from-files {
+  display: none;
+}
