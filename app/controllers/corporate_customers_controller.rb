@@ -14,6 +14,9 @@
 #  logo_content_type    :string
 #  logo_file_size       :integer
 #  logo_updated_at      :datetime
+#  subdomian            :string
+#  user_name            :string
+#  passcode             :string
 #
 
 class CorporateCustomersController < ApplicationController
@@ -124,12 +127,8 @@ class CorporateCustomersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:corporate_customer).permit(:organisation_name,
-                                               :address,
-                                               :country_id,
-                                               :payments_by_card,
-                                               :stripe_customer_guid,
-                                               :logo)
+    params.require(:corporate_customer).permit(:organisation_name, :address,
+:country_id, :payments_by_card, :stripe_customer_guid, :logo, :subdomian, :user_name, :passcode)
   end
 
 end

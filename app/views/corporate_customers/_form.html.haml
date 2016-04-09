@@ -14,6 +14,14 @@
       =f.label :stripe_customer_guid, t('views.corporate_customers.form.stripe_customer_guid'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :stripe_customer_guid, class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :user_name, t('views.corporate_customers.form.user_name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :user_name, class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :passcode, t('views.corporate_customers.form.passcode'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :passcode, class: 'form-control', style: 'border-radius: 6px;'
 
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

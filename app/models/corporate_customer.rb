@@ -3,17 +3,20 @@
 # Table name: corporate_customers
 #
 #  id                   :integer          not null, primary key
-#  created_at           :datetime
-#  updated_at           :datetime
 #  organisation_name    :string
 #  address              :text
 #  country_id           :integer
 #  payments_by_card     :boolean          default(FALSE), not null
 #  stripe_customer_guid :string
+#  created_at           :datetime
+#  updated_at           :datetime
 #  logo_file_name       :string
 #  logo_content_type    :string
 #  logo_file_size       :integer
 #  logo_updated_at      :datetime
+#  subdomian            :string
+#  user_name            :string
+#  passcode             :string
 #
 
 class CorporateCustomer < ActiveRecord::Base
@@ -22,7 +25,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
-                  :stripe_customer_guid, :logo
+                  :stripe_customer_guid, :logo, :subdomian, :user_name, :passcode
 
   # Constants
 
@@ -40,7 +43,7 @@ class CorporateCustomer < ActiveRecord::Base
            foreign_key: :corporate_customer_id
   has_many :subscriptions
   has_many :corporate_groups
-  has_attached_file :logo, default_url: "/assets/images/missing_corporate_logo.png"
+  has_attached_file :logo, default_url: "missing_corporate_logo.png"
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}

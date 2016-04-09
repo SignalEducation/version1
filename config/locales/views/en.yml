@@ -145,6 +145,8 @@ en:
         country_id: Country
         payments_by_card: Payments by card
         stripe_customer_guid: Stripe Customer ID
+        user_name: Username
+        passcode: Password
 
       index:
         h1: Corporate Customers
