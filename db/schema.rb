@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314145146) do
+ActiveRecord::Schema.define(version: 20160409111930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,6 +262,8 @@ ActiveRecord::Schema.define(version: 20160314145146) do
     t.float    "video_duration",            default: 0.0
     t.integer  "video_count",               default: 0
     t.integer  "quiz_count",                default: 0
+    t.boolean  "is_past_paper",             default: false, null: false
+    t.string   "highlight_colour"
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree

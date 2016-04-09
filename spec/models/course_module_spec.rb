@@ -21,6 +21,8 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
+#  is_past_paper             :boolean          default(FALSE), not null
+#  highlight_colour          :string
 #
 
 require 'rails_helper'
@@ -67,6 +69,10 @@ describe CourseModule do
   it { should validate_presence_of(:tutor_id) }
 
   it { should validate_presence_of(:sorting_order) }
+
+  it { should_not validate_presence_of(:is_past_paper) }
+
+  it { should_not validate_presence_of(:highlight_colour) }
 
   it { should validate_length_of(:seo_description).is_at_most(255) }
 

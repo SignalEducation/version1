@@ -21,6 +21,8 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
+#  is_past_paper             :boolean          default(FALSE), not null
+#  highlight_colour          :string
 #
 
 class CourseModulesController < ApplicationController
@@ -99,7 +101,7 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id)
+    params.require(:course_module).permit(:name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :is_past_paper, :highlight_colour)
   end
 
 end
