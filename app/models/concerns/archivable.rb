@@ -16,8 +16,8 @@ module Archivable
 
   included do
     scope :all_destroyed, -> { unscoped.where.not(destroyed_at: nil) }
-    scope :all_live, -> { where(destroyed_at: nil) }
-    default_scope{all_live}
+    scope :all_not_destroyed, -> { where(destroyed_at: nil) }
+    default_scope{all_not_destroyed}
   end
 
   def destroy
@@ -25,6 +25,7 @@ module Archivable
     # Assumes the model has a "destroyed_at" attribute.
     self.destroyed_at = Proc.new { Time.now }.call
     self.active = false if self.respond_to?(:active)
+    self.live = false if self.respond_to?(:live)
     self.name = "#{self.name}-destroyed" if self.respond_to?(:name)
     self.name_url = "#{self.name_url}-destroyed" if self.respond_to?(:name_url)
     self.destroyable_children.map { |x| x.destroy } if self.respond_to?(:destroyable_children)
