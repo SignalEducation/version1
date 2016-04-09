@@ -287,13 +287,12 @@ describe SubjectCoursesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be OK even though dependencies exist' do
         delete :destroy, id: subject_course_1.id
-        expect_delete_error_with_model('subject_course', subject_courses_url)
+        expect_archive_success_with_model('subject_course', subject_course_1.id, subject_courses_url)
       end
 
-      #This test currently fails because the archivable ability is not configured correctly
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_3.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
@@ -490,13 +489,12 @@ describe SubjectCoursesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be OK even though dependencies exist' do
         delete :destroy, id: subject_course_1.id
-        expect_delete_error_with_model('subject_course', subject_courses_url)
+        expect_archive_success_with_model('subject_course', subject_course_1.id, subject_courses_url)
       end
 
-      #This test currently fails because the archivable ability is not configured correctly
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_3.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
@@ -787,13 +785,12 @@ describe SubjectCoursesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be OK even though dependencies exist' do
         delete :destroy, id: subject_course_1.id
-        expect_delete_error_with_model('subject_course', subject_courses_url)
+        expect_archive_success_with_model('subject_course', subject_course_1.id, subject_courses_url)
       end
 
-      #This test currently fails because the archivable ability is not configured correctly
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_3.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
@@ -888,13 +885,12 @@ describe SubjectCoursesController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be OK even though dependencies exist' do
         delete :destroy, id: subject_course_1.id
-        expect_delete_error_with_model('subject_course', subject_courses_url)
+        expect_archive_success_with_model('subject_course', subject_course_1.id, subject_courses_url)
       end
 
-      #This test currently fails because the archivable ability is not configured correctly
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_3.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end

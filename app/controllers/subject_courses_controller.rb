@@ -107,6 +107,7 @@ class SubjectCoursesController < ApplicationController
     render json: {}, status: 200
   end
 
+
   def destroy
     if @subject_course.destroy
       flash[:success] = I18n.t('controllers.subject_courses.destroy.flash.success')
