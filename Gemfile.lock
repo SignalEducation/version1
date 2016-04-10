@@ -266,6 +266,8 @@ GEM
       cliver (~> 0.3.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
+    powder (0.3.0)
+      thor (>= 0.11.5)
     prawn (1.0.0)
       pdf-core (~> 0.2.2)
       ttfunk (~> 1.1.1)
@@ -508,6 +510,7 @@ DEPENDENCIES
   payday
   pg
   poltergeist
+  powder
   prawn
   protected_attributes
   pry-byebug

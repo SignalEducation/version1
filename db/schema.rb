@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20160409195657) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
-    t.string   "subdomian"
+    t.string   "subdomain"
     t.string   "user_name"
     t.string   "passcode"
   end

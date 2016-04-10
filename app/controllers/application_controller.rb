@@ -42,6 +42,7 @@ class ApplicationController < ActionController::Base
   before_action :process_referral_code # not for Api::
   before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
+  before_action :check_subdomain
   #before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user
@@ -99,6 +100,12 @@ class ApplicationController < ActionController::Base
       session[:return_to] = nil
     end
     redirect_to(destination)
+  end
+
+  def check_subdomain
+    @corporate_account = CorporateCustomer.where(subdomain: request.subdomain).first if request.subdomain
+    Rails.logger.error("ERROR: Subdomain - Details: #{request.subdomain}")
+    Rails.logger.error("ERROR: Subdomain - Details: #{@corporate_account}")
   end
 
   def ensure_user_is_of_type(authorised_features)

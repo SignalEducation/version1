@@ -70,6 +70,7 @@ group :development do
   gem 'capistrano-rbenv', '~> 2.0'
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
+  gem 'powder'
 end
 
 group :development, :test do
