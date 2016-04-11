@@ -475,3 +475,13 @@ en:
         flash:
           success: Corporate manager user has been deactivated
           error: Corporate manager user was not deactivated
+
+
+    corporate_profiles:
+      create:
+        flash:
+          success: Your profile has been created successfully!
+          error: Sorry an error occured while creating your profile please try again!
+      show:
+        flash:
+          error: The username and/or password are incorrect. Please try again!

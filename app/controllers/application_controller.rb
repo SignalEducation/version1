@@ -1,6 +1,8 @@
 # coding: utf-8
 require 'mailchimp'
 require 'prawn'
+#require 'pry-remote'
+
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -103,9 +105,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_subdomain
-    @corporate_account = CorporateCustomer.where(subdomain: request.subdomain).first if request.subdomain
-    Rails.logger.error("ERROR: Subdomain - Details: #{request.subdomain}")
-    Rails.logger.error("ERROR: Subdomain - Details: #{@corporate_account}")
+    @corporate_with_subdomain = CorporateCustomer.where(subdomain: request.subdomain).first if request.subdomain
   end
 
   def ensure_user_is_of_type(authorised_features)

@@ -1009,7 +1009,7 @@ en:
         full_name: Name
         current_password: Current password
         current_password_placeholder: Current password
-        password: New Password
+        password: Password
         password_placeholder: New Password
         password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
@@ -1409,6 +1409,10 @@ en:
         corporate_customer: Corporate customer
         corporate_group_name: Corporate group
         add_to_groups: Add to Groups
+        password: Password
+        password_placeholder: XXXXX
+        password_confirmation: Confirmation Password
+        password_confirmation_placeholder: XXXXXX
 
       index:
         h1: Students

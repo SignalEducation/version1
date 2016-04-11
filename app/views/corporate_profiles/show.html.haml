@@ -4,9 +4,11 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.user_sessions.new.h1')
+            Login
         .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          =form_tag("/login", method: "get") do
-            =label_tag(:q, "Search for:")
-            =text_field_tag(:q)
-            =submit_tag("Search")
+          =form_tag("/corporate_verification", method: "post") do
+            =label_tag(:user_name, "Ussername")
+            =text_field_tag(:user_name)
+            =label_tag(:passcode, "Password")
+            =password_field_tag(:passcode)
+            =submit_tag("Enter")

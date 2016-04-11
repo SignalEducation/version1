@@ -293,6 +293,12 @@ class User < ActiveRecord::Base
     self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
+  def validate_user
+    self.email_verified = true
+    self.email_verified_at = Proc.new{Time.now}.call
+    self.email_verification_code = nil
+  end
+
   def de_activate_user
     self.active = false
     self.account_activated_at = nil

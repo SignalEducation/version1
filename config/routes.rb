@@ -73,6 +73,10 @@ Rails.application.routes.draw do
       post :preview_csv, on: :collection, action: :preview_corporate_students
     end
 
+    get '/login', to: 'corporate_profiles#show', as: :corporate_login
+    post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
+    post '/corporate_profiles/create', to: 'corporate_profiles#create', as: :new_corporate_user
+    resources :corporate_profiles
     resources :corporate_requests
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
