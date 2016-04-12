@@ -9,7 +9,7 @@ class CorporateProfilesController < ApplicationController
   def corporate_verification
     @corp_account = @corporate_with_subdomain
     if params[:user_name] == @corp_account.user_name && params[:passcode] == @corp_account.passcode
-      redirect_to new_corporate_profile_url(corp_id: @corp_account.id)
+      redirect_to new_corporate_profile_url
     else
       flash[:error] = I18n.t('controllers.corporate_profiles.show.flash.error')
       render action: :show
@@ -17,7 +17,9 @@ class CorporateProfilesController < ApplicationController
   end
 
   def new
-    redirect_to root_url unless (request.subdomain == @corporate_with_subdomain.subdomain) && (params[:corp_id] == @corporate_with_subdomain.id.to_s)
+    url_ending = request.referrer.split('/').last
+    path_ending = corporate_login_url.split('/').last
+    redirect_to corporate_login_url unless (request.subdomain == @corporate_with_subdomain.subdomain) && (url_ending == path_ending)
     @corporate_student = User.new
   end
 
@@ -39,6 +41,10 @@ class CorporateProfilesController < ApplicationController
   end
 
   protected
+
+  def generate_guid
+    @guid = SecureRandom.hex(10)
+  end
 
   def allowed_params
     usr_params = [:first_name, :last_name, :email, :employee_guid, :password, :password_confirmation]
