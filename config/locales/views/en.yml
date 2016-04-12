@@ -50,6 +50,7 @@ en:
       or: or
       review: Review
       save: Save
+      create_account: Create Account
       upload: Upload
       save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
@@ -1402,7 +1403,7 @@ en:
         first_name_placeholder: John
         last_name: Last name
         last_name_placeholder: Smith
-        employee_guid: Employee ID
+        employee_guid: "Employee ID (Optional)"
         employee_guid_placeholder: Employee ID
         active: Active
         country: Country

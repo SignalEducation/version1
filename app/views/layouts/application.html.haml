@@ -90,6 +90,9 @@
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield
+    -elsif controller_name == 'corporate_profiles'
+      .corporate_layout
+        =yield
     -elsif ['new_paid_subscription', 'reactivate_account'].include? action_name && controller_name == 'users'
       =render partial: 'layouts/new_navbar'
       .margin-top

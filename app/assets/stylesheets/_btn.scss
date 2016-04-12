@@ -45,6 +45,10 @@
     line-height: 60px;
 
   }
+  &.btn-lg-text {
+    line-height: 60px;
+    font-size: large;
+  }
   &.btn-purple {
     background: $purple-1;
     color: $white;

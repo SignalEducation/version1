@@ -1,14 +1,28 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Login
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          =form_tag("/corporate_verification", method: "post") do
-            =label_tag(:user_name, "Ussername")
-            =text_field_tag(:user_name)
-            =label_tag(:passcode, "Password")
-            =password_field_tag(:passcode)
-            =submit_tag("Enter")
+.top-content
+  .l-wrap-corporate
+    .container
+      .row
+        .col-sm-6.col-sm-offset-3.text-center.l-margin-top.l-margin-bottom-big
+          -if @corporate_with_subdomain.logo.url
+            =image_tag @corporate_with_subdomain.logo.url, class: 'lg-image'
+          -else
+            =image_tag 'ls-logo-red.svg', class: 'lg-image'
+
+
+      .row
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          %h3.h-white.l-margin-bottom.text-center
+            ="Enter Username & Password for #{@corporate_with_subdomain.organisation_name} to continue on and create your account"
+          .l-margin-top-big
+            =form_tag('/corporate_verification', method: 'post', class: 'login-form') do
+              .form-group
+                =label_tag(:user_name, 'Username', class: 'control-label')
+                =text_field_tag(:user_name, '', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;')
+                %br/
+                =label_tag(:passcode, 'Password', class: 'control-label')
+                =password_field_tag(:passcode, '', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;')
+                %br/
+                %br/
+                =submit_tag 'Enter', class: 'btn btn-red btn-wide btn-lg-text'
+              .text-center
+                =link_to 'Already have an account? Sign In Here', sign_in_url, {class: ''}

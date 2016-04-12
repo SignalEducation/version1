@@ -11,6 +11,7 @@
 $gutter: 20px;
 $white: #fff;
 $gray-1: #6E6D75;
+$gray-2: #ecf0f1;
 $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $asphalt-3: #C0CFD5;
@@ -23,6 +24,7 @@ $red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
 $blue-1: #54a4ee;
+$blue-2: #34495e;
 $green-1: #D0F6BD;
 $green-2: #00cc66;
 $pink-1: #FED4CD;
@@ -31,7 +33,7 @@ $sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
 
 // 1. Base
 html {
-  background: darken($purple-1, 15%);
+  background: $blue-2;
   .margin-top {
     margin-top: 62px;
   }
@@ -50,6 +52,10 @@ body {
     margin: 0 auto;
     //max-width: 1800px;
   }
+  .corporate_layout {
+    background: #34495e;
+  }
+
 }
 a {
   color: $red-1;
@@ -268,6 +274,14 @@ hr {
   margin: 0 auto;
   @include breakpoint(md-min) {
     max-width: 1200px;
+  }
+}
+.l-wrap-corporate {
+  @include breakpoint(sm-min) {
+    padding: 100px 0 170px 0;
+  }
+  @include breakpoint(md-min) {
+
   }
 }
 .l-wrap-medium {
@@ -1534,4 +1548,25 @@ a.image-link {
 // This hides the image upload BTN on the summernote modal so that only image urls can be entered
 .note-group-select-from-files {
   display: none;
+}
+
+// New corporate Form Box
+.login-form {
+  padding: $gutter*2;
+  background: $gray-2;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+  text-align: left;
+  color: #fff !important;
+}
+
+.form-bottom form textarea {
+  height: 100px;
+}
+
+.form-bottom form .input-error {
+  border-color: #de615e;
+}
+
+.lg-image {
+  width: 40%;
 }

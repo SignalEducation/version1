@@ -26,6 +26,7 @@ class CorporateProfilesController < ApplicationController
   def create
     @corporate_student = User.new(allowed_params.merge({user_group_id: UserGroup.where(corporate_student: true).first.id}))
     @corporate_student.corporate_customer_id = @corporate_with_subdomain.id if @corporate_with_subdomain
+    @corporate_student.password_confirmation = @corporate_student.password
     @corporate_student.activate_user
     @corporate_student.validate_user
     @corporate_student.country_id = @corporate_with_subdomain.country_id  if @corporate_with_subdomain
