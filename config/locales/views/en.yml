@@ -1249,7 +1249,7 @@ en:
         email: Email
         email_placeholder: 'Enter your e-mail address'
         password: Password
-        password_placeholder: 'Enter your password address'
+        password_placeholder: 'Enter your password'
         forgot_password: 'Forgot password?'
 
     vat_codes:

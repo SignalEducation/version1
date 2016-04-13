@@ -47,6 +47,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}
+  validates :subdomain, presence: true, uniqueness: true, length: {maximum: 15}
   validates :country_id, presence: true
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 

@@ -1,25 +1,52 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+.top-content
+  .l-wrap-corporate
+    .container
+      .row
+        =render partial: 'layouts/corporate_logo'
+      .row
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          %h3.h-white.l-margin-bottom.text-center
             =t('views.user_sessions.new.h1')
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          =form_for(@user_session, html: {role: 'form'}) do |f|
-            =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
-            .sign-in-modal#sign-in
-              .col-md-8.col-md-offset-2.l-margin-top-small
+          .l-margin-top-big
+            =form_for(@user_session, class: 'login-form') do |f|
+              =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+              .form-group
                 =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
+                =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
                 %br/
-                %div#validation-div
-                  =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control', autofocus: true
-              .col-md-8.col-md-offset-2.l-margin-top-small
                 =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
+                =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
                 %br/
-                %div#validation-div-password
-                  =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off'
-              .col-md-8.col-md-offset-2.l-margin-top-big
-                =f.submit t('views.general.sign_in'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
-                .pull-right
-                  =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: 'forgot-password-link'
+                %br/
+                =f.submit t('views.general.sign_in'), class: 'btn btn-red btn-wide btn-lg-text'
+              .text-center
+                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'
+
+
+
+.top-content
+  .l-wrap-corporate
+    .container
+      .row
+        =render partial: 'layouts/corporate_logo'
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          %h3.h-white.l-margin-bottom.text-center
+            =t('views.user_sessions.new.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          .login-form
+            =form_for(@user_session, class: 'login-form') do |f|
+              =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+              .form-group
+                .col-sm-12
+                  =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control', autofocus: true, style: 'border-radius: 6px;', required: true
+                .col-sm-12
+                  =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off', style: 'border-radius: 6px;', required: true
+                .col-sm-12.l-margin-top-big
+                  =f.submit t('views.general.sign_in'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+                  .pull-right
+                    =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: 'forgot-password-link'
