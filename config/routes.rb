@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
+  require 'subdomain'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
@@ -73,10 +74,10 @@ Rails.application.routes.draw do
       post :preview_csv, on: :collection, action: :preview_corporate_students
     end
 
-    get '/login', to: 'corporate_profiles#show', as: :corporate_login
+    get '/login', to: 'corporate_profiles#login', as: :corporate_login
     post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
     post '/corporate_profiles/create', to: 'corporate_profiles#create', as: :new_corporate_user
-    resources :corporate_profiles
+    resources :corporate_profiles, only: [:new, :show]
     resources :corporate_requests
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
@@ -146,6 +147,10 @@ Rails.application.routes.draw do
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
+    end
+
+    constraints(Subdomain) do
+      get '/' => 'corporate_profiles#show'
     end
 
     # home page

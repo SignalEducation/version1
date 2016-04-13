@@ -1,0 +1,16 @@
+.top-content
+  .l-wrap-corporate
+    .container
+      .row
+        .col-sm-6.col-sm-offset-3.text-center.l-margin-top.l-margin-bottom-big
+          -if @corporate_with_subdomain.logo.url
+            =image_tag @corporate_with_subdomain.logo.url, class: 'lg-image'
+          -else
+            =image_tag 'ls-logo-red.svg', class: 'lg-image'
+
+
+      .row
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          %h3.h-white.l-margin-bottom.text-center
+            ="Enter Username & Password for #{@corporate_with_subdomain.organisation_name} to continue on and create your account"
+          .l-margin-top-big

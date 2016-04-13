@@ -277,12 +277,7 @@ hr {
   }
 }
 .l-wrap-corporate {
-  @include breakpoint(sm-min) {
-    padding: 100px 0 170px 0;
-  }
-  @include breakpoint(md-min) {
-
-  }
+  padding: 100px 0 170px 0;
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {

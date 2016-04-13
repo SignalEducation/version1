@@ -1,0 +1,24 @@
+.top-content
+  .l-wrap-corporate
+    .container
+      .row
+        =render partial: 'layouts/corporate_logo'
+
+
+      .row
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          %h3.h-white.l-margin-bottom.text-center
+            ="Verify you belong to #{@corporate_with_subdomain.organisation_name}"
+          .l-margin-top-big
+            =form_tag('/corporate_verification', method: 'post', class: 'login-form') do
+              .form-group
+                =label_tag(:user_name, 'Username', class: 'control-label')
+                =text_field_tag(:user_name, '', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;')
+                %br/
+                =label_tag(:passcode, 'Password', class: 'control-label')
+                =password_field_tag(:passcode, '', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;')
+                %br/
+                %br/
+                =submit_tag 'Enter', class: 'btn btn-red btn-wide btn-lg-text'
+              .text-center
+                =link_to 'Already have an account? Sign In Here', sign_in_url, {class: ''}

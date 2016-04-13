@@ -1,0 +1,7 @@
+.col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big
+  -if @corporate_with_subdomain.logo.url
+    =link_to root_url do
+      =image_tag @corporate_with_subdomain.logo.url, class: 'lg-image'
+  -else
+    =link_to root_url do
+      =image_tag 'ls-logo-red.svg', class: 'lg-image'

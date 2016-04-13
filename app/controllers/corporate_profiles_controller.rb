@@ -1,8 +1,12 @@
 class CorporateProfilesController < ApplicationController
-  require 'pry-remote'
+
   before_action :logged_out_required
 
   def show
+    @corp_account = @corporate_with_subdomain
+  end
+
+  def login
     @corp_account = @corporate_with_subdomain
   end
 

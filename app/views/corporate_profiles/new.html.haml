@@ -2,8 +2,8 @@
   .l-wrap-corporate
     .container
       .row
-        .col-sm-6.col-sm-offset-3.text-center.l-margin-top.l-margin-bottom-big
-          =image_tag @corporate_with_subdomain.logo.url, class: 'lg-image'
+        =render partial: 'layouts/corporate_logo'
+
     .row.l-margin-top.l-margin-bottom
       .col-sm-6.col-sm-offset-3.l-margin-top
         .login-form
