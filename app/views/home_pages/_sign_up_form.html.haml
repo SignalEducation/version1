@@ -1,22 +1,25 @@
 .text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
 =form_for @user, url: student_sign_up_url do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
-  =#f.hidden_field :country_id, value: @user.country_id
-  .form-group
-    =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
-  .form-group
-    =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
-  .form-group
-    =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
-  .form-group#topic-interest
-    =f.collection_select :topic_interest, @topic_interests, :name, :name, {include_blank: t('views.users.form.topic_interest')}, class: 'form-control', style: 'border-radius: 6px;', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
-  .form-group
-    =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
-  .form-group
-    =f.password_field :password_confirmation, placeholder: t('views.home_pages.sign_up_form.confirm_password'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
-  .row
-    .col-xs-6
-      =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red', id: 'signUp', onclick: "$(this).val('loading...').addClass('disabled') "
-    .col-xs-6
-      %span.no-card
-        =t('views.home_pages.sign_up_form.no_credit_card_needed')
+  =f.hidden_field :topic_interest, value: @url_value
+  .col-sm-12
+    %p.h5.h-white.l-margin-bottom
+      ='Sign Up for your 7-day free trial'
+
+  .col-sm-6
+    .form-group
+      =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+  .col-sm-6
+    .form-group
+      =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+  .col-sm-12
+    .form-group
+      =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+  .col-sm-12
+    .form-group
+      =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+  .col-sm-6
+    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red', id: 'signUp', onclick: "$(this).val('loading...').addClass('disabled') "
+  .col-sm-6
+    %span.no-card
+      =t('views.home_pages.sign_up_form.no_credit_card_needed')
