@@ -95,6 +95,13 @@
         =yield
     -elsif controller_name == 'user_sessions'
       .corporate_layout
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
+    -elsif controller_name == 'users' && action_name == 'new'
+      .corporate_layout
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
         =yield
     -elsif ['new_paid_subscription', 'reactivate_account'].include? action_name && controller_name == 'users'
       =render partial: 'layouts/new_navbar'

@@ -74,7 +74,7 @@
 
     color: $red-1;
     background: transparent;
-    border: 1px solid $white;
+    border: 2px solid $white;
     line-height: 38px;
     &:hover, &:active {
       background: transparent;
@@ -82,7 +82,7 @@
     }
     &.btn-red{
       color: $red-1;
-      border: 1px solid $red-1;
+      border: 2px solid $red-1;
       &:hover {
         background: transparent;
         color: shade($red-1, 20%);
@@ -91,20 +91,20 @@
     }
     &.btn-green {
       color: $green-2;
-      border: 1px solid $green-2;
+      border: 2px solid $green-2;
     }
     &.btn-purple {
       color: $purple-1;
-      border: 1px solid $purple-1;
+      border: 2px solid $purple-1;
       &:hover {
         background: transparent;
         color: shade($purple-1, 20%);
-        border: 1px solid shade($purple-1, 20%);
+        border: 2px solid shade($purple-1, 20%);
       }
     }
     &.btn-cyan {
       color: $cyan-1;
-      border: 1px solid $cyan-1;
+      border: 2px solid $cyan-1;
       &:hover {
         background: transparent;
         color: shade($cyan-1, 20%);

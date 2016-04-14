@@ -1547,7 +1547,7 @@ a.image-link {
 
 // New corporate Form Box
 .login-form {
-  padding: $gutter*2;
+  padding: $gutter*2 $gutter/2;
   background: $gray-2;
   -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
   text-align: left;
@@ -1562,6 +1562,9 @@ a.image-link {
   border-color: #de615e;
 }
 
-.lg-image {
+.md-image {
   width: 40%;
+}
+.lg-image {
+  width: 60%;
 }

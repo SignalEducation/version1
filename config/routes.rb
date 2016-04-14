@@ -137,6 +137,7 @@ Rails.application.routes.draw do
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     resources :user_activity_logs
     resources :user_notifications
+    resources :users, only: [:new]
     resources :vat_codes
     resources :marketing_categories
     resources :marketing_tokens do

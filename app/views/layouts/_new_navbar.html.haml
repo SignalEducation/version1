@@ -91,6 +91,6 @@
               %li
                 =link_to 'Courses', library_url
               %li
-                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
+                =link_to 'Sign Up', new_user_url, class: 'sign-up-link'
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}

@@ -61,6 +61,7 @@ en:
       sign_in: Sign in
       sign_out: Sign out
       sign_up: Sign up
+      sign_up_now: Sign up Now
       start: Start
       start_free_trial: Free Trial
       table_of_contents: Table of Contents
@@ -1058,7 +1059,7 @@ en:
         h1: Users
 
       new:
-        h1: Create Account
+        h1: "Start your 7 day Free Trial"
 
       show:
         h1: Account
@@ -1243,7 +1244,7 @@ en:
 
     user_sessions:
       new:
-        h1: Sign in
+        h1: Sign In
       form:
         error_message: 'prevented you from signing in'
         email: Email
