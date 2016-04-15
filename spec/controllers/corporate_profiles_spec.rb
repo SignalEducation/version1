@@ -7,8 +7,6 @@ describe CorporateProfilesController, type: :controller do
 
   let!(:corporation_1) { FactoryGirl.create(:corporate_customer) }
   let!(:corporation_2) { FactoryGirl.create(:corporate_customer) }
-  let!(:corporate_customer_group) { FactoryGirl.create(:corporate_customer_user_group) }
-  let!(:corporate_student_group) { FactoryGirl.create(:corporate_student_user_group) }
 
   let!(:valid_params) { FactoryGirl.attributes_for(:corporate_student_user) }
 
