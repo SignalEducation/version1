@@ -25,7 +25,7 @@ class CorporateCustomer < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
-                  :stripe_customer_guid, :logo, :subdomian, :user_name, :passcode
+                  :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode
 
   # Constants
 
@@ -47,7 +47,9 @@ class CorporateCustomer < ActiveRecord::Base
 
   # validation
   validates :organisation_name, presence: true, length: {maximum: 255}
-  validates :subdomain, presence: true, uniqueness: true, length: {maximum: 15}
+  validates :subdomain, presence: true, uniqueness: true, length: {maximum: 20}
+  validates :user_name, presence: true, length: {maximum: 25}
+  validates :passcode, presence: true, length: {maximum: 25}
   validates :country_id, presence: true
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 

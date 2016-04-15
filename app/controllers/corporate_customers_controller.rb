@@ -128,7 +128,7 @@ class CorporateCustomersController < ApplicationController
 
   def allowed_params
     params.require(:corporate_customer).permit(:organisation_name, :address,
-:country_id, :payments_by_card, :stripe_customer_guid, :logo, :subdomian, :user_name, :passcode)
+:country_id, :payments_by_card, :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode)
   end
 
 end

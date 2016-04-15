@@ -26,6 +26,9 @@ FactoryGirl.define do
     country_id                    1 # todo { Country.first.try(:id) || 1 }
     payments_by_card              false
     stripe_customer_guid          'MyString'
+    sequence(:subdomain)  {|n| "customer#{n}"}
+    user_name          'MyString'
+    passcode          'MyString'
   end
 
 end
