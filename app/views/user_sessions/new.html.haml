@@ -26,4 +26,7 @@
 
       .row
         .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
-          =link_to 'create account', new_user_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+          -if @corporate_with_subdomain
+            =link_to 'create account', corporate_login_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+          -else
+            =link_to 'create account', new_user_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
