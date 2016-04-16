@@ -37,7 +37,7 @@ class HomePagesController < ApplicationController
         v.each { |err| @user.errors.add(k, err) }
       end if session[:sign_up_errors]
       session.delete(:sign_up_errors)
-      ip_address = IpAddress.get_country(request.remote_ip).try(:id)
+      ip_address = IpAddress.get_country(request.remote_ip).try(:id) || 105
       if ip_address
         @user.country_id = ip_address
       else
