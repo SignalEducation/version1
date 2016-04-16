@@ -97,8 +97,80 @@ describe UsersController, type: :controller do
     end
 
     describe "POST 'create'" do
+
+      let!(:sign_up_params) { { first_name: "Test", last_name: "Student",
+                                country_id: Country.first.id,
+                                locale: 'en',
+                                email: "test.student@example.com", password: "dummy_pass",
+                                password_confirmation: "dummy_pass" } }
+      let!(:default_plan) { FactoryGirl.create(:subscription_plan, price: 0.0) }
+      let!(:student) { FactoryGirl.create(:individual_student_user) }
+      let!(:currency) { FactoryGirl.create(:usd) }
+      let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
+
+      describe "invalid data" do
+        it 'does not subscribe user if default plan does not exist' do
+          request.env['HTTP_REFERER'] = '/'
+          default_plan.update_attribute(:price, 0.1)
+          post :create, user: sign_up_params
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:new)
+        end
+
+        it 'does not subscribe user if user with same email already exists' do
+          request.env['HTTP_REFERER'] = '/'
+          post :create, user: sign_up_params.merge(email: student.email)
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:new)
+        end
+
+        it 'does not subscribe user if password is blank' do
+          request.env['HTTP_REFERER'] = '/'
+          post :create, user: sign_up_params.merge(password: nil)
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:new)
+        end
+
+        it 'does not subscribe user if password is not of required length' do
+          request.env['HTTP_REFERER'] = '/'
+          post :create, user: sign_up_params.merge(password: '12345')
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:new)
+        end
+
+      end
+
+      describe "valid data" do
+        it 'signs up new student' do
+          referral_codes = ReferralCode.count
+          post :create, user: sign_up_params
+          #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(ReferralCode.count).to eq(referral_codes + 1)
+        end
+
+        it 'creates referred signup if user comes from referral link' do
+          cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
+          post :create, user: sign_up_params
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(Subscription.all.count).to eq(1)
+          expect(User.last.subscriptions.count).to eq(1)
+
+          expect(ReferredSignup.count).to eq(1)
+          rs = ReferredSignup.first
+          expect(rs.referral_code_id).to eq(referral_code.id)
+          expect(rs.user_id).to eq(User.last.id)
+          expect(rs.referrer_url).to eq("http://referral.example.com")
+        end
+      end
+    end
+
+
+    describe "POST 'admin_create'" do
       it 'should redirect to root' do
-        post :create, user: valid_params
+        post :admin_create, user: valid_params
         expect_bounce_as_not_signed_in
       end
     end
@@ -174,6 +246,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -295,6 +374,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -388,6 +474,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -481,6 +574,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -575,6 +675,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -668,6 +775,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -761,6 +875,13 @@ describe UsersController, type: :controller do
     describe "POST 'create'" do
       it 'should redirect to root' do
         post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'admin_create'" do
+      it 'should redirect to root' do
+        post :admin_create, user: valid_params
         expect_bounce_as_not_allowed
       end
     end
@@ -836,7 +957,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_new_success_with_model('user')
+        expect_bounce_as_signed_in
       end
     end
 
@@ -852,18 +973,30 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "POST 'create'" do
+    describe "POST 'admin create'" do
       it 'should report OK for valid params' do
         referral_codes = ReferralCode.count
-        post :create, user: valid_params
+        post :admin_create, user: valid_params
         expect_create_success_with_model('user', users_url)
         expect(assigns(:user).password_change_required).to eq(true)
         expect(ReferralCode.count).to eq(referral_codes + 1)
       end
 
       it 'should report error for invalid params' do
-        post :create, user: {email: 'abc'}
+        post :admin_create, user: {email: 'abc'}
         expect_create_error_with_model('user')
+      end
+    end
+
+    describe "POST 'create - sign_up'" do
+      it 'should report OK for valid params' do
+        post :create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+
+      it 'should report error for invalid params' do
+        post :create, user: {email: 'abc'}
+        expect_bounce_as_signed_in
       end
     end
 

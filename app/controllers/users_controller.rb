@@ -64,7 +64,7 @@ class UsersController < ApplicationController
   before_action except: [:show, :edit, :new, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:create_account, :new, :profile, :profile_index]
+  before_action :get_variables, except: [:create, :admin_create, :new, :profile, :profile_index]
 
   def index
     @users = params[:search_term].to_s.blank? ?
