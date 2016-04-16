@@ -1061,6 +1061,8 @@ en:
 
       new:
         h1: "Start your 7 day Free Trial"
+      admin_new:
+        h1: New User
 
       show:
         h1: Account

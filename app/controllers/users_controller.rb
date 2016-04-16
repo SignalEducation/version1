@@ -113,7 +113,7 @@ class UsersController < ApplicationController
     @topic_interests = @topic_interests = Group.all_active.all_in_order.for_public
   end
 
-  def admin_create
+  def create
     if current_user
       redirect_to dashboard_url
     else
@@ -166,7 +166,7 @@ class UsersController < ApplicationController
   end
 
   # Admins new tutors, content managers or admins
-  def create
+  def admin_create
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else
