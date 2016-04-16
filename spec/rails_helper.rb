@@ -14,6 +14,7 @@ require 'support/dry_specs'       # our handy way of doing lots of repetitive te
 require 'support/feature_specs'   # shortcuts for our feature tests
 require 'capybara/rspec'
 require 'capybara/poltergeist'
+require 'support/subdomains'
 require 'database_cleaner'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'sidekiq/testing'

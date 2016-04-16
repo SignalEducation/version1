@@ -59,6 +59,7 @@ en:
       send: Send
       settings: Settings
       sign_in: Sign in
+      enter: Enter
       sign_out: Sign out
       sign_up: Sign up
       sign_up_now: Sign up Now
@@ -1252,6 +1253,7 @@ en:
         error_message: 'prevented you from signing in'
         email: Email
         email_placeholder: 'Enter your e-mail address'
+        user_name: Username
         password: Password
         password_placeholder: 'Enter your password'
         forgot_password: 'Forgot password?'

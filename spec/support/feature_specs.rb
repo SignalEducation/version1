@@ -23,6 +23,22 @@ def sign_in_via_sign_in_page(user)
   end
 end
 
+def fill_in_sign_in_form(user)
+  within('#sign-in') do
+    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
+    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
+    click_button I18n.t('views.general.sign_in')
+  end
+end
+
+def fill_in_corp_verification_form(corp)
+  within('.login-form') do
+    fill_in I18n.t('views.user_sessions.form.user_name'), with: corp.user_name
+    fill_in I18n.t('views.user_sessions.form.password'), with: corp.passcode
+    click_button I18n.t('views.general.enter')
+  end
+end
+
 def sign_out
   find('.dropdown.dropdown-normal').click
   click_link(I18n.t('views.general.sign_out'))
@@ -41,15 +57,11 @@ def student_sign_up_as(user_first_name, user_second_name, user_email, user_passw
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
   expect(page).to have_content 'SIGN UP FOR YOUR 7-DAY FREE TRIAL'
   page.all(:css, '#signUp').first.click
-  #click_button I18n.t('views.home_pages.sign_up_form.submit')
   sleep 1
   if expect_sign_up
-    #within('#thank-you-message') do
-    #  expect(page).to have_content 'Thanks for joining us!'
-    #end
+
   else
-    expect(page).to_not have_content 'Thanks for joining us!'
-    expect(page).to_not have_content 'An E-mail with your activation code has been sent. Please check your inbox and click on the link to activate your LearnSignal account.'
+
   end
 end
 
@@ -89,9 +101,7 @@ def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  page.all(:css, '#topic-interest').first.select('Group 1')
   fill_in('user_password', with: user_password)
-  fill_in('user_password_confirmation', with: user_password)
 end
 
 def student_picks_a_subscription_plan(currency, payment_frequency)

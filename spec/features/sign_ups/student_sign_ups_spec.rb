@@ -17,9 +17,41 @@ describe 'The student sign-up process', type: :feature do
   end
 
   #### The Successful Path
-  describe 'sign-up with to free trial valid details:' do
+  describe 'sign-up with to free trial valid details on a home_page:' do
     describe 'Euro / Ireland /' do
       scenario 'Free Plan', js: true do
+        user_password = ApplicationController.generate_random_code(10)
+        within('#sign-up-form') do
+          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+        end
+      end
+    end
+
+    describe 'GBP / UK /' do
+      scenario 'Free Plam', js: true do
+        user_password = ApplicationController.generate_random_code(10)
+        within('#sign-up-form') do
+          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+        end
+      end
+    end
+
+    describe 'USD / USA /' do
+      scenario 'Free Plan', js: true do
+        user_password = ApplicationController.generate_random_code(10)
+        within('#sign-up-form') do
+          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+        end
+      end
+    end
+  end
+
+  describe 'sign-up with to free trial valid details on users#new page:' do
+    describe 'Euro / Ireland /' do
+      scenario 'Free Plan', js: true do
+        within('.navbar.navbar-default') do
+          find('.sign-up-link').click
+        end
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
           student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
