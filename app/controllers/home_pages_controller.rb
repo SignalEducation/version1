@@ -37,12 +37,13 @@ class HomePagesController < ApplicationController
         v.each { |err| @user.errors.add(k, err) }
       end if session[:sign_up_errors]
       session.delete(:sign_up_errors)
-      ip_address = IpAddress.get_country(request.remote_ip).try(:id) || 105
-      if ip_address
-        @user.country_id = ip_address
-      else
-        @user.country_id = 105
-      end
+      #ip_address = IpAddress.get_country(request.remote_ip).try(:id) || 105
+      #if ip_address
+      #  @user.country_id = ip_address
+      #else
+      #  @user.country_id = 105
+      #end
+      @user.country_id = 105
       # @user.subscriptions.build(subscription_plan_id: SubscriptionPlan.where(price: 0.0).pluck(:id).first)
       @group1 = Group.where(name_url: 'it-skills').first
       @group2 = Group.where(name_url: 'it-operations').first
