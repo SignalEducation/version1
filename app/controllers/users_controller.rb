@@ -60,6 +60,7 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:create_account, :new, :profile, :profile_index]
+  before_action :logged_out_required, only: [:create_account, :new]
   before_action except: [:show, :edit, :new, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :create_account] do
     ensure_user_is_of_type(['admin'])
   end

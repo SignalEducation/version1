@@ -12,7 +12,7 @@ describe 'The password reset process,', type: :feature do
 
     scenario 'attempt to log in then reset password' do
       visit sign_in_path
-      within('.sign-in-modal') do
+      within('.login-form') do
         fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abc'
         click_button I18n.t('views.general.sign_in')
@@ -31,7 +31,7 @@ describe 'The password reset process,', type: :feature do
     scenario 'attempt to log in and then reset password', js: true do
       visit dashboard_path
       visit sign_in_path
-      within('.sign-in-modal') do
+      within('.login-form') do
         fill_in 'user_session_email' , with: individual_student_user.email
         fill_in 'user_session_password', with: 'abc'
         click_button I18n.t('views.general.sign_in')

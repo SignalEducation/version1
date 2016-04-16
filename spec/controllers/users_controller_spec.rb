@@ -85,7 +85,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_signed_in
+        expect_new_success_with_model('user')
       end
     end
 
@@ -155,7 +155,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 
@@ -276,7 +276,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 
@@ -369,7 +369,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 
@@ -462,7 +462,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 
@@ -555,7 +555,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 
@@ -649,7 +649,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 
@@ -742,7 +742,7 @@ describe UsersController, type: :controller do
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
-        expect_bounce_as_not_allowed
+        expect_bounce_as_signed_in
       end
     end
 

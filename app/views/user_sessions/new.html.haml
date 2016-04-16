@@ -7,7 +7,7 @@
         .col-sm-6.col-sm-offset-3.l-margin-top
           %h2.h-white.l-margin-bottom.l-margin-top-big.text-center
             =t('views.user_sessions.new.h1')
-          .login-form.l-margin-top
+          .login-form.l-margin-top#sign-in
             =form_for(@user_session) do |f|
               =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
               .col-sm-12
