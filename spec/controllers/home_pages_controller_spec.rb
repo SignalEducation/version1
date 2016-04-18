@@ -106,21 +106,6 @@ describe HomePagesController, type: :controller do
           expect(response).to redirect_to('/en')
         end
 
-        it 'does not subscribe user if password_confirmation is blank' do
-          request.env['HTTP_REFERER'] = '/'
-          post :student_sign_up, user: sign_up_params.merge(password_confirmation: nil)
-          expect(session[:sign_up_errors].keys).to include(:password_confirmation)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to('/en')
-        end
-
-        it 'does not subscribe user if password_confirmation does not match password' do
-          request.env['HTTP_REFERER'] = '/'
-          post :student_sign_up, user: sign_up_params.merge(password_confirmation: sign_up_params[:password] + "1")
-          expect(session[:sign_up_errors].keys).to include(:password_confirmation)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to('/en')
-        end
       end
 
       describe "valid data" do

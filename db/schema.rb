@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160409111930) do
+ActiveRecord::Schema.define(version: 20160409195657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,9 @@ ActiveRecord::Schema.define(version: 20160409111930) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+    t.string   "subdomain"
+    t.string   "user_name"
+    t.string   "passcode"
   end
 
   add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree

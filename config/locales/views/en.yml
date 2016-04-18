@@ -50,6 +50,7 @@ en:
       or: or
       review: Review
       save: Save
+      create_account: Create Account
       upload: Upload
       save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
@@ -58,8 +59,10 @@ en:
       send: Send
       settings: Settings
       sign_in: Sign in
+      enter: Enter
       sign_out: Sign out
       sign_up: Sign up
+      sign_up_now: Sign up Now
       start: Start
       start_free_trial: Free Trial
       table_of_contents: Table of Contents
@@ -145,6 +148,8 @@ en:
         country_id: Country
         payments_by_card: Payments by card
         stripe_customer_guid: Stripe Customer ID
+        user_name: Username
+        passcode: Password
 
       index:
         h1: Corporate Customers
@@ -998,6 +1003,7 @@ en:
         email: Email
         email_placeholder: user@example.com
         phone_number: Phone Number
+        interest: Topic
         topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
         first_name: First name
@@ -1007,7 +1013,7 @@ en:
         full_name: Name
         current_password: Current password
         current_password_placeholder: Current password
-        password: New Password
+        password: Password
         password_placeholder: New Password
         password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
@@ -1055,7 +1061,9 @@ en:
         h1: Users
 
       new:
-        h1: Create Account
+        h1: "Start your 7 day Free Trial"
+      admin_new:
+        h1: New User
 
       show:
         h1: Account
@@ -1240,13 +1248,14 @@ en:
 
     user_sessions:
       new:
-        h1: Sign in
+        h1: Sign In
       form:
         error_message: 'prevented you from signing in'
         email: Email
         email_placeholder: 'Enter your e-mail address'
+        user_name: Username
         password: Password
-        password_placeholder: 'Enter your password address'
+        password_placeholder: 'Enter your password'
         forgot_password: 'Forgot password?'
 
     vat_codes:
@@ -1400,13 +1409,17 @@ en:
         first_name_placeholder: John
         last_name: Last name
         last_name_placeholder: Smith
-        employee_guid: Employee ID
+        employee_guid: "Employee ID (Optional)"
         employee_guid_placeholder: Employee ID
         active: Active
         country: Country
         corporate_customer: Corporate customer
         corporate_group_name: Corporate group
         add_to_groups: Add to Groups
+        password: Password
+        password_placeholder: XXXXX
+        password_confirmation: Confirmation Password
+        password_confirmation_placeholder: XXXXXX
 
       index:
         h1: Students

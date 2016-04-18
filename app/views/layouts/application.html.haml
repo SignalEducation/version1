@@ -79,7 +79,7 @@
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield
-    -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_sessions') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
+    -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
       =render partial: 'layouts/new_navbar'
       .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
@@ -90,6 +90,17 @@
       =render partial: 'layouts/new_navbar'
       .margin-top
       =yield
+    -elsif controller_name == 'corporate_profiles'
+      .corporate_layout
+        =yield
+    -elsif controller_name == 'user_sessions'
+      .corporate_layout
+        =yield
+    -elsif (controller_name == 'users' && action_name == 'new') || (controller_name == 'users' && action_name == 'create_account')
+      .corporate_layout
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
     -elsif ['new_paid_subscription', 'reactivate_account'].include? action_name && controller_name == 'users'
       =render partial: 'layouts/new_navbar'
       .margin-top

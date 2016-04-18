@@ -59,11 +59,12 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:profile, :profile_index]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
+  before_action :logged_in_required, except: [:create, :new, :profile, :profile_index]
+  before_action :logged_out_required, only: [:create, :new]
+  before_action except: [:show, :edit, :new, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:profile, :profile_index]
+  before_action :get_variables, except: [:create, :admin_create, :new, :profile, :profile_index]
 
   def index
     @users = params[:search_term].to_s.blank? ?
@@ -102,15 +103,73 @@ class UsersController < ApplicationController
 
   end
 
+  def admin_new
+    @user = User.new
+  end
+
   def new
     @user = User.new
+    #@user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+    @user.country_id = 105
+    @topic_interests = @topic_interests = Group.all_active.all_in_order.for_public
+  end
+
+  def create
+    if current_user
+      redirect_to dashboard_url
+    else
+      #currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
+      currency = Currency.where(iso_code: 'EUR').first
+      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
+      if subscription_plan
+        @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }}))
+        @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+        #@user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+        @user.country_id = 105
+        @user.account_activation_code = SecureRandom.hex(10)
+        @user.email_verification_code = SecureRandom.hex(10)
+        @user.password_confirmation = @user.password
+        # Check for CrushOffers cookie and assign it to the User
+        if cookies.encrypted[:crush_offers]
+          @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
+          cookies.delete(:crush_offers)
+        end
+        # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
+        if cookies.encrypted[:latest_subscription_plan_category_guid]
+          subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
+          @user.subscription_plan_category_id = subscription_plan_category.try(:id)
+        end
+        if @user.valid? && @user.save
+          # Send User Activation email through Intercom
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+          # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
+          if cookies.encrypted[:referral_data]
+            code, referrer_url = cookies.encrypted[:referral_data].split(';')
+            if code
+              referral_code = ReferralCode.find_by_code(code)
+              @user.create_referred_signup(referral_code_id: referral_code.id, subscription_id: @user.subscriptions.first.id, referrer_url: referrer_url) if referral_code
+              cookies.delete(:referral_data)
+            end
+          end
+          @user.assign_anonymous_logs_to_user(current_session_guid)
+          user = User.get_and_activate(@user.account_activation_code)
+          @user.create_referral_code
+          UserSession.create(user)
+          redirect_to personal_sign_up_complete_url
+        else
+          render action: :new
+        end
+      else
+        render action: :new
+      end
+    end
   end
 
   def edit
   end
 
   # Admins new tutors, content managers or admins
-  def create
+  def admin_create
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else
@@ -355,6 +414,15 @@ class UsersController < ApplicationController
 
   def change_password_params
     params.require(:user).permit(:current_password, :password, :password_confirmation)
+  end
+
+  def student_allowed_params
+    params.require(:user).permit(
+        :email, :first_name, :last_name,
+        :country_id, :locale,
+        :password, :password_confirmation,
+        :topic_interest
+    )
   end
 
 end

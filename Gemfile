@@ -70,10 +70,12 @@ group :development do
   gem 'capistrano-rbenv', '~> 2.0'
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
+  gem 'powder'
 end
 
 group :development, :test do
-  gem 'pry-byebug' # halts code so you can experiment with it
+  #gem 'pry-byebug' # halts code so you can experiment with it
+  gem 'pry-remote'
   gem 'hirb'
   gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser

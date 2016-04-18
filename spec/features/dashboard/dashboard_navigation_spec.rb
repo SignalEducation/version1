@@ -24,7 +24,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       click_link 'Courses'
       visit dashboard_path
       expect(page).to have_content 'You must be signed in to access that page - please sign in'
-      within('.sign-in-modal') do
+      within('.login-form') do
         expect(page).to have_content 'Email Password Forgot password?'
       end
     end

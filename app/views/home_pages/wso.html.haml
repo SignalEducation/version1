@@ -22,6 +22,8 @@
                 =link_to 'Courses', library_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+              %li
+                =link_to 'Sign Up', new_user_url, class: 'sign-up-link'
 
   .l-section#sign-up
     .l-wrap
@@ -33,8 +35,6 @@
             %h1.h1.h-white.l-margin-top-big
               Take the quick prep course for the CFA level 1
           .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
-            %p.h5.h-white.l-margin-bottom
-              ='Sign Up for your 14-day free trial'
             =render partial: 'sign_up_form'
 
 .l-section

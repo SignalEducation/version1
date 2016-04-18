@@ -22,6 +22,8 @@
                 =link_to 'Courses', library_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+              %li
+                =link_to 'Sign Up', new_user_url, class: 'sign-up-link'
 
   .hero-inner#sign-up
     .l-wrap-medium
@@ -39,8 +41,6 @@
               ="are using our platform to progress their careers"
 
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
-            %p.h5.h-white.l-margin-bottom
-              ='Sign Up for your 7-day free trial'
             =render partial: 'sign_up_form'
 
 .business

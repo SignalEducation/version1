@@ -14,6 +14,9 @@
 #  logo_content_type    :string
 #  logo_file_size       :integer
 #  logo_updated_at      :datetime
+#  subdomain            :string
+#  user_name            :string
+#  passcode             :string
 #
 
 require 'rails_helper'

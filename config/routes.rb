@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
+  require 'subdomain'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
@@ -73,6 +74,10 @@ Rails.application.routes.draw do
       post :preview_csv, on: :collection, action: :preview_corporate_students
     end
 
+    get '/login', to: 'corporate_profiles#login', as: :corporate_login
+    post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
+    post '/corporate_profiles/create', to: 'corporate_profiles#create', as: :new_corporate_user
+    resources :corporate_profiles, only: [:new, :show]
     resources :corporate_requests
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
@@ -105,6 +110,7 @@ Rails.application.routes.draw do
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
+    post 'admin_create', to: 'users#admin_create', as: :create_account
     resources :invoices, only: [:index, :show]
     get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
@@ -132,6 +138,8 @@ Rails.application.routes.draw do
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     resources :user_activity_logs
     resources :user_notifications
+    resources :users, only: [:new, :create]
+    get 'admin_new_user', to: 'users#admin_new', as: :admin_new_user
     resources :vat_codes
     resources :marketing_categories
     resources :marketing_tokens do
@@ -142,6 +150,10 @@ Rails.application.routes.draw do
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
+    end
+
+    constraints(Subdomain) do
+      get '/' => 'corporate_profiles#show'
     end
 
     # home page

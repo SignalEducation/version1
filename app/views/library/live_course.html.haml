@@ -225,10 +225,5 @@
               ='Learn Signal'
 
 
-          -#if @course.class == ExamSection
-            =link_to t('views.library.show.new_question_bank'), new_section_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
-          -#else
-            =link_to t('views.library.show.new_question_bank'), new_level_question_bank_path, class: 'btn btn-cyan l-margin-top-big l-margin-bottom-big'
-
   =render partial: 'layouts/new_footer'
   =render partial: 'shared/activate_tab'

@@ -33,6 +33,7 @@ class HomePagesController < ApplicationController
       @home_page = HomePage.where(public_url: first_element).first
       @user = User.new
       @topic_interests = Group.all_active.all_in_order.for_public
+      @url_value = params[:first_element].to_s
       session[:sign_up_errors].each do |k, v|
         v.each { |err| @user.errors.add(k, err) }
       end if session[:sign_up_errors]
@@ -100,32 +101,27 @@ class HomePagesController < ApplicationController
       currency = Currency.where(iso_code: 'EUR').first
       subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
       if subscription_plan
-        @user = User.new(student_allowed_params.merge({
-                                                        "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
-                                                      }))
+        @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" => subscription_plan.id } }}))
         @user.user_group_id = UserGroup.default_student_user_group.try(:id)
         #@user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
         @user.country_id = 105
-
         @user.account_activation_code = SecureRandom.hex(10)
         @user.email_verification_code = SecureRandom.hex(10)
+        @user.password_confirmation = @user.password
 
         # Check for CrushOffers cookie and assign it to the User
         if cookies.encrypted[:crush_offers]
           @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
           cookies.delete(:crush_offers)
         end
-
         # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
         if cookies.encrypted[:latest_subscription_plan_category_guid]
           subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
-
         if @user.valid? && @user.save
           # Send User Activation email through Intercom
           IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
-
           # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
@@ -135,7 +131,6 @@ class HomePagesController < ApplicationController
               cookies.delete(:referral_data)
             end
           end
-
           @user.assign_anonymous_logs_to_user(current_session_guid)
           user = User.get_and_activate(@user.account_activation_code)
           @user.create_referral_code
