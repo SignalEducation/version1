@@ -21,10 +21,14 @@ class CorporateProfilesController < ApplicationController
   end
 
   def new
-    url_ending = request.referrer.split('/').last
-    path_ending = corporate_login_url.split('/').last
-    redirect_to corporate_login_url unless (request.subdomain == @corporate_with_subdomain.subdomain) && (url_ending == path_ending)
-    @corporate_student = User.new
+    if request.referrer
+      url_ending = request.referrer.split('/').last
+      path_ending = corporate_login_url.split('/').last
+      redirect_to corporate_login_url unless (request.subdomain == @corporate_with_subdomain.subdomain) && (url_ending == path_ending)
+      @corporate_student = User.new
+    else
+      redirect_to corporate_login_url
+    end
   end
 
   def create
