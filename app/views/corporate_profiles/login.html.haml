@@ -6,7 +6,7 @@
       .row
         .col-sm-6.col-sm-offset-3.l-margin-top
           %h3.h-white.l-margin-bottom.text-center
-            ="Verify you belong to #{@corporate_with_subdomain.organisation_name}"
+            ="Verify you belong to #{@corporate_with_subdomain.try(:organisation_name)}"
           .login-form.l-margin-top-big
             =form_tag('/corporate_verification', method: 'post') do
               .row

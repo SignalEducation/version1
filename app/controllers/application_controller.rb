@@ -105,6 +105,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_subdomain
+    Rails.logger.debug "DEBUG: ApplicationController#check_subdomain: Received options: #{request.subdomain}"
     @corporate_with_subdomain = CorporateCustomer.where(subdomain: request.subdomain).first if request.subdomain
   end
 

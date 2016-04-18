@@ -4,6 +4,8 @@
       .row
         =render partial: 'layouts/corporate_logo'
       .row
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
         .col-sm-6.col-sm-offset-3.l-margin-top
           %h2.h-white.l-margin-bottom.l-margin-top-big.text-center
             =t('views.user_sessions.new.h1')
