@@ -110,7 +110,9 @@ Rails.application.routes.draw do
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
-    post 'admin_create', to: 'users#admin_create', as: :create_account
+    get '/student_new', to: 'users#student_new', as: :new_student
+    post '/student_create', to: 'users#student_create', as: :create_student
+
     resources :invoices, only: [:index, :show]
     get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
@@ -139,7 +141,6 @@ Rails.application.routes.draw do
     resources :user_activity_logs
     resources :user_notifications
     resources :users, only: [:new, :create]
-    get 'admin_new_user', to: 'users#admin_new', as: :admin_new_user
     resources :vat_codes
     resources :marketing_categories
     resources :marketing_tokens do

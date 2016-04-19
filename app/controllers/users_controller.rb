@@ -59,12 +59,12 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:create, :new, :profile, :profile_index]
-  before_action :logged_out_required, only: [:create, :new]
-  before_action except: [:show, :edit, :new, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :create] do
+  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index]
+  before_action :logged_out_required, only: [:student_create, :student_new]
+  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :student_create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:create, :admin_create, :new, :profile, :profile_index]
+  before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index]
 
   def index
     @users = params[:search_term].to_s.blank? ?
@@ -103,18 +103,18 @@ class UsersController < ApplicationController
 
   end
 
-  def admin_new
+  def new
     @user = User.new
   end
 
-  def new
+  def student_new
     @user = User.new
     #@user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
     @user.country_id = 105
     @topic_interests = @topic_interests = Group.all_active.all_in_order.for_public
   end
 
-  def create
+  def student_create
     if current_user
       redirect_to dashboard_url
     else
@@ -169,7 +169,7 @@ class UsersController < ApplicationController
   end
 
   # Admins new tutors, content managers or admins
-  def admin_create
+  def create
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else

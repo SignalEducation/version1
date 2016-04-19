@@ -96,7 +96,7 @@
     -elsif controller_name == 'user_sessions'
       .corporate_layout
         =yield
-    -elsif (controller_name == 'users' && action_name == 'new') || (controller_name == 'users' && action_name == 'create_account')
+    -elsif (controller_name == 'users' && action_name == 'student_new') || (controller_name == 'users' && action_name == 'student_create')
       .corporate_layout
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'

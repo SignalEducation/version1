@@ -1,44 +1,8 @@
-.top-content
-  .l-wrap-corporate
-    .container
-      .row
-        =render partial: 'layouts/corporate_logo'
-      .row
-        .col-sm-6.col-sm-offset-3.l-margin-top
-          %h1.h-white.l-margin-bottom.l-margin-top-big.text-center
-            ='Sign Up for your 7-day free trial'
-
-          .login-form.l-margin-top
-            =form_for @user, url: create_account_url do |f|
-              =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
-              =f.hidden_field :locale, value: (params[:locale] || 'en')
-              .row
-                .col-md-12
-                  .col-sm-6
-                    .form-group
-                      =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
-                      =f.text_field :first_name, autofocus: true, required: true, class: 'form-control'
-                  .col-sm-6
-                    .form-group
-                      =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
-                      =f.text_field :last_name, class: 'form-control'
-                  .col-sm-12
-                    .form-group
-                      =f.label :email, t('views.users.form.email'), class: 'control-label'
-                      =f.email_field :email, class: 'form-control', required: true
-                  .col-sm-12
-                    .form-group
-                      =f.label :topic_interest, t('views.users.form.interest'), class: 'control-label'
-                      =f.collection_select :topic_interest, @topic_interests, :name, :name, {include_blank: t('views.users.form.topic_interest')}, class: 'form-control', style: 'border-radius: 6px;'
-                  .col-sm-12
-                    .form-group
-                      =f.label :password, t('views.users.form.password'), class: 'control-label'
-                      =f.password_field :password, class: 'form-control'
-
-                  .col-sm-12.l-margin-top
-                    =f.submit t('views.general.sign_up_now'), class: 'btn btn-red btn-wide btn-lg-text'
-
-
-      .row
-        .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
-          =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.users.admin_new.h1')
+      =render partial: 'form'
