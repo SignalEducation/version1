@@ -1,8 +1,8 @@
 .hero-home {
-  background: $purple-5 asset-url('home-page-1003.png') 20% 0 no-repeat;
+  background: $purple-5 asset-url('home-page-1003.png') 10% 0 no-repeat;
   color: $white;
   background-size: cover;
-  min-height: 1100px;
+  //min-height: 1100px;
   @include breakpoint(md-min) {
     background: $purple-5 asset-url('home-page-1003.png') no-repeat;
     background-size: cover;
@@ -45,7 +45,6 @@
   background: $purple-5 asset-url('acca-background.png') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
-  min-height: 1100px;
   @include breakpoint(md-min) {
     background: $purple-5 asset-url('acca-background.png') no-repeat;
     background-size: cover;
@@ -62,7 +61,6 @@
 .hero-business {
   background: $purple-5 asset-url('business-home-1001.png') 50% 0 no-repeat;
   color: $white;
-  min-height: 1100px;
   @include breakpoint(md-min) {
     background: $purple-5 asset-url('business-home-1001.png') no-repeat;
     background-size: cover;

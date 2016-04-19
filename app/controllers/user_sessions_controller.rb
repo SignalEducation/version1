@@ -15,13 +15,13 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:session_key, session[:session_id])
       flash[:error] = nil
       if @user_session.user.corporate_customer?
-        redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer)
+        redirect_to corporate_customer_url(@user_session.user.corporate_customer)
       elsif @user_session.user.corporate_student?
-        redirect_back_or_default library_url
+        redirect_to library_url
       elsif session[:return_to]
-        redirect_back_or_default root_url
+        redirect_to library_url
       else
-        redirect_to root_url, flash: { just_signed_in: true }
+        redirect_to library_url, flash: { just_signed_in: true }
       end
     else
       render action: :new
