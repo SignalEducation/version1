@@ -76,7 +76,6 @@
                               .col-sm-6
                                 -if @current_subscription.current_status == 'canceled'
                                   %h3=t('views.users.show.reactivate_subscription.h3')
-                                  -#=link_to t('views.users.show.reactivate_subscription.button_call_to_action'), '#', class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', data: {toggle: 'modal', target: '#re-subscribe-modal'}
                                   =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
                                 -elsif @current_subscription.current_status == 'canceled-pending'
                                   %h3=t('views.users.show.un_cancel_subscription.h3')
@@ -111,9 +110,6 @@
   -if @user.id == current_user.id
     =render partial: 'users/change_password'
 
-  -if @current_subscription
-    -if @current_subscription.current_status.include?('cancel')
-      =render partial: 'users/re_subscribe'
     =render partial: 'subscription_payment_cards/modal'
 
   -if current_user.corporate_customer?
