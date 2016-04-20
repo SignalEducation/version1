@@ -109,8 +109,8 @@
 
   -if @user.id == current_user.id
     =render partial: 'users/change_password'
-
-    =render partial: 'subscription_payment_cards/modal'
+    -if @user.user_group_id == UserGroup.where(individual_student: true).first.id
+      =render partial: 'subscription_payment_cards/modal'
 
   -if current_user.corporate_customer?
     =render partial: 'users/company'
