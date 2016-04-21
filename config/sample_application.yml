@@ -50,3 +50,6 @@ learnsignal_mandrill_api_key: mandrill_api_key_goes_here
 # for each load balancer in AWS console (go to Load Balancers, select
 # load balancer and in bottom table all availability zones are listed).
 aws_load_balancers: aws_load_balancers_ips_go_here
+
+# Pointpin Api
+learnsignal_pointpin_api_key: b36dbb3d-b657-44fb-83fd-84519a7c0520

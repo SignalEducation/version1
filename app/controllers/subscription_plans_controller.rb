@@ -48,22 +48,8 @@ class SubscriptionPlansController < ApplicationController
     @student_plan_2 = @student_subscription_plans[1]
     @student_plan_3 = @student_subscription_plans[2]
 
-    @corporate_subscription_plans = SubscriptionPlan
-                                        .where('price > 0.0')
-                                        .where(livemode: true)
-                                        .where(subscription_plan_category_id: nil)
-                                        .includes(:currency)
-                                        .for_corporates
-                                        .in_currency(@currency_id)
-                                        .all_active
-                                        .all_in_display_order
 
-    @corp_plan_1 = @corporate_subscription_plans[0]
-    @corp_plan_2 = @corporate_subscription_plans[1]
-    @corp_plan_3 = @corporate_subscription_plans[2]
-    @corp_plan_4 = @corporate_subscription_plans[3]
-
-    seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds. Choose from our personal and business pricing plans.', nil)
+    seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
   end
 
   def show
