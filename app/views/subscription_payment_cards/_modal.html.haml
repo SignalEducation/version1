@@ -1,5 +1,5 @@
 =form_for(SubscriptionPaymentCard.new(make_default_card: true), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}) do |f|
-  =f.hidden_field :user_id, value: @current_subscription.user_id
+  =f.hidden_field :user_id, value: @current_subscription.try(:user_id)
   =f.hidden_field :stripe_token
   =f.hidden_field :make_default_card, value: true
 

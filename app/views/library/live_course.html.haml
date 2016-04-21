@@ -211,9 +211,14 @@
                   =@course.tutor.try(:full_name)
 
                 .col-md-6{style: 'padding-left: 0;'}
-                  =link_to profile_url(@course.tutor), class: 'box'  do
-                    .box-pic
-                      =image_tag @course.tutor.profile_image.url, class: 'profile-pic', style: 'margin-bottom: 10px;'
+                  -if @course.tutor_id == 415
+                    .box
+                      .box-pic
+                        =image_tag @course.tutor.profile_image.url, class: 'profile-pic', style: 'margin-bottom: 10px;'
+                  -else
+                    =link_to profile_url(@course.tutor), class: 'box'  do
+                      .box-pic
+                        =image_tag @course.tutor.profile_image.url, class: 'profile-pic', style: 'margin-bottom: 10px;'
 
               -else
                 %li.lined-list-item
