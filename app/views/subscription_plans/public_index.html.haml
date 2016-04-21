@@ -33,10 +33,7 @@
                   Course Completion Certificates
 
 
-            .plan-footer
-              %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}, style: 'text-decoration: none;'}
-                %h4.h4.plan-title
-                  ='Sign Up Now'
+            =link_to 'Sign Up', new_student_url, class: 'h4 plan-title plan-footer'
 
         .col-md-4
           .pricing-box-cyan.l-margin-top-big
@@ -60,10 +57,7 @@
                   Course Completion Certificates
 
 
-            .plan-footer
-              %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}, style: 'text-decoration: none;'}
-                %h4.h4.plan-title
-                  ='Sign Up Now'
+            =link_to 'Sign Up', new_student_url, class: 'h4 plan-title plan-footer'
 
         .col-md-4
           .pricing-box-red.l-margin-top-big
@@ -87,138 +81,5 @@
                   Course Completion Certificates
 
 
-            .plan-footer
-              %a.signupModal{href: '#', class: 'sign-up-link', data: {toggle: 'modal', target: '#signupModal'}, style: 'text-decoration: none;'}
-                %h4.h4.plan-title
-                  ='Sign Up Now'
+            =link_to 'Sign Up', new_student_url, class: 'h4 plan-title plan-footer'
 
-      .col-md-10.col-md-offset-1.l-margin-top
-        %hr/
-        %h2.upcase.text-center
-          Business Plans
-
-        .col-md-4
-          .pricing-box-purple.l-margin-top-big
-            .plan-header{style: 'background: #6E6D75;'}
-              %h4.h4.plan-title{style: 'color: #fff;'}
-                = '1 - 24 Users'
-            .plan-inner{style: 'background: #6E6D75;'}
-              -if @corp_plan_1
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  &#160;
-                  =number_in_local_currency(@corp_plan_1.try(:price), @corp_plan_1.try(:currency))
-                  &#47;
-                  User
-              .l-margin-bottom.l-margin-top-big
-                %h5.plan-title
-                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_1.try(:payment_frequency_in_months) || 1}")}"
-                %br/
-                %h5.plan-title
-                  Reporting & Analytics
-                %br/
-                %h5.plan-title
-                  Easy Registration
-                %br/
-                %h5.plan-title
-                  Learning Paths
-                %br/
-                %h5.plan-title
-                  Expert Author Network
-                %br/
-                %h5.plan-title
-                  Course Completion Certificates
-                %br/
-                %h5.plan-title
-                  Control Member Access
-                %br/
-                %h5.plan-title
-                  Upload your own content
-            .plan-footer
-              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, style: 'text-decoration: none;'}
-
-                %h4.h4.plan-title
-                  ='Contact Us'
-
-
-        .col-md-4
-          .pricing-box-cyan.l-margin-top-big
-            .plan-header{style: 'background: #6E6D75;'}
-              %h4.h4.plan-title{style: 'color: #fff;'}
-                ='25 - 49 Users'
-            .plan-inner{style: 'background: #6E6D75;'}
-              -if @corp_plan_2
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  &#160;
-                  =number_in_local_currency(@corp_plan_2.try(:price), @corp_plan_2.try(:currency))
-                  &#47;
-                  User
-              .l-margin-bottom.l-margin-top-big
-                %h5.plan-title
-                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_2.try(:payment_frequency_in_months) || 3}")}"
-                %br/
-                %h5.plan-title
-                  Reporting & Analytics
-                %br/
-                %h5.plan-title
-                  Easy Registration
-                %br/
-                %h5.plan-title
-                  Learning Paths
-                %br/
-                %h5.plan-title
-                  Expert Author Network
-                %br/
-                %h5.plan-title
-                  Course Completion Certificates
-                %br/
-                %h5.plan-title
-                  Control Member Access
-                %br/
-                %h5.plan-title
-                  Upload your own content
-            .plan-footer
-              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, style: 'text-decoration: none;'}
-                %h4.h4.plan-title
-                  ='Contact Us'
-
-
-        .col-md-4
-          .pricing-box-red.l-margin-top-big.l-margin-bottom-huge
-            .plan-header{style: 'background: #6E6D75;'}
-              %h4.h4.plan-title{style: 'color: #fff;'}
-                ='50 - 99 Users'
-            .plan-inner{style: 'background: #6E6D75;'}
-              -if @corp_plan_3
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  &#160;
-                  =number_in_local_currency(@corp_plan_3.try(:price), @corp_plan_3.try(:currency))
-                  &#47;
-                  User
-              .l-margin-bottom.l-margin-top-big
-                %h5.plan-title
-                  ="Full Access for a #{t("views.general.payment_intervals.a#{@corp_plan_3.try(:payment_frequency_in_months) || 12}")}"
-                %br/
-                %h5.plan-title
-                  Reporting & Analytics
-                %br/
-                %h5.plan-title
-                  Easy Registration
-                %br/
-                %h5.plan-title
-                  Learning Paths
-                %br/
-                %h5.plan-title
-                  Expert Author Network
-                %br/
-                %h5.plan-title
-                  Course Completion Certificates
-                %br/
-                %h5.plan-title
-                  Control Member Access
-                %br/
-                %h5.plan-title
-                  Upload your own content
-            .plan-footer
-              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, style: 'text-decoration: none;'}
-                %h4.h4.plan-title
-                  ='Contact Us'
