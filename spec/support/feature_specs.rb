@@ -65,6 +65,17 @@ def student_sign_up_as(user_first_name, user_second_name, user_email, user_passw
   end
 end
 
+def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
+  enter_user_details(user_first_name, user_second_name, user_email, user_password)
+  page.all(:css, '#signUp').first.click
+  sleep 1
+  if expect_sign_up
+
+  else
+
+  end
+end
+
 def enter_card_details(card, cvv, exp_month, exp_year)
   fill_in('card_number', with: card)
   fill_in('cvv_number', with: cvv)

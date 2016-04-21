@@ -53,26 +53,32 @@ describe 'The student sign-up process', type: :feature do
           find('.sign-up-link').click
         end
         user_password = ApplicationController.generate_random_code(10)
-        within('#sign-up-form') do
-          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+        within('.login-form') do
+          signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
         end
       end
     end
 
     describe 'GBP / UK /' do
       scenario 'Free Plam', js: true do
+        within('.navbar.navbar-default') do
+          find('.sign-up-link').click
+        end
         user_password = ApplicationController.generate_random_code(10)
-        within('#sign-up-form') do
-          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+        within('.login-form') do
+          signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
         end
       end
     end
 
     describe 'USD / USA /' do
       scenario 'Free Plan', js: true do
+        within('.navbar.navbar-default') do
+          find('.sign-up-link').click
+        end
         user_password = ApplicationController.generate_random_code(10)
-        within('#sign-up-form') do
-          student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+        within('.login-form') do
+          signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
         end
       end
     end
