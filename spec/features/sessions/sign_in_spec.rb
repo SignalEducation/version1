@@ -170,10 +170,7 @@ describe 'The sign in process.', type: :feature do
         fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
         click_button I18n.t('views.general.sign_in')
       end
-      expect(page).to have_content maybe_upcase 'Your Course Stats'
-      find('.dropdown').click
-      expect(page).to have_content maybe_upcase I18n.t('views.subject_courses.index.my_courses')
-      expect(page).to_not have_content I18n.t('views.subject_courses.index.your_courses')
+      expect(page).to have_content maybe_upcase 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors'
       find('.dropdown').click
       click_link('Sign out')
     end
@@ -227,8 +224,7 @@ describe 'The sign in process.', type: :feature do
         fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
         click_button I18n.t('views.general.sign_in')
       end
-      find('.dropdown').click
-      expect(page).to have_content 'Your Learn Signal Dashboard'
+      expect(page).to have_content maybe_upcase 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors'
       find('.dropdown').click
       click_link('Sign out')
     end

@@ -60,15 +60,20 @@ class ApplicationController < ActionController::Base
     @current_user_session = UserSession.find
   end
 
+  #def current_user
+  #  if @current_user && @current_user.corporate_customer? && @current_user.session_key != session[:session_id]
+  #    flash[:notice] = I18n.t('controllers.application.simultaneous_logins_detected')
+  #    current_user_session.destroy
+  #    return nil
+  #  else
+  #    return @current_user if defined?(@current_user)
+  #    @current_user = current_user_session && current_user_session.record
+  #  end
+  #end
+
   def current_user
-    if @current_user && @current_user.corporate_customer? && @current_user.session_key != session[:session_id]
-      flash[:notice] = I18n.t('controllers.application.simultaneous_logins_detected')
-      current_user_session.destroy
-      return nil
-    else
-      return @current_user if defined?(@current_user)
-      @current_user = current_user_session && current_user_session.record
-    end
+    return @current_user if defined?(@current_user)
+    @current_user = current_user_session && current_user_session.record
   end
 
   def logged_in_required
