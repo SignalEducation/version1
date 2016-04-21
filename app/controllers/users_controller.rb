@@ -109,8 +109,8 @@ class UsersController < ApplicationController
 
   def student_new
     @user = User.new
-    #@user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-    @user.country_id = 105
+    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+    #@user.country_id = 105
     @topic_interests = @topic_interests = Group.all_active.all_in_order.for_public
   end
 
@@ -118,14 +118,14 @@ class UsersController < ApplicationController
     if current_user
       redirect_to dashboard_url
     else
-      #currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
-      currency = Currency.where(iso_code: 'EUR').first
+      currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
+      #currency = Currency.where(iso_code: 'EUR').first
       subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
       if subscription_plan
         @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }}))
         @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-        #@user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-        @user.country_id = 105
+        @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+        #@user.country_id = 105
         @user.account_activation_code = SecureRandom.hex(10)
         @user.email_verification_code = SecureRandom.hex(10)
         @user.password_confirmation = @user.password
