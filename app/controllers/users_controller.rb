@@ -140,7 +140,6 @@ class UsersController < ApplicationController
           subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
-        binding.pry
         if @user.valid? && @user.save
           # Send User Activation email through Intercom
           IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
