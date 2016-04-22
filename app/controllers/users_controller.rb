@@ -111,7 +111,7 @@ class UsersController < ApplicationController
     @user = User.new
     @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
     #@user.country_id = 105
-    @topic_interests = @topic_interests = Group.all_active.all_in_order.for_public
+    @topic_interests = Group.all_active.all_in_order.for_public
   end
 
   def student_create
@@ -120,6 +120,7 @@ class UsersController < ApplicationController
     else
       currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
       #currency = Currency.where(iso_code: 'EUR').first
+      @topic_interests = Group.all_active.all_in_order.for_public
       subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
       if subscription_plan
         @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }}))
@@ -139,6 +140,7 @@ class UsersController < ApplicationController
           subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
+        binding.pry
         if @user.valid? && @user.save
           # Send User Activation email through Intercom
           IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
@@ -157,10 +159,10 @@ class UsersController < ApplicationController
           UserSession.create(user)
           redirect_to personal_sign_up_complete_url
         else
-          render action: :new
+          render action: :student_new
         end
       else
-        render action: :new
+        render action: :student_new
       end
     end
   end
