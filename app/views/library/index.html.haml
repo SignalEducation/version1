@@ -32,7 +32,12 @@
                 .l-margin-bottom.l-margin-top{style: 'min-height: 110px'}
                   %h3.text-bold.one-line-text
                     =group.name
-                  %p.l-margin-bottom-big
+                    =image_tag('glasses.png', class: 'features-img', alt: 'glasses')
+                    =#image_tag('business.png', class: 'features-img', alt: 'glasses')
+                    =#image_tag('it_operations.png', class: 'features-img', alt: 'glasses')
+                    =#image_tag('compliance_form.png', class: 'features-img', alt: 'glasses')
+
+                  -#%p.l-margin-bottom-big
                     =group.description.to_s.truncate(170).html_safe
                   -#total_lesson = group.subject_courses.count
                   -#complete_lesson = group.subject_courses.count

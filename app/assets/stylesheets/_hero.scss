@@ -74,14 +74,17 @@
     background-size: cover;
   }
 }
+
 .hero-cfa {
-  background: $purple-5 asset-url('bg-cfa.jpg') 50% 0 no-repeat;
+  background: $purple-5 asset-url('acca-background.png') 50% 0 no-repeat;
   color: $white;
+  background-size: cover;
   @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-cfa.jpg') no-repeat;
+    background: $purple-5 asset-url('acca-background.png') no-repeat;
     background-size: cover;
   }
 }
+
 .hero-sign-up {
   background: $purple-2 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
   color: $white;
