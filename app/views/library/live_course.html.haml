@@ -96,7 +96,7 @@
                           -else
                             =link_to '#restrictedAccess', class: 'list-group-item link-purple box-topic-item', data: {toggle: 'modal', target: '#restrictedAccess'} do
                               .row
-                                .col-xs-12.col-sm-1
+                                .col-xs-1.col-sm-1
                                   .left-side-meta
                                     -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
                                       %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
@@ -104,10 +104,10 @@
                                     -else
                                       %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
                                         %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
-                                .col-xs-12.col-sm-7{style: 'padding-left: 0px;'}
+                                .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
                                   .pull-left
                                     =grandchild.name
-                                .col-xs-12.col-sm-4
+                                .col-xs-12.col-sm-4.hidden-xs
                                   .side-meta
                                     -if grandchild.is_video
                                       -if grandchild.try(:course_module_element_video).try(:duration)
