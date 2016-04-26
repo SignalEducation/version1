@@ -94,7 +94,7 @@
                                     -else
                                       ='Flash Card'
                           -else
-                            =link_to '#restrictedAccess', class: 'list-group-item link-purple box-topic-item', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                            =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                               .row
                                 .col-xs-1.col-sm-1
                                   .left-side-meta
@@ -130,7 +130,7 @@
                                   .side-meta
                                     =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
                           -else
-                            =link_to '#restrictedAccess', class: 'list-group-item link-purple box-topic-item', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                            =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                               .row
                                 .col-xs-12.col-sm-8
                                   =child.course_module_jumbo_quiz.name
@@ -149,7 +149,7 @@
                                 %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
                                 Passed
                         -else
-                          =link_to '#restrictedAccess', class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                          =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                             .box-topic-item
                               =@course.question_bank.name
                             .time.hidden-xs
@@ -174,7 +174,7 @@
                             .time.hidden-xs
                               =@course.question_bank.number_of_questions.to_s + ' Questions'
                         -else
-                          =link_to '#restrictedAccess', class: 'cert-box-item lib-panel', style: 'text-decoration: none;', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                          =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                             .box-topic-item
                               =@course.question_bank.name
                             .time.hidden-xs
@@ -187,7 +187,7 @@
                             .box-topic-item
                               Click here to download your completion certificate
                         -else
-                          =link_to '#restrictedAccess', class: 'cert-box-item lib-panel', style: 'text-decoration: none;', data: {toggle: 'modal', target: '#restrictedAccess'} do
+                          =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                             .box-topic-item
                               Click here to download your completion certificate
               .tab-pane.fade#description{role: 'tabpanel'}
