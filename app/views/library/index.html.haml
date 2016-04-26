@@ -7,76 +7,25 @@
           .col-md-6.col-md-offset-3
             %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big.is-text-white
               Learn anytime, anywhere
-            %p.h5.h-white.text-center.l-margin-bottom-big
+            %p.h5.h-white.text-center.l-margin-bottom-big8
               Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
-          -#.col-md-6.col-md-offset-3
-            %form.form-horizontal.l-margin-top
-              .row
-                .col-sm-12
-                  .input-group
-                    =form_tag(library_url, method: :get, id: 'search-form') do
-                      =text_field_tag :search, params[:search], placeholder: 'Search our courses', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'
-                      %span.input-group-btn
-                        =submit_tag 'Search', class: 'btn btn-red', name: nil
 
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
-      -if @groups.present?
-        .row.l-margin-top-big.l-margin-bottom-huge
-          -@groups.each do |group|
-            .col-md-6.l-margin-top
-              =link_to library_special_link(group), class: 'library-box-item panel text-center' do
-                .panel-icon.icon-big
-                  %i.glyphicon.glyphicon-arrow-right
-                .l-margin-bottom.l-margin-top{style: 'min-height: 110px'}
-                  %h3.text-bold.one-line-text
-                    =group.name
-                    =image_tag('glasses.png', class: 'features-img', alt: 'glasses')
-                    =#image_tag('business.png', class: 'features-img', alt: 'glasses')
-                    =#image_tag('it_operations.png', class: 'features-img', alt: 'glasses')
-                    =#image_tag('compliance_form.png', class: 'features-img', alt: 'glasses')
-
-                  -#%p.l-margin-bottom-big
-                    =group.description.to_s.truncate(170).html_safe
-                  -#total_lesson = group.subject_courses.count
-                  -#complete_lesson = group.subject_courses.count
-                  -#total_lesson = 10
-                  -#complete_lesson = 10
-                  -#if group.subject_courses.count > 0
-                  -#%ul#progress_circles
-                    -(1..complete_lesson).each do |i|
-                      %li.lesson-complete
-                    -(1..(total_lesson-complete_lesson)).each do |i|
-                      %li
-                .box-label
-                  =t('views.general.browse')
+      .row.l-margin-top-big.l-margin-bottom-huge
+        -@groups.each do |group|
+          .col-md-6.l-margin-top
+            =link_to library_special_link(group), class: 'box box-course', style: '' do
+              .box-inner
+                %h3.h4.box-title
+                  =group.try(:name)
+                .box-pic
+                  =image_tag group.image.url
+              .box-label
+                =t('views.general.browse')
 
 
-      -if @no_grouped_courses.present?
-        %br/
-        %hr/
-        %br/
-        .course-list-wrap
-          .row
-            %h2.h-separator.h-separator-center.text-center.l-margin-bottom-big
-              ='Other Courses'
-            -@no_grouped_courses.each do |course|
-              .col-sm-6.col-md-4
-                =link_to library_special_link(course), class: 'box box-course' do
-                  .box-inner
-                    %h3.h4.box-title
-                      =course.try(:name)
-                    %p.box-desc
-                      -if course.short_description
-                        =course.try(:short_description).to_s.truncate(30)
-                      -else
-                        =course.description.to_s.truncate(15).html_safe
-                  .box-label
-                    =t('views.general.browse')
-
-      -#else
-        ="Sorry there are no courses containing the terms #{params[:search]}"
 
 =render partial: 'layouts/new_footer'
 

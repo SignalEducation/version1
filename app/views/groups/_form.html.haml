@@ -1,34 +1,36 @@
 =form_for(@group, html: {class: 'form-horizontal', role: 'form'}) do |f|
   .row
-    .col-md-8.col-md-offset-2
-      =render partial: '/layouts/error_messages', locals: {thing: @group, message: nil}
-      =f.hidden_field :name_url
-      =f.label :name, t('views.groups.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.groups.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
-      %br/
-      =f.label :name_url, t('views.groups.form.name_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name_url, placeholder: t('views.groups.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      %br/
-      .col-sm-2
-        .checkbox
-          %label
-            =f.check_box :active
-            =t('views.groups.form.active')
-      %br/
-      %br/
-      %br/
-      =f.label :description, t('views.groups.form.description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :description, placeholder: t('views.groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
-      %br/
+    .col-md-12
+      .col-md-6
+        =render partial: '/layouts/error_messages', locals: {thing: @group, message: nil}
+        =f.hidden_field :name_url
+        =f.label :name, t('views.groups.form.name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, class: 'form-control update-my-url', style: 'border-radius: 6px;'
+        %br/
+        =f.label :name_url, t('views.groups.form.name_url'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name_url, class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        %br/
+        .col-sm-2
+          .checkbox
+            %label
+              =f.check_box :active
+              =t('views.groups.form.active')
+      .col-md-6
+        =f.label :description, t('views.groups.form.description'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :description, rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+        .col-md-12.l-margin-top-big
+          =image_tag @group.image.url, class: 'md-image'
+          %br/
+          =f.file_field :image
 
-  %br/
-  %br/
-  %br/
-  .row
-    =f.submit t('views.general.save'), class: 'btn btn-red'
-    =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan'
+
+
+      .row
+        .col-md-12.l-margin-top-big
+          =f.submit t('views.general.save'), class: 'btn btn-red'
+          =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan'
 

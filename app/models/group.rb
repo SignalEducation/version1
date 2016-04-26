@@ -13,6 +13,10 @@
 #  updated_at            :datetime         not null
 #  corporate_customer_id :integer
 #  destroyed_at          :datetime
+#  image_file_name       :string
+#  image_content_type    :string
+#  image_file_size       :integer
+#  image_updated_at      :datetime
 #
 
 class Group < ActiveRecord::Base
@@ -21,18 +25,21 @@ class Group < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id
+  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id, :image
 
   # Constants
 
   # relationships
   #belongs_to :subject
   has_and_belongs_to_many :subject_courses
+  has_attached_file :image, default_url: "missing_corporate_logo.png"
+
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_destroy :check_dependencies

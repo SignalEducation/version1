@@ -538,10 +538,8 @@ label, .label {
     background-color: darken($white, 15);
   }
 }
-
 a.box {
   text-decoration: none;
-
   &:link {
     text-decoration: none;
   }
@@ -600,9 +598,11 @@ a.box {
 }
 .box-inner {
   padding: $gutter*2 $gutter/2;
+  height: 250px;
 }
 .box-pic {
-  padding: $gutter/2 $gutter/2 ;
+  padding: $gutter $gutter;
+  background: 50%;
 }
 .box-desc {
   margin: $gutter/2 0 0 0;
