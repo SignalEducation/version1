@@ -23,10 +23,6 @@
                 .input-group.input-group-lg.full-width
                   =f.text_field :organisation_name, class: 'form-control', style: 'border-radius: 6px;'
                 %br/
-                =f.label :address, t('views.corporate_customers.form.address')
-                .input-group.input-group-lg.full-width
-                  =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
-                %br/
                 =f.label :user_name, t('views.corporate_customers.form.user_name')
                 .input-group.input-group-lg.full-width
                   =f.text_field :user_name, class: 'form-control', style: 'border-radius: 6px;'

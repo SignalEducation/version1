@@ -141,13 +141,14 @@ en:
 
     corporate_customers:
       form:
-        organisation_name: Organisation name
+        organisation_name: Name
         organisation_name_placeholder: 'Smyth & co. Accountants'
         address: Address
         address_placeholder: '123 Fake Street'
         country_id: Country
         payments_by_card: Payments by card
         stripe_customer_guid: Stripe Customer ID
+        subdomain: Subdomian
         user_name: Create Account Username
         passcode: Create Account Password
 
