@@ -17,6 +17,7 @@
 #  image_content_type    :string
 #  image_file_size       :integer
 #  image_updated_at      :datetime
+#  background_colour     :string
 #
 
 class GroupsController < ApplicationController
@@ -141,7 +142,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour)
   end
 
 end

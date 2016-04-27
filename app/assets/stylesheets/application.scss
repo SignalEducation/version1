@@ -15,6 +15,7 @@ $gray-2: #ecf0f1;
 $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $asphalt-3: #C0CFD5;
+$asphalt-4: #edeff0;
 $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
 $purple-3: rgb(83, 84, 112);
@@ -28,6 +29,22 @@ $blue-2: #34495e;
 $green-1: #D0F6BD;
 $green-2: #00cc66;
 $pink-1: #FED4CD;
+
+// Course Image Colours
+$gray-3: #ecf0f1;
+$blue-3: #3079AB;
+$blue-4: #39ADD1;
+$orange-1: #F9845B;
+$orange-2: #eb7728;
+$orange-3: #e59a13;
+$green-3: #5cb860;
+$green-4: #20898c;
+$green-5: #2c9676;
+$purple-6: #c38cd4;
+$purple-6: #c38cd4;
+$red-2: #e15258;
+$red-3: #c25975;
+$pink-2: #f092b0;
 
 $sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
 
@@ -96,6 +113,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   margin-top: 0;
   &.h-white {
     color: $white;
+  }
+  &.h-white-faded {
+    color: lightcyan;
+    //color: gainsboro;
   }
 }
 h1, .h1 {
@@ -571,7 +592,7 @@ a.box {
   }
   &.box-course {
     text-align: center;
-    margin-top: $gutter*1.5;
+    margin-top: $gutter;
     &:after {
       position: absolute;
       top: 0;
@@ -585,7 +606,7 @@ a.box {
       background-size: contain;
     }
     & .box-inner {
-      padding-top: $gutter*2.5;
+      padding-top: $gutter*2;
     }
   }
 }
@@ -597,16 +618,31 @@ a.box {
   margin: 0 auto;
 }
 .box-inner {
-  padding: $gutter*2 $gutter/2;
-  height: 250px;
+  padding: $gutter $gutter/2;
+  height: 200px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 .box-pic {
-  padding: $gutter $gutter;
-  background: 50%;
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
 }
 .box-desc {
   margin: $gutter/2 0 0 0;
 }
+.saturate {-webkit-filter: saturate(3); filter: saturate(3);}
+.grayscale {-webkit-filter: grayscale(100%); filter: grayscale(100%);}
+.contrast {-webkit-filter: contrast(160%); filter: contrast(160%);}
+.brightness {-webkit-filter: brightness(0.25); filter: brightness(0.25);}
+.blur {-webkit-filter: blur(3px); filter: blur(3px);}
+.invert {-webkit-filter: invert(100%); filter: invert(100%);}
+.sepia {-webkit-filter: sepia(100%); filter: sepia(100%);}
+.huerotate {-webkit-filter: hue-rotate(180deg); filter: hue-rotate(180deg);}
+.rss.opacity {-webkit-filter: opacity(50%); filter: opacity(50%);}
 .box-label {
   background: $red-1;
   color: $white;
@@ -619,6 +655,10 @@ a.box {
   @include breakpoint(sm-min) {
     @include font-size(1.2);
   }
+}
+.box-label-small {
+  color: gainsboro;
+  padding: $gutter/4;
 }
 .course-topics-list {
   list-style: none;
@@ -813,6 +853,9 @@ a.box-item {
 }
 .is-bg-asphalt {
   background: $asphalt-1;
+}
+.is-bg-asphalt-dark {
+  background: $asphalt-4;
 }
 .is-bg-white-to-asphalt {
   @include gradient-vertical($white, $asphalt-1, 0%, 50%);

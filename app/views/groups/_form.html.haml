@@ -12,6 +12,10 @@
         .input-group.input-group-lg.full-width
           =f.text_field :name_url, class: 'form-control', style: 'border-radius: 6px;'
         %br/
+        =f.label :background_colour, t('views.groups.form.background_colour'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.color_field :background_colour, rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+        %br/
         %br/
         .col-sm-2
           .checkbox

@@ -10,20 +10,18 @@
             %p.h5.h-white.text-center.l-margin-bottom-big8
               Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
 
-.l-section.is-bg-asphalt
-  .l-wrap
+.l-section.is-bg-asphalt-dark
+  .l-wrap-medium
     .container-fluid
       .row.l-margin-top-big.l-margin-bottom-huge
         -@groups.each do |group|
-          .col-md-6.l-margin-top
-            =link_to library_special_link(group), class: 'box box-course', style: '' do
-              .box-inner
-                %h3.h4.box-title
-                  =group.try(:name)
-                .box-pic
-                  =image_tag group.image.url
-              .box-label
-                =t('views.general.browse')
+          .col-md-4
+            =link_to library_special_link(group), class: 'box box-course' do
+              .box-inner{style: "background: #{group.try(:background_colour)};"}
+                =image_tag group.image.url, class: 'box-pic'
+              .box-label-small
+                %h2
+                  =group.name
 
 
 
