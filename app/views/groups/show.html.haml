@@ -1,14 +1,14 @@
 .l-section-small.is-bg-asphalt
-  .l-wrap
+  .l-wrap-medium
     .container-fluid
       .row
-        .col-md-8.col-md-offset-2
-          %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+        .col-md-12
+          %h1.h1.h-separator.h-separator-left
             =@group.name
-          %h6.text-center
+          %h6
             =@group.description.to_s.truncate(200)
 .l-section-small.is-bg-asphalt
-  .l-wrap
+  .l-wrap-medium
     .container-fluid
       .course-list-wrap
         .row
