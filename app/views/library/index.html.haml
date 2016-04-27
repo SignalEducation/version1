@@ -17,10 +17,10 @@
         -@groups.each do |group|
           .col-md-4
             =link_to library_special_link(group), class: 'box box-course' do
-              .box-inner{style: "background: #{group.try(:background_colour)};"}
+              .box-inner
                 =image_tag group.image.url, class: 'box-pic'
-              .box-label-small
-                %h2
+              .box-label
+                %h3.h-white
                   =group.name
 
 
