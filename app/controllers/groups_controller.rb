@@ -48,7 +48,7 @@ class GroupsController < ApplicationController
         @courses = corporate_courses + non_restricted_courses
       else
         courses = courses.try(:all_not_restricted)
-        @courses = courses.all_in_order
+        @courses = courses.try(:all_in_order)
       end
       if current_user
         @logs = SubjectCourseUserLog.where(user_id: current_user.id)

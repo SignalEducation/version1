@@ -1,5 +1,5 @@
 .l-section-small.is-bg-asphalt
-  .l-wrap-medium
+  .l-wrap-small
     .container-fluid
       .row
         .col-md-12
@@ -8,54 +8,87 @@
           %h6
             =@group.description.to_s.truncate(200)
 .l-section-small.is-bg-asphalt
-  .l-wrap-medium
+  .l-wrap-small
     .container-fluid
       .course-list-wrap
         .row
-          -if current_user
-            -@courses.each do |course|
-              -log = @logs.where(subject_course_id: course.id).first
-              .col-sm-6.col-md-4
-                =link_to library_special_link(course), class: 'card card-course' do
-                  .card-inner
-                    %h3.h4.card-title
-                      =course.try(:name)
-                    %p.card-desc
-                    -total_lesson = course.cme_count
-                    -complete_lesson = log.try(:count_of_cmes_completed) || 0
-                    -complete_percent = log.try(:percentage_complete)
-                    %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
-                    .progress.l-margin-top-big
-                      .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                  .card-label
-                    .col-xs-3
-                      -if log
-                        Resume
-                      -else
-                        =t('views.general.browse')
-                    .col-xs-9
-                      =simple_time(course.total_video_duration)
-          -else
-            -@courses.each do |course|
-              .col-sm-6.col-md-4
-                =link_to library_special_link(course), class: 'card card-course' do
-                  .card-inner{style: 'height: 163px'}
-                    %h3.h4.card-title.l-margin-bottom
-                      =course.try(:name)
-                    %p.card-desc
-                      -if course.try(:short_description)
-                        =course.try(:short_description).truncate(150)
-                      -else
-                        =course.try(:description).truncate(150)
-                  .card-label
-                    .row
-                      .col-md-12.col-xs-12
-                        .col-md-6.col-xs-6
-                          %h6
-                            =t('views.general.browse')
-                        .col-md-6.col-xs-6.text-right
-                          %h6
-                            =simple_time(course.total_video_duration)
+          -if @courses
+            -if current_user
+              -@courses.each do |course|
+                -log = @logs.where(subject_course_id: course.id).first
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'card card-course' do
+                    .card-outer
+                      .card-inner
+                        %h3.h3.card-title.l-margin-bottom
+                          =course.try(:name)
+                        -if log
+                          %p.card-desc
+                            -total_lesson = course.cme_count
+                            -complete_lesson = log.try(:count_of_cmes_completed) || 0
+                            -complete_percent = log.try(:percentage_complete)
+                            %br/
+                            %p
+                              ="#{complete_lesson} out of #{total_lesson} lessons completed"
+
+                            .progress
+                              .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                        -else
+                          %p.card-desc
+                            -if course.short_description.blank?
+                              =course.try(:description).truncate(185).try(:html_safe)
+                            -elsif course.short_description
+                              =course.try(:short_description).truncate(185).try(:html_safe)
+                            -else
+                              =course.try(:description).truncate(185).try(:html_safe)
+
+                      .card-info
+                        -if !course.live && course.active
+                          .days-left
+                            .h8.text-center
+                              =humanize_datetime(course.created_at)
+                    .card-label
+                      .row
+                        .col-md-12.col-xs-12
+                          .col-md-6.col-xs-6
+                            %h6
+                              -if log
+                                Resume
+                              -else
+                                =t('views.general.browse')
+                          .col-md-6.col-xs-6.text-right
+                            %h6
+                              =simple_time(course.total_video_duration)
+
+            -else
+              -@courses.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'card card-course' do
+                    .card-outer
+                      .card-inner
+                        %h3.h3.card-title.l-margin-bottom
+                          =course.try(:name)
+                        %p.card-desc
+                          -if course.short_description.blank?
+                            =course.try(:description).truncate(185).try(:html_safe)
+                          -elsif course.short_description
+                            =course.try(:short_description).truncate(185).try(:html_safe)
+                          -else
+                            =course.try(:description).truncate(185).try(:html_safe)
+                      .card-info
+                        -if !course.live && course.active
+                          .days-left
+                            .h8.text-center
+                              =humanize_datetime(course.created_at)
+                    .card-label
+                      .row
+                        .col-md-12.col-xs-12
+                          .col-md-6.col-xs-6
+                            %h6
+                              =t('views.general.browse')
+                          .col-md-6.col-xs-6.text-right
+                            %h6
+                              =simple_time(course.total_video_duration)
 
 
 -if current_user && (current_user.corporate_customer?)

@@ -60,6 +60,10 @@ class Group < ActiveRecord::Base
     children.try(:all_active)
   end
 
+  def live_children
+    children.try(:all_live)
+  end
+
   def children
     self.try(:subject_courses)
   end
