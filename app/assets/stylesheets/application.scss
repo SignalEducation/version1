@@ -387,6 +387,9 @@ hr {
 .l-margin-top-big {
   margin-top: $gutter*2;
 }
+.l-margin-top-huge {
+  margin-top: $gutter*4;
+}
 
 // 3. modules
 
@@ -891,7 +894,29 @@ a.box-item {
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
 }
 .course-info {
-  width: 50%;
+  width: 60%;
+  float: right;
+  margin-top: $gutter*4;
+  @include breakpoint(xs-min) {
+    width: 100%;
+    margin-top: $gutter*2;
+  }
+
+  @include breakpoint(md-min) {
+    width: 60%;
+    margin-top: $gutter*4;
+  }
+
+}
+.course-action {
+  width: 93%;
+  float: right;
+  margin-top: $gutter*4;
+  @include breakpoint(xs-min) {
+    width: 100%;
+  }
+  @include breakpoint(md-min) {
+  }
 }
 .tutor-profile-pic {
   float: left;
@@ -1418,6 +1443,17 @@ ol.example li.placeholder:before {
 
 
 .tutor-header {
+  img.profile-pic {
+    text-decoration: none;
+
+    &:link {
+      text-decoration: none;
+    }
+    &:hover, &:active {
+      text-decoration: none;
+      @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    }
+  }
   .profile-pic {
     display: block;
     max-width: 120px;

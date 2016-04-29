@@ -17,6 +17,9 @@ en:
       approve_tooltip: click to approve
       at_date_time: At
       author: "Author : "
+      course_tutor: Course Tutor
+      course_structure: Course Stucture
+      course_content: Course Content
       back: Back
       browse: Browse
       by: by

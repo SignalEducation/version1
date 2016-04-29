@@ -236,6 +236,10 @@ class User < ActiveRecord::Base
     self.subscriptions.last.try(:free_trial?)
   end
 
+  def canceled_member?
+    self.subscriptions.last.try(:current_status) == 'canceled'
+  end
+
   def referred_user
     self.referred_signup
   end
