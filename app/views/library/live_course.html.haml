@@ -4,8 +4,8 @@
     .container-fluid
       .row
         .col-sm-4.col-md-4
-          =link_to library_url do
-            .h3.orange.l-margin-bottom-huge
+          .lib-nav.l-margin-bottom-huge
+            =link_to library_url do
               .fa.fa-arrow-left.bold
                 ="Library"
 
@@ -14,12 +14,14 @@
           .col-md-6
             %h1.h1.h-separator.h-separator-left
               =@course.name
-            %h6
+            %p.h4.l-margin-top
+              ='About this Course'
+            %p
               =@course.description.to_s.html_safe
           .col-md-6
             .course-info
               -if @course.tutor.try(:profile_image_file_name)
-                %p.h4.l-margin-bottom
+                %p.h4.l-margin-bottom.l-margin-top
                   =t('views.general.course_tutor')
                 .tutor-header
                   %p.h6
