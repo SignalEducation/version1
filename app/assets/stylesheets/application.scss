@@ -419,24 +419,6 @@ hr {
     max-width: 159px;
   }
 }
-a.lib-nav {
-  color: $purple-1;
-  &:hover {
-    color: $cyan-1;
-  }
-}
-.lib-nav {
-  color: #7b8b8e;
-  text-transform: uppercase;
-  letter-spacing: .1rem;
-  line-height: 1.5;
-  margin-top: 0;
-  font-weight: bolder;
-  @include font-size(1.8);
-  @include breakpoint(md-min) {
-    @include font-size(1.8);
-  }
-}
 .no-card {
   height: 40px;
   line-height: 40px;

@@ -3,10 +3,10 @@
     .container-fluid
       .row
         .col-sm-4.col-md-4
-          =link_to library_url do
-            .h3.orange.l-margin-bottom-huge
-              .fa.fa-arrow-left.bold
-                ="Library"
+          .l-margin-bottom-huge
+            =link_to library_url, class: 'btn btn-red btn-secondary' do
+              .fa.fa-arrow-left
+              ="Library"
       .row
         .col-md-12
           %h1.h1.h-separator.h-separator-left

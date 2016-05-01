@@ -135,7 +135,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def parent
-    self.groups
+    self.groups.all_in_order.first
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
