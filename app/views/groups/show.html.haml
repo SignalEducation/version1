@@ -49,10 +49,15 @@
                               =course.try(:description).truncate(185).try(:html_safe)
 
                       .card-info
-                        -if !course.live && course.active
-                          .days-left
-                            .h8.text-center
-                              =humanize_datetime(course.created_at)
+                        .col-md-6.col-xs-6
+                          -if !course.live && course.active
+                            .days-left
+                              .h8.text-center
+                                =humanize_datetime(course.created_at)
+                        .col-md-6.col-xs-6
+                          %h6.pull-right
+                            =simple_time(course.total_video_duration)
+
                     .card-label
                       .row
                         .col-md-12.col-xs-12
@@ -63,8 +68,6 @@
                               -else
                                 =t('views.general.browse')
                           .col-md-6.col-xs-6.text-right
-                            %h6
-                              =simple_time(course.total_video_duration)
 
             -else
               -@courses.each do |course|
@@ -82,10 +85,15 @@
                           -else
                             =course.try(:description).truncate(185).try(:html_safe)
                       .card-info
-                        -if !course.live && course.active
-                          .days-left
-                            .h8.text-center
-                              =humanize_datetime(course.created_at)
+                        .col-md-6.col-xs-6
+                          -if !course.live && course.active
+                            .days-left
+                              .h8.text-center
+                                =humanize_datetime(course.created_at)
+                        .col-md-6.col-xs-6
+                          %h6.pull-right
+                            =simple_time(course.total_video_duration)
+
                     .card-label
                       .row
                         .col-md-12.col-xs-12
@@ -93,8 +101,6 @@
                             %h6
                               =t('views.general.browse')
                           .col-md-6.col-xs-6.text-right
-                            %h6
-                              =simple_time(course.total_video_duration)
 
 
 -if current_user && (current_user.corporate_customer?)

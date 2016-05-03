@@ -834,14 +834,11 @@ a.card {
 }
 .card-info {
   padding: $gutter/2 $gutter $gutter $gutter;
-  width: 40%;
-  @include breakpoint(xs-sm) {
-    width: 60%;
-  }
 }
 .days-left {
   @include border-radius(16px);
   border: 2px dashed $cyan-1;
+  //width: 80%;
 }
 
 .card-label {
