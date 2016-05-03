@@ -18,7 +18,11 @@
           .col-md-4
             =link_to library_special_link(group), class: 'box box-course' do
               .box-inner
-                =image_tag group.image.url, class: 'box-pic'
+                -if group.image_file_name
+                  =image_tag group.image.url, class: 'box-pic'
+                -else
+                  %p.l-margin-top
+                    =group.description.truncate(200).html_safe
               .box-label
                 %h3.h-white
                   =group.name
