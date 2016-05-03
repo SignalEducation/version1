@@ -53,7 +53,7 @@ describe Group do
 
   it { should validate_presence_of(:description) }
 
-  it { should validate_presence_of(:image) }
+  it { should_not validate_presence_of(:image) }
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
