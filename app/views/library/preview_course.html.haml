@@ -1,7 +1,7 @@
 .hero-upcoming
   =render partial: 'layouts/transparent_navbar'
   .l-section
-    .l-wrap
+    .l-wrap-small
       .container-fluid
         .row
           .col-md-6.col-md-offset-3
@@ -21,83 +21,62 @@
                       %span.input-group-btn
                         =submit_tag 'Register', class: 'btn btn-red', name: nil
 
--if @course.children.count > 0
-  .l-asphalt
-    .l-section
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-sm-12.col-md-8{role: 'tablist'}
-              .signal-tabs
-                %a{href: '#table-of-contents', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
-                  =t('views.library.show.table_of_contents')
-                %a{href: '#description', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
-                  =t('views.library.show.description')
 
 
-              .col-md-12.l-margin-top-big.l-margin-bottom
-                .tab-content
-                  .tab-pane.fade.in.active#table-of-contents{role: 'tabpanel'}
-                    %ul.course-topics-list
-                      -if @course.children.count > 0
-                        -@course.children.all_active.all_in_order.each do |child|
-                          %li
-                            .box-item.upcoming
-                              =child.try(:name)
 
-                  .tab-pane.fade#description{role: 'tabpanel'}
-                    %p.big
-                      =@course.try(:description).try(:html_safe)
 
-            .col-sm-12.col-md-4.l-margin-bottom-huge
-              %h3.l-margin-top-small.h-separator.h-separator-left.h-separator-small
-                =t('views.subject_courses.show.info')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-top-big
+        .col-md-12
+          .col-md-6
+            %p.h4.l-margin-top
+              ='About this Course'
+            %p
+              =@course.description.to_s.html_safe
+          .col-md-6
+            .course-info
+              -if @course.tutor.try(:profile_image_file_name)
+                %p.h4.l-margin-bottom.l-margin-top
+                  =t('views.general.course_tutor')
+                .tutor-header
+                  %p.h6
+                    =@course.tutor.full_name
+                  =link_to profile_url(@course.tutor) do
+                    =image_tag @course.tutor.profile_image.url, class: 'profile-pic profile-pic-small pull-right'
+                  %p
+                    =@course.tutor.try(:first_description).truncate(225).try(:html_safe)
+                  .days-left.l-margin-top-big
+                    .h8.text-center
+                      =humanize_datetime(@course.created_at)
 
-              -if @course.try(:tutor_id)
-                -if @course.tutor.profile_image_file_name
-                  %br/
-                  %h6
-                    =t('views.general.author')
-                    &nbsp;
-                    =@course.tutor.try(:full_name)
-
-                  .col-md-6{style: 'padding-left: 0;'}
-                    =link_to profile_url(@course.tutor), class: 'box'  do
-                      .box-pic
-                        =image_tag @course.tutor.profile_image.url, class: 'profile-pic', style: 'margin-bottom: 10px;'
-
-                -else
-                  %li.lined-list-item
-                    =t('views.general.author')
-                    =@course.tutor.try(:full_name)
-                %p{style: 'margin-top: 5px;'}
-                  =@course.tutor.try(:first_description).try(:html_safe)
               -else
-                ='Learn Signal'
--else
-  .l-asphalt
-    .l-section
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom-huge
-            .col-sm-12.col-md-8
-              %h3.l-margin-top-big
-                =t('views.subject_courses.form.description')
-              %p
-                -if @course.try(:description)
-                  =@course.try(:description).try(:html_safe)
-                -else
-                  =@course.try(:description).try(:html_safe)
-            .col-sm-4
-              %h3.l-margin-top-big
-                =t('views.general.author')
-              %p
-                -if @course.tutor
-                  =@course.tutor.try(:name)
-                -else
-                  ='Learn Signal'
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_tutor')
+                .tutor-header
+                  %p.h6
+                    =@course.tutor.full_name
+                  -if @course.tutor.first_description
+                    %p
+                      =@course.tutor.first_description.truncate(225).html_safe
+                  .days-left.l-margin-top-big
+                    .h8.text-center
+                      =humanize_datetime(@course.created_at)
 
-%br/
-%br/
-%br/
+      .row
+        .col-md-12
+          .col-md-8.l-margin-top-big
+            %p.h4.l-margin-bottom
+              =t('views.general.course_content')
+          .col-md-12.l-margin-top-big.l-margin-bottom
+            %ul.course-topics-list
+              -if @course.children.count > 0
+                -@course.children.all_active.all_in_order.each do |child|
+                  %li
+                    .box-item.upcoming
+                      =child.try(:name)
+
+
+
 =render partial: 'layouts/new_footer'
