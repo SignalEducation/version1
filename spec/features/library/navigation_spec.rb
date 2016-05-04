@@ -39,7 +39,9 @@ describe 'User navigating through the library:', type: :feature do
       expect(page).to have_content subject_course_1.name
       click_link("#{subject_course_1.name}")
       expect(page).to have_content subject_course_1.name
-      click_link('Start Course')
+      parent = page.find('.course-topics-list li:first-child')
+      parent.click
+      page.find('#collapse_0').click
       expect(page).to have_content(course_module_1.name)
       expect(page).to have_content course_module_element_1_1.name
       expect(page).to have_content course_module_element_1_2.name
