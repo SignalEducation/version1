@@ -50,10 +50,10 @@
 
                       .card-info
                         .col-md-6.col-xs-6
-                          -if !course.live && course.active
+                          -if course.try(:live_date)
                             .days-left
                               .h8.text-center
-                                =humanize_datetime(course.created_at)
+                                =humanize_datetime(course.live_date)
                         .col-md-6.col-xs-6
                           %h6.pull-right
                             =simple_time(course.total_video_duration)
@@ -86,10 +86,10 @@
                             =course.try(:description).truncate(185).try(:html_safe)
                       .card-info
                         .col-md-6.col-xs-6
-                          -if !course.live && course.active
+                          -if course.try(:live_date)
                             .days-left
                               .h8.text-center
-                                =humanize_datetime(course.created_at)
+                                =humanize_datetime(course.live_date)
                         .col-md-6.col-xs-6
                           %h6.pull-right
                             =simple_time(course.total_video_duration)

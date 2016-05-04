@@ -47,9 +47,10 @@
                     =image_tag @course.tutor.profile_image.url, class: 'profile-pic profile-pic-small pull-right'
                   %p
                     =@course.tutor.try(:first_description).truncate(225).try(:html_safe)
-                  .days-left.l-margin-top-big
-                    .h8.text-center
-                      =humanize_datetime(@course.created_at)
+                  -if @course.try(:live_date)
+                    .days-left.l-margin-top-big
+                      .h8.text-center
+                        =humanize_datetime(@course.live_date)
 
               -else
                 %p.h4.l-margin-bottom
@@ -60,9 +61,10 @@
                   -if @course.tutor.first_description
                     %p
                       =@course.tutor.first_description.truncate(225).html_safe
-                  .days-left.l-margin-top-big
-                    .h8.text-center
-                      =humanize_datetime(@course.created_at)
+                  -if @course.try(:live_date)
+                    .days-left.l-margin-top-big
+                      .h8.text-center
+                        =humanize_datetime(@course.live_date)
 
       .row
         .col-md-12

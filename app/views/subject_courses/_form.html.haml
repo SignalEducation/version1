@@ -35,6 +35,9 @@
                   %label
                     =f.check_box :active
                     =t('views.subject_courses.form.active')
+            =f.label :live_date, t('views.subject_courses.form.tutor_id'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :live_date, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
 
 
         .col-md-12
@@ -93,6 +96,12 @@
 
   $('#editor').summernote({
     height: 150
+  });
+
+
+  $(function () {
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker2').datetimepicker();
   });
 
 -#:javascript

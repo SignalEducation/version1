@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160427110359) do
+ActiveRecord::Schema.define(version: 20160504134538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -713,6 +713,7 @@ ActiveRecord::Schema.define(version: 20160427110359) do
     t.boolean  "is_cpd",                                  default: false
     t.float    "cpd_hours"
     t.integer  "cpd_pass_rate"
+    t.datetime "live_date"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
