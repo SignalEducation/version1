@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160409195657) do
+ActiveRecord::Schema.define(version: 20160504134538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -334,6 +334,11 @@ ActiveRecord::Schema.define(version: 20160409195657) do
     t.datetime "updated_at",                            null: false
     t.integer  "corporate_customer_id"
     t.datetime "destroyed_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.string   "background_colour"
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
@@ -708,6 +713,7 @@ ActiveRecord::Schema.define(version: 20160409195657) do
     t.boolean  "is_cpd",                                  default: false
     t.float    "cpd_hours"
     t.integer  "cpd_pass_rate"
+    t.datetime "live_date"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

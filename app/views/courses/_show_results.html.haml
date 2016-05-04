@@ -53,8 +53,9 @@
           =link_to "Discuss #{@course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.course_module_jumbo_quiz.try(:name)} in the Forum", @course_module_element_user_log.course_module.parent.try(:forum_url), target: '_blank'
 
 
-.box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
-  -if @course_module_element_user_log.is_jumbo_quiz
+
+-if @course_module_element_user_log.is_jumbo_quiz
+  .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
     .col-xs-4.text-left
       =link_to course_special_link(@course_module), class: 'btn btn-red text-bold' do
         .glyphicon.glyphicon-arrow-left
@@ -66,7 +67,8 @@
         Next Module
         .glyphicon.glyphicon-arrow-right
 
-  -if @course_module_element_user_log.is_question_bank
+-if @course_module_element_user_log.is_question_bank
+  .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
     .row.pull-left
       =link_to library_special_link(@question_bank.subject_course), class: 'btn btn-red text-bold' do
         .glyphicon.glyphicon-arrow-left
@@ -74,9 +76,13 @@
         =@question_bank.subject_course.name
 
 
-  -if @course_module_element
-    .cme-nav
+-if @course_module_element
+  .box-item.question-box.border-same-backcolor.width-bigger{style: 'padding-right: 40px;'}
+    .cme-nav.hidden-xs
       =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
+    .cme-nav.hidden-sm.hidden-md.hidden-lg
+      =render partial: 'courses/small_cme_nav', locals: {cme: @course_module_element}
+
 :javascript
 
   var allSolutions = $('.all_solutions'),

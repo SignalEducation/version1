@@ -71,7 +71,7 @@ describe CorporateCustomer do
 
   it { should validate_presence_of(:passcode) }
 
-  it { should validate_presence_of(:country_id) }
+  it { should_not validate_presence_of(:country_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

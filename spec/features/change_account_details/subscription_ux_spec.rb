@@ -118,6 +118,7 @@ describe 'Subscription UX:', type: :feature do
     #%w(expired bad_cvc declined processing_error valid_visa_debit
     #valid_mc_debit).each do |this_card|
     %w(valid_visa_debit ).each do |this_card|
+      sleep 1
       click_link(I18n.t('views.users.show.tabs.payments'))
       # new card modal
       sleep 1

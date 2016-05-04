@@ -13,6 +13,11 @@
 #  updated_at            :datetime         not null
 #  corporate_customer_id :integer
 #  destroyed_at          :datetime
+#  image_file_name       :string
+#  image_content_type    :string
+#  image_file_size       :integer
+#  image_updated_at      :datetime
+#  background_colour     :string
 #
 
 require 'rails_helper'

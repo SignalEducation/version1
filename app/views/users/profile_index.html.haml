@@ -10,12 +10,9 @@
     .container-fluid
       -@tutors.each do |tutor|
         .col-sm-6.col-md-3.col-lg-3
-          =link_to profile_url(tutor), class: 'box box-profile' do
-            .box-inner
+          =link_to profile_url(tutor), class: 'tutor-box' do
+            .tutor-box-inner
               = image_tag tutor.profile_image.url, class: 'profile-pic profile-pic-big'
-              %h3.h4.box-title
+              %h3.h4.tutor-box-title
                 =tutor.full_name
 
-
-
-=render partial: 'layouts/new_footer'

@@ -17,6 +17,9 @@ en:
       approve_tooltip: click to approve
       at_date_time: At
       author: "Author : "
+      course_tutor: Course Tutor
+      course_structure: Course Stucture
+      course_content: Course Content
       back: Back
       browse: Browse
       by: by
@@ -141,13 +144,14 @@ en:
 
     corporate_customers:
       form:
-        organisation_name: Organisation name
+        organisation_name: Name
         organisation_name_placeholder: 'Smyth & co. Accountants'
         address: Address
         address_placeholder: '123 Fake Street'
         country_id: Country
         payments_by_card: Payments by card
         stripe_customer_guid: Stripe Customer ID
+        subdomain: Subdomian
         user_name: Create Account Username
         passcode: Create Account Password
 
@@ -535,6 +539,7 @@ en:
         name_url_placeholder: Name URL
         description: Discription
         description_placeholder: Discription goes here!
+        background_colour: Background Colour
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100

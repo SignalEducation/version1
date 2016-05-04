@@ -13,6 +13,11 @@
 #  updated_at            :datetime         not null
 #  corporate_customer_id :integer
 #  destroyed_at          :datetime
+#  image_file_name       :string
+#  image_content_type    :string
+#  image_file_size       :integer
+#  image_updated_at      :datetime
+#  background_colour     :string
 #
 
 class GroupsController < ApplicationController
@@ -43,7 +48,7 @@ class GroupsController < ApplicationController
         @courses = corporate_courses + non_restricted_courses
       else
         courses = courses.try(:all_not_restricted)
-        @courses = courses.all_in_order
+        @courses = courses.try(:all_in_order)
       end
       if current_user
         @logs = SubjectCourseUserLog.where(user_id: current_user.id)
@@ -137,7 +142,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour)
   end
 
 end

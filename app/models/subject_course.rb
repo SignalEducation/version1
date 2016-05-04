@@ -29,6 +29,7 @@
 #  is_cpd                                  :boolean          default(FALSE)
 #  cpd_hours                               :float
 #  cpd_pass_rate                           :integer
+#  live_date                               :datetime
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -38,7 +39,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate
+ :cpd_hours, :cpd_pass_rate, :live_date
 
   # Constants
 
@@ -135,7 +136,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def parent
-    self.groups
+    self.groups.all_in_order.first
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)

@@ -29,6 +29,7 @@
 #  is_cpd                                  :boolean          default(FALSE)
 #  cpd_hours                               :float
 #  cpd_pass_rate                           :integer
+#  live_date                               :datetime
 #
 
 FactoryGirl.define do

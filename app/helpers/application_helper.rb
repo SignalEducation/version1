@@ -45,6 +45,14 @@ module ApplicationHelper
     end
   end
 
+  def simple_time(seconds)  # Used in the library UI
+    if seconds > 3600
+      Time.at(seconds).utc.strftime('%Hh')
+    else
+      Time.at(seconds).utc.strftime('%Mm')
+    end
+  end
+
   def humanize_datetime(date)  # Used in the library UI
     date.utc.strftime('%d %b %y')
   end

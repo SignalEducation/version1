@@ -15,6 +15,7 @@ $gray-2: #ecf0f1;
 $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $asphalt-3: #C0CFD5;
+$asphalt-4: #edeff0;
 $purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
 $purple-3: rgb(83, 84, 112);
@@ -28,6 +29,22 @@ $blue-2: #34495e;
 $green-1: #D0F6BD;
 $green-2: #00cc66;
 $pink-1: #FED4CD;
+
+// Course Image Colours
+$gray-3: #ecf0f1;
+$blue-3: #3079AB;
+$blue-4: #39ADD1;
+$orange-1: #F9845B;
+$orange-2: #eb7728;
+$orange-3: #e59a13;
+$green-3: #5cb860;
+$green-4: #20898c;
+$green-5: #2c9676;
+$purple-6: #c38cd4;
+$purple-6: #c38cd4;
+$red-2: #e15258;
+$red-3: #c25975;
+$pink-2: #f092b0;
 
 $sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
 
@@ -97,6 +114,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   &.h-white {
     color: $white;
   }
+  &.h-white-faded {
+    color: lightcyan;
+    //color: gainsboro;
+  }
 }
 h1, .h1 {
   font-weight: normal;
@@ -138,6 +159,9 @@ h3, .h3 {
   letter-spacing: 0;
   margin-top: 0;
   @include font-size(2.4);
+  &.orange {
+    color: $orange-3;
+  }
 }
 h4, .h4 {
   color: $purple-1;
@@ -168,6 +192,18 @@ h6, .h6 {
 }
 h7, .h7 {
   color: lighten($purple-1, 60%);
+  letter-spacing: .1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  text-transform: none;
+  margin-top: 0;
+  @include font-size(1.8);
+  @include breakpoint(md-min) {
+    @include font-size(1.8);
+  }
+}
+h8, .h8 {
+  color: #7b8b8e;
   letter-spacing: .1rem;
   font-weight: normal;
   line-height: 1.5;
@@ -288,6 +324,15 @@ hr {
     max-width: 1400px;
   }
 }
+.l-wrap-small {
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+  margin: 0 auto;
+  @include breakpoint(md-min) {
+    max-width: 1600px;
+  }
+}
 .l-wrap-big {
   @include breakpoint(sm-min) {
     padding: 0 $gutter/2;
@@ -342,6 +387,9 @@ hr {
 .l-margin-top-big {
   margin-top: $gutter*2;
 }
+.l-margin-top-huge {
+  margin-top: $gutter*4;
+}
 
 // 3. modules
 
@@ -371,7 +419,6 @@ hr {
     max-width: 159px;
   }
 }
-
 .no-card {
   height: 40px;
   line-height: 40px;
@@ -538,10 +585,8 @@ label, .label {
     background-color: darken($white, 15);
   }
 }
-
 a.box {
   text-decoration: none;
-
   &:link {
     text-decoration: none;
   }
@@ -573,7 +618,7 @@ a.box {
   }
   &.box-course {
     text-align: center;
-    margin-top: $gutter*1.5;
+    margin-top: $gutter;
     &:after {
       position: absolute;
       top: 0;
@@ -587,7 +632,7 @@ a.box {
       background-size: contain;
     }
     & .box-inner {
-      padding-top: $gutter*2.5;
+      padding-top: $gutter*2;
     }
   }
 }
@@ -599,10 +644,18 @@ a.box {
   margin: 0 auto;
 }
 .box-inner {
-  padding: $gutter*2 $gutter/2;
+  padding: $gutter $gutter/2;
+  height: 200px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 .box-pic {
-  padding: $gutter/2 $gutter/2 ;
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
 }
 .box-desc {
   margin: $gutter/2 0 0 0;
@@ -619,6 +672,191 @@ a.box {
   @include breakpoint(sm-min) {
     @include font-size(1.2);
   }
+}
+
+a.tutor-box {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .tutor-box-title {
+      //color: $red-1;
+    }
+    .tutor-box-label {
+      background: shade($red-1, 10%);
+    }
+  }
+}
+.tutor-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.tutor-box-course {
+    text-align: center;
+    margin-top: $gutter;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .tutor-box-inner {
+      padding-top: $gutter*2;
+    }
+  }
+}
+.tutor-box-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.tutor-box-inner {
+  padding: $gutter $gutter/2;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.tutor-box-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.box-desc {
+  margin: $gutter/2 0 0 0;
+}
+.tutor-box-label {
+  background: $red-1;
+  color: $white;
+  padding: $gutter/1.45;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+
+a.card {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+
+  }
+  &:hover {
+    .card-title {
+      //color: $red-1;
+    }
+    .card-label {
+      background: darken($red-1, 5%);
+
+    }
+  }
+}
+.card{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.card-course {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding-top: $gutter;
+    }
+  }
+}
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.card-outer {
+  height: 275px;
+}
+.card-inner {
+  padding: $gutter $gutter;
+  height: 200px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.card-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.card-desc {
+  margin: 0 0 0 0;
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.days-left {
+  @include border-radius(16px);
+  border: 2px dashed $cyan-1;
+  //width: 80%;
+}
+
+.card-label {
+  background: $red-1;
+  color: $white;
+  padding: $gutter/1.45;
+  //letter-spacing: .2rem;
+  //text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+.box-label-small {
+  color: gainsboro;
+  padding: $gutter/4;
 }
 .course-topics-list {
   list-style: none;
@@ -739,6 +977,31 @@ a.box-item {
   background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
 }
+.course-info {
+  width: 60%;
+  float: right;
+  margin-top: $gutter*4;
+  @include breakpoint(xs-min) {
+    width: 100%;
+    margin-top: $gutter*2;
+  }
+
+  @include breakpoint(md-min) {
+    width: 60%;
+    margin-top: $gutter*4;
+  }
+
+}
+.course-action {
+  width: 93%;
+  float: right;
+  margin-top: $gutter*4;
+  @include breakpoint(xs-min) {
+    width: 100%;
+  }
+  @include breakpoint(md-min) {
+  }
+}
 .tutor-profile-pic {
   float: left;
   max-width: 50px;
@@ -813,6 +1076,9 @@ a.box-item {
 }
 .is-bg-asphalt {
   background: $asphalt-1;
+}
+.is-bg-asphalt-dark {
+  background: $asphalt-4;
 }
 .is-bg-white-to-asphalt {
   @include gradient-vertical($white, $asphalt-1, 0%, 50%);
@@ -1261,6 +1527,17 @@ ol.example li.placeholder:before {
 
 
 .tutor-header {
+  img.profile-pic {
+    text-decoration: none;
+
+    &:link {
+      text-decoration: none;
+    }
+    &:hover, &:active {
+      text-decoration: none;
+      @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    }
+  }
   .profile-pic {
     display: block;
     max-width: 120px;
@@ -1269,8 +1546,10 @@ ol.example li.placeholder:before {
     &.profile-pic-big {
       max-width: 170px;
     }
+    &.profile-pic-small {
+      max-width: 80px;
+    }
   }
-
 }
 //////////////////////
 a.library-box {

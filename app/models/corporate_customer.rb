@@ -50,7 +50,6 @@ class CorporateCustomer < ActiveRecord::Base
   validates :subdomain, presence: true, uniqueness: true, length: {maximum: 20}
   validates :user_name, presence: true, length: {maximum: 25}
   validates :passcode, presence: true, length: {maximum: 25}
-  validates :country_id, presence: true
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   # callbacks

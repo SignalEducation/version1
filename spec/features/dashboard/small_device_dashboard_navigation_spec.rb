@@ -43,7 +43,11 @@ describe 'User navigating through the dashboard:', type: :feature do
       sleep(1)
       click_link('Group 1')
       click_link('Subject Course 1')
-      click_link('Start Course')
+
+      parent = page.find('.course-topics-list li:first-child')
+      parent.click
+      page.find('#collapse_0').click
+
       expect(page).to have_content course_module_element_1_1.name
       page.all('.quiz-answer-clickable').first.click
       expect(page).to have_content I18n.t('views.courses.show_results.h1')

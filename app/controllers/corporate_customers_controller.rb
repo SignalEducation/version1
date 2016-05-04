@@ -71,6 +71,9 @@ class CorporateCustomersController < ApplicationController
     @quizzes_five_months_ago = @corporate_quiz_logs.five_months_ago.count
     @compulsory_course_cms = CourseModule.where(subject_course_id: @compulsory_courses).map(&:id)
 
+    #Admin Data
+    @corporate_students = @corporate_customer.students
+    @corporate_managers = @corporate_customer.managers
   end
 
   def new
