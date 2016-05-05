@@ -500,7 +500,7 @@ class User < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
-          livemode: (result[:livemode] == 'live'),
+          livemode: (result[:plan][:livemode]),
           current_status: result[:status],
       )
       # mass-assign-protected attributes
@@ -564,7 +564,7 @@ class User < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
-          livemode: (result[:livemode] == 'live'),
+          livemode: (result[:plan][:livemode]),
           current_status: result[:status],
       )
       # mass-assign-protected attributes
