@@ -68,7 +68,7 @@ class Subscription < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: plan.id,
           complimentary: false,
-          livemode: (stripe_subscription_hash[:livemode] == 'live'),
+          livemode: (stripe_subscription_hash[:livemode]),
           current_status: stripe_subscription_hash[:status],
     )
     x.stripe_guid = stripe_subscription_hash[:id]
@@ -133,8 +133,10 @@ class Subscription < ActiveRecord::Base
     response = stripe_subscription.delete(at_period_end: true).to_hash
     if response[:status] == 'active' && response[:cancel_at_period_end] == true
       self.update_attribute(:current_status, 'canceled-pending')
+
       SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
       Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
+
     else
       Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
@@ -319,7 +321,7 @@ class Subscription < ActiveRecord::Base
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complimentary: false,
-              livemode: (result[:livemode] == 'live'),
+              livemode: (result[:plan][:livemode]),
               current_status: result[:status],
       )
       # mass-assign-protected attributes
@@ -330,7 +332,7 @@ class Subscription < ActiveRecord::Base
       new_sub.save(validate: false) # see "sample_response_from_stripe" above
 
       self.update_attribute(:current_status, 'previous')
-      self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
+      #self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
 
       return new_sub
     end
@@ -385,7 +387,7 @@ class Subscription < ActiveRecord::Base
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complimentary: false,
-              livemode: (result[:livemode] == 'live'),
+              livemode: (result[:plan][:livemode]),
               current_status: result[:status],
       )
       # mass-assign-protected attributes
@@ -395,7 +397,9 @@ class Subscription < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false) # see "sample_response_from_stripe" above
       self.update_attribute(:current_status, 'previous')
-      self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
+
+      #self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
+
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       user = new_sub.user
       user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)

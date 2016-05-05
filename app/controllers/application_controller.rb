@@ -149,7 +149,7 @@ class ApplicationController < ActionController::Base
     not_allowed = {course_content: {view_all: false, reason: ''},
                    forum: {read: true, write: false},
                    blog: {comment: false} }
-    subscription_in_charge = current_user.subscriptions.all_in_order.last unless current_user.nil?
+    subscription_in_charge = current_user.active_subscription
     if current_user.nil?
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
     elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
       result = not_allowed
       result[:course_content][:reason] = "free_trial_expired"
-    elsif %w(active past_due canceled-pending).include?(subscription_in_charge.try(:current_status) || 'canceled')
+    elsif current_user.permission_to_see_content
       result = allowed
     else
       result = not_allowed
