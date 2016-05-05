@@ -243,6 +243,23 @@ class User < ActiveRecord::Base
     self.referred_signup
   end
 
+  def active_subscription
+    if permission_to_see_content
+      self.subscriptions.where(current_status: 'active').all_in_order.last
+    else
+      self.subscriptions.all_in_order.last
+    end
+  end
+
+  def permission_to_see_content
+    subs = self.subscriptions.map(&:current_status)
+    if subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')
+      return true
+    else
+      return false
+    end
+  end
+
   def assign_anonymous_logs_to_user(session_guid)
     model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
