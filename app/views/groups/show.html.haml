@@ -55,8 +55,9 @@
                               .h8.text-center
                                 =humanize_datetime(course.live_date)
                         .col-md-6.col-xs-6
-                          %h6.pull-right
-                            =simple_time(course.total_video_duration)
+                          -if course.total_video_duration.to_i > 0
+                            %h6.pull-right
+                              =simple_time(course.total_video_duration)
 
                     .card-label
                       .row
@@ -91,8 +92,9 @@
                               .h8.text-center
                                 =humanize_datetime(course.live_date)
                         .col-md-6.col-xs-6
-                          %h6.pull-right
-                            =simple_time(course.total_video_duration)
+                          -if course.total_video_duration.to_i > 0
+                            %h6.pull-right
+                              =simple_time(course.total_video_duration)
 
                     .card-label
                       .row
