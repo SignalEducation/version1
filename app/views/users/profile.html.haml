@@ -51,6 +51,7 @@
                               %h6
                                 =t('views.general.browse')
                             .col-md-6.col-xs-6.text-right
-                              %h6
-                                =simple_time(course.total_video_duration)
+                              -if course.total_video_duration > 0
+                                %h6
+                                  =simple_time(course.total_video_duration)
 
