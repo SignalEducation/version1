@@ -123,29 +123,30 @@ describe UsersController, type: :controller do
           request.env['HTTP_REFERER'] = '/'
           default_plan.update_attribute(:price, 0.1)
           post :student_create, user: sign_up_params
+
           expect(response.status).to eq(200)
-          expect(response).to render_template(:new)
+          expect(response).to render_template(:student_new)
         end
 
         it 'does not subscribe user if user with same email already exists' do
           request.env['HTTP_REFERER'] = '/'
           post :student_create, user: sign_up_params.merge(email: student.email)
           expect(response.status).to eq(200)
-          expect(response).to render_template(:new)
+          expect(response).to render_template(:student_new)
         end
 
         it 'does not subscribe user if password is blank' do
           request.env['HTTP_REFERER'] = '/'
           post :student_create, user: sign_up_params.merge(password: nil)
           expect(response.status).to eq(200)
-          expect(response).to render_template(:new)
+          expect(response).to render_template(:student_new)
         end
 
         it 'does not subscribe user if password is not of required length' do
           request.env['HTTP_REFERER'] = '/'
           post :student_create, user: sign_up_params.merge(password: '12345')
           expect(response.status).to eq(200)
-          expect(response).to render_template(:new)
+          expect(response).to render_template(:student_new)
         end
 
       end

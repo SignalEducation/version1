@@ -10,6 +10,7 @@
 #  destroyed_at             :datetime
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  transcript               :text
 #
 
 class VideoResource < ActiveRecord::Base
@@ -18,7 +19,7 @@ class VideoResource < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :question, :answer, :notes, :course_module_element_id
+  attr_accessible :question, :answer, :notes, :course_module_element_id, :transcript
 
   # Constants
 

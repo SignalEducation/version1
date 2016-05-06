@@ -30,6 +30,7 @@
 #  cpd_hours                               :float
 #  cpd_pass_rate                           :integer
 #  live_date                               :datetime
+#  certificate                             :boolean          default(FALSE), not null
 #
 
 class SubjectCoursesController < ApplicationController
@@ -74,6 +75,7 @@ class SubjectCoursesController < ApplicationController
       @subject_course.live = true
       @subject_course.active = true
       @subject_course.restricted = true
+      @subject_course.certificate = true
       @subject_course.tutor_id = current_user.id
     end
     wistia_response = create_wistia_project(@subject_course.name)
@@ -100,6 +102,10 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
+  def course_modules_order
+    @course_modules = @subject_course.children
+  end
+
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|
@@ -107,7 +113,6 @@ class SubjectCoursesController < ApplicationController
     end
     render json: {}, status: 200
   end
-
 
   def destroy
     if @subject_course.destroy
@@ -132,7 +137,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate)
   end
 
 end

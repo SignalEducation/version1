@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160504134538) do
+ActiveRecord::Schema.define(version: 20160506111537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -714,6 +714,7 @@ ActiveRecord::Schema.define(version: 20160504134538) do
     t.float    "cpd_hours"
     t.integer  "cpd_pass_rate"
     t.datetime "live_date"
+    t.boolean  "certificate",                             default: false, null: false
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -1029,6 +1030,7 @@ ActiveRecord::Schema.define(version: 20160504134538) do
     t.datetime "destroyed_at"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.text     "transcript"
   end
 
   add_index "video_resources", ["course_module_element_id"], name: "index_video_resources_on_course_module_element_id", using: :btree

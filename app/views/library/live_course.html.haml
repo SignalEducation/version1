@@ -142,74 +142,73 @@
                               .side-meta
                                 =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
 
-                -if @course.question_bank && @course.question_bank.active?
-                  -if @question_bank_passed
-                    -if current_user
-                      =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
-                        .box-topic-item
-                          =@course.question_bank.name
-                        .time.hidden-xs
-                          .question-bank-passed
-                            %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                            Passed
-                    -else
-                      =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                        .box-topic-item
-                          =@course.question_bank.name
-                        .time.hidden-xs
-                          .question-bank-passed
-                            %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                            Passed
-                    -if @subject_course_user_log.completed
-                      %hr/
+                -if current_user && @course.certificate
+                  -if @course.question_bank && @course.question_bank.active?
+                    -if @question_bank_passed
                       -if current_user
-                        =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                        =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
                           .box-topic-item
-                            Click here to download your completion certificate
+                            =@course.question_bank.name
+                          .time.hidden-xs
+                            .question-bank-passed
+                              %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                              Passed
                       -else
-                        =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                        =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                           .box-topic-item
-                            Click here to download your completion certificate
-                  -else
-                    -if current_user
-                      =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                        .box-topic-item
-                          =@course.question_bank.name
-                        .time.hidden-xs
-                          =@course.question_bank.number_of_questions.to_s + ' Questions'
+                            =@course.question_bank.name
+                          .time.hidden-xs
+                            .question-bank-passed
+                              %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                              Passed
+                      -if @subject_course_user_log.completed
+                        %hr/
+                        -if current_user
+                          =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                            .box-topic-item
+                              Click here to download your completion certificate
+                        -else
+                          =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                            .box-topic-item
+                              Click here to download your completion certificate
                     -else
-                      =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                        .box-topic-item
-                          =@course.question_bank.name
-                        .time.hidden-xs
-                          =@course.question_bank.number_of_questions.to_s + ' Questions'
-                -else
-                  -if @subject_course_user_log && @subject_course_user_log.completed
-                    %hr/
-                    -if current_user
+                      -if current_user
+                        =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                          .box-topic-item
+                            =@course.question_bank.name
+                          .time.hidden-xs
+                            =@course.question_bank.number_of_questions.to_s + ' Questions'
+                      -else
+                        =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
+                          .box-topic-item
+                            =@course.question_bank.name
+                          .time.hidden-xs
+                            =@course.question_bank.number_of_questions.to_s + ' Questions'
+                  -else
+                    -if @subject_course_user_log && @subject_course_user_log.completed
+                      %hr/
                       =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
                         .box-topic-item
                           Click here to download your completion certificate
-                    -else
-                      =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                        .box-topic-item
-                          Click here to download your completion certificate
+
           .col-md-4
             .course-action
-              -if current_user && current_user.individual_student?
-                -if current_user.free_member?
-                  -# Logged In User on Trial Membership
-                  =link_to 'upgrade account', user_new_paid_subscription_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
-                  %p.l-margin-top.text-center
-                    Upgrade your membership to get full access to all content
-                -elsif current_user.canceled_member?
-                  -# Logged In User Canceled Membership
-                  =link_to  t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
-                  %p.l-margin-top.text-center
-                    Reactivate your membership to get full access to all content
+              -if current_user
+                -if current_user.individual_student?
+                  -if current_user.free_member?
+                    -# Logged In User on Trial Membership
+                    =link_to 'upgrade account', user_new_paid_subscription_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+                    %p.l-margin-top.text-center
+                      Upgrade your membership to get full access to all content
+                  -elsif current_user.canceled_member?
+                    -# Logged In User Canceled Membership
+                    =link_to  t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+                    %p.l-margin-top.text-center
+                      Reactivate your membership to get full access to all content
+                  -else
+                    -# Logged In User on Full Membership
                 -else
-                  -# Logged In User on Full Membership
-
+                  -# Logged In User Admin, Tutor or Corporate
 
               -else
                 -# Logged Out User

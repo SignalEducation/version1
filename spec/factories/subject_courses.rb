@@ -30,6 +30,7 @@
 #  cpd_hours                               :float
 #  cpd_pass_rate                           :integer
 #  live_date                               :datetime
+#  certificate                             :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do

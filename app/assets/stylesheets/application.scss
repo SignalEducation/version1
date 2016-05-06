@@ -632,7 +632,7 @@ a.box {
       background-size: contain;
     }
     & .box-inner {
-      padding-top: $gutter*2;
+      padding-top: $gutter*1.5;
     }
   }
 }
@@ -645,7 +645,7 @@ a.box {
 }
 .box-inner {
   padding: $gutter $gutter/2;
-  height: 200px;
+  height: 225px;
   position: relative;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
