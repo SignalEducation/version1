@@ -912,6 +912,11 @@ en:
       edit:
         h1: Edit Course
 
+      course_modules_order:
+        return: Return
+
+      reorder: Reorder Course Modules
+
       new:
         h1: New Course
 
