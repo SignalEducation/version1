@@ -229,7 +229,9 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def set_total_video_duration
-    self.total_video_duration = self.active_children.sum(:video_duration)
+    video_duration = self.active_children.sum(:video_duration)
+    quiz_duration = self.active_children.sum(:estimated_time_in_seconds)
+    self.total_video_duration = video_duration + quiz_duration
   end
 
   def check_dependencies
