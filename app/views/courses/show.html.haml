@@ -52,6 +52,9 @@
                   -unless @course_module_element.video_resource.answer.empty?
                     %a{href: '#answer', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.answer')
+                  -unless @course_module_element.video_resource.transcript.empty? && @course_module_element.course_module_element_resources.count < 1
+                    %a{href: '#transcript', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                      =t('views.course_module_elements.show.tabs.transcript')
                   -unless @course_module_element.video_resource.notes.empty? && @course_module_element.course_module_element_resources.count < 1
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
@@ -84,6 +87,12 @@
                         .l-margin-bottom-huge
                           %p.big
                             =@course_module_element.video_resource.answer.html_safe
+
+                    .tab-pane.fade#transcript{role: 'tabpanel'}
+                      .col-md-12
+                        .l-margin-bottom-huge
+                          %p.big
+                            =@course_module_element.video_resource.transcript.html_safe
 
                     .tab-pane.fade#notes{role: 'tabpanel'}
                       .col-md-12

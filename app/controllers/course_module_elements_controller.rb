@@ -393,6 +393,7 @@ class CourseModuleElementsController < ApplicationController
             :question,
             :answer,
             :notes,
+            :transcript,
         ],
         course_module_element_flash_card_pack_attributes: [
                 :id,

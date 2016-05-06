@@ -17,6 +17,11 @@
       =video_resource.text_area :notes, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'notes'
     %br/
 
+    =video_resource.label :transcript, t('views.video_resource.form.transcript'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =video_resource.text_area :transcript, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'transcript'
+    %br/
+
 
 
 
@@ -33,6 +38,10 @@
   });
 
   $('#notes').summernote({
+    height: '100'
+  });
+
+  $('#transcript').summernote({
     height: '100'
   });
 

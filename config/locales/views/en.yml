@@ -370,6 +370,7 @@ en:
           question: Question
           answer: Answer
           notes: Notes
+          transcript: Transcript
 
     course_module_element_flash_card_packs:
       form:
@@ -1493,6 +1494,7 @@ en:
         question: Question
         answer: Answer
         notes: Notes
+        transcript: Transcript
 
       show:
         question: Question

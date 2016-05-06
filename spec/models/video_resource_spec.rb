@@ -10,6 +10,7 @@
 #  destroyed_at             :datetime
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  transcript               :text
 #
 
 require 'rails_helper'
