@@ -76,6 +76,10 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
 
+  def current_corporate
+    current_user.try(:corporate_customer)
+  end
+
   def logged_in_required
     unless current_user
       session[:return_to] = request.original_url
