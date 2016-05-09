@@ -14,7 +14,7 @@
         =@seo_title
       -else
         Business Training Library | LearnSignal
-    =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
+    =stylesheet_link_tag @css_root, media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}

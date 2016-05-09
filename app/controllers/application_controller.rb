@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'mailchimp'
 require 'prawn'
+require 'pry-remote'
 
 class ApplicationController < ActionController::Base
 
@@ -20,12 +21,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_if_staging
   before_action :setup_mcapi
-
-  def use_basic_auth_for_staging
-    if Rails.env.staging? && params[:first_element] != 'api'
-      ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
-    end
-  end
+  before_action :set_assets
 
   def authenticate_if_staging
     if Rails.env.staging? && params[:first_element] != 'api'
@@ -76,8 +72,15 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
 
-  def current_corporate
-    current_user.try(:corporate_customer)
+  def set_assets
+    allowed_domains = %w("www learnsignal jobs forum cfa acca staging learnsignal '' ")
+    if request.subdomain.present? && allowed_domains.include?(request.subdomain)
+      @css_root = 'application'
+    elsif request.subdomain.present?
+      @css_root = "#{request.subdomain}/application"
+    else
+      @css_root = 'application'
+    end
   end
 
   def logged_in_required

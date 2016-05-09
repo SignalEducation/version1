@@ -74,8 +74,8 @@ group :development do
 end
 
 group :development, :test do
-  gem 'pry-byebug' # halts code so you can experiment with it
-  #gem 'pry-remote'
+  #gem 'pry-byebug' # halts code so you can experiment with it
+  gem 'pry-remote'
   gem 'hirb'
   gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser
