@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   before_action :check_subdomain
   #before_action :log_user_activity # not for Api::
 
-  helper_method :current_user_session, :current_user
+  helper_method :current_user_session, :current_user, :current_corporate
 
   Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.datetime_formats.simple')
   Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.datetime_formats.standard')
@@ -72,8 +72,12 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
 
+  def current_corporate
+    current_user.try(:corporate_customer)
+  end
+
   def set_assets
-    allowed_domains = %w("www learnsignal jobs forum cfa acca staging learnsignal '' ")
+    allowed_domains = %w("www jobs forum cfa acca staging learnsignal '' ")
     if request.subdomain.present? && allowed_domains.include?(request.subdomain)
       @css_root = 'application'
     elsif request.subdomain.present?
