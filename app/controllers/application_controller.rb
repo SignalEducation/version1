@@ -77,11 +77,12 @@ class ApplicationController < ActionController::Base
   end
 
   def set_assets
+    corporate_domains = CorporateCustomer.all.map(&:subdomain)
     allowed_domains = %w("www jobs forum cfa acca staging learnsignal '' ")
-    if request.subdomain.present? && allowed_domains.include?(request.subdomain)
-      @css_root = 'application'
-    elsif request.subdomain.present?
+    if request.subdomain.present? && corporate_domains.include?(request.subdomain)
       @css_root = "#{request.subdomain}/application"
+    elsif request.subdomain.present? && allowed_domains.include?(request.subdomain)
+      @css_root = 'application'
     else
       @css_root = 'application'
     end
