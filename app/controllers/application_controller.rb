@@ -21,7 +21,6 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_if_staging
   before_action :setup_mcapi
-  before_action :set_assets
 
   def authenticate_if_staging
     if Rails.env.staging? && params[:first_element] != 'api'
@@ -39,7 +38,7 @@ class ApplicationController < ActionController::Base
   before_action :process_referral_code # not for Api::
   before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
-  before_action :check_subdomain
+  before_action :set_assets_from_subdomain
   #before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user, :current_corporate
@@ -76,13 +75,16 @@ class ApplicationController < ActionController::Base
     current_user.try(:corporate_customer)
   end
 
-  def set_assets
+  def set_assets_from_subdomain
     corporate_domains = CorporateCustomer.all.map(&:subdomain)
-    allowed_domains = %w("www jobs forum cfa acca staging learnsignal '' ")
     if request.subdomain.present? && corporate_domains.include?(request.subdomain)
-      @css_root = "#{request.subdomain}/application"
-    elsif request.subdomain.present? && allowed_domains.include?(request.subdomain)
-      @css_root = 'application'
+      asset_folder = "#{Rails.root}/app/assets/stylesheets/#{request.subdomain}/application.scss"
+      if File.exists?(asset_folder)
+        @css_root = "#{request.subdomain}/application"
+      else
+        @css_root = 'application'
+      end
+      @corporate_with_subdomain = CorporateCustomer.find_by_subdomain(request.subdomain)
     else
       @css_root = 'application'
     end
@@ -118,11 +120,6 @@ class ApplicationController < ActionController::Base
       session[:return_to] = nil
     end
     redirect_to(destination)
-  end
-
-  def check_subdomain
-    Rails.logger.debug "DEBUG: ApplicationController#check_subdomain: Received options: #{request.subdomain}"
-    @corporate_with_subdomain = CorporateCustomer.where(subdomain: request.subdomain).first if request.subdomain
   end
 
   def ensure_user_is_of_type(authorised_features)
