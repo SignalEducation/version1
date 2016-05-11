@@ -62,32 +62,32 @@
       =yield
       =render partial: 'layouts/new_footer'
     -elsif controller_name == 'tutor_profile'
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif controller_name == 'study_schedules'|| (controller_name == 'tutor_applications' && action_name == 'index')
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .schedule-margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif (controller_name == 'subject_courses' && current_user.try(:corporate_customer?)) || (controller_name == 'groups' && current_user.try(:corporate_customer?))
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       =yield
     -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
       =render partial: 'layouts/new_footer'
     -elsif controller_name == 'users' && action_name == 'show'
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       =yield
     -elsif controller_name == 'corporate_profiles'
@@ -102,13 +102,13 @@
           =render partial: 'layouts/flash_messages'
         =yield
     -elsif ['new_paid_subscription', 'reactivate_account'].include? action_name && controller_name == 'users'
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       =yield
     -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_groups') || (controller_name == 'corporate_managers')
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       =yield
     -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications')
@@ -133,7 +133,7 @@
       =yield
       =render partial: 'layouts/new_footer'
     -else
-      =render partial: 'layouts/new_navbar'
+      =render partial: 'layouts/navbar'
       .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
