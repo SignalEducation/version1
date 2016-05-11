@@ -7,12 +7,8 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          -if current_user && current_user.corporate_customer?
-            =link_to corporate_customer_url(current_user.corporate_customer) do
-              =image_tag('ls-logo-red.svg', class: 'logo')
-          -else
-            =link_to root_url do
-              =image_tag('ls-logo-red.svg', class: 'logo')
+          =link_to root_url do
+            =image_tag(current_corporate.logo.url, class: 'logo')
         #myNavbar.collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
             -if current_user

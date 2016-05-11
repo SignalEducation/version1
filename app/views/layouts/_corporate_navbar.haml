@@ -8,7 +8,7 @@
             %span.icon-bar
             %span.icon-bar
           =link_to root_url do
-            =image_tag('ls-logo-red.svg', class: 'logo')
+            =image_tag(current_corporate.logo.url, class: 'logo')
         #myNavbar.collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
             -if current_user

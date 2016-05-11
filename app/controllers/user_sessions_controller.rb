@@ -5,6 +5,8 @@ class UserSessionsController < ApplicationController
   before_filter :set_variables
 
   def new
+    @navbar = nil
+    @footer = nil
     @user_session = UserSession.new
   end
 

@@ -1,4 +1,4 @@
-.top-content
+.top-content{:class => ('corporate_layout' if current_corporate)}
   .l-wrap-corporate
     .container
       .row
@@ -28,7 +28,7 @@
 
       .row
         .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
-          -if @corporate_with_subdomain
+          -if current_corporate
             =link_to 'create account', corporate_login_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
           -else
             =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'

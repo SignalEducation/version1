@@ -1,18 +1,16 @@
 class CorporateProfilesController < ApplicationController
 
   before_action :logged_out_required
+  before_action :set_variables
 
   def show
-    @corp_account = @corporate_with_subdomain
   end
 
   def login
-    @corp_account = @corporate_with_subdomain
   end
 
   def corporate_verification
-    @corp_account = @corporate_with_subdomain
-    if params[:user_name] == @corp_account.user_name && params[:passcode] == @corp_account.passcode
+    if params[:user_name] == current_corporate.user_name && params[:passcode] == current_corporate.passcode
       redirect_to new_corporate_profile_url
     else
       flash[:error] = I18n.t('controllers.corporate_profiles.show.flash.error')
@@ -24,7 +22,7 @@ class CorporateProfilesController < ApplicationController
     if request.referrer
       url_ending = request.referrer.split('/').last
       path_ending = corporate_login_url.split('/').last
-      redirect_to corporate_login_url unless (request.subdomain == @corporate_with_subdomain.subdomain) && (url_ending == path_ending)
+      redirect_to corporate_login_url unless (request.subdomain == current_corporate.subdomain) && (url_ending == path_ending)
       @corporate_student = User.new
     else
       redirect_to corporate_login_url
@@ -33,16 +31,15 @@ class CorporateProfilesController < ApplicationController
 
   def create
     @corporate_student = User.new(allowed_params.merge({user_group_id: UserGroup.where(corporate_student: true).first.id}))
-    @corporate_student.corporate_customer_id = @corporate_with_subdomain.id if @corporate_with_subdomain
+    @corporate_student.corporate_customer_id = current_corporate.id if current_corporate
     @corporate_student.password_confirmation = @corporate_student.password
     @corporate_student.activate_user
     @corporate_student.validate_user
-    @corporate_student.country_id = @corporate_with_subdomain.country_id  if @corporate_with_subdomain
+    @corporate_student.country_id = current_corporate.country_id  if current_corporate
     @corporate_student.locale = 'en'
     if @corporate_student.valid? && @corporate_student.save
-      #@corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
       UserSession.create(@corporate_student)
-      redirect_to dashboard_url
+      redirect_back_or_default library_url(subdomain: current_corporate.subdomain)
     else
       render action: :new
     end
@@ -53,6 +50,11 @@ class CorporateProfilesController < ApplicationController
 
   def generate_guid
     @guid = SecureRandom.hex(10)
+  end
+
+  def set_variables
+    @navbar = nil
+    @footer = nil
   end
 
   def allowed_params

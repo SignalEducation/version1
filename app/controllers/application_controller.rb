@@ -39,6 +39,7 @@ class ApplicationController < ActionController::Base
   before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
   before_action :set_assets_from_subdomain
+  before_action :set_navbar_and_footer
   #before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user, :current_corporate
@@ -72,7 +73,13 @@ class ApplicationController < ActionController::Base
   end
 
   def current_corporate
-    current_user.try(:corporate_customer)
+    CorporateCustomer.find_by_subdomain(request.subdomain) || current_user.try(:corporate_customer)
+  end
+
+  def set_navbar_and_footer
+    @navbar = 'standard'
+    @footer = 'standard'
+    @flash = true
   end
 
   def set_assets_from_subdomain
@@ -84,7 +91,6 @@ class ApplicationController < ActionController::Base
       else
         @css_root = 'application'
       end
-      @corporate_with_subdomain = CorporateCustomer.find_by_subdomain(request.subdomain)
     else
       @css_root = 'application'
     end

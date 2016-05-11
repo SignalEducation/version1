@@ -126,7 +126,6 @@ Rails.application.routes.draw do
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
-    get 'acca-schedule', to: 'study_schedules#acca_schedule'
     resources :subject_courses, concerns: :supports_reordering
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     resources :subscriptions, only: [:create, :update, :destroy]

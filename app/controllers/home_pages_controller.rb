@@ -18,6 +18,7 @@ class HomePagesController < ApplicationController
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_sign_up]
+  before_action :layout_variables, only: [:show]
 
   def index
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
@@ -158,6 +159,12 @@ class HomePagesController < ApplicationController
       @home_page = HomePage.where(id: params[:id]).first
     end
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
+  end
+
+  def layout_variables
+    @navbar = nil
+    @footer = true
+    @flash = false
   end
 
   def allowed_params
