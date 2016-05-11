@@ -245,7 +245,7 @@ class User < ActiveRecord::Base
 
   def active_subscription
     if permission_to_see_content
-      self.subscriptions.where(current_status: 'active').all_in_order.last || self.subscriptions.all_in_order.last
+      self.subscriptions.where(current_status: ['active', 'canceled-pending', 'past_due']).all_in_order.last || self.subscriptions.all_in_order.last
     else
       self.subscriptions.all_in_order.last
     end
