@@ -48,7 +48,7 @@
                             -if corporate_group.destroyable?
                               =link_to t('views.general.delete'), corporate_group,
                   method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-red'
-    =render partial: 'layouts/new_footer'
+    =render partial: 'layouts/footer'
 -else
   .l-section-small.is-bg-asphalt
     .l-wrap
@@ -92,4 +92,4 @@
           =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
 
-    =render partial: 'layouts/new_footer'
+    =render partial: 'layouts/footer'
