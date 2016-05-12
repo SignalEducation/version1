@@ -9,7 +9,7 @@
         =t('views.course_module_elements.show.h1')
 
 .row
-  .col-sm-8.col-sm-offset-2
+  .col-sm-8.col-sm-offset-2.margin-top
     -if @course_module_element.is_video
       =render partial: 'courses/show_video', locals: {cme: @course_module_element}
     -elsif @course_module_element.is_quiz

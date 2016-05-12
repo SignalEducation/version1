@@ -34,7 +34,7 @@ class GroupsController < ApplicationController
     else
       @groups = Group.where(corporate_customer_id: nil).paginate(per_page: 50, page: params[:page])
     end
-
+    @footer = nil
   end
 
   def show
@@ -65,9 +65,11 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    @footer = nil
   end
 
   def edit
+    @footer = nil
   end
 
   def edit_courses
@@ -82,6 +84,7 @@ class GroupsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to groups_url
     end
+    @footer = nil
   end
 
   def create

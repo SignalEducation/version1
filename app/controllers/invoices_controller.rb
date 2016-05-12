@@ -38,6 +38,10 @@
 class InvoicesController < ApplicationController
 
   before_action :logged_in_required
+  before_action do
+    ensure_user_is_of_type(['admin'])
+  end
+
   before_action :get_variables
 
   def index

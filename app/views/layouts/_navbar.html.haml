@@ -63,15 +63,10 @@
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
                   -if current_user.admin?
                     %li=link_to t('views.users.index.h1'), users_url
-                    %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url
                     %li=link_to t('views.user_groups.index.h1'), user_groups_url
                     %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
                     %li=link_to t('views.currencies.index.h1'), currencies_url
                     %li=link_to t('views.countries.index.h1'), countries_url
-                    %li=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
-                    %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
-                    %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
-                    %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), account_url
