@@ -3,7 +3,7 @@
     .hidden-xs
       =render partial: 'layouts/corporate_side_bar'
 
-    .main-content
+    .main-content.margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
@@ -50,7 +50,7 @@
                   method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-red'
     =render partial: 'layouts/footer'
 -else
-  .l-section-small.is-bg-asphalt
+  .l-section-small.is-bg-asphalt.margin-top
     .l-wrap
       .container-fluid
         .row.l-margin-bottom

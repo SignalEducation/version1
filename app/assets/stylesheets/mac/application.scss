@@ -2048,11 +2048,11 @@ ol li.highlight i.icon-move {
   }
 }
 .logo {
-  padding: $gutter 0;
+  padding: $gutter/4 0;
   float: left;
-  max-width: 119px;
+  max-height: 65px;
   @include breakpoint(sm-min) {
-    max-width: 159px;
+    max-height: 65px;
   }
 }
 .no-card {

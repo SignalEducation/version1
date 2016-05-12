@@ -122,6 +122,7 @@ class CorporateGroupsController < ApplicationController
     if params[:id].to_i > 0
       @corporate_group = CorporateGroup.where(id: params[:id]).first
     end
+    @footer = nil
   end
 
   def allowed_params

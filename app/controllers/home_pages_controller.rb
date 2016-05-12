@@ -164,7 +164,6 @@ class HomePagesController < ApplicationController
   def layout_variables
     @navbar = nil
     @footer = true
-    @flash = false
   end
 
   def allowed_params

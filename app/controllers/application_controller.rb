@@ -79,7 +79,6 @@ class ApplicationController < ActionController::Base
   def set_navbar_and_footer
     @navbar = 'standard'
     @footer = 'standard'
-    @flash = true
   end
 
   def set_assets_from_subdomain

@@ -258,4 +258,6 @@ class CoursesController < ApplicationController
 
   end
 
+  protected
+
 end

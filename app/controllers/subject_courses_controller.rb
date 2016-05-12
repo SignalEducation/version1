@@ -135,7 +135,6 @@ class SubjectCoursesController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
     @footer = nil
-    @flash = true
   end
 
   def allowed_params

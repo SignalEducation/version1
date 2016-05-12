@@ -65,8 +65,6 @@
           =render partial: 'layouts/transparent_corporate_navbar'
         -else
           =render partial: 'layouts/corporate_navbar'
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
       =yield
       -if @footer
         =render partial: 'layouts/corporate_footer'
@@ -74,83 +72,12 @@
     -else
       -if @navbar
         -if @navbar == 'transparent'
-          -if @flash && flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
           =render partial: 'layouts/transparent_navbar'
         -else
           =render partial: 'layouts/navbar'
-        -if @flash && flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
       =yield
       -if @footer
         =render partial: 'layouts/footer'
-
-    -#else
-      -elsif (controller_name == 'subject_courses' && current_user.try(:corporate_customer?)) || (controller_name == 'groups' && current_user.try(:corporate_customer?))
-        =render partial: 'layouts/navbar'
-        .margin-top
-        =yield
-      -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
-        =render partial: 'layouts/navbar'
-        .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-        =render partial: 'layouts/footer'
-      -elsif controller_name == 'users' && action_name == 'show'
-        =render partial: 'layouts/navbar'
-        .margin-top
-        =yield
-      -elsif controller_name == 'corporate_profiles'
-        .corporate_layout
-          =yield
-      -elsif controller_name == 'user_sessions'
-        .corporate_layout
-          =yield
-      -elsif (controller_name == 'users' && action_name == 'student_new') || (controller_name == 'users' && action_name == 'student_create')
-        .corporate_layout
-          -if flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
-          =yield
-      -elsif ['new_paid_subscription', 'reactivate_account'].include? action_name && controller_name == 'users'
-        =render partial: 'layouts/navbar'
-        .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-      -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_groups') || (controller_name == 'corporate_managers')
-        =render partial: 'layouts/navbar'
-        .margin-top
-        =yield
-      -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications')
-        -if @course.try(:live)
-          .margin-top
-          -if flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
-        -else
-          .no-margin-top
-          -if flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
-        =yield
-      -elsif controller_name == 'users' && action_name == 'new_paid_subscription'
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-        =render partial: 'layouts/footer'
-      -elsif controller_name == 'users' && action_name == 'reactivate_account'
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-        =render partial: 'layouts/footer'
-      -else
-        =render partial: 'layouts/navbar'
-        .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-        =render partial: 'layouts/footer'
-
-
 
     -#General partials
     =render partial: 'layouts/misc_javascript'

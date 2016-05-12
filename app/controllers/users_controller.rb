@@ -112,6 +112,8 @@ class UsersController < ApplicationController
     @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
     #@user.country_id = 105
     @topic_interests = Group.all_active.all_in_order.for_public
+    @navbar = false
+    @footer = false
   end
 
   def student_create
@@ -242,6 +244,7 @@ class UsersController < ApplicationController
     @user = User.where(id: params[:user_id]).first
     currency_id = @user.subscriptions.first.subscription_plan.currency_id
     @country = Country.where(currency_id: currency_id).first
+    @navbar = false
     if @user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
       @subscription_plans = SubscriptionPlan
                                 .where('price > 0.0')
@@ -308,6 +311,7 @@ class UsersController < ApplicationController
     @country = Country.where(currency_id: currency_id).first
     @subscription_plans = @subscription.reactivation_options
     @new_subscription = Subscription.new
+    @navbar = nil
   end
 
   def reactivate_account_subscription

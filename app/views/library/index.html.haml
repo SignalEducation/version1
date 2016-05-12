@@ -1,5 +1,8 @@
 .hero-library
-  =render partial: 'layouts/transparent_navbar'
+  -if current_corporate
+    =render partial: 'layouts/transparent_corporate_navbar'
+  -else
+    =render partial: 'layouts/transparent_navbar'
   .l-section-small
     .l-wrap
       .container-fluid
@@ -28,7 +31,3 @@
               .box-label
                 %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
                   Browse Courses
-
-
-
-=render partial: 'layouts/footer'
