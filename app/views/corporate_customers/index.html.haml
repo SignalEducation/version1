@@ -1,4 +1,7 @@
-.margin-top.l-section-small.is-bg-asphalt
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
@@ -29,6 +32,3 @@
 
     .row
       =link_to t('views.general.new'), new_corporate_customer_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', title: t('views.general.new_tooltip')
-
-
-=render partial: 'layouts/footer'

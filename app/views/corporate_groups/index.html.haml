@@ -50,6 +50,9 @@
                   method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-red'
     =render partial: 'layouts/footer'
 -else
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
   .l-section-small.is-bg-asphalt.margin-top
     .l-wrap
       .container-fluid

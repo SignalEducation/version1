@@ -15,7 +15,7 @@
               .col-sm-12
                 .form-group
                   =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
-                  =f.email_field :email, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
+                  =f.email_field :email, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true
               .col-sm-12
                 .form-group
                   =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'

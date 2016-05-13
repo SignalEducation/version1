@@ -5,6 +5,8 @@
         =render partial: 'layouts/corporate_logo'
 
     .row.l-margin-top.l-margin-bottom
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
       .col-sm-6.col-sm-offset-3.l-margin-top
         .login-form
           =form_for(@corporate_student, url: new_corporate_user_url(@corporate_student), method: 'post', html: {role: 'form'}) do |f|
