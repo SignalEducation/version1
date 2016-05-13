@@ -1,7 +1,10 @@
 -if current_user.corporate_customer?
   =render partial: 'groups/corporate_index'
 -else
-  .margin-top.l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
     .container-fluid.l-padding-side-3x
       .row.l-margin-bottom.l-margin-top
         .col-md-12.col-sm-12.col-xs-12.text-center
@@ -34,4 +37,3 @@
 
       .row
         =link_to t('views.general.new'), new_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
-=render 'layouts/footer'

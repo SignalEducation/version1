@@ -9,8 +9,10 @@
               Full access &middot; Cancel any time
             %h1.h1.h-white.h-separator.h-separator-center.text-center
               Reactivate your membership
--if @valid_card
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 
+-if @valid_card
   #upgrade-subscription
     =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {role: 'form'} do |f|
       =f.hidden_field :subscription_plan_id

@@ -12,7 +12,8 @@
               Learn anytime, anywhere
             %p.h5.h-white.text-center.l-margin-bottom-big8
               Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
-
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-section.is-bg-asphalt-dark
   .l-wrap-medium
     .container-fluid

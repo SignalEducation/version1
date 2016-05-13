@@ -1,4 +1,6 @@
 .margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 -if current_user
   -if current_user.individual_student?
     =render partial: 'dashboard/student'

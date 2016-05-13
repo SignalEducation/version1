@@ -10,7 +10,8 @@
               Full access &middot; Cancel any time
             %h1.h1.h-white.h-separator.h-separator-center.text-center
               Upgrade your membership
-
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 #upgrade-subscription
   =form_for @user, url: user_upgrade_from_free_trial_url(@user.id), html: {role: 'form'} do |f|
     =f.hidden_field :country_id, value: @country.id

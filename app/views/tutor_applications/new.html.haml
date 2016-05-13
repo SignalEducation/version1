@@ -9,6 +9,9 @@
               Teach
             %p.h5.h-white.text-center
               Your skills, our platform
+
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .is-bg-asphalt
   .l-wrap
     .l-section

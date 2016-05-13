@@ -1,5 +1,9 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
 -if @course_module
-  .margin-top.l-section-small.is-bg-asphalt
+  .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid{style: 'margin-bottom: 60px;'}
         .row
