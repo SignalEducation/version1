@@ -131,9 +131,7 @@ class ApplicationController < ActionController::Base
     logged_in_required
     the_user_group = current_user.user_group
     # for a list of permitted features, see UserGroup::FEATURES
-
     permission_granted = false
-
     authorised_features.each do |permitted_thing|
       if (the_user_group.individual_student && permitted_thing == 'individual_student') ||
          (the_user_group.corporate_student  && permitted_thing == 'corporate_student') ||
@@ -143,7 +141,6 @@ class ApplicationController < ActionController::Base
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
          (the_user_group.forum_manager      && permitted_thing == 'forum_manager') ||
          (the_user_group.site_admin)
-
         permission_granted = true
       end
     end

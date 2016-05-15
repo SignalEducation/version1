@@ -158,7 +158,7 @@ Rails.application.routes.draw do
     end
 
     # home page
-    root 'home_pages#show'
+    root 'routes#root'
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
