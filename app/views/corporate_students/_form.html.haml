@@ -5,11 +5,11 @@
   .main-content.margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
-    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .l-section-small.is-bg-asphalt.corporate-padding
       .container-fluid.l-padding-side-3x
         .row.l-margin-bottom.l-margin-top
           .col-md-6.col-sm-6.col-xs-6
-            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            %h1.h-separator.h-separator-left
               =@corporate_student.new_record? ? 'New User' : 'Edit User'
         .row.l-margin-top.l-margin-bottom
           .col-md-12.l-margin-top
@@ -55,4 +55,4 @@
                 .row
                   =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
                   =link_to t('views.general.cancel'), corporate_students_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
-    =render partial: 'layouts/footer'
+    =render partial: 'layouts/corporate_footer'

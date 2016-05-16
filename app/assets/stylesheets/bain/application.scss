@@ -389,6 +389,10 @@ hr {
 .l-margin-top-huge {
   margin-top: $gutter*4;
 }
+.corporate-padding {
+  padding-left: 30px;
+  padding-right: 30px;
+}
 
 // 3. modules
 
@@ -735,6 +739,47 @@ a.btn-block {
     }
   }
 }
+.foot-nav-small {
+  color: $white;
+  list-style: none;
+  padding: 0;
+  margin: $gutter 0 0 0;
+  @include font-size(1.2);
+  @include breakpoint(md-min) {
+    float: left;
+    @include font-size(1.4);
+  }
+  & li {
+    position: relative;
+    display: inline-block;
+    color: tint($purple-1, 20%);
+    margin-left: $gutter/4;
+    &:before {
+      content: "•";
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+  & li:first-child {
+    margin: 0;
+    &:before {
+      content: "";
+    }
+    & a {
+      margin: 0;
+    }
+  }
+  & a {
+    color: $white;
+    text-decoration: none;
+    margin-left: $gutter/1.5;
+    @include opacity(0.8);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
 .social-nav {
   color: $white;
   list-style: none;
@@ -785,7 +830,16 @@ a.btn-block {
     @include font-size(1.4);
   }
 }
-
+.foot-powered-by {
+  color: $white;
+  margin-top: $gutter;
+  @include opacity(0.8);
+  @include font-size(1.2);
+  @include breakpoint(md-min) {
+    float: right;
+    @include font-size(1.4);
+  }
+}
 #iubenda {
   background-color: #eee;
 }

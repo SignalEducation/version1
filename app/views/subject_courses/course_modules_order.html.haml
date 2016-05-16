@@ -36,3 +36,7 @@
                           =link_to t('views.general.delete'), cm, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
                       %td
                         %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+-if current_user.corporate_customer
+  =render partial: 'layouts/corporate_footer'
+-else
+  =render partial: 'layouts/footer'

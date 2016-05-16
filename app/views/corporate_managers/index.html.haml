@@ -5,11 +5,11 @@
   .main-content.margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
-    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .l-section-small.is-bg-asphalt.corporate-padding
       .container-fluid.l-padding-side-3x
         .row.l-margin-bottom.l-margin-top
           .col-md-6.col-sm-6.col-xs-6
-            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            %h1.h-separator.h-separator-left
               Managers
           .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
             =link_to t('views.general.add_manager'), new_corporate_manager_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
@@ -46,7 +46,7 @@
 
 
 
-  =render partial: 'layouts/footer'
+  =render partial: 'layouts/corporate_footer'
 
 :javascript
   $(document).ready(function() {
