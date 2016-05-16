@@ -9,19 +9,19 @@
 
 $gutter: 20px;
 $white: #fff;
-$gray-1: #F9845B;
+$gray-1: #6E6D75;
 $gray-2: #ecf0f1;
 $asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $asphalt-3: #C0CFD5;
 $asphalt-4: #edeff0;
-$purple-1: #eb7728;
-$purple-2: #e15258;
+$purple-1: #3E3F5B;
+$purple-2: #4E3F5B;
 $purple-3: rgb(83, 84, 112);
 $purple-4: #9E9FAD;
 $purple-5: lighten($purple-1, 5%);
-$red-1: #5cb860;
-$cyan-1: #20898c;
+$red-1: #EE5457;
+$cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
 $blue-1: #54a4ee;
 $blue-2: #34495e;
@@ -393,7 +393,9 @@ hr {
   padding-left: 30px;
   padding-right: 30px;
 }
-
+.corporate-form-margin {
+  margin-left: 0px;
+}
 // 3. modules
 
 
@@ -2088,10 +2090,6 @@ ol li.highlight i.icon-move {
   left: -5px;
   border-right: none;
 }
-
-
-
-
 
 .course-group-title {
   margin-bottom: $gutter*2;

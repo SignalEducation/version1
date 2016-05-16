@@ -79,16 +79,6 @@
       -if @footer
         =render partial: 'layouts/footer'
 
-    -#else
-      -else
-        =render partial: 'layouts/navbar'
-        .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-        =render partial: 'layouts/footer'
-
-
 
     -#General partials
     =render partial: 'layouts/misc_javascript'
@@ -111,6 +101,3 @@
     =render partial: 'layouts/restricted_access'
     -unless current_user
       =render partial: 'layouts/sign_up_modal'
-
-  :javascript
-      var nav = responsiveNav(".nav-collapse");
