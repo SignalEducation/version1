@@ -9,7 +9,16 @@ class RoutesController < ApplicationController
       end
       redirect_to custom_root
     else
-      redirect_to home_url
+      if !request.subdomain.empty?
+        case request.subdomain
+          when 'www', '', nil, 'learnsignal', 'staging', 'acca', 'cfa', 'forum', 'jobs'
+            redirect_to home_url
+          else
+            redirect_to corporate_home_url
+          end
+      else
+        redirect_to home_url
+      end
     end
   end
 end

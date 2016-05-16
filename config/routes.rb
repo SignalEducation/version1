@@ -75,6 +75,7 @@ Rails.application.routes.draw do
     end
 
     get '/login', to: 'corporate_profiles#login', as: :corporate_login
+    get '/corp_home', to: 'corporate_profiles#show', as: :corporate_home
     post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
     post '/corporate_profiles/create', to: 'corporate_profiles#create', as: :new_corporate_user
     resources :corporate_profiles, only: [:new, :show]
@@ -103,8 +104,8 @@ Rails.application.routes.draw do
       put 'update_courses', action: :update_courses
     end
 
+    get 'home', to: 'home_pages#show', as: :home
     get 'acca', to: 'home_pages#show', first_element: 'acca', as: :acca
-    get '', to: 'home_pages#show', first_element: '', as: :home
     get 'cfa', to: 'home_pages#show', first_element: 'cfa', as: :cfa
     get 'wso', to: 'home_pages#show', first_element: 'wso', as: :wso
     get 'business', to: 'home_pages#show', first_element: 'business', as: :business
@@ -155,7 +156,7 @@ Rails.application.routes.draw do
     end
 
     constraints(Subdomain) do
-      get '/' => 'corporate_profiles#show'
+      get '/' => 'routes#root'
     end
 
     # home page

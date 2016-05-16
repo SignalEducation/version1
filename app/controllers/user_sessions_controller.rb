@@ -11,6 +11,8 @@ class UserSessionsController < ApplicationController
   end
 
   def create
+    @navbar = nil
+    @footer = nil
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
