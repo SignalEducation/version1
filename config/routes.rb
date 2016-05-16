@@ -104,6 +104,7 @@ Rails.application.routes.draw do
     end
 
     get 'acca', to: 'home_pages#show', first_element: 'acca', as: :acca
+    get '', to: 'home_pages#show', first_element: '', as: :home
     get 'cfa', to: 'home_pages#show', first_element: 'cfa', as: :cfa
     get 'wso', to: 'home_pages#show', first_element: 'wso', as: :wso
     get 'business', to: 'home_pages#show', first_element: 'business', as: :business

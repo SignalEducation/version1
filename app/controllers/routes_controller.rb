@@ -9,7 +9,7 @@ class RoutesController < ApplicationController
       end
       redirect_to custom_root
     else
-      redirect_to 'home_pages#show'
+      redirect_to home_url
     end
   end
 end

@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  before_action :process_marketing_tokens # not for Api::
+  #before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
   before_action :set_assets_from_subdomain
   before_action :set_navbar_and_footer
