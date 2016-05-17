@@ -24,15 +24,15 @@ class UserSessionsController < ApplicationController
         redirect_back_or_default library_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
       elsif session[:return_to]
         if Rails.env.staging?
-          redirect_back_or_default library_url
+          redirect_back_or_default library_url(subdomain: request.subdomain)
         else
-          redirect_back_or_default library_url(subdomain: nil)
+          redirect_back_or_default library_url(subdomain: '')
         end
       else
         if Rails.env.staging?
-          redirect_to library_url, flash: { just_signed_in: true }
+          redirect_to library_url(subdomain: request.subdomain), flash: { just_signed_in: true }
         else
-          redirect_to library_url(subdomain: nil), flash: { just_signed_in: true }
+          redirect_to library_url(subdomain: ''), flash: { just_signed_in: true }
         end
       end
     else
