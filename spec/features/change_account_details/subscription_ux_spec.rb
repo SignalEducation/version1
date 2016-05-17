@@ -104,8 +104,6 @@ describe 'Subscription UX:', type: :feature do
   scenario 'user can update card details', js: true do
     # sign up as a student
     sign_up_and_upgrade_from_free_trial
-    # go to my-profile page
-    visit_my_profile
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
     click_link('Subscriptions')
     click_link(I18n.t('views.users.show.your_card_details'))
@@ -118,13 +116,13 @@ describe 'Subscription UX:', type: :feature do
     #%w(expired bad_cvc declined processing_error valid_visa_debit
     #valid_mc_debit).each do |this_card|
     %w(valid_visa_debit ).each do |this_card|
-      sleep 1
+      sleep 2
       click_link(I18n.t('views.users.show.tabs.payments'))
       # new card modal
-      sleep 1
+      sleep 2
       enter_credit_card_details(this_card)
       click_button(I18n.t('views.general.save'))
-      sleep 1
+      sleep 2
 
       # back at the subscriptions page
       if this_card.include?('valid')
