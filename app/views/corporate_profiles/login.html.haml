@@ -1,12 +1,14 @@
-.top-content
+.top-content.corporate_layout
   .l-wrap-corporate
     .container
       .row
         =render partial: 'layouts/corporate_logo'
       .row
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
         .col-sm-6.col-sm-offset-3.l-margin-top
           %h3.h-white.l-margin-bottom.text-center
-            ="Verify you belong to #{@corporate_with_subdomain.try(:organisation_name)}"
+            ="Verify you belong to #{current_corporate.try(:organisation_name)}"
           .login-form.l-margin-top-big
             =form_tag('/corporate_verification', method: 'post') do
               .row

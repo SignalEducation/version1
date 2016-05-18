@@ -1,15 +1,21 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    %h1
-      -if @course_module_element.is_video
-        =t('views.course_module_elements.show.video_preview')
-      -elsif @course_module_element.is_quiz
-        =t('views.course_module_elements.show.quiz_preview')
-      -else
-        =t('views.course_module_elements.show.h1')
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-sm-12
+          %h1
+            -if @course_module_element.is_video
+              =t('views.course_module_elements.show.video_preview')
+            -elsif @course_module_element.is_quiz
+              =t('views.course_module_elements.show.quiz_preview')
+            -else
+              =t('views.course_module_elements.show.h1')
 
 .row
-  .col-sm-8.col-sm-offset-2
+  .col-sm-8.col-sm-offset-2.margin-top
     -if @course_module_element.is_video
       =render partial: 'courses/show_video', locals: {cme: @course_module_element}
     -elsif @course_module_element.is_quiz
@@ -18,6 +24,6 @@
       .well.well-sm
         %h2 Sorry, this Course Content Element is of an unknown type
 
-.row
+.row.l-margin-bottom-huge
   .col-sm-8.col-sm-offset-2
     =link_to sanitize('&larr; ' + t('views.course_modules.index.h1')), course_module_special_link(@course_module_element.course_module)

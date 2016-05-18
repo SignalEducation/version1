@@ -1,4 +1,4 @@
-.top-content
+.corporate_layout.top-content{:class => ('corporate_layout' if current_corporate)}
   .l-wrap-corporate
     .container
       .row
@@ -15,7 +15,7 @@
               .col-sm-12
                 .form-group
                   =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
-                  =f.email_field :email, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
+                  =f.email_field :email, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true
               .col-sm-12
                 .form-group
                   =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
@@ -28,7 +28,7 @@
 
       .row
         .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
-          -if @corporate_with_subdomain
+          -if current_corporate
             =link_to 'create account', corporate_login_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
           -else
             =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'

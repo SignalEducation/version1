@@ -3,14 +3,14 @@
     .hidden-xs
       =render partial: 'layouts/corporate_side_bar'
 
-    .main-content
+    .main-content.margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
-      .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .l-section-small.is-bg-asphalt.corporate-padding
         .container-fluid.l-padding-side-3x
           .row.l-margin-bottom.l-margin-top
             .col-md-6.col-sm-6.col-xs-6
-              %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+              %h1.h-separator.h-separator-left
                 =t('views.corporate_groups.index.h1')
             .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
               =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
@@ -48,14 +48,17 @@
                             -if corporate_group.destroyable?
                               =link_to t('views.general.delete'), corporate_group,
                   method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-small btn-red'
-    =render partial: 'layouts/new_footer'
+    =render partial: 'layouts/corporate_footer'
 -else
-  .l-section-small.is-bg-asphalt
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt.margin-top
     .l-wrap
       .container-fluid
         .row.l-margin-bottom
           .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
               Groups
           .col-md-12.l-margin-top-big.l-margin-bottom-6x
             -@corporate_customers.each do |cc|
@@ -92,4 +95,4 @@
           =link_to t('views.general.add_group'), new_corporate_group_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
 
-    =render partial: 'layouts/new_footer'
+    =render partial: 'layouts/footer'

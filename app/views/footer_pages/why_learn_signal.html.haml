@@ -7,6 +7,8 @@
           .col-md-6.col-md-offset-3
             %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe
               Why Learn<font color="#EE5457">Signal</font>
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .is-bg-asphalt
   .l-wrap
     .l-section-small
@@ -38,6 +40,3 @@
         .row
           .col-md-6.col-md-offset-3.l-margin-top-big
             =link_to 'Browse Courses', library_url, class: 'btn btn-red btn-wide'
-
-
-=render partial: 'layouts/new_footer'

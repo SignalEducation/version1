@@ -1,4 +1,6 @@
-=render partial: 'layouts/new_navbar'
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .row
   .col-sm-8.col-sm-offset-2
     %img{src: '/assets/images/404_V2.png', class: 'img-responsive'}
@@ -13,6 +15,3 @@
       .col-md-12.text-center.l-margin-bottom-huge
         =link_to 'Visit our home page', root_url, class: 'btn btn-purple'
         =link_to 'Visit our Library page', library_url, class: 'btn btn-cyan'
-        =link_to 'Visit our pricing page', pricing_url, class: 'btn btn-red'
-
-=render partial: 'layouts/new_footer'

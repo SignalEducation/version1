@@ -1,26 +1,30 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1=t('views.marketing_tokens.index.h1')
-.row
-  .col-sm-12
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th=t('views.marketing_tokens.form.code')
-          %th=t('views.marketing_tokens.form.marketing_category_id')
-          %th=t('views.marketing_tokens.form.is_hard')
-          %th=t('views.marketing_tokens.form.is_seo')
-          %th=t('views.marketing_tokens.form.is_direct')
-      %tbody
-        -@marketing_tokens.each do |token|
-          %tr{id: token.id}
-            %td=token.code
-            %td=token.marketing_category.name
-            %td=tick_or_cross(token.is_hard)
-            %td=tick_or_cross(token.is_seo)
-            %td=tick_or_cross(token.is_direct)
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.marketing_tokens.index.h1')
+      .col-sm-12
+        %table.table.table-striped.table-bordered
+          %thead
+            %tr
+              %th=t('views.marketing_tokens.form.code')
+              %th=t('views.marketing_tokens.form.marketing_category_id')
+              %th=t('views.marketing_tokens.form.is_hard')
+              %th=t('views.marketing_tokens.form.is_seo')
+              %th=t('views.marketing_tokens.form.is_direct')
+          %tbody
+            -@marketing_tokens.each do |token|
+              %tr{id: token.id}
+                %td=token.code
+                %td=token.marketing_category.name
+                %td=tick_or_cross(token.is_hard)
+                %td=tick_or_cross(token.is_seo)
+                %td=tick_or_cross(token.is_direct)
 
-.row
-  .col-sm-12
-    =link_to '&larr; '.html_safe + t('views.marketing_tokens.index.h1'), marketing_tokens_url
+      .col-sm-12
+        =link_to '&larr; '.html_safe + t('views.marketing_tokens.index.h1'), marketing_tokens_url

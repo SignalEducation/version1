@@ -22,6 +22,7 @@ describe 'Corp User:', type: :feature do
     scenario 'as a corporate manager', js: true  do
       click_link('Login')
       fill_in_sign_in_form(corporate_customer_user)
+
       expect(page).to have_content 'Overview'
       expect(page).to have_content 'User Activity'
       expect(page).to have_content 'Compulsory Courses'

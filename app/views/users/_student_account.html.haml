@@ -106,7 +106,7 @@
                     .col-md-12{style: 'padding-bottom: 50px;'}
                       =render partial: 'users/payment_details', locals: {f: f}
 
-
+  =render partial: 'layouts/footer'
   -if @user.id == current_user.id
     =render partial: 'users/change_password'
     -if @user.user_group_id == UserGroup.where(individual_student: true).first.id
@@ -116,7 +116,6 @@
     =render partial: 'users/company'
 
 
-  =render partial: 'layouts/new_footer'
   :javascript
     $(document).on('ready', function() {
       var stripped_url = document.location.toString().split("#");

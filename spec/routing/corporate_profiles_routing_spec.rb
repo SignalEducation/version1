@@ -6,7 +6,7 @@ RSpec.describe CorporateProfilesController, type: :routing do
     let(:url)     { "http://corp.example.com" }
 
     it 'routes to #show' do
-      expect(get: "#{url}/").to route_to('corporate_profiles#show')
+      expect(get: "#{url}/").to route_to('routes#root')
     end
 
     it 'routes to #login' do

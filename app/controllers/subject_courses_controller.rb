@@ -134,6 +134,7 @@ class SubjectCoursesController < ApplicationController
     @corporate_groups = @groups.where(corporate_customer_id: current_user.corporate_customer_id)
     @tutors = User.all_tutors.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
+    @footer = nil
   end
 
   def allowed_params

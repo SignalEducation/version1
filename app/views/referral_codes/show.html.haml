@@ -1,4 +1,7 @@
 -if current_user.individual_student?
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
   .l-section-small.is-bg-asphalt
     .container-fluid
       .row.l-margin-bottom
@@ -64,6 +67,9 @@
 
 -elsif current_user.blogger?
 
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
   .l-section-small.is-bg-asphalt
     .container-fluid
       .row.l-margin-bottom

@@ -1,7 +1,7 @@
 #wrapper
   .hidden-xs
     =render partial: 'layouts/corporate_side_bar'
-  .main-content
+  .main-content.margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
     .l-section-small.is-bg-asphalt
@@ -36,4 +36,4 @@
 
         .row
           =link_to t('views.general.new'), new_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
-  =render partial: 'layouts/new_footer'
+  =render partial: 'layouts/corporate_footer'

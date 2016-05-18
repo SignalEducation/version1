@@ -1,4 +1,4 @@
--if current_user.corporate_customer?
+.margin-top
   -if flash[:success] || flash[:error] || flash[:warning]
     =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
@@ -103,6 +103,7 @@
 
 
 -if current_user.corporate_customer?
-  =render partial: 'layouts/new_footer'
-
+  =render partial: 'layouts/corporate_footer'
+-else
+  =render partial: 'layouts/footer'
 

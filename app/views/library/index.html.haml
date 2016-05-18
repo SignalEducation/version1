@@ -1,5 +1,8 @@
 .hero-library
-  =render partial: 'layouts/transparent_navbar'
+  -if current_corporate
+    =render partial: 'layouts/transparent_corporate_navbar'
+  -else
+    =render partial: 'layouts/transparent_navbar'
   .l-section-small
     .l-wrap
       .container-fluid
@@ -9,7 +12,8 @@
               Learn anytime, anywhere
             %p.h5.h-white.text-center.l-margin-bottom-big8
               Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
-
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-section.is-bg-asphalt-dark
   .l-wrap-medium
     .container-fluid
@@ -28,7 +32,3 @@
               .box-label
                 %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
                   Browse Courses
-
-
-
-=render partial: 'layouts/new_footer'

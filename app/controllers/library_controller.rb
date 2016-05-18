@@ -1,6 +1,7 @@
 class LibraryController < ApplicationController
 
   def index
+    @navbar = nil
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
       #Filter Groups for corporate students by corporate_customer_id and by restrictions.
       all_groups = Group.all_active.all_in_order
@@ -54,7 +55,8 @@ class LibraryController < ApplicationController
           @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
           if @course.try(:live)
             render 'live_course'
-          elsif @course.try(:live) == false
+          elsif !@course.try(:live)
+            @navbar = nil
             render 'preview_course'
           else
             redirect_to library_url
@@ -80,8 +82,9 @@ class LibraryController < ApplicationController
         if @course.try(:live)
           seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
           render 'live_course'
-        elsif @course.try(:live) == false
+        elsif !@course.try(:live)
           seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
+          @navbar = nil
           render 'preview_course'
         else
           redirect_to library_url

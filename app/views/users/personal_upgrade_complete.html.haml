@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -17,4 +20,3 @@
               ="to view your subscription details."
             %p.h3.l-margin-top-big{style: 'text-align: center;  letter-spacing: 0.5px;'}
               =link_to 'Or return to our courses.', library_url
-=render partial: 'layouts/new_footer'

@@ -24,7 +24,8 @@
 
 
 
-
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -79,6 +80,3 @@
                     .box-item.upcoming
                       =child.try(:name)
 
-
-
-=render partial: 'layouts/new_footer'

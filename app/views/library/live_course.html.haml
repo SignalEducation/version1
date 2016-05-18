@@ -1,4 +1,6 @@
-=render partial: 'layouts/new_navbar'
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap-small
     .container-fluid
@@ -217,6 +219,3 @@
                   Sign up for our 7-day Free Trial and get full access to all content
 
 
-
-  .l-margin-top-huge
-    =render partial: 'layouts/new_footer'

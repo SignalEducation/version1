@@ -21,12 +21,6 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_if_staging
   before_action :setup_mcapi
 
-  def use_basic_auth_for_staging
-    if Rails.env.staging? && params[:first_element] != 'api'
-      ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
-    end
-  end
-
   def authenticate_if_staging
     if Rails.env.staging? && params[:first_element] != 'api'
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
@@ -41,12 +35,13 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  before_action :process_marketing_tokens # not for Api::
+  #before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
-  before_action :check_subdomain
+  before_action :set_assets_from_subdomain
+  before_action :set_navbar_and_footer
   #before_action :log_user_activity # not for Api::
 
-  helper_method :current_user_session, :current_user
+  helper_method :current_user_session, :current_user, :current_corporate
 
   Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.datetime_formats.simple')
   Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.datetime_formats.standard')
@@ -74,6 +69,33 @@ class ApplicationController < ActionController::Base
   def current_user
     return @current_user if defined?(@current_user)
     @current_user = current_user_session && current_user_session.record
+  end
+
+  def current_corporate
+    if current_user
+      CorporateCustomer.find_by_subdomain(request.subdomain) if current_user.corporate_customer? || current_user.corporate_student?
+    else
+      CorporateCustomer.find_by_subdomain(request.subdomain)
+    end
+  end
+
+  def set_navbar_and_footer
+    @navbar = 'standard'
+    @footer = 'standard'
+  end
+
+  def set_assets_from_subdomain
+    corporate_domains = CorporateCustomer.all.map(&:subdomain)
+    if request.subdomain.present? && corporate_domains.include?(request.subdomain)
+      asset_folder = "#{Rails.root}/app/assets/stylesheets/#{request.subdomain}/application.scss"
+      if File.exists?(asset_folder)
+        @css_root = "#{request.subdomain}/application"
+      else
+        @css_root = 'application'
+      end
+    else
+      @css_root = 'application'
+    end
   end
 
   def logged_in_required
@@ -108,18 +130,11 @@ class ApplicationController < ActionController::Base
     redirect_to(destination)
   end
 
-  def check_subdomain
-    Rails.logger.debug "DEBUG: ApplicationController#check_subdomain: Received options: #{request.subdomain}"
-    @corporate_with_subdomain = CorporateCustomer.where(subdomain: request.subdomain).first if request.subdomain
-  end
-
   def ensure_user_is_of_type(authorised_features)
     logged_in_required
     the_user_group = current_user.user_group
     # for a list of permitted features, see UserGroup::FEATURES
-
     permission_granted = false
-
     authorised_features.each do |permitted_thing|
       if (the_user_group.individual_student && permitted_thing == 'individual_student') ||
          (the_user_group.corporate_student  && permitted_thing == 'corporate_student') ||
@@ -129,7 +144,6 @@ class ApplicationController < ActionController::Base
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
          (the_user_group.forum_manager      && permitted_thing == 'forum_manager') ||
          (the_user_group.site_admin)
-
         permission_granted = true
       end
     end

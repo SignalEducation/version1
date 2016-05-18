@@ -14,7 +14,7 @@
         =@seo_title
       -else
         Business Training Library | LearnSignal
-    =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
+    =stylesheet_link_tag @css_root, media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
@@ -58,87 +58,29 @@
       =render partial: 'layouts/hubspot'
     -if controller_name == 'referral_codes' && action_name == 'show'
       =render partial: 'layouts/facebook_sdk'
-    -if controller_name == 'home_pages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'tutor_profile'
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'study_schedules'|| (controller_name == 'tutor_applications' && action_name == 'index')
-      =render partial: 'layouts/new_navbar'
-      .schedule-margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'subject_courses' && current_user.try(:corporate_customer?)) || (controller_name == 'groups' && current_user.try(:corporate_customer?))
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      =yield
-    -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'users' && action_name == 'show'
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      =yield
-    -elsif controller_name == 'corporate_profiles'
-      .corporate_layout
-        =yield
-    -elsif controller_name == 'user_sessions'
-      .corporate_layout
-        =yield
-    -elsif (controller_name == 'users' && action_name == 'student_new') || (controller_name == 'users' && action_name == 'student_create')
-      .corporate_layout
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-    -elsif ['new_paid_subscription', 'reactivate_account'].include? action_name && controller_name == 'users'
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-    -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_groups') || (controller_name == 'corporate_managers')
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      =yield
-    -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications')
-      -if @course.try(:live)
-        .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
 
-      -else
-        .no-margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
+    -if current_corporate
+      -if @navbar
+        -if @navbar == 'transparent'
+          =render partial: 'layouts/transparent_corporate_navbar'
+        -else
+          =render partial: 'layouts/corporate_navbar'
       =yield
-    -elsif controller_name == 'users' && action_name == 'new_paid_subscription'
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'users' && action_name == 'reactivate_account'
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
+      -if @footer
+        =render partial: 'layouts/corporate_footer'
+
     -else
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
+      -if @navbar
+        -if @navbar == 'transparent'
+          =render partial: 'layouts/transparent_navbar'
+        -else
+          =render partial: 'layouts/navbar'
       =yield
-      =render partial: 'layouts/new_footer'
+      -if @footer
+        =render partial: 'layouts/footer'
+
+
+    -#General partials
     =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
     -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
@@ -159,6 +101,3 @@
     =render partial: 'layouts/restricted_access'
     -unless current_user
       =render partial: 'layouts/sign_up_modal'
-
-  :javascript
-      var nav = responsiveNav(".nav-collapse");

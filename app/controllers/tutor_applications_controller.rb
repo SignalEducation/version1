@@ -69,6 +69,7 @@ class TutorApplicationsController < ApplicationController
     if params[:id].to_i > 0
       @tutor_application = TutorApplication.where(id: params[:id]).first
     end
+    @navbar = nil
   end
 
   def allowed_params

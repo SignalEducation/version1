@@ -82,6 +82,7 @@ class CorporateManagersController < ApplicationController
     if params[:id].to_i > 0
       @corporate_manager = User.where(id: params[:id]).first
     end
+    @footer = nil
   end
 
   def allowed_params

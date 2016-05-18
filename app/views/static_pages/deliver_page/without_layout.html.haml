@@ -35,7 +35,7 @@
       =render partial: 'layouts/google_tag_manager'
     =body_sanitizer(@delivered_page.body_content)
     -if @delivered_page.show_standard_footer
-      =render partial: 'layouts/new_footer'
+      =render partial: 'layouts/footer'
       =render partial: 'layouts/misc_javascript'
     =render partial: 'static_pages/deliver_page/scroller'
     =render partial: 'layouts/flash_messages'

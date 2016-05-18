@@ -3,7 +3,7 @@
     .hidden-xs
       =render partial: 'layouts/corporate_side_bar'
 
-    .main-content
+    .main-content.margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
@@ -32,7 +32,7 @@
 
                   =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
                   =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
-      =render partial: 'layouts/new_footer'
+      =render partial: 'layouts/footer'
 -else
   .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
     .container-fluid.l-padding-side-3x
@@ -60,4 +60,4 @@
 
               =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
               =link_to t('views.general.cancel'), groups_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
-  =render partial: 'layouts/new_footer'
+  =render partial: 'layouts/footer'

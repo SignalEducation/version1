@@ -75,6 +75,7 @@ Rails.application.routes.draw do
     end
 
     get '/login', to: 'corporate_profiles#login', as: :corporate_login
+    get '/corp_home', to: 'corporate_profiles#show', as: :corporate_home
     post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
     post '/corporate_profiles/create', to: 'corporate_profiles#create', as: :new_corporate_user
     resources :corporate_profiles, only: [:new, :show]
@@ -103,6 +104,7 @@ Rails.application.routes.draw do
       put 'update_courses', action: :update_courses
     end
 
+    get 'home', to: 'home_pages#show', as: :home
     get 'acca', to: 'home_pages#show', first_element: 'acca', as: :acca
     get 'cfa', to: 'home_pages#show', first_element: 'cfa', as: :cfa
     get 'wso', to: 'home_pages#show', first_element: 'wso', as: :wso
@@ -126,7 +128,6 @@ Rails.application.routes.draw do
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
-    get 'acca-schedule', to: 'study_schedules#acca_schedule'
     resources :subject_courses, concerns: :supports_reordering
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     resources :subscriptions, only: [:create, :update, :destroy]
@@ -155,11 +156,11 @@ Rails.application.routes.draw do
     end
 
     constraints(Subdomain) do
-      get '/' => 'corporate_profiles#show'
+      get '/' => 'routes#root'
     end
 
     # home page
-    root 'home_pages#show'
+    root 'routes#root'
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'

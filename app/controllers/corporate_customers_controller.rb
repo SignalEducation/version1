@@ -74,6 +74,7 @@ class CorporateCustomersController < ApplicationController
     #Admin Data
     @corporate_students = @corporate_customer.students
     @corporate_managers = @corporate_customer.managers
+    @footer = nil
   end
 
   def new

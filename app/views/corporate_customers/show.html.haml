@@ -3,10 +3,10 @@
     .hidden-xs
       =render partial: 'layouts/corporate_side_bar'
 
-    .main-content.full-width
+    .main-content.full-width.margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
-      .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .l-section-small.is-bg-asphalt.corporate-padding{style: ''}
         .container-fluid
           .row.l-margin-bottom
             .col-md-12
@@ -98,18 +98,11 @@
                           %td=@corporate_videos_logs.where(course_module_id: ids).count
                           %td=@corporate_quiz_logs.where(course_module_id: ids).count
 
-
-        %p
-          - if current_user.admin?
-            =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
-            |
-            =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')
-
-    =render partial: 'layouts/new_footer'
+    =render partial: 'layouts/corporate_footer'
 
 -elsif current_user.admin?
 
-  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+  .margin-top.l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
     .container-fluid
       .row.l-margin-bottom
         .col-md-12
@@ -185,7 +178,7 @@
                       %td=managers.id
                       %td
                         =link_to t('views.general.edit_user'), edit_user_url(managers), class: 'btn btn-small btn-purple'
-  =render partial: 'layouts/new_footer'
+  =render partial: 'layouts/footer'
 
 
 :javascript

@@ -1,7 +1,7 @@
 #wrapper
   .hidden-xs
     =render partial: 'layouts/corporate_side_bar'
-  .main-content
+  .main-content.margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
     .l-section-small.is-bg-asphalt
@@ -13,4 +13,4 @@
                 =t('views.subject_courses.new.h1')
             =render partial: 'form'
 
-  =render partial: 'layouts/new_footer'
+  =render partial: 'layouts/corporate_footer'

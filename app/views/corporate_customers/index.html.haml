@@ -1,9 +1,12 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
             =t('views.corporate_customers.index.h1')
     .row.l-margin-top.l-margin-bottom
       .col-md-12
@@ -29,6 +32,3 @@
 
     .row
       =link_to t('views.general.new'), new_corporate_customer_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top', title: t('views.general.new_tooltip')
-
-
-=render partial: 'layouts/new_footer'

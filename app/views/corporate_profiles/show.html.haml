@@ -1,11 +1,13 @@
--# Landing Page for all corporates
+-# Landing Page when a subdomain is present
 
-.top-content
+.corporate_layout.top-content
   .l-wrap-corporate
     .container
       .row
         =render partial: 'layouts/corporate_logo'
       .row
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
         .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big
           %h3.h-white
             ='Please Login or Create an account'

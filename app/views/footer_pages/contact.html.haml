@@ -7,6 +7,8 @@
           .col-md-6.col-md-offset-3
             %h1.h1.h-white.h-separator.h-separator-center.text-center
               Contact
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .is-bg-asphalt
   .l-wrap
     .l-section
@@ -35,11 +37,3 @@
                         =email_field(:email, :address, {id: 'email', placeholder: 'Enter your email', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'})
                         %span.input-group-btn
                           =submit_tag 'Sign Up', class: 'btn btn-red', name: nil
-
-
-
-
-
-
-
-=render partial: 'layouts/new_footer'

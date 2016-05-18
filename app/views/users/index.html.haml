@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid.l-padding-side-3x
@@ -58,5 +61,3 @@
                         =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
                         -if user.destroyable?
                           =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
-
-=render partial: 'layouts/new_footer'
