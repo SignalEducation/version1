@@ -1,5 +1,6 @@
 =form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
   =f.hidden_field :course_module_element_quiz_id
+  =f.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first
   .row
     =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
     .col-sm-12
@@ -19,10 +20,6 @@
               .solution_content_block
                 =render partial: 'quiz_contents/fields_for', locals: {qc: solution, the_type: 'solution'}
 
-        .form-group
-          =f.label :difficulty_level, class: 'control-label col-sm-2'
-          .col-sm-10
-            =f.select :difficulty_level, ApplicationController::DIFFICULTY_LEVEL_NAMES, {include_blank: t('views.general.select')}, {class: 'form-control'}
 
   %h2=t('views.quiz_questions.form.answers')
   =f.fields_for :quiz_answers do |qa|
