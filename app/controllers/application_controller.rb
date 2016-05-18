@@ -200,15 +200,13 @@ class ApplicationController < ActionController::Base
   #### Session GUIDs and user tracking
 
   def current_session_guid
-    #cookies.permanent.encrypted[:session_guid]
-    cookies.encrypted[:session_guid]
+    cookies.permanent.encrypted[:session_guid]
   end
   helper_method :current_session_guid
 
 
   def set_session_stuff
-    #cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
-    cookies.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
+    cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
     cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
