@@ -8,22 +8,27 @@
 @import "summernote";
 
 $gutter: 20px;
+$sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
+
 $white: #fff;
 $gray-1: #6E6D75;
 $gray-2: #ecf0f1;
-$asphalt-1: #EFF3F6;
+
+$asphalt-1: $white;
 $asphalt-2: #F8FAFF;
 $asphalt-3: #C0CFD5;
 $asphalt-4: #edeff0;
-$purple-1: #3E3F5B;
+$text-color: #131313;
+$purple: #717171;
+$purple-1: lighten($purple, 2%);
 $purple-2: #4E3F5B;
-$purple-3: rgb(83, 84, 112);
-$purple-4: #9E9FAD;
+$purple-3: lighten($purple, 10%);
+$purple-4: darken($purple, 10%);
 $purple-5: lighten($purple-1, 5%);
-$red-1: #EE5457;
+$red-1: #CC0000;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
-$blue-1: #54a4ee;
+$blue-1: #30617B;
 $blue-2: #34495e;
 $green-1: #D0F6BD;
 $green-2: #00cc66;
@@ -45,11 +50,10 @@ $red-2: #e15258;
 $red-3: #c25975;
 $pink-2: #f092b0;
 
-$sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
 
 // 1. Base
 html {
-  background: $blue-2;
+  background: $white;
   .margin-top {
     margin-top: 62px;
   }
@@ -63,7 +67,7 @@ html {
 body {
   font-family: $sans-font;
   background: $white;
-  color: $gray-1;
+  color: $text-color;
   @include breakpoint(md-min) {
     margin: 0 auto;
     //max-width: 1800px;
@@ -120,7 +124,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
 }
 h1, .h1 {
   font-weight: normal;
-  color: $purple-1;
+  color: $text-color;
   text-transform: none;
   font-weight: normal;
   letter-spacing: 0;
@@ -141,7 +145,7 @@ h1, .h1 {
 }
 h2, .h2 {
   font-weight: normal;
-  color: $purple-1;
+  color: $text-color;
   line-height: 1.2;
   @include font-size(2.6);
   @include breakpoint(md-min) {
@@ -153,7 +157,7 @@ h2, .h2 {
 }
 h3, .h3 {
   font-weight: normal;
-  color: $purple-1;
+  color: $text-color;
   text-transform: none;
   letter-spacing: 0;
   margin-top: 0;
@@ -163,7 +167,7 @@ h3, .h3 {
   }
 }
 h4, .h4 {
-  color: $purple-1;
+  color: $text-color;
   font-weight: bold;
   @include font-size(1.6);
   @include breakpoint(md-min) {
@@ -214,7 +218,7 @@ h8, .h8 {
   }
 }
 p, .p, ol, .ol, ul, .ul, address, dl {
-  color: $gray-1;
+  color: $text-color;
   margin-bottom: $gutter;
   @include font-size(1.4);
   @include breakpoint(md-min) {
@@ -452,23 +456,23 @@ hr {
     font-size: large;
   }
   &.btn-purple {
-    background: $purple-1;
+    background: $blue-1;
     color: $white;
     &:hover {
-      background: shade($purple-1, 10%);
+      background: shade($blue-1, 10%);
     }
     &:active {
-      background: ($purple-1);
+      background: ($blue-1);
     }
   }
   &.btn-cyan {
-    background: $cyan-1;
+    background: $blue-1;
     color: $white;
     &:hover {
-      background: shade($cyan-1, 10%);
+      background: shade($blue-1, 10%);
     }
     &:active {
-      background: ($cyan-1);
+      background: ($blue-1);
     }
   }
   &.btn-secondary {
@@ -497,21 +501,21 @@ hr {
       border: 2px solid $green-2;
     }
     &.btn-purple {
-      color: $purple-1;
-      border: 2px solid $purple-1;
+      color: $blue-1;
+      border: 2px solid $blue-1;
       &:hover {
         background: transparent;
-        color: shade($purple-1, 20%);
-        border: 2px solid shade($purple-1, 20%);
+        color: shade($blue-1, 20%);
+        border: 2px solid shade($blue-1, 20%);
       }
     }
     &.btn-cyan {
-      color: $cyan-1;
-      border: 2px solid $cyan-1;
+      color: $blue-1;
+      border: 2px solid $blue-1;
       &:hover {
         background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
+        color: shade($blue-1, 20%);
+        border: 1px solid shade($blue-1, 20%);
       }
     }
   }
@@ -616,24 +620,24 @@ a.btn-block {
     }
   }
   &.btn-purple {
-    background: $purple-1;
+    background: $blue-1;
     color: $white;
     &:hover {
-      background: shade($purple-1, 10%);
+      background: shade($blue-1, 10%);
     }
     &:active {
-      background: ($purple-1);
+      background: ($blue-1);
     }
   }
   &.btn-cyan {
-    background: $cyan-1;
+    background: $blue-1;
     color: $white;
     &:hover {
       cursor: not-allowed;
-      background: shade($cyan-1, 10%);
+      background: shade($blue-1, 10%);
     }
     &:active {
-      background: ($cyan-1);
+      background: ($blue-1);
     }
   }
   &.btn-secondary {
@@ -657,21 +661,21 @@ a.btn-block {
       }
     }
     &.btn-purple {
-      color: $purple-1;
-      border: 1px solid $purple-1;
+      color: $blue-1;
+      border: 1px solid $blue-1;
       &:hover {
         background: transparent;
-        color: shade($purple-1, 20%);
-        border: 1px solid shade($purple-1, 20%);
+        color: shade($blue-1, 20%);
+        border: 1px solid shade($blue-1, 20%);
       }
     }
     &.btn-cyan {
-      color: $cyan-1;
-      border: 1px solid $cyan-1;
+      color: $blue-1;
+      border: 1px solid $blue-1;
       &:hover {
         background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
+        color: shade($blue-1, 20%);
+        border: 1px solid shade($blue-1, 20%);
       }
     }
   }
@@ -1649,7 +1653,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   padding-top: 5px;
   padding-bottom: 5px;
   &:hover, &:focus {
-    background: $cyan-1;
+    background: $purple-4;
 
   }
 }
@@ -1963,7 +1967,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(md-min) {
     @include font-size(1.6);
     &:hover {
-      background: $purple-2;
+      background: $purple-4;
     }
   }
 
@@ -2126,7 +2130,7 @@ form {
 }
 label, .label {
   font-weight: bold;
-  color: $purple-1;
+  color: $text-color;
   cursor: pointer;
   margin-bottom: $gutter/2;
   padding: 0;

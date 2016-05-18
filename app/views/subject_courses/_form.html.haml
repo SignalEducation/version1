@@ -16,9 +16,10 @@
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           %br/
-          =f.label :live_date, t('views.subject_courses.form.live_date'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :live_date, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
+          -unless current_corporate
+            =f.label :live_date, t('views.subject_courses.form.live_date'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :live_date, placeholder: t('views.subscription_plans.form.available_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
 
 
         .col-md-6
