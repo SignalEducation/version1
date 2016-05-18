@@ -1,5 +1,8 @@
 .hero-sign-up
-  =render partial: 'layouts/transparent_corporate_navbar'
+  -if current_corporate
+    =render partial: 'layouts/transparent_corporate_navbar'
+  -else
+    =render partial: 'layouts/transparent_navbar'
   .l-section
     .l-wrap
       .container-fluid
