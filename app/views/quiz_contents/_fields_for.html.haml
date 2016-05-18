@@ -4,19 +4,4 @@
 =qc.hidden_field :_destroy, value: false, class: 'destroy'
 =qc.hidden_field :id, class: 'the_id'
 =qc.hidden_field :sorting_order, value: (qc.options[:child_index] * 100), class: 'sorting_order'
--if qc.object.content_type == 'image'
-  .thumbnail
-    =image_tag qc.object.image.url
-    =qc.object.image_file_name
-    =number_to_human_size(qc.object.image_file_size)
-=qc.file_field :image, style: (qc.object.content_type != 'image' ? 'display: none;' : ''), class: 'quiz_content_image well col-sm-12'
-=qc.text_area :text_content, placeholder: t("views.quiz_contents.form.placeholder_for.#{the_type}"), class: 'form-control', rows: 6, style: (qc.object.content_type == 'image' ? 'display: none;' : '')
-.btn-group{role: 'group', aria: {label: 'add and remove buttons'}}
-  =link_to '#', class: 'btn btn-default', onclick: "addQuizContent($(this), '#{the_type}'); return false;" do
-    %span.glyphicon.glyphicon-plus
-  =link_to '#', class: 'btn btn-default', onclick: 'removeContent($(this)); return false;' do
-    %span.glyphicon.glyphicon-minus
-.pull-right.text-right
-  -QuizContent::CONTENT_TYPES.each do |t|
-    =qc.radio_button :content_type, t, class: 'content_type_radios'
-    =qc.label ('content_type_' + t).to_sym, t('views.quiz_contents.form.content_type.' + t), class: 'content_type_radio_labels'
+=qc.text_area :text_content, as: :summernote, placeholder: t('views.quiz_contents.form.content_type.text'), class: 'form-control', rows: 6, id: "#{the_type}"

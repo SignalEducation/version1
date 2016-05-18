@@ -139,7 +139,26 @@
         -counter += 1
 
   .row
-    -if question.object.id.nil?
-      =link_to t('views.general.delete_block'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-cyan'
-    -elsif question.object.destroyable?
-      =link_to t('views.general.delete_block'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-cyan'
+    .col-sm-6.text-left
+      -if question.object.id.nil?
+        =link_to t('views.general.delete_block'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-cyan'
+      -elsif question.object.destroyable?
+        =link_to t('views.general.delete_block'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-cyan'
+
+    .col-sm-6.text-right
+      -if parent.object.id.nil?
+        -# new parent
+        =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
+        =f.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-cyan'
+      -elsif question.object.id.nil?
+        -# new question
+        =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
+        =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: parent.object.id), class: 'btn btn-cyan'
+      -else
+        -# edit question of existing quiz
+        =link_to t('views.course_module_element_quizzes.form.preview_button'), question.object, class: 'btn btn-cyan'
+        =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: parent.object.id), class: 'btn btn-cyan'
+      -if question.object.id.nil?
+        =link_to t('views.general.delete'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-red'
+      -elsif question.object.destroyable?
+        =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-red'
