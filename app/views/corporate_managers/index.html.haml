@@ -27,16 +27,16 @@
                 %table.table{style: 'font-size: 18px;'}
                   %thead
                     %tr
-                      %th Name
-                      %th Email
-                      %th Active
-                      %th Edit
+                      %th.p Name
+                      %th.p Email
+                      %th.p Active
+                      %th.p Edit
                   %tbody
                     -@corporate_managers.each do |corporate_student|
                       %tr{id: corporate_student.id}
-                        %td
+                        %td.p
                           =corporate_student.full_name
-                        %td
+                        %td.p
                           =corporate_student.email
                         %td
                           =tick_or_cross(corporate_student.active)

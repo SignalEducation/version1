@@ -63,9 +63,9 @@
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
-                        %th Course
-                        %th Videos Watched
-                        %th Quizzes Taken
+                        %th.p Course
+                        %th.p Videos Watched
+                        %th.p Quizzes Taken
                     %tbody
                       - @compulsory_courses.each do |cc|
                         %tr
@@ -84,19 +84,19 @@
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
-                        %th Course
-                        %th Videos Watched
-                        %th Quizzes Taken
+                        %th.p Course
+                        %th.p Videos Watched
+                        %th.p Quizzes Taken
                     %tbody
                       - @started_courses.each do |sc|
                         %tr
-                          %td= sc.name
+                          %td.p= sc.name
                           -if sc.class == SubjectCourse
                             -ids = sc.children.all.map(&:id)
                           -else
                             -ids = sc.course_modules.all.map(&:id)
-                          %td=@corporate_videos_logs.where(course_module_id: ids).count
-                          %td=@corporate_quiz_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_videos_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_quiz_logs.where(course_module_id: ids).count
 
     =render partial: 'layouts/corporate_footer'
 

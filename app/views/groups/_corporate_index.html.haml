@@ -19,13 +19,13 @@
               %table.table.sorted_table{style: 'font-size: 18px;'}
                 %thead
                   %tr
-                    %th=t('views.groups.form.name')
-                    %th=t('views.groups.form.active')
+                    %th.p=t('views.groups.form.name')
+                    %th.p=t('views.groups.form.active')
                     %th
                 %tbody
                   -@groups.each do |group|
                     %tr{id: group.id}
-                      %td=group.name
+                      %td.p=group.name
                       %td=tick_or_cross(group.active)
                       %td
                         =link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-cyan btn-small'
