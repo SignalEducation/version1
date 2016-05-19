@@ -69,13 +69,13 @@
                     %tbody
                       - @compulsory_courses.each do |cc|
                         %tr
-                          %td= cc.name
+                          %td.p= cc.name
                           -if cc.class == SubjectCourse
                             -ids = cc.children.all.map(&:id)
                           -else
                             -ids = cc.course_modules.all.map(&:id)
-                          %td=@corporate_videos_logs.where(course_module_id: ids).count
-                          %td=@corporate_quiz_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_videos_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_quiz_logs.where(course_module_id: ids).count
 
               .corporate-box-item.table-box
                 %h2.l-margin-bottom

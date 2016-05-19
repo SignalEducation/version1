@@ -20,12 +20,12 @@
                   %table
                     %thead
                       %tr
-                        %th{style: 'font-size: 1.6rem;'}= t('views.groups.manage_courses.course')
+                        %th.p{style: 'font-size: 1.6rem;'}= t('views.groups.manage_courses.course')
                         %th
                     %tbody
                       - @subject_courses.each do |course|
                         %tr
-                          %td= course.name
+                          %td.p= course.name
                           %td{style: 'width: 5%;'}= check_box_tag "group[subject_course_ids][]",
                           course.id, @group.subject_courses.include?(course)
 
