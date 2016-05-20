@@ -511,7 +511,7 @@ hr {
     }
     &.btn-red{
       color: $red-1;
-      border: 2px solid $red-1;
+      border: 2px solid lighten($red-1, 10%);
       &:hover {
         background: transparent;
         color: $orange-2;
