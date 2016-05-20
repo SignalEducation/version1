@@ -339,7 +339,10 @@ hr {
   }
 }
 .l-wrap-corporate {
-  padding: 100px 0 170px 0;
+  padding: 150px 0 170px 0;
+  @include breakpoint(lg-min) {
+    padding: 150px 0 450px 0;
+  }
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {
