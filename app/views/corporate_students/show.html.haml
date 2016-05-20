@@ -22,25 +22,25 @@
                       %h2
                         ='Compulsory Courses'
                     %tr
-                      %th
+                      %th.p
                         Course
-                      %th
+                      %th.p
                         Videos Watched
-                      %th
+                      %th.p
                         Questions Correct
-                      %th
+                      %th.p
                         Completed
                       %th
                   %tbody
                     -@compulsory_course_logs.all_in_order.each do |log|
                       %tr
-                        %td
+                        %td.p
                           =log.subject_course.name
-                        %td
+                        %td.p
                           =log.try(:count_of_videos_taken)
                           &#47;
                           =log.subject_course.video_count.to_i
-                        %td
+                        %td.p
                           =log.count_of_questions_correct
                           &#47;
                           =log.count_of_questions_taken
@@ -55,25 +55,25 @@
                       %h2
                         ='Other Courses'
                     %tr
-                      %th
+                      %th.p
                         Course
-                      %th
+                      %th.p
                         Videos Watched
-                      %th
+                      %th.p
                         Questions Correct
-                      %th
+                      %th.p
                         Completed
                       %th
                   %tbody
                     -@other_course_logs.all_in_order.each do |log|
                       %tr
-                        %td
+                        %td.p
                           =log.subject_course.name
-                        %td
+                        %td.p
                           =log.try(:count_of_videos_taken)
                           &#47;
                           =log.subject_course.video_count.to_i
-                        %td
+                        %td.p
                           =log.count_of_questions_correct
                           &#47;
                           =log.count_of_questions_taken

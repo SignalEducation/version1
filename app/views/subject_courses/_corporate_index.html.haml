@@ -21,8 +21,8 @@
                   %table.table.sorted_table{data: {destination: subject_courses_url}, style: 'font-size: 18px;'}
                     %thead
                       %tr
-                        %th Name
-                        %th Active
+                        %th.p Name
+                        %th.p Active
                         -if current_user.admin? || current_user.content_manager?
                           %th Live
                           %th Wistia ID
@@ -33,7 +33,7 @@
                     %tbody
                       -@courses.each do |subject_course|
                         %tr{id: subject_course.id}
-                          %td=subject_course.name
+                          %td.p=subject_course.name
                           %td=tick_or_cross(subject_course.active)
                           %td
                             =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'

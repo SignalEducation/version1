@@ -100,7 +100,7 @@ class UsersController < ApplicationController
     if current_user.corporate_customer?
       @corporate_customer = current_user.corporate_customer
     end
-    @footer = nil
+    @footer = true
   end
 
   def new

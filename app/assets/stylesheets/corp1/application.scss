@@ -2101,6 +2101,14 @@ ol li.highlight i.icon-move {
   }
 }
 .logo {
+  padding: $gutter 0;
+  float: left;
+  max-width: 119px;
+  @include breakpoint(sm-min) {
+    max-width: 159px;
+  }
+}
+.corporate-logo {
   padding: $gutter/4 0;
   float: left;
   max-height: 65px;

@@ -25,20 +25,20 @@
                   %table.table{style: 'font-size: 18px;'}
                     %thead
                       %tr
-                        %th
+                        %th.p
                           =t('views.corporate_groups.show.h1')
-                        %th Manager
-                        %th No. of Users
-                        %th Edit Members
+                        %th.p Manager
+                        %th.p No. of Users
+                        %th.p Edit Members
                         %th
                     %tbody
                       -@corporate_groups.each do |corporate_group|
                         %tr
-                          %td
+                          %td.p
                             =corporate_group.name
-                          %td
+                          %td.p
                             =User.where(id: corporate_group.corporate_manager_id).first.try(:full_name)
-                          %td
+                          %td.p
                             =corporate_group.users.count
                           %td
                             =link_to t('views.general.show'), corporate_group_url(corporate_group), class: 'btn btn-small btn-purple'

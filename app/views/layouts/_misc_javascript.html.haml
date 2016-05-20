@@ -1,27 +1,58 @@
-:javascript
-  // Pulls footer to bottom of page
-  $(document).on('ready page:load', function() {
-    var navbar = $('.foot');
-    if (navbar.length > 0) {
-      var topOfFooter = navbar.offset().top,
-        heightOfFooter = navbar.height(),
-        bottomOfFooter = topOfFooter + heightOfFooter,
-        viewportHeight = $(window).height(),
-        currentBorderTop = parseInt(navbar.css('border-top'));
+-#Todo this is a bad quick fix, needs to be dynamic for all corporates
+-if current_corporate
+  :javascript
+      // Pulls footer to bottom of page
+      $(document).on('ready page:load', function() {
+        var navbar = $('.foot');
+        if (navbar.length > 0) {
+          var topOfFooter = navbar.offset().top,
+            heightOfFooter = navbar.height(),
+            bottomOfFooter = topOfFooter + heightOfFooter,
+            viewportHeight = $(window).height(),
+            currentBorderTop = parseInt(navbar.css('border-top'));
 
-      if (bottomOfFooter < viewportHeight) {
-        var extra = 0,
-          browser = navigator.userAgent;
-        if (browser.match(/OPR/i) == 'OPR') {
-          extra = 5;
-        } else if (browser.match(/Safari/i) == 'Safari') {
-          extra = 0;
-        } else if (browser.match(/Mozilla/i) == 'Mozilla') {
-          extra = 15;
-        } else
-          extra = 10;
-        var newBorder = currentBorderTop + viewportHeight - bottomOfFooter + extra;
-        navbar.css('border-top', newBorder + 'px solid #EFF3F6');
-      }
-    }
-  });
+          if (bottomOfFooter < viewportHeight) {
+            var extra = 0,
+              browser = navigator.userAgent;
+            if (browser.match(/OPR/i) == 'OPR') {
+              extra = 5;
+            } else if (browser.match(/Safari/i) == 'Safari') {
+              extra = 0;
+            } else if (browser.match(/Mozilla/i) == 'Mozilla') {
+              extra = 15;
+            } else
+              extra = 10;
+            var newBorder = currentBorderTop + viewportHeight - bottomOfFooter + extra;
+            navbar.css('border-top', newBorder + 'px solid #fff');
+          }
+        }
+      });
+
+-else
+  :javascript
+      // Pulls footer to bottom of page
+      $(document).on('ready page:load', function() {
+        var navbar = $('.foot');
+        if (navbar.length > 0) {
+          var topOfFooter = navbar.offset().top,
+            heightOfFooter = navbar.height(),
+            bottomOfFooter = topOfFooter + heightOfFooter,
+            viewportHeight = $(window).height(),
+            currentBorderTop = parseInt(navbar.css('border-top'));
+
+          if (bottomOfFooter < viewportHeight) {
+            var extra = 0,
+              browser = navigator.userAgent;
+            if (browser.match(/OPR/i) == 'OPR') {
+              extra = 5;
+            } else if (browser.match(/Safari/i) == 'Safari') {
+              extra = 0;
+            } else if (browser.match(/Mozilla/i) == 'Mozilla') {
+              extra = 15;
+            } else
+              extra = 10;
+            var newBorder = currentBorderTop + viewportHeight - bottomOfFooter + extra;
+            navbar.css('border-top', newBorder + 'px solid #EFF3F6');
+          }
+        }
+      });

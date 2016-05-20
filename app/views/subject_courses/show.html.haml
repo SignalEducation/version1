@@ -20,7 +20,7 @@
 
         -else
           .pull-right
-            -if @subject_course.question_bank.nil?
+            -if @subject_course.question_bank.nil? && !current_corporate
               =link_to t('views.question_banks.new.h1'), new_question_bank_url(sc_id: @subject_course.id), class: 'btn btn-red'
             =link_to t('views.course_modules.new.h1'), course_module_special_link(@subject_course), class: 'btn btn-purple'
             =link_to t('views.subject_courses.reorder'), course_modules_order_url(@subject_course), class: 'btn btn-cyan'

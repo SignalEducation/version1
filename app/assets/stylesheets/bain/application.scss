@@ -45,7 +45,7 @@ $red-2: #e15258;
 $red-3: #c25975;
 $pink-2: #f092b0;
 
-$sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
+$sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
 
 // 1. Base
 html {
@@ -71,7 +71,6 @@ body {
   .corporate_layout {
     background: #34495e;
   }
-
 }
 a {
   color: $red-1;
@@ -832,6 +831,7 @@ a.btn-block {
     @include font-size(1.4);
   }
 }
+
 .foot-powered-by {
   color: $white;
   margin-top: $gutter;
@@ -2101,6 +2101,14 @@ ol li.highlight i.icon-move {
   }
 }
 .logo {
+  padding: $gutter 0;
+  float: left;
+  max-width: 119px;
+  @include breakpoint(sm-min) {
+    max-width: 159px;
+  }
+}
+.corporate-logo {
   padding: $gutter/4 0;
   float: left;
   max-height: 65px;

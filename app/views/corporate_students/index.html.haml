@@ -34,20 +34,20 @@
                   %thead
                     %tr
                       -#%th{width: 20}
-                      %th Name
-                      %th Email
-                      %th Active
-                      %th Teams
-                      %th View/Edit
+                      %th.p Name
+                      %th.p Email
+                      %th.p Active
+                      %th.p Teams
+                      %th.p View/Edit
                   %tbody
                     -@corporate_students.each do |corporate_student|
                       %tr{id: corporate_student.id}
                         -#%td
                           =link_to edit_corporate_student_url(corporate_student) do
                             %i.glyphicon.glyphicon-remove-circle
-                        %td
+                        %td.p
                           =corporate_student.full_name
-                        %td
+                        %td.p
                           =corporate_student.email
                         %td
                           =tick_or_cross(corporate_student.active)
