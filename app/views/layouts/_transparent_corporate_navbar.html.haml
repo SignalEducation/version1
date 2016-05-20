@@ -10,13 +10,13 @@
           -if current_user
             -if current_user && current_user.corporate_student?
               =link_to root_url do
-                =image_tag(current_corporate.logo.url, class: 'logo')
+                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
             -else
               =link_to corporate_customer_url(current_user.corporate_customer) do
-                =image_tag(current_corporate.logo.url, class: 'logo')
+                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
           -else
             =link_to root_url do
-              =image_tag(current_corporate.logo.url, class: 'logo')
+              =image_tag(current_corporate.logo.url, class: 'corporate-logo')
 
         #myNavbar.collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
