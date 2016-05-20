@@ -339,7 +339,10 @@ hr {
   }
 }
 .l-wrap-corporate {
-  padding: 100px 0 170px 0;
+  padding: 150px 0 170px 0;
+  @include breakpoint(lg-min) {
+    padding: 150px 0 450px 0;
+  }
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {
@@ -510,18 +513,24 @@ hr {
       color: shade($red-1, 20%);
     }
     &.btn-red{
-      color: $red-1;
-      border: 2px solid lighten($red-1, 10%);
+      color: darken($red-1, 10%);
+      border: 2px solid darken($red-1, 10%);
       &:hover {
         background: transparent;
-        color: $orange-2;
-        border: 2px solid $orange-2;
-        //border: 1px solid shade($red-1, 20%);
+        color: $red-1;
+        border: 2px solid $red-1;
       }
     }
     &.btn-green {
-      color: $green-2;
-      border: 2px solid $green-2;
+      color: $green-3;
+      border: 2px solid $green-3;
+      &:hover {
+        background: transparent;
+        color: $green-2;
+        border: 2px solid $green-2;
+        //border: 1px solid shade($red-1, 20%);
+      }
+
     }
     &.btn-purple {
       color: $blue-1;
