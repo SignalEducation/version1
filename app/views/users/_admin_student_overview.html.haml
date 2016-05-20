@@ -108,7 +108,6 @@
                       =render partial: 'users/payment_details', locals: {f: f}
 
 
-  =render partial: 'layouts/footer'
   -if @current_subscription
     -if @current_subscription.current_status.include?('cancel')
       =render partial: 'users/re_subscribe'

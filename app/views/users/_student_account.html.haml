@@ -1,3 +1,4 @@
+.margin-top
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
@@ -106,7 +107,7 @@
                     .col-md-12{style: 'padding-bottom: 50px;'}
                       =render partial: 'users/payment_details', locals: {f: f}
 
-  =render partial: 'layouts/footer'
+
   -if @user.id == current_user.id
     =render partial: 'users/change_password'
     -if @user.user_group_id == UserGroup.where(individual_student: true).first.id
