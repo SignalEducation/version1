@@ -66,7 +66,6 @@ class CourseModule < ActiveRecord::Base
   before_save :calculate_estimated_time
   before_save :sanitize_name_url
   after_update :update_parent_and_sets
-  after_commit :update_sitemap
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }

@@ -31,7 +31,6 @@ class HomePage < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_commit :update_sitemap
 
   # scopes
   scope :all_in_order, -> { order(:seo_title) }
