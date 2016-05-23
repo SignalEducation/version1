@@ -117,15 +117,19 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def elements_complete
-    self.latest_cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
+    self.latest_cme_user_logs.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
   end
 
   def latest_cme_user_logs
     self.cme_user_logs.latest_only
   end
 
+  def unique_logs
+    cme_user_logs.all_completed.with_elements_active.map(&:course_module_element_id).uniq
+  end
+
   def calculate_completeness
-    self.count_of_cmes_completed = self.cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
+    self.count_of_cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     self.save
     self.create_or_update_subject_course_user_log
@@ -133,7 +137,7 @@ class StudentExamTrack < ActiveRecord::Base
 
   def recalculate_completeness
     set_count_of_fields
-    self.update_columns(count_of_cmes_completed: self.cme_user_logs.latest_only.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0))
+    self.update_columns(count_of_cmes_completed: self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0))
     self.update_columns(percentage_complete: (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100)
 
     self.create_or_update_subject_course_user_log
