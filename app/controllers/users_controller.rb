@@ -293,9 +293,15 @@ class UsersController < ApplicationController
       if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_new_paid_subscription_url(current_user.id)
       else
-        current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], coupon_code)
-        current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-        redirect_to personal_upgrade_complete_url
+        upgrade = current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], coupon_code)
+
+        if upgrade
+          current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+          redirect_to personal_upgrade_complete_url
+        else
+          redirect_to request.referer
+          flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
+        end
       end
     else
       redirect_to account_url
