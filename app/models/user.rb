@@ -74,7 +74,8 @@ class User < ActiveRecord::Base
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
-                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key
+                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key,
+                  :stripe_account_balance
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)

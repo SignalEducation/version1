@@ -117,9 +117,9 @@ describe 'Subscription UX:', type: :feature do
     #valid_mc_debit).each do |this_card|
     %w(valid_visa_debit ).each do |this_card|
       sleep 2
-      click_link(I18n.t('views.users.show.tabs.payments'))
+      #click_link(I18n.t('views.users.show.tabs.payments'))
       # new card modal
-      sleep 2
+      #sleep 2
       enter_credit_card_details(this_card)
       click_button(I18n.t('views.general.save'))
       sleep 2
