@@ -94,7 +94,7 @@ class StripeApiEvent < ActiveRecord::Base
               Rails.logger.error "Notice: User Stripe balance #{balance}"
               Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
               user.update_attributes(stripe_account_balance: balance)
-              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:lines][:data][0][:id])
+              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription]) || user.subscriptions.last
               subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
               Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
             end
