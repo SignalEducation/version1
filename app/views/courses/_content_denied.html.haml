@@ -48,6 +48,17 @@
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.free_trial_expired.h2')
+  -elsif @paywall[:course_content][:reason] == 'free_trial_limit_reached'
+    .l-section.is-bg-purple
+      .l-wrap
+        .container-fluid
+          .row
+            .col-md-8.col-md-offset-2
+              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+                =link_to t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription'), user_new_paid_subscription_url(current_user.id)
+
+              %p.text-center{style: 'color: #fff;'}
+                =t('views.courses.content_denied.free_trial_limit_reached.h2')
   -elsif @paywall[:course_content][:reason] == 'free_trial'
     .l-section.is-bg-purple
       .l-wrap

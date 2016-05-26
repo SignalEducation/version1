@@ -26,7 +26,7 @@ describe 'Course content Vs Paywall', type: :feature do
   end
 
   #Todo select the first CM and click the first CME inside the panel; expect to see the sign-up modal
-  xit describe 'sign up and upgrade to paying plan as a normal student' do
+  it describe 'sign up and upgrade to paying plan as a normal student' do
     before(:each) do
       activate_authlogic
       sign_up_and_upgrade_from_free_trial
