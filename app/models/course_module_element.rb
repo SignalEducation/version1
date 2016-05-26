@@ -173,7 +173,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   def populate_estimated_time
     if self.is_quiz && self.estimated_time_in_seconds.nil?
-      self.estimated_time_in_seconds = (self.number_of_questions * 120)
+      self.estimated_time_in_seconds = (self.number_of_questions * 60)
     else
       true
     end

@@ -20,7 +20,7 @@
       =f.text_field :course_module_element_id
       =f.text_field :course_module_jumbo_quiz_id
       =f.text_field :question_bank_id
-      =f.text_field :time_taken_in_seconds, value: (Time.now.to_i * -1)
+      =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
       =f.fields_for :quiz_attempts do |attempt|
         =attempt.text_field :user_id
         =attempt.text_field :quiz_question_id
@@ -47,8 +47,7 @@
       nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
       progressBar = $('.progress-bar'),
       questionCount = $('.l-margin-bottom-small.l-margin-top'),
-      previousAnswerCorrect = true,
-      startTime = #{Time.now.to_i};
+      previousAnswerCorrect = true;
 
   function updateProgressBar() {
     var percentage = (currentQuestion / numberOfQuestions * 100);
@@ -100,7 +99,6 @@
     }
   }
 
-  var quizStartTime = new Date();
   var numberOfCorrectAnswers = 0;
   $(document).on('ready page:load', function() {
     askQuestion(1); // 1 is the first question
