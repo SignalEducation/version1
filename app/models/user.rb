@@ -255,7 +255,8 @@ class User < ActiveRecord::Base
 
   def permission_to_see_content
     subs = self.subscriptions.map(&:current_status)
-    if subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')
+    under_limit = self.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
+    if (subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')) && under_limit
       return true
     else
       return false
