@@ -55,6 +55,7 @@
 #  email_verified_at                :datetime
 #  email_verified                   :boolean          default(FALSE), not null
 #  stripe_account_balance           :integer          default(0)
+#  trial_limit_in_seconds           :integer          default(0)
 #
 
 class UsersController < ApplicationController
