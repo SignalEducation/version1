@@ -126,9 +126,11 @@ end
 def sign_up_and_upgrade_from_free_trial
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
+  sleep(2)
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
+  sleep(2)
   within('#thank-you-message') do
     expect(page).to have_content 'Final Step!'
     expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."

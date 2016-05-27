@@ -21,19 +21,23 @@ describe 'Course content Vs Paywall', type: :feature do
       visit library_path
       click_link('Group 1')
       click_link('Subject Course 1')
-      #Todo select the first CM and click the first CME inside the panel; expect to see the sign-up modal
+      parent = page.find('.course-topics-list li:first-child')
+      parent.click
+      page.find('#collapse_0').click
+
     end
   end
 
-  #Todo select the first CM and click the first CME inside the panel; expect to see the sign-up modal
-  it describe 'sign up and upgrade to paying plan as a normal student' do
+  describe 'sign up and upgrade to paying plan as a normal student' do
     before(:each) do
       activate_authlogic
       sign_up_and_upgrade_from_free_trial
       click_link 'Courses'
       click_link('Group 1')
       click_link('Subject Course 1')
-      click_link('Start Course')
+      parent = page.find('.course-topics-list li:first-child')
+      parent.click
+      page.find('#collapse_0').click
       expect(page).to have_content(course_module_1.name)
     end
 
@@ -42,7 +46,7 @@ describe 'Course content Vs Paywall', type: :feature do
       click_link course_module_element_1_3.name
       expect(page).to have_content(course_module_element_1_3.name)
       expect(page).to have_content(course_module_1.name)
-      expect(page).to have_css('#quiz-contents')
+      page.has_content?('Mark as Complete')
     end
 
     scenario 'should still see all content with a recently cancelled account', js: true do
@@ -55,7 +59,9 @@ describe 'Course content Vs Paywall', type: :feature do
       click_link 'Courses'
       click_link('Group 1')
       click_link('Subject Course 1')
-      click_link('Start Course')
+      parent = page.find('.course-topics-list li:first-child')
+      parent.click
+      page.find('#collapse_0').click
       expect(page).to have_content course_module_1.name
       expect(page).to have_css('#quiz-contents')
       click_link course_module_element_1_3.name
@@ -71,6 +77,17 @@ describe 'Course content Vs Paywall', type: :feature do
       click_link(course_module_element_1_3.name)
       expect(page).not_to have_content I18n.t('views.courses.content_denied.not_logged_in.h2')
       expect(page).to have_content I18n.t('views.courses.content_denied.account_problem.h2')
+    end
+
+    scenario 'should only see free content with an account problem', js: true do
+      User.last.update_column(:trial_limit_in_seconds, '12001')
+      expect(page).to have_content(course_module_element_1_1.name)
+      expect(page).to have_content(course_module_element_1_2.name)
+      expect(page).to have_content(course_module_element_1_3.name)
+      expect(page).to have_css('#quiz-contents')
+      click_link(course_module_element_1_3.name)
+      expect(page).to have_content I18n.t('views.courses.content_denied.free_trial_limit_reached.h2')
+      expect(page).to have_content I18n.t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription')
     end
 
   end
