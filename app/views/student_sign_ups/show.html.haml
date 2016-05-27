@@ -27,6 +27,9 @@
                   ="To complete your membership we need to verify that we're sending emails to the correct address. To do this click on the verification email we just sent to #{current_user.email}. Didn't get the email? Please check your spam folder or "
                   =link_to 'click here', resend_verification_mail_url
                   =" to resend it."
+                %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                  ="Your Free Trial will expire on #{humanize_datetime(current_user.subscriptions[0].created_at + 7.days)} or when you reach 200 minutes of video and quiz time"
+
       %hr/
       .text-center.l-margin-bottom-big
         %h3
