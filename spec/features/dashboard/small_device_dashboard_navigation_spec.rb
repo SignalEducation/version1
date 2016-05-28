@@ -30,7 +30,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       expect(page).to have_content 'You must be signed in to access that page - please sign in'
     end
 
-    scenario 'when logged in as an individual user', js: true do
+    xit scenario 'when logged in as an individual user', js: true do
       visit root_path
       sign_up_and_upgrade_from_free_trial_small_device
       visit dashboard_path

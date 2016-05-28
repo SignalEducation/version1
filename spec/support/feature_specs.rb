@@ -55,7 +55,7 @@ end
 
 def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
-  expect(page).to have_content 'SIGN UP FOR YOUR 7-DAY FREE TRIAL'
+  expect(page).to have_content '7-DAY FREE TRIAL (UP TO 200 MINUTES) No credit card needed'
   page.all(:css, '#signUp').first.click
   sleep 1
   if expect_sign_up
@@ -166,7 +166,6 @@ def sign_up_and_upgrade_from_free_trial_small_device
     click_link 'Upgrade your account'
   end
   sleep(5)
-  expect(page).to have_content 'Upgrade your membership'
   student_picks_a_subscription_plan(usd, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
