@@ -254,7 +254,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_to_see_content
-    if self.user.free_member?
+    if self.free_member?
       if self.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
         return true
       else
