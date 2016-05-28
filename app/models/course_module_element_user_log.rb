@@ -65,6 +65,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
   after_create :create_or_update_student_exam_track
   after_update :update_student_exam_track
+  after_commit :add_to_user_trial_limit
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -165,6 +166,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def update_student_exam_track
     unless self.is_question_bank
       self.student_exam_track.try(:recalculate_completeness)
+    end
+  end
+
+  def add_to_user_trial_limit
+    user = self.user
+    new_limit = user.try(:trial_limit_in_seconds) + self.try(:time_taken_in_seconds)
+    if user.free_member?
+      user.update_columns(trial_limit_in_seconds: new_limit)
     end
   end
 

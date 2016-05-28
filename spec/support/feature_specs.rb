@@ -55,7 +55,7 @@ end
 
 def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
-  expect(page).to have_content 'SIGN UP FOR YOUR 7-DAY FREE TRIAL'
+  expect(page).to have_content '7-DAY FREE TRIAL (UP TO 200 MINUTES) No credit card needed'
   page.all(:css, '#signUp').first.click
   sleep 1
   if expect_sign_up
@@ -126,9 +126,11 @@ end
 def sign_up_and_upgrade_from_free_trial
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
+  sleep(2)
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
+  sleep(2)
   within('#thank-you-message') do
     expect(page).to have_content 'Final Step!'
     expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
@@ -164,7 +166,6 @@ def sign_up_and_upgrade_from_free_trial_small_device
     click_link 'Upgrade your account'
   end
   sleep(5)
-  expect(page).to have_content 'Upgrade your membership'
   student_picks_a_subscription_plan(usd, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click

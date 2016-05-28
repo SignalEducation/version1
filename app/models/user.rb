@@ -55,6 +55,7 @@
 #  email_verified_at                :datetime
 #  email_verified                   :boolean          default(FALSE), not null
 #  stripe_account_balance           :integer          default(0)
+#  trial_limit_in_seconds           :integer          default(0)
 #
 
 class User < ActiveRecord::Base
@@ -75,7 +76,7 @@ class User < ActiveRecord::Base
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key,
-                  :stripe_account_balance
+                  :stripe_account_balance, :trial_limit_in_seconds
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -254,7 +255,8 @@ class User < ActiveRecord::Base
 
   def permission_to_see_content
     subs = self.subscriptions.map(&:current_status)
-    if subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')
+    under_limit = self.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
+    if (subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')) && under_limit
       return true
     else
       return false

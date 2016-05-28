@@ -66,7 +66,6 @@ class CoursesController < ApplicationController
       @course_module_element_user_log.session_guid = current_session_guid
       @course_module_element_user_log.corporate_customer_id = current_user.try(:corporate_customer_id)
       @course_module_element_user_log.element_completed = true
-      @course_module_element_user_log.time_taken_in_seconds += Time.now.to_i if @course_module_element_user_log.time_taken_in_seconds.to_i != 0
       @course_module_element = @course_module_element_user_log.course_module_element
       @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
       @question_bank = @course_module_element_user_log.question_bank
@@ -93,8 +92,10 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json {
         video_cme_user_log = CourseModuleElementUserLog.find_by_id(params[:course][:videoLogId])
+        cme = video_cme_user_log.course_module_element
         if video_cme_user_log
           video_cme_user_log.element_completed = true
+          video_cme_user_log.time_taken_in_seconds = cme.try(:duration)
           video_cme_user_log.save
         end
         render json: {}, status: :ok
