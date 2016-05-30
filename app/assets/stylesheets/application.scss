@@ -464,7 +464,7 @@ hr {
     background: $cyan-1;
     color: $white;
     &:hover {
-      background: shade($cyan-1, 10%);
+      background: darken($cyan-1, 6%);
     }
     &:active {
       background: ($cyan-1);

@@ -24,11 +24,14 @@ class DashboardController < ApplicationController
     incomplete_set_ids = @incomplete_student_exam_tracks.all.map(&:subject_course_id)
     completed_set_ids = @completed_student_exam_tracks.all.map(&:subject_course_id)
 
-    logs = SubjectCourseUserLog.where(user_id: current_user.id)
-    @active_logs = logs.where('percentage_complete < ?', 100)
-    active_logs_ids = @active_logs.all.map(&:subject_course_id)
+    logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
+    @all_active_logs = logs.where('percentage_complete < ?', 100)
+    @first_active_log = @all_active_logs.first
+    active_logs_ids = @all_active_logs.all.map(&:subject_course_id)
+
     @completed_logs = logs.where('percentage_complete > ?', 99)
     completed_logs_ids = @completed_logs.all.map(&:subject_course_id)
+
     @compulsory_logs = SubjectCourseUserLog.where(user_id: current_user.id)
 
     @incomplete_courses = @courses.where(id: active_logs_ids)
