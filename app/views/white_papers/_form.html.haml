@@ -1,4 +1,4 @@
-.row.l-margin-top.l-margin-bottom
+.row.l-margin-top.l-margin-bottom.margin-top
   .col-md-12.l-margin-top
     =form_for(@white_paper, html: {class: 'form-horizontal', role: 'form'}) do |f|
       =render partial: '/layouts/error_messages', locals: {thing: @white_paper, message: nil}
@@ -8,10 +8,6 @@
           =f.label :title, t('views.white_papers.form.title'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :title, placeholder: t('views.white_papers.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-          %br/
-          =f.label :description, t('views.white_papers.form.description'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_area :description, placeholder: t('views.white_papers.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;', required: true
         .col-md-6
           -if f.object.file_file_name
             =f.label :file, t('views.white_papers.form.file_title'), class: 'control-label'
@@ -36,8 +32,12 @@
             =f.label :cover_image, t('views.white_papers.form.cover_image'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.file_field :cover_image, class: 'form-control', style: 'border-radius: 6px;', required: true
+        .col-md-12
 
-
+          %br/
+          =f.label :description, t('views.white_papers.form.description'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_area :description, as: :summernote, placeholder: t('views.white_papers.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;', required: true, id: 'editor'
 
 
 
@@ -47,3 +47,10 @@
         %br/
         =f.submit t('views.general.save'), class: 'btn btn-red'
         =link_to t('views.general.cancel'), white_papers_path, class: 'btn btn-cyan'
+
+
+:javascript
+
+  $('#editor').summernote({
+    height: 150
+  });

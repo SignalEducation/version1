@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: white_papers
+#
+#  id                       :integer          not null, primary key
+#  title                    :string
+#  description              :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  file_file_name           :string
+#  file_content_type        :string
+#  file_file_size           :integer
+#  file_updated_at          :datetime
+#  sorting_order            :integer
+#  cover_image_file_name    :string
+#  cover_image_content_type :string
+#  cover_image_file_size    :integer
+#  cover_image_updated_at   :datetime
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
@@ -5,7 +25,6 @@ describe WhitePapersController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for white_paper_1
   let!(:white_paper_1) { FactoryGirl.create(:white_paper) }
   let!(:white_paper_2) { FactoryGirl.create(:white_paper) }
   let!(:valid_params) { FactoryGirl.attributes_for(:white_paper) }
@@ -15,7 +34,7 @@ describe WhitePapersController, type: :controller do
     describe "GET 'index'" do
       it 'should redirect to sign_in' do
         get :index
-        expect_bounce_as_not_signed_in
+        expect_index_success_with_model('white_papers', 2)
       end
     end
 

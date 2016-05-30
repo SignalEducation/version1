@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: white_papers
+#
+#  id                       :integer          not null, primary key
+#  title                    :string
+#  description              :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  file_file_name           :string
+#  file_content_type        :string
+#  file_file_size           :integer
+#  file_updated_at          :datetime
+#  sorting_order            :integer
+#  cover_image_file_name    :string
+#  cover_image_content_type :string
+#  cover_image_file_size    :integer
+#  cover_image_updated_at   :datetime
+#
+
 require 'rails_helper'
 
 RSpec.describe "WhitePapers", type: :request do

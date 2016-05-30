@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -14,14 +17,12 @@
                 %thead
                   %tr
                     %th=t('views.white_papers.form.title')
-                    %th=t('views.white_papers.form.description')
                     %th
                     %th
                 %tbody
                   -@white_papers.each do |white_paper|
                     %tr{id: white_paper.id}
                       %td=white_paper.title
-                      %td=white_paper.description.truncate(35)
                       %td
                         =link_to t('views.general.view'), white_paper, class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_white_paper_url(white_paper), class: 'btn btn-cyan btn-small'

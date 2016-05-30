@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -15,5 +18,5 @@
 
         .col-md-4.l-margin-top
           %h3.text-center.h-separator.h-separator-center
-            Download The Report
+            Download Your Free Copy
           =render partial: 'request_form'

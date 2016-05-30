@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: white_paper_requests
+#
+#  id             :integer          not null, primary key
+#  name           :string
+#  email          :string
+#  number         :string
+#  web_url        :string
+#  company_name   :string
+#  white_paper_id :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe "WhitePaperRequests", type: :request do

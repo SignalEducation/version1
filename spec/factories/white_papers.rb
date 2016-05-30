@@ -20,8 +20,8 @@
 
 FactoryGirl.define do
   factory :white_paper do
-    title "MyString"
-description "MyText"
+    sequence(:title) { |n| "Title#{n}" }
+    description "MyText"
   end
 
 end

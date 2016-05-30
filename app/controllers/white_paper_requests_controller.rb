@@ -1,6 +1,21 @@
+# == Schema Information
+#
+# Table name: white_paper_requests
+#
+#  id             :integer          not null, primary key
+#  name           :string
+#  email          :string
+#  number         :string
+#  web_url        :string
+#  company_name   :string
+#  white_paper_id :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+
 class WhitePaperRequestsController < ApplicationController
 
-  before_action :logged_in_required, except: [:create]
+  before_action :logged_in_required
   before_action do
     ensure_user_is_of_type(['admin'])
   end
@@ -12,7 +27,6 @@ class WhitePaperRequestsController < ApplicationController
 
   def show
   end
-
 
   def destroy
     if @white_paper_request.destroy
