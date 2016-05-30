@@ -21,7 +21,7 @@ require 'rails_helper'
 describe CourseModuleElementResource do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at destroyed_at)
+  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at destroyed_at web_url description)
   CourseModuleElementResource.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -38,17 +38,9 @@ describe CourseModuleElementResource do
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  it { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_presence_of(:name) }
   it { should validate_length_of(:name).is_at_most(255) }
-
-  it { should_not validate_presence_of(:description) }
-
-  it { should allow_value('http://linkedin.com/').for(:web_url) }
-  it { should_not allow_value('www.linkedin.com/').for(:web_url) }
-  it { should_not allow_value('linkedin.com/').for(:web_url) }
-  it { should validate_length_of(:web_url).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

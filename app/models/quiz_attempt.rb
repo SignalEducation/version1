@@ -33,17 +33,10 @@ class QuizAttempt < ActiveRecord::Base
   belongs_to :user
 
   # validation
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_question_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_answer_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :quiz_question_id, presence: true
+  validates :quiz_answer_id, presence: true
   validates :course_module_element_user_log_id, presence: true,
             on: :update
-  validates :course_module_element_user_log_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0},
-            on: :create
   validates :answer_array, presence: true, on: :update
 
   # callbacks
@@ -80,9 +73,14 @@ class QuizAttempt < ActiveRecord::Base
 
   def calculate_score
     self.correct = self.quiz_answer.try(:correct) || false
-    self.score = self.correct ?
-            ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
+    self.score = self.correct ? 1: 0
   end
+
+  #def calculate_score
+    #self.correct = self.quiz_answer.try(:correct) || false
+    #self.score = self.correct ?
+    #        ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
+  #end
 
   def serialize_the_array
     self.answer_array = self.answer_array.to_s.split(',') if self.answer_array.to_s.split(',').length > 1

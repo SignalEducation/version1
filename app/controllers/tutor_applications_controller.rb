@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: tutor_applications
+#
+#  id          :integer          not null, primary key
+#  first_name  :string
+#  last_name   :string
+#  email       :string
+#  info        :text
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class TutorApplicationsController < ApplicationController
 
   before_action :logged_in_required, except: [:new, :create]
@@ -15,6 +29,7 @@ class TutorApplicationsController < ApplicationController
 
   def new
     @tutor_application = TutorApplication.new
+    seo_title_maker('Teach', 'As a dedicated training resource we are always on the lookout for talent. If you possess the required qualifications along with extensive experience in finance, IT or business, and are passionate about teaching, we’d love to hear from you.', nil)
   end
 
   def edit
@@ -54,6 +69,7 @@ class TutorApplicationsController < ApplicationController
     if params[:id].to_i > 0
       @tutor_application = TutorApplication.where(id: params[:id]).first
     end
+    @navbar = nil
   end
 
   def allowed_params

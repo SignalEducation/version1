@@ -26,6 +26,11 @@
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
+#  live_date                               :datetime
+#  certificate                             :boolean          default(FALSE), not null
 #
 
 FactoryGirl.define do
@@ -49,6 +54,7 @@ FactoryGirl.define do
 
     factory :active_subject_course do
       active                       true
+      live                         true
     end
 
     factory :inactive_subject_course do

@@ -1,85 +1,92 @@
-.navbar.navbar-inverse.navbar-fixed-top#navbar{role:'navigation', style: 'border-bottom: 0;'}
-  .container
-    .navbar-header
-      %button.navbar-toggle.collapsed{type: 'button', data: {toggle: 'collapse', target: '.navbar-collapse'}}
-        %span.sr-only Toggle navigation
-        %span.icon-bar
-        %span.icon-bar
-        %span.icon-bar
-      -if Rails.env.staging?
-        =link_to Rails.env, root_url, class: (controller_name == 'static_pages' ? 'navbar-brand active' : 'navbar-brand'), style: 'background-color: blue;'
-      -else
-        =link_to root_url, class: 'navbar-brand navbar-logo', id: '#navbar-logo' do
-          =image_tag 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/LS_Only_Logo.png', alt: t('views.layouts.navigation.learn_signal'), class: 'img img-responsive'
-
-    .collapse.navbar-collapse
-      %ul.nav.navbar-nav.navbar-left
-        =render partial: 'layouts/custom_nav_links', locals: {link_type: 'navbar'}
-        %li{class: controller_name == 'dashboard' ? 'active' : ''}
-          =link_to t('views.dashboard.index.h1'), dashboard_url
-        %li{class: controller_name == 'library' ? 'active' : ''}
-          =link_to t('views.library.show.h1'), library_url
-      %ul.nav.navbar-nav.navbar-right
-        -if current_user
-          -if current_user.admin?
-            %li=link_to t('views.home_pages.index.h1'), home_pages_url
-          -if current_user.admin? || current_user.tutor? || current_user.content_manager?
-            %li.dropdown
-              %a.dropdown-toggle{href: '#', data: {toggle: 'dropdown'} }
-                =t('views.general.tools')
-                %span.caret
-              %ul.dropdown-menu{role: 'menu'}
-                %li.dropdown-header=t('views.layouts.navigation.course_content')
-                -if current_user.admin? || current_user.content_manager?
-                  %li=link_to t('views.subject_areas.index.h1'), subject_areas_url
-                  %li=link_to t('views.institutions.index.h1'), institutions_url
-                  %li=link_to t('views.qualifications.index.h1'), qualifications_url
-                %li=link_to t('views.exam_levels.index.h1'), exam_levels_url
-                %li=link_to t('views.exam_sections.index.h1'), exam_sections_url
-                %li=link_to t('views.course_modules.index.h1'), course_modules_url
-                -if current_user.admin?
-                  %li.divider
-                    %li.dropdown-header=t('views.layouts.navigation.content_management')
-                    %li=link_to t('views.static_pages.index.h1'), static_pages_url
-            %li
-              =link_to user_notifications_url do
-                -if current_user && current_user.user_notifications.unread.count > 0
-                  %span.badge{style: 'background-color: red;'}
-                    %span.glyphicon.glyphicon-envelope
-                    =current_user.user_notifications.unread.count
-                  %span.visible-xs-inline=t('views.users.show.tabs.notifications')
-                -else
-                  %span.glyphicon.glyphicon-envelope
-                  %span.visible-xs-inline=t('views.users.show.tabs.notifications')
-
-          %li.dropdown
-            %a.dropdown-toggle#navbar-cog{href: '#', data: {toggle: 'dropdown'} }
-              %span.glyphicon.glyphicon-cog
-              %span.visible-xs-inline=t('views.general.settings')
-            %ul.dropdown-menu{role: 'menu'}
-              %li=link_to t('views.users.show.h1'), account_url
+.header.header-dark.navbar-fixed-top{role: 'banner'}
+  .l-wrap-small
+    .container-fluid
+      %nav.navbar.navbar-default
+        .navbar-header
+          %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          =link_to root_url do
+            =image_tag('ls-logo-red.svg', class: 'logo')
+        #myNavbar.collapse.navbar-collapse
+          %ul.nav.navbar-nav.navbar-right
+            -if current_user
+              -if current_user.corporate_customer?
+                %li
+                  =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
+                %li
+                  =link_to 'Dashboard', dashboard_url
+              -else
+                %li
+                  =link_to 'Dashboard', dashboard_url
+              %li
+                =link_to 'Courses', library_url
               -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial?
-                %li=link_to "Upgrade Subscription", user_new_paid_subscription_url(current_user.id)
+                %li=link_to "#{current_user.subscriptions[0].days_left} Days left in Trial", user_new_paid_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
+
+              -#Admin Dropdown
               -if current_user.admin?
-                %li.divider
-                %li=link_to t('views.users.index.h1'), users_url
-                %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url
-                %li=link_to t('views.user_groups.index.h1'), user_groups_url
-                %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
-                %li=link_to t('views.currencies.index.h1'), currencies_url
-                %li=link_to t('views.countries.index.h1'), countries_url
-                %li=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
-                %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
-                %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
-                %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
-                %li.divider
-                %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
-                %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
-                %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
-                %li.divider
-                %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
-                %li=link_to t('views.stripe_developer_calls.index.h1'), stripe_developer_calls_url
-                %li.divider
-              %li=link_to t('views.general.sign_out'), sign_out_url
-        -else
-          %li=link_to t('views.general.sign_in'), sign_in_url, class: 'navbar-link'
+                %li.dropdown.dropdown-admin
+                  %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                    Admin
+                    -#Todo when user notifications are reactivated
+                    -#%span.user-notification
+                      1
+                    %span.caret
+                  %ul#menu.dropdown-menu
+                    %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
+                    %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
+                    %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
+                    %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
+                    %li=link_to t('views.white_papers.index.h1'), white_papers_url
+                    %li.divider
+                    %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
+                    %li=link_to t('views.home_pages.index.h1'), home_pages_url
+                    %li.divider
+                    %li=link_to t('views.groups.index.h1'), groups_url
+                    %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
+
+              -#Student/Tutor/Content Manager Dropdown
+              %li.dropdown.dropdown-normal
+                %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                  =t('views.general.user_name') + current_user.first_name.to_s
+                  -#Todo when user notifications are reactivated
+                  -#%span.user-notification
+                    1
+                  %span.caret
+                %ul#menu.dropdown-menu
+                  -if current_user.corporate_customer?
+                    %li=link_to t('views.subject_courses.index.your_courses'), subject_courses_url
+                  -elsif current_user.tutor?
+                    %li=link_to t('views.subject_courses.index.my_courses'), subject_courses_url
+                  -elsif current_user.content_manager?
+                    %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
+                  -if current_user.admin?
+                    %li=link_to t('views.users.index.h1'), users_url
+                    %li=link_to t('views.user_groups.index.h1'), user_groups_url
+                    %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
+                    %li=link_to t('views.currencies.index.h1'), currencies_url
+                    %li=link_to t('views.countries.index.h1'), countries_url
+                    %li.divider
+                  %li
+                    %li=link_to t('views.users.show.h1'), account_url
+                  -#if current_user.blogger? || current_user.individual_student?
+                    %li
+                      %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
+                  %li
+                    =link_to t('views.general.sign_out'), sign_out_url
+
+            -else
+              %li
+                =link_to 'Business', business_url
+              %li
+                =link_to 'Why Learn Signal', why_learn_signal_url
+              %li
+                =link_to 'Pricing', pricing_url
+              %li
+                =link_to 'Courses', library_url
+              %li
+                =link_to 'Sign Up', new_student_url, class: 'sign-up-link'
+              %li
+                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}

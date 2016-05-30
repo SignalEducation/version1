@@ -3,10 +3,6 @@
 # Table name: course_modules
 #
 #  id                        :integer          not null, primary key
-#  institution_id            :integer
-#  qualification_id          :integer
-#  exam_level_id             :integer
-#  exam_section_id           :integer
 #  name                      :string
 #  name_url                  :string
 #  description               :text
@@ -25,6 +21,8 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
+#  is_past_paper             :boolean          default(FALSE), not null
+#  highlight_colour          :string
 #
 
 FactoryGirl.define do

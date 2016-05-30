@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: user_notifications
+#
+#  id             :integer          not null, primary key
+#  user_id        :integer
+#  subject_line   :string
+#  content        :text
+#  email_required :boolean          default(FALSE), not null
+#  email_sent_at  :datetime
+#  unread         :boolean          default(TRUE), not null
+#  destroyed_at   :datetime
+#  message_type   :string
+#  tutor_id       :integer
+#  falling_behind :boolean          not null
+#  blog_post_id   :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
 class UserNotificationsController < ApplicationController
 
   before_action :logged_in_required
@@ -75,8 +95,6 @@ class UserNotificationsController < ApplicationController
       redirect_to root_url
       return false
     end
-    #@forum_topics = ForumTopic.all_in_order
-    #@forum_posts = ForumPost.all_in_order
     #@tutors = Tutor.all_in_order
     #@blog_posts = BlogPost.all_in_order
     seo_title_maker(@user_notification.try(:subject_line) || 'User Notifications', '', true)
@@ -86,7 +104,6 @@ class UserNotificationsController < ApplicationController
     params.require(:user_notification).permit(:user_id, :subject_line, :content,
                                               :email_required, :email_sent_at,
                                               :unread, :destroyed_at, :message_type,
-                                              :forum_topic_id, :forum_post_id,
                                               :tutor_id, :falling_behind,
                                               :blog_post_id)
   end

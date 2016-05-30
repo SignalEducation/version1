@@ -1,0 +1,7 @@
+.col-xs-12
+  .col-xs-6
+    =link_to course_special_link(cme.previous_element), class: 'btn btn-red' do
+      .glyphicon.glyphicon-arrow-left
+  .col-xs-6
+    =link_to course_special_link(cme.next_element), class: 'btn btn-red pull-right' do
+      .glyphicon.glyphicon-arrow-right

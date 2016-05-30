@@ -1,6 +1,7 @@
 !!! 5
 %html{lang: params[:locale] || @delivered_page.try(:language) || 'en'}
   %head
+    %script{src: '//cdn.optimizely.com/js/5168310932.js'}
     -if @delivered_page
       <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
@@ -12,18 +13,13 @@
       -elsif @seo_title
         =@seo_title
       -else
-        LearnSignal
-    =stylesheet_link_tag 'application', media: 'all'#, 'data-turbolinks-track' => true
-    -# Bootstrap DateTimePicker
-    %link{rel: 'stylesheet', type: 'text/css', media: 'screen', href: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css'}
-
+        Business Training Library | LearnSignal
+    =stylesheet_link_tag @css_root, media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
-    -# Bootstrap DateTimePicker
-    %script{type: 'text/javascript', src: '/assets/javascripts/moment.js'}
-    %script{type: 'text/javascript', src: '//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/src/js/bootstrap-datetimepicker.js'}
-    %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
-    %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
 
+    %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
+    -if controller_name == 'courses'
+      %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
     %script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -37,8 +33,6 @@
       %script{type: 'text/javascript', src: 'https://jwpsrv.com/library/w07RSqLlEeOssyIACi0I_Q.js'}
 
     =csrf_meta_tags
-    -if Rails.env.production? && (!current_user || current_user.try(:individual_student?))
-      =render partial: 'layouts/google_analytics'
     -if @delivered_page
       =head_sanitizer(@delivered_page.head_content)
       -if @delivered_page.mark_as_nofollow
@@ -52,76 +46,41 @@
       %meta{name: 'robots', content: 'noindex'}
 
     =render partial: 'layouts/favicon'
-    =render partial: '/layouts/mixpanel_head_tag'
+    -if Rails.env.production?
+      =render partial: 'layouts/cookie_banner'
+      =render partial: 'layouts/facebook_pixel'
+      =render partial: 'layouts/hotjar'
 
-  %body{ontouchstart: ''}
-    -#if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
+  %body
+    -if (Rails.env.production?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
-    -if controller_name == 'home_pages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'tutor_profile'
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'study_schedules'|| (controller_name == 'tutor_applications' && action_name == 'index')
-      =render partial: 'layouts/new_navbar'
-      .schedule-margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif (controller_name == 'subject_courses' && current_user.try(:corporate_customer?)) || (controller_name == 'groups' && current_user.try(:corporate_customer?))
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      =yield
-    -elsif (controller_name == 'courses') || (controller_name == 'dashboard') || (controller_name == 'user_sessions') || (controller_name == 'user_password_resets') || (controller_name == 'course_modules') || (controller_name == 'subject_courses') || (controller_name == 'student_sign_ups')
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
-    -elsif controller_name == 'users' && action_name == 'show'
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      =yield
-    -elsif controller_name == 'users' && action_name != 'new_paid_subscription'
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-    -elsif (controller_name == 'corporate_customers') || (controller_name == 'corporate_students') || (controller_name == 'corporate_groups') || (controller_name == 'corporate_managers')
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      =yield
-    -elsif (controller_name == 'library') || (controller_name == 'footer_pages') || (controller_name == 'tutor_applications')
-      -if @course.try(:live)
-        .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
+    -if Rails.env.production?
+      =render partial: 'layouts/hubspot'
+    -if controller_name == 'referral_codes' && action_name == 'show'
+      =render partial: 'layouts/facebook_sdk'
 
-      -else
-        .no-margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
+    -if current_corporate
+      -if @navbar
+        -if @navbar == 'transparent'
+          =render partial: 'layouts/transparent_corporate_navbar'
+        -else
+          =render partial: 'layouts/corporate_navbar'
       =yield
-    -elsif controller_name == 'users' && action_name == 'new_paid_subscription'
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/new_footer'
+      -if @footer
+        =render partial: 'layouts/corporate_footer'
+
     -else
-      =render partial: 'layouts/new_navbar'
-      .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
+      -if @navbar
+        -if @navbar == 'transparent'
+          =render partial: 'layouts/transparent_navbar'
+        -else
+          =render partial: 'layouts/navbar'
       =yield
-      =render partial: 'layouts/new_footer'
+      -if @footer
+        =render partial: 'layouts/footer'
+
+
+    -#General partials
     =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
     -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
@@ -138,10 +97,7 @@
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
 
-    =render partial: 'layouts/mixpanel_body_tag'
     =render partial: 'layouts/contact_modal'
+    =render partial: 'layouts/restricted_access'
     -unless current_user
       =render partial: 'layouts/sign_up_modal'
-
-:javascript
-    var nav = responsiveNav(".nav-collapse");

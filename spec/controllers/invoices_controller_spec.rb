@@ -1,3 +1,40 @@
+# == Schema Information
+#
+# Table name: invoices
+#
+#  id                          :integer          not null, primary key
+#  user_id                     :integer
+#  corporate_customer_id       :integer
+#  subscription_transaction_id :integer
+#  subscription_id             :integer
+#  number_of_users             :integer
+#  currency_id                 :integer
+#  vat_rate_id                 :integer
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  issued_at                   :datetime
+#  stripe_guid                 :string
+#  sub_total                   :decimal(, )      default(0.0)
+#  total                       :decimal(, )      default(0.0)
+#  total_tax                   :decimal(, )      default(0.0)
+#  stripe_customer_guid        :string
+#  object_type                 :string           default("invoice")
+#  payment_attempted           :boolean          default(FALSE)
+#  payment_closed              :boolean          default(FALSE)
+#  forgiven                    :boolean          default(FALSE)
+#  paid                        :boolean          default(FALSE)
+#  livemode                    :boolean          default(FALSE)
+#  attempt_count               :integer          default(0)
+#  amount_due                  :decimal(, )      default(0.0)
+#  next_payment_attempt_at     :datetime
+#  webhooks_delivered_at       :datetime
+#  charge_guid                 :string
+#  subscription_guid           :string
+#  tax_percent                 :decimal(, )
+#  tax                         :decimal(, )
+#  original_stripe_data        :text
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
@@ -52,20 +89,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: individual_student_user_invoice.id
-        expect_show_success_with_model('invoice', individual_student_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -81,20 +118,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: tutor_user_invoice.id
-        expect_show_success_with_model('invoice', tutor_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -111,20 +148,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: corporate_student_user_invoice.id
-        expect_show_success_with_model('invoice', corporate_student_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -140,20 +177,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: corporate_customer_user_invoice.id
-        expect_show_success_with_model('invoice', corporate_customer_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: individual_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -169,20 +206,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: blogger_user_invoice.id
-        expect_show_success_with_model('invoice', blogger_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -198,20 +235,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: forum_manager_user_invoice.id
-        expect_show_success_with_model('invoice', forum_manager_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -227,20 +264,20 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
         get :show, id: content_manager_user_invoice.id
-        expect_show_success_with_model('invoice', content_manager_user_invoice.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
-        expect_error_bounce(account_url)
+        expect_bounce_as_not_allowed
       end
     end
 

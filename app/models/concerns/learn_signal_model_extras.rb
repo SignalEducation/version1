@@ -40,4 +40,11 @@ module LearnSignalModelExtras
     true
   end
 
+  def update_sitemap
+    if Rails.env.production?
+      system("RAILS_ENV=#{Rails.env} bundle exec rake sitemap:generate")
+      system("RAILS_ENV=#{Rails.env} bundle exec rake sitemap:symlink")
+    end
+  end
+
 end

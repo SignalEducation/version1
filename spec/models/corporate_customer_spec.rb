@@ -3,17 +3,20 @@
 # Table name: corporate_customers
 #
 #  id                   :integer          not null, primary key
-#  created_at           :datetime
-#  updated_at           :datetime
 #  organisation_name    :string
 #  address              :text
 #  country_id           :integer
 #  payments_by_card     :boolean          default(FALSE), not null
 #  stripe_customer_guid :string
+#  created_at           :datetime
+#  updated_at           :datetime
 #  logo_file_name       :string
 #  logo_content_type    :string
 #  logo_file_size       :integer
 #  logo_updated_at      :datetime
+#  subdomain            :string
+#  user_name            :string
+#  passcode             :string
 #
 
 require 'rails_helper'
@@ -54,8 +57,21 @@ describe CorporateCustomer do
 
   it { should_not validate_presence_of(:address) }
 
-  it { should validate_presence_of(:country_id) }
-  it { should validate_numericality_of(:country_id) }
+  it { should validate_presence_of(:subdomain) }
+  it { should validate_uniqueness_of(:subdomain) }
+  it { should validate_length_of(:subdomain).is_at_most(20) }
+
+  it { should validate_presence_of(:user_name) }
+  it { should validate_length_of(:user_name).is_at_most(25) }
+
+  it { should validate_presence_of(:passcode) }
+  it { should validate_length_of(:passcode).is_at_most(25) }
+
+  it { should validate_presence_of(:user_name) }
+
+  it { should validate_presence_of(:passcode) }
+
+  it { should_not validate_presence_of(:country_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

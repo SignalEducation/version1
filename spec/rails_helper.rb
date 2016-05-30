@@ -14,12 +14,24 @@ require 'support/dry_specs'       # our handy way of doing lots of repetitive te
 require 'support/feature_specs'   # shortcuts for our feature tests
 require 'capybara/rspec'
 require 'capybara/poltergeist'
+require 'support/subdomains'
 require 'database_cleaner'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'sidekiq/testing'
 Sidekiq::Testing.inline! # makes background jobs run immediately
 
 # Add additional requires below this line. Rails is not loaded until this point!
+
+# Added the below block to ensure that updated shoulda/matchers gem works correctly with rspec
+require "bundler/setup"
+::Bundler.require(:default, :test)
+require "shoulda/matchers"
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

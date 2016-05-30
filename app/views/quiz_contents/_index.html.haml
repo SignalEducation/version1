@@ -1,6 +1,6 @@
 -contents.each do |content|
   -if content.content_type == 'text'
-    =sanitizer content.text_content
+    =content.text_content.html_safe
     %br/
   -elsif content.content_type == 'mathjax'
     .mathjax=sanitizer content.text_content

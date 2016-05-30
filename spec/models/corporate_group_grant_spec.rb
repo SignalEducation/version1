@@ -4,8 +4,6 @@
 #
 #  id                 :integer          not null, primary key
 #  corporate_group_id :integer
-#  exam_level_id      :integer
-#  exam_section_id    :integer
 #  compulsory         :boolean
 #  restricted         :boolean
 #  created_at         :datetime         not null
@@ -37,10 +35,6 @@ describe CorporateGroupGrant do
 
   # validation
   it { should validate_presence_of(:corporate_group_id) }
-  it { should validate_numericality_of(:corporate_group_id) }
-
-
-  it { should validate_numericality_of(:subject_course_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

@@ -1,3 +1,40 @@
+# == Schema Information
+#
+# Table name: static_pages
+#
+#  id                            :integer          not null, primary key
+#  name                          :string
+#  publish_from                  :datetime
+#  publish_to                    :datetime
+#  allow_multiples               :boolean          default(FALSE), not null
+#  public_url                    :string
+#  use_standard_page_template    :boolean          default(FALSE), not null
+#  head_content                  :text
+#  body_content                  :text
+#  created_by                    :integer
+#  updated_by                    :integer
+#  add_to_navbar                 :boolean          default(FALSE), not null
+#  add_to_footer                 :boolean          default(FALSE), not null
+#  menu_label                    :string
+#  tooltip_text                  :string
+#  language                      :string
+#  mark_as_noindex               :boolean          default(FALSE), not null
+#  mark_as_nofollow              :boolean          default(FALSE), not null
+#  seo_title                     :string
+#  seo_description               :string
+#  approved_country_ids          :text
+#  default_page_for_this_url     :boolean          default(FALSE), not null
+#  make_this_page_sticky         :boolean          default(FALSE), not null
+#  logged_in_required            :boolean          default(FALSE), not null
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  show_standard_footer          :boolean          default(TRUE)
+#  post_sign_up_redirect_url     :string
+#  subscription_plan_category_id :integer
+#  student_sign_up_h1            :string
+#  student_sign_up_sub_head      :string
+#
+
 class StaticPagesController < ApplicationController
 
   before_action :logged_in_required, except: :deliver_page
@@ -72,21 +109,22 @@ class StaticPagesController < ApplicationController
     elsif params[:first_element].to_s == '500-page'
       render file: 'public/500.html', layout: nil, status: 500
     else
-      first_element = '/' + params[:first_element].to_s
-      @delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
-      if @delivered_page
-        cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @delivered_page.subscription_plan_category.try(:guid), httponly: true}
+      redirect_to root_url, status: 301
+      #first_element = '/' + params[:first_element].to_s
+      #@delivered_page = StaticPage.all_for_language(params[:locale]).all_active.with_logged_in_status(current_user).where(public_url: first_element).sample
+      #if @delivered_page
+      #  cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @delivered_page.subscription_plan_category.try(:guid), httponly: true}
 
-        if @delivered_page.use_standard_page_template
-          reset_latest_session_landing_url
-          reset_post_sign_up_redirect_path(@delivered_page.post_sign_up_redirect_url)
-          render 'static_pages/deliver_page/with_layout'
-        else
-          render 'static_pages/deliver_page/without_layout', layout: nil
-        end
-      else
-        render 'static_pages/deliver_page/404_page.html.haml', status: 404
-      end
+      #  if @delivered_page.use_standard_page_template
+      #    reset_latest_session_landing_url
+      #    reset_post_sign_up_redirect_path(@delivered_page.post_sign_up_redirect_url)
+      #    render 'static_pages/deliver_page/with_layout'
+      #  else
+      #    render 'static_pages/deliver_page/without_layout', layout: nil
+      #  end
+      #else
+      #  render 'static_pages/deliver_page/404_page.html.haml', status: 404
+      #end
     end
   end
 

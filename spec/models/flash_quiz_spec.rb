@@ -34,7 +34,6 @@ describe FlashQuiz do
 
   # validation
   it { should validate_presence_of(:flash_card_stack_id).on(:update) }
-  it { should validate_numericality_of(:flash_card_stack_id) }
 
   it { should validate_presence_of(:background_color) }
   it { should validate_length_of(:background_color).is_at_most(255) }

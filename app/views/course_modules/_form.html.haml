@@ -36,6 +36,19 @@
       .input-group.input-group-lg.full-width
         =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
 
+      %br/
+      %br/
+      .col-sm-11.col-sm-offset-1
+        .checkbox
+          %label
+            =f.check_box :is_past_paper
+            =t('views.course_modules.form.is_past_paper')
+      %br/
+      %br/
+      =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
+
   %br/
   %br/
   %br/

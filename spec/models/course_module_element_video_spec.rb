@@ -4,7 +4,6 @@
 #
 #  id                           :integer          not null, primary key
 #  course_module_element_id     :integer
-#  raw_video_file_id            :integer
 #  tags                         :string
 #  difficulty_level             :string
 #  estimated_study_time_seconds :integer
@@ -22,7 +21,7 @@ require 'rails_helper'
 describe CourseModuleElementVideo do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at thumbnail duration)
+  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at thumbnail)
   CourseModuleElementVideo.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -36,14 +35,9 @@ describe CourseModuleElementVideo do
 
   # relationships
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:raw_video_file) }
 
   # validation
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_id) }
-
-  it { should_not validate_presence_of(:raw_video_file_id) }
-  it { should validate_numericality_of(:raw_video_file_id) }
 
   it { should_not validate_presence_of(:tags) }
   it { should validate_length_of(:tags).is_at_most(255) }

@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: subscription_plans
+#
+#  id                            :integer          not null, primary key
+#  available_to_students         :boolean          default(FALSE), not null
+#  available_to_corporates       :boolean          default(FALSE), not null
+#  all_you_can_eat               :boolean          default(TRUE), not null
+#  payment_frequency_in_months   :integer          default(1)
+#  currency_id                   :integer
+#  price                         :decimal(, )
+#  available_from                :date
+#  available_to                  :date
+#  stripe_guid                   :string
+#  trial_period_in_days          :integer          default(0)
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  name                          :string
+#  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'stripe_mock'
@@ -9,9 +31,14 @@ describe SubscriptionPlansController, type: :controller do
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
+  #Commented this out because creating the stripe_token fails to save the subscription
+  #let!(:subscription_1) { FactoryGirl.create(:subscription,
+  #                        subscription_plan_id: subscription_plan_1.id,
+  #                        stripe_token: stripe_helper.generate_card_token) }
   let!(:subscription_1) { FactoryGirl.create(:subscription,
-                          subscription_plan_id: subscription_plan_1.id,
-                          stripe_token: stripe_helper.generate_card_token) }
+                                             subscription_plan_id: subscription_plan_1.id
+  ) }
+
   let!(:subscription_plan_2) { FactoryGirl.create(:corporate_subscription_plan) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
 

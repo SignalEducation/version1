@@ -12,6 +12,7 @@
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  destroyed_at                      :datetime
+#  is_final_quiz                     :boolean          default(FALSE)
 #
 
 class CourseModuleElementQuiz < ActiveRecord::Base
@@ -26,7 +27,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_id,
                   :number_of_questions, :quiz_questions_attributes,
-                  :question_selection_strategy
+                  :question_selection_strategy, :is_final_quiz
 
   # Constants
 
@@ -38,11 +39,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }
 
   # validation
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :number_of_questions, presence: true, numericality:
-            {greater_than_or_equal_to: 3, less_than_or_equal_to: 30,
-             only_integer: true}, on: :update
+  validates :course_module_element_id, presence: true, on: :update
+  validates :number_of_questions, presence: true, on: :update
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
   # callbacks
@@ -52,6 +50,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
+  scope :all_for_final_quiz, -> { where(is_final_quiz: true) }
 
   # class methods
 
@@ -105,8 +104,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   def set_ancestors_best_scores
     changes = self.previous_changes[:best_possible_score_first_attempt] # [prev,new]
     if changes && changes[0] != changes[1]
-      self.course_module_element.course_module.exam_section.try(:save)
-      self.course_module_element.course_module.subject_course.save
+      self.course_module_element.course_module.subject_course.try(:save)
     end
     true
   end

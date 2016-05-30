@@ -17,6 +17,9 @@ en:
       approve_tooltip: click to approve
       at_date_time: At
       author: "Author : "
+      course_tutor: Course Tutor
+      course_structure: Course Stucture
+      course_content: Course Content
       back: Back
       browse: Browse
       by: by
@@ -51,6 +54,7 @@ en:
       review: Review
       save: Save
       download: Download Now
+      create_account: Create Account
       upload: Upload
       save_changes: Save Changes
       save_and_continue_editing: Save and continue Editing
@@ -59,8 +63,10 @@ en:
       send: Send
       settings: Settings
       sign_in: Sign in
+      enter: Enter
       sign_out: Sign out
       sign_up: Sign up
+      sign_up_now: Sign up Now
       start: Start
       start_free_trial: Free Trial
       table_of_contents: Table of Contents
@@ -98,9 +104,16 @@ en:
         a3: Quarterly subscription
         a6: Half-yearly subscription
         a12: Yearly subscription
+      subscription_in_months:
+        a1: LearnSignal Monthly Subscription
+        a3: LearnSignal Quarterly Subscription
+        a6: LearnSignal Half-yearly Subscription
+        a12: Yearly subscription
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
+      all_courses: "Unlimited Courses"
+      cancel_anytime: "Cancel Anytime"
       submit: Sign Up Now
       actual_submit: Submit
       user_name: "Hi, "
@@ -132,13 +145,16 @@ en:
 
     corporate_customers:
       form:
-        organisation_name: Organisation name
+        organisation_name: Name
         organisation_name_placeholder: 'Smyth & co. Accountants'
         address: Address
         address_placeholder: '123 Fake Street'
         country_id: Country
         payments_by_card: Payments by card
         stripe_customer_guid: Stripe Customer ID
+        subdomain: Subdomian
+        user_name: Create Account Username
+        passcode: Create Account Password
 
       index:
         h1: Corporate Customers
@@ -235,6 +251,9 @@ en:
         free_trial_expired:
           h2: Your free trial period has expired. Please upgrade your subscription.
           upgrade_subscription: Upgrade Subscription
+        free_trial_limit_reached:
+          h2: You have reached your free trial limit 200 minutes of content. Please upgrade your subscription to continue.
+          upgrade_subscription: Upgrade Subscription
         free_trial:
           h2: Your free trial is limited to certain content. Please upgrade your subscription to get full access.
           upgrade_subscription: Upgrade Subscription
@@ -262,11 +281,7 @@ en:
     course_modules:
       form:
         course_module_elements: Course Module Elements
-        institution_id: Institution
-        qualification_id: Qualification
-        exam_level_id: Exam level
         subject_course_id: Course
-        exam_section_id: Exam section
         name: Name
         name_placeholder: Course Module Name
         name_url: Name URL
@@ -282,16 +297,15 @@ en:
         seo_description: SEO description
         seo_description_placeholder: Description text that Google will show in search results
         seo_no_index: "SEO no-index flag"
+        is_past_paper: Past Paper Module
+        highlight_colour: Highlight Colour
+        colour_placeholder: "eg. #fff"
 
       edit:
         h1: Edit Course Module
 
       index:
         h1: Course Modules
-        lead: You can manage Course Modules for any of the Qualifications and Exam levels shown below, or create a new Qualification or Exam Level.
-        new_qualification: New Qualification
-        new_exam_level: New Exam Level
-        new_exam_section: New Exam Section
 
       new:
         h1: New Course Module
@@ -302,6 +316,7 @@ en:
         link_to_student_ui: "View in the student-facing UI"
         add_more_questions: More questions needed
 
+
     course_module_elements:
       form:
         name: Name
@@ -311,7 +326,7 @@ en:
         description: "Description:"
         description_placeholder: Description (This is optional)
         estimated_time_in_seconds: Estimated overall time in seconds
-        estimated_time_in_seconds_tag: (If blank this will be auto-populated with 120 seconds per question)
+        estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
         estimated_time_in_seconds_placeholder: 180
         course_module_id: Course module
         course_module_element_video_id: Course module element video id
@@ -346,10 +361,20 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
-        next_step: Next
-        previous_step: Previous
+        next: Next
+        next_step: Next Lesson
+        mark_complete: Mark as Complete
+        previous: Previous
+        previous_step: Previous Lesson
         preview: Preview
         continue: Continue
+
+        tabs:
+          description: Description
+          question: Question
+          answer: Answer
+          notes: Notes
+          transcript: Transcript
 
     course_module_element_flash_card_packs:
       form:
@@ -366,6 +391,7 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
+        is_final_quiz: Use these questions for Final Quiz
         advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
@@ -376,7 +402,7 @@ en:
     course_module_element_resources:
       form:
         course_module_element_id: Course module element
-        name: Name
+        name: File Name
         name_placeholder: Name that users will see
         description: Description
         description_placeholder: Description of your resource
@@ -386,12 +412,12 @@ en:
         upload_content_type: Upload content type
         upload_file_size: Upload file size
         upload_updated_at: Upload updated at
-        upload: Upload a file
+        upload: Upload file
 
       edit:
 
       index:
-        h1: "Additional Resources: "
+        h1: File Uploads
 
       new:
 
@@ -399,7 +425,6 @@ en:
 
     course_module_element_videos:
       form:
-        raw_video_file_id: Video File
         tags: "Tags (separate with commas)"
         tags_placeholder: "economics, macro-economics"
         difficulty_level: Difficulty Level
@@ -408,6 +433,7 @@ en:
         transcript: Transcript
         transcript_placeholder: This is optional
         video_file: Video File
+        duration: Duration
         video_id: Video ID
         video_id_placeholder: Wistia ID
 
@@ -467,7 +493,8 @@ en:
         completed: Completed
         none_in_progress: "Remember, you can study multiple modules at the same time."
         none_completed: "This panel will show you the modules that you have completed. Keep going!"
-        no_content_right_now: "This Dashboard will show you your recent study history when you have started to watch videos and take quizzes. To get started, choose a course form our library."
+        no_content_right_now_h1: Your Learn Signal Dashboard
+        no_content_right_now_h5: Your progress through all courses will be recorded here.
         overview: Overview
 
       tutor:
@@ -485,10 +512,6 @@ en:
         users: Users
         user_groups: User Groups
         course_content_data: Courses Data
-        subject_areas: Subject Areas
-        institutions: Institutions
-        qualifications: Qualifications
-        exam_levels: Exam Levels
 
       content_manager:
         edited_in_last_3_days: Edited in the last 3 days
@@ -497,89 +520,6 @@ en:
         published_in_last_3_days: Published in the last 3 days
         publishes_in_next_3_days: Publishes in the next 3 days
         see_all_static_pages: See All Static Pages
-
-    exam_levels:
-      form:
-        qualification_id: Qualification
-        name: Name
-        name_placeholder: First exam level
-        name_url: Name URL
-        name_url_placeholder: first-exam-level
-        description: Description
-        description_placeholder: Description for this Exam Level
-        short_description: Short Description
-        short_description_placeholder: This appears only on landing page for this course
-        duration: Duration
-        is_cpd: 'is CPD?'
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: 'Active?'
-        live: Live Mode
-        best_possible_first_attempt_score: 'Best-possible first attempt score'
-        best_possible_first_attempt_score_placeholder: 200
-        default_number_of_possible_exam_answers: Default Number of Exam Answers
-        default_number_of_possible_exam_answers_placeholder: 4
-        default_number_of_possible_exam_answers_help_text: "When creating quizzes, this is the default number of answers that will be created"
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        mailchimp_list_id: Mailchimp List ID
-        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
-        forum_url: Forum URL
-        forum_url_placeholder: This is the Forum URL
-        seo_no_index: "SEO no-index flag"
-
-      index:
-        h1: Exam Levels
-        new: New Exam Level
-        exam_sections: "Exam sections?"
-
-      show:
-        h1: Exam Level
-
-      edit:
-        h1: Edit Exam Level
-
-      new:
-        h1: New Exam Level
-
-    exam_sections:
-      form:
-        name: Name
-        name_placeholder: Economics
-        name_url: Name URL
-        name_url_placeholder: economics
-        exam_level_id: Exam level
-        category_id: Category
-        active: Active
-        live: Live Mode
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        best_possible_first_attempt_score: Best-possible first attempt score
-        best_possible_first_attempt_score_placeholder: 100
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        short_description: Short description
-        short_description_placeholder: Description that will appear on library landing page for this course
-        mailchimp_list_id: Mailchimp List ID
-        mailchimp_list_id_placeholder: This is the List ID provided by mailchimp
-        description: Description
-        description_placeholder: Description text of the course
-        seo_no_index: "SEO no-index flag"
-        forum_url: Forum URL
-        forum_url_placeholder: This is the Forum URL
-
-
-      index:
-        h1: Exam Sections
-
-      show:
-        h1: Exam Section
-
-      edit:
-        h1: Edit Exam Section
-
-      new:
-        h1: New Exam Section
 
     flash_cards:
       form:
@@ -604,6 +544,7 @@ en:
         name_url_placeholder: Name URL
         description: Discription
         description_placeholder: Discription goes here!
+        background_colour: Background Colour
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -656,42 +597,6 @@ en:
         no_credit_card_needed: No credit card needed
         error_panel_caption: "prevented your Sign-Up from being completed:"
 
-    institutions:
-      form:
-        name: Name
-        name_placeholder: Institute of eTeaching
-        short_name: Short name
-        short_name_placeholder: iet
-        name_url: Name URL
-        name_url_placeholder: institute-of-eteaching
-        description: Description
-        description_placeholder: Add some text that describes the institution
-        feedback_url: Feedback URL
-        feedback_url_placeholder: http://iet.com/feedback
-        help_desk_url: Help desk URL
-        help_desk_url_placeholder: http://help.iet.com
-        subject_area_id: Subject area
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: Active
-        background_colour_code: Background colour code
-        background_colour_code_placeholder: 'FFEE99 (no need for #)'
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        seo_no_index: "SEO no-index flag"
-
-      edit:
-        h1: Edit Institution
-
-      index:
-        h1: Institutions
-
-      new:
-        h1: New Institution
-
-      show:
-        h1: Institution
-
     invoices:
       form:
         user_id: User
@@ -710,6 +615,7 @@ en:
         status: 'Status'
         vat_rate_id: "VAT rated"
         issued_at: "Issued at"
+        date: Date
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"
@@ -782,59 +688,31 @@ en:
         question: Question
         quiz: Quiz
         quizzes: MCQs
+        mcq: MCQ
+        mcqs: MCQs
         video: Video
         number_of_videos: Videos
         videos: of Video
-        institution: Institution
-        qualification: Qualification
-        exam_level: Exam Level
-        exam_section: Exam Section
         course_module: Course Module
         course_module_element: Step
         new_question_bank: Create a Custom Quiz
+        table_of_contents: Table of contents
+        description: Description
 
       index:
         continue_course: Continue Course
         start_course: Start Course
 
-    qualifications:
-      form:
-        name: Name
-        name_placeholder: CFA qualification
-        institution_id: Institution
-        name_url: Name URL
-        name_url_placeholder: cfa-qualification
-        cpd_hours_required_per_year: Required CPD hours per year
-        cpd_hours_required_per_year_placeholder: 100
-        category_id: Category
-        active: Active
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        seo_no_index: "SEO no-index flag"
-
-      index:
-        h1: Qualifications
-
-      show:
-        h1: Qualification
-
-      edit:
-        h1: Edit Qualification
-
-      new:
-        h1: New Qualification
-
     question_banks:
       form:
+        name: Name
+        name_placeholder: Give the quiz a name
+        active: Active
         number_of_questions: No. of Questions
-        easy_questions: No. of Easy Questions
-        medium_questions: No. of Normal Questions
-        hard_questions: No. of Difficult Questions
-        save: Create
+        save: Save
       new:
-        h1: Create Custom Quiz
+        h1: Final Exam
+        edit: Edit Final Exam
 
     quiz_answer:
       form:
@@ -967,56 +845,20 @@ en:
       modal:
         h1: Upload A File
 
-    stripe_developer_calls:
-      form:
-        user_id: User
-        params_received: Params received
-        params_received_placeholder: '{"name":"something","amount":123}'
-        prevent_delete: Prevent deletion
-
-      edit:
-        h1: Edit Stripe Developer Call
-
-      index:
-        h1: Stripe Developer Calls
-
-      new:
-        h1: New Stripe Developer Call
-
-      show:
-        h1: Stripe Developer Call
 
     student_sign_ups:
       show:
         h1: "Thanks for joining us!"
         sub-head: "E-mail with activation link has been sent. Please check your inbox and click on the link to activate your LearnSignal account."
 
-    subject_areas:
-      form:
-        name: Name
-        name_placeholder: Human resources
-        name_url: Name URL
-        name_url_placeholder: "human-resources"
-        seo_description: SEO description
-        seo_description_placeholder: Description text that Google will show in search results
-        seo_no_index: "SEO no-index flag"
-        sorting_order: Sorting order
-        sorting_order_placeholder: 100
-        active: Active
-
-      edit:
-        h1: Edit Subject Area
-
-      index:
-        h1: Subject Areas
-
-      new:
-        h1: New Subject Area
-
-      show:
-        h1: Subject Area
-
     subscription_payment_cards:
+      show:
+        h1: Your Card Details
+      index:
+        h1: Your Payment Details
+        h4: Card Details
+        status: Status
+
       form:
         make_default_card: Use this as your default Card
 
@@ -1035,6 +877,7 @@ en:
         wistia_guid: Wistia Project ID
         wistia_guid_placeholder: Wistia Project ID
         tutor_id: Tutor
+        live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -1049,6 +892,12 @@ en:
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
+        is_cpd: Is this a CPD course?
+        certificate: Completion Cert
+        cpd_hours: CPD Hours
+        cpd_hours_placeholder: Required CPD Hours
+        cpd_pass_rate: Pass Rate for this course
+        cpd_pass_rate_placeholder: CPD Pass Rate
 
       index:
         h1: Courses
@@ -1062,10 +911,15 @@ en:
         h1: Course
         add_course_module: Please create a Course module to begin
         description: Description
-        info: More Info
+        info: Course Info
 
       edit:
         h1: Edit Course
+
+      course_modules_order:
+        return: Return
+
+      reorder: Reorder Course Modules
 
       new:
         h1: New Course
@@ -1166,6 +1020,8 @@ en:
         email: Email
         email_placeholder: user@example.com
         phone_number: Phone Number
+        interest: Topic
+        topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
         first_name: First name
         first_name_placeholder: Jay
@@ -1174,7 +1030,7 @@ en:
         full_name: Name
         current_password: Current password
         current_password_placeholder: Current password
-        password: New Password
+        password: Password
         password_placeholder: New Password
         password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
@@ -1206,14 +1062,8 @@ en:
         password_reset_requested_at: Password reset requested at
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID
+        email_verified: Email Verified
         corporate_customer_id: Corporate customer
-        operational_email_frequency: Operational email frequency
-        study_plan_notifications_email_frequency: Study plan notifications email frequency
-        falling_behind_email_alert_frequency: Falling behind email alert frequency
-        marketing_email_frequency: Marketing email frequency
-        marketing_email_permission_given_at: Marketing email permission given at
-        blog_notification_email_frequency: Blog notification email frequency
-        forum_notification_email_frequency: Forum notification email frequency
         created_at: Created at
         updated_at: Updated at
         guid: GUID
@@ -1228,17 +1078,20 @@ en:
         h1: Users
 
       new:
-        h1: Create Account
+        h1: "Start your 7 day Free Trial"
+      admin_new:
+        h1: New User
 
       show:
         h1: Account
         edit: Edit Account
-        add_new_card: "Add New Card"
+        add_new_card: Update Payment Info
+        new_card: Click Here To Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
           h4: Change your password
-        cancel_your_subscription_plan: "Would you like to cancel your subscription?"
+        cancel_your_subscription_plan: Cancel Recurring Payments
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
@@ -1254,28 +1107,31 @@ en:
           h3: "Undo Your Account Cancellation"
           features_and_benefits: "Don't give up! You can do it, and the whole Learn Signal community are here to help. It's not too late to keep uninterrupted access to your account."
           button_call_to_action: 'Un-cancel Now'
-        re_subscribe_plan: 'Thank you for reactivating'
+        re_subscribe_plan: Select a Plan below to reactivate your account
         tabs:
           personal_details: Personal details
           corporation: Corporation
           subscriptions: Subscriptions
+          payments: Payment Information
           notifications: Notifications
           admin: Admin
-          referral_code: Referral Code
+          referral_code: Referrals
           your_referral_code: Your Referral Code
         upgrade_now: Upgrade Now
-        upgrade_subscription_plan: Edit Your Subscription
+        upgrade_subscription_plan: Upgrade Subscription
+        change_subscription_plan: Change Subscription
         use_this_card: "Use this card"
         your_card_details: Update Payment Info
-        your_invoices: Your Invoices
-        your_next_payment_will_be_on: "Your next payment will be processed on"
+        your_invoices: Payment History
+        your_next_payment_will_be_on: "Next Bill Due: "
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
-        your_plan_will_expire_on: "Your plan is set to expire on"
-        your_subscription: Current Subscription
+        your_plan_will_expire_on: "Your subscription is cancelled, you will continue to have access until: "
+        your_subscription: My Subscription
         you_dont_have_referral_code: "You don't have a referral code Yet."
         total_number_of_referred_users: Total number of referred users
         number_of_referred_users_this_month: Number of referred users this month
+        number_of_referred_users_last_month: Number of referred users last month
       upgrade_subscription:
         error_panel_caption: "prevented your subscription upgrade from being completed"
         stripe_com_logo: "Stripe.com logo"
@@ -1377,8 +1233,6 @@ en:
         destroyed_at_placeholder: Destroyed at
         message_type: Message type
         message_type_placeholder: Blog, study plan, forum, marketing etc
-        forum_topic_id: Forum topic
-        forum_post_id: Forum post
         tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
@@ -1395,8 +1249,6 @@ en:
         unread: Unread
         destroyed_at: Destroyed at
         message_type: Type
-        forum_topic_id: Forum topic
-        forum_post_id: Forum post
         tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
@@ -1413,13 +1265,14 @@ en:
 
     user_sessions:
       new:
-        h1: Sign in
+        h1: Sign In
       form:
         error_message: 'prevented you from signing in'
         email: Email
         email_placeholder: 'Enter your e-mail address'
+        user_name: Username
         password: Password
-        password_placeholder: 'Enter your password address'
+        password_placeholder: 'Enter your password'
         forgot_password: 'Forgot password?'
 
     vat_codes:
@@ -1548,7 +1401,6 @@ en:
       index:
         h1: Teams
         corp_h1: Teams
-        exam_level: Exam Level
         compulsory: Compulsory
         restricted: Restricted
         members: Members
@@ -1574,13 +1426,17 @@ en:
         first_name_placeholder: John
         last_name: Last name
         last_name_placeholder: Smith
-        employee_guid: Employee ID
+        employee_guid: "Employee ID (Optional)"
         employee_guid_placeholder: Employee ID
         active: Active
         country: Country
         corporate_customer: Corporate customer
         corporate_group_name: Corporate group
         add_to_groups: Add to Groups
+        password: Password
+        password_placeholder: XXXXX
+        password_confirmation: Confirmation Password
+        password_confirmation_placeholder: XXXXXX
 
       index:
         h1: Students
@@ -1701,3 +1557,20 @@ en:
       new:
         h1: New White Paper Request
 
+    video_resource:
+      form:
+        question: Question
+        answer: Answer
+        notes: Notes
+        transcript: Transcript
+
+      show:
+        question: Question
+        answer: Answer
+        notes: Notes
+
+      edit:
+        h1: Video Resources
+
+      new:
+        h1: Video Resources

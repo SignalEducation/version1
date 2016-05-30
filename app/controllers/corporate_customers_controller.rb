@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: corporate_customers
+#
+#  id                   :integer          not null, primary key
+#  organisation_name    :string
+#  address              :text
+#  country_id           :integer
+#  payments_by_card     :boolean          default(FALSE), not null
+#  stripe_customer_guid :string
+#  created_at           :datetime
+#  updated_at           :datetime
+#  logo_file_name       :string
+#  logo_content_type    :string
+#  logo_file_size       :integer
+#  logo_updated_at      :datetime
+#  subdomain            :string
+#  user_name            :string
+#  passcode             :string
+#
+
 class CorporateCustomersController < ApplicationController
 
   before_action :logged_in_required
@@ -50,6 +71,10 @@ class CorporateCustomersController < ApplicationController
     @quizzes_five_months_ago = @corporate_quiz_logs.five_months_ago.count
     @compulsory_course_cms = CourseModule.where(subject_course_id: @compulsory_courses).map(&:id)
 
+    #Admin Data
+    @corporate_students = @corporate_customer.students
+    @corporate_managers = @corporate_customer.managers
+    @footer = nil
   end
 
   def new
@@ -106,12 +131,8 @@ class CorporateCustomersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:corporate_customer).permit(:organisation_name,
-                                               :address,
-                                               :country_id,
-                                               :payments_by_card,
-                                               :stripe_customer_guid,
-                                               :logo)
+    params.require(:corporate_customer).permit(:organisation_name, :address,
+:country_id, :payments_by_card, :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode)
   end
 
 end

@@ -25,6 +25,8 @@
                 =link_to 'Courses', library_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+              %li
+                =link_to 'Sign Up', new_student_url, class: 'sign-up-link'
 
   .l-section#sign-up
     .l-wrap
@@ -36,8 +38,6 @@
             %h1.h1.h-white.l-margin-top-big
               Take the quick prep course for the CFA level 1
           .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
-            %p.h5.h-white.l-margin-bottom
-              ='Sign Up for your 14-day free trial'
             =render partial: 'sign_up_form'
 
 .l-section
@@ -113,7 +113,7 @@
             .col-sm-12.col-md-6.col-md-offset-3
               .testimonial
                 .testimonial-pic-wrap
-                  =image_tag('mike-testimonial-pic.jpg', class: 'testimonial-pic')
+                  =image_tag('testimonial-mike-pic.jpg', class: 'testimonial-pic')
                 %p.p
                   When I signed up for Level I, I had 85 days to put in the 300 hours of studying while working full time. I had just finished my undergrad in Math and even though I had no finance background, I was confident that I could handle the material.
                 %p.p

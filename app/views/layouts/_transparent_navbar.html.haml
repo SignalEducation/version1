@@ -1,5 +1,5 @@
 .header{role: 'banner'}
-  .l-wrap
+  .l-wrap-small
     .container-fluid
       %nav.navbar.navbar-default.navbar-transparent
         .navbar-header
@@ -34,7 +34,7 @@
 
               -#Admin Dropdown
               -if current_user.admin?
-                %li.dropdown
+                %li.dropdown.dropdown-admin
                   %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                     Admin
                     -#Todo when user notifications are reactivated
@@ -54,7 +54,7 @@
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
 
                 -#Student Dropdown
-              %li.dropdown
+              %li.dropdown.dropdown-normal
                 %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   =t('views.general.user_name') + current_user.first_name.to_s
                   -#Todo when user notifications are reactivated
@@ -70,22 +70,22 @@
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
                   -if current_user.admin?
                     %li=link_to t('views.users.index.h1'), users_url
-                    %li=link_to t('views.user_activity_logs.index.h1'), user_activity_logs_url
                     %li=link_to t('views.user_groups.index.h1'), user_groups_url
                     %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
                     %li=link_to t('views.currencies.index.h1'), currencies_url
                     %li=link_to t('views.countries.index.h1'), countries_url
-                    %li=link_to t('views.marketing_categories.index.h1'), marketing_categories_url
-                    %li=link_to t('views.marketing_tokens.index.h1'), marketing_tokens_url
-                    %li=link_to t('views.referral_codes.index.h1'), referral_codes_url
-                    %li=link_to t('views.referred_signups.index.h1'), referred_signups_url
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), account_url
+                  -#if current_user.blogger? || current_user.individual_student?
+                    %li
+                      %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
                   %li
                     =link_to t('views.general.sign_out'), sign_out_url
 
             -else
+              %li
+                =link_to 'Business', business_url
               %li
                 =link_to 'Why Learn Signal', why_learn_signal_url
               %li
@@ -93,6 +93,6 @@
               %li
                 =link_to 'Courses', library_url
               %li
-                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}Sign Up
+                =link_to 'Sign In', sign_in_url
               %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+                =link_to 'Sign Up', new_student_url, class: 'sign-up-link'

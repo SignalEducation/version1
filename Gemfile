@@ -4,7 +4,7 @@ ruby '2.2.2'
 gem 'rails', '4.2.1'
 
 # Core gems - common to all environments
-gem 'airbrake'
+gem 'airbrake', '~> 4.3.4'
 gem 'authlogic', '~> 3.4.3'
 gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
@@ -18,6 +18,7 @@ gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
 gem 'chart-js-rails' #Graphs
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
+gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'figaro' # management of ENV vars
 gem 'geocoder' # a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
@@ -28,9 +29,12 @@ gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
+gem 'prawn' # PDF creator
 gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
+gem 'payday' #Invoice PDF's
 gem 'mailchimp-api', '~> 2.0.4'
-gem 'mixpanel-ruby', '~> 2.1' # support for MixPanel
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
@@ -42,7 +46,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
 gem 'stripe', '=1.16.0' #, git: 'https://github.com/stripe/stripe-ruby'
-# support for Stripe.com payment processing
+gem 'summernote-rails'
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
 gem 'utf8-cleaner' # removes illegal characters from inbound requests
@@ -66,10 +70,12 @@ group :development do
   gem 'capistrano-rbenv', '~> 2.0'
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
+  gem 'powder'
 end
 
 group :development, :test do
-  gem 'pry-byebug' # halts code so you can experiment with it
+  #gem 'pry-byebug' # halts code so you can experiment with it
+  gem 'pry-remote'
   gem 'hirb'
   gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser
@@ -79,6 +85,7 @@ group :development, :test do
   gem 'rspec-rails' # our core testing environment
   gem 'selenium-webdriver', '>=2.45.0'
   gem 'thin' # new web server
+  gem 'ultrahook' # allows incoming webhooks from stripe
 end
 
 group :test do

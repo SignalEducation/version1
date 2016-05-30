@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -30,9 +33,9 @@
                         = referral_code.user.full_name
                         %br
                         = referral_code.user.email
-                      %td= referral_code.payed_referred_signups.count
-                      %td= referral_code.unpayed_referred_signups.count
-                      %td= referral_code.referred_signups_ready_for_paying.count
+                      %td= referral_code.try(:payed_referred_signups).try(:count)
+                      %td= referral_code.try(:unpayed_referred_signups).try(:count)
+                      %td= referral_code.try(:referred_signups_ready_for_paying).try(:count)
                       %td
                         -if referral_code.destroyable?
                           =link_to t('views.general.delete'), referral_code, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'

@@ -52,20 +52,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_attempts
 
   # validation
-  validates :course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_jumbo_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :user_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, presence: true, length: {maximum: 255}
   validates :time_taken_in_seconds, presence: true
-  validates :course_module_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :question_bank_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
@@ -74,8 +62,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_booleans
   before_save :set_count_of_questions_taken_and_correct
   after_create :calculate_score
+  after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
   after_create :create_or_update_student_exam_track
   after_update :update_student_exam_track
+  after_commit :add_to_user_trial_limit
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -139,7 +129,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def calculate_score
     if self.is_quiz || self.is_jumbo_quiz || self.is_question_bank
-      self.quiz_score_actual = self.quiz_attempts.sum(:score)
+      self.quiz_score_actual = (((self.quiz_attempts.all_correct.count).to_f/(self.quiz_attempts.count).to_f)*100).to_i
       if self.is_quiz
         self.quiz_score_potential = self.recent_attempts.count == 0 ?
             self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
@@ -179,6 +169,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     end
   end
 
+  def add_to_user_trial_limit
+    user = self.user
+    new_limit = user.try(:trial_limit_in_seconds) + self.try(:time_taken_in_seconds)
+    if user.free_member?
+      user.update_columns(trial_limit_in_seconds: new_limit)
+    end
+  end
+
   def set_booleans
     if self.course_module_jumbo_quiz
       self.is_jumbo_quiz = true
@@ -202,6 +200,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
     others.update_all(latest_attempt: false)
     true
+  end
+
+  def create_lesson_intercom_event
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct))
   end
 
 end

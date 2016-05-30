@@ -3,10 +3,6 @@
 # Table name: course_modules
 #
 #  id                        :integer          not null, primary key
-#  institution_id            :integer
-#  qualification_id          :integer
-#  exam_level_id             :integer
-#  exam_section_id           :integer
 #  name                      :string
 #  name_url                  :string
 #  description               :text
@@ -25,6 +21,8 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
+#  is_past_paper             :boolean          default(FALSE), not null
+#  highlight_colour          :string
 #
 
 class CourseModule < ActiveRecord::Base
@@ -36,7 +34,8 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
-                  :number_of_questions, :subject_course_id
+                  :number_of_questions, :subject_course_id, :is_past_paper,
+                  :highlight_colour
 
   # Constants
 
@@ -51,14 +50,12 @@ class CourseModule < ActiveRecord::Base
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   # validation
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
   validates :name, presence: true,
             uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :name_url, presence: true,
             uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :tutor_id, presence: true
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
@@ -71,7 +68,7 @@ class CourseModule < ActiveRecord::Base
   after_update :update_parent_and_sets
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :institution_id) }
+  scope :all_in_order, -> { order(:sorting_order) }
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
@@ -189,11 +186,11 @@ class CourseModule < ActiveRecord::Base
   end
 
   def calculate_quiz_count
-    self.quiz_count = self.course_module_elements.all_quizzes.count
+    self.quiz_count = self.course_module_elements.all_active.all_quizzes.count
   end
 
   def calculate_video_count
-    self.video_count = self.course_module_elements.all_videos.count
+    self.video_count = self.course_module_elements.all_active.all_videos.count
   end
 
   def calculate_video_duration

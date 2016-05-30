@@ -4,7 +4,6 @@
 #
 #  id                           :integer          not null, primary key
 #  course_module_element_id     :integer
-#  raw_video_file_id            :integer
 #  tags                         :string
 #  difficulty_level             :string
 #  estimated_study_time_seconds :integer
@@ -23,19 +22,15 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :raw_video_file_id, :tags, :difficulty_level, :transcript, :video_id
+  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
-  belongs_to :raw_video_file
 
   # validation
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
-  validates :raw_video_file_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_element_id, presence: true, on: :update
   validates :video_id, presence: true, length: {maximum: 255}, on: :create
   #validates :duration, presence: true, numericality: true
   validates :tags, allow_nil: true, length: {maximum: 255}

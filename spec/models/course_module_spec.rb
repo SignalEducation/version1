@@ -3,10 +3,6 @@
 # Table name: course_modules
 #
 #  id                        :integer          not null, primary key
-#  institution_id            :integer
-#  qualification_id          :integer
-#  exam_level_id             :integer
-#  exam_section_id           :integer
 #  name                      :string
 #  name_url                  :string
 #  description               :text
@@ -25,6 +21,8 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
+#  is_past_paper             :boolean          default(FALSE), not null
+#  highlight_colour          :string
 #
 
 require 'rails_helper'
@@ -40,6 +38,8 @@ describe CourseModule do
       it { should allow_mass_assignment_of(column_name.to_sym) }
     end
   end
+
+  subject { FactoryGirl.build(:course_module) }
 
   # Constants
   #it { expect()CourseModule.const_defined?(:CONSTANT_NAME)).to eq(true) }
@@ -57,7 +57,6 @@ describe CourseModule do
   # validation
 
   it { should validate_presence_of(:subject_course_id)}
-  it { should validate_numericality_of(:subject_course_id)}
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name).scoped_to(:subject_course_id) }
@@ -68,9 +67,12 @@ describe CourseModule do
   it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:sorting_order) }
+
+  it { should_not validate_presence_of(:is_past_paper) }
+
+  it { should_not validate_presence_of(:highlight_colour) }
 
   it { should validate_length_of(:seo_description).is_at_most(255) }
 

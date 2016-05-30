@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: subscription_plans
+#
+#  id                            :integer          not null, primary key
+#  available_to_students         :boolean          default(FALSE), not null
+#  available_to_corporates       :boolean          default(FALSE), not null
+#  all_you_can_eat               :boolean          default(TRUE), not null
+#  payment_frequency_in_months   :integer          default(1)
+#  currency_id                   :integer
+#  price                         :decimal(, )
+#  available_from                :date
+#  available_to                  :date
+#  stripe_guid                   :string
+#  trial_period_in_days          :integer          default(0)
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  name                          :string
+#  subscription_plan_category_id :integer
+#  livemode                      :boolean          default(FALSE)
+#
+
 class SubscriptionPlansController < ApplicationController
 
   before_action :logged_in_required, except: [:public_index]
@@ -22,23 +44,12 @@ class SubscriptionPlansController < ApplicationController
                                                             .in_currency(@currency_id)
                                                             .all_active
                                                             .all_in_order
+    @student_plan_1 = @student_subscription_plans[0]
+    @student_plan_2 = @student_subscription_plans[1]
+    @student_plan_3 = @student_subscription_plans[2]
 
-    @corporate_subscription_plans = SubscriptionPlan
-                                        .where('price > 0.0')
-                                        .where(livemode: true)
-                                        .where(subscription_plan_category_id: nil)
-                                        .includes(:currency)
-                                        .for_corporates
-                                        .in_currency(@currency_id)
-                                        .all_active
-                                        .all_in_display_order
 
-    @first_plan = @corporate_subscription_plans[0]
-    @second_plan = @corporate_subscription_plans[1]
-    @third_plan = @corporate_subscription_plans[2]
-    @fourth_plan = @corporate_subscription_plans[3]
-
-    seo_title_maker('Pricing', nil, nil)
+    seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
   end
 
   def show

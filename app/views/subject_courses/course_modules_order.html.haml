@@ -1,0 +1,42 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            ="Reorder Course Modules for #{@subject_course.name}"
+
+      .row.l-margin-top.l-margin-bottom
+        .pull-right
+          =link_to t('views.subject_courses.course_modules_order.return'), subject_course_url(@subject_course), class: 'btn btn-red'
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.sorted_table{data: {destination: course_modules_url}, id: @subject_course.id, style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th Name
+                    %th Active
+                    %th
+                    %th
+                %tbody
+                  -@course_modules.all_in_order.each do |cm|
+                    %tr{id: cm.id, data: {parent: @subject_course.id, destination: course_modules_url}}
+                      %td
+                        =cm.name.to_s.html_safe.truncate(30)
+                      %td
+                        =tick_or_cross(cm.active)
+                      %td
+                        =link_to t('views.general.edit'), edit_course_module_url(cm.id), class: 'btn btn-small btn-purple'
+                        =link_to t('views.course_module_elements.show.preview'), cm, class: 'btn btn-small btn-purple', target: '_blank'
+                        -if cm.destroyable?
+                          =link_to t('views.general.delete'), cm, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+-if current_user.corporate_customer
+  =render partial: 'layouts/corporate_footer'
+-else
+  =render partial: 'layouts/footer'

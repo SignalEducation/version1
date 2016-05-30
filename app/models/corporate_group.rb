@@ -23,8 +23,7 @@ class CorporateGroup < ActiveRecord::Base
   has_many :corporate_group_grants
 
   # validation
-  validates :corporate_customer_id, presence: true,
-            numericality: { only_integer: true, greater_than: 0 }
+  validates :corporate_customer_id, presence: true
   validates :name, presence: true,
             uniqueness: { scope: :corporate_customer_id }
 

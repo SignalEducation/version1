@@ -1,9 +1,12 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
             =t('models.users.import_csv')
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
@@ -26,4 +29,4 @@
 
     .row
       =link_to t('views.corporate_students.index.corp_h1'), corporate_students_url, class: 'btn btn-cyan'
-=render partial: 'layouts/new_footer'
+=render partial: 'layouts/footer'

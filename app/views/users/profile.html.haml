@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section.is-bg-asphalt{style: 'padding-bottom: 0px;'}
   .l-wrap
     .container-fluid
@@ -34,17 +37,24 @@
               .row
                 -@courses.each do |course|
                   .col-sm-6.col-md-4
-                    =link_to library_course_url(course.name_url), class: 'box box-course' do
-                      .box-inner
-                        %h3.h4.box-title
-                          =course.try(:name)
-                        %p.box-desc
-                          -if course.short_description
-                            =course.try(:short_description).to_s.truncate(30)
-                          -else
-                            =course.parent.try(:name)
-                      .box-label
-                        =t('views.general.browse')
+                    =link_to library_course_url(course.name_url), class: 'card card-course' do
+                      .card-outer
+                        .card-inner
+                          %h3.h3.card-title.l-margin-bottom
+                            =course.try(:name)
+                          %p.card-desc
+                            -if course.short_description
+                              =course.try(:short_description).to_s.truncate(185)
+                            -else
+                              =course.parent.try(:name).to_s.truncate(185)
+                      .card-label
+                        .row
+                          .col-md-12.col-xs-12
+                            .col-md-6.col-xs-6
+                              %h6
+                                =t('views.general.browse')
+                            .col-md-6.col-xs-6.text-right
+                              -if course.total_video_duration > 0
+                                %h6
+                                  =simple_time(course.total_video_duration)
 
-
-=render partial: 'layouts/new_footer'

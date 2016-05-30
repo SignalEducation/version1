@@ -13,6 +13,11 @@
 #  updated_at            :datetime         not null
 #  corporate_customer_id :integer
 #  destroyed_at          :datetime
+#  image_file_name       :string
+#  image_content_type    :string
+#  image_file_size       :integer
+#  image_updated_at      :datetime
+#  background_colour     :string
 #
 
 require 'rails_helper'
@@ -20,7 +25,7 @@ require 'rails_helper'
 describe Group do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at corporate_customer_id )
+  black_list = %w(id created_at updated_at corporate_customer_id destroyed_at image_content_type image_file_size image_updated_at image_file_name)
   Group.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -28,6 +33,8 @@ describe Group do
       it { should allow_mass_assignment_of(column_name.to_sym) }
     end
   end
+
+  subject { FactoryGirl.build(:group) }
 
   # Constants
   #it { expect(Group.const_defined?(:CONSTANT_NAME)).to eq(true) }
@@ -46,6 +53,7 @@ describe Group do
 
   it { should validate_presence_of(:description) }
 
+  it { should_not validate_presence_of(:image) }
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 

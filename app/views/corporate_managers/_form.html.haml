@@ -2,14 +2,14 @@
   .hidden-xs
     =render partial: 'layouts/corporate_side_bar'
 
-  .main-content
+  .main-content.margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
-    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .l-section-small.is-bg-asphalt.corporate-padding
       .container-fluid.l-padding-side-3x
         .row.l-margin-bottom.l-margin-top
           .col-md-6.col-sm-6.col-xs-6
-            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            %h1.h-separator.h-separator-left
               =@corporate_manager.new_record? ? 'New Manager' : 'Edit Manager'
         .row.l-margin-top.l-margin-bottom
           .col-md-12.l-margin-top
@@ -19,7 +19,6 @@
                 method: @corporate_manager.new_record? ? 'POST' : 'PATCH',
                 html: {class: 'form-horizontal', role: 'form'}) do |f|
                 =render partial: '/layouts/error_messages', locals: {thing: @corporate_manager, message: nil}
-                =f.hidden_field :country_id, value: current_user.country_id
                 .row
                   .col-md-6
                     =f.label :first_name, t('views.corporate_managers.form.first_name'), class: 'control-label'
@@ -44,4 +43,4 @@
                   %br/
                   =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
                   =link_to t('views.general.cancel'), corporate_managers_path, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
-    =render partial: 'layouts/new_footer'
+    =render partial: 'layouts/corporate_footer'

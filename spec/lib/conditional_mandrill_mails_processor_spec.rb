@@ -25,7 +25,7 @@ describe ConditionalMandrillMailsProcessor do
   let(:cmes_for_section) { FactoryGirl.create_list(:cme_quiz, 10,
                                                    course_module_id: cm_for_section.id) }
 
-  context "study streak" do
+  xit context "study streak" do
     context "no eligible student exam tracks" do
       context "track's update date does not match selected calculation start" do
         it "does not send mail if start is yesterday and track was updated day before" do
@@ -247,7 +247,7 @@ describe ConditionalMandrillMailsProcessor do
     end
   end
 
-  context "we haven't seen you in a while mail" do
+  xit context "we haven't seen you in a while mail" do
     describe 'no eligible user' do
       it 'user has last logged in before or after target date' do
         se_track = FactoryGirl.create(:student_exam_track,

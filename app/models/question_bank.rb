@@ -3,16 +3,13 @@
 # Table name: question_banks
 #
 #  id                          :integer          not null, primary key
-#  user_id                     :integer
-#  exam_level_id               :integer
-#  easy_questions              :integer
-#  medium_questions            :integer
-#  hard_questions              :integer
 #  question_selection_strategy :string
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  exam_section_id             :integer
 #  subject_course_id           :integer
+#  number_of_questions         :integer
+#  name                        :string
+#  active                      :boolean          default(FALSE)
 #
 
 class QuestionBank < ActiveRecord::Base
@@ -20,29 +17,27 @@ class QuestionBank < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :user_id, :easy_questions, :medium_questions, :hard_questions, :question_selection_strategy, :subject_course_id
+  attr_accessible :question_selection_strategy, :subject_course_id, :number_of_questions, :name, :active
 
   # Constants
-  STRATEGIES = %w(random progressive)
+  STRATEGIES = %w(random)
 
   # relationships
-  belongs_to :user
   belongs_to :subject_course
   has_many :course_module_element_user_logs
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
+  validates :number_of_questions, presence: true
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
-  validate :at_least_one_question_set
+  validates :name, presence: true
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
 
@@ -51,22 +46,12 @@ class QuestionBank < ActiveRecord::Base
     true
   end
 
-  def number_of_questions
-    ([self.easy_questions].compact + [self.medium_questions].compact + [self.hard_questions].compact).sum
-  end
-
   protected
 
   def check_dependencies
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
-    end
-  end
-
-  def at_least_one_question_set
-    if number_of_questions < 1
-      errors.add(:base, I18n.t('controllers.question_banks.at_least_one_question_set'))
     end
   end
 

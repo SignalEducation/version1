@@ -1,5 +1,7 @@
 # coding: utf-8
 require 'mailchimp'
+require 'prawn'
+
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -16,12 +18,14 @@ class ApplicationController < ActionController::Base
         DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
   end
 
-  before_action :use_basic_auth_for_staging
+  before_action :authenticate_if_staging
   before_action :setup_mcapi
 
-  def use_basic_auth_for_staging
-    if Rails.env.staging? && !request.original_fullpath.include?('/api/')
-      ApplicationController.http_basic_authenticate_with name: 'signal', password: 'MeagherMacRedmond'
+  def authenticate_if_staging
+    if Rails.env.staging? && params[:first_element] != 'api'
+      authenticate_or_request_with_http_basic 'Staging' do |name, password|
+        name == 'signal' && password == '27(South!)'
+      end
     end
   end
 
@@ -31,11 +35,13 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  before_action :process_marketing_tokens # not for Api::
+  #before_action :process_marketing_tokens # not for Api::
   before_action :process_crush_offers_session_id # not for Api::
+  before_action :set_assets_from_subdomain
+  before_action :set_navbar_and_footer
   #before_action :log_user_activity # not for Api::
 
-  helper_method :current_user_session, :current_user
+  helper_method :current_user_session, :current_user, :current_corporate
 
   Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.datetime_formats.simple')
   Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.datetime_formats.standard')
@@ -49,14 +55,46 @@ class ApplicationController < ActionController::Base
     @current_user_session = UserSession.find
   end
 
+  #def current_user
+  #  if @current_user && @current_user.corporate_customer? && @current_user.session_key != session[:session_id]
+  #    flash[:notice] = I18n.t('controllers.application.simultaneous_logins_detected')
+  #    current_user_session.destroy
+  #    return nil
+  #  else
+  #    return @current_user if defined?(@current_user)
+  #    @current_user = current_user_session && current_user_session.record
+  #  end
+  #end
+
   def current_user
-    if @current_user && @current_user.corporate_customer? && @current_user.session_key != session[:session_id]
-      flash[:notice] = I18n.t('controllers.application.simultaneous_logins_detected')
-      current_user_session.destroy
-      return nil
+    return @current_user if defined?(@current_user)
+    @current_user = current_user_session && current_user_session.record
+  end
+
+  def current_corporate
+    if current_user
+      CorporateCustomer.find_by_subdomain(request.subdomain) if current_user.corporate_customer? || current_user.corporate_student?
     else
-      return @current_user if defined?(@current_user)
-      @current_user = current_user_session && current_user_session.record
+      CorporateCustomer.find_by_subdomain(request.subdomain)
+    end
+  end
+
+  def set_navbar_and_footer
+    @navbar = 'standard'
+    @footer = 'standard'
+  end
+
+  def set_assets_from_subdomain
+    corporate_domains = CorporateCustomer.all.map(&:subdomain)
+    if request.subdomain.present? && corporate_domains.include?(request.subdomain)
+      asset_folder = "#{Rails.root}/app/assets/stylesheets/#{request.subdomain}/application.scss"
+      if File.exists?(asset_folder)
+        @css_root = "#{request.subdomain}/application"
+      else
+        @css_root = 'application'
+      end
+    else
+      @css_root = 'application'
     end
   end
 
@@ -96,9 +134,7 @@ class ApplicationController < ActionController::Base
     logged_in_required
     the_user_group = current_user.user_group
     # for a list of permitted features, see UserGroup::FEATURES
-
     permission_granted = false
-
     authorised_features.each do |permitted_thing|
       if (the_user_group.individual_student && permitted_thing == 'individual_student') ||
          (the_user_group.corporate_student  && permitted_thing == 'corporate_student') ||
@@ -108,7 +144,6 @@ class ApplicationController < ActionController::Base
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
          (the_user_group.forum_manager      && permitted_thing == 'forum_manager') ||
          (the_user_group.site_admin)
-
         permission_granted = true
       end
     end
@@ -128,20 +163,23 @@ class ApplicationController < ActionController::Base
     not_allowed = {course_content: {view_all: false, reason: ''},
                    forum: {read: true, write: false},
                    blog: {comment: false} }
-    subscription_in_charge = current_user.subscriptions.all_in_order.last unless current_user.nil?
+    subscription_in_charge = current_user.active_subscription
     if current_user.nil?
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
     elsif !current_user.user_group.subscription_required_to_see_content
       result = allowed
     elsif subscription_in_charge && subscription_in_charge.free_trial? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
-      result = not_allowed
+      result = allowed
       result[:course_content][:reason] = 'free_trial'
     elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
       result = not_allowed
       result[:course_content][:reason] = "free_trial_expired"
-    elsif %w(trialing active canceled-pending).include?(subscription_in_charge.try(:current_status) || 'canceled')
+    elsif current_user.permission_to_see_content
       result = allowed
+    elsif !current_user.permission_to_see_content && current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
+      result = not_allowed
+      result[:course_content][:reason] = "free_trial_limit_reached"
     else
       result = not_allowed
       result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
@@ -169,22 +207,12 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_session_guid
 
-  def clear_mixpanel_initial_id
-    cookies.delete :mixpanel_initial_id
-  end
-
-  def mixpanel_initial_id
-    cookies.encrypted[:mixpanel_initial_id] ||= { value: SecureRandom.hex(32), httponly: true }
-  end
-  helper_method :mixpanel_initial_id
 
   def set_session_stuff
     cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
     cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
     cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
-    @mathjax_required = false # default
-    @show_mixpanel = (Rails.env.staging? || Rails.env.production?) && (!current_user || current_user.try(:individual_student?))
   end
 
   def reset_latest_session_landing_url
@@ -326,11 +354,16 @@ class ApplicationController < ActionController::Base
 
   def seo_title_maker(last_element, seo_description, seo_no_index)
     @seo_title = last_element ?
-            "LearnSignal – #{last_element.to_s.truncate(46)}" :
-            'LearnSignal'
-    @seo_description = seo_description
+            "#{last_element.to_s.truncate(65)} | LearnSignal" :
+            'Business Training Library | LearnSignal'
+    @seo_description = seo_description.to_s.truncate(156)
     @seo_no_index = seo_no_index
   end
+
+  def tag_manager_data_layer(course)
+    @tag_manager_course = course
+  end
+  helper_method :tag_manager_data_layer
 
   def setup_mcapi
     @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])

@@ -1,8 +1,51 @@
+:javascript
+  dataLayer = [];
+
+
+-if (controller_name == 'groups' && action_name == 'show') || (controller_name == 'library' && action_name == 'show')
+
+  -course = @tag_manager_course
+  -if current_user
+    :javascript
+      dataLayer.push({
+        'edu_pid': "#{course}",
+        'user_id': "#{current_user.id}"
+      });
+
+  -else
+    :javascript
+      dataLayer.push({
+        'edu_pid': "#{course}"
+      });
+
+
+-elsif current_user && (controller_name == 'users' && action_name == 'personal_upgrade_complete')
+
+  :javascript
+    dataLayer.push({
+      'user_id': "#{current_user.id}",
+      'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'products': [{
+            'name': "#{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan",
+            'id': "#{@subscription.subscription_plan.id}",
+            'price': "#{@subscription.subscription_plan.price}",
+          }]
+        }
+      }
+    });
+
+-elsif current_user
+  :javascript
+    dataLayer.push({'user_id': "#{current_user.id}"});
+
+
 -# Google Tag Manager
 %noscript
-  %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-PD893W',
+  %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
 height: 0, width: 0, style: 'display:none;visibility:hidden'}
 :javascript
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'}); var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:''; j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PD893W');
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'}); var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:''; j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5SC76S');
 
 -# End Google Tag Manager

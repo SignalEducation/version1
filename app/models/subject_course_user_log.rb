@@ -30,20 +30,17 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
+  has_many :completion_certificates
 
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
   validates :session_guid, presence: true, length: { maximum: 255 }
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :latest_course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_intercom_event unless Rails.env.development?
+  after_create :start_course_intercom_event if Rails.env.production? || Rails.env.staging?
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -113,8 +110,8 @@ class SubjectCourseUserLog < ActiveRecord::Base
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
 
-  def create_intercom_event
-    IntercomCourseStartedEventWorker.perform_async(self.user.email, self.subject_course.name)
+  def start_course_intercom_event
+    IntercomCourseStartedEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
   end
 
   protected

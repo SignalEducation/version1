@@ -40,20 +40,17 @@ class CorporateStudentsController < ApplicationController
 
   def create
     password = SecureRandom.hex(5)
-    @corporate_student = User.new(allowed_params.merge({password: password,
-                                                        password_confirmation: password,
-                                                        user_group_id: UserGroup.where(corporate_student: true).first.id,
-                                                        password_change_required: true}))
+    @corporate_student = User.new(allowed_params.merge({password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, password_change_required: true}))
 
     @corporate_student.corporate_customer_id = current_user.corporate_customer_id if current_user.corporate_customer?
-    @corporate_student.de_activate_user
+    @corporate_student.activate_user
+    @corporate_student.generate_email_verification_code
+    @corporate_student.country_id = current_user.corporate_customer.country_id  if current_user.corporate_customer?
     @corporate_student.locale = 'en'
     if @corporate_student.save
       @corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
-      MandrillWorker.perform_async(@corporate_student.id,
-                                   nil,
-                                   'send_verification_email',
-                                   user_activation_url(activation_code: @corporate_student.account_activation_code))
+      IntercomCreateCorporateStudentWorker.perform_async(@corporate_student.id, @corporate_student.email, @corporate_student.full_name, @corporate_student.created_at, @corporate_student.guid, @corporate_student.user_group.name, @corporate_student.corporate_customer_id, @corporate_student.corporate_customer.organisation_name) unless Rails.env.test?
+      IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @corporate_student.id,user_verification_url(email_verification_code: @corporate_student.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
@@ -95,10 +92,8 @@ class CorporateStudentsController < ApplicationController
       @corporate_students = User.bulk_create(params[:csvdata], current_user)
       @corporate_students.each do |user|
         if user.save
-          MandrillWorker.perform_async(user.id,
-                                       nil,
-                                       'send_verification_email',
-                                       user_activation_url(activation_code: user.account_activation_code))
+          IntercomCreateCorporateStudentWorker.perform_async(user.id, user.email, user.full_name, user.created_at, user.guid, user.user_group.name, user.corporate_customer_id, user.corporate_customer.organisation_name)
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, user.id, user_verification_url(email_verification_code: user.email_verification_code)) unless Rails.env.test?
         end
       end
     else
@@ -110,7 +105,6 @@ class CorporateStudentsController < ApplicationController
   protected
 
   def get_variables
-    @countries = Country.all_in_order
     if current_user.admin?
       @corporate_customers = CorporateCustomer.all_in_order
     elsif current_user.corporate_customer?
@@ -119,6 +113,7 @@ class CorporateStudentsController < ApplicationController
     if params[:id].to_i > 0
       @corporate_student = User.where(id: params[:id]).first
     end
+    @footer = nil
   end
 
   def allowed_params

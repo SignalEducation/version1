@@ -6,6 +6,7 @@
 # General
 SECRET_KEY_BASE: 128-character-code
 free_trial_days: "7"
+free_trial_limit_in_seconds: "12000"
 
 # Email sending
 learnsignal_v3_server_email_address: 'some-account@gmail.com'
@@ -23,9 +24,6 @@ LEARNSIGNAL3_S3_SECRET_ACCESS_KEY: 40-character-code
 
 # Intercom
 intercom_app_id: 8-char-code
-
-# MixPanel
-mixpanel_key: mixpanel_api_key_goes_here
 
 # Mandrill
 learnsignal_mandrill_api_key: mandrill_api_key_goes_here
@@ -53,3 +51,6 @@ learnsignal_mandrill_api_key: mandrill_api_key_goes_here
 # for each load balancer in AWS console (go to Load Balancers, select
 # load balancer and in bottom table all availability zones are listed).
 aws_load_balancers: aws_load_balancers_ips_go_here
+
+# Pointpin Api
+learnsignal_pointpin_api_key: b36dbb3d-b657-44fb-83fd-84519a7c0520

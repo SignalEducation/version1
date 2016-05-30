@@ -1,0 +1,39 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-6.col-md-offset-3
+          %h1.h1.h-separator.h-separator-center.text-center
+            Select a new plan
+
+      =form_for(@current_subscription, method: :put, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
+        =f.hidden_field :subscription_plan_id
+        .row
+          .plans
+            -@current_subscription.upgrade_options.each do|plan|
+              .col-sm-4
+                .subscription-panel.plan.plan-yearly{class: " #{@current_subscription.subscription_plan_id == plan.id ? 'chosen-plan' : ''}", id: "subscription-panel-#{plan.id}", data: {plan: plan.id}, onclick: "$('#subscription_subscription_plan_id').val($(this).data('plan') ); if (#{@current_subscription.subscription_plan_id} == $(this).data('plan')) {$('#upgrade-submit').addClass('disabled');} else {$('#upgrade-submit').removeClass('disabled');} $('.subscription-panel').removeClass('chosen-plan'); $(this).addClass('chosen-plan');"}
+                  .plan-header
+                    %h3.h4.plan-title
+                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                  .plan-inner
+                    %h4.h3.plan-price
+                      =plan.currency.format_number(plan.price)
+                    %p.plan-text
+                      =plan.description.lines[1]
+                  %label.plan-option
+                    =@current_subscription.subscription_plan_id == plan.id ? 'Current Plan' : 'Select this plan'
+
+        .row
+          %br/
+          %br/
+          %br/
+          =f.submit t('views.general.save'), class: 'btn btn-red', id: 'upgrade-submit'
+          =link_to t('views.general.cancel'), account_url(anchor: 'subscriptions'), class: 'btn btn-cyan'
+
+
+
+=render partial: 'layouts/footer'

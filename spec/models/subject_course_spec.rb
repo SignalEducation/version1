@@ -26,6 +26,11 @@
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
+#  live_date                               :datetime
+#  certificate                             :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
@@ -33,7 +38,7 @@ require 'rails_helper'
 describe SubjectCourse do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at video_count quiz_count question_count best_possible_first_attempt_score total_video_duration)
+  black_list = %w(id created_at updated_at video_count quiz_count question_count best_possible_first_attempt_score total_video_duration destroyed_at)
   SubjectCourse.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -65,7 +70,6 @@ describe SubjectCourse do
   xit { should validate_length_of(:wistia_guid).is_at_most(255) }
 
   it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
 
   it { should validate_presence_of(:description) }
 
@@ -79,7 +83,6 @@ describe SubjectCourse do
   it { should validate_length_of(:forum_url).is_at_most(255) }
 
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
-  it { should validate_numericality_of(:default_number_of_possible_exam_answers) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

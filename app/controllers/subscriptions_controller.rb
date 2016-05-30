@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: subscriptions
+#
+#  id                    :integer          not null, primary key
+#  user_id               :integer
+#  corporate_customer_id :integer
+#  subscription_plan_id  :integer
+#  stripe_guid           :string
+#  next_renewal_date     :date
+#  complimentary         :boolean          default(FALSE), not null
+#  current_status        :string
+#  created_at            :datetime
+#  updated_at            :datetime
+#  stripe_customer_id    :string
+#  stripe_customer_data  :text
+#  livemode              :boolean          default(FALSE)
+#
+
 class SubscriptionsController < ApplicationController
 
   before_action :logged_in_required

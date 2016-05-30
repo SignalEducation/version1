@@ -26,6 +26,8 @@ describe SubscriptionPlanCategory do
     end
   end
 
+  subject { FactoryGirl.build(:subscription_plan_category) }
+
   # Constants
   #it { expect(SubscriptionPlanCategory.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
@@ -41,8 +43,6 @@ describe SubscriptionPlanCategory do
   it { should validate_presence_of(:available_from) }
 
   it { should validate_presence_of(:available_to) }
-
-  it { should validate_numericality_of(:trial_period_in_days)}
 
   # callbacks
   it { should callback(:set_guid).before(:validation).on(:create) }

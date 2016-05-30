@@ -27,6 +27,8 @@ describe ReferredSignup do
     end
   end
 
+  subject { FactoryGirl.build(:referred_signup) }
+
   # Constants
   #it { expect(ReferredSignup.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
@@ -37,14 +39,11 @@ describe ReferredSignup do
 
   # validation
   it { should validate_presence_of(:referral_code_id) }
-  it { should validate_numericality_of(:referral_code_id) }
   it { should validate_uniqueness_of(:referral_code_id).scoped_to(:user_id).with_message(I18n.t('models.referred_signups.user_can_be_referred_only_once')) }
 
   it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:subscription_id)}
-  it { should validate_numericality_of(:subscription_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

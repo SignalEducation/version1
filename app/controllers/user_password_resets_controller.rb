@@ -29,10 +29,15 @@ class UserPasswordResetsController < ApplicationController
     if params[:password] == params[:password_confirmation]
       # in the params, params[:id] holds the reset_token.
       @user = User.finish_password_reset_process(params[:id], params[:password], params[:password_confirmation])
-      if @user
+      if @user && @user.corporate_customer?
+        @user_session = UserSession.create(@user)
+        flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
+        @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
+        redirect_back_or_default corporate_customer_url(@user.corporate_customer)
+      elsif @user
         UserSession.create!(@user)
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
-        Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id) unless @user.password_change_required
+        #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id) unless @user.password_change_required
         @user.update_attribute(:password_change_required, nil)
         redirect_to root_url
       else
@@ -52,6 +57,6 @@ class UserPasswordResetsController < ApplicationController
   protected
 
   def get_variables
-    seo_title_maker('Reset your password', '', true)
+    seo_title_maker('Reset your password', 'Forgot password? No problem! Enter your email address and we will send you further instructions.', true)
   end
 end

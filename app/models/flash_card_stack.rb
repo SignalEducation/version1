@@ -32,8 +32,7 @@ class FlashCardStack < ActiveRecord::Base
   accepts_nested_attributes_for :flash_quiz, allow_destroy: true
 
   # validation
-  validates :course_module_element_flash_card_pack_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :course_module_element_flash_card_pack_id, presence: true, on: :update
   validates :name, presence: true, length: {maximum: 255}
   validates :sorting_order, presence: true
   validates :final_button_label, presence: true, length: {maximum: 255}

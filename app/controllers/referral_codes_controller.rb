@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: referral_codes
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  code       :string(7)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class ReferralCodesController < ApplicationController
   include ApplicationHelper
 
@@ -5,27 +16,48 @@ class ReferralCodesController < ApplicationController
   before_action only: [:index, :destroy] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action only: [:create] do
-    ensure_user_is_of_type(['individual_student', 'corporate_student', 'tutor', 'blogger'])
+  before_action only: [:show] do
+    ensure_user_is_of_type(['individual_student', 'tutor', 'blogger'])
   end
 
   def index
     @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def create
-    respond_to do |format|
-      format.html { redirect_to root_url }
-      format.js {
-        if current_user.admin?
-          render json: { message: I18n.t('controllers.application.you_are_not_permitted_to_do_that') }, status: 422
-        elsif current_user.referral_code
-          render json: { message: I18n.t('controllers.referral_codes.create.flash.error') }, status: 422
-        else
-          referral_code = current_user.create_referral_code
-          render json: { url: referral_code_sharing_url(referral_code) }.to_json
-        end
-      }
+  def show
+    @referral_code = ReferralCode.find(params[:id])
+    @user = User.find(@referral_code.user_id)
+    if @user.individual_student?
+      sub_plan_currency = @user.subscriptions.first.subscription_plan.currency
+      @current_monthly_sub = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
+    end
+    url = request.original_url.split("/")
+    new_url = url[2] + "/" + url[3] + "/"
+    @ref_page = new_url + "library/?ref_code="
+    @referral_url = referral_code_sharing_url(current_user.referral_code)
+    if current_user == @user
+      #Graph Dates Data
+      date_to  = Date.parse("#{Proc.new{Time.now}.call}")
+      date_from = date_to - 2.months
+      date_range = date_from..date_to
+      date_months = date_range.map {|d| Date.new(d.year, d.month, 1) }.uniq
+      @labels = date_months.map {|d| d.strftime "%B" }
+
+      #Referral Data
+      referral_code = ReferralCode.where(user_id: @user.id).last
+      total_referrals = ReferredSignup.where(referral_code_id: referral_code.id)
+      initial_referrals = total_referrals.where(payed_at: nil)
+      converted_referrals = total_referrals.where.not(payed_at: nil)
+      @initial_referrals_this_month = initial_referrals.this_month.count
+      @initial_referrals_one_month_ago = initial_referrals.one_month_ago.count
+      @initial_referrals_two_months_ago = initial_referrals.two_months_ago.count
+      @initial_referrals_three_months_ago = initial_referrals.three_months_ago.count
+      @converted_referrals_this_month = converted_referrals.this_month.count
+      @converted_referrals_one_month_ago = converted_referrals.one_month_ago.count
+      @converted_referrals_two_months_ago = converted_referrals.two_months_ago.count
+      @converted_referrals_three_months_ago = converted_referrals.three_months_ago.count
+    else
+      redirect_to root_url
     end
   end
 

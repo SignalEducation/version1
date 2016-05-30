@@ -1,3 +1,6 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid.l-padding-side-3x
@@ -31,7 +34,7 @@
                     %br/
                     =t('views.users.form.email')
                   %th=t('views.users.form.active')
-                  %th=t('views.users.form.stripe_customer_id')
+                  %th=t('views.users.form.email_verified')
                   %th=t('views.users.form.corporate_customer_id')
                   %th
                   -user_group_id_tracker = nil
@@ -51,13 +54,10 @@
                         =user.email
                       %td=tick_or_cross(user.active)
                       %td
-                        -if user.stripe_customer_id
-                          =user.stripe_customer_id
+                        =tick_or_cross(user.email_verified)
                       %td=user.corporate_customer.try(:organisation_name)
                       %td
                         =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
                         =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
                         -if user.destroyable?
                           =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
-
-=render partial: 'layouts/new_footer'

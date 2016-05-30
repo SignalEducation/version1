@@ -14,60 +14,65 @@ end
 
 #### Signing in and out, and 'my profile'
 
-def sign_in_via_navbar(user)
-  visit root_path
-  within('.nav #login_form') do
-    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
-    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
-    click_button I18n.t('views.general.go')
-  end
-  expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
-end
-
 def sign_in_via_sign_in_page(user)
-  visit root_path
-  within('.navbar-main') do
-    click_link 'Sign In'
-  end
-  within('.well.well-sm') do
+  visit sign_in_path
+  within('#sign-in') do
     fill_in I18n.t('views.user_sessions.form.email'), with: user.email
     fill_in I18n.t('views.user_sessions.form.password'), with: user.password
     click_button I18n.t('views.general.sign_in')
   end
-  expect(page).to have_content I18n.t('controllers.user_sessions.create.flash.success')
+end
+
+def fill_in_sign_in_form(user)
+  within('#sign-in') do
+    fill_in I18n.t('views.user_sessions.form.email'), with: user.email
+    fill_in I18n.t('views.user_sessions.form.password'), with: user.password
+    click_button I18n.t('views.general.sign_in')
+  end
+end
+
+def fill_in_corp_verification_form(corp)
+  within('.login-form') do
+    fill_in I18n.t('views.user_sessions.form.user_name'), with: corp.user_name
+    fill_in I18n.t('views.user_sessions.form.password'), with: corp.passcode
+    click_button I18n.t('views.general.enter')
+  end
 end
 
 def sign_out
-  click_link('navbar-cog')
+  find('.dropdown.dropdown-normal').click
   click_link(I18n.t('views.general.sign_out'))
 end
 
 def visit_my_profile
-  click_link('navbar-cog')
-  click_link(I18n.t('views.users.show.h1'))
-  expect(page).to have_content maybe_upcase I18n.t('views.users.show.h1')
-end
-
-def edit_my_profile
-  visit_my_profile
-  click_link I18n.t('views.general.edit')
-  expect(page).to have_content maybe_upcase I18n.t('views.users.edit.h1')
+  within('.navbar.navbar-default') do
+    find('.dropdown-normal').click
+    click_link(I18n.t('views.users.show.h1'))
+  end
 end
 
 #### Student sign_up process
 
-def student_sign_up_as(user_first_name, user_second_name, user_email, card_type, currency, country, subscription_months, expect_sign_up)
-  enter_user_details(user_first_name, user_second_name, user_email, country)
-  expect(page).to have_content currency.leading_symbol
-  student_picks_a_subscription_plan(currency, subscription_months)
-  enter_credit_card_details(card_type)
-  click_button I18n.t('views.general.submit')
+def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
+  enter_user_details(user_first_name, user_second_name, user_email, user_password)
+  expect(page).to have_content '7-DAY FREE TRIAL (UP TO 200 MINUTES) No credit card needed'
+  page.all(:css, '#signUp').first.click
   sleep 1
   if expect_sign_up
-    sleep 2
-    expect(page).to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
+
   else
-    expect(page).not_to have_content I18n.t('controllers.student_sign_ups.create.flash.success')
+
+  end
+end
+
+def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
+  enter_user_details(user_first_name, user_second_name, user_email, user_password)
+  page.all(:css, '#signUp').first.click
+  sleep 1
+  if expect_sign_up
+
+  else
+
   end
 end
 
@@ -103,17 +108,72 @@ def enter_credit_card_details(card_type='valid')
   end
 end
 
-def enter_user_details(first_name, last_name, email=nil, country)
+def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  page.execute_script("$('#user_country_id').val(#{country.id}); clearPlans(); showPlans(); return false;")
-  temp_password = ApplicationController.generate_random_code(10)
-  fill_in('user_password', with: temp_password)
-  fill_in('user_password_confirmation', with: temp_password)
+  fill_in('user_password', with: user_password)
 end
 
 def student_picks_a_subscription_plan(currency, payment_frequency)
   expect([1,3,12].include?(payment_frequency)).to eq(true)
-  find("#sub-#{currency.iso_code}-#{payment_frequency}").click
+  find("#sub-#{currency.iso_code.upcase}-#{payment_frequency}").click
+  within("#sub-#{currency.iso_code.upcase}-#{payment_frequency}") do
+    find('.plan-option').click
+  end
+end
+
+def sign_up_and_upgrade_from_free_trial
+  visit root_path
+  user_password = ApplicationController.generate_random_code(10)
+  sleep(2)
+  within('#sign-up-form') do
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+  end
+  sleep(2)
+  within('#thank-you-message') do
+    expect(page).to have_content 'Final Step!'
+    expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
+  end
+  within('.navbar.navbar-default') do
+    find('.days-left').click
+  end
+  expect(page).to have_content 'Upgrade your membership'
+  student_picks_a_subscription_plan(usd, 1)
+  enter_credit_card_details('valid')
+  find('.upgrade-sub').click
+  sleep(5)
+  within('#thank-you-message') do
+    expect(page).to have_content 'Thanks for upgrading your subscription!'
+  end
+  visit_my_profile
+  click_on 'Subscriptions'
+  expect(page).to have_content 'Billing Interval:   Monthly'
+  end
+
+def sign_up_and_upgrade_from_free_trial_small_device
+  visit root_path
+  user_password = ApplicationController.generate_random_code(10)
+  within('#sign-up-form') do
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+  end
+  within('#thank-you-message') do
+    expect(page).to have_content 'Final Step!'
+    expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
+  end
+  within('.navbar.navbar-default') do
+    find('.navbar-toggle').click
+    click_link 'Upgrade your account'
+  end
+  sleep(5)
+  student_picks_a_subscription_plan(usd, 1)
+  enter_credit_card_details('valid')
+  find('.upgrade-sub').click
+  sleep(5)
+  within('#thank-you-message') do
+    expect(page).to have_content 'Thanks for upgrading your subscription!'
+  end
+  visit account_path
+  click_on 'Subscriptions'
+  expect(page).to have_content 'Billing Interval:   Monthly'
 end

@@ -1,0 +1,48 @@
+%h2=t('views.video_resource.new.h1')
+=f.fields_for :video_resource do |video_resource|
+  =video_resource.hidden_field :course_module_element_id, value: @course_module_element.id
+  .col-md-12
+    =video_resource.label :question, t('views.video_resource.form.question'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =video_resource.text_area :question, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'question'
+    %br/
+
+    =video_resource.label :answer, t('views.video_resource.form.answer'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =video_resource.text_area :answer, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'answer'
+    %br/
+
+    =video_resource.label :notes, t('views.video_resource.form.notes'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =video_resource.text_area :notes, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'notes'
+    %br/
+
+    =video_resource.label :transcript, t('views.video_resource.form.transcript'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =video_resource.text_area :transcript, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'transcript'
+    %br/
+
+
+
+
+
+
+:javascript
+
+  $('#question').summernote({
+    height: '100'
+  });
+
+  $('#answer').summernote({
+    height: '100'
+  });
+
+  $('#notes').summernote({
+    height: '100'
+  });
+
+  $('#transcript').summernote({
+    height: '100'
+  });
+
+

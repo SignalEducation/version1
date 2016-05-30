@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  forum_topic_id            :integer
 #  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
@@ -40,6 +39,8 @@ describe CourseModuleElement do
     end
   end
 
+  subject { FactoryGirl.build(:course_module_element) }
+
   # Constants
   #it { expect()CourseModuleElement.const_defined?(:CONSTANT_NAME).to eq(true) }
 
@@ -69,19 +70,14 @@ describe CourseModuleElement do
   # it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:course_module_id) }
-  it { should validate_numericality_of(:course_module_id) }
 
   it { should validate_presence_of(:sorting_order) }
-  it { should validate_numericality_of(:sorting_order) }
 
   it { should validate_presence_of(:tutor_id) }
-  it { should validate_numericality_of(:tutor_id) }
 
   it { should_not validate_presence_of(:related_quiz_id) }
-  it { should validate_numericality_of(:related_quiz_id) }
 
   it { should_not validate_presence_of(:related_video_id) }
-  it { should validate_numericality_of(:related_video_id) }
 
   it { should validate_length_of(:seo_description).is_at_most(255) }
 

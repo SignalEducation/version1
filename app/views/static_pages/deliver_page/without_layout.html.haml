@@ -22,8 +22,6 @@
 
     =csrf_meta_tags
 
-    -if Rails.env.production? && (!current_user || current_user.try(:individual_student?))
-      =render partial: 'layouts/google_analytics'
     =head_sanitizer(@delivered_page.head_content)
     -if @delivered_page.mark_as_nofollow
       %meta{name: 'robots', content: 'nofollow'}
@@ -31,7 +29,6 @@
       %meta{name: 'robots', content: 'noindex'}
 
     =render partial: 'layouts/favicon'
-    =render partial: 'layouts/mixpanel_head_tag'
 
   %body.no-top-margin
     -if (Rails.env.production? || Rails.env.staging?) && (current_user.nil? || current_user.individual_student?)
@@ -42,4 +39,3 @@
       =render partial: 'layouts/misc_javascript'
     =render partial: 'static_pages/deliver_page/scroller'
     =render partial: 'layouts/flash_messages'
-    =render partial: 'layouts/mixpanel_body_tag'

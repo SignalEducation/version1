@@ -1,4 +1,4 @@
-.box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 645px;'}
+.box-item.question-box.border-same-backcolor.width-bigger.no-content-well#quiz-contents{style: 'min-height: 645px;'}
   %h2=@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
 
   -if @paywall[:course_content][:reason] == 'not_logged_in'
@@ -48,6 +48,17 @@
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.free_trial_expired.h2')
+  -elsif @paywall[:course_content][:reason] == 'free_trial_limit_reached'
+    .l-section.is-bg-purple
+      .l-wrap
+        .container-fluid
+          .row
+            .col-md-8.col-md-offset-2
+              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+                =link_to t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription'), user_new_paid_subscription_url(current_user.id)
+
+              %p.text-center{style: 'color: #fff;'}
+                =t('views.courses.content_denied.free_trial_limit_reached.h2')
   -elsif @paywall[:course_content][:reason] == 'free_trial'
     .l-section.is-bg-purple
       .l-wrap

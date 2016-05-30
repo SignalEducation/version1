@@ -24,6 +24,8 @@ describe CorporateGroup do
     end
   end
 
+  subject { FactoryGirl.build(:corporate_group) }
+
   # Constants
 
   # relationships
@@ -33,7 +35,6 @@ describe CorporateGroup do
 
   # validation
   it { should validate_presence_of(:corporate_customer_id) }
-  it { should validate_numericality_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name).scoped_to(:corporate_customer_id) }

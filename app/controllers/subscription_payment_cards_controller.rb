@@ -1,9 +1,44 @@
+# == Schema Information
+#
+# Table name: subscription_payment_cards
+#
+#  id                  :integer          not null, primary key
+#  user_id             :integer
+#  stripe_card_guid    :string
+#  status              :string
+#  brand               :string
+#  last_4              :string
+#  expiry_month        :integer
+#  expiry_year         :integer
+#  address_line1       :string
+#  account_country     :string
+#  account_country_id  :integer
+#  created_at          :datetime
+#  updated_at          :datetime
+#  stripe_object_name  :string
+#  funding             :string
+#  cardholder_name     :string
+#  fingerprint         :string
+#  cvc_checked         :string
+#  address_line1_check :string
+#  address_zip_check   :string
+#  dynamic_last4       :string
+#  customer_guid       :string
+#  is_default_card     :boolean          default(FALSE)
+#  address_line2       :string
+#  address_city        :string
+#  address_state       :string
+#  address_zip         :string
+#  address_country     :string
+#
+
 class SubscriptionPaymentCardsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
     ensure_user_is_of_type(%w(individual_student corporate_customer admin))
   end
+  before_action :get_variables
 
   def create
     @subscription_payment_card = SubscriptionPaymentCard.new(create_params)
@@ -12,7 +47,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'payment-details')
   end
 
   def update
@@ -22,7 +57,7 @@ class SubscriptionPaymentCardsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_payment_cards.update.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'payment-details')
   end
 
   protected

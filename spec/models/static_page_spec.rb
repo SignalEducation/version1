@@ -49,6 +49,8 @@ describe StaticPage do
     end
   end
 
+  subject { FactoryGirl.build(:static_page) }
+
   # Constants
   #it { expect(StaticPage.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
@@ -105,7 +107,6 @@ describe StaticPage do
   it { should validate_length_of(:seo_description).is_at_most(255) }
 
   it { should_not validate_presence_of(:subscription_plan_category_id) }
-  it { should validate_numericality_of(:subscription_plan_category_id) }
 
   it { should validate_length_of(:post_sign_up_redirect_url).is_at_most(255) }
   it { should validate_length_of(:student_sign_up_h1).is_at_most(255) }

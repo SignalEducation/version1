@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: corporate_requests
+#
+#  id               :integer          not null, primary key
+#  name             :string
+#  title            :string
+#  company          :string
+#  email            :string
+#  phone_number     :string
+#  website          :string
+#  personal_message :text
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe CorporateRequestsController, type: :routing do

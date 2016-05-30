@@ -34,13 +34,10 @@ class IpAddress < ActiveRecord::Base
 
   # validation
   validates :ip_address, presence: true, uniqueness: true, length: { maximum: 255 }
-  validates :latitude, presence: true, numericality: true
-  validates :longitude, presence: true, numericality: true
-  validates :country_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :alert_level, presence: true,
-            numericality: {only_integer: true, greater_than_or_equal_to: 0,
-                           less_than_or_equal_to: 3}
+  validates :latitude, presence: true
+  validates :longitude, presence: true
+  validates :country_id, presence: true
+  validates :alert_level, presence: true
 
   # callbacks
   before_validation :geo_locate, on: :create

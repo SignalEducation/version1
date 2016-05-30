@@ -64,20 +64,11 @@ class Invoice < ActiveRecord::Base
   belongs_to :vat_rate
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :corporate_customer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_transaction_id, allow_blank: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
+  validates :subscription_id, presence: true
   validates :number_of_users, presence: true
-  validates :currency_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :currency_id, presence: true
   validates :total, presence: true
-  validates :vat_rate_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true

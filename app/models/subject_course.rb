@@ -26,15 +26,21 @@
 #  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
+#  live_date                               :datetime
+#  certificate                             :boolean          default(FALSE), not null
 #
 
 class SubjectCourse < ActiveRecord::Base
 
   include LearnSignalModelExtras
-  #include Archivable
+  include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
+ :cpd_hours, :cpd_pass_rate, :live_date, :certificate
 
   # Constants
 
@@ -45,7 +51,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
-  has_many :question_banks
+  has_one :question_bank
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :corporate_group_grants
@@ -55,19 +61,19 @@ class SubjectCourse < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :tutor_id, presence: true
   validates :description, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :forum_url, allow_nil: true, length: {maximum: 255}
-  validates :default_number_of_possible_exam_answers, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :default_number_of_possible_exam_answers, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
   before_save :calculate_best_possible_score
   before_save :sanitize_name_url
   before_destroy :check_dependencies
+  after_commit :update_sitemap
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -105,18 +111,15 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def destroyable?
-    false
+    true
   end
 
   def destroyable_children
-    # not destroyable:
-    # - self.course_module_element_user_logs
-    # - self.student_exam_tracks.empty?
     the_list = []
     the_list += self.course_modules.to_a
-    the_list << self.question_banks if self.question_banks
+    the_list << self.question_bank if self.question_bank
+    the_list << self.groups if self.groups
     the_list << self.corporate_group_grants if self.corporate_group_grants
-    the_list << self.student_exam_tracks if self.student_exam_tracks
     the_list
   end
 
@@ -134,7 +137,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def parent
-    self.groups
+    self.groups.all_in_order.first
   end
 
   def percentage_complete_by_user_or_guid(user_id, session_guid)
@@ -226,7 +229,9 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def set_total_video_duration
-    self.total_video_duration = self.active_children.sum(:video_duration)
+    video_duration = self.active_children.sum(:video_duration)
+    quiz_duration = self.active_children.sum(:estimated_time_in_seconds)
+    self.total_video_duration = video_duration + quiz_duration
   end
 
   def check_dependencies

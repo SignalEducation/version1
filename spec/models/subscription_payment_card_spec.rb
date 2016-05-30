@@ -57,7 +57,6 @@ describe SubscriptionPaymentCard do
 
   # validation
   it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:stripe_card_guid) }
   it { should validate_length_of(:stripe_card_guid).is_at_most(255) }
@@ -76,7 +75,6 @@ describe SubscriptionPaymentCard do
   it { should validate_presence_of(:expiry_year) }
 
   it { should_not validate_presence_of(:account_country_id) }
-  it { should validate_numericality_of(:account_country_id) }
 
   it { should validate_length_of(:address_line1).is_at_most(255) }
   it { should validate_length_of(:account_country).is_at_most(255) }

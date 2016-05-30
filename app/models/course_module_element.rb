@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  forum_topic_id            :integer
 #  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
@@ -42,7 +41,8 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
                   :course_module_element_flash_card_pack_attributes,
-                  :is_cme_flash_card_pack, :number_of_questions
+                  :is_cme_flash_card_pack, :number_of_questions,
+                  :video_resource_attributes, :delete_upload
 
   # Constants
 
@@ -51,6 +51,7 @@ class CourseModuleElement < ActiveRecord::Base
   has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
   has_many :course_module_element_resources
+  has_one :video_resource
   has_many :course_module_element_user_logs
   has_one :course_module_element_video
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
@@ -65,24 +66,16 @@ class CourseModuleElement < ActiveRecord::Base
 
   accepts_nested_attributes_for :course_module_element_flash_card_pack
   accepts_nested_attributes_for :course_module_element_quiz
-  accepts_nested_attributes_for :course_module_element_video, update_only: true
+  accepts_nested_attributes_for :course_module_element_video
+  accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :estimated_time_in_seconds, allow_nil: true,
-            numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :course_module_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :sorting_order, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :tutor_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :related_quiz_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :related_video_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_id, presence: true
+  validates :sorting_order, presence: true
+  validates :tutor_id, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
@@ -108,10 +101,11 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def completed_by_user_or_guid(user_id, session_guid)
-    cmeul = user_id ?
-            self.course_module_element_user_logs.where(user_id: user_id).latest_only.first :
-            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid).latest_only.first
-    cmeul.try(:element_completed)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    array = cmeuls.all.map(&:element_completed)
+    array.include? true
   end
 
   def destroyable?
@@ -179,7 +173,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   def populate_estimated_time
     if self.is_quiz && self.estimated_time_in_seconds.nil?
-      self.estimated_time_in_seconds = (self.number_of_questions * 120)
+      self.estimated_time_in_seconds = (self.number_of_questions * 60)
     else
       true
     end
@@ -192,6 +186,12 @@ class CourseModuleElement < ActiveRecord::Base
     attributes['description'].blank? &&
     attributes['upload'].blank? &&
     attributes['the_url'].blank?
+  end
+
+  def self.nested_video_resource_is_blank?(attributes)
+    attributes['question'].blank? &&
+    attributes['name'].blank? &&
+    attributes['notes'].blank?
   end
 
   def log_question_count_and_duration

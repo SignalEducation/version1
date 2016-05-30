@@ -43,16 +43,9 @@ class QuizContent < ActiveRecord::Base
 
   # validation
   validate  :one_parent_only, on: :update
-  validates :quiz_question_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_answer_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_solution_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :text_content, presence: true,
             unless: Proc.new{|qc| qc.content_type == 'image' }
-  validates :sorting_order, presence: true,
-            numericality: {only_integer: true, greater_than_or_equal_to: 0}
+  validates :sorting_order, presence: true
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   # callbacks

@@ -7,19 +7,15 @@ class CorporateManagersController < ApplicationController
   before_action :get_variables
 
   def index
-    @corporate_managers = User
-                              .where(user_group_id: UserGroup.where(corporate_customer: true).first.id).all_in_order
+    @corporate_managers = User.where(user_group_id: UserGroup.where(corporate_customer: true).first.id).all_in_order
     if current_user.admin?
       @corporate_managers = @corporate_managers.where("corporate_customer_id is not null")
     else
       @corporate_managers = @corporate_managers.where(corporate_customer_id: current_user.corporate_customer_id)
-
     end
-
     unless params[:search_term].blank?
       @corporate_managers = @corporate_managers.search_for(params[:search_term])
     end
-
     @corporate_managers = @corporate_managers.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
@@ -34,24 +30,23 @@ class CorporateManagersController < ApplicationController
   end
 
   def create
+
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else
       password = '123123123'
     end
-    @corporate_manager = User.new(allowed_params.merge({password: password,
-                                                        password_confirmation: password,
-                                                        user_group_id: UserGroup.where(corporate_customer: true).first.id,
-                                                        password_change_required: true}))
+
+    @corporate_manager = User.new(allowed_params.merge({password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_customer: true).first.id, password_change_required: true}))
 
     @corporate_manager.corporate_customer_id = current_user.corporate_customer_id if current_user.corporate_customer?
-    @corporate_manager.de_activate_user
+    @corporate_manager.activate_user
+    @corporate_manager.country_id = current_user.corporate_customer.country_id  if current_user.corporate_customer?
+    @corporate_manager.generate_email_verification_code
     @corporate_manager.locale = 'en'
     if @corporate_manager.save
-      MandrillWorker.perform_async(@corporate_manager.id,
-                                   nil,
-                                   'send_verification_email',
-                                   user_activation_url(activation_code: @corporate_manager.account_activation_code))
+      IntercomCreateCorporateManagerWorker.perform_async(@corporate_manager.id, @corporate_manager.email, @corporate_manager.full_name, @corporate_manager.created_at, @corporate_manager.guid, @corporate_manager.user_group.name, @corporate_manager.corporate_customer_id, @corporate_manager.corporate_customer.organisation_name) unless Rails.env.test?
+      IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, @corporate_manager.email, user_verification_url(email_verification_code: @corporate_manager.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.corporate_managers.create.flash.success')
       redirect_to corporate_managers_url
     else
@@ -87,6 +82,7 @@ class CorporateManagersController < ApplicationController
     if params[:id].to_i > 0
       @corporate_manager = User.where(id: params[:id]).first
     end
+    @footer = nil
   end
 
   def allowed_params

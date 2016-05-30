@@ -1,3 +1,63 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                               :integer          not null, primary key
+#  email                            :string
+#  first_name                       :string
+#  last_name                        :string
+#  address                          :text
+#  country_id                       :integer
+#  crypted_password                 :string(128)      default(""), not null
+#  password_salt                    :string(128)      default(""), not null
+#  persistence_token                :string
+#  perishable_token                 :string(128)
+#  single_access_token              :string
+#  login_count                      :integer          default(0)
+#  failed_login_count               :integer          default(0)
+#  last_request_at                  :datetime
+#  current_login_at                 :datetime
+#  last_login_at                    :datetime
+#  current_login_ip                 :string
+#  last_login_ip                    :string
+#  account_activation_code          :string
+#  account_activated_at             :datetime
+#  active                           :boolean          default(FALSE), not null
+#  user_group_id                    :integer
+#  password_reset_requested_at      :datetime
+#  password_reset_token             :string
+#  password_reset_at                :datetime
+#  stripe_customer_id               :string
+#  corporate_customer_id            :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  locale                           :string
+#  guid                             :string
+#  trial_ended_notification_sent_at :datetime
+#  crush_offers_session_id          :string
+#  subscription_plan_category_id    :integer
+#  employee_guid                    :string
+#  password_change_required         :boolean
+#  session_key                      :string
+#  first_description                :text
+#  second_description               :text
+#  wistia_url                       :text
+#  personal_url                     :text
+#  name_url                         :string
+#  qualifications                   :text
+#  profile_image_file_name          :string
+#  profile_image_content_type       :string
+#  profile_image_file_size          :integer
+#  profile_image_updated_at         :datetime
+#  phone_number                     :string
+#  topic_interest                   :string
+#  email_verification_code          :string
+#  email_verified_at                :datetime
+#  email_verified                   :boolean          default(FALSE), not null
+#  stripe_account_balance           :integer          default(0)
+#  trial_limit_in_seconds           :integer          default(0)
+#
+
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :routing do

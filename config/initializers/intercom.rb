@@ -1,7 +1,7 @@
 IntercomRails.config do |config|
   # == Intercom app_id
   #
-  config.app_id = ENV["INTERCOM_APP_ID"] || "r0yyonn3"
+  config.app_id = ENV["intercom_app_id"] || "a81yx184"
 
   # == Intercom secret key
   # This is required to enable secure mode, you can find it on your Setup
@@ -29,7 +29,7 @@ IntercomRails.config do |config|
   # == Include for logged out Users
   # If set to true, include the Intercom messenger on all pages, regardless of whether
   # The user model class (set below) is present. Only available for Apps on the Acquire plan.
-  # config.include_for_logged_out_users = true
+  config.include_for_logged_out_users = true
 
   # == User model class
   # The class which defines your user model

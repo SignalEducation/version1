@@ -6,30 +6,16 @@ Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
+  require 'subdomain'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
 
   namespace :api do
-    get 'penetration_test_start', to: 'penetration_test_webhooks#test_starting'
-    get 'penetration_test_finish', to: 'penetration_test_webhooks#test_complete'
     post 'stripe_v01', to: 'stripe_v01#create'
-    post 'stripe_dev/:dev_name', to: 'stripe_dev#create'
     resources :user_activities, only: :create
   end
-
-  # unscoped routes - to support incoming traffic from v2 cached pages
-  get '/courses/:subject_area_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}')
-  get '/courses/:subject_area_name_url/:institution_name_url/:qualification_name_url/:exam_level_name_url/:exam_section_name_url',
-      to: redirect('/en/library/%{subject_area_name_url}/%{institution_name_url}/%{qualification_name_url}/%{exam_level_name_url}/%{exam_section_name_url}')
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -40,15 +26,20 @@ Rails.application.routes.draw do
     resources :users do
       get 'new_paid_subscription', to: 'users#new_paid_subscription', as: :new_paid_subscription
       patch 'upgrade_from_free_trial', to: 'users#upgrade_from_free_trial', as: :upgrade_from_free_trial
+      get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
+      post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
     end
 
-    get 'user_activate/:activation_code', to: 'user_activations#update',
-        as: :user_activation
+    get 'user_verification/:email_verification_code', to: 'user_verifications#update',
+        as: :user_verification
+    get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
+        as: :old_user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'account', to: 'users#show', as: :account
+    get 'account/change_plan', to: 'users#change_plan', as: :account_change_plan
     get 'profile/:id', to: 'users#profile', as: :profile
     get 'profiles', to: 'users#profile_index', as: :tutors
     post 'change_password', to: 'users#change_password', as: :change_password
@@ -58,10 +49,13 @@ Rails.application.routes.draw do
 
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
-    get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :question_bank
+    get 'send_verification', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
+    get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
+    get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
-    get 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
-    post 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#create', as: :new_question_bank
+    #get 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
+    #post 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#create', as: :new_question_bank
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
@@ -80,6 +74,11 @@ Rails.application.routes.draw do
       post :preview_csv, on: :collection, action: :preview_corporate_students
     end
 
+    get '/login', to: 'corporate_profiles#login', as: :corporate_login
+    get '/corp_home', to: 'corporate_profiles#show', as: :corporate_home
+    post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
+    post '/corporate_profiles/create', to: 'corporate_profiles#create', as: :new_corporate_user
+    resources :corporate_profiles, only: [:new, :show]
     resources :corporate_requests
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
@@ -94,14 +93,9 @@ Rails.application.routes.draw do
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
+    get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
     get 'dashboard', to: 'dashboard#index', as: :dashboard
-    resources :exam_levels, concerns: :supports_reordering do
-      get  '/filter/:qualification_url', on: :collection, action: :index, as: :filtered
-    end
-    resources :exam_sections, concerns: :supports_reordering do
-      get  '/filter/:exam_level_url', on: :collection, action: :index, as: :filtered
-    end
     resources :groups, concerns: :supports_reordering
     resources :groups do
       get 'edit_courses', action: :edit_courses
@@ -110,17 +104,19 @@ Rails.application.routes.draw do
       put 'update_courses', action: :update_courses
     end
 
-    get 'acca', to: 'home_pages#show', first_element: 'acca'
-    get 'cfa', to: 'home_pages#show', first_element: 'cfa'
-    get 'wso', to: 'home_pages#show', first_element: 'wso'
+    get 'home', to: 'home_pages#show', as: :home
+    get 'acca', to: 'home_pages#show', first_element: 'acca', as: :acca
+    get 'cfa', to: 'home_pages#show', first_element: 'cfa', as: :cfa
+    get 'wso', to: 'home_pages#show', first_element: 'wso', as: :wso
     get 'business', to: 'home_pages#show', first_element: 'business', as: :business
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
-    resources :institutions, concerns: :supports_reordering do
-      get  '/filter/:subject_area_url', on: :collection, action: :index, as: :filtered
-    end
+    get '/student_new', to: 'users#student_new', as: :new_student
+    post '/student_create', to: 'users#student_create', as: :create_student
+
     resources :invoices, only: [:index, :show]
+    get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
@@ -128,18 +124,12 @@ Rails.application.routes.draw do
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
-    #get 'library/:exam_level_name_url', to: 'library#show'
-    resources :qualifications, concerns: :supports_reordering do
-      get  '/filter/:institution_url', on: :collection, action: :index, as: :filtered
-    end
-    resources :question_banks, only: [:new, :create, :destroy]
+    resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index]
     resources :static_pages
     resources :static_page_uploads, only: [:create]
-    resources :stripe_developer_calls
-    get 'acca-schedule', to: 'study_schedules#acca_schedule'
-    resources :subject_areas, concerns: :supports_reordering
     resources :subject_courses, concerns: :supports_reordering
+    get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
@@ -149,8 +139,10 @@ Rails.application.routes.draw do
     get 'careers', to: 'footer_pages#careers'
     get 'contact', to: 'footer_pages#contact'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
+    get 'privacy_policy', to: 'footer_pages#privacy_policy'
     resources :user_activity_logs
     resources :user_notifications
+    resources :users, only: [:new, :create]
     resources :vat_codes
     resources :marketing_categories
     resources :marketing_tokens do
@@ -167,16 +159,19 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
+    constraints(Subdomain) do
+      get '/' => 'routes#root'
+    end
+
     # home page
-    root 'home_pages#show'
+    root 'routes#root'
 
     # Catch-all
-    get '404', to: 'static_pages#deliver_page', first_element: '404-page'
-    get '(:first_element(/:second_element))', to: 'static_pages#deliver_page',
-        as: :deliver_static_pages
+    get '404', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end
 
   # Catch-all
-  get '(:first_element(/:second_element))', to: 'static_pages#deliver_page'
+  get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
 
 end

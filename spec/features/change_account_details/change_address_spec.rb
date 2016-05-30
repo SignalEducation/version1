@@ -16,15 +16,17 @@ describe 'User changing their email', type: :feature do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
-      within('#personal-details') do
+      if this_user.corporate_customer?
         fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
-        click_button(I18n.t('views.general.save'))
-      end
-      expect(page).to have_content I18n.t('controllers.users.update.flash.success')
-      if this_user.admin?
-        expect(page).to have_content maybe_upcase I18n.t('views.users.index.h1')
+        click_button(I18n.t('views.general.save_changes'))
+      elsif this_user.admin?
+        expect(page).to have_content maybe_upcase "#{this_user.full_name}"
       else
-        expect(page).to have_content maybe_upcase I18n.t('views.users.show.h1')
+        within('#personal-details') do
+          fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
+          click_button(I18n.t('views.general.save'))
+        end
+        expect(page).to have_content I18n.t('controllers.users.update.flash.success')
       end
       sign_out
       print '>'

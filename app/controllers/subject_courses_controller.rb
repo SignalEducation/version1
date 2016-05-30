@@ -1,8 +1,43 @@
+# == Schema Information
+#
+# Table name: subject_courses
+#
+#  id                                      :integer          not null, primary key
+#  name                                    :string
+#  name_url                                :string
+#  sorting_order                           :integer
+#  active                                  :boolean          default(FALSE), not null
+#  live                                    :boolean          default(FALSE), not null
+#  wistia_guid                             :string
+#  tutor_id                                :integer
+#  cme_count                               :integer
+#  video_count                             :integer
+#  quiz_count                              :integer
+#  question_count                          :integer
+#  description                             :text
+#  short_description                       :string
+#  mailchimp_guid                          :string
+#  forum_url                               :string
+#  created_at                              :datetime         not null
+#  updated_at                              :datetime         not null
+#  best_possible_first_attempt_score       :float
+#  default_number_of_possible_exam_answers :integer
+#  restricted                              :boolean          default(FALSE), not null
+#  corporate_customer_id                   :integer
+#  total_video_duration                    :float            default(0.0)
+#  destroyed_at                            :datetime
+#  is_cpd                                  :boolean          default(FALSE)
+#  cpd_hours                               :float
+#  cpd_pass_rate                           :integer
+#  live_date                               :datetime
+#  certificate                             :boolean          default(FALSE), not null
+#
+
 class SubjectCoursesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin', 'tutor', 'content_manager'])
+    ensure_user_is_of_type(['admin', 'tutor', 'content_manager', 'corporate_customer'])
   end
   before_action :get_variables
 
@@ -38,7 +73,9 @@ class SubjectCoursesController < ApplicationController
     if current_user.corporate_customer?
       @subject_course.corporate_customer_id = current_user.corporate_customer_id
       @subject_course.live = true
+      @subject_course.active = true
       @subject_course.restricted = true
+      @subject_course.certificate = true
       @subject_course.tutor_id = current_user.id
     end
     wistia_response = create_wistia_project(@subject_course.name)
@@ -63,6 +100,10 @@ class SubjectCoursesController < ApplicationController
     else
       render action: :edit
     end
+  end
+
+  def course_modules_order
+    @course_modules = @subject_course.children
   end
 
   def reorder
@@ -93,10 +134,11 @@ class SubjectCoursesController < ApplicationController
     @corporate_groups = @groups.where(corporate_customer_id: current_user.corporate_customer_id)
     @tutors = User.all_tutors.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
+    @footer = nil
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate)
   end
 
 end

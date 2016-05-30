@@ -36,7 +36,7 @@ class Currency < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :leading_symbol, presence: true, length: {maximum: 255}
   validates :trailing_symbol, presence: true, length: {maximum: 255}
-  validates :sorting_order, presence: true, numericality: true
+  validates :sorting_order, presence: true
 
   # callbacks
   before_validation { squish_fields(:name, :iso_code, :leading_symbol, :trailing_symbol) }
@@ -57,7 +57,7 @@ class Currency < ActiveRecord::Base
   end
 
   def format_number(the_number=0)
-    number_to_currency(the_number, precision: 0, unit: self.leading_symbol)
+    number_to_currency(the_number, precision: 2, unit: self.leading_symbol)
   end
 
   protected

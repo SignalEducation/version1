@@ -1,38 +1,38 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@<%= singular_table_name %>, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @<%= singular_table_name %>, message: nil}
-        <%- attributes.each_with_index do |attribute, loop_counter| -%>
-        <%- if attribute.name != 'user_id' -%>
-        <%- if attribute.type.to_s == 'boolean' -%>
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :<%= attribute.name %>
-                =t('views.<%= table_name -%>.form.<%= attribute.name %>')
-        <%- else -%>
-        .form-group
-          =f.label :<%= attribute.name %>, t('views.<%= table_name -%>.form.<%= attribute.name %>'), class: 'control-label col-sm-4'
-          .col-sm-8
-            <%- if attribute.name[-3..-1] == '_id' -%>
-            =f.collection_select :<%= attribute.name -%>, @<%= attribute.name[0..-4].pluralize -%>, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-            <%- elsif attribute.type.to_s == 'text' -%>
-            =f.text_area :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), rows: 4, class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
-            <%- elsif attribute.type.to_s == 'date' -%>
-            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control datepicker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => t('controllers.application.datepicker_date_format')}
-            <%- elsif attribute.type.to_s == 'datetime' -%>
-            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control datetimepicker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
-            <%- elsif attribute.type.to_s == 'time' -%>
-            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control time_only_picker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => 'HH:MM'}
-            <%- else -%>
-            =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
-            <%- end -%>
-        <%- end -%>
-        <%- end -%>
-        <%- end -%>
+=form_for(@<%= singular_table_name %>, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-md-12
+    =render partial: '/layouts/error_messages', locals: {thing: @<%= singular_table_name %>, message: nil}
+      <%- attributes.each_with_index do |attribute, loop_counter| -%>
+      <%- if attribute.name != 'user_id' -%>
+      <%- if attribute.type.to_s == 'boolean' -%>
+      .form-group
+        .col-sm-8.col-sm-offset-4
+          .checkbox
+            %label
+              =f.check_box :<%= attribute.name %>
+              =t('views.<%= table_name -%>.form.<%= attribute.name %>')
+      <%- else -%>
+      .form-group
+        =f.label :<%= attribute.name %>, t('views.<%= table_name -%>.form.<%= attribute.name %>'), class: 'control-label col-sm-4'
+        .col-sm-8
+          <%- if attribute.name[-3..-1] == '_id' -%>
+          =f.collection_select :<%= attribute.name -%>, @<%= attribute.name[0..-4].pluralize -%>, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+          <%- elsif attribute.type.to_s == 'text' -%>
+          =f.text_area :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), rows: 4, class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
+          <%- elsif attribute.type.to_s == 'date' -%>
+          =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control datepicker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => t('controllers.application.datepicker_date_format')}
+          <%- elsif attribute.type.to_s == 'datetime' -%>
+          =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control datetimepicker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+          <%- elsif attribute.type.to_s == 'time' -%>
+          =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control time_only_picker'<%= loop_counter == 0 ? ', autofocus: true' : '' %>, data: {'date-format' => 'HH:MM'}
+          <%- else -%>
+          =f.text_field :<%= attribute.name -%>, placeholder: t('views.<%= table_name -%>.form.<%= attribute.name %>_placeholder'), class: 'form-control'<%= loop_counter == 0 ? ', autofocus: true' : '' %>
+          <%- end -%>
+      <%- end -%>
+      <%- end -%>
+      <%- end -%>
 
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), <%= table_name %>_path
+      .row.l-margin-top-big
+        =f.submit t('views.general.save'), class: 'btn btn-red'
+        =t('views.general.or')
+        =link_to t('views.general.cancel'), <%= table_name %>_path, class: 'btn btn-cyan'

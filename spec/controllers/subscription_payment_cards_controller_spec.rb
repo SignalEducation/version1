@@ -1,3 +1,37 @@
+# == Schema Information
+#
+# Table name: subscription_payment_cards
+#
+#  id                  :integer          not null, primary key
+#  user_id             :integer
+#  stripe_card_guid    :string
+#  status              :string
+#  brand               :string
+#  last_4              :string
+#  expiry_month        :integer
+#  expiry_year         :integer
+#  address_line1       :string
+#  account_country     :string
+#  account_country_id  :integer
+#  created_at          :datetime
+#  updated_at          :datetime
+#  stripe_object_name  :string
+#  funding             :string
+#  cardholder_name     :string
+#  fingerprint         :string
+#  cvc_checked         :string
+#  address_line1_check :string
+#  address_zip_check   :string
+#  dynamic_last4       :string
+#  customer_guid       :string
+#  is_default_card     :boolean          default(FALSE)
+#  address_line2       :string
+#  address_city        :string
+#  address_state       :string
+#  address_zip         :string
+#  address_country     :string
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/subscription_plans_setup'
@@ -72,7 +106,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
 
       it 'should report ERROR as token is invalid' do
@@ -80,7 +114,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
 
@@ -90,7 +124,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
   end
@@ -154,7 +188,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
 
       it 'should report ERROR as token is invalid' do
@@ -162,7 +196,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
 
@@ -172,7 +206,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
   end
@@ -259,7 +293,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
 
       it 'should report ERROR as token is invalid' do
@@ -267,7 +301,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
 
@@ -277,7 +311,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
   end

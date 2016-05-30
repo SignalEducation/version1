@@ -1,0 +1,23 @@
+.hero-sign-up
+  -if current_corporate
+    =render partial: 'layouts/transparent_corporate_navbar'
+  -else
+    =render partial: 'layouts/transparent_navbar'
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
+              Privacy Policy
+            %p.h5.h-white.text-center.l-margin-bottom-big
+              Our privacy outline for Learn Signal
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.l-asphalt
+  .l-section
+    .container
+      .row
+        .col-sm-12
+          .panel-body.no-top-padding
+            <a href="//www.iubenda.com/privacy-policy/7779613" class="iubenda-nostyle no-brand iub-body-embed iub-no-markup iubenda-embed" title="Privacy Policy">Privacy Policy</a><script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src = "//cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>

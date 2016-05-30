@@ -33,11 +33,11 @@
                 .row.l-margin-bottom
                   %canvas#canvas{height:"300", width:"790"}
 
+
               -@tutor_courses.each do |course|
                 %h2.l-margin-bottom
                   =course.name
                 .no-image-box-item.table-box
-                  -#TODO complete this once Wistia project ID are added to Courses
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
@@ -48,9 +48,11 @@
                       %tr
                         %td.row-name.text-bold Video Play Time
                         %td
-                          =humanize_time(course.monthly_project_hours_watched * 3600)
+                          -if Rails.env.production?
+                            =humanize_time(course.monthly_project_hours_watched * 3600)
                         %td
-                          =humanize_time(course.total_project_hours_watched * 3600)
+                          -if Rails.env.production?
+                            =humanize_time(course.total_project_hours_watched * 3600)
                       %tr
                         %td.row-name.text-bold Quiz Questions Answered
                         %td

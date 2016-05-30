@@ -1,46 +1,78 @@
+# == Schema Information
+#
+# Table name: question_banks
+#
+#  id                          :integer          not null, primary key
+#  question_selection_strategy :string
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  subject_course_id           :integer
+#  number_of_questions         :integer
+#  name                        :string
+#  active                      :boolean          default(FALSE)
+#
+
+
+#This model serves as the final quiz in a subject course
 class QuestionBanksController < ApplicationController
 
   before_action :logged_in_required
+  before_action do
+    ensure_user_is_of_type(['admin', 'tutor', 'content_manager'])
+  end
   before_action :get_variables
 
   def new
     @question_bank = QuestionBank.new
-    @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
+    @subject_course = SubjectCourse.where(id: params[:sc_id].to_s).first
     if @subject_course
       n = 5
-      max_easy_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(difficulty_level: 'easy').count
-      easy_array = Array(1..max_easy_questions)
-      @easy_array = (1.. easy_array.length).select{ |x| x%n == n-1 }.map { |y| easy_array[y] }
-      max_medium_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(difficulty_level: 'medium').count
-      medium_array = Array(1..max_medium_questions)
-      @medium_array = (1.. medium_array.length).select{ |x| x%n == n-1 }.map { |y| medium_array[y] }
-      max_hard_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(difficulty_level: 'difficult').count
-      hard_array = Array(1..max_hard_questions)
-      @hard_array = (1.. hard_array.length).select{ |x| x%n == n-1 }.map { |y| hard_array[y] }
+      quizzes = CourseModuleElementQuiz.where(is_final_quiz: true).all.map(&:id)
+      max_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(course_module_element_quiz_id: quizzes).count
+      array = Array(1..max_questions)
+      @question_array = (1.. array.length).select{ |x| x%n == n-1 }.map { |y| array[y] }
     end
   end
 
   def create
     @question_bank = QuestionBank.new(allowed_params)
-    @question_bank.user_id = current_user.id
-    url = URI(request.referer).path
-    split_url = url.split('/')
-    subject_course = SubjectCourse.where(name_url: split_url).first
-    @question_bank.subject_course_id = subject_course.try(:id)
     @question_bank.question_selection_strategy = 'random'
     if @question_bank.save
-      redirect_to question_bank_url(subject_course.name_url, @question_bank.id)
+      redirect_to subject_course_url(@question_bank.subject_course)
+      flash[:success] = I18n.t('controllers.question_banks.create.flash.success')
     else
-      flash[:error] = I18n.t('controllers.question_banks.create.flash.error')
-      redirect_to new_question_bank_path
+      render action: :new
+    end
+  end
+
+  def edit
+    @subject_course = SubjectCourse.where(id: params[:sc_id].to_s).first
+    if @subject_course
+      n = 5
+      quizzes = CourseModuleElementQuiz.where(is_final_quiz: true).all.map(&:id)
+      max_questions = QuizQuestion.where(subject_course_id: @subject_course.id).where(course_module_element_quiz_id: quizzes).count
+      array = Array(1..max_questions)
+      @question_array = (1.. array.length).select{ |x| x%n == n-1 }.map { |y| array[y] }
+    end
+
+  end
+
+  def update
+    if @question_bank.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.question_banks.update.flash.success')
+      redirect_to subject_course_url(@question_bank.subject_course)
+    else
+      render action: :edit
     end
   end
 
   def destroy
     if @question_bank.destroy
-      redirect_to library_special_link(@question_bank.subject_course)
+      flash[:success] = I18n.t('controllers.question_banks.destroy.flash.success')
+      redirect_to subject_course_url(@question_bank.subject_course)
     else
-      redirect_to library_special_link(@question_bank.subject_course)
+      flash[:error] = I18n.t('controllers.question_banks.destroy.flash.error')
+      redirect_to subject_course_url(@question_bank.subject_course)
     end
   end
 
@@ -50,11 +82,10 @@ class QuestionBanksController < ApplicationController
     if params[:id].to_i > 0
       @question_bank = QuestionBank.where(id: params[:id]).first
     end
-    @users = User.all_in_order
  end
 
   def allowed_params
-    params.require(:question_bank).permit(:user_id, :easy_questions, :medium_questions, :hard_questions, :subject_course_id)
+    params.require(:question_bank).permit(:subject_course_id, :number_of_questions, :name, :active)
   end
 
 end

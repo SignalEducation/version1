@@ -91,8 +91,6 @@ en:
           error: "Sorry, your quiz attempt could not be saved."
 
     course_modules:
-      index:
-        no_exam_level: Sorry, there are no Exam Levels for that Qualification
       show:
         cant_find: Sorry, that could not be found
       create:
@@ -144,30 +142,6 @@ en:
           success: Currency has been deleted
           error: Currency was not deleted
 
-    exam_levels:
-      create:
-        flash:
-          success: Exam Level has been created successfully
-      update:
-        flash:
-          success: Exam Level details have been updated successfully
-      destroy:
-        flash:
-          success: Exam Level has been deleted
-          error: Exam Level was not deleted
-
-    exam_sections:
-      create:
-        flash:
-          success: Exam Section has been created successfully
-      update:
-        flash:
-          success: Exam Section details have been updated successfully
-      destroy:
-        flash:
-          success: Exam Section has been deleted
-          error: Exam Section was not deleted
-
     groups:
       create:
         flash:
@@ -197,17 +171,9 @@ en:
         flash:
           success: "Welcome aboard! Your sign-up was completed successfully"
 
-    institutions:
-      create:
+      resend_verification_mail:
         flash:
-          success: Institution has been created successfully
-      update:
-        flash:
-          success: Institution details have been updated successfully
-      destroy:
-        flash:
-          success: Institution has been deleted
-          error: Institution was not deleted
+          success: "Your verification email has been resent!"
 
     invoices:
       create:
@@ -221,26 +187,19 @@ en:
           success: Invoice has been deleted
           error: Invoice was not deleted
 
-    qualifications:
-      create:
-        flash:
-          success: Qualification has been created successfully
-      update:
-        flash:
-          success: Qualification details have been updated successfully
-      destroy:
-        flash:
-          success: Qualification has been deleted
-          error: Qualification was not deleted
-
     question_banks:
       create:
         flash:
+          success: Final Exam has been created successfully
+          error: Please ensure that a value is set for at least one group of questions.
+      update:
+        flash:
+          success: Final Exam has been updated successfully
           error: Please ensure that a value is set for at least one group of questions.
       destroy:
         flash:
-          success: Questions Bank has been deleted
-          error: Questions Bank was not deleted
+          success: Final Exam has been deleted
+          error: Final Exam was not deleted
       at_least_one_question_set: You must assign a value for at least one set of questions
 
     quiz_questions:
@@ -266,30 +225,6 @@ en:
         flash:
           success: Static Page has been deleted
           error: Static Page was not deleted
-
-    stripe_developer_calls:
-      create:
-        flash:
-          success: Stripe Call has been created successfully
-      update:
-        flash:
-          success: Stripe Call details have been updated successfully
-      destroy:
-        flash:
-          success: Stripe Call has been deleted
-          error: Stripe Call was not deleted
-
-    subject_areas:
-      create:
-        flash:
-          success: Subject Area has been created successfully
-      update:
-        flash:
-          success: Subject Area details have been updated successfully
-      destroy:
-        flash:
-          success: Subject Area has been deleted
-          error: Subject Area was not deleted
 
     subscription_payment_cards:
       create:
@@ -420,7 +355,7 @@ en:
           error: Sorry, that reset request is invalid. Please start again.
       update:
         flash:
-          success: Your password has been successsfully reset; welcome back!
+          success: Your password has been successsfully set!
           error: Your password has not been reset. Please start again.
           password_and_confirmation_do_not_match: Password and password confirmation do not match. Please try again.
 
@@ -565,3 +500,11 @@ en:
           success: Request has been deleted
           error: Request was not deleted
 
+    corporate_profiles:
+      create:
+        flash:
+          success: Your profile has been created successfully!
+          error: Sorry an error occured while creating your profile please try again!
+      show:
+        flash:
+          error: The username and/or password are incorrect. Please try again!

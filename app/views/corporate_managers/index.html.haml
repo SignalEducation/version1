@@ -2,14 +2,14 @@
   .hidden-xs
     =render partial: 'layouts/corporate_side_bar'
 
-  .main-content
+  .main-content.margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
-    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .l-section-small.is-bg-asphalt.corporate-padding
       .container-fluid.l-padding-side-3x
         .row.l-margin-bottom.l-margin-top
           .col-md-6.col-sm-6.col-xs-6
-            %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
+            %h1.h-separator.h-separator-left
               Managers
           .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
             =link_to t('views.general.add_manager'), new_corporate_manager_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
@@ -27,16 +27,16 @@
                 %table.table{style: 'font-size: 18px;'}
                   %thead
                     %tr
-                      %th Name
-                      %th Email
-                      %th Active
-                      %th Edit
+                      %th.p Name
+                      %th.p Email
+                      %th.p Active
+                      %th.p Edit
                   %tbody
                     -@corporate_managers.each do |corporate_student|
                       %tr{id: corporate_student.id}
-                        %td
+                        %td.p
                           =corporate_student.full_name
-                        %td
+                        %td.p
                           =corporate_student.email
                         %td
                           =tick_or_cross(corporate_student.active)
@@ -46,7 +46,7 @@
 
 
 
-  =render partial: 'layouts/new_footer'
+  =render partial: 'layouts/corporate_footer'
 
 :javascript
   $(document).ready(function() {

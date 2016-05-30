@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: corporate_requests
+#
+#  id               :integer          not null, primary key
+#  name             :string
+#  title            :string
+#  company          :string
+#  email            :string
+#  phone_number     :string
+#  website          :string
+#  personal_message :text
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
@@ -42,12 +58,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -124,12 +139,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -228,12 +242,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -332,12 +345,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -436,12 +448,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -540,12 +551,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -644,12 +654,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -748,12 +757,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end
@@ -852,12 +860,11 @@ describe CorporateRequestsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        request.env['HTTP_REFERER'] = '/'
         post :create, corporate_request: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(request.referrer)
+        expect(response).to redirect_to(submission_complete_url)
         expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
 
       end

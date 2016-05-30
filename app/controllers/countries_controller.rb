@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: countries
+#
+#  id            :integer          not null, primary key
+#  name          :string
+#  iso_code      :string
+#  country_tld   :string
+#  sorting_order :integer
+#  in_the_eu     :boolean          default(FALSE), not null
+#  currency_id   :integer
+#  created_at    :datetime
+#  updated_at    :datetime
+#  continent     :string
+#
+
 class CountriesController < ApplicationController
 
   before_action :logged_in_required

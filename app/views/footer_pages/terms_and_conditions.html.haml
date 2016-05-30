@@ -1,5 +1,8 @@
 .hero-sign-up
-  =render partial: 'layouts/transparent_navbar'
+  -if current_corporate
+    =render partial: 'layouts/transparent_corporate_navbar'
+  -else
+    =render partial: 'layouts/transparent_navbar'
   .l-section
     .l-wrap
       .container-fluid
@@ -9,6 +12,8 @@
               Terms & Conditions
             %p.h5.h-white.text-center.l-margin-bottom-big
               Our rules for using Learn Signal
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-asphalt
   .l-section
     .container-fluid
@@ -168,11 +173,3 @@
               Privacy have been amended or altered you do not agree to their terms, you must stop using this Website.
 
 
-
-
-
-
-
-
-
-=render partial: 'layouts/new_footer'

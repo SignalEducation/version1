@@ -22,28 +22,25 @@ class CourseModuleElementResource < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :name, :description, :web_url, :upload
+  attr_accessible :course_module_element_id, :name, :upload, :delete_upload
+  #attr_accessible :course_module_element_id, :name, :upload
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
-  has_attached_file :upload, default_url: '/assets/images/missing.png'
+  has_attached_file :upload, default_url: '/assets/images/missing_corporate_logo.png'
 
   # validation
-  validates :course_module_element_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_id, presence: true, on: :update
   validates :name, presence: true, length: {maximum: 255}
   validates_attachment_content_type :upload,
-            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document text/csv application/octet-stream application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-excel.sheet.macroenabled.12 application/vnd.openxmlformats-officedocument.presentationml.presentation)
-  validates :web_url, format: {with: URI::regexp(%w(http https)) },
-            if: '!web_url.blank?', length: {maximum: 255}
-  validate  :web_url_or_upload_required
+            content_type: %w(image/jpg image/jpeg image/png image/gif application/pdf application/xlsx application/xls application/doc application/docx application/vnd.openxmlformats-officedocument.wordprocessingml.document text/csv application/octet-stream application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-excel.sheet.macroenabled.12 application/vnd.openxmlformats-officedocument.presentationml.presentation text/css)
 
   # callbacks
-  before_validation { squish_fields(:name, :description, :web_url) }
+  before_validation { squish_fields(:name) }
   before_destroy :check_dependencies
+  #before_validation { upload.clear if delete_upload == '1' }
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -57,10 +54,5 @@ class CourseModuleElementResource < ActiveRecord::Base
 
   protected
 
-  def web_url_or_upload_required
-    if self.web_url.blank? && self.upload.blank? && self.upload_file_name.blank?
-      errors.add(:base, I18n.t('models.course_module_element_resources.must_link_with_an_upload_or_url'))
-    end
-  end
 
 end

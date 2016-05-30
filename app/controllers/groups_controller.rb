@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: groups
+#
+#  id                    :integer          not null, primary key
+#  name                  :string
+#  name_url              :string
+#  active                :boolean          default(FALSE), not null
+#  sorting_order         :integer
+#  description           :text
+#  subject_id            :integer
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  corporate_customer_id :integer
+#  destroyed_at          :datetime
+#  image_file_name       :string
+#  image_content_type    :string
+#  image_file_size       :integer
+#  image_updated_at      :datetime
+#  background_colour     :string
+#
+
 class GroupsController < ApplicationController
 
   before_action :logged_in_required, except: [:show]
@@ -12,7 +34,7 @@ class GroupsController < ApplicationController
     else
       @groups = Group.where(corporate_customer_id: nil).paginate(per_page: 50, page: params[:page])
     end
-
+    @footer = nil
   end
 
   def show
@@ -26,11 +48,13 @@ class GroupsController < ApplicationController
         @courses = corporate_courses + non_restricted_courses
       else
         courses = courses.try(:all_not_restricted)
-        @courses = courses.all_in_order
+        @courses = courses.try(:all_in_order)
       end
       if current_user
         @logs = SubjectCourseUserLog.where(user_id: current_user.id)
       end
+      seo_title_maker(@group.try(:name), @group.try(:description), nil)
+      tag_manager_data_layer(@group.try(:name))
     end
   end
 
@@ -41,9 +65,11 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    @footer = nil
   end
 
   def edit
+    @footer = nil
   end
 
   def edit_courses
@@ -58,6 +84,7 @@ class GroupsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to groups_url
     end
+    @footer = nil
   end
 
   def create
@@ -118,7 +145,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour)
   end
 
 end

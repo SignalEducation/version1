@@ -4,8 +4,6 @@
 #
 #  id                              :integer          not null, primary key
 #  user_id                         :integer
-#  exam_level_id                   :integer
-#  exam_section_id                 :integer
 #  latest_course_module_element_id :integer
 #  exam_schedule_id                :integer
 #  created_at                      :datetime
@@ -47,19 +45,15 @@ describe StudentExamTrack do
 
   # validation
   it { should_not validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
 
   it { should_not validate_presence_of(:latest_course_module_element_id) }
-  it { should validate_numericality_of(:latest_course_module_element_id) }
 
   it { should validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
 
   it { should validate_presence_of(:course_module_id) }
-  it { should validate_numericality_of(:course_module_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

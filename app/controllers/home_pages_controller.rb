@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: home_pages
+#
+#  id                            :integer          not null, primary key
+#  seo_title                     :string
+#  seo_description               :string
+#  subscription_plan_category_id :integer
+#  public_url                    :string
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#
+
 class HomePagesController < ApplicationController
 
   before_action :logged_in_required, except: [:show, :student_sign_up]
@@ -5,6 +18,7 @@ class HomePagesController < ApplicationController
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_sign_up]
+  before_action :layout_variables, only: [:show]
 
   def index
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
@@ -19,13 +33,20 @@ class HomePagesController < ApplicationController
       first_element = '/' + params[:first_element].to_s
       @home_page = HomePage.where(public_url: first_element).first
       @user = User.new
+      @topic_interests = Group.all_active.all_in_order.for_public
+      @url_value = params[:first_element].to_s
       session[:sign_up_errors].each do |k, v|
         v.each { |err| @user.errors.add(k, err) }
       end if session[:sign_up_errors]
       session.delete(:sign_up_errors)
-      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
+      #@user.country_id = 105
       # @user.subscriptions.build(subscription_plan_id: SubscriptionPlan.where(price: 0.0).pluck(:id).first)
-
+      @group1 = Group.where(name_url: 'it-skills').first
+      @group2 = Group.where(name_url: 'it-operations').first
+      @group3 = Group.where(name_url: 'business').first
+      @group4 = Group.where(name_url: 'acca-revision').first
+      @group5 = Group.where(name_url: 'cfa-revision').first
       if @home_page
         seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
         cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
@@ -73,55 +94,43 @@ class HomePagesController < ApplicationController
       redirect_to dashboard_url
     else
       currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
-      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).all_active.first
+      #currency = Currency.where(iso_code: 'EUR').first
+      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
       if subscription_plan
-        @user = User.new(student_allowed_params.merge({
-                                                        "subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }
-                                                      }))
+        @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" => subscription_plan.id } }}))
         @user.user_group_id = UserGroup.default_student_user_group.try(:id)
         @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-
+        #@user.country_id = 105
         @user.account_activation_code = SecureRandom.hex(10)
-        @user.set_original_mixpanel_alias_id(mixpanel_initial_id)
+        @user.email_verification_code = SecureRandom.hex(10)
+        @user.password_confirmation = @user.password
+
+        # Check for CrushOffers cookie and assign it to the User
         if cookies.encrypted[:crush_offers]
           @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
           cookies.delete(:crush_offers)
         end
-
+        # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
         if cookies.encrypted[:latest_subscription_plan_category_guid]
           subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
-
         if @user.valid? && @user.save
-          clear_mixpanel_initial_id
-          MandrillWorker.perform_async(@user.id,
-                                       nil,
-                                       'send_verification_email',
-                                       user_activation_url(activation_code: @user.account_activation_code))
-          if Rails.env.production?
-            @base = BaseCRM::Client.new(access_token: ENV['learnsignal_base_api_key'])
-            @base.leads.create(first_name: @user.first_name,
-                                 last_name: @user.last_name,
-                                 phone: @user.phone_number,
-                                 email: @user.email,
-                                 address: {
-                                   country: @user.country.name}
-            )
-          end
+          # Send User Activation email through Intercom
+          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+          # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
             if code
               referral_code = ReferralCode.find_by_code(code)
-              @user.create_referred_signup(referral_code_id: referral_code.id,
-                                           subscription_id: @user.subscriptions.first.id,
-                                           referrer_url: referrer_url) if referral_code
+              @user.create_referred_signup(referral_code_id: referral_code.id, subscription_id: @user.subscriptions.first.id, referrer_url: referrer_url) if referral_code
               cookies.delete(:referral_data)
             end
           end
-
           @user.assign_anonymous_logs_to_user(current_session_guid)
-          flash[:success] = I18n.t('controllers.home_pages.student_sign_up.flash.success')
+          user = User.get_and_activate(@user.account_activation_code)
+          @user.create_referral_code
+          UserSession.create(user)
           redirect_to personal_sign_up_complete_url
         else
           # This is the way to restore model errors after redirect. In referrer method
@@ -152,6 +161,11 @@ class HomePagesController < ApplicationController
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
   end
 
+  def layout_variables
+    @navbar = nil
+    @footer = true
+  end
+
   def allowed_params
     params.require(:home_page).permit(:seo_title, :seo_description, :subscription_plan_category_id, :public_url)
   end
@@ -161,7 +175,7 @@ class HomePagesController < ApplicationController
           :email, :first_name, :last_name,
           :country_id, :locale,
           :password, :password_confirmation,
-          :phone_number
+          :topic_interest
     )
   end
 end

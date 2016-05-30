@@ -1,3 +1,63 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                               :integer          not null, primary key
+#  email                            :string
+#  first_name                       :string
+#  last_name                        :string
+#  address                          :text
+#  country_id                       :integer
+#  crypted_password                 :string(128)      default(""), not null
+#  password_salt                    :string(128)      default(""), not null
+#  persistence_token                :string
+#  perishable_token                 :string(128)
+#  single_access_token              :string
+#  login_count                      :integer          default(0)
+#  failed_login_count               :integer          default(0)
+#  last_request_at                  :datetime
+#  current_login_at                 :datetime
+#  last_login_at                    :datetime
+#  current_login_ip                 :string
+#  last_login_ip                    :string
+#  account_activation_code          :string
+#  account_activated_at             :datetime
+#  active                           :boolean          default(FALSE), not null
+#  user_group_id                    :integer
+#  password_reset_requested_at      :datetime
+#  password_reset_token             :string
+#  password_reset_at                :datetime
+#  stripe_customer_id               :string
+#  corporate_customer_id            :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  locale                           :string
+#  guid                             :string
+#  trial_ended_notification_sent_at :datetime
+#  crush_offers_session_id          :string
+#  subscription_plan_category_id    :integer
+#  employee_guid                    :string
+#  password_change_required         :boolean
+#  session_key                      :string
+#  first_description                :text
+#  second_description               :text
+#  wistia_url                       :text
+#  personal_url                     :text
+#  name_url                         :string
+#  qualifications                   :text
+#  profile_image_file_name          :string
+#  profile_image_content_type       :string
+#  profile_image_file_size          :integer
+#  profile_image_updated_at         :datetime
+#  phone_number                     :string
+#  topic_interest                   :string
+#  email_verification_code          :string
+#  email_verified_at                :datetime
+#  email_verified                   :boolean          default(FALSE), not null
+#  stripe_account_balance           :integer          default(0)
+#  trial_limit_in_seconds           :integer          default(0)
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
@@ -30,12 +90,95 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should render sign up page' do
+        get :student_new
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:student_new)
+      end
+    end
+
     describe "GET 'edit/1'" do
       it 'should redirect to root' do
         get :edit, id: 1
         expect_bounce_as_not_signed_in
       end
     end
+
+    describe "POST 'student_create'" do
+
+      let!(:sign_up_params) { { first_name: "Test", last_name: "Student",
+                                country_id: Country.first.id,
+                                locale: 'en',
+                                email: "test.student@example.com", password: "dummy_pass",
+                                password_confirmation: "dummy_pass" } }
+      let!(:default_plan) { FactoryGirl.create(:subscription_plan, price: 0.0) }
+      let!(:student) { FactoryGirl.create(:individual_student_user) }
+      let!(:currency) { FactoryGirl.create(:usd) }
+      let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
+
+      describe "invalid data" do
+        it 'does not subscribe user if default plan does not exist' do
+          request.env['HTTP_REFERER'] = '/'
+          default_plan.update_attribute(:price, 0.1)
+          post :student_create, user: sign_up_params
+
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:student_new)
+        end
+
+        it 'does not subscribe user if user with same email already exists' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_create, user: sign_up_params.merge(email: student.email)
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:student_new)
+        end
+
+        it 'does not subscribe user if password is blank' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_create, user: sign_up_params.merge(password: nil)
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:student_new)
+        end
+
+        it 'does not subscribe user if password is not of required length' do
+          request.env['HTTP_REFERER'] = '/'
+          post :student_create, user: sign_up_params.merge(password: '12345')
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:student_new)
+        end
+
+      end
+
+      describe "valid data" do
+        it 'signs up new student' do
+          referral_codes = ReferralCode.count
+          post :student_create, user: sign_up_params
+          #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(ReferralCode.count).to eq(referral_codes + 1)
+        end
+
+        it 'creates referred signup if user comes from referral link' do
+          cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
+          post :student_create, user: sign_up_params
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(Subscription.all.count).to eq(1)
+          expect(User.last.subscriptions.count).to eq(1)
+
+          expect(ReferredSignup.count).to eq(1)
+          rs = ReferredSignup.first
+          expect(rs.referral_code_id).to eq(referral_code.id)
+          expect(rs.user_id).to eq(User.last.id)
+          expect(rs.referrer_url).to eq("http://referral.example.com")
+        end
+      end
+    end
+
 
     describe "POST 'create'" do
       it 'should redirect to root' do
@@ -93,6 +236,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -109,6 +259,13 @@ describe UsersController, type: :controller do
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
         expect_edit_success_with_model('user', individual_student_user.id)
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -142,6 +299,35 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "new_paid_subscription" do
+      xit 'should respond OK and render upgrade page' do
+        get :new_paid_subscription, id: individual_student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response).to render_template(:new_paid_subscription)
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new_paid_subscription)
+
+      end
+    end
+
+    describe "upgrade_from_free_trial as a referred sign_up user" do
+      xit 'allow upgrade as all necessary params are present' do
+        post :create, user: valid_params
+        expect_create_success_with_model('user', users_url)
+        expect(assigns(:user).password_change_required).to eq(true)
+        expect(ReferralCode.count).to eq(referral_codes + 1)
+
+
+      end
+    end
+
+    describe "upgrade_from_free_trial with wrong currency coupon" do
+      xit 'deny upgrade as currency of coupon and current sub dont match' do
+
       end
     end
 
@@ -185,6 +371,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -208,6 +401,13 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         post :create, user: valid_params
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -278,6 +478,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -301,6 +508,13 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         post :create, user: valid_params
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -371,6 +585,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -394,6 +615,13 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         post :create, user: valid_params
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -464,6 +692,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -488,6 +723,13 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         post :create, user: valid_params
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -558,6 +800,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -581,6 +830,13 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         post :create, user: valid_params
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -651,6 +907,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -674,6 +937,13 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         post :create, user: valid_params
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
       end
     end
 
@@ -745,6 +1015,13 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
     describe "GET 'new'" do
       it 'should redirect to root' do
         get :new
@@ -764,16 +1041,30 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "POST 'create'" do
+    describe "POST 'admin create'" do
       it 'should report OK for valid params' do
+        referral_codes = ReferralCode.count
         post :create, user: valid_params
         expect_create_success_with_model('user', users_url)
         expect(assigns(:user).password_change_required).to eq(true)
+        expect(ReferralCode.count).to eq(referral_codes + 1)
       end
 
       it 'should report error for invalid params' do
         post :create, user: {email: 'abc'}
         expect_create_error_with_model('user')
+      end
+    end
+
+    describe "POST 'create - sign_up'" do
+      it 'should report OK for valid params' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+
+      it 'should report error for invalid params' do
+        post :student_create, user: {email: 'abc'}
+        expect_bounce_as_signed_in
       end
     end
 

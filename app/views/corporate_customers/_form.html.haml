@@ -1,19 +1,28 @@
 =form_for(@corporate_customer, html: {class: 'form-horizontal', role: 'form'}) do |f|
   =render partial: '/layouts/error_messages', locals: {thing: @corporate_customer, message: nil}
   .row
-    .col-md-8.col-md-offset-2
+    .col-md-12
       =f.hidden_field :country_id, value: 105
-      =f.label :organisation_name, t('views.corporate_customers.form.organisation_name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :organisation_name, placeholder: t('views.corporate_customers.form.organisation_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      =f.label :address, t('views.corporate_customers.form.address'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :stripe_customer_guid, t('views.corporate_customers.form.stripe_customer_guid'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :stripe_customer_guid, class: 'form-control', style: 'border-radius: 6px;'
+      .col-md-6
+        =f.label :organisation_name, t('views.corporate_customers.form.organisation_name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :organisation_name, class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+        %br/
+        =f.label :subdomain, t('views.corporate_customers.form.subdomain'), class: 'control-label'
+        .input-group.input-group-lg.full-width.l-margin-bottom-big
+          =f.text_field :subdomain, class: 'form-control', style: 'border-radius: 6px;'
+        .col-md-12
+          = image_tag @corporate_customer.logo.url, class: 'md-image'
+          %br/
+          =f.file_field :logo
+      .col-md-6
+        =f.label :user_name, t('views.corporate_customers.form.user_name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :user_name, class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :passcode, t('views.corporate_customers.form.passcode'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :passcode, class: 'form-control', style: 'border-radius: 6px;'
 
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

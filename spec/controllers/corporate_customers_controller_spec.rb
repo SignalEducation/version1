@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: corporate_customers
+#
+#  id                   :integer          not null, primary key
+#  organisation_name    :string
+#  address              :text
+#  country_id           :integer
+#  payments_by_card     :boolean          default(FALSE), not null
+#  stripe_customer_guid :string
+#  created_at           :datetime
+#  updated_at           :datetime
+#  logo_file_name       :string
+#  logo_content_type    :string
+#  logo_file_size       :integer
+#  logo_updated_at      :datetime
+#  subdomain            :string
+#  user_name            :string
+#  passcode             :string
+#
+
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
@@ -488,7 +509,7 @@ describe CorporateCustomersController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('corporate_customers', 2)
+        expect_index_success_with_model('corporate_customers', 3)
       end
     end
 

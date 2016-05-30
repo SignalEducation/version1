@@ -33,7 +33,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   UserGroup.where(id: 3).first_or_create!(
           name: 'Corporate customers',
           description: 'Administrative users on behalf of a corporate customer',
-          individual_student: false, tutor: false, content_manager: false,
+          individual_student: false, tutor: true, content_manager: false,
           blogger: false, corporate_customer: true, site_admin: false,
           subscription_required_at_sign_up: true,
           subscription_required_to_see_content: true, forum_manager: false
@@ -97,88 +97,6 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
       individual_student_user_group_id: 1,
       corporate_student_user_group_id: 2,
       corporate_customer_user_group_id: 3
-  ); print '.'
-
-  puts ' DONE'
-  print 'Subject Areas: '
-  SubjectArea.where(id: 1).first_or_create!(name: 'Finance', name_url: 'finance',
-                        sorting_order: 100, active: true, seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque la aspernatur aut odit aut fugit'); print '.'
-
-  puts ' DONE'
-  print 'Institutions: '
-  Institution.where(id: 1).first_or_create(
-          name: 'Association of Certified Chartered Accountants',
-          short_name: 'ACCA', name_url: 'acca',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmoore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex eproident.',
-          feedback_url: 'http://example.com/feedback',
-          help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: true,                          background_colour_code: '37ba8e',
-          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sim quia dolor sit amet, consectetur, adipisci velit'
-  ); print '.'
-  Institution.where(id: 2).first_or_create(
-          name: 'CFA Institute',
-          short_name: 'CFA', name_url: 'cfa-institute',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore mag eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
-          feedback_url: 'http://example.com/feedback',
-          help_desk_url: 'http://help.example.com',
-          subject_area_id: 1, sorting_order: 1, active: true,
-          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, . Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
-  ); print '.'
-
-  puts ' DONE'
-  print 'Qualifications: '
-  Qualification.where(id: 1).first_or_create(
-          institution_id: 2, name: 'CFA Professional',
-          name_url: 'cfa-professional', sorting_order: 1, active: true,
-          cpd_hours_required_per_year: 0,
-          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit dolor sit amet, consectetur, adipisci velit'
-  ); print '.'
-  Qualification.where(id: 2).first_or_create(
-          institution_id: 1, name: 'Claritas', name_url: 'claritas',
-          sorting_order: 1, active: true, cpd_hours_required_per_year: 0,
-          seo_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam  nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit'
-  ); print '.'
-
-  puts ' DONE'
-  print 'Exam Levels: '
-  ExamLevel.where(id: 1).first_or_create(
-          qualification_id: 1, name: 'Level 1', name_url: 'level-1',
-          is_cpd: false, sorting_order: 1, active: true
-  ); print '.'
-  ExamLevel.where(id: 2).first_or_create(
-          qualification_id: 1, name: 'Level 2', name_url: 'level-2',
-          is_cpd: false, sorting_order: 1, active: true
-  ); print '.'
-  ExamLevel.where(id: 3).first_or_create(
-          qualification_id: 1, name: 'Level 3', name_url: 'level-3',
-          is_cpd: false, sorting_order: 1, active: true
-  ); print '.'
-
-  puts ' DONE'
-  print 'Exam Sections: '
-  ExamSection.where(id: 1).first_or_create(
-          name: 'Economics', name_url: 'economics', exam_level_id: 1,
-          active: true, sorting_order: 0
-  ); print '.'
-  ExamSection.where(id: 2).first_or_create(
-          name: 'Quantitative Methods', name_url: 'quantitative-methods',
-          exam_level_id: 1, active: true, sorting_order: 0
-  ); print '.'
-  ExamSection.where(id: 3).first_or_create(
-          name: 'Alternative Investments', name_url: 'alternative-investments',
-          exam_level_id: 1, active: true, sorting_order: 0
-  ); print '.'
-  ExamSection.where(id: 4).first_or_create(
-          name: 'Portfolio Management', name_url: 'portfolio-management',
-          exam_level_id: 1, active: true, sorting_order: 0
-  ); print '.'
-  ExamSection.where(id: 5).first_or_create(
-          name: 'Fixed Income', name_url: 'fixed-income',
-          exam_level_id: 1, active: true, sorting_order: 0
-  ); print '.'
-  ExamSection.where(id: 6).first_or_create(
-          name: 'Derivatives', name_url: 'derivatives',
-          exam_level_id: 1, active: true, sorting_order: 0
   ); print '.'
 
   puts ' DONE'
@@ -663,11 +581,22 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   if Rails.env.development?
     puts 'Building simple framework'
 
-    HomePage.where(id: 1).first_or_create(seo_title: 'ACCA and CFA Online Courses | Learn Signal', seo_description: 'The home of the ACCA and CFA. Study with online video lectures, interactive quizzes and an online community to be a part of. Start the path to your professional certification.', public_url: '/')
-    HomePage.where(id: 2).first_or_create(seo_title: 'Pass the ACCA with our online course', seo_description: 'Learn Signal makes it easy to grasp difficult course topics and practice exam questions to ensure you are fully prepared to pass your exams.')
-    HomePage.where(id: 3).first_or_create(seo_title: 'Pass the CFA with our online course | Learn Signal', seo_description: 'CFA online courses, containing interactive quizzes, video lectures, and forums. Study at your own pace, and have it all in one place.', public_url: 'cfa')
+    HomePage.where(id: 1).first_or_create(seo_title: 'Business Training Library', seo_description: 'The first ever on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device.', public_url: '/')
+    HomePage.where(id: 2).first_or_create(seo_title: 'Business', seo_description: "'Unleash your team's potential. Give your staff access to a library of on-demand courses. Keep your staff focused with customized learning paths.'", public_url: 'business')
+    HomePage.where(id: 3).first_or_create(seo_title: 'ACCA', seo_description: 'Learn Signal makes it easy to grasp difficult course topics and practice exam questions to ensure you are fully prepared to pass your exams.', public_url: 'acca')
+    HomePage.where(id: 4).first_or_create(seo_title: 'CFA', seo_description: 'CFA online courses, containing interactive quizzes, video lectures, and forums. Study at your own pace, and have it all in one place.', public_url: 'cfa')
 
-    StaticPage.where(id: 1).first_or_create!(name: 'Default landing page', publish_from: '2015-02-10 10:02:00', publish_to: nil, allow_multiples: false, public_url: '/', use_standard_page_template: true, head_content: '', body_content: "<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"col-sm-12 text-center\">\r\n      <h1>Welcome to Learn Signal</h1>\r\n    </div>\r\n  </div>\r\n</div>", created_by: 8, updated_by: 8, add_to_navbar: false, add_to_footer: false, menu_label: '', tooltip_text: '', language: 'en', mark_as_noindex: false, mark_as_nofollow: false, seo_title: 'Hello', seo_description: 'Learnsignal', approved_country_ids: [], default_page_for_this_url: false, make_this_page_sticky: false, logged_in_required: false, show_standard_footer: true)
+    SubjectCourse.where(id: 1).first_or_create(name: 'Course 1', name_url: 'course-1', sorting_order: 1, active: true,
+    live: true, wistia_guid: 'abc123', tutor_id: 4, description: 'Course 1 description', default_number_of_possible_exam_answers: 4)
+    SubjectCourse.where(id: 2).first_or_create(name: 'Course 2', name_url: 'course-2', sorting_order: 2, active: true,
+    live: true, wistia_guid: 'abc1234', tutor_id: 4, description: 'Course 2 description', default_number_of_possible_exam_answers: 4)
+    SubjectCourse.where(id: 3).first_or_create(name: 'Course 3', name_url: 'course-3', sorting_order: 3, active: true,
+    live: false, wistia_guid: 'abc1235', tutor_id: 4, description: 'Course 3 description', default_number_of_possible_exam_answers: 4)
+    SubjectCourse.where(id: 4).first_or_create(name: 'Course 4', name_url: 'course-4', sorting_order: 4, active: false,
+    live: false, wistia_guid: 'abc1236', tutor_id: 4, description: 'Course 4 description', default_number_of_possible_exam_answers: 3)
+    SubjectCourse.where(id: 5).first_or_create(name: 'Course 5', name_url: 'course-5', sorting_order: 5, active: true,
+    live: true, wistia_guid: 'abc1237', tutor_id: 4, description: 'Course 5 description', default_number_of_possible_exam_answers: 4)
+
 
   end
 

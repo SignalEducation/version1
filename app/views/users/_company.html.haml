@@ -22,9 +22,14 @@
                 =f.label :organisation_name, t('views.corporate_customers.form.organisation_name')
                 .input-group.input-group-lg.full-width
                   =f.text_field :organisation_name, class: 'form-control', style: 'border-radius: 6px;'
-                =f.label :address, t('views.corporate_customers.form.address')
+                %br/
+                =f.label :user_name, t('views.corporate_customers.form.user_name')
                 .input-group.input-group-lg.full-width
-                  =f.text_area :address, placeholder: t('views.corporate_customers.form.address_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+                  =f.text_field :user_name, class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                =f.label :passcode, t('views.corporate_customers.form.passcode')
+                .input-group.input-group-lg.full-width
+                  =f.text_field :passcode, class: 'form-control', style: 'border-radius: 6px;'
                 %br/
 
             %button.btn.btn-cyan{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')

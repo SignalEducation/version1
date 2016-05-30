@@ -44,18 +44,14 @@ class SubscriptionPlan < ActiveRecord::Base
   # validation
   validates :name, presence: true, length: { maximum: 255 }
   validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
-  validates :currency_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :price, presence: true,
-            numericality: {greater_than_or_equal_to: 0}
+  validates :currency_id, presence: true
+  validates :price, presence: true
   validates :available_from, presence: true
   validates :available_to, presence: true
   validate  :available_to_in_the_future
   validates :trial_period_in_days, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0,
                            less_than: 32}
-  validates :subscription_plan_category_id, allow_blank: true,
-            numericality: {greater_than_or_equal_to: 0}
   validate  :one_of_customer_types_checked
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
 
@@ -67,6 +63,7 @@ class SubscriptionPlan < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
   scope :all_in_display_order, -> { order(:created_at) }
+  scope :all_in_update_order, -> { order(:updated_at) }
   scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
   scope :for_corporates, -> { where(available_to_corporates: true) }
   scope :for_students, -> { where(available_to_students: true) }
@@ -104,6 +101,14 @@ class SubscriptionPlan < ActiveRecord::Base
             (self.trial_period_in_days > 0 ?
                 (self.trial_period_in_days).to_s + (I18n.t('views.general.day') + I18n.t('views.general.free_trial')) +
                      "\r\n" : '')
+  end
+
+  def unlimited_access
+    I18n.t('views.general.all_courses')
+  end
+
+  def cancel_anytime
+    I18n.t('views.general.cancel_anytime')
   end
 
   def description_without_trial

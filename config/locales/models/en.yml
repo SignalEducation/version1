@@ -13,8 +13,8 @@ en:
       web_url_or_upload_error: You must enter a web URL or upload a file
       must_link_with_an_upload_or_url: You must link this Resource to an upload or URL
 
-    institution_users:
-      can_t_be_blank_for_students: "Can't be blank for students"
+    video_resources:
+      must_populate_one: At least one of the three fileds must have a value
 
     quiz_content:
       can_t_assign_to_multiple_things: Can't assign this to a more than one parent

@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: tutor_applications
+#
+#  id          :integer          not null, primary key
+#  first_name  :string
+#  last_name   :string
+#  email       :string
+#  info        :text
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe TutorApplicationsController, type: :routing do

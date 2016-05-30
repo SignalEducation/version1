@@ -11,8 +11,6 @@
 #  updated_at                    :datetime
 #  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
-#  exam_level_id                 :integer
-#  exam_section_id               :integer
 #  subject_course_id             :integer
 #
 
@@ -43,10 +41,8 @@ describe QuizQuestion do
   it { should have_many(:quiz_solutions) }
 
   # validation
-  xit { should validate_numericality_of(:course_module_element_quiz_id) }
 
   it { should validate_presence_of(:course_module_element_id).on(:update) }
-  xit { should validate_numericality_of(:course_module_element_id) }
 
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES).on(:update) }
   it { should validate_length_of(:difficulty_level).is_at_most(255) }

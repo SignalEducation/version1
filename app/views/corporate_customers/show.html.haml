@@ -3,10 +3,10 @@
     .hidden-xs
       =render partial: 'layouts/corporate_side_bar'
 
-    .main-content.full-width
+    .main-content.full-width.margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
-      .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .l-section-small.is-bg-asphalt.corporate-padding{style: ''}
         .container-fluid
           .row.l-margin-bottom
             .col-md-12
@@ -63,19 +63,19 @@
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
-                        %th Course
-                        %th Videos Watched
-                        %th Quizzes Taken
+                        %th.p Course
+                        %th.p Videos Watched
+                        %th.p Quizzes Taken
                     %tbody
                       - @compulsory_courses.each do |cc|
                         %tr
-                          %td= cc.name
-                          -if cc.class == ExamSection
+                          %td.p= cc.name
+                          -if cc.class == SubjectCourse
                             -ids = cc.children.all.map(&:id)
                           -else
                             -ids = cc.course_modules.all.map(&:id)
-                          %td=@corporate_videos_logs.where(course_module_id: ids).count
-                          %td=@corporate_quiz_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_videos_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_quiz_logs.where(course_module_id: ids).count
 
               .corporate-box-item.table-box
                 %h2.l-margin-bottom
@@ -84,32 +84,25 @@
                   %table.table{style: 'font-size: 16px;'}
                     %thead
                       %tr
-                        %th Course
-                        %th Videos Watched
-                        %th Quizzes Taken
+                        %th.p Course
+                        %th.p Videos Watched
+                        %th.p Quizzes Taken
                     %tbody
                       - @started_courses.each do |sc|
                         %tr
-                          %td= sc.name
-                          -if sc.class == ExamSection
+                          %td.p= sc.name
+                          -if sc.class == SubjectCourse
                             -ids = sc.children.all.map(&:id)
                           -else
                             -ids = sc.course_modules.all.map(&:id)
-                          %td=@corporate_videos_logs.where(course_module_id: ids).count
-                          %td=@corporate_quiz_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_videos_logs.where(course_module_id: ids).count
+                          %td.p=@corporate_quiz_logs.where(course_module_id: ids).count
 
+    =render partial: 'layouts/corporate_footer'
 
-        %p
-          - if current_user.admin?
-            =link_to t('views.corporate_customers.index.h1'), corporate_customers_url
-            |
-            =link_to t('views.general.edit'), edit_corporate_customer_url(id: @corporate_customer.id), title: t('views.general.edit_tooltip')
+-elsif current_user.admin?
 
-    =render partial: 'layouts/new_footer'
-
--else
-
-  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+  .margin-top.l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
     .container-fluid
       .row.l-margin-bottom
         .col-md-12
@@ -125,82 +118,67 @@
                       %th
                         =t('views.corporate_customers.form.organisation_name')
                       %th
-                        =t('views.corporate_customers.form.address')
+                        =t('views.corporate_customers.form.subdomain')
                       %th
-                        =t('views.corporate_customers.form.payments_by_card')
+                        =t('views.corporate_customers.form.user_name')
                       %th
-                        =t('views.corporate_customers.form.stripe_customer_guid')
+                        =t('views.corporate_customers.form.passcode')
                   %tbody
                     %tr
                       %td
                         =@corporate_customer.organisation_name
                       %td
-                        =@corporate_customer.address
+                        =@corporate_customer.subdomain
                       %td
-                        =tick_or_cross(@corporate_customer.payments_by_card)
+                        =@corporate_customer.user_name
                       %td
-                        =@corporate_customer.stripe_customer_guid ? "#{@corporate_customer.stripe_customer_guid}" : "Nil"
+                        =@corporate_customer.passcode
                     %tr
                       %td
                       %td
                       %td
                       %td
 
-          .corporate-box-item.chart-box
-            .row.l-margin-bottom-big
-              .col-md-6
-                %h2.letter-space-wide User Activity
-              .col-md-6.chart-legend.text-right
-                .color-circle.color-red.text-inline
-                %p.text-inline.font-small Videos Watched
-                .color-circle.color-cyan.text-inline
-                %p.text-inline.font-small Quizzes Taken
-            .row.l-margin-bottom
-              %canvas#canvas{height:"300", width:"790"}
 
 
           .corporate-box-item.table-box
             %h2.l-margin-bottom
-              = t('views.corporate_customers.show.compulsory_courses')
+              Students
             .table-responsive
               %table.table{style: 'font-size: 16px;'}
                 %thead
                   %tr
-                    %th Course
-                    %th Videos Watched
-                    %th Quizzes Taken
+                    %th Name
+                    %th Email
+                    %th User Id
                 %tbody
-                  - @compulsory_courses.each do |cc|
+                  - @corporate_students.each do |student|
                     %tr
-                      %td= cc.name
-                      -if cc.class == ExamSection
-                        -ids = cc.children.all.map(&:id)
-                      -else
-                        -ids = cc.course_modules.all.map(&:id)
-                      %td=@corporate_videos_logs.where(course_module_id: ids).count
-                      %td=@corporate_quiz_logs.where(course_module_id: ids).count
+                      %td=student.full_name
+                      %td=student.email
+                      %td=student.id
+                      %td
+                        =link_to t('views.general.edit_user'), edit_user_url(student), class: 'btn btn-small btn-purple'
 
           .corporate-box-item.table-box
             %h2.l-margin-bottom
-              = t('views.corporate_customers.show.started_courses')
+              Managers
             .table-responsive
               %table.table{style: 'font-size: 16px;'}
                 %thead
                   %tr
-                    %th Course
-                    %th Videos Watched
-                    %th Quizzes Taken
+                    %th Name
+                    %th Email
+                    %th User Id
                 %tbody
-                  - @started_courses.each do |sc|
+                  - @corporate_managers.each do |managers|
                     %tr
-                      %td= sc.name
-                      -if sc.class == ExamSection
-                        -ids = sc.children.all.map(&:id)
-                      -else
-                        -ids = sc.course_modules.all.map(&:id)
-                      %td=@corporate_videos_logs.where(course_module_id: ids).count
-                      %td=@corporate_quiz_logs.where(course_module_id: ids).count
-  =render partial: 'layouts/new_footer'
+                      %td=managers.full_name
+                      %td=managers.email
+                      %td=managers.id
+                      %td
+                        =link_to t('views.general.edit_user'), edit_user_url(managers), class: 'btn btn-small btn-purple'
+  =render partial: 'layouts/footer'
 
 
 :javascript

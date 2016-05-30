@@ -1,14 +1,71 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .row.l-margin-bottom
+      .row.l-margin-bottom#thank-you-message
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Thanks for joining us!
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          .col-md-8.col-md-offset-2.l-margin-top.text-center
-            =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sendmailimage.png', class: 'l-margin-bottom-big')
-            %p{style: 'letter-spacing: 0.5px;'}
-              Welcome aboard! Your sign-up was completed successfully.
-            %p{style: 'text-align: left;  letter-spacing: 0.5px;'}
-              An E-mail with your activation code has been sent. Please check your inbox and click on the link to activate your LearnSignal account.
+            ="Welcome, #{current_user.try(:first_name)}"
+        .col-md-10.col-md-offset-1.l-margin-bottom-6x
+          .corporate-box-item
+            .container-fluid
+              .email-pic-padding
+                .row
+                  .col-sm-6.col-sm-offset-4
+                    .pull-left
+                      =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sendmailimage.png', class: 'email-pic')
+                    .pull-left{style: 'margin-left: 40px; padding-top: 25px;'}
+                      %h4.h3.text-left
+                        Final Step!
+
+
+            .row
+              .col-md-12
+                %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                  ="To complete your membership we need to verify that we're sending emails to the correct address. To do this click on the verification email we just sent to #{current_user.email}. Didn't get the email? Please check your spam folder or "
+                  =link_to 'click here', resend_verification_mail_url
+                  =" to resend it."
+                %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                  ="Your Free Trial will expire on #{humanize_datetime(current_user.subscriptions[0].created_at + 7.days)} or when you reach 200 minutes of video and quiz time"
+
+      %hr/
+      .text-center.l-margin-bottom-big
+        %h3
+          Get Started!
+        %p
+          Select your first course to begin advancing your career.
+      .container-fluid.l-margin-bottom-huge
+        .course-list-wrap
+          .row
+            -if current_user.try(:topic_interest)
+              -interest = current_user.topic_interest
+              -group = Group.where('name ILIKE ?', "#{interest}").try(:last) || Group.first
+              -group.children.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
+                    .box-inner{style: 'height: 163px'}
+                      %h3.h4.box-title
+                        =course.try(:name)
+                      %p.box-desc
+                        -if course.short_description
+                          =course.try(:short_description).to_s.truncate(30)
+                        -else
+                          =course.description.to_s.truncate(30)
+                    .box-label
+                      =t('views.general.start')
+            -else
+              -@courses.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
+                    .box-inner{style: 'height: 163px'}
+                      %h3.h4.box-title
+                        =course.try(:name)
+                      %p.box-desc
+                        -if course.short_description
+                          =course.try(:short_description).to_s.truncate(30)
+                        -else
+                          =course.description.to_s.truncate(30)
+                    .box-label
+                      =t('views.general.start')

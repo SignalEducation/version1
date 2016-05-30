@@ -2,61 +2,60 @@
 #
 # Table name: users
 #
-#  id                                       :integer          not null, primary key
-#  email                                    :string
-#  first_name                               :string
-#  last_name                                :string
-#  address                                  :text
-#  country_id                               :integer
-#  crypted_password                         :string(128)      default(""), not null
-#  password_salt                            :string(128)      default(""), not null
-#  persistence_token                        :string
-#  perishable_token                         :string(128)
-#  single_access_token                      :string
-#  login_count                              :integer          default(0)
-#  failed_login_count                       :integer          default(0)
-#  last_request_at                          :datetime
-#  current_login_at                         :datetime
-#  last_login_at                            :datetime
-#  current_login_ip                         :string
-#  last_login_ip                            :string
-#  account_activation_code                  :string
-#  account_activated_at                     :datetime
-#  active                                   :boolean          default(FALSE), not null
-#  user_group_id                            :integer
-#  password_reset_requested_at              :datetime
-#  password_reset_token                     :string
-#  password_reset_at                        :datetime
-#  stripe_customer_id                       :string
-#  corporate_customer_id                    :integer
-#  operational_email_frequency              :string
-#  study_plan_notifications_email_frequency :string
-#  falling_behind_email_alert_frequency     :string
-#  marketing_email_frequency                :string
-#  marketing_email_permission_given_at      :datetime
-#  blog_notification_email_frequency        :string
-#  forum_notification_email_frequency       :string
-#  created_at                               :datetime
-#  updated_at                               :datetime
-#  locale                                   :string
-#  guid                                     :string
-#  trial_ended_notification_sent_at         :datetime
-#  crush_offers_session_id                  :string
-#  subscription_plan_category_id            :integer
-#  employee_guid                            :string
-#  password_change_required                 :boolean
-#  session_key                              :string
-#  first_description                        :text
-#  second_description                       :text
-#  wistia_url                               :text
-#  personal_url                             :text
-#  name_url                                 :string
-#  qualifications                           :text
-#  profile_image_file_name                  :string
-#  profile_image_content_type               :string
-#  profile_image_file_size                  :integer
-#  profile_image_updated_at                 :datetime
-#  phone_number                             :string
+#  id                               :integer          not null, primary key
+#  email                            :string
+#  first_name                       :string
+#  last_name                        :string
+#  address                          :text
+#  country_id                       :integer
+#  crypted_password                 :string(128)      default(""), not null
+#  password_salt                    :string(128)      default(""), not null
+#  persistence_token                :string
+#  perishable_token                 :string(128)
+#  single_access_token              :string
+#  login_count                      :integer          default(0)
+#  failed_login_count               :integer          default(0)
+#  last_request_at                  :datetime
+#  current_login_at                 :datetime
+#  last_login_at                    :datetime
+#  current_login_ip                 :string
+#  last_login_ip                    :string
+#  account_activation_code          :string
+#  account_activated_at             :datetime
+#  active                           :boolean          default(FALSE), not null
+#  user_group_id                    :integer
+#  password_reset_requested_at      :datetime
+#  password_reset_token             :string
+#  password_reset_at                :datetime
+#  stripe_customer_id               :string
+#  corporate_customer_id            :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  locale                           :string
+#  guid                             :string
+#  trial_ended_notification_sent_at :datetime
+#  crush_offers_session_id          :string
+#  subscription_plan_category_id    :integer
+#  employee_guid                    :string
+#  password_change_required         :boolean
+#  session_key                      :string
+#  first_description                :text
+#  second_description               :text
+#  wistia_url                       :text
+#  personal_url                     :text
+#  name_url                         :string
+#  qualifications                   :text
+#  profile_image_file_name          :string
+#  profile_image_content_type       :string
+#  profile_image_file_size          :integer
+#  profile_image_updated_at         :datetime
+#  phone_number                     :string
+#  topic_interest                   :string
+#  email_verification_code          :string
+#  email_verified_at                :datetime
+#  email_verified                   :boolean          default(FALSE), not null
+#  stripe_account_balance           :integer          default(0)
+#  trial_limit_in_seconds           :integer          default(0)
 #
 
 class User < ActiveRecord::Base
@@ -75,7 +74,9 @@ class User < ActiveRecord::Base
                   :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :account_activated_at, :account_activation_code, :phone_number
+                  :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
+                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key,
+                  :stripe_account_balance, :trial_limit_in_seconds
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -87,6 +88,7 @@ class User < ActiveRecord::Base
              # employed by the corporate customer
   belongs_to :country
   has_many :course_modules, foreign_key: :tutor_id
+  has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :subject_courses, foreign_key: :tutor_id
   has_many :invoices
@@ -111,20 +113,13 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :subscriptions
 
   # validation
-  validates :email, presence: true, uniqueness: true,
-            length: {within: 7..40}
-            #TODO
-            #format: {with:  /^([^\s]+)((?:[-a-z0-9]\.)[a-z]{2,})$/i,
-            #         message: 'must be a valid email address.'}
-  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
+  validates :email, presence: true, uniqueness: true, length: {within: 7..50}
+  validates :first_name, presence: true, length: {minimum: 1, maximum: 20}
+  validates :last_name, presence: true, length: {minimum: 1, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
-  validates :country_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :user_group_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_group_id, presence: true
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
@@ -134,9 +129,7 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
-  before_validation :set_defaults, on: :create
   before_validation { squish_fields(:email, :first_name, :last_name) }
-  # before_validation :de_activate_user, on: :create, if: '!Rails.env.test?'
   before_create :add_guid
   after_create :set_stripe_customer_id
 
@@ -158,10 +151,27 @@ class User < ActiveRecord::Base
 
   def self.get_and_activate(activation_code)
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
-    if user
+    duplicate_users = User.where(email: user.email)
+    if duplicate_users.count > 1
+      duplicate_user = duplicate_users.last
+      duplicate_user.active = false
+      duplicate_user.email = duplicate_user.email.prepend('copy-')
+      duplicate_user.save!
+    else
       user.account_activated_at = Proc.new{Time.now}.call
       user.account_activation_code = nil
       user.active = true
+      user.save!
+    end
+    return user
+  end
+
+  def self.get_and_verify(email_verification_code)
+    user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
+    if user
+      user.email_verified_at = Proc.new{Time.now}.call
+      user.email_verification_code = nil
+      user.email_verified = true
       user.save!
     end
     return user
@@ -171,11 +181,9 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user
-        user.update_attributes(
-                password_reset_requested_at: Proc.new{Time.now}.call,
-                password_reset_token: ApplicationController::generate_random_code(20),
-                active: false)
-        MandrillWorker.perform_async(user.id, nil, 'send_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        #Send reset password email from Intercom
+        IntercomPasswordResetEmailWorker.perform_async(user.id, "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
       end
     end
   end
@@ -183,13 +191,14 @@ class User < ActiveRecord::Base
   def self.finish_password_reset_process(reset_token, new_password,
           new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
-      user = User.where(password_reset_token: reset_token.to_s, active: false).first
+      user = User.where(password_reset_token: reset_token.to_s).first
       if user
         if user.update_attributes(password: new_password.to_s,
                                   password_confirmation: new_password_confirmation.to_s,
-                                  active: true, password_reset_token: nil,
+                                  password_reset_token: nil,
                                   password_reset_requested_at: nil,
-                                  password_reset_at: Time.now)
+                                  password_reset_at: Time.now,
+                                  active: true)
           user # return this
         else
           false
@@ -222,6 +231,43 @@ class User < ActiveRecord::Base
   # instance methods
   def admin?
     self.user_group.try(:site_admin)
+  end
+
+  def free_member?
+    self.subscriptions.last.try(:free_trial?)
+  end
+
+  def canceled_member?
+    self.subscriptions.last.try(:current_status) == 'canceled'
+  end
+
+  def referred_user
+    self.referred_signup
+  end
+
+  def active_subscription
+    if permission_to_see_content
+      self.subscriptions.where(current_status: ['active', 'canceled-pending', 'past_due']).all_in_order.last || self.subscriptions.all_in_order.last
+    else
+      self.subscriptions.all_in_order.last
+    end
+  end
+
+  def permission_to_see_content
+    if self.free_member?
+      if self.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
+        return true
+      else
+        return false
+      end
+    else
+      subs = self.subscriptions.map(&:current_status)
+      if subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')
+        return true
+      else
+        return false
+      end
+    end
   end
 
   def assign_anonymous_logs_to_user(session_guid)
@@ -259,6 +305,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_customer)
   end
 
+  def corporate_manager?
+    self.user_group.try(:corporate_manager)
+  end
+
   def corporate_student?
     self.user_group.try(:corporate_student)
   end
@@ -267,10 +317,35 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
   end
 
+  def activate_user
+    self.active = true
+    self.account_activated_at = Proc.new{Time.now}.call
+    self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
+  def validate_user
+    self.email_verified = true
+    self.email_verified_at = Proc.new{Time.now}.call
+    self.email_verification_code = nil
+  end
+
   def de_activate_user
     self.active = false
     self.account_activated_at = nil
     self.account_activation_code = ApplicationController::generate_random_code(20)
+  end
+
+  def generate_email_verification_code
+    self.email_verified = false
+    self.email_verified_at = nil
+    self.email_verification_code = ApplicationController::generate_random_code(20)
+  end
+
+  def create_referral
+    unless self.referral_code
+      new_referral_code = ReferralCode.new
+      new_referral_code.generate_referral_code(self.id)
+    end
   end
 
   def destroyable?
@@ -301,10 +376,6 @@ class User < ActiveRecord::Base
     self.user_group.try(:tutor)
   end
 
-  def set_original_mixpanel_alias_id(mixpanel_alias_id)
-    @mixpanel_alias_id = mixpanel_alias_id
-  end
-
   #Corporate Account Methods
 
   def compulsory_group_ids
@@ -333,9 +404,9 @@ class User < ActiveRecord::Base
     csv_data = []
     duplicate_emails = []
     has_errors = false
-    if csv_content.respond_to?(:each_line)
-      csv_content.each_line do |line|
-        line.strip.split(',').tap do |fields|
+    if csv_content.lines.count == 1 && csv_content.include?("\r")
+      csv_content.strip.split("\r").each do |line|
+        line.to_s.strip.split(',').tap do |fields|
           error_msgs = []
           if fields.length == 3
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
@@ -351,7 +422,27 @@ class User < ActiveRecord::Base
         end
       end
     else
-      has_errors = true
+      if csv_content.respond_to?(:each_line)
+        csv_content.each_line do |line|
+          line.strip.split(',').tap do |fields|
+            error_msgs = []
+            if fields.length == 3
+              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+              error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+              duplicate_emails << fields[0]
+            else
+              error_msgs << I18n.t('models.users.invalid_field_count')
+            end
+            has_errors = true unless error_msgs.empty?
+            csv_data << { values: fields, error_messages: error_msgs }
+          end
+        end
+      else
+        has_errors = true
+      end
+
     end
     has_errors = true if csv_data.empty?
     return csv_data, has_errors
@@ -369,10 +460,10 @@ class User < ActiveRecord::Base
             raise ActiveRecord::Rollback
           end
           password = SecureRandom.hex(5)
-
+          verification_code = ApplicationController::generate_random_code(20)
+          time_now = Proc.new{Time.now}.call
           user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', active: false, account_activated_at: nil, account_activation_code: ApplicationController::generate_random_code(20))
-
+          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
           if used_emails.include?(v['email']) || !user.valid?
             users = []
             raise ActiveRecord::Rollback
@@ -385,23 +476,151 @@ class User < ActiveRecord::Base
     users
   end
 
+  # Should only be used from the console, it is to fix issues where free_trial subscriptions were canceled but no new plan was created
+  def create_free_trial_subscription
+    if self.subscriptions.first.free_trial? && self.subscriptions.first.current_status == 'canceled'
+      previous_free_trial_sub = self.subscriptions.first
+      currency = previous_free_trial_sub.subscription_plan.currency_id
+      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
+      new_sub = self.subscriptions.new(subscription_plan_id: subscription_plan.id, stripe_customer_id: self.stripe_customer_id, user_id: self.id)
+      new_sub.save
+    end
+  end
+
+  #User reactivating their account by adding a new subscription and card
+  def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, coupon_code)
+    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
+    user = User.find_by_id(user_id)
+    old_sub = user.subscriptions.first
+
+    # compare the currencies of the old and new plans,
+    unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
+    end
+    # make sure new plan is active
+    unless new_subscription_plan.active?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
+    end
+    # make sure the current subscription is in "good standing"
+    unless %w(active).include?(old_sub.current_status)
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
+    end
+    # only individual students are allowed to upgrade their plan
+    unless user.individual_student?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
+    end
+
+    #### if we're here, then we're good to go.
+    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+    stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid, source: stripe_token)
+
+    stripe_subscription.prorate = true
+    stripe_subscription.coupon = coupon_code if coupon_code
+    stripe_subscription.trial_end = 'now'
+    result = stripe_subscription.save # saves it on stripe
+
+    #### if we are here, the subscription creation on Stripe was successful
+    #### Now we need to create a new Subscription in our DB.
+    ActiveRecord::Base.transaction do
+      new_sub = Subscription.new(
+          user_id: user_id,
+          corporate_customer_id: user.corporate_customer_id,
+          subscription_plan_id: new_subscription_plan.id,
+          complimentary: false,
+          livemode: (result[:plan][:livemode]),
+          current_status: result[:status],
+      )
+      # mass-assign-protected attributes
+      new_sub.stripe_guid = result[:id]
+      new_sub.next_renewal_date = Time.at(result[:current_period_end])
+      new_sub.stripe_customer_id = user.stripe_customer_id
+      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
+      new_sub.save(validate: false)
+
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+      return new_sub
+    end
+  rescue ActiveRecord::RecordInvalid => exception
+    Rails.logger.error("ERROR: Subscription#reactivation - AR.Transaction failed.  Details: #{exception.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+  rescue => e
+    Rails.logger.error("ERROR: Subscription#reactivation - failed to create Subscription at Stripe.  Details: #{e.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+
+  end
+
+  #User reactivating their account by adding a new subscription and no card
+  def resubscribe_account_without_token(user_id, new_plan_id, reactivate_account_url = nil)
+    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
+    user = User.find_by_id(user_id)
+    old_sub = user.subscriptions.first
+
+    # compare the currencies of the old and new plans,
+    unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
+    end
+    # make sure new plan is active
+    unless new_subscription_plan.active?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
+    end
+    # make sure the current subscription is in "good standing"
+    unless %w(active).include?(old_sub.current_status)
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
+    end
+    # only individual students are allowed to upgrade their plan
+    unless user.individual_student?
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
+    end
+
+    #### if we're here, then we're good to go.
+    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+    stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid)
+
+    stripe_subscription.prorate = true
+    stripe_subscription.trial_end = 'now'
+    result = stripe_subscription.save # saves it on stripe
+
+    #### if we are here, the subscription creation on Stripe was successful
+    #### Now we need to create a new Subscription in our DB.
+    ActiveRecord::Base.transaction do
+      new_sub = Subscription.new(
+          user_id: user_id,
+          corporate_customer_id: user.corporate_customer_id,
+          subscription_plan_id: new_subscription_plan.id,
+          complimentary: false,
+          livemode: (result[:plan][:livemode]),
+          current_status: result[:status],
+      )
+      # mass-assign-protected attributes
+      new_sub.stripe_guid = result[:id]
+      new_sub.next_renewal_date = Time.at(result[:current_period_end])
+      new_sub.stripe_customer_id = user.stripe_customer_id
+      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
+      new_sub.save(validate: false)
+
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+      return new_sub
+    end
+  rescue ActiveRecord::RecordInvalid => exception
+    Rails.logger.error("ERROR: Subscription#reactivation - AR.Transaction failed.  Details: #{exception.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+  rescue => e
+    Rails.logger.error("ERROR: Subscription#reactivation - failed to create Subscription at Stripe.  Details: #{e.inspect}")
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+
+  end
+
   protected
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-  end
-
-  def set_defaults
-    Rails.logger.debug "DEBUG: User#set_defaults - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-    self.marketing_email_permission_given_at ||= Proc.new{Time.now}.call
-    self.operational_email_frequency ||= 'weekly'
-    self.study_plan_notifications_email_frequency ||= 'off'
-    self.falling_behind_email_alert_frequency ||= 'off'
-    self.marketing_email_frequency ||= 'off'
-    self.blog_notification_email_frequency ||= 'off'
-    self.forum_notification_email_frequency ||= 'off'
-    Rails.logger.debug "DEBUG: User#set_defaults - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
   end
 
   def set_stripe_customer_id

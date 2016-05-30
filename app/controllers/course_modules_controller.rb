@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: course_modules
+#
+#  id                        :integer          not null, primary key
+#  name                      :string
+#  name_url                  :string
+#  description               :text
+#  tutor_id                  :integer
+#  sorting_order             :integer
+#  estimated_time_in_seconds :integer
+#  active                    :boolean          default(FALSE), not null
+#  created_at                :datetime
+#  updated_at                :datetime
+#  cme_count                 :integer          default(0)
+#  seo_description           :string
+#  seo_no_index              :boolean          default(FALSE)
+#  destroyed_at              :datetime
+#  number_of_questions       :integer          default(0)
+#  subject_course_id         :integer
+#  video_duration            :float            default(0.0)
+#  video_count               :integer          default(0)
+#  quiz_count                :integer          default(0)
+#  is_past_paper             :boolean          default(FALSE), not null
+#  highlight_colour          :string
+#
+
 class CourseModulesController < ApplicationController
 
   before_action :logged_in_required
@@ -74,7 +101,7 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id)
+    params.require(:course_module).permit(:name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :is_past_paper, :highlight_colour)
   end
 
 end

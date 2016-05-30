@@ -1,0 +1,213 @@
+-if current_user.individual_student?
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center.text-center
+            ="Referral Program"
+
+
+        .col-md-10.col-md-offset-1.l-margin-top-big
+          .corporate-box-item
+            .container-fluid
+              .row
+                .col-md-12
+                  %p.h4.text-center.l-margin-bottom-big
+                    Invite friends to LearnSignal and get a discount off you subscription!
+
+              .row
+                .col-md-12
+                  %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                    If you refer 5 friends each month you will earn #{@current_monthly_sub.currency.format_number(@current_monthly_sub.price)} off your next subscription fee.
+          %br/
+          %br/
+          .corporate-box-item.chart-box
+            .row.l-margin-bottom-big
+              .col-md-6.l-margin-bottom-big
+                %h2.l-margin-bottom.text-center
+                  Ways to refer
+                .form-group
+                  .col-sm-12.text-center
+                    %p
+                      Use this link to invite friends to LearnSignal and receive a discounted rate.
+                  .col-sm-8
+                    =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
+
+                      =text_field_tag :code, current_user.referral_code ? referral_code_sharing_url(current_user.referral_code) : '', class: 'form-control', id: 'fe_text'
+                  .col-sm-4
+                    .btn.btn-red#copy_button.my_clip_button{"data-clipboard-target" => "fe_text", "data-clipboard-text" => "Default clipboard text from attribute", :title => "Click me to copy to clipboard."}
+                      %b Copy
+                  .col-md-12.l-margin-top-big
+                    %p.text-center
+                      Or use these buttons to invite followers and friends
+                    -post = "Come learn with me at @LearnSignal, the on-demand training library for business professionals. #{referral_code_sharing_url(current_user.referral_code)}"
+                    .col-md-4
+                      =link_to "Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan', target: '_blank'
+
+                    .col-md-4
+                      .btn.btn-red{onclick: "fbPost()"}
+                        Facebook
+                    -summary = "The%20first%20ever%20ondemand%20training%20library%20for%20business%20professionals.%20Learn%20the%20skills%20you%20need%20anytime,%20anywhere,%20on%20any%20device.%20Access%20a%20library%20of%20business-focused%20courses%20taught%20by%20expert%20tutors.%20Learn%20from%20the%20best%20with%20training%20designed%20and%20developed%20by%20industry%20experts"
+                    .col-md-4
+                      =link_to "linkedin", "https://www.linkedin.com/shareArticle?mini=true&url=#{@referral_url}&title=Come%20learn%20with%20me%20at%20LearnSignal.com,%20the%20ondemand%20training%20library%20for%20business%20professionals&summary=#{summary}&source=www.learnsignal.com", class: 'btn btn-purple', target: '_blank'
+
+              .col-md-6
+                %h2.l-margin-bottom.text-center
+                  Referral Stats
+                .col-md-10.col-md-offset-1.chart-legend.text-right
+                  .color-circle.color-red.text-inline
+                  %p.text-inline.font-small Free-trial Referrals
+                  .color-circle.color-cyan.text-inline
+                  %p.text-inline.font-small Paying Referrals
+                .row.l-margin-bottom
+                  %canvas#canvas{height:"300", width:"790"}
+
+-elsif current_user.blogger?
+
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center.text-center
+            ="Referral Program"
+
+
+        .col-md-10.col-md-offset-1.l-margin-top-big
+          .corporate-box-item
+            .container-fluid
+              .row
+                .col-md-12
+                  %p.h4.text-center.l-margin-bottom-big
+                    Invite friends to LearnSignal to earn rewards!
+
+              .row
+                .col-md-12
+                  %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                    If you refer 5 friends each month you will earn reward
+          %br/
+          %br/
+          .corporate-box-item.chart-box
+            .row.l-margin-bottom-big
+              .col-md-6.l-margin-bottom-big
+                %h2.l-margin-bottom.text-center
+                  Ways to refer
+                .form-group
+                  .col-sm-12.text-center
+                    %p
+                      Use this link to invite friends to LearnSignal and receive a discounted rate.
+                  .col-sm-8
+                    =form_tag(referral_codes_path, authenticity_token: true, id: 'referral-code-form', role: 'form',  data: {type: 'json'}, class: 'form-horizontal', remote: true) do
+
+                      =text_field_tag :code, current_user.referral_code ? referral_code_sharing_url(current_user.referral_code) : '', class: 'form-control', id: 'fe_text'
+                  .col-sm-4
+                    .btn.btn-red#copy_button.my_clip_button{"data-clipboard-target" => "fe_text", "data-clipboard-text" => "Default clipboard text from attribute", :title => "Click me to copy to clipboard."}
+                      %b Copy
+                  .col-md-12.l-margin-top-big
+                    %p.text-center
+                      Or use these buttons to invite followers and friends
+                    -post = "Come learn with me at @LearnSignal, the on-demand training library for business professionals. #{referral_code_sharing_url(current_user.referral_code)}"
+                    .col-md-4
+                      =link_to "Twitter", "https://twitter.com/intent/tweet?text=#{post}", class: 'btn btn-cyan', target: '_blank'
+
+                    .col-md-4
+                      .btn.btn-red{onclick: "fbPost()"}
+                        Facebook
+                    -summary = "The%20first%20ever%20ondemand%20training%20library%20for%20business%20professionals.%20Learn%20the%20skills%20you%20need%20anytime,%20anywhere,%20on%20any%20device.%20Access%20a%20library%20of%20business-focused%20courses%20taught%20by%20expert%20tutors.%20Learn%20from%20the%20best%20with%20training%20designed%20and%20developed%20by%20industry%20experts"
+                    .col-md-4
+                      =link_to "linkedin", "https://www.linkedin.com/shareArticle?mini=true&url=#{@referral_url}&title=Come%20learn%20with%20me%20at%20LearnSignal.com,%20the%20ondemand%20training%20library%20for%20business%20professionals&summary=#{summary}&source=www.learnsignal.com", class: 'btn btn-purple', target: '_blank'
+
+              .col-md-6
+                %h2.l-margin-bottom.text-center
+                  Referral Stats
+                .col-md-10.col-md-offset-1.chart-legend.text-right
+                  .color-circle.color-red.text-inline
+                  %p.text-inline.font-small Initial Referrals
+                  .color-circle.color-cyan.text-inline
+                  %p.text-inline.font-small Paying Referrals
+                .row.l-margin-bottom
+                  %canvas#canvas{height:"300", width:"790"}
+
+
+
+
+:javascript
+    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+    var months = #{@labels},
+        initial_referrals_this_month = #{@initial_referrals_this_month},
+        initial_referrals_one_month_ago = #{@initial_referrals_one_month_ago},
+        initial_referrals_two_months_ago = #{@initial_referrals_two_months_ago},
+        initial_referrals_three_months_ago = #{@initial_referrals_three_months_ago},
+        converted_referrals_this_month = #{@converted_referrals_this_month},
+        converted_referrals_one_month_ago = #{@converted_referrals_one_month_ago},
+        converted_referrals_two_months_ago = #{@converted_referrals_two_months_ago},
+        //ref_link = "www.learnsignal.com/en/library/?ref_code=",
+        ref_link = "#{@ref_page}",
+        ref_code = "#{@referral_code.code}",
+        redirect_link = "#{@ref_page}";
+
+    console.log(ref_link)
+    var lineChartData = {
+      labels : months,
+      datasets : [
+        {
+          label: "Initial Referrals",
+          fillColor : "rgba(220,220,220,0)",
+          strokeColor : "#EE5457",
+          pointColor : "#EE5457",
+          pointStrokeColor : "#EE5457",
+          pointHighlightFill : "#fff",
+          pointHighlightStroke : "rgba(220,220,220,1)",
+          data : [initial_referrals_two_months_ago,initial_referrals_one_month_ago,initial_referrals_this_month]
+        },
+        {
+          label: "Paying Referrals",
+          fillColor : "rgba(62,185,206,0.2)",
+          strokeColor : "rgba(62,185,206,1)",
+          pointColor : "rgba(62,185,206,1)",
+          //pointStrokeColor : "#fff",
+          pointHighlightFill : "#fff",
+          pointHighlightStroke : "rgba(151,187,205,1)",
+          data : [converted_referrals_two_months_ago,converted_referrals_one_month_ago,converted_referrals_this_month]
+        }
+      ]
+    }
+
+    window.onload = function(){
+      var ctx = document.getElementById("canvas").getContext("2d");
+      window.myLine = new Chart(ctx).Line(lineChartData, {
+        responsive: true,scaleShowVerticalLines: false,datasetStrokeWidth : 3,scaleGridLineColor : "rgba(0,0,0,.1)",
+        scaleOverride: true, scaleStartValue: 0, scaleStepWidth: 10, scaleSteps: 3,scaleShowLabels: true
+      });
+    }
+
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+
+    $(document).ready(function() {
+      var clip = new ZeroClipboard($("#copy_button"))
+    });
+
+    $("#clear-test").on("click", function(){
+      $("#fe_text").val("Copy me!");
+      $("#testarea").val("");
+    });
+
+
+    function fbPost() {
+      FB.ui({
+        method: 'feed',
+        redirect_uri: redirect_link,
+        link: ref_link.concat(ref_code),
+        picture: 'https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/LS_Only_Logo.png',
+        name: 'LearnSignal Referral',
+        description: 'The first ever on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device. Access a library of business-focused courses taught by expert tutors. Learn from the best with training designed and developed by industry experts.'
+      });
+    }

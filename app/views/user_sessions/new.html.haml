@@ -1,25 +1,34 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+.corporate_layout.top-content{:class => ('corporate_layout' if current_corporate)}
+  .l-wrap-corporate
+    .container
+      .row
+        =render partial: 'layouts/corporate_logo'
+      .row
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        .col-sm-6.col-sm-offset-3.l-margin-top
+          %h2.h-white.l-margin-bottom.l-margin-top-big.text-center
             =t('views.user_sessions.new.h1')
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          =form_for(@user_session, html: {role: 'form'}) do |f|
-            =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+          .login-form.l-margin-top#sign-in
+            =form_for(@user_session) do |f|
+              =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+              .col-sm-12
+                .form-group
+                  =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
+                  =f.email_field :email, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true
+              .col-sm-12
+                .form-group
+                  =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
+                  =f.password_field :password, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
 
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
-              %br/
-              %div#validation-div
-                =f.email_field :email, placeholder: t('views.user_sessions.form.email_placeholder'), class: 'form-control', autofocus: true
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
-              %br/
-              %div#validation-div-password
-                =f.password_field :password, placeholder: t('views.user_sessions.form.password_placeholder'), class: 'form-control', autocomplete: 'off'
-            .col-md-8.col-md-offset-2.l-margin-top-big
-              =f.submit t('views.general.sign_in'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
-              .pull-right
-                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: 'forgot-password-link'
+              .col-sm-12.l-margin-bottom.l-margin-top
+                =f.submit t('views.general.sign_in'), class: 'btn btn-red btn-wide btn-lg-text'
+              .text-center
+                =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'
+
+      .row
+        .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
+          -if current_corporate
+            =link_to 'create account', corporate_login_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+          -else
+            =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'

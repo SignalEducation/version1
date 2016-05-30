@@ -2,12 +2,15 @@
   =render partial: 'corporate_groups/corporate_user_group_form'
 
 -else
+  .margin-top
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
   .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
         .row.l-margin-bottom
           .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
               =t('views.corporate_groups.new.h1')
         =render partial: 'form'
-  =render partial: 'layouts/new_footer'
+  =render partial: 'layouts/corporate_footer'
