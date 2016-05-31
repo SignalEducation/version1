@@ -92,6 +92,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.subject_course.try(:cme_count) || 0
   end
 
+  def last_element
+    CourseModuleElement.find(self.latest_course_module_element_id)
+  end
+
   def recalculate_completeness
     self.count_of_cmes_completed = self.student_exam_tracks.with_active_cmes.sum(:count_of_cmes_completed)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100

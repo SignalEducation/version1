@@ -150,13 +150,13 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       if self.student_exam_track
         set = self.student_exam_track
         set.subject_course_id ||= self.course_module.subject_course.id
-        set.latest_course_module_element_id = self.course_module_element_id
+        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
         set.jumbo_quiz_taken = true if self.is_jumbo_quiz
         set.recalculate_completeness
       else
         set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
         set.subject_course_id ||= self.course_module.try(:subject_course_id)
-        set.latest_course_module_element_id = self.course_module_element_id
+        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
         set.jumbo_quiz_taken = true if self.is_jumbo_quiz
         set.calculate_completeness
       end
@@ -166,6 +166,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def update_student_exam_track
     unless self.is_question_bank
       self.student_exam_track.try(:recalculate_completeness)
+      self.student_exam_track.update_column(:latest_course_module_element_id, self.course_module_element_id) if self.element_completed
     end
   end
 
