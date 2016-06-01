@@ -194,7 +194,7 @@
                           Click here to download your completion certificate
 
           .col-md-4
-            .course-action
+            .course-action.l-margin-bottom-big
               -if current_user
                 -if current_user.individual_student?
                   -if current_user.free_member?
@@ -218,4 +218,20 @@
                 %p.l-margin-top.text-center
                   Sign up for our 7-day Free Trial and get full access to all content
 
+
+            .course-resources
+              %p.h4.l-margin-bottom
+                ='Course Resources'
+              -@course_resources.each do |r|
+                %ul
+                  %li
+                    -if !current_user
+                      =r.name
+                    -elsif current_user && (current_user.free_member? || current_user.canceled_member?)
+                      =r.name
+                    -else
+                      -if r.web_url && r.web_url.length > 0
+                        =link_to r.name, r.web_url, target: '_blank'
+                      -else
+                        =link_to r.name, r.upload.url, target: '_blank'
 
