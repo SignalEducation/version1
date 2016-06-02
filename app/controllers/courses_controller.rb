@@ -58,7 +58,8 @@ class CoursesController < ApplicationController
     end
   end
 
-  def create # course_module_element_user_log and children
+  def create
+    # Create course_module_element_user_log for QUIZ from params sent in from previously initiated CMEUL record that was not saved
     if current_user
       @mathjax_required = true
       @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
@@ -96,6 +97,7 @@ class CoursesController < ApplicationController
           video_cme_user_log.element_completed = true
           video_cme_user_log.time_taken_in_seconds = cme.try(:duration)
           video_cme_user_log.save
+          #Triggers Update Callbacks
         end
         render json: {}, status: :ok
       }
@@ -133,6 +135,8 @@ class CoursesController < ApplicationController
 
 
   def create_a_cme_user_log
+    #Creating Video Log upon loading video page, later updated by JSON request to video_watched_data method
+
     CourseModuleElementUserLog.create!(
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
@@ -153,6 +157,7 @@ class CoursesController < ApplicationController
   end
 
   def set_up_quiz
+    #Creates QUIZ log when page renders but does not save log, data is sent as params to create method where a new CMEUL is initiated and saved
     @course_module_element_user_log = CourseModuleElementUserLog.new(
             session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,

@@ -85,7 +85,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.student_exam_tracks.empty?
   end
 
   def elements_total
