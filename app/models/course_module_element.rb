@@ -129,14 +129,17 @@ class CourseModuleElement < ActiveRecord::Base
     elsif self.course_module.course_module_jumbo_quiz && self.course_module.course_module_jumbo_quiz.active
       self.course_module.course_module_jumbo_quiz
     elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
-
-      if self.course_module.next_module.nil?
-
-        CourseModule.where(id: self.course_module_id).first
-
-      else
+      if self.course_module.next_module && self.course_module.next_module.try(:course_module_elements).try(:all_active).any?
+        #End of CourseModule continue on to first CME of next CourseModule
         next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
-        CourseModuleElement.find(next_id) if next_id
+        if next_id
+          CourseModuleElement.find(next_id)
+        else
+          CourseModule.where(id: self.course_module_id).first
+        end
+      else
+        #End of Course redirect to Course library#live
+        self.course_module
       end
     else
       CourseModule.where(id: self.course_module_id).first
