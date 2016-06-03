@@ -85,8 +85,8 @@ describe CourseModuleElement do
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:log_question_count_and_duration).before(:save) }
   it { should callback(:populate_estimated_time).before(:save) }
-  it { should callback(:update_parent).after(:create) }
-  it { should callback(:update_parent).after(:update) }
+  it { should callback(:update_parent).after(:save) }
+  it { should callback(:update_parent).after(:destroy) }
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }
