@@ -70,10 +70,10 @@ class SubjectCourse < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
-  before_save :calculate_best_possible_score
-  before_save :sanitize_name_url
+  before_save :calculate_best_possible_score, :sanitize_name_url
   before_destroy :check_dependencies
-  after_commit :update_sitemap
+  after_create :update_sitemap
+  after_update :update_course_logs
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -239,6 +239,10 @@ class SubjectCourse < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def update_course_logs
+    SubjectCourseUserLogWorker.perform_async(self.id)
   end
 
 end

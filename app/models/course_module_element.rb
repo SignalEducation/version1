@@ -80,11 +80,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_save :sanitize_name_url
-  before_save :log_question_count_and_duration
-  before_save :populate_estimated_time
-  after_create :update_parent
-  after_update :update_parent
+  before_save :sanitize_name_url, :populate_estimated_time, :log_question_count_and_duration
+  after_save :update_parent
   after_destroy :update_parent
 
   # scopes

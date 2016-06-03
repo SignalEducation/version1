@@ -96,8 +96,7 @@ class StudentExamTrack < ActiveRecord::Base
     log = self.subject_course_user_log || SubjectCourseUserLog.new(user_id: self.user_id, session_guid: self.session_guid, subject_course_id: self.subject_course_id)
     log.subject_course_id ||= self.try(:subject_course_id)
     log.latest_course_module_element_id = self.latest_course_module_element_id
-    #log.save!
-    log.recalculate_completeness
+    log.recalculate_completeness # Includes a save
   end
 
   def cme_user_logs
@@ -136,7 +135,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    #This can only be called externally from CMEUL model or the CourseModule model
+    #This can only be called externally from CMEUL model or the CourseModule model via the StudentExamTracksWorker
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
     self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
     video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
