@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
   before_action :logged_in_required
 
   def index
-    seo_title_maker('Dashboard - Personalised to you', 'Your progress through all courses will be recorded here.', false)
+    seo_title_maker('Dashboard', 'Your progress through all courses will be recorded here.', false)
     @dashboard_type = []
     if current_user.nil? || current_user.individual_student? || current_user.admin?
       @dashboard_type << 'individual_student'
@@ -15,25 +15,19 @@ class DashboardController < ApplicationController
     @dashboard_type << 'corporate_customer' if current_user.try(:corporate_customer?)
 
     @courses = SubjectCourse.all_active.all_live.all_in_order
-    @student_exam_tracks = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_in_order
-    @latest_set = @student_exam_tracks.first
-    @completed_student_exam_tracks = @student_exam_tracks.where(percentage_complete: 100)
-    @incomplete_student_exam_tracks = @student_exam_tracks.where('percentage_complete < ?', 100)
-    @latest_course = @latest_set.try(:course_module).try(:parent)
 
-    incomplete_set_ids = @incomplete_student_exam_tracks.all.map(&:subject_course_id)
-    completed_set_ids = @completed_student_exam_tracks.all.map(&:subject_course_id)
+    logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
+    @all_active_logs = logs.where('percentage_complete < ?', 100)
+    @first_active_log = @all_active_logs.first
+    active_logs_ids = @all_active_logs.all.map(&:subject_course_id)
 
-    logs = SubjectCourseUserLog.where(user_id: current_user.id)
-    @active_logs = logs.where('percentage_complete < ?', 100)
-    active_logs_ids = @active_logs.all.map(&:subject_course_id)
     @completed_logs = logs.where('percentage_complete > ?', 99)
     completed_logs_ids = @completed_logs.all.map(&:subject_course_id)
+
     @compulsory_logs = SubjectCourseUserLog.where(user_id: current_user.id)
 
     @incomplete_courses = @courses.where(id: active_logs_ids)
     @completed_courses = @courses.where(id: completed_logs_ids)
-    @compulsory_courses = []
 
     if @dashboard_type.include?('admin')
 
@@ -41,8 +35,23 @@ class DashboardController < ApplicationController
 
     if @dashboard_type.include?('corporate_student')
       if current_user && current_user.corporate_student?
-        @subject_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids) unless current_user.restricted_subject_course_ids.empty?
-        @compulsory_courses = SubjectCourse.all_active.all_live.where(id: current_user.compulsory_subject_course_ids).all_in_order
+        if !current_user.restricted_subject_course_ids.empty?
+          @permitted_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids)
+          @course_ids = @permitted_courses.map(&:id)
+          @backup_courses =  @permitted_courses
+        else
+          @course_ids = @courses.map(&:id)
+          @backup_courses =  @courses
+        end
+        @compulsory_courses = @courses.all_active.all_live.where(id: current_user.compulsory_subject_course_ids).all_in_order
+        logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
+        permitted_course_logs = logs.where(subject_course_id: @course_ids)
+        @all_incomplete_logs = permitted_course_logs.where('percentage_complete < ?', 100)
+        @all_completed_logs = permitted_course_logs.where('percentage_complete > ?', 99)
+        @all_active_logs = @all_incomplete_logs + @all_completed_logs
+        @other_active_logs = @all_active_logs[1..-1]
+        @first_corp_log = permitted_course_logs.first
+
       end
 
 

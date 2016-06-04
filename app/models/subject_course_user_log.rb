@@ -85,11 +85,15 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.student_exam_tracks.empty?
   end
 
   def elements_total
     self.subject_course.try(:cme_count) || 0
+  end
+
+  def last_element
+    CourseModuleElement.find(self.latest_course_module_element_id)
   end
 
   def recalculate_completeness

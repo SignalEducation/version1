@@ -54,23 +54,44 @@
               %ul.course-topics-list
                 -@course.children.all_active.all_in_order.each_with_index do |child, counter|
                   %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
-                    .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"}, style: "background-color: #{child.is_past_paper ? child.try(:highlight_colour) : ""}"}
-                      .box-topic-item
-                        =truncate(child.name, length: 50)
-                      .time.hidden-xs
-                        -if child.quiz_count.to_i > 0
-                          -if child.quiz_count.to_i == 1
-                            =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
-                          -elsif child.quiz_count.to_i > 1
-                            =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
-                          -if child.video_count > 0
-                            |
-                        -if child.video_count == 1
-                          =#humanize_time(child.video_duration)
-                          =child.video_count.to_s + ' ' + t('views.library.show.video')
-                        -elsif child.video_count > 1
-                          =#humanize_time(child.estimated_time_in_seconds)
-                          =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+                    -if child.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                      .completed-box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"}, style: "background-color: #{child.is_past_paper ? child.try(:highlight_colour) : ""}"}
+                        .box-topic-item
+                          =truncate(child.name, length: 50)
+                        .time.hidden-xs
+                          -if child.quiz_count.to_i > 0
+                            -if child.quiz_count.to_i == 1
+                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
+                            -elsif child.quiz_count.to_i > 1
+                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
+                            -if child.video_count > 0
+                              |
+                          -if child.video_count == 1
+                            =#humanize_time(child.video_duration)
+                            =child.video_count.to_s + ' ' + t('views.library.show.video')
+                          -elsif child.video_count > 1
+                            =#humanize_time(child.estimated_time_in_seconds)
+                            =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+
+                    -else
+                      .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"}, style: "background-color: #{child.is_past_paper ? child.try(:highlight_colour) : ""}"}
+                        .box-topic-item
+                          =truncate(child.name, length: 50)
+                        .time.hidden-xs
+                          -if child.quiz_count.to_i > 0
+                            -if child.quiz_count.to_i == 1
+                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
+                            -elsif child.quiz_count.to_i > 1
+                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
+                            -if child.video_count > 0
+                              |
+                          -if child.video_count == 1
+                            =#humanize_time(child.video_duration)
+                            =child.video_count.to_s + ' ' + t('views.library.show.video')
+                          -elsif child.video_count > 1
+                            =#humanize_time(child.estimated_time_in_seconds)
+                            =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+
 
                   .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
                     -child.children.all_in_order.all_active.each do |grandchild|
@@ -194,7 +215,7 @@
                           Click here to download your completion certificate
 
           .col-md-4
-            .course-action
+            .course-action.l-margin-bottom-big
               -if current_user
                 -if current_user.individual_student?
                   -if current_user.free_member?
@@ -218,4 +239,22 @@
                 %p.l-margin-top.text-center
                   Sign up for our 7-day Free Trial and get full access to all content
 
+
+            .course-resources
+              %p.h4.l-margin-bottom
+                ='Course Resources'
+              -@course_resources.each do |r|
+                %ul
+                  %li
+                    -if !current_user
+                      =r.name
+                    -elsif current_user && (current_user.free_member? || current_user.canceled_member?)
+                      =r.name
+                    -else
+                      -if r.web_url && r.web_url.length > 0
+                        .p
+                          =link_to r.name, r.web_url, target: '_blank'
+                      -else
+                        .p
+                          =link_to r.name, r.upload.url, target: '_blank'
 
