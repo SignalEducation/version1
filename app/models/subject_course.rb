@@ -110,6 +110,10 @@ class SubjectCourse < ActiveRecord::Base
     self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
   end
 
+  def started_by_user_or_guid(user_id, session_guid)
+    self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+  end
+
   def destroyable?
     true
   end

@@ -1,160 +1,130 @@
-%div{role: 'tabpanel'}
-  .is-bg-purple-2.coursebar
+-if @first_corp_log
+  .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
         .row
-          .col-md-12{role: 'tablist'}
-            .l-margin-top-small
-              -if current_user.compulsory_subject_course_ids.any?
-                =link_to 'Compulsory Courses', '#compulsory', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'btn btn-purple', style: 'margin-bottom: 5px;'
-              =link_to 'Active Courses', '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}, class: 'btn btn-purple', style: 'margin-bottom: 5px;'
-              =link_to 'Completed Courses', '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}, class: 'btn btn-purple', style: 'margin-bottom: 5px;'
-
-  .l-section-small.is-bg-asphalt
-    .tab-content
-      -if current_user.compulsory_subject_course_ids.any?
-        .l-wrap.active.tab-pane.fade.in#compulsory{role: 'tabpanel'}
-          .container-fluid
-            .row
-              .col-md-12.text-center
-                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                  -if current_user
-                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
-                  -else
-                    ='You are making good progress!'
-                %p{style: 'font-size: 24px'}
-                  Your Compulsory Courses
-            .row.l-margin-bottom-huge
-              -@compulsory_courses.each do |course|
-                -log = @compulsory_logs.where(subject_course_id: course.id).first
-                .col-md-4.l-margin-top
-                  =link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
-                    .panel-icon.icon-big
-                      %i.glyphicon.glyphicon-pencil
-                    .panel-body
-                      %h4.text-bold.one-line-text
-                        =course.try(:name)
-                      - total_lesson = course.try(:cme_count)
-                      - complete_lesson = log.try(:count_of_cmes_completed) || 0
-                      - complete_percent = log.try(:percentage_complete)
-                      %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
-                      .progress.l-margin-top-big
-                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                    .box-label continue
-
-        .l-wrap.tab-pane.fade#active{role: 'tabpanel'}
-          .container-fluid
-            .row
-              .col-md-12.text-center
-                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                  -if current_user
-                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
-                  -else
-                    ='You are making good progress!'
-                %p{style: 'font-size: 24px'}
-                  Your Active Courses
-            .row.l-margin-bottom-huge
-              -@incomplete_courses.each do |course|
-                -log = @active_logs.where(subject_course_id: course.id).first
-                .col-md-4.l-margin-top
-                  = link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
-                    .panel-icon.icon-big
-                      %i.glyphicon.glyphicon-pencil
-                    .panel-body
-                      %h4.text-bold.one-line-text
-                        =course.try(:name)
-                      - total_lesson = course.try(:cme_count)
-                      - complete_lesson = log.try(:count_of_cmes_completed) || 0
-                      - complete_percent = log.try(:percentage_complete)
-                      %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
-                      .progress.l-margin-top-big
-                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                    .box-label continue
-
-        .tab-pane.fade#completed{role: 'tabpanel'}
-          .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
-            .container-fluid
-              .row
-                .col-md-12.text-center
-                  %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                    -if current_user
-                      ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
-                    -else
-                      ='You are making good progress!'
-                  %p{style: 'font-size: 24px'}
-                    Your Completed Courses
-              .row.l-margin-bottom-huge
-                -@completed_courses.each do |course|
-                  -log = @completed_logs.where(subject_course_id: course.id).first
-                  .col-md-4.l-margin-top
-                    =link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
-                      .panel-icon.icon-big
-                        %i.glyphicon.glyphicon-pencil
-                      .panel-body
-                        %h4.text-bold.one-line-text
-                          =course.try(:name)
-                        - total_lesson = course.try(:cme_count)
-                        - complete_lesson = log.try(:count_of_cmes_completed) || 0
-                        - complete_percent = log.try(:percentage_complete)
-                        %p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
-                        .progress.l-margin-top-big
-                          .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-                      .box-label continue
-      -else
-        .l-wrap.active.tab-pane.fade.in#active{role: 'tabpanel'}
-          .container-fluid
-            .row
-              .col-md-12.text-center
-                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                  -if current_user
-                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
-                  -else
-                    ='You are making good progress!'
-                %p{style: 'font-size: 24px'}
-                  Your Active Courses
-            .row.l-margin-bottom-huge
-              -@incomplete_courses.each do |course|
-                .col-md-4.l-margin-top
-                  = link_to course_special_link(course), class: 'library-box library-box-item panel text-center', style: 'background-image: 0;' do
-                    .panel-icon.icon-big
-                      %i.glyphicon.glyphicon-pencil
-                    .panel-body
-                      %h4.text-bold.one-line-text
-                        =course.try(:name)
+          .col-md-12
+            %h2.h2.h-separator.h-separator-left
+              -if current_user
+                ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+              -else
+                ='You are making good progress!'
+        .row.l-margin-bottom-huge
+          .col-md-12
+            %h6.l-margin-top-big.l-margin-bottom
+              Latest Activity
+            .card.card-course
+              .card-outer
+                .card-inner
+                  .col-sm-8
+                    %h3.h3.card-title.l-margin-bottom
+                      =@first_corp_log.subject_course.try(:name)
+                    %p.card-desc
+                      =@first_corp_log.subject_course.try(:description).truncate(185).try(:html_safe)
+                    .card-info
+                      -total_lesson = @first_corp_log.subject_course.cme_count
+                      -complete_lesson = @first_corp_log.try(:count_of_cmes_completed) || 0
+                      -complete_percent = @first_corp_log.try(:percentage_complete)
+                      %br/
                       %p
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.parent.try(:name)
-                    .box-label continue
+                        ="#{complete_lesson} out of #{total_lesson} lessons completed"
 
-        .tab-pane.fade#completed{role: 'tabpanel'}
-          .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
-            .container-fluid
-              .row
-                .col-md-12.text-center
-                  %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                    -if current_user
-                      ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
-                    -else
-                      ='You are making good progress!'
-                  %p{'style'=>'font-size: 24px'}
-                    Your Completed Courses
-              .row.l-margin-bottom-huge
-                -@completed_courses.each do |course|
-                  .col-md-4.l-margin-top
-                    =link_to course_special_link(course), class: 'library-box library-box-item panel text-center' do
-                      .panel-icon.icon-big
-                        %i.glyphicon.glyphicon-pencil
-                      .panel-body
-                        %h4.text-bold.one-line-text
-                          =course.try(:name)
+                      .progress
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+
+                  .col-sm-4.text-center.l-margin-top-big
+                    =link_to 'Resume Course', course_special_link(@first_corp_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
+
+
+
+        -if !@compulsory_courses.empty?
+          .row.l-margin-bottom-huge
+            .col-md-12
+              %h6.l-margin-top-big
+                Compulsory Courses
+            -@compulsory_courses.each do |course|
+              .col-md-6
+                = link_to course_special_link(course), class: 'card card-course' do
+                  .card-outer
+                    .card-inner
+                      %h3.h3.card-title.l-margin-bottom
+                        =course.try(:name)
+                      %p.card-desc
+                        =course.try(:description).truncate(185).try(:html_safe)
+                      .card-info
+                        -if course.started_by_user_or_guid(current_user, current_session_guid)
+                          -log = course.subject_course_user_logs.for_user_or_session(current_user, current_session_guid).first
+                          -total_lesson = course.cme_count
+                          -complete_lesson = log.try(:count_of_cmes_completed) || 0
+                          -complete_percent = log.try(:percentage_complete)
+                          %br/
+                          %p
+                            ="#{complete_lesson} out of #{total_lesson} lessons completed"
+                          .progress
+                            .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                  .card-label
+                    .row
+                      .col-md-12.col-xs-12
+                        .col-md-6.col-xs-6
+                          %h6
+                            View Course
+                        .col-md-6.col-xs-6.text-right
+        -if !@other_active_logs.empty?
+          .row.l-margin-bottom-huge
+            .col-md-12
+              %h6.l-margin-top-big
+                Other Courses
+            -@other_active_logs.each do |log|
+              .col-md-6
+                = link_to course_special_link(log.subject_course), class: 'card card-course' do
+                  .card-outer
+                    .card-inner
+                      %h3.h3.card-title.l-margin-bottom
+                        =log.subject_course.try(:name)
+                      %p.card-desc
+                        =log.subject_course.try(:description).truncate(185).try(:html_safe)
+                      .card-info
+                        -total_lesson = log.subject_course.cme_count
+                        -complete_lesson = log.try(:count_of_cmes_completed) || 0
+                        -complete_percent = log.try(:percentage_complete)
+                        %br/
                         %p
-                          -if course.short_description
-                            =course.try(:short_description).to_s.truncate(30)
-                          -else
-                            =course.parent.try(:name)
-                      .box-label continue
+                          ="#{complete_lesson} out of #{total_lesson} lessons completed"
+                        .progress
+                          .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                  .card-label
+                    .row
+                      .col-md-12.col-xs-12
+                        .col-md-6.col-xs-6
+                          %h6
+                            View Course
+                        .col-md-6.col-xs-6.text-right
 
+-else
+  .l-section-small.is-bg-asphalt
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-12
+            %h2.h2.h-separator.h-separator-left
+              Welcome to your Dashboard
+            %p.h3
+              Please select a courses below to get started!
 
-  =render partial: 'shared/activate_tab'
+        .row.l-margin-bottom-huge
+          -@backup_courses.each do |course|
+            .col-md-4
+              = link_to course_special_link(course), class: 'card card-course' do
+                .card-outer
+                  .card-inner
+                    %h3.h3.card-title.l-margin-bottom
+                      =course.try(:name)
+                    %p.card-desc
+                      =course.try(:description).truncate(185).try(:html_safe)
+                .card-label
+                  .row
+                    .col-md-12.col-xs-12
+                      .col-md-6.col-xs-6
+                        %h6
+                          View Course
+                      .col-md-6.col-xs-6.text-right
