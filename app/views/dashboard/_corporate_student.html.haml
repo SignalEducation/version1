@@ -20,7 +20,7 @@
                     %h3.h3.card-title.l-margin-bottom
                       =@first_corp_log.subject_course.try(:name)
                     %p.card-desc
-                      =@first_corp_log.subject_course.try(:description).truncate(185).try(:html_safe)
+                      =@first_corp_log.subject_course.try(:short_description).truncate(185)
                     .card-info
                       -total_lesson = @first_corp_log.subject_course.cme_count
                       -complete_lesson = @first_corp_log.try(:count_of_cmes_completed) || 0
@@ -50,7 +50,7 @@
                       %h3.h3.card-title.l-margin-bottom
                         =course.try(:name)
                       %p.card-desc
-                        =course.try(:description).truncate(185).try(:html_safe)
+                        =course.try(:short_description).truncate(185)
                       .card-info
                         -if course.started_by_user_or_guid(current_user, current_session_guid)
                           -log = course.subject_course_user_logs.for_user_or_session(current_user, current_session_guid).first
@@ -82,7 +82,7 @@
                       %h3.h3.card-title.l-margin-bottom
                         =log.subject_course.try(:name)
                       %p.card-desc
-                        =log.subject_course.try(:description).truncate(185).try(:html_safe)
+                        =log.subject_course.try(:short_description).truncate(185)
                       .card-info
                         -total_lesson = log.subject_course.cme_count
                         -complete_lesson = log.try(:count_of_cmes_completed) || 0
@@ -120,7 +120,7 @@
                     %h3.h3.card-title.l-margin-bottom
                       =course.try(:name)
                     %p.card-desc
-                      =course.try(:description).truncate(185).try(:html_safe)
+                      =course.try(:short_description).truncate(185)
                 .card-label
                   .row
                     .col-md-12.col-xs-12

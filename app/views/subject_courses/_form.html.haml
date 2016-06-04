@@ -47,6 +47,12 @@
                     =f.check_box :certificate
                     =t('views.subject_courses.form.certificate')
 
+            %br/
+            %br/
+            %br/
+            =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :short_description, placeholder: t('views.subject_courses.form.short_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
 
 
@@ -64,10 +70,6 @@
                 .col-md-6
                   %p.h4.l-margin-bottom
                     Optional Fields
-                  =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.text_field :short_description, placeholder: t('views.subject_courses.form.short_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                  %br/
                   =f.label :mailchimp_guid, t('views.subject_courses.form.mailchimp_guid'), class: 'control-label'
                   .input-group.input-group-lg.full-width
                     =f.text_field :mailchimp_guid, placeholder: t('views.subject_courses.form.mailchimp_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
