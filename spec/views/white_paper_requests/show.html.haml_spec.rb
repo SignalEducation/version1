@@ -12,7 +12,6 @@ RSpec.describe 'white_paper_requests/show', type: :view do
     expect(rendered).to match(/#{@white_paper_request.name}/)
     expect(rendered).to match(/#{@white_paper_request.email}/)
     expect(rendered).to match(/#{@white_paper_request.number}/)
-    expect(rendered).to match(/#{@white_paper_request.web_url}/)
     expect(rendered).to match(/#{@white_paper_request.company_name}/)
     expect(rendered).to match(/#{@white_paper_request.white_paper.name}/)
   end

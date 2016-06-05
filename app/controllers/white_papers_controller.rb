@@ -116,7 +116,7 @@ class WhitePapersController < ApplicationController
   end
 
   def request_allowed_params
-    params.require(:white_paper_request).permit(:name, :email, :number, :web_url, :company_name, :white_paper_id)
+    params.require(:white_paper_request).permit(:name, :email, :number, :company_name, :white_paper_id)
   end
 
 end

@@ -39,8 +39,6 @@ describe WhitePaperRequest do
 
   it { should validate_presence_of(:number) }
 
-  it { should validate_presence_of(:web_url) }
-
   it { should validate_presence_of(:company_name) }
 
   it { should validate_presence_of(:white_paper_id) }
@@ -56,7 +54,5 @@ describe WhitePaperRequest do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

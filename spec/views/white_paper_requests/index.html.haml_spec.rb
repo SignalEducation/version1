@@ -13,7 +13,6 @@ RSpec.describe 'white_paper_requests/index', type: :view do
     expect(rendered).to match(/#{@white_paper_requests.first.name.to_s}/)
     expect(rendered).to match(/#{@white_paper_requests.first.email.to_s}/)
     expect(rendered).to match(/#{@white_paper_requests.first.number.to_s}/)
-    expect(rendered).to match(/#{@white_paper_requests.first.web_url.to_s}/)
     expect(rendered).to match(/#{@white_paper_requests.first.company_name.to_s}/)
     expect(rendered).to match(/#{@white_paper_requests.first.white_paper.name.to_s}/)
   end

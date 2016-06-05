@@ -15,11 +15,10 @@
 FactoryGirl.define do
   factory :white_paper_request do
     name "MyString"
-email "MyString"
-number "MyString"
-web_url "MyString"
-company_name "MyString"
-white_paper_id 1
+    email "MyString"
+    number "MyString"
+    company_name "MyString"
+    white_paper_id 1
   end
 
 end

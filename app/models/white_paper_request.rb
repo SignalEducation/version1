@@ -15,7 +15,7 @@
 class WhitePaperRequest < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :email, :number, :web_url, :company_name, :white_paper_id
+  attr_accessible :name, :email, :number, :company_name, :white_paper_id
 
   # Constants
 
@@ -26,7 +26,6 @@ class WhitePaperRequest < ActiveRecord::Base
   validates :name, presence: true
   validates :email, presence: true, length: {within: 7..40}
   validates :number, presence: true
-  validates :web_url, presence: true
   validates :company_name, presence: true
   validates :white_paper_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}

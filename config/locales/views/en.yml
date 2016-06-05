@@ -1542,8 +1542,6 @@ en:
         email_placeholder: Enter Email Here
         number: Phone Number
         number_placeholder: Enter a Contact Number
-        web_url: Website URL
-        web_url_placeholder: Website URL
         company_name: Company Name
         company_name_placeholder: Company Name
 
