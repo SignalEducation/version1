@@ -16,12 +16,13 @@
 #  cover_image_content_type :string
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
+#  name_url                 :string
 #
 
 class WhitePaper < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :title, :description, :file, :cover_image, :sorting_order
+  attr_accessible :title, :description, :file, :cover_image, :sorting_order, :name_url
 
   # Constants
 

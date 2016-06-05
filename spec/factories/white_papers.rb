@@ -16,6 +16,7 @@
 #  cover_image_content_type :string
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
+#  name_url                 :string
 #
 
 FactoryGirl.define do

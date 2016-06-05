@@ -6,7 +6,6 @@
 #  name           :string
 #  email          :string
 #  number         :string
-#  web_url        :string
 #  company_name   :string
 #  white_paper_id :integer
 #  created_at     :datetime         not null

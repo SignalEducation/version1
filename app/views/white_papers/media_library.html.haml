@@ -16,7 +16,7 @@
           -@white_papers.each do |paper|
             .col-sm-6.col-md-3.col-lg-3
               .box
-                =link_to paper, class: 'box box-profile' do
+                =link_to public_white_paper_url(paper.name_url), class: 'box box-profile' do
                   .box-inner
                     =image_tag paper.cover_image.url, class: 'media-pic '
                     %p

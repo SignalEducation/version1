@@ -16,6 +16,7 @@
 #  cover_image_content_type :string
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
+#  name_url                 :string
 #
 
 class WhitePapersController < ApplicationController
@@ -24,7 +25,7 @@ class WhitePapersController < ApplicationController
   before_action except: [:show, :create_request, :media_library] do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: [:show]
 
   def index
     @white_papers = WhitePaper.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -35,6 +36,7 @@ class WhitePapersController < ApplicationController
   end
 
   def show
+    @white_paper = WhitePaper.where(name_url: params[:white_paper_name_url]).first
     @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
   end
 
@@ -110,7 +112,7 @@ class WhitePapersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:white_paper).permit(:title, :description, :file, :sorting_order, :cover_image)
+    params.require(:white_paper).permit(:title, :description, :file, :sorting_order, :cover_image, :name_url)
   end
 
   def request_allowed_params

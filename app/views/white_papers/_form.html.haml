@@ -8,6 +8,10 @@
           =f.label :title, t('views.white_papers.form.title'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :title, placeholder: t('views.white_papers.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+          %br/
+          =f.label :name_url, t('views.white_papers.form.name_url'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :name_url, placeholder: t('views.white_papers.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
         .col-md-6
           -if f.object.file_file_name
             =f.label :file, t('views.white_papers.form.file_title'), class: 'control-label'
@@ -15,11 +19,11 @@
               =link_to f.object.file_file_name, f.object.file.url, target: '_blank'
               =number_to_human_size(f.object.file_file_size)
               %br/
-              =f.label :file, t('views.white_papers.form.file_replacement'), class: 'control-label', required: true
+              =f.label :file, t('views.white_papers.form.file_replacement'), class: 'control-label'
           -else
             =f.label :file, t('views.white_papers.form.file'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.file_field :file, class: 'form-control', style: 'border-radius: 6px;', required: true
+            =f.file_field :file, class: 'form-control', style: 'border-radius: 6px;'
           %br/
           -if f.object.cover_image_file_name
             =f.label :file, t('views.white_papers.form.cover_image_title'), class: 'control-label'
@@ -31,7 +35,7 @@
           -else
             =f.label :cover_image, t('views.white_papers.form.cover_image'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.file_field :cover_image, class: 'form-control', style: 'border-radius: 6px;', required: true
+            =f.file_field :cover_image, class: 'form-control', style: 'border-radius: 6px;'
         .col-md-12
 
           %br/

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526102434) do
+ActiveRecord::Schema.define(version: 20160605094616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1040,7 +1040,6 @@ ActiveRecord::Schema.define(version: 20160526102434) do
     t.string   "name"
     t.string   "email"
     t.string   "number"
-    t.string   "web_url"
     t.string   "company_name"
     t.integer  "white_paper_id"
     t.datetime "created_at",     null: false
@@ -1067,6 +1066,7 @@ ActiveRecord::Schema.define(version: 20160526102434) do
     t.string   "cover_image_content_type"
     t.integer  "cover_image_file_size"
     t.datetime "cover_image_updated_at"
+    t.string   "name_url"
   end
 
   add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree
