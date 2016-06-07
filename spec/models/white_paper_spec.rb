@@ -24,7 +24,7 @@ require 'rails_helper'
 describe WhitePaper do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at file_updated_at cover_image_file_size cover_image_file_name cover_image_updated_at file_file_size file_content_type cover_image_content_type file_file_name)
   WhitePaper.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -33,13 +33,14 @@ describe WhitePaper do
     end
   end
 
-  # Constants
-  #it { expect(WhitePaper.const_defined?(:CONSTANT_NAME)).to eq(true) }
-
   # relationships
+  it { should have_many(:white_paper_requests) }
 
   # validation
   it { should validate_presence_of(:title) }
+
+  it { should validate_presence_of(:name_url) }
+  xit { should validate_uniqueness_of(:name_url) }
 
   it { should validate_presence_of(:description) }
 
@@ -54,6 +55,5 @@ describe WhitePaper do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

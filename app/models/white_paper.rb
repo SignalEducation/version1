@@ -33,6 +33,7 @@ class WhitePaper < ActiveRecord::Base
 
   # validation
   validates :title, presence: true, uniqueness: true
+  validates :name_url, presence: true, uniqueness: true
   validates :description, presence: true
   validates_attachment_content_type :file,
                                     content_type: %w(application/pdf)
