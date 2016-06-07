@@ -7,17 +7,9 @@ class OperationalMailer < ActionMailer::Base
 
   def send_corporate_enquiry_email(corporate_request) # backgrounded
     @request = corporate_request
-    emails = ['philip@learnsignal.com', 'conn@learnsignal.com', 'johnny@learnsignal.com', 'chris@learnsignal.com' , 'acb9b393@email.getbase.com']
+    emails = ['philip@learnsignal.com', 'conn@learnsignal.com', 'johnny@learnsignal.com', 'acb9b393@email.getbase.com']
     mail(to: emails,
          subject: I18n.t('mailers.operational.corporate_enquiry.subject_line')
-    )
-  end
-
-  def send_white_paper_downloaded_email(white_paper_request) # backgrounded
-    @request = white_paper_request
-    emails = ['philip@learnsignal.com', 'conn@learnsignal.com', 'johnny@learnsignal.com', 'chris@learnsignal.com' , 'acb9b393@email.getbase.com']
-    mail(to: emails,
-         subject: I18n.t('mailers.operational.white_paper_request.subject_line')
     )
   end
 

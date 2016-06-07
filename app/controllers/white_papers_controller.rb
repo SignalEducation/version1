@@ -90,12 +90,10 @@ class WhitePapersController < ApplicationController
       white_paper = WhitePaper.where(id: @white_paper_request.white_paper.id).first
       file  = white_paper.file
 
-      MandrillWorker.perform_async(nil,
-                                   @white_paper_request.id,
-                                   'send_white_paper_email',
-                                   white_paper.title,
-                                   file.url)
-      Mailers::OperationalMailers::send_white_paper_downloaded_email.perform_async(@white_paper_request.id)
+      intercom = Intercom::Client.new(app_id: ENV['intercom_app_id'], api_key: ENV['intercom_api_key'])
+      intercom_user = intercom.contacts.create(email: @white_paper_request.email)
+      IntercomWhitePaperEmailWorker.perform_at(1.minute.from_now, intercom_user.user_id, @white_paper_request.email, @white_paper_request.name, white_paper.title, file.url) unless Rails.env.test?
+
       redirect_to request.referrer
     else
       render action: :new

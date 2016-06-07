@@ -1,7 +1,7 @@
 class IntercomCourseStartedEventWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: 'high'
+  sidekiq_options queue: 'low'
 
   def perform(user_id, course_name)
     user = User.where(id: user_id).first
