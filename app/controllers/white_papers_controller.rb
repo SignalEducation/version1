@@ -21,7 +21,7 @@
 
 class WhitePapersController < ApplicationController
 
-  before_action :logged_in_required, except: [:index, :show, :create_request, :media_library]
+  before_action :logged_in_required, except: [:show, :create_request, :media_library]
   before_action except: [:show, :create_request, :media_library] do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
@@ -87,14 +87,12 @@ class WhitePapersController < ApplicationController
     @white_paper_request = WhitePaperRequest.new(request_allowed_params)
     if @white_paper_request.save
       flash[:success] = I18n.t('controllers.white_paper_requests.create.flash.success')
-      white_paper = WhitePaper.where(id: @white_paper_request.white_paper.id).first
+      white_paper = WhitePaper.where(id: @white_paper_request.white_paper_id).first
       file  = white_paper.file
-
       intercom = Intercom::Client.new(app_id: ENV['intercom_app_id'], api_key: ENV['intercom_api_key'])
       intercom_user = intercom.contacts.create(email: @white_paper_request.email)
       IntercomWhitePaperEmailWorker.perform_at(1.minute.from_now, intercom_user.user_id, @white_paper_request.email, @white_paper_request.name, white_paper.title, file.url) unless Rails.env.test?
-
-      redirect_to request.referrer
+      redirect_to white_paper_url(white_paper)
     else
       render action: :new
     end

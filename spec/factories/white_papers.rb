@@ -22,6 +22,7 @@
 FactoryGirl.define do
   factory :white_paper do
     sequence(:title) { |n| "Title#{n}" }
+    sequence(:name_url) { |n| "title_#{n}" }
     description "MyText"
   end
 

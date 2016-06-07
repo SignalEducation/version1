@@ -29,20 +29,32 @@ describe WhitePapersController, type: :controller do
   let!(:white_paper_1) { FactoryGirl.create(:white_paper) }
   let!(:white_paper_2) { FactoryGirl.create(:white_paper) }
   let!(:valid_params) { FactoryGirl.attributes_for(:white_paper) }
+  let!(:request_params) { FactoryGirl.attributes_for(:white_paper_request, white_paper_id: white_paper_1.id) }
 
   context 'Not logged in: ' do
 
     describe "GET 'index'" do
       it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to sign_in' do
-        get :show, id: 1
-        expect_bounce_as_not_signed_in
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
+        expect_show_success_with_model('white_paper', white_paper_1.id)
       end
     end
 
@@ -64,6 +76,13 @@ describe WhitePapersController, type: :controller do
       it 'should redirect to sign_in' do
         post :create, user: valid_params
         expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
@@ -92,87 +111,70 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
-        expect_new_success_with_model('white_paper')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
-        expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, white_paper: valid_params
-        expect_create_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, user: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
-        expect_delete_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -184,89 +186,71 @@ describe WhitePapersController, type: :controller do
       activate_authlogic
       UserSession.create!(tutor_user)
     end
-
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
-        expect_new_success_with_model('white_paper')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
-        expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, white_paper: valid_params
-        expect_create_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, user: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
-        expect_delete_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -280,87 +264,70 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
-        expect_new_success_with_model('white_paper')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
-        expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, white_paper: valid_params
-        expect_create_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, user: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
-        expect_delete_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -374,87 +341,70 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
-        expect_new_success_with_model('white_paper')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
-        expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, white_paper: valid_params
-        expect_create_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, user: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
-        expect_delete_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -468,87 +418,70 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
-        expect_new_success_with_model('white_paper')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
-        expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, white_paper: valid_params
-        expect_create_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, user: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
-        expect_delete_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -562,87 +495,70 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
-        expect_new_success_with_model('white_paper')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
-        expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, white_paper: valid_params
-        expect_create_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, user: valid_params
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
-        expect_delete_success_with_model('white_paper', white_papers_url)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -656,86 +572,68 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_index_success_with_model('white_papers', white_paper_2.id)
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
         expect_new_success_with_model('white_paper')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
         expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should redirect to sign_in' do
         post :create, white_paper: valid_params
         expect_create_success_with_model('white_paper', white_papers_url)
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
+      it 'should redirect to sign_in' do
+        put :update, id: 1, white_paper: valid_params
         expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
         expect_delete_success_with_model('white_paper', white_papers_url)
       end
     end
@@ -750,86 +648,68 @@ describe WhitePapersController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :index
-        expect_index_success_with_model('white_papers', 2)
+        expect_index_success_with_model('white_papers', white_paper_2.id)
+      end
+    end
+
+    describe "GET 'media_library'" do
+      it 'should render public index' do
+        get :media_library
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:media_library)
+        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see white_paper_1' do
-        get :show, id: white_paper_1.id
+      it 'should render  show' do
+        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
         expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional - some other object
-      it 'should see white_paper_2' do
-        get :show, id: white_paper_2.id
-        expect_show_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond OK' do
+      it 'should redirect to sign_in' do
         get :new
         expect_new_success_with_model('white_paper')
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with white_paper_1' do
-        get :edit, id: white_paper_1.id
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
         expect_edit_success_with_model('white_paper', white_paper_1.id)
-      end
-
-      # optional
-      it 'should respond OK with white_paper_2' do
-        get :edit, id: white_paper_2.id
-        expect_edit_success_with_model('white_paper', white_paper_2.id)
       end
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      it 'should redirect to sign_in' do
         post :create, white_paper: valid_params
         expect_create_success_with_model('white_paper', white_papers_url)
       end
+    end
 
-      it 'should report error for invalid params' do
-        post :create, white_paper: {valid_params.keys.first => ''}
-        expect_create_error_with_model('white_paper')
+    describe "POST 'create_request'" do
+      it 'should report OK for valid params' do
+        post :create_request, white_paper_request: request_params
+        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for white_paper_1' do
-        put :update, id: white_paper_1.id, white_paper: valid_params
+      it 'should redirect to sign_in' do
+        put :update, id: 1, white_paper: valid_params
         expect_update_success_with_model('white_paper', white_papers_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for white_paper_2' do
-        put :update, id: white_paper_2.id, white_paper: valid_params
-        expect_update_success_with_model('white_paper', white_papers_url)
-        expect(assigns(:white_paper).id).to eq(white_paper_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: white_paper_1.id, white_paper: {valid_params.keys.first => ''}
-        expect_update_error_with_model('white_paper')
-        expect(assigns(:white_paper).id).to eq(white_paper_1.id)
       end
     end
 
-
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_1.id
-        expect_delete_error_with_model('white_paper', white_papers_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_2.id
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
         expect_delete_success_with_model('white_paper', white_papers_url)
       end
     end
