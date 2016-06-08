@@ -15,7 +15,7 @@
           %h1.h1.h-separator.h-separator-left
             =@group.name
           %h6.l-margin-top
-            =@group.description.to_s.truncate(200)
+            =@group.description.to_s.html_safe
 .l-section-small.is-bg-asphalt
   .l-wrap-small
     .container-fluid
@@ -44,12 +44,7 @@
                               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
                         -else
                           %p.card-desc
-                            -if course.short_description.blank?
-                              =course.try(:description).truncate(185).try(:html_safe)
-                            -elsif course.short_description
-                              =course.try(:short_description).truncate(185).try(:html_safe)
-                            -else
-                              =course.try(:description).truncate(185).try(:html_safe)
+                            =course.try(:short_description).truncate(185)
 
                       .card-info
                         .col-md-6.col-xs-6
@@ -82,12 +77,7 @@
                         %h3.h3.card-title.l-margin-bottom
                           =course.try(:name)
                         %p.card-desc
-                          -if course.short_description.blank?
-                            =course.try(:description).truncate(185).try(:html_safe)
-                          -elsif course.short_description
-                            =course.try(:short_description).truncate(185).try(:html_safe)
-                          -else
-                            =course.try(:description).truncate(185).try(:html_safe)
+                          =course.try(:short_description).truncate(185)
                       .card-info
                         .col-md-6.col-xs-6
                           -if course.try(:live_date)

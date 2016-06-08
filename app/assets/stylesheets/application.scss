@@ -464,7 +464,7 @@ hr {
     background: $cyan-1;
     color: $white;
     &:hover {
-      background: shade($cyan-1, 10%);
+      background: darken($cyan-1, 6%);
     }
     &:active {
       background: ($cyan-1);
@@ -2585,6 +2585,43 @@ a.box-item {
   &:before {
     position: absolute;
     background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.completed-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $purple-1;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-green.png") no-repeat 0 0;
     background-size: contain;
     top: 50%;
     margin-top: -11px;
