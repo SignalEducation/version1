@@ -86,10 +86,7 @@
                       %h4.text-bold.one-line-text
                         =course.try(:name)
                       %p
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.parent.try(:name)
+                        =course.try(:short_description).to_s.truncate(30)
 
                       - #total_lesson = course.active_children.count
                       - #complete_lesson = course.number_complete_by_user_or_guid(current_user.id, current_session_guid)
@@ -122,10 +119,7 @@
                         %h4.text-bold.one-line-text
                           =course.try(:name)
                         %p
-                          -if course.short_description
-                            =course.try(:short_description).to_s.truncate(30)
-                          -else
-                            =course.parent.try(:name)
+                          =course.try(:short_description).to_s.truncate(30)
 
                         - #total_lesson = course.course_modules.count
                         - #complete_lesson = course.course_modules.where(student_exam_tracks.percentage_complete = 100).count

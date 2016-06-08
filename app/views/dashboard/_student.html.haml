@@ -20,7 +20,7 @@
                     %h3.h3.card-title.l-margin-bottom
                       =@first_active_log.subject_course.try(:name)
                     %p.card-desc
-                      =@first_active_log.subject_course.try(:description).truncate(185).try(:html_safe)
+                      =@first_active_log.subject_course.try(:short_description).truncate(185)
                     .card-info
                       -total_lesson = @first_active_log.subject_course.cme_count
                       -complete_lesson = @first_active_log.try(:count_of_cmes_completed) || 0
@@ -49,7 +49,7 @@
                     %h3.h3.card-title.l-margin-bottom
                       =log.subject_course.try(:name)
                     %p.card-desc
-                      =log.subject_course.try(:description).truncate(185).try(:html_safe)
+                      =log.subject_course.try(:short_description).truncate(185)
                     .card-info
                       -total_lesson = log.subject_course.cme_count
                       -complete_lesson = log.try(:count_of_cmes_completed) || 0
@@ -96,10 +96,7 @@
                       %h3.h4.box-title
                         =course.try(:name)
                       %p.box-desc
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.description.to_s.truncate(30)
+                        =course.try(:short_description).to_s.truncate(30)
                     .box-label
                       =t('views.general.start')
             -else
@@ -110,10 +107,7 @@
                       %h3.h4.box-title
                         =course.try(:name)
                       %p.box-desc
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.description.to_s.truncate(30)
+                        =course.try(:short_description).to_s.truncate(30)
                     .box-label
                       =t('views.general.start')
 -if current_user && current_user.free_member? && flash[:just_signed_in]
