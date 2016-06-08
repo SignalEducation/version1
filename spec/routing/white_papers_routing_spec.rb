@@ -33,7 +33,7 @@ RSpec.describe WhitePapersController, type: :routing do
     end
 
     it 'routes to #show' do
-      expect(get: '/white_papers/1').to route_to('white_papers#show', id: '1')
+      expect(get: '/white_papers/abc').to route_to('white_papers#show', white_paper_name_url: 'abc')
     end
 
     it 'routes to #edit' do
