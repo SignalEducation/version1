@@ -156,8 +156,8 @@ Rails.application.routes.draw do
     end
 
     resources :white_papers, except: [:show], concerns: :supports_reordering
-    get 'white_papers/:white_paper_name_url', to: 'white_papers#show', as: :public_white_paper
     get 'media_library', to: 'white_papers#media_library', as: :media_library
+    get 'white_papers/:white_paper_name_url', to: 'white_papers#show', as: :public_white_paper
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
