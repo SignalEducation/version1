@@ -1,0 +1,22 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@white_paper.title
+      .row.l-margin-top.l-margin-bottom
+        .col-md-4.l-margin-top
+          %p
+            =@white_paper.description.html_safe
+        .col-md-4.l-margin-top
+          .box-inner
+            =image_tag @white_paper.cover_image.url, class: 'img-responsive'
+
+        .col-md-4.l-margin-top
+          %h3.text-center.h-separator.h-separator-center
+            Download Your Free Copy
+          =render partial: 'request_form'

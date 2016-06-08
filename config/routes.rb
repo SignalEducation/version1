@@ -155,6 +155,12 @@ Rails.application.routes.draw do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
 
+    resources :white_papers, except: [:show], concerns: :supports_reordering
+    get 'white_papers/:white_paper_name_url', to: 'white_papers#show', as: :public_white_paper
+    get 'media_library', to: 'white_papers#media_library', as: :media_library
+    resources :white_paper_requests
+    post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
+
     constraints(Subdomain) do
       get '/' => 'routes#root'
     end
