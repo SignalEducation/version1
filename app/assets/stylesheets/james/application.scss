@@ -3294,7 +3294,6 @@ ol.example li.placeholder:before {
   /** Define arrowhead **/
 }
 
-
 .tutor-header {
   img.profile-pic {
     text-decoration: none;
@@ -3320,6 +3319,13 @@ ol.example li.placeholder:before {
     }
   }
 }
+.media-pic {
+  display: block;
+  max-width: 200px;
+  max-height: 150px;
+  margin: 0 auto $gutter auto;
+}
+
 //////////////////////
 a.library-box {
   text-decoration: none;
