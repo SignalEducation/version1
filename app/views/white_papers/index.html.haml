@@ -24,7 +24,7 @@
                     %tr{id: white_paper.id}
                       %td=white_paper.title
                       %td
-                        =link_to t('views.general.view'), public_white_paper_url(white_paper.try(:name_url)), class: 'btn btn-purple btn-small'
+                        =#link_to t('views.general.view'), public_white_paper_url(white_paper.try(:name_url)), class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_white_paper_url(white_paper), class: 'btn btn-cyan btn-small'
                         -if white_paper.destroyable?
                           =link_to t('views.general.delete'), white_paper, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
