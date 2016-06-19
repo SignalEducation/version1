@@ -1,9 +1,8 @@
 .top-content.corporate_layout
-  .l-wrap-corporate
-    .container
-      .row
-        =render partial: 'layouts/corporate_logo'
+  .corporate-heading
+    =render partial: 'layouts/corporate_logo'
 
+  .l-wrap-corporate
     .row.l-margin-top.l-margin-bottom
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'

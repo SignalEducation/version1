@@ -1,54 +1,53 @@
 .header.header-dark.navbar-fixed-top{role: 'banner'}
-  .l-wrap-small
-    .container-fluid
-      %nav.navbar.navbar-default
-        .navbar-header
-          %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          -if current_user
-            -if current_user && current_user.corporate_student?
-              =link_to root_url do
-                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
-            -else
-              =link_to corporate_customer_url(current_user.corporate_customer) do
-                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
-          -else
+  .nav-wrap
+    %nav.navbar.navbar-default
+      .navbar-header
+        %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+        -if current_user
+          -if current_user && current_user.corporate_student?
             =link_to root_url do
               =image_tag(current_corporate.logo.url, class: 'corporate-logo')
+          -else
+            =link_to corporate_customer_url(current_user.corporate_customer) do
+              =image_tag(current_corporate.logo.url, class: 'corporate-logo')
+        -else
+          =link_to root_url do
+            =image_tag(current_corporate.logo.url, class: 'corporate-logo')
 
-        #myNavbar.collapse.navbar-collapse
-          %ul.nav.navbar-nav.navbar-right
-            -if current_user
-              -if current_user.corporate_customer?
-                %li
-                  =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
-                %li
-                  =link_to 'Dashboard', dashboard_url
-              -else
-                %li
-                  =link_to 'Dashboard', dashboard_url
+      #myNavbar.collapse.navbar-collapse
+        %ul.nav.navbar-nav.navbar-right
+          -if current_user
+            -if current_user.corporate_customer?
               %li
-                =link_to 'Courses', library_url
-
-              %li.dropdown.dropdown-normal
-                %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                  =t('views.general.user_name') + current_user.first_name.to_s
-                  %span.caret
-                %ul#menu.dropdown-menu
-                  -if current_user.corporate_customer?
-                    %li=link_to t('views.subject_courses.index.your_courses'), subject_courses_url
-                  %li
-                    %li=link_to t('views.users.show.h1'), account_url
-                  -#if current_user.blogger? || current_user.individual_student?
-                    %li
-                      %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
-                  %li
-                    =link_to t('views.general.sign_out'), sign_out_url
-
+                =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
+              %li
+                =link_to 'Dashboard', dashboard_url
             -else
               %li
-                =link_to 'Create Account', corporate_login_url, {class: 'sign-in-link'}
-              %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+                =link_to 'Dashboard', dashboard_url
+            %li
+              =link_to 'Courses', library_url
+
+            %li.dropdown.dropdown-normal
+              %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                =t('views.general.user_name') + current_user.first_name.to_s
+                %span.caret
+              %ul#menu.dropdown-menu
+                -if current_user.corporate_customer?
+                  %li=link_to t('views.subject_courses.index.your_courses'), subject_courses_url
+                %li
+                  %li=link_to t('views.users.show.h1'), account_url
+                -#if current_user.blogger? || current_user.individual_student?
+                  %li
+                    %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
+                %li
+                  =link_to t('views.general.sign_out'), sign_out_url
+
+          -else
+            %li
+              =link_to 'Create Account', corporate_login_url, {class: 'sign-in-link'}
+            %li
+              =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
