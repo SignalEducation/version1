@@ -40,6 +40,6 @@ module LearnsignalV3
     end
 
     # to enable Rack-Attack gem
-    #config.middleware.use Rack::Attack
+    config.middleware.use Rack::Attack
   end
 end

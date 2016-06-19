@@ -39,7 +39,11 @@ class CorporateStudentsController < ApplicationController
   end
 
   def create
-    password = SecureRandom.hex(5)
+    if Rails.env.development?
+      password = '123123123'
+    else
+      password = SecureRandom.hex(5)
+    end
     @corporate_student = User.new(allowed_params.merge({password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, password_change_required: true}))
 
     @corporate_student.corporate_customer_id = current_user.corporate_customer_id if current_user.corporate_customer?

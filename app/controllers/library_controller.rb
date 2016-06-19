@@ -78,6 +78,8 @@ class LibraryController < ApplicationController
         array2 = array.uniq
         @question_bank_passed = array2.include? true
         @cert = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).first
+        cme_ids = @course.course_module_elements.all_active.map(&:id)
+        @course_resources = CourseModuleElementResource.where(course_module_element_id: cme_ids)
 
         if @course.try(:live)
           seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))

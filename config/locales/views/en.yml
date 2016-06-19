@@ -53,6 +53,7 @@ en:
       or: or
       review: Review
       save: Save
+      download: Download Now
       create_account: Create Account
       upload: Upload
       save_changes: Save Changes
@@ -882,7 +883,7 @@ en:
         sorting_order_placeholder: 100
         description: Description
         description_placeholder: Course Description
-        short_description: Short Description
+        short_description: "Plain Description (Description without any text formatting)"
         short_description_placeholder: Description
         mailchimp_guid: MailChimp List ID
         mailchimp_guid_placeholder: MailChimp ID
@@ -1496,6 +1497,65 @@ en:
         message: Message
         message_placeholder: Message (optional)
 
+    white_papers:
+      form:
+        title: Title
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        title_placeholder: Title of White Paper
+        description: Description(This accepts html tags)
+        description_placeholder: Enter description here
+        file_file_name: File name
+        file_content_type: File content type
+        file_file_size: File size
+        file_updated_at: File updated at
+        file: Upload the White Paper File
+        file_replacement: Upload replacement if you want
+        file_title: White Paper File
+        cover_image_file_name: Cover Image name
+        cover_image_content_type: Cover Image content type
+        cover_image_file_size: Cover Image size
+        cover_image_updated_at: Cover Image updated at
+        cover_image: Upload the Cover Image
+        cover_image_replacement: Upload replacement if you want
+        cover_image_title: Cover Image
+
+
+      index:
+        h1: White Papers
+        library: Media Library
+
+      show:
+        h1: White Paper
+
+      edit:
+        h1: Edit White Paper
+
+      new:
+        h1: New White Paper
+
+    white_paper_requests:
+      form:
+        name: Name
+        name_placeholder: Enter Full Name
+        email: Email
+        email_placeholder: Enter Email Here
+        number: Phone Number
+        number_placeholder: Enter a Contact Number
+        company_name: Company Name
+        company_name_placeholder: Company Name
+
+      index:
+        h1: White Paper Requests
+
+      show:
+        h1: White Paper Request
+
+      edit:
+        h1: Edit White Paper Request
+
+      new:
+        h1: New White Paper Request
 
     video_resource:
       form:
@@ -1514,4 +1574,3 @@ en:
 
       new:
         h1: Video Resources
-

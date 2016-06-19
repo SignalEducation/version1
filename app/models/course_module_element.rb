@@ -80,11 +80,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_save :sanitize_name_url
-  before_save :log_question_count_and_duration
-  before_save :populate_estimated_time
-  after_create :update_parent
-  after_update :update_parent
+  before_save :sanitize_name_url, :populate_estimated_time, :log_question_count_and_duration
+  after_save :update_parent
   after_destroy :update_parent
 
   # scopes
@@ -132,14 +129,17 @@ class CourseModuleElement < ActiveRecord::Base
     elsif self.course_module.course_module_jumbo_quiz && self.course_module.course_module_jumbo_quiz.active
       self.course_module.course_module_jumbo_quiz
     elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
-
-      if self.course_module.next_module.nil?
-
-        CourseModule.where(id: self.course_module_id).first
-
-      else
+      if self.course_module.next_module && self.course_module.next_module.try(:course_module_elements).try(:all_active).any?
+        #End of CourseModule continue on to first CME of next CourseModule
         next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
-        CourseModuleElement.find(next_id) if next_id
+        if next_id
+          CourseModuleElement.find(next_id)
+        else
+          CourseModule.where(id: self.course_module_id).first
+        end
+      else
+        #End of Course redirect to Course library#live
+        self.course_module
       end
     else
       CourseModule.where(id: self.course_module_id).first

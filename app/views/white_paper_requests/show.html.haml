@@ -1,0 +1,25 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@white_paper_request.white_paper.title
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      %table.table.table-bordered
+        %tr
+          %td.col-sm-4=t('views.white_paper_requests.form.name')
+          %td.col-sm-8=@white_paper_request.name
+        %tr
+          %td.col-sm-4=t('views.white_paper_requests.form.email')
+          %td.col-sm-8=@white_paper_request.email
+        %tr
+          %td.col-sm-4=t('views.white_paper_requests.form.number')
+          %td.col-sm-8=@white_paper_request.number
+        %tr
+          %td.col-sm-4=t('views.white_paper_requests.form.company_name')
+          %td.col-sm-8=@white_paper_request.company_name
+      %p
+        =link_to t('views.general.back'), white_paper_requests_url

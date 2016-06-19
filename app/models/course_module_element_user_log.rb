@@ -58,13 +58,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
   # callbacks
-  before_create :set_latest_attempt
-  before_create :set_booleans
+  before_create :set_latest_attempt, :set_booleans
   before_save :set_count_of_questions_taken_and_correct
   after_create :calculate_score
   after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
-  after_create :create_or_update_student_exam_track
-  after_update :update_student_exam_track
+  after_update :create_or_update_student_exam_track
   after_commit :add_to_user_trial_limit
 
   # scopes
@@ -147,25 +145,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def create_or_update_student_exam_track
     unless self.is_question_bank
-      if self.student_exam_track
-        set = self.student_exam_track
-        set.subject_course_id ||= self.course_module.subject_course.id
-        set.latest_course_module_element_id = self.course_module_element_id
-        set.jumbo_quiz_taken = true if self.is_jumbo_quiz
-        set.recalculate_completeness
-      else
-        set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-        set.subject_course_id ||= self.course_module.try(:subject_course_id)
-        set.latest_course_module_element_id = self.course_module_element_id
-        set.jumbo_quiz_taken = true if self.is_jumbo_quiz
-        set.calculate_completeness
-      end
-    end
-  end
-
-  def update_student_exam_track
-    unless self.is_question_bank
-      self.student_exam_track.try(:recalculate_completeness)
+      set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
+      set.subject_course_id ||= self.course_module.subject_course.id
+      set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+      set.jumbo_quiz_taken = true if self.is_jumbo_quiz
+      set.recalculate_completeness
     end
   end
 

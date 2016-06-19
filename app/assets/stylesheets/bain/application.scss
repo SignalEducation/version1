@@ -20,9 +20,9 @@ $asphalt-3: #C0CFD5;
 $asphalt-4: #edeff0;
 $text-color: #131313;
 $grey: #717171;
-$purple-1: lighten($grey, 2%);
+$purple-1: lighten($grey, 10%);
 $purple-2: #4E3F5B;
-$purple-3: lighten($grey, 10%);
+$purple-3: lighten($grey, 5%);
 $purple-4: darken($grey, 10%);
 $purple-5: lighten($purple-1, 5%);
 $red-1: #CC0000;
@@ -2643,6 +2643,43 @@ a.box-item {
 
   }
 }
+.completed-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $purple-1;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-green.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
 .box-topic-item {
   padding-right: $gutter*2;
 }
@@ -3283,6 +3320,13 @@ ol.example li.placeholder:before {
     }
   }
 }
+.media-pic {
+  display: block;
+  max-width: 200px;
+  max-height: 150px;
+  margin: 0 auto $gutter auto;
+}
+
 //////////////////////
 a.library-box {
   text-decoration: none;

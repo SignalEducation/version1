@@ -52,10 +52,9 @@ describe 'User navigating through the dashboard:', type: :feature do
       end
       expect(page).to have_content subject_course_1.name
       expect(page).to have_css('.progress')
-      expect(page).to have_css('.panel')
-      within('.panel-body') do
-        expect(page).to have_content('1 out of 3 lessons completed')
-      end
+      expect(page).to have_css('.card')
+      expect(page).to have_content('1 out of 3 lessons completed')
+      click_link('Resume Course')
       find('.panel-body').click
       expect(page).to have_content subject_course_1.name
       within('.navbar.navbar-default') do
@@ -63,7 +62,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       end
       expect(page).to have_content subject_course_1.name
       expect(page).to have_css('.progress')
-      expect(page).to have_css('.panel')
+      expect(page).to have_css('.card')
       sign_out
     end
 

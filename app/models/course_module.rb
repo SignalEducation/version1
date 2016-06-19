@@ -62,9 +62,7 @@ class CourseModule < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
   before_create :set_sorting_order
-  before_save :set_cme_count
-  before_save :calculate_estimated_time
-  before_save :sanitize_name_url
+  before_save :set_cme_count, :calculate_estimated_time, :sanitize_name_url
   after_update :update_parent_and_sets
 
   # scopes
@@ -204,9 +202,6 @@ class CourseModule < ActiveRecord::Base
 
   def update_parent_and_sets
     self.parent.try(:recalculate_fields)
-    #StudentExamTrack.where(course_module_id: self.id).each do |set|
-    #  set.recalculate_completeness
-    #end
     StudentExamTracksWorker.perform_async(self.id)
   end
 

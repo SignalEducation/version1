@@ -42,6 +42,7 @@ describe 'Course content Vs Paywall', type: :feature do
     end
 
     scenario 'should see all content', js: true do
+      sleep(2)
       expect(page).to have_css('#quiz-contents')
       click_link course_module_element_1_3.name
       expect(page).to have_content(course_module_element_1_3.name)
@@ -86,6 +87,7 @@ describe 'Course content Vs Paywall', type: :feature do
       expect(page).to have_content(course_module_element_1_3.name)
       expect(page).to have_css('#quiz-contents')
       click_link(course_module_element_1_3.name)
+      sleep(2)
       expect(page).to have_content I18n.t('views.courses.content_denied.free_trial_limit_reached.h2')
       expect(page).to have_content I18n.t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription')
     end

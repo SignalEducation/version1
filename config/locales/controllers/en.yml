@@ -476,6 +476,29 @@ en:
           success: Corporate manager user has been deactivated
           error: Corporate manager user was not deactivated
 
+    white_papers:
+      create:
+        flash:
+          success: White Paper has been created successfully
+      update:
+        flash:
+          success: White Paper details have been updated successfully
+      destroy:
+        flash:
+          success: White Paper has been deleted
+          error: White Paper was not deleted
+
+    white_paper_requests:
+      create:
+        flash:
+          success: Your submission was successful. Please check your email for your download.
+      update:
+        flash:
+          success: Request details have been updated successfully
+      destroy:
+        flash:
+          success: Request has been deleted
+          error: Request was not deleted
 
     corporate_profiles:
       create:
