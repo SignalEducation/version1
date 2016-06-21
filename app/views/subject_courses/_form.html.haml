@@ -106,7 +106,7 @@
 :javascript
 
   $('#editor').summernote({
-    height: 150
+    height: 150,
   });
 
 
@@ -114,30 +114,3 @@
     $('#datetimepicker1').datetimepicker();
     $('#datetimepicker2').datetimepicker();
   });
-
--#:javascript
-  $('#editor').summernote({
-    height: 150,
-    onImageUpload: function(files, editor, welEditable) {
-      // upload image to server and create imgNode...
-      for (var i = files.length - 1; i >= 0; i--) {
-        sendFile(files[i], this);
-      }
-    }
-  });
-
-  function sendFile(file, el) {
-    var form_data = new FormData();
-    form_data.append('file', file);
-    $.ajax({
-      data: form_data,
-      type: "POST",
-      url: "/media/ajaxupload",
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: function(url) {
-        $(el).summernote('editor.insertImage', url);
-      }
-    });
-  }
