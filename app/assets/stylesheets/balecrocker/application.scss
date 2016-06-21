@@ -101,7 +101,7 @@ body {
   }
 }
 a {
-  color: $colour-6;
+  color: $colour-8;
   //text-decoration: underline;
   @include transition(background-color .2s ease);
   @include transition(color .2s ease);
@@ -109,7 +109,7 @@ a {
 }
 a:hover,
 a:focus {
-  color: shade($colour-13, 10%);
+  color: $colour-18;
   text-decoration: underline;
 
 }
@@ -442,13 +442,25 @@ hr {
   padding-right: 30px;
 }
 .corporate-form-margin {
-  margin-left: 0px;
+  margin-left: 0;
 }
 .corporate-heading {
-  padding: 45px 0 10px 0;
-  margin: $gutter*2 $gutter*6;
-}
+  padding: 0;
+  margin: 33px $gutter*6 33px $gutter*5;
 
+  @include breakpoint(xs-min) {
+    margin: 33px $gutter*6 33px $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 33px $gutter*6 33px $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: 33px $gutter*6 33px $gutter*5;
+  }
+}
+.corporate-title {
+  margin: $gutter 0;
+}
 
 // 3. modules
 
@@ -470,6 +482,7 @@ hr {
   display: block;
   height: 40px;
   padding: 0 $gutter;
+  border-radius: 0;
   line-height: 40px;
   letter-spacing: .2rem;
   text-transform: uppercase;
@@ -3642,9 +3655,9 @@ a.image-link {
 // New corporate Form Box
 .login-form {
   padding: $gutter*2 $gutter/2;
-  border: 2px solid $colour-2;
+  border: 1px solid $colour-8;
   //background: $colour-2;
-  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+  -moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px;
   text-align: left;
   color: #fff !important;
 }
