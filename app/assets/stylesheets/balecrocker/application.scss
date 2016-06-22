@@ -32,7 +32,7 @@ $colour-15: #54a4ee;
 $colour-16: #34495e;
 $colour-17: #D0F6BD;
 $colour-18: #47A447;  // Button Colour #2
-$colour-19: #FED4CD;
+$colour-19: #F9F9F9;  // Box Inner COlour
 $colour-20: #F5F5F5;  // Text Input Area Colour
 
 // Site Default Colours
@@ -269,7 +269,7 @@ hr {
     content: "";
     width: 60px;
     height: 2px;
-    background: $colour-13;
+    background: $colour-5;
     bottom: 0;
     @include border-radius(10px);
   }
@@ -338,8 +338,24 @@ hr {
     max-width: 1200px;
   }
 }
+.l-wrap-course {
+  padding: 50px 0 50px 0;
+  margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
 .l-wrap-corporate {
-  padding: 25px 0 150px 0;
+  padding: 50px 0 50px 0;
   margin: $gutter*2.5 $gutter*10;
   background: $colour-3;
 
@@ -383,28 +399,50 @@ hr {
 }
 .l-section {
   padding: 5rem 0;
-  margin: $gutter $gutter*5;
+  padding-bottom: 250px;
   @include breakpoint(xs-min) {
-    margin: $gutter $gutter/2;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter $gutter;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
   }
   @include breakpoint(md-min) {
-    margin: $gutter $gutter*5;
-    padding: 10rem 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-section-small {
-  padding: 3rem 0;
+  padding: 5rem 0;
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
   @include breakpoint(md-min) {
-    padding: 4rem 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-section-extra-small {
-  padding: 1rem 0;
+  padding: 5rem 0;
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
   @include breakpoint(md-min) {
-    padding: 2rem 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-padding-zero {
@@ -529,10 +567,10 @@ hr {
     }
   }
   &.btn-cyan {
-    background: $colour-13;
+    background: $colour-5;
     color: $white;
     &:hover {
-      background: shade($colour-13, 10%);
+      background: shade($colour-5, 10%);
     }
     &:active {
       background: ($colour-13);
@@ -578,12 +616,12 @@ hr {
       }
     }
     &.btn-cyan {
-      color: $colour-13;
-      border: 2px solid $colour-13;
+      color: $colour-5;
+      border: 2px solid $colour-5;
       &:hover {
         background: transparent;
-        color: shade($colour-13, 20%);
-        border: 1px solid shade($colour-13, 20%);
+        color: shade($colour-5, 20%);
+        border: 1px solid shade($colour-5, 20%);
       }
     }
   }
@@ -1327,8 +1365,8 @@ a.btn-block {
 }
 
 .border-same-backcolor {
-  border-color: $colour-3;
-  border-width: 2px;
+  border-color: $colour-2;
+  border-width: 1px;
   box-shadow: 0 0 0px #aec2d1;
 }
 
@@ -1337,11 +1375,11 @@ a.btn-block {
 }
 
 .round-border {
-  @include border-radius(5px);
+  @include border-radius(0px);
 }
 
 .panel > .list-group .list-group-item {
-  border-color: $colour-3;
+  border-color: $colour-7;
   border-top-width: 2px;
 }
 
@@ -1374,7 +1412,7 @@ a.list-group-item {
 }
 
 .text-active {
-  color: $colour-8;
+  color: $colour-6;
   margin-bottom: 0px;
   margin-top:10px;
 }
@@ -1409,8 +1447,8 @@ a.list-group-item {
   float: right;
 }
 .list-group-item.current-cme {
-  background-color: $colour-4;
-  border-left: 4px solid $colour-7 !important;
+  background-color: darken($colour-19, 5%);
+  border-left: 4px solid darken($colour-19, 5%) !important;
 
 }
 .answer-correct {
@@ -1423,9 +1461,9 @@ a.list-group-item {
   }
 }
 .answer-failed {
-  background-color: $colour-19;
+  background-color: $pink-1;
   &:hover {
-    background-color: darken($colour-19, 5);
+    background-color: darken($pink-1, 5);
   }
   p {
     color: $colour-12;
@@ -1457,12 +1495,12 @@ a.list-group-item {
 
 .answerpanel{
   .list-group-item:hover {
-    background-color: $colour-3;
-    border-left: 0px solid $colour-7 !important;
+    background-color: darken($colour-19, 5%);
+    border-left: 0px solid darken($colour-19, 5%) !important;
   }
   a.list-group-item:focus{
-    background-color: $colour-3;
-    border-left: 1px solid $colour-7 !important;
+    background-color: darken($colour-19, 5%);
+    border-left: 1px solid darken($colour-19, 5%) !important;
     //-webkit-animation-name: example; /* Chrome, Safari, Opera */
     //-webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
     //animation-name: example;
@@ -1667,7 +1705,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: $colour-9;
+  background: #F8F8F8;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -1700,7 +1738,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: fixed;
   top: 0;
   width: 250px;
-  margin: 0;
+  margin-top: $gutter*8;
   padding: 0;
   list-style: none;
 }
@@ -1718,11 +1756,10 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: rgba(255,255,255,0.8);
+
   padding-top: 5px;
   padding-bottom: 5px;
   &:hover, &:focus {
-    background: $colour-13;
 
   }
 }
@@ -1895,18 +1932,31 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .nav-wrap {
-
   @include breakpoint(xs-min) {
-    margin: $gutter $gutter/2;
+    margin: $gutter/4 $gutter/2;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/1.25 $gutter;
+    margin: $gutter/4 $gutter;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/1.25 $gutter*5;
+    margin: $gutter/4 $gutter;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/1.25 $gutter*5;
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
   }
 
 }
@@ -2394,7 +2444,7 @@ a.box {
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
-  @include border-radius(5px);
+  @include border-radius(0px);
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
@@ -2445,13 +2495,13 @@ a.box {
   margin: $gutter/2 0 0 0;
 }
 .box-label {
-  background: $colour-12;
+  background: $colour-6;
   color: $white;
   padding: $gutter/1.45;
   letter-spacing: .2rem;
   text-transform: uppercase;
   @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
+  @include border-bottom-radius(0px);
   @include font-size(1.1);
   @include breakpoint(sm-min) {
     @include font-size(1.2);
@@ -2561,18 +2611,18 @@ a.card {
       //color: $colour-12;
     }
     .card-label {
-      background: darken($colour-12, 5%);
+      background: $colour-18;
 
     }
   }
 }
 .card{
   display: block;
-  background: $white;
+  background: $colour-19;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: left;
-  @include border-radius(5px);
+  @include border-radius(0px);
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
@@ -2600,8 +2650,8 @@ a.card {
   padding: $gutter $gutter;
   height: 200px;
   position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  //border-top-left-radius: 5px;
+  //border-top-right-radius: 5px;
 }
 .card-pic {
   max-height: 60%;
@@ -2621,18 +2671,18 @@ a.card {
 }
 .days-left {
   @include border-radius(16px);
-  border: 2px dashed $colour-13;
+  border: 2px dashed $colour-5
   //width: 80%;
 }
 
 .card-label {
-  background: $colour-12;
+  background: $colour-6;
   color: $white;
   padding: $gutter/1.45;
   //letter-spacing: .2rem;
   //text-transform: uppercase;
   @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
+  @include border-bottom-radius(0px);
   @include font-size(1.1);
   @include breakpoint(sm-min) {
     @include font-size(1.2);
@@ -2660,13 +2710,13 @@ a.box-item {
 }
 .box-item {
   display: block;
-  background: $white;
+  background: $colour-19;
   position: relative;
   margin: 0 0 $gutter/2 0;
   color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
-  @include border-radius(5px);
+  @include border-radius(0px);
   @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
@@ -2899,7 +2949,7 @@ a.box-item {
   background: $colour-3;
 }
 .is-bg-asphalt-dark {
-  background: $asphalt-4;
+  background: $colour-1;
 }
 .is-bg-white-to-asphalt {
   @include gradient-vertical($white, $colour-3, 0%, 50%);
@@ -3096,7 +3146,7 @@ a.box-item {
 //Question
 .question-box-item {
   display: block;
-  background: darken($white, 5);
+  background: lighten($colour-20, 5%);
   position: relative;
   margin: 0 0 $gutter/2 0;
   color: $colour-7;
