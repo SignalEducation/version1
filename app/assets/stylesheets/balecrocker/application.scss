@@ -557,20 +557,20 @@ hr {
     font-size: large;
   }
   &.btn-purple {
-    background: $colour-7;
+    background: $colour-6;
     color: $white;
     &:hover {
-      background: shade($colour-7, 10%);
+      background: $colour-18;
     }
     &:active {
-      background: ($colour-7);
+      background: ($colour-18);
     }
   }
   &.btn-cyan {
     background: $colour-5;
     color: $white;
     &:hover {
-      background: shade($colour-5, 10%);
+      background: darken($colour-5, 10%);
     }
     &:active {
       background: ($colour-13);
