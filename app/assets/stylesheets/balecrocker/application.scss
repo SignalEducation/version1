@@ -355,7 +355,7 @@ hr {
 
 }
 .l-wrap-corporate {
-  padding: 50px 0 50px 0;
+  padding: 50px 0 250px 0;
   margin: $gutter*2.5 $gutter*10;
   background: $colour-3;
 
@@ -415,7 +415,7 @@ hr {
 }
 .l-section-small {
   padding: 5rem 0;
-  padding-bottom: 250px;
+  padding-bottom: 50px;
   @include breakpoint(xs-min) {
     margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
   }
@@ -443,6 +443,21 @@ hr {
   }
   @include breakpoint(lg-min) {
     margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
+  }
+}
+.l-section-corporate {
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
 .l-padding-zero {
@@ -1705,7 +1720,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: #F8F8F8;
+  background: $colour-5;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -1748,6 +1763,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   line-height: 40px;
   border-bottom: 1px solid rgba(120,120,120,.5);
   font-size: 17px;
+  &:hover, &:focus {
+    background: darken($colour-5, 5%);
+  }
   &.first-li {
     border-top: 1px solid rgba(120,120,120,.5);
   }
@@ -1756,11 +1774,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-
+  color: $colour-3;
   padding-top: 5px;
   padding-bottom: 5px;
   &:hover, &:focus {
-
+    color: $colour-18;
   }
 }
 
