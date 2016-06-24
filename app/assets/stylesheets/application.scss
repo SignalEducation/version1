@@ -68,7 +68,7 @@ body {
     margin: 0 auto;
     //max-width: 1800px;
   }
-  .corporate_layout {
+  .default_layout {
     background: #34495e;
   }
 }
@@ -310,6 +310,38 @@ hr {
     max-width: 1200px;
   }
 }
+.l-wrap-default {
+  padding: 100px 0 170px 0;
+}
+.l-wrap-course {
+  padding: 20px 0 20px 0;
+  margin: $gutter*2.5 $gutter*10;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+}
+.l-wrap-dashboard {
+  padding: 20px 0 20px 0;
+  margin: $gutter*2.5 $gutter*10;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
 .l-wrap-corporate {
   padding: 100px 0 170px 0;
 }
@@ -395,6 +427,43 @@ hr {
 .corporate-form-margin {
   margin-left: 0px;
 }
+.default-heading {
+  padding: 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter*6 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-title {
+  @include breakpoint(xs-min) {
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  @include breakpoint(sm-min) {
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+  }
+  @include breakpoint(lg-min) {
+    margin: auto;
+    width: 65%;
+    padding: 10px;
+  }
+}
+.sign-in-logo {
+  //width: 100%;
+  display: block;
+  margin: auto;
+  width: 80%;
+}
+
+
 // 3. modules
 
 
@@ -3588,3 +3657,4 @@ a.image-link {
 .lg-image {
   width: 60%;
 }
+

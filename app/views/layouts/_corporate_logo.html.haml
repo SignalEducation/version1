@@ -1,4 +1,4 @@
-.corporate-title
+.default-title
   -if current_corporate
     -if current_corporate.logo.url
       =link_to root_url do
@@ -8,4 +8,4 @@
         =image_tag 'ls-logo-red.svg', class: 'md-image'
   -else
     =link_to root_url do
-      =image_tag 'ls-logo-red.svg', class: 'lg-image'
+      =image_tag 'ls-logo-red.svg', class: 'sign-in-logo'

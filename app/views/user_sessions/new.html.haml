@@ -35,11 +35,11 @@
             =link_to 'create account', new_student_url, class: 'btn btn-green btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 -else
-  .corporate_layout.top-content
-    .l-wrap-corporate
+  .default_layout.top-content
+    .default-heading
+      =render partial: 'layouts/corporate_logo'
+    .l-wrap
       .container
-        .row
-          =render partial: 'layouts/corporate_logo'
         .row
           -if flash[:success] || flash[:error] || flash[:warning]
             =render partial: 'layouts/flash_messages'
