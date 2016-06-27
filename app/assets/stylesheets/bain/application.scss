@@ -7,8 +7,9 @@
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
-$gutter: 20px;
 $sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
+$gutter: 20px;
+
 
 $white: #fff;
 $gray-1: #6E6D75;
@@ -305,6 +306,9 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
+.corp-text {
+  color: $text-color;
+}
 
 // 2. Layout
 .l-wrap {
@@ -316,11 +320,31 @@ hr {
     max-width: 1200px;
   }
 }
-.l-wrap-corporate {
-  padding: 150px 0 170px 0;
-  @include breakpoint(lg-min) {
-    padding: 150px 0 450px 0;
+.l-wrap-corp-home {
+  padding: 20px 0 170px 0;
+  @include breakpoint(xs-min) {
+    padding: 20px 0 200px 0;
+    margin: 0 $gutter;
   }
+  @include breakpoint(lg-min) {
+    padding: 50px 0 450px 0;
+  }
+}
+.l-wrap-dashboard {
+  padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  //background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {
@@ -402,8 +426,44 @@ hr {
   padding-right: 30px;
 }
 .corporate-form-margin {
-  margin-left: 0px;
+  margin-left: 0;
 }
+.corporate-heading {
+  padding-top: $gutter*5;
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-title {
+  @include breakpoint(xs-min) {
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  @include breakpoint(sm-min) {
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+  }
+  @include breakpoint(lg-min) {
+    margin: auto;
+    width: 65%;
+    padding: 10px;
+  }
+}
+.default-logo {
+  //width: 100%;
+  display: block;
+  margin: auto;
+  width: 40%;
+}
+
 // 3. modules
 
 
@@ -1834,6 +1894,35 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     width: 100%;
     z-index: 100;
   }
+}
+.nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
+  }
+
 }
 
 .navbar {

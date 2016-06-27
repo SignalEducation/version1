@@ -71,6 +71,9 @@ body {
   .default_layout {
     background: #34495e;
   }
+  .corporate_layout {
+    background: #34495e;
+  }
 }
 a {
   color: $red-1;
@@ -299,6 +302,9 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
+.corp-text {
+  color: $white;
+}
 
 // 2. Layout
 .l-wrap {
@@ -341,6 +347,17 @@ hr {
     margin: $gutter $gutter*5;
   }
 
+}
+.l-wrap-corp-home {
+  padding: 20px 0 170px 0;
+  @include breakpoint(xs-min) {
+    padding: 20px 0 200px 0;
+    margin: 0 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    padding: 50px 0 450px 0;
+  }
+  color: $white;
 }
 .l-wrap-corporate {
   padding: 100px 0 170px 0;
@@ -427,6 +444,18 @@ hr {
 .corporate-form-margin {
   margin-left: 0px;
 }
+.corporate-heading {
+  padding: 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter*6 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
+  }
+}
 .default-heading {
   padding: 0;
   @include breakpoint(xs-min) {
@@ -456,8 +485,7 @@ hr {
     padding: 10px;
   }
 }
-.sign-in-logo {
-  //width: 100%;
+.default-logo {
   display: block;
   margin: auto;
   width: 80%;
@@ -1888,6 +1916,34 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     position: fixed;
     width: 100%;
     z-index: 100;
+  }
+}
+.nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
   }
 }
 

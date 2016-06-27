@@ -7,6 +7,7 @@
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
+$sans-font: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
 $gutter: 20px;
 
 // Base Colours
@@ -32,7 +33,7 @@ $colour-15: #54a4ee;
 $colour-16: #34495e;
 $colour-17: #D0F6BD;
 $colour-18: #47A447;  // Button Colour #2
-$colour-19: #F9F9F9;  // Box Inner COlour
+$colour-19: #F9F9F9;  // Box Inner Colour
 $colour-20: #F5F5F5;  // Text Input Area Colour
 
 // Site Default Colours
@@ -73,7 +74,7 @@ $red-2: #e15258;
 $red-3: #c25975;
 $pink-2: #f092b0;
 
-$sans-font: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+
 
 // 1. Base
 html {
@@ -327,6 +328,9 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
+.corp-text {
+  color: $colour-2;
+}
 
 // 2. Layout
 .l-wrap {
@@ -361,6 +365,39 @@ hr {
 
   @include breakpoint(xs-min) {
     margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
+.l-wrap-dashboard {
+  padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
+.l-wrap-corp-home {
+  padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+    padding: 50px 10px 250px 10px;
   }
   @include breakpoint(sm-min) {
     margin: $gutter $gutter*2;
