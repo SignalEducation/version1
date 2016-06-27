@@ -3,12 +3,12 @@
     .corporate-heading
       =render partial: 'layouts/corporate_logo'
 
-    .l-wrap-corporate
+    .l-wrap-corp-home
       .row
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         .col-sm-6.col-sm-offset-3.l-margin-top
-          %h2.l-margin-bottom.text-center
+          %h2.l-margin-bottom.text-center.corp-text
             =t('views.user_sessions.new.h1')
           .login-form.l-margin-top#sign-in
             =form_for(@user_session) do |f|

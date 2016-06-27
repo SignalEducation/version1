@@ -1,13 +1,12 @@
-.top-content.corporate_layout
+.corporate_layout.top-content
   .corporate-heading
     =render partial: 'layouts/corporate_logo'
-
-  .l-wrap-corporate
+  .l-wrap-corp-home
     .row.l-margin-top.l-margin-bottom
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-sm-6.col-sm-offset-3.l-margin-top
-        %h3.l-margin-bottom-huge.text-center
+        %h3.l-margin-bottom-huge.text-center.corp-text
           ='Please enter your details below'
 
         .login-form

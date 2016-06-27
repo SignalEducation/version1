@@ -109,6 +109,7 @@ class UsersController < ApplicationController
   end
 
   def student_new
+    redirect_to root_url if current_corporate
     @user = User.new
     @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
     #@user.country_id = 105
