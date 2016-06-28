@@ -8,54 +8,26 @@
 @import "summernote";
 
 $gutter: 20px;
-$sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
-
 $white: #fff;
 $gray-1: #6E6D75;
 $gray-2: #ecf0f1;
-$asphalt-1: $white;
-$footer_border: $asphalt-1;
+$asphalt-1: #EFF3F6;
 $asphalt-2: #F8FAFF;
 $asphalt-3: #C0CFD5;
 $asphalt-4: #edeff0;
-$text-color: #131313;
-$grey: #717171;
-$purple-1: lighten($grey, 2%);
+$purple-1: #3E3F5B;
 $purple-2: #4E3F5B;
-$purple-3: lighten($grey, 10%);
-$purple-4: darken($grey, 10%);
+$purple-3: rgb(83, 84, 112);
+$purple-4: #9E9FAD;
 $purple-5: lighten($purple-1, 5%);
-$red-1: #CC0000;
+$red-1: #EE5457;
 $cyan-1: #3EB9CE;
 $yellow-1: #FAFEC0;
-$blue-1: #30617B;
+$blue-1: #54a4ee;
 $blue-2: #34495e;
 $green-1: #D0F6BD;
 $green-2: #00cc66;
 $pink-1: #FED4CD;
-
-$colour-1: #fff;
-$colour-2: #6E6D75;
-$colour-3: #ecf0f1;
-$colour-4: $white;
-$colour-5: #F8FAFF;
-$colour-6: #C0CFD5;
-$colour-7: #edeff0;
-$colour-8: #131313;
-$colour-9: #717171;
-$colour-10: lighten($grey, 2%);
-$colour-11: #4E3F5B;
-$colour-12: lighten($grey, 10%);
-$colour-13: darken($grey, 10%);
-$colour-14: lighten($purple-1, 5%);
-$colour-15: #CC0000;
-$colour-16: #3EB9CE;
-$colour-17: #FAFEC0;
-$colour-18: #30617B;
-$colour-19: #34495e;
-$colour-20: #D0F6BD;
-$colour-21: #00cc66;
-$colour-22: #FED4CD;
 
 // Course Image Colours
 $gray-3: #ecf0f1;
@@ -73,10 +45,11 @@ $red-2: #e15258;
 $red-3: #c25975;
 $pink-2: #f092b0;
 
+$sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
 
 // 1. Base
 html {
-  background: $white;
+  background: $blue-2;
   .margin-top {
     margin-top: 62px;
   }
@@ -90,15 +63,17 @@ html {
 body {
   font-family: $sans-font;
   background: $white;
-  color: $text-color;
+  color: $gray-1;
   @include breakpoint(md-min) {
     margin: 0 auto;
     //max-width: 1800px;
   }
-  .corporate_layout {
-    background: $purple-1;
+  .default_layout {
+    background: #34495e;
   }
-
+  .corporate_layout {
+    background: #34495e;
+  }
 }
 a {
   color: $red-1;
@@ -120,9 +95,9 @@ blockquote {
   border-left: 2px solid $red-1;
 }
 a.link-purple {
-  color: $text-color;
+  color: $purple-1;
   &:hover {
-    color: $blue-1;
+    color: $cyan-1;
   }
 }
 a.no-link-style {
@@ -147,7 +122,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
 }
 h1, .h1 {
   font-weight: normal;
-  color: $text-color;
+  color: $purple-1;
   text-transform: none;
   font-weight: normal;
   letter-spacing: 0;
@@ -168,7 +143,7 @@ h1, .h1 {
 }
 h2, .h2 {
   font-weight: normal;
-  color: $text-color;
+  color: $purple-1;
   line-height: 1.2;
   @include font-size(2.6);
   @include breakpoint(md-min) {
@@ -180,7 +155,7 @@ h2, .h2 {
 }
 h3, .h3 {
   font-weight: normal;
-  color: $text-color;
+  color: $purple-1;
   text-transform: none;
   letter-spacing: 0;
   margin-top: 0;
@@ -190,7 +165,7 @@ h3, .h3 {
   }
 }
 h4, .h4 {
-  color: $text-color;
+  color: $purple-1;
   font-weight: bold;
   @include font-size(1.6);
   @include breakpoint(md-min) {
@@ -198,7 +173,7 @@ h4, .h4 {
   }
 }
 h5, .h5 {
-  color: lighten($purple-1, 30%);
+  color: lighten($purple-1, 40%);
   text-transform: uppercase;
   letter-spacing: .2rem;
   line-height: 1.5;
@@ -241,7 +216,7 @@ h8, .h8 {
   }
 }
 p, .p, ol, .ol, ul, .ul, address, dl {
-  color: $text-color;
+  color: $gray-1;
   margin-bottom: $gutter;
   @include font-size(1.4);
   @include breakpoint(md-min) {
@@ -269,7 +244,7 @@ hr {
     content: "";
     width: 60px;
     height: 2px;
-    background: $blue-1;
+    background: $cyan-1;
     bottom: 0;
     @include border-radius(10px);
   }
@@ -327,6 +302,9 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
+.corp-text {
+  color: $white;
+}
 
 // 2. Layout
 .l-wrap {
@@ -337,6 +315,49 @@ hr {
   @include breakpoint(md-min) {
     max-width: 1200px;
   }
+}
+.l-wrap-default {
+  padding: 100px 0 170px 0;
+}
+.l-wrap-course {
+  padding: 20px 0 20px 0;
+  margin: $gutter*2.5 $gutter*10;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+}
+.l-wrap-dashboard {
+  padding: 20px 0 20px 0;
+  margin: $gutter*2.5 $gutter*10;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
+.l-wrap-corp-home {
+  padding: 20px 0 170px 0;
+  @include breakpoint(xs-min) {
+    padding: 20px 0 200px 0;
+    margin: 0 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    padding: 50px 0 450px 0;
+  }
+  color: $white;
 }
 .l-wrap-corporate {
   padding: 100px 0 170px 0;
@@ -386,6 +407,142 @@ hr {
     padding: 2rem 0;
   }
 }
+.l-section-corporate {
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-overview {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-library {
+  padding: 5rem 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter 0 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 0 $gutter*5;
+  }
+}
+.l-section-corp-groups {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-courses {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-subject-areas {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-account {
+  padding: $gutter*1 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-managers {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-students {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+
 .l-padding-zero {
   padding: 0;
 }
@@ -423,6 +580,54 @@ hr {
 .corporate-form-margin {
   margin-left: 0px;
 }
+.corporate-heading {
+  padding: 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter*6 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-heading {
+  padding: 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter*6 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-title {
+  @include breakpoint(xs-min) {
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  @include breakpoint(sm-min) {
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+  }
+  @include breakpoint(lg-min) {
+    margin: auto;
+    width: 65%;
+    padding: 10px;
+  }
+}
+.default-logo {
+  display: block;
+  margin: auto;
+  width: 80%;
+}
+
+
 // 3. modules
 
 
@@ -479,23 +684,23 @@ hr {
     font-size: large;
   }
   &.btn-purple {
-    background: $blue-1;
+    background: $purple-1;
     color: $white;
     &:hover {
-      background: shade($blue-1, 10%);
+      background: shade($purple-1, 10%);
     }
     &:active {
-      background: ($blue-1);
+      background: ($purple-1);
     }
   }
   &.btn-cyan {
-    background: $blue-1;
+    background: $cyan-1;
     color: $white;
     &:hover {
-      background: shade($blue-1, 10%);
+      background: darken($cyan-1, 6%);
     }
     &:active {
-      background: ($blue-1);
+      background: ($cyan-1);
     }
   }
   &.btn-secondary {
@@ -524,21 +729,21 @@ hr {
       border: 2px solid $green-2;
     }
     &.btn-purple {
-      color: $blue-1;
-      border: 2px solid $blue-1;
+      color: $purple-1;
+      border: 2px solid $purple-1;
       &:hover {
         background: transparent;
-        color: shade($blue-1, 20%);
-        border: 2px solid shade($blue-1, 20%);
+        color: shade($purple-1, 20%);
+        border: 2px solid shade($purple-1, 20%);
       }
     }
     &.btn-cyan {
-      color: $blue-1;
-      border: 2px solid $blue-1;
+      color: $cyan-1;
+      border: 2px solid $cyan-1;
       &:hover {
         background: transparent;
-        color: shade($blue-1, 20%);
-        border: 1px solid shade($blue-1, 20%);
+        color: shade($cyan-1, 20%);
+        border: 1px solid shade($cyan-1, 20%);
       }
     }
   }
@@ -643,24 +848,24 @@ a.btn-block {
     }
   }
   &.btn-purple {
-    background: $blue-1;
+    background: $purple-1;
     color: $white;
     &:hover {
-      background: shade($blue-1, 10%);
+      background: shade($purple-1, 10%);
     }
     &:active {
-      background: ($blue-1);
+      background: ($purple-1);
     }
   }
   &.btn-cyan {
-    background: $blue-1;
+    background: $cyan-1;
     color: $white;
     &:hover {
       cursor: not-allowed;
-      background: shade($blue-1, 10%);
+      background: shade($cyan-1, 10%);
     }
     &:active {
-      background: ($blue-1);
+      background: ($cyan-1);
     }
   }
   &.btn-secondary {
@@ -684,21 +889,21 @@ a.btn-block {
       }
     }
     &.btn-purple {
-      color: $blue-1;
-      border: 1px solid $blue-1;
+      color: $purple-1;
+      border: 1px solid $purple-1;
       &:hover {
         background: transparent;
-        color: shade($blue-1, 20%);
-        border: 1px solid shade($blue-1, 20%);
+        color: shade($purple-1, 20%);
+        border: 1px solid shade($purple-1, 20%);
       }
     }
     &.btn-cyan {
-      color: $blue-1;
-      border: 1px solid $blue-1;
+      color: $cyan-1;
+      border: 1px solid $cyan-1;
       &:hover {
         background: transparent;
-        color: shade($blue-1, 20%);
-        border: 1px solid shade($blue-1, 20%);
+        color: shade($cyan-1, 20%);
+        border: 1px solid shade($cyan-1, 20%);
       }
     }
   }
@@ -859,6 +1064,7 @@ a.btn-block {
     @include font-size(1.4);
   }
 }
+
 .foot-powered-by {
   color: $white;
   margin-top: $gutter;
@@ -1045,10 +1251,10 @@ a.btn-block {
 }
 
 .hero-sign-up {
-  background: $purple-1 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
+  background: $purple-2 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-1 asset-url('bg-sign-up.jpg') no-repeat;
+    background: $purple-2 asset-url('bg-sign-up.jpg') no-repeat;
     background-size: cover;
   }
 }
@@ -1281,7 +1487,7 @@ a.btn-block {
 }
 
 .border-same-backcolor {
-  border-color: $gray-2;
+  border-color: $asphalt-1;
   border-width: 2px;
   box-shadow: 0 0 0px #aec2d1;
 }
@@ -1295,7 +1501,7 @@ a.btn-block {
 }
 
 .panel > .list-group .list-group-item {
-  border-color: $gray-2;
+  border-color: $asphalt-1;
   border-top-width: 2px;
 }
 
@@ -1411,7 +1617,7 @@ a.list-group-item {
 
 .answerpanel{
   .list-group-item:hover {
-    background-color: $gray-3;
+    background-color: $asphalt-1;
     border-left: 0px solid $purple-1 !important;
   }
   a.list-group-item:focus{
@@ -1654,7 +1860,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: fixed;
   top: 0;
   width: 250px;
-  margin: 0;
+  margin-top: $gutter*8;
   padding: 0;
   list-style: none;
 }
@@ -1676,7 +1882,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   padding-top: 5px;
   padding-bottom: 5px;
   &:hover, &:focus {
-    background: $purple-4;
+    background: $cyan-1;
 
   }
 }
@@ -1703,6 +1909,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 }
 .brand-logo {
+  width: 50%;
   a:hover, a:focus {
     background: none;
   }
@@ -1753,7 +1960,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 .corporate-box-item {
   display: block;
-  background: darken($asphalt-1, 5%);
+  background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
   display: block;
@@ -1846,6 +2053,34 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     position: fixed;
     width: 100%;
     z-index: 100;
+  }
+}
+.nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
   }
 }
 
@@ -1990,7 +2225,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(md-min) {
     @include font-size(1.6);
     &:hover {
-      background: $purple-4;
+      background: $purple-2;
     }
   }
 
@@ -2161,7 +2396,7 @@ form {
 }
 label, .label {
   font-weight: bold;
-  color: $text-color;
+  color: $purple-1;
   cursor: pointer;
   margin-bottom: $gutter/2;
   padding: 0;
@@ -2185,6 +2420,7 @@ label, .label {
   }
   &:focus {
     border: 1px solid darken($asphalt-1, 30%);
+    border: 1px solid $purple-1;
     background: $yellow-1;
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
@@ -2329,7 +2565,7 @@ a.box {
 }
 .box {
   display: block;
-  background: darken($asphalt-1, 5%);
+  background: $white;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
@@ -2507,7 +2743,7 @@ a.card {
 }
 .card{
   display: block;
-  background: darken($asphalt-1, 5%);
+  background: $white;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: left;
@@ -2602,11 +2838,11 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $text-color;
+  color: $purple-1;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 40%));
+  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -2838,7 +3074,7 @@ a.box-item {
   background: $asphalt-1;
 }
 .is-bg-asphalt-dark {
-  background: $asphalt-1;
+  background: $asphalt-4;
 }
 .is-bg-white-to-asphalt {
   @include gradient-vertical($white, $asphalt-1, 0%, 50%);
@@ -2919,7 +3155,7 @@ a.box-item {
 // Dashboard Boxes
 .no-image-box-item {
   display: block;
-  background: darken($asphalt-1, 5%);
+  background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
   color: $purple-1;
@@ -3341,7 +3577,7 @@ a.library-box {
 }
 .library-box {
   display: block;
-  background: darken($asphalt-1, 5%);
+  background: $white;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
@@ -3410,7 +3646,7 @@ a.library-box-item {
 }
 .library-box-item {
   display: block;
-  background: darken($asphalt-1, 5%);
+  background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
   color: $purple-1;
@@ -3614,3 +3850,4 @@ a.image-link {
 .lg-image {
   width: 60%;
 }
+

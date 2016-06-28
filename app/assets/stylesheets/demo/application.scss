@@ -7,8 +7,9 @@
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
-$gutter: 20px;
 $sans-font: HelveticaNeue,Helvetica,Arial,sans-serif;
+$gutter: 20px;
+
 
 $white: #fff;
 $gray-1: #6E6D75;
@@ -20,9 +21,9 @@ $asphalt-3: #C0CFD5;
 $asphalt-4: #edeff0;
 $text-color: #131313;
 $grey: #717171;
-$purple-1: lighten($grey, 2%);
+$purple-1: lighten($grey, 10%);
 $purple-2: #4E3F5B;
-$purple-3: lighten($grey, 10%);
+$purple-3: lighten($grey, 5%);
 $purple-4: darken($grey, 10%);
 $purple-5: lighten($purple-1, 5%);
 $red-1: #CC0000;
@@ -34,28 +35,6 @@ $green-1: #D0F6BD;
 $green-2: #00cc66;
 $pink-1: #FED4CD;
 
-$colour-1: #fff;
-$colour-2: #6E6D75;
-$colour-3: #ecf0f1;
-$colour-4: $white;
-$colour-5: #F8FAFF;
-$colour-6: #C0CFD5;
-$colour-7: #edeff0;
-$colour-8: #131313;
-$colour-9: #717171;
-$colour-10: lighten($grey, 2%);
-$colour-11: #4E3F5B;
-$colour-12: lighten($grey, 10%);
-$colour-13: darken($grey, 10%);
-$colour-14: lighten($purple-1, 5%);
-$colour-15: #CC0000;
-$colour-16: #3EB9CE;
-$colour-17: #FAFEC0;
-$colour-18: #30617B;
-$colour-19: #34495e;
-$colour-20: #D0F6BD;
-$colour-21: #00cc66;
-$colour-22: #FED4CD;
 
 // Course Image Colours
 $gray-3: #ecf0f1;
@@ -327,6 +306,9 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
+.corp-text {
+  color: $text-color;
+}
 
 // 2. Layout
 .l-wrap {
@@ -338,11 +320,31 @@ hr {
     max-width: 1200px;
   }
 }
-.l-wrap-corporate {
-  padding: 150px 0 170px 0;
-  @include breakpoint(lg-min) {
-    padding: 150px 0 450px 0;
+.l-wrap-corp-home {
+  padding: 20px 0 170px 0;
+  @include breakpoint(xs-min) {
+    padding: 20px 0 200px 0;
+    margin: 0 $gutter;
   }
+  @include breakpoint(lg-min) {
+    padding: 50px 0 450px 0;
+  }
+}
+.l-wrap-dashboard {
+  padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  //background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {
@@ -389,6 +391,142 @@ hr {
     padding: 2rem 0;
   }
 }
+.l-section-corporate {
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-overview {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-library {
+  padding: 5rem 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
+  }
+}
+.l-section-corp-groups {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-courses {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-subject-areas {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-account {
+  padding: $gutter*1 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-managers {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-students {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+
 .l-padding-zero {
   padding: 0;
 }
@@ -424,8 +562,44 @@ hr {
   padding-right: 30px;
 }
 .corporate-form-margin {
-  margin-left: 0px;
+  margin-left: 0;
 }
+.corporate-heading {
+  padding-top: $gutter*5;
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-title {
+  @include breakpoint(xs-min) {
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  @include breakpoint(sm-min) {
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+  }
+  @include breakpoint(lg-min) {
+    margin: auto;
+    width: 65%;
+    padding: 10px;
+  }
+}
+.default-logo {
+  //width: 100%;
+  display: block;
+  margin: auto;
+  width: 40%;
+}
+
 // 3. modules
 
 
@@ -1663,7 +1837,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: fixed;
   top: 0;
   width: 250px;
-  margin: 0;
+  margin-top: $gutter*8;
   padding: 0;
   list-style: none;
 }
@@ -1712,6 +1886,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 }
 .brand-logo {
+  width: 50%;
   a:hover, a:focus {
     background: none;
   }
@@ -1856,6 +2031,35 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     width: 100%;
     z-index: 100;
   }
+}
+.nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
+  }
+
 }
 
 .navbar {
@@ -2186,6 +2390,7 @@ label, .label {
 .form-control {
   padding: $gutter/2 $gutter/1.5;
   height: 40px;
+  background: $gray-2;
   border: 1px solid darken($asphalt-1, 10%);
   @include font-size(1.4);
   @include box-shadow(2px, 0, 0, rgba(#000, .05));
