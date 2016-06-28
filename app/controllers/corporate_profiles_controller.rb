@@ -4,9 +4,11 @@ class CorporateProfilesController < ApplicationController
   before_action :set_variables
 
   def show
+    redirect_to root_url unless current_corporate
   end
 
   def login
+    redirect_to root_url unless current_corporate
   end
 
   def corporate_verification

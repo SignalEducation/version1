@@ -4,12 +4,12 @@
 
 -if @course_module
   .l-section-small.is-bg-asphalt
-    .l-wrap
+    .l-wrap-course
       .container-fluid{style: 'margin-bottom: 60px;'}
         .row
           .col-sm-4.col-md-4
             =link_to library_special_link(@course_module.parent) do
-              %p.text-left{style: 'color: #333149'}
+              %p.text-left
                 &#60;
                 ="Back To #{@course_module.try(:subject_course).try(:name)}"
         =render 'side_nav_xs'

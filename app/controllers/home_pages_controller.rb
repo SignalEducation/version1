@@ -25,6 +25,7 @@ class HomePagesController < ApplicationController
   end
 
   def show
+    redirect_to root_url if current_corporate
     if params[:first_element].to_s == '' && current_user
       redirect_to dashboard_url
     elsif params[:first_element].to_s == '500-page'

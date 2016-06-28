@@ -1,13 +1,14 @@
-.top-content.corporate_layout
-  .l-wrap-corporate
-    .container
-      .row
-        =render partial: 'layouts/corporate_logo'
-
+.corporate_layout.top-content
+  .corporate-heading
+    =render partial: 'layouts/corporate_logo'
+  .l-wrap-corp-home
     .row.l-margin-top.l-margin-bottom
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-sm-6.col-sm-offset-3.l-margin-top
+        %h3.l-margin-bottom-huge.text-center.corp-text
+          ='Please enter your details below'
+
         .login-form
           =form_for(@corporate_student, url: new_corporate_user_url(@corporate_student), method: 'post', html: {role: 'form'}) do |f|
             =render partial: '/layouts/error_messages', locals: {thing: @corporate_student, message: nil}

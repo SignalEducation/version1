@@ -1,10 +1,5 @@
 #sidebar-wrapper.text-center
   %ul.sidebar-nav
-    .sidebar-brand
-      -if current_user.corporate_customer.logo
-        = image_tag current_user.corporate_customer.logo.url
-      -else
-        %img.logo{alt: 'Corporate Logo', src: 'missing_corporate_logo.png'}
     %li.first-li
       =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
     %li

@@ -1,11 +1,11 @@
-.col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big
+.default-title
   -if current_corporate
     -if current_corporate.logo.url
       =link_to root_url do
-        =image_tag current_corporate.logo.url, class: 'md-image'
+        =image_tag current_corporate.logo.url, class: 'default-logo'
     -else
       =link_to root_url do
-        =image_tag 'ls-logo-red.svg', class: 'md-image'
+        =image_tag 'ls-logo-red.svg', class: 'default-logo'
   -else
     =link_to root_url do
-      =image_tag 'ls-logo-red.svg', class: 'lg-image'
+      =image_tag 'ls-logo-red.svg', class: 'default-logo'

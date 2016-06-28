@@ -68,6 +68,9 @@ body {
     margin: 0 auto;
     //max-width: 1800px;
   }
+  .default_layout {
+    background: #34495e;
+  }
   .corporate_layout {
     background: #34495e;
   }
@@ -299,6 +302,9 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
+.corp-text {
+  color: $white;
+}
 
 // 2. Layout
 .l-wrap {
@@ -309,6 +315,49 @@ hr {
   @include breakpoint(md-min) {
     max-width: 1200px;
   }
+}
+.l-wrap-default {
+  padding: 100px 0 170px 0;
+}
+.l-wrap-course {
+  padding: 20px 0 20px 0;
+  margin: $gutter*2.5 $gutter*10;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+}
+.l-wrap-dashboard {
+  padding: 20px 0 20px 0;
+  margin: $gutter*2.5 $gutter*10;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
+.l-wrap-corp-home {
+  padding: 20px 0 170px 0;
+  @include breakpoint(xs-min) {
+    padding: 20px 0 200px 0;
+    margin: 0 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    padding: 50px 0 450px 0;
+  }
+  color: $white;
 }
 .l-wrap-corporate {
   padding: 100px 0 170px 0;
@@ -358,6 +407,142 @@ hr {
     padding: 2rem 0;
   }
 }
+.l-section-corporate {
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-overview {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-library {
+  padding: 5rem 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter 0 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 0 $gutter*5;
+  }
+}
+.l-section-corp-groups {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-courses {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-subject-areas {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-account {
+  padding: $gutter*1 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-managers {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-corp-students {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+
 .l-padding-zero {
   padding: 0;
 }
@@ -395,6 +580,54 @@ hr {
 .corporate-form-margin {
   margin-left: 0px;
 }
+.corporate-heading {
+  padding: 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter*6 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-heading {
+  padding: 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter*6 $gutter $gutter $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
+  }
+}
+.default-title {
+  @include breakpoint(xs-min) {
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  @include breakpoint(sm-min) {
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+  }
+  @include breakpoint(lg-min) {
+    margin: auto;
+    width: 65%;
+    padding: 10px;
+  }
+}
+.default-logo {
+  display: block;
+  margin: auto;
+  width: 80%;
+}
+
+
 // 3. modules
 
 
@@ -1627,7 +1860,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: fixed;
   top: 0;
   width: 250px;
-  margin: 0;
+  margin-top: $gutter*8;
   padding: 0;
   list-style: none;
 }
@@ -1676,6 +1909,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 }
 .brand-logo {
+  width: 50%;
   a:hover, a:focus {
     background: none;
   }
@@ -1819,6 +2053,34 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     position: fixed;
     width: 100%;
     z-index: 100;
+  }
+}
+.nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
   }
 }
 
@@ -3588,3 +3850,4 @@ a.image-link {
 .lg-image {
   width: 60%;
 }
+

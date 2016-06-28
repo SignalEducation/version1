@@ -1,6 +1,6 @@
 -if @first_corp_log
-  .l-section-small.is-bg-asphalt
-    .l-wrap
+  .l-section.is-bg-asphalt
+    .l-wrap-dashboard
       .container-fluid
         .row
           .col-md-12
@@ -101,7 +101,7 @@
                         .col-md-6.col-xs-6.text-right
 
 -else
-  .l-section-small.is-bg-asphalt
+  .l-section.is-bg-asphalt
     .l-wrap
       .container-fluid
         .row
@@ -120,7 +120,7 @@
                     %h3.h3.card-title.l-margin-bottom
                       =course.try(:name)
                     %p.card-desc
-                      =course.try(:short_description).truncate(185)
+                      =course.try(:short_description)
                 .card-label
                   .row
                     .col-md-12.col-xs-12
