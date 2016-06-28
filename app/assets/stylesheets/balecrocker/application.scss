@@ -497,6 +497,112 @@ hr {
     margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
+.l-section-overview {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-corp-groups {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-corp-courses {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-corp-subject-areas {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-library {
+   padding: 5rem 0;
+   @include breakpoint(xs-min) {
+     margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+   }
+   @include breakpoint(sm-min) {
+     margin: $gutter/4 $gutter $gutter/2 $gutter;
+   }
+   @include breakpoint(md-min) {
+     margin: $gutter/4 $gutter $gutter/2 $gutter;
+   }
+   @include breakpoint(lg-min) {
+     margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
+   }
+}
+.l-section-corp-managers {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+.l-section-corp-students {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
+  }
+}
+
 .l-padding-zero {
   padding: 0;
 }
@@ -625,7 +731,7 @@ hr {
       background: darken($colour-5, 10%);
     }
     &:active {
-      background: ($colour-13);
+      background: darken($colour-5, 10%);
     }
   }
   &.btn-secondary {
@@ -1841,6 +1947,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 }
 .brand-logo {
+  width: 50%;
   a:hover, a:focus {
     background: none;
   }
