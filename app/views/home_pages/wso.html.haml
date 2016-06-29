@@ -15,10 +15,12 @@
           #myNavbar.collapse.navbar-collapse
             %ul.nav.navbar-nav.navbar-right
               %li
-                %a{href: 'http://blog.learnsignal.com', target: '_blank'}
-                  ='Blog'
+                =link_to 'Business', business_url
               %li
                 =link_to 'Why Learn Signal', why_learn_signal_url
+              %li
+                %a{href: 'http://blog.learnsignal.com', target: '_blank'}
+                  ='Blog'
               %li
                 =link_to 'Pricing', pricing_url
               %li
