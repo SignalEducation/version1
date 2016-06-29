@@ -331,6 +331,12 @@ hr {
 .corp-text {
   color: $colour-2;
 }
+.library-heading {
+  color: $colour-2;
+}
+.library-text {
+  color: $colour-2;
+}
 
 // 2. Layout
 .l-wrap {
@@ -558,19 +564,20 @@ hr {
   }
 }
 .l-section-library {
-   padding: 5rem 0;
-   @include breakpoint(xs-min) {
-     margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
-   }
-   @include breakpoint(sm-min) {
-     margin: $gutter/4 $gutter $gutter/2 $gutter;
-   }
-   @include breakpoint(md-min) {
-     margin: $gutter/4 $gutter $gutter/2 $gutter;
-   }
-   @include breakpoint(lg-min) {
-     margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
-   }
+  padding: 5rem 0;
+  padding-bottom: 50px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
+  }
 }
 .l-section-corp-managers {
   padding: $gutter 0;
@@ -792,6 +799,18 @@ hr {
     height: 60px;
     line-height: 60px;
   }
+  &.btn-resume {
+    @include box-shadow(0, 0, 0, 0);
+    color: $colour-2;
+    background: transparent;
+    border: 2px solid $colour-5;
+    //line-height: 38px;
+    &:hover, &:active {
+      background: $colour-5;
+      color: lighten($colour-18, 10%);
+    }
+  }
+
 }
 .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
   margin-left: 0; // for horizontal forms and .input-group
