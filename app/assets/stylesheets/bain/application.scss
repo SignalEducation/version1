@@ -532,6 +532,21 @@ hr {
     margin: $gutter/4 0 $gutter/2 0;
   }
 }
+.l-section-dashboard {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
 
 .l-padding-zero {
   padding: 0;
