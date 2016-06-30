@@ -306,6 +306,13 @@ hr {
   color: $white;
 }
 
+.library-heading {
+  color: $purple-1;
+}
+.library-text {
+  color: $purple-1;
+}
+
 // 2. Layout
 .l-wrap {
   @include breakpoint(sm-min) {
@@ -438,18 +445,9 @@ hr {
   }
 }
 .l-section-library {
-  padding: 5rem 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2 0 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter 0 $gutter;
-  }
+  padding: 3rem 0;
   @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter 0 $gutter;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5 0 $gutter*5;
+    padding: 4rem 0;
   }
 }
 .l-section-corp-groups {
@@ -528,6 +526,21 @@ hr {
   }
 }
 .l-section-corp-students {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-dashboard {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
     margin: $gutter/4 0 $gutter/2 0;
