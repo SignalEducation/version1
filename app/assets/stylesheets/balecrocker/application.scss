@@ -80,7 +80,7 @@ $pink-2: #f092b0;
 html {
   background: $colour-1;
   .margin-top {
-    margin-top: 62px;
+    margin-top: 75px;
   }
   .no-margin-top {
     margin-top: 0;
@@ -2130,12 +2130,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .nav-wrap {
-  @include breakpoint(sm-min) {
-    padding: 0 $gutter/2;
-  }
-  margin: 0 auto;
+  padding: $gutter/2 $gutter/2;
+  margin: 0 auto $gutter/4 auto;
   @include breakpoint(md-min) {
     max-width: 1200px;
+
   }
 }
 .transparent-nav-wrap {
