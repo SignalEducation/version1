@@ -7,8 +7,36 @@
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
+$sans-font: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
 $gutter: 20px;
+
+// Base Colours
 $white: #fff;
+
+
+// Custom Colours
+$colour-1: #F2F2F2;  // Background Colour
+$colour-2: #767676;  // Text Colour Primary
+$colour-3: #FFFFFF;  // Foreground Colour
+$colour-4: #323232;  // Content Colour #1
+$colour-5: #A68064;  // Content Colour #2
+$colour-6: #6BBE6B;  // Button Colour #1
+$colour-7: #333333;  // Content Colour #3
+$colour-8: #9A9A9A;  // Text Colour Secondary
+$colour-9: rgb(83, 84, 112);
+$colour-10: #9E9FAD;
+$colour-11: lighten($colour-7, 5%);
+$colour-12: #EE5457;
+$colour-13: #3EB9CE;
+$colour-14: #FAFEC0;
+$colour-15: #54a4ee;
+$colour-16: #34495e;
+$colour-17: #D0F6BD;
+$colour-18: #47A447;  // Button Colour #2
+$colour-19: #F9F9F9;  // Box Inner Colour
+$colour-20: #F5F5F5;  // Text Input Area Colour
+
+// Site Default Colours
 $gray-1: #6E6D75;
 $gray-2: #ecf0f1;
 $asphalt-1: #EFF3F6;
@@ -29,7 +57,8 @@ $green-1: #D0F6BD;
 $green-2: #00cc66;
 $pink-1: #FED4CD;
 
-// Course Image Colours
+
+// Extra Colours
 $gray-3: #ecf0f1;
 $blue-3: #3079AB;
 $blue-4: #39ADD1;
@@ -45,13 +74,13 @@ $red-2: #e15258;
 $red-3: #c25975;
 $pink-2: #f092b0;
 
-$sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
+
 
 // 1. Base
 html {
-  background: $blue-2;
+  background: $colour-1;
   .margin-top {
-    margin-top: 62px;
+    margin-top: 75px;
   }
   .no-margin-top {
     margin-top: 0;
@@ -62,21 +91,18 @@ html {
 }
 body {
   font-family: $sans-font;
-  background: $white;
-  color: $gray-1;
+  background: $colour-1;
+  color: $colour-2;
   @include breakpoint(md-min) {
     margin: 0 auto;
     //max-width: 1800px;
   }
-  .default_layout {
-    background: #34495e;
-  }
   .corporate_layout {
-    background: #34495e;
+    background: $colour-1;
   }
 }
 a {
-  color: $red-1;
+  color: $colour-8;
   //text-decoration: underline;
   @include transition(background-color .2s ease);
   @include transition(color .2s ease);
@@ -84,27 +110,27 @@ a {
 }
 a:hover,
 a:focus {
-  color: shade($cyan-1, 10%);
+  color: $colour-18;
   text-decoration: underline;
 
 }
 a:active {
-  color: $purple-1;
+  color: $colour-7;
 }
 blockquote {
-  border-left: 2px solid $red-1;
+  border-left: 2px solid $colour-12;
 }
 a.link-purple {
-  color: $purple-1;
+  color: $colour-7;
   &:hover {
-    color: $cyan-1;
+    color: $colour-13;
   }
 }
 a.no-link-style {
-  color: $red-1;
+  color: $colour-12;
   text-decoration: underline;
   &:hover {
-    color: $red-1;
+    color: $colour-12;
     text-decoration: underline;
     cursor: default;
   }
@@ -122,7 +148,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
 }
 h1, .h1 {
   font-weight: normal;
-  color: $purple-1;
+  color: $colour-7;
   text-transform: none;
   font-weight: normal;
   letter-spacing: 0;
@@ -143,7 +169,7 @@ h1, .h1 {
 }
 h2, .h2 {
   font-weight: normal;
-  color: $purple-1;
+  color: $colour-7;
   line-height: 1.2;
   @include font-size(2.6);
   @include breakpoint(md-min) {
@@ -155,7 +181,7 @@ h2, .h2 {
 }
 h3, .h3 {
   font-weight: normal;
-  color: $purple-1;
+  color: $colour-7;
   text-transform: none;
   letter-spacing: 0;
   margin-top: 0;
@@ -165,7 +191,7 @@ h3, .h3 {
   }
 }
 h4, .h4 {
-  color: $purple-1;
+  color: $colour-7;
   font-weight: bold;
   @include font-size(1.6);
   @include breakpoint(md-min) {
@@ -173,7 +199,7 @@ h4, .h4 {
   }
 }
 h5, .h5 {
-  color: lighten($purple-1, 40%);
+  color: lighten($colour-7, 40%);
   text-transform: uppercase;
   letter-spacing: .2rem;
   line-height: 1.5;
@@ -185,14 +211,14 @@ h5, .h5 {
 }
 h6, .h6 {
   font-weight: bold;
-  //color: $purple-1;
+  //color: $colour-7;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
 }
 h7, .h7 {
-  color: lighten($purple-1, 60%);
+  color: lighten($colour-7, 60%);
   letter-spacing: .1rem;
   font-weight: normal;
   line-height: 1.5;
@@ -216,21 +242,21 @@ h8, .h8 {
   }
 }
 p, .p, ol, .ol, ul, .ul, address, dl {
-  color: $gray-1;
+  color: $colour-2;
   margin-bottom: $gutter;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
   &.p-white {
-    color: lighten($purple-1, 40%);
+    color: lighten($colour-7, 40%);
   }
   &.big {
     font-size: large;
   }
 }
 hr {
-  border-color: lighten($purple-1, 60%);
+  border-color: lighten($colour-7, 60%);
   margin: $gutter*2 0;
 }
 .h-separator {
@@ -244,7 +270,7 @@ hr {
     content: "";
     width: 60px;
     height: 2px;
-    background: $cyan-1;
+    background: $colour-5;
     bottom: 0;
     @include border-radius(10px);
   }
@@ -270,7 +296,7 @@ hr {
   }
 }
 .note {
-  color: tint($gray-1, 30%);
+  color: tint($colour-2, 30%);
   position: relative;
   display: block;
   padding-left: $gutter;
@@ -303,7 +329,13 @@ hr {
   padding-left: 15px;
 }
 .corp-text {
-  color: $white;
+  color: $colour-2;
+}
+.library-heading {
+  color: $colour-2;
+}
+.library-text {
+  color: $colour-2;
 }
 
 // 2. Layout
@@ -316,12 +348,10 @@ hr {
     max-width: 1200px;
   }
 }
-.l-wrap-default {
-  padding: 100px 0 170px 0;
-}
 .l-wrap-course {
-  padding: 20px 0 20px 0;
+  padding: 50px 0 50px 0;
   margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
 
   @include breakpoint(xs-min) {
     margin: $gutter $gutter*2;
@@ -332,10 +362,28 @@ hr {
   @include breakpoint(md-min) {
     margin: $gutter $gutter*5;
   }
+
+}
+.l-wrap-corporate {
+  padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
 }
 .l-wrap-dashboard {
-  padding: 20px 0 20px 0;
+  padding: 50px 0 250px 0;
   margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
 
   @include breakpoint(xs-min) {
     margin: $gutter $gutter*2;
@@ -349,18 +397,21 @@ hr {
 
 }
 .l-wrap-corp-home {
-  padding: 20px 0 170px 0;
+  padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  background: $colour-3;
+
   @include breakpoint(xs-min) {
-    padding: 20px 0 200px 0;
-    margin: 0 $gutter;
+    margin: $gutter $gutter*2;
+    padding: 50px 10px 250px 10px;
   }
-  @include breakpoint(lg-min) {
-    padding: 50px 0 450px 0;
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
   }
-  color: $white;
-}
-.l-wrap-corporate {
-  padding: 100px 0 170px 0;
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {
@@ -391,20 +442,50 @@ hr {
 }
 .l-section {
   padding: 5rem 0;
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
   @include breakpoint(md-min) {
-    padding: 10rem 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-section-small {
-  padding: 3rem 0;
+  padding: 5rem 0;
+  padding-bottom: 50px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
   @include breakpoint(md-min) {
-    padding: 4rem 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-section-extra-small {
-  padding: 1rem 0;
+  padding: 5rem 0;
+  padding-bottom: 250px;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
   @include breakpoint(md-min) {
-    padding: 2rem 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-section-corporate {
@@ -425,122 +506,125 @@ hr {
 .l-section-overview {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-library {
-  padding: 5rem 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2 0 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter 0 $gutter;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter 0 $gutter;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5 0 $gutter*5;
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
 .l-section-corp-groups {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
 .l-section-corp-courses {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
 .l-section-corp-subject-areas {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
-.l-section-corp-account {
-  padding: $gutter*1 0;
+.l-section-library {
+  padding: 5rem 0;
+  padding-bottom: 50px;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 $gutter;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
   }
 }
 .l-section-corp-managers {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
 .l-section-corp-students {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter $gutter/2 0;
   }
   @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
+    margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
+}
+.l-section-dashboard {
+
+  @include breakpoint(xs-min) {
+    padding: $gutter 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+    padding: $gutter 0;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 auto;
+    padding: $gutter 0;
+    max-width: 1150px;
+  }
+
 }
 
 .l-padding-zero {
@@ -578,55 +662,25 @@ hr {
   padding-right: 30px;
 }
 .corporate-form-margin {
-  margin-left: 0px;
+  margin-left: 0;
 }
 .corporate-heading {
   padding: 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter*6 $gutter $gutter $gutter;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
-  }
-}
-.default-heading {
-  padding: 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter*6 $gutter $gutter $gutter;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
-  }
-}
-.default-title {
-  @include breakpoint(xs-min) {
-    margin: auto;
-    width: 100%;
-    padding: 10px;
-  }
-  @include breakpoint(sm-min) {
-    margin: auto;
-    width: 90%;
-    padding: 10px;
-  }
-  @include breakpoint(lg-min) {
-    margin: auto;
-    width: 65%;
-    padding: 10px;
-  }
-}
-.default-logo {
-  display: block;
-  margin: auto;
-  width: 80%;
-}
+  margin: 33px $gutter*6 33px $gutter*5;
 
+  @include breakpoint(xs-min) {
+    margin: 33px $gutter*6 33px $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 33px $gutter*6 33px $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: 33px $gutter*6 33px $gutter*5;
+  }
+}
+.corporate-title {
+  margin: $gutter 0;
+}
 
 // 3. modules
 
@@ -648,6 +702,7 @@ hr {
   display: block;
   height: 40px;
   padding: 0 $gutter;
+  border-radius: 0;
   line-height: 40px;
   letter-spacing: .2rem;
   text-transform: uppercase;
@@ -655,22 +710,22 @@ hr {
 
   &:link, &:visited {
     text-decoration: none;
-    color: $red-1;
+    color: $colour-6;
   }
   &:hover {
-    color: shade($red-1, 20%);
+    color: shade($colour-6, 20%);
   }
   &:active {
     @include box-shadow(0, 0, 0, 0);
   }
   &.btn-red {
-    background: $red-1;
+    background: $colour-6;
     color: $white;
     &:hover {
-      background: shade($red-1, 10%);
+      background: $colour-18;
     }
     &:active {
-      background: ($red-1);
+      background: ($colour-6);
     }
   }
   &.btn-wide {
@@ -684,66 +739,71 @@ hr {
     font-size: large;
   }
   &.btn-purple {
-    background: $purple-1;
+    background: $colour-6;
     color: $white;
     &:hover {
-      background: shade($purple-1, 10%);
+      background: $colour-18;
     }
     &:active {
-      background: ($purple-1);
+      background: ($colour-18);
     }
   }
   &.btn-cyan {
-    background: $cyan-1;
+    background: $colour-5;
     color: $white;
     &:hover {
-      background: darken($cyan-1, 6%);
+      background: darken($colour-5, 10%);
     }
     &:active {
-      background: ($cyan-1);
+      background: darken($colour-5, 10%);
     }
   }
   &.btn-secondary {
     @include box-shadow(0, 0, 0, 0);
 
-    color: $red-1;
+    color: $colour-6;
     background: transparent;
     border: 2px solid $white;
     line-height: 38px;
     &:hover, &:active {
       background: transparent;
-      color: shade($red-1, 20%);
+      color: shade($colour-6, 20%);
     }
     &.btn-red{
-      color: $red-1;
-      border: 2px solid $red-1;
+      color: $colour-6;
+      border: 2px solid $colour-6;
       &:hover {
         background: transparent;
-        color: $orange-2;
-        border: 2px solid $orange-2;
-        //border: 1px solid shade($red-1, 20%);
+        color: $colour-18;
+        border: 2px solid $colour-18;
       }
     }
     &.btn-green {
-      color: $green-2;
-      border: 2px solid $green-2;
-    }
-    &.btn-purple {
-      color: $purple-1;
-      border: 2px solid $purple-1;
+      color: $colour-5;
+      border: 2px solid $colour-5;
       &:hover {
         background: transparent;
-        color: shade($purple-1, 20%);
-        border: 2px solid shade($purple-1, 20%);
+        color: darken($colour-5, 10%);
+        border: 2px solid darken($colour-5, 10%);
+      }
+
+    }
+    &.btn-purple {
+      color: $colour-7;
+      border: 2px solid $colour-7;
+      &:hover {
+        background: transparent;
+        color: shade($colour-7, 20%);
+        border: 2px solid shade($colour-7, 20%);
       }
     }
     &.btn-cyan {
-      color: $cyan-1;
-      border: 2px solid $cyan-1;
+      color: $colour-5;
+      border: 2px solid $colour-5;
       &:hover {
         background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
+        color: shade($colour-5, 20%);
+        border: 1px solid shade($colour-5, 20%);
       }
     }
   }
@@ -756,6 +816,18 @@ hr {
     height: 60px;
     line-height: 60px;
   }
+  &.btn-resume {
+    @include box-shadow(0, 0, 0, 0);
+    color: $colour-2;
+    background: transparent;
+    border: 2px solid $colour-5;
+    //line-height: 38px;
+    &:hover, &:active {
+      background: $colour-5;
+      color: lighten($colour-18, 10%);
+    }
+  }
+
 }
 .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
   margin-left: 0; // for horizontal forms and .input-group
@@ -773,35 +845,35 @@ a.btn-block {
     padding: $gutter*1.25 $gutter;
   }
   &.btn-block-purple {
-    background: $purple-1;
+    background: $colour-7;
     &:hover {
-      background: shade($purple-1, 10%);
+      background: shade($colour-7, 10%);
     }
   }
   &.btn-block-red {
-    background: $red-1;
+    background: $colour-12;
     &:hover {
-      background: shade($red-1, 10%);
+      background: shade($colour-12, 10%);
     }
   }
   &.btn-block-cyan {
-    background: $cyan-1;
+    background: $colour-13;
     &:hover {
-      background: shade($cyan-1, 10%);
+      background: shade($colour-13, 10%);
     }
   }
 }
 
 .pagination > li > a, .pagination > li > span {
   padding: 10px 18px;
-  color: $purple-1;
+  color: $colour-7;
   &:hover {
 
   }
 }
 .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
-  background-color: $asphalt-3;
-  border-color: $asphalt-3;
+  background-color: $colour-5;
+  border-color: $colour-5;
 }
 
 
@@ -828,82 +900,82 @@ a.btn-block {
 
   &:link, &:visited {
     text-decoration: none;
-    color: $red-1;
+    color: $colour-12;
   }
   &:hover {
-    color: shade($red-1, 20%);
+    color: shade($colour-12, 20%);
   }
   &:active {
     @include box-shadow(0, 0, 0, 0);
   }
   &.btn-red {
-    background: $red-1;
+    background: $colour-12;
     color: $white;
     &:hover {
       cursor: not-allowed;
-      background: shade($red-1, 10%);
+      background: shade($colour-12, 10%);
     }
     &:active {
-      background: ($red-1);
+      background: ($colour-12);
     }
   }
   &.btn-purple {
-    background: $purple-1;
+    background: $colour-7;
     color: $white;
     &:hover {
-      background: shade($purple-1, 10%);
+      background: shade($colour-7, 10%);
     }
     &:active {
-      background: ($purple-1);
+      background: ($colour-7);
     }
   }
   &.btn-cyan {
-    background: $cyan-1;
+    background: $colour-13;
     color: $white;
     &:hover {
       cursor: not-allowed;
-      background: shade($cyan-1, 10%);
+      background: shade($colour-13, 10%);
     }
     &:active {
-      background: ($cyan-1);
+      background: ($colour-13);
     }
   }
   &.btn-secondary {
     @include box-shadow(0, 0, 0, 0);
 
-    color: $red-1;
+    color: $colour-12;
     background: transparent;
     border: 1px solid $white;
     line-height: 38px;
     &:hover, &:active {
       background: transparent;
-      color: shade($red-1, 20%);
+      color: shade($colour-12, 20%);
     }
     &.btn-red{
-      color: $red-1;
-      border: 1px solid $red-1;
+      color: $colour-12;
+      border: 1px solid $colour-12;
       &:hover {
         background: transparent;
-        color: shade($red-1, 20%);
-        border: 1px solid shade($red-1, 20%);
+        color: shade($colour-12, 20%);
+        border: 1px solid shade($colour-12, 20%);
       }
     }
     &.btn-purple {
-      color: $purple-1;
-      border: 1px solid $purple-1;
+      color: $colour-7;
+      border: 1px solid $colour-7;
       &:hover {
         background: transparent;
-        color: shade($purple-1, 20%);
-        border: 1px solid shade($purple-1, 20%);
+        color: shade($colour-7, 20%);
+        border: 1px solid shade($colour-7, 20%);
       }
     }
     &.btn-cyan {
-      color: $cyan-1;
-      border: 1px solid $cyan-1;
+      color: $colour-13;
+      border: 1px solid $colour-13;
       &:hover {
         background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
+        color: shade($colour-13, 20%);
+        border: 1px solid shade($colour-13, 20%);
       }
     }
   }
@@ -918,8 +990,8 @@ a.btn-block {
 .foot {
   position: relative;
   margin-bottom: -50px; /* negative value of footer height */
-  background: $purple-1;
-  border-top: 0px solid $asphalt-1;
+  background: $colour-7;
+  border-top: 0px solid $colour-3;
   padding: $gutter*1.5 0 $gutter*2 0;
   text-align: center;
   @include clearfix();
@@ -929,7 +1001,7 @@ a.btn-block {
     @include font-size(1.4);
   }
   .border-top {
-    border-top: 10px solid $asphalt-1;
+    border-top: 10px solid $colour-3;
   }
 }
 .foot-nav {
@@ -945,7 +1017,7 @@ a.btn-block {
   & li {
     position: relative;
     display: inline-block;
-    color: tint($purple-1, 20%);
+    color: tint($colour-7, 20%);
     margin-left: $gutter/4;
     &:before {
       content: "•";
@@ -986,7 +1058,7 @@ a.btn-block {
   & li {
     position: relative;
     display: inline-block;
-    color: tint($purple-1, 20%);
+    color: tint($colour-7, 20%);
     margin-left: $gutter/4;
     &:before {
       content: "•";
@@ -1027,7 +1099,7 @@ a.btn-block {
   & li {
     position: relative;
     display: inline-block;
-    color: tint($purple-1, 20%);
+    color: tint($colour-7, 20%);
     margin-left: $gutter/4;
     &:before {
       position: absolute;
@@ -1164,12 +1236,12 @@ a.btn-block {
 //Hero
 
 .hero-home {
-  background: $purple-5 asset-url('home-page-1003.png') 10% 0 no-repeat;
+  background: $colour-11 asset-url('home-page-1003.png') 10% 0 no-repeat;
   color: $white;
   background-size: cover;
   //min-height: 1100px;
   @include breakpoint(md-min) {
-    background: $purple-5 asset-url('home-page-1003.png') no-repeat;
+    background: $colour-11 asset-url('home-page-1003.png') no-repeat;
     background-size: cover;
   }
 }
@@ -1207,97 +1279,97 @@ a.btn-block {
   }
 }
 .hero-acca {
-  background: $purple-5 asset-url('acca-background.png') 50% 0 no-repeat;
+  background: $colour-11 asset-url('acca-background.png') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   @include breakpoint(md-min) {
-    background: $purple-5 asset-url('acca-background.png') no-repeat;
+    background: $colour-11 asset-url('acca-background.png') no-repeat;
     background-size: cover;
   }
 }
 .hero-why-learn {
-  background: $purple-2 asset-url('bg-acca.jpg') 50% 0 no-repeat;
+  background: $colour-8 asset-url('bg-acca.jpg') 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-acca.jpg') no-repeat;
+    background: $colour-8 asset-url('bg-acca.jpg') no-repeat;
     background-size: cover;
   }
 }
 .hero-business {
-  background: $purple-5 asset-url('business-home-1001.png') 50% 0 no-repeat;
+  background: $colour-11 asset-url('business-home-1001.png') 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-5 asset-url('business-home-1001.png') no-repeat;
+    background: $colour-11 asset-url('business-home-1001.png') no-repeat;
     background-size: cover;
   }
 }
 .hero-upcoming {
-  background: $purple-2 asset-url('bg-upcoming.jpg') 50% 0 no-repeat;
+  background: $colour-8 asset-url('bg-upcoming.jpg') 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-upcoming.jpg') no-repeat;
+    background: $colour-8 asset-url('bg-upcoming.jpg') no-repeat;
     background-size: cover;
   }
 }
 
 .hero-cfa {
-  background: $purple-5 asset-url('acca-background.png') 50% 0 no-repeat;
+  background: $colour-11 asset-url('acca-background.png') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   @include breakpoint(md-min) {
-    background: $purple-5 asset-url('acca-background.png') no-repeat;
+    background: $colour-11 asset-url('acca-background.png') no-repeat;
     background-size: cover;
   }
 }
 
 .hero-sign-up {
-  background: $purple-2 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
+  background: $colour-8 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-sign-up.jpg') no-repeat;
+    background: $colour-8 asset-url('bg-sign-up.jpg') no-repeat;
     background-size: cover;
   }
 }
 .hero-library {
-  background: $purple-2 asset-url('bg-library.jpg') 50% 0 no-repeat;
+  background: $colour-8 asset-url('bg-library.jpg') 50% 0 no-repeat;
   color: $white;
   @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-library.jpg') no-repeat;
+    background: $colour-8 asset-url('bg-library.jpg') no-repeat;
     background-size: cover;
   }
 }
 // Landing Page Images
 .home-image-1 {
-  background: lighten($purple-1, 5%) asset-url('professional-qualifications.png') 50% 0 no-repeat;
+  background: lighten($colour-7, 5%) asset-url('professional-qualifications.png') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 500px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('professional-qualifications.png') 50% 25 no-repeat;
+    background: lighten($colour-7, 5%) asset-url('professional-qualifications.png') 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     //min-height: 500px;
   }
 }
 .home-image-2 {
-  background: lighten($purple-1, 5%) asset-url('it-perations.png') 50% 0 no-repeat;
+  background: lighten($colour-7, 5%) asset-url('it-perations.png') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 500px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('it-perations.png') 50% 25 no-repeat;
+    background: lighten($colour-7, 5%) asset-url('it-perations.png') 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 500px;
   }
 }
 .home-image-3 {
-  background: lighten($purple-1, 5%) asset-url('business-professionals.png') 50% 0 no-repeat;
+  background: lighten($colour-7, 5%) asset-url('business-professionals.png') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 500px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('business-professionals.png') 50% 25 no-repeat;
+    background: lighten($colour-7, 5%) asset-url('business-professionals.png') 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 500px;
@@ -1308,36 +1380,36 @@ a.btn-block {
 
 
 .blog-image-1 {
-  background: lighten($purple-1, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 0 no-repeat;
+  background: lighten($colour-7, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 250px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 25 no-repeat;
+    background: lighten($colour-7, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 250px;
   }
 }
 .blog-image-2 {
-  background: lighten($purple-1, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 0 no-repeat;
+  background: lighten($colour-7, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 250px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 25 no-repeat;
+    background: lighten($colour-7, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 250px;
   }
 }
 .blog-image-3 {
-  background: lighten($purple-1, 5%) asset-url('elearning-employee-retention.jpg') 50% 0 no-repeat;
+  background: lighten($colour-7, 5%) asset-url('elearning-employee-retention.jpg') 50% 0 no-repeat;
   color: $white;
   background-size: cover;
   min-height: 250px;
   @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('elearning-employee-retention.jpg') 50% 25 no-repeat;
+    background: lighten($colour-7, 5%) asset-url('elearning-employee-retention.jpg') 50% 25 no-repeat;
     color: $white;
     background-size: cover;
     min-height: 250px;
@@ -1357,20 +1429,20 @@ a.btn-block {
   @include border-radius(5px);
 }
 .plan-monthly {
-  background: $cyan-1;
+  background: $colour-13;
 }
 .plan-quarterly {
-  background: $red-1;
+  background: $colour-12;
 }
 .plan-yearly {
-  background: $purple-1;
+  background: $colour-7;
 }
 .plan-header {
   background: rgba(#000, .05);
   padding: $gutter/2 $gutter;
 }
 .plan-popular {
-  background: $blue-1;
+  background: $colour-15;
   padding: $gutter/2 $gutter;
   //border: 5px solid $yellow-2;
 }
@@ -1414,7 +1486,7 @@ a.btn-block {
   }
 }
 .blue-border {
-  border: 1px solid $blue-1 ;
+  border: 1px solid $colour-15 ;
 }
 
 //Quizzes
@@ -1487,21 +1559,21 @@ a.btn-block {
 }
 
 .border-same-backcolor {
-  border-color: $asphalt-1;
-  border-width: 2px;
+  border-color: $colour-2;
+  border-width: 1px;
   box-shadow: 0 0 0px #aec2d1;
 }
 
 .bordercolor-cyan {
-  border-color: $cyan-1;
+  border-color: $colour-13;
 }
 
 .round-border {
-  @include border-radius(5px);
+  @include border-radius(0px);
 }
 
 .panel > .list-group .list-group-item {
-  border-color: $asphalt-1;
+  border-color: $colour-7;
   border-top-width: 2px;
 }
 
@@ -1522,7 +1594,7 @@ a.list-group-item {
 }
 
 .text-failed {
-  color: $red-1;
+  color: $colour-12;
   margin-bottom: 0px;
   margin-top:10px;
 }
@@ -1534,7 +1606,7 @@ a.list-group-item {
 }
 
 .text-active {
-  color: $purple-2;
+  color: $colour-6;
   margin-bottom: 0px;
   margin-top:10px;
 }
@@ -1551,10 +1623,10 @@ a.list-group-item {
 .progress {
   height: $gutter/2;
   border-radius: $gutter/2;
-  background-color: $asphalt-1;
+  background-color: $colour-3;
   box-shadow: none;
   .progress-bar {
-    background-color: $red-1;
+    background-color: $colour-12;
   }
 }
 .result-summary {
@@ -1569,14 +1641,14 @@ a.list-group-item {
   float: right;
 }
 .list-group-item.current-cme {
-  background-color: $asphalt-2;
-  border-left: 4px solid $purple-1 !important;
+  background-color: darken($colour-19, 5%);
+  border-left: 4px solid darken($colour-19, 5%) !important;
 
 }
 .answer-correct {
-  background-color: $green-1;
+  background-color: $colour-17;
   &:hover {
-    background-color: darken($green-1, 7);
+    background-color: darken($colour-17, 7);
   }
   p {
     color: green;
@@ -1588,7 +1660,7 @@ a.list-group-item {
     background-color: darken($pink-1, 5);
   }
   p {
-    color: $red-1;
+    color: $colour-12;
   }
 }
 .answer {
@@ -1617,12 +1689,12 @@ a.list-group-item {
 
 .answerpanel{
   .list-group-item:hover {
-    background-color: $asphalt-1;
-    border-left: 0px solid $purple-1 !important;
+    background-color: darken($colour-19, 5%);
+    border-left: 0px solid darken($colour-19, 5%) !important;
   }
   a.list-group-item:focus{
-    background-color: $asphalt-1;
-    border-left: 1px solid $purple-1 !important;
+    background-color: darken($colour-19, 5%);
+    border-left: 1px solid darken($colour-19, 5%) !important;
     //-webkit-animation-name: example; /* Chrome, Safari, Opera */
     //-webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
     //animation-name: example;
@@ -1653,7 +1725,7 @@ a.list-group-item {
 
 //Testimonials
 .testimonials {
-  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
+  background: $colour-3 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
   &.testimonials-alt {
     background: $white;
@@ -1685,7 +1757,7 @@ a.list-group-item {
   @include border-radius(100%);
 }
 .testimonial-sig {
-  color: darken($gray-1, 15%);
+  color: darken($colour-2, 15%);
 }
 
 //Bootstrap Social
@@ -1827,7 +1899,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: $purple-3;
+  background: $colour-5;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -1870,6 +1942,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   line-height: 40px;
   border-bottom: 1px solid rgba(120,120,120,.5);
   font-size: 17px;
+  &:hover, &:focus {
+    background: darken($colour-5, 5%);
+  }
   &.first-li {
     border-top: 1px solid rgba(120,120,120,.5);
   }
@@ -1878,12 +1953,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: rgba(255,255,255,0.8);
+  color: $colour-3;
   padding-top: 5px;
   padding-bottom: 5px;
   &:hover, &:focus {
-    background: $cyan-1;
-
+    color: $colour-18;
   }
 }
 
@@ -1965,11 +2039,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   margin: 0 0 $gutter/2 0;
   display: block;
   position: relative;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -2019,13 +2093,13 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   margin-left: 20px;
 
   &.color-red {
-    background-color: $red-1;
+    background-color: $colour-12;
   }
   &.color-cyan {
-    background-color: $cyan-1;
+    background-color: $colour-13;
   }
   &.color-purple {
-    background-color: $purple-1;
+    background-color: $colour-7;
   }
 }
 .font-small {
@@ -2034,10 +2108,10 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .corporate-box-item.viewed-item {
   pointer-events: none;
   cursor: default;
-  background-color: $asphalt-1;
-  @include box-shadow(0, 0, 0px, darken($asphalt-1, 20%));
+  background-color: $colour-3;
+  @include box-shadow(0, 0, 0px, darken($colour-3, 20%));
   @include border-radius(0px);
-  border-bottom: 1px solid darken($asphalt-1, 8%) ;
+  border-bottom: 1px solid darken($colour-3, 8%) ;
   padding-left: 10px;
   padding-top: 2px;
 }
@@ -2047,7 +2121,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 .header {
   &.header-dark {
-    background: $purple-1;
+    background: $colour-1;
   }
   &.header-fixed { // unused
     position: fixed;
@@ -2056,17 +2130,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .nav-wrap {
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter;
-  }
+  padding: $gutter/2 $gutter/2;
+  margin: 0 auto $gutter/4 auto;
   @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5;
+    max-width: 1200px;
+
   }
 }
 .transparent-nav-wrap {
@@ -2082,10 +2150,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(lg-min) {
     margin: 0 $gutter*5;
   }
-}
 
+}
 .navbar {
-  min-height: auto;
   margin: 0;
   border: 0;
   @include border-radius(0);
@@ -2106,13 +2173,13 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .navbar-default .navbar-nav > li > a {
-  color: rgba($white, .8);
+  //color: rgba($white, .8);
   text-transform: uppercase;
   letter-spacing: .2rem;
   text-decoration: none;
   @include font-size(1.3);
   &:hover, &:active {
-    color: rgba($white, 1);
+    color: $colour-18;
   }
   @include breakpoint(sm-min) {
     margin: 0;
@@ -2124,20 +2191,20 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   &.sign-up-link {
     @include breakpoint(sm-min) {
       @include border-radius(3px);
-      border: 1px solid $red-1;
-      color: $red-1;
+      border: 1px solid $colour-12;
+      color: $colour-12;
       &:hover {
-        border: 1px solid darken($red-1, 15%);
-        color: $red-1 darken($red-1, 15%);
+        border: 1px solid darken($colour-12, 15%);
+        color: $colour-12 darken($colour-12, 15%);
       }
     }
   }
   &.days-left {
     @include breakpoint(sm-min) {
       @include border-radius(4px);
-      border: 1px solid rgba($red-1, 0.5);
+      border: 1px solid rgba($colour-12, 0.5);
       &:hover {
-        border: 1px solid rgba($red-1, 0.8);
+        border: 1px solid rgba($colour-12, 0.8);
       }
     }
   }
@@ -2179,16 +2246,16 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   background: transparent;
 }
 .navbar-default .navbar-toggle {
-  border-color: rgba($white, 0.2);
+  border-color: $colour-4;
   margin: 11px 0 0 0;
   @include border-radius(3px);
 }
 .navbar-default .navbar-toggle .icon-bar {
-  background-color: $white;
+  background-color: $colour-4;
 }
 .user-notification {
   display: inline-block;
-  background: $red-1;
+  background: $colour-12;
   padding: 4px;
   min-width: 17px;
   height: 17px;
@@ -2198,12 +2265,12 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include font-size(1.1);
 }
 .dropdown-menu {
-  border: 1px solid shade($purple-1, 20%);
+  border: 1px solid shade($colour-7, 20%);
   padding: 0;
   @include box-shadow(0, 0, 5px, rgba(#000, .3));
   @include breakpoint(md-min) {
     padding: $gutter/2 0;
-    background: $purple-1;
+    background: $colour-3;
   }
 }
 .dropdown-menu > li {
@@ -2217,24 +2284,24 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   text-transform: none;
   letter-spacing: 0;
   margin-top: -1px;
-  border-top: 1px solid tint($purple-1, 10%);
-  border-bottom: 1px solid tint($purple-1, 10%);
+  border-top: 1px solid tint($colour-7, 10%);
+  border-bottom: 1px solid tint($colour-7, 10%);
   color: $white;
   text-decoration: none;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
     &:hover {
-      background: $purple-2;
+      background: $colour-1;
     }
   }
 
 }
 .navbar-default .navbar-nav .open .dropdown-menu>li>a {
-  color: $white;
+  color: $colour-2;
 }
 .navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
-  color: $white;
+  color: $colour-18;
 }
 .navbar-nav .open .dropdown-menu>li>a {
   line-height: 30px;
@@ -2371,7 +2438,7 @@ ol li.highlight i.icon-move {
   }
 }
 .corporate-logo {
-  padding: $gutter/4 0;
+  padding: 15px 0;
   float: left;
   max-height: 65px;
   @include breakpoint(sm-min) {
@@ -2396,7 +2463,7 @@ form {
 }
 label, .label {
   font-weight: bold;
-  color: $purple-1;
+  color: $colour-7;
   cursor: pointer;
   margin-bottom: $gutter/2;
   padding: 0;
@@ -2412,16 +2479,16 @@ label, .label {
 .form-control {
   padding: $gutter/2 $gutter/1.5;
   height: 40px;
-  border: 1px solid darken($asphalt-1, 10%);
+  background: $colour-20;
+  border: 1px solid $colour-20;
   @include font-size(1.4);
-  @include box-shadow(2px, 0, 0, rgba(#000, .05));
+  @include box-shadow(2px, 0, 0, $colour-20);
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
   &:focus {
-    border: 1px solid darken($asphalt-1, 30%);
-    border: 1px solid $purple-1;
-    background: $yellow-1;
+    border: 1px solid darken($colour-20, 30%);
+    background: $colour-14;
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
 }
@@ -2432,17 +2499,17 @@ label, .label {
 }
 .course-types {
   text-align: center;
-  background: lighten($purple-1, 5%);
-  color: lighten($purple-1, 40%);
+  background: lighten($colour-7, 5%);
+  color: lighten($colour-7, 40%);
 }
 .business {
   text-align: center;
   background: $white;
-  color: lighten($purple-1, 40%);
+  color: lighten($colour-7, 40%);
 }
 .individuals {
   text-align: center;
-  background: lighten($purple-1, 5%);
+  background: lighten($colour-7, 5%);
   color: $white
 }
 .features-img {
@@ -2524,7 +2591,7 @@ label, .label {
 }
 
 .footer-nav {
-  color: $red-1;
+  color: $colour-12;
   &:hover {
     background-color: darken($white, 5);
   }
@@ -2551,26 +2618,26 @@ a.box {
   }
   &:hover, &:active {
     text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
     @include box-shadow(0, 0, 12px, rgba(#000, .25));
   }
   &:hover {
     .box-title {
-      //color: $red-1;
+      //color: $colour-12;
     }
     .box-label {
-      background: shade($red-1, 10%);
+      background: shade($colour-12, 10%);
     }
   }
 }
 .box {
   display: block;
-  background: $white;
+  background: $colour-19;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include border-radius(0px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -2620,13 +2687,13 @@ a.box {
   margin: $gutter/2 0 0 0;
 }
 .box-label {
-  background: $red-1;
+  background: $colour-6;
   color: $white;
   padding: $gutter/1.45;
   letter-spacing: .2rem;
   text-transform: uppercase;
   @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
+  @include border-bottom-radius(0px);
   @include font-size(1.1);
   @include breakpoint(sm-min) {
     @include font-size(1.2);
@@ -2640,15 +2707,15 @@ a.tutor-box {
   }
   &:hover, &:active {
     text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
     @include box-shadow(0, 0, 12px, rgba(#000, .25));
   }
   &:hover {
     .tutor-box-title {
-      //color: $red-1;
+      //color: $colour-12;
     }
     .tutor-box-label {
-      background: shade($red-1, 10%);
+      background: shade($colour-12, 10%);
     }
   }
 }
@@ -2659,7 +2726,7 @@ a.tutor-box {
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
   @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -2708,7 +2775,7 @@ a.tutor-box {
   margin: $gutter/2 0 0 0;
 }
 .tutor-box-label {
-  background: $red-1;
+  background: $colour-12;
   color: $white;
   padding: $gutter/1.45;
   letter-spacing: .2rem;
@@ -2733,22 +2800,22 @@ a.card {
   }
   &:hover {
     .card-title {
-      //color: $red-1;
+      //color: $colour-12;
     }
     .card-label {
-      background: darken($red-1, 5%);
+      background: $colour-18;
 
     }
   }
 }
 .card{
   display: block;
-  background: $white;
+  background: $colour-19;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: left;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include border-radius(0px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -2775,8 +2842,8 @@ a.card {
   padding: $gutter $gutter;
   height: 200px;
   position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  //border-top-left-radius: 5px;
+  //border-top-right-radius: 5px;
 }
 .card-pic {
   max-height: 60%;
@@ -2796,18 +2863,18 @@ a.card {
 }
 .days-left {
   @include border-radius(16px);
-  border: 2px dashed $cyan-1;
+  border: 2px dashed $colour-5
   //width: 80%;
 }
 
 .card-label {
-  background: $red-1;
+  background: $colour-6;
   color: $white;
   padding: $gutter/1.45;
   //letter-spacing: .2rem;
   //text-transform: uppercase;
   @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
+  @include border-bottom-radius(0px);
   @include font-size(1.1);
   @include breakpoint(sm-min) {
     @include font-size(1.2);
@@ -2823,26 +2890,26 @@ a.card {
   padding-left: 0;
 }
 a.box-item {
-  color: $purple-1;
+  color: $colour-7;
   text-decoration: none;
   display: block;
   border: 1px solid $white;
   @include transition(border .1s ease);
   &:hover, &:active {
-    border: 1px solid $purple-1;
-    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+    border: 1px solid $colour-7;
+    @include box-shadow(0, 0, 12px, darken($colour-3, 15%));
   }
 }
 .box-item {
   display: block;
-  background: $white;
+  background: $colour-19;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include border-radius(0px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -2875,11 +2942,11 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -2914,10 +2981,10 @@ a.box-item {
   position: absolute;
   top: 16px;
   right: 15px;
-  color: tint($purple-1, 50%);
+  color: tint($colour-7, 50%);
 }
 .side-meta {
-  color: tint($purple-1, 50%);
+  color: tint($colour-7, 50%);
   display: block;
   text-align: left;
   @include breakpoint(sm-min) {
@@ -2925,7 +2992,7 @@ a.box-item {
   }
 }
 .left-side-meta {
-  color: tint($purple-1, 50%);
+  color: tint($colour-7, 50%);
   display: block;
   text-align: left;
   @include breakpoint(sm-min) {
@@ -2933,7 +3000,7 @@ a.box-item {
   }
 }
 .lined-list {
-  border-top: 1px solid rgba($gray-1, .15);
+  border-top: 1px solid rgba($colour-2, .15);
   padding: 0;
   li {
     list-style: none;
@@ -2947,7 +3014,7 @@ a.box-item {
   list-style: none;
   margin: 0;
   padding: $gutter/2 $gutter/2 $gutter/2 0;
-  border-bottom: 1px solid rgba($gray-1, .15);
+  border-bottom: 1px solid rgba($colour-2, .15);
   position: relative;
   .current {
     color: #009900;
@@ -2970,7 +3037,7 @@ a.box-item {
   }
 }
 .sign-up {
-  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
+  background: $colour-3 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
 }
 .course-info {
@@ -3001,7 +3068,7 @@ a.box-item {
 .tutor-profile-pic {
   float: left;
   max-width: 50px;
-  border: 1px solid $purple-1;
+  border: 1px solid $colour-7;
   margin-top: -15px;
   margin-right: 10px;
 }
@@ -3011,14 +3078,14 @@ a.box-item {
 }
 .number {
   display: inline-block;
-  border: 1px solid $purple-1;
+  border: 1px solid $colour-7;
   width: 40px;
   height: 40px;
   color: $white;
   line-height: 40px;
   margin-right: $gutter/2;
   @include border-radius(100%);
-  color: $purple-1;
+  color: $colour-7;
 }
 // 4. Print
 @media print {
@@ -3053,40 +3120,40 @@ a.box-item {
   color: $white;
 }
 .is-bg-red {
-  background: $red-1;
+  background: $colour-12;
 }
 .is-bg-purple {
-  background: $purple-1;
+  background: $colour-7;
 }
 .is-bg-purple-1 {
-  background: $purple-2;
+  background: $colour-8;
 }
 .is-bg-purple-2 {
-  background: $purple-3;
+  background: $colour-9;
 }
 .is-bg-cyan {
-  background: $cyan-1;
+  background: $colour-13;
 }
 .is-bg-gray {
-  background: $gray-1;
+  background: $colour-2;
 }
 .is-bg-asphalt {
-  background: $asphalt-1;
+  background: $colour-3;
 }
 .is-bg-asphalt-dark {
-  background: $asphalt-4;
+  background: $colour-1;
 }
 .is-bg-white-to-asphalt {
-  @include gradient-vertical($white, $asphalt-1, 0%, 50%);
+  @include gradient-vertical($white, $colour-3, 0%, 50%);
 }
 .is-bg-white {
   background: $white;
 }
 .is-bg-yellow {
-  background: $yellow-1;
+  background: $colour-14;
 }
 .is-bg-green {
-  background: $green-1;
+  background: $colour-17;
 }
 // 6. Vendor
 
@@ -3145,9 +3212,9 @@ a.box-item {
   letter-spacing: .2rem;
   text-decoration: none;
   font-size: 12px;
-  background-color: $purple-1;
+  background-color: $colour-7;
   border-radius: 5%;
-  border: 0px solid $purple-1;
+  border: 0px solid $colour-7;
   text-decoration: initial;
   color: rgba(255, 255, 255, 0.9);
 }
@@ -3158,11 +3225,11 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -3195,11 +3262,11 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -3234,11 +3301,11 @@ a.box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -3271,14 +3338,14 @@ a.box-item {
 //Question
 .question-box-item {
   display: block;
-  background: darken($white, 5);
+  background: lighten($colour-20, 5%);
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -3329,7 +3396,7 @@ a.box-item {
 
   }
   li.lesson-complete {
-    background: darken($green-1, 45);
+    background: darken($colour-17, 45);
   }
 }
 
@@ -3401,25 +3468,25 @@ a.box-item {
 }
 
 .purple-block {
-  background: $purple-1;
+  background: $colour-7;
   color: $white;
   padding-top: $gutter;
 }
 
 .red-block {
-  background: $red-1;
+  background: $colour-12;
   color: $white;
   padding-top: $gutter;
 }
 
 .cyan-block {
-  background: $cyan-1;
+  background: $colour-13;
   color: $white;
   padding-top: $gutter;
 }
 
 .grey-block {
-  background: $gray-1;
+  background: $colour-2;
   color: $white;
   padding-top: $gutter;
 }
@@ -3429,7 +3496,7 @@ a.box-item {
   padding-left:0px;
   border-bottom: 4px solid gainsboro ;
   a {
-    color: $gray-1;
+    color: $colour-2;
     margin-bottom: $gutter;
     letter-spacing: .1rem;
     @include font-size(1.4);
@@ -3442,14 +3509,14 @@ a.box-item {
       padding-bottom: 15px;
       //border-bottom: 4px solid;
       box-sizing: content-box;
-      color: $purple-1;
+      color: $colour-7;
       font-weight: bold;
     }
     &:focus {
       padding-bottom: 15px;
       border-bottom: 4px solid;
       box-sizing: content-box;
-      color: $purple-1;
+      color: $colour-7;
       font-weight: bold;
     }
   }
@@ -3458,7 +3525,7 @@ a.box-item {
   padding-bottom: 15px;
   border-bottom: 4px solid;
   box-sizing: content-box;
-  color: $purple-1;
+  color: $colour-7;
   font-weight: bold;
 }
 
@@ -3471,33 +3538,33 @@ a.box-item {
 }
 
 .selected {
-  background: $green-1;
+  background: $colour-17;
   color: $white;
 }
 
 .chosen-plan {
-  background: $red-1;
+  background: $colour-12;
   color: $white;
 }
 
 .alert.success {
-  background: $green-1;
+  background: $colour-17;
   margin-bottom: 0;
 }
 .alert.error {
-  background: $red-1;
+  background: $colour-12;
   color: $white;
   border-radius: 0;
   margin-bottom: 0;
 }
 .alert.warning {
-  background: $red-1;
+  background: $colour-12;
   color: $white;
   border-radius: 0;
   margin-bottom: 0;
 }
 .alert.alert-info {
-  background: $cyan-1;
+  background: $colour-13;
   margin-bottom: 0;
 }
 
@@ -3563,15 +3630,15 @@ a.library-box {
   }
   &:hover, &:active {
     text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
     @include box-shadow(0, 0, 12px, rgba(#000, .25));
   }
   &:hover {
     .library-box-title {
-      //color: $red-1;
+      //color: $colour-12;
     }
     .library-box-label {
-      background: shade($red-1, 10%);
+      background: shade($colour-12, 10%);
     }
   }
 }
@@ -3582,7 +3649,7 @@ a.library-box {
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
   @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -3621,7 +3688,7 @@ a.library-box {
   margin: $gutter/2 0 0 0;
 }
 .library-box-label {
-  background: $red-1;
+  background: $colour-12;
   color: $white;
   padding: $gutter/1.45;
   letter-spacing: .2rem;
@@ -3634,14 +3701,14 @@ a.library-box {
   }
 }
 a.library-box-item {
-  color: $purple-1;
+  color: $colour-7;
   text-decoration: none;
   display: block;
   border: 1px solid $white;
   @include transition(border .1s ease);
   &:hover, &:active {
-    border: 1px solid $purple-1;
-    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
+    border: 1px solid $colour-7;
+    @include box-shadow(0, 0, 12px, darken($colour-3, 15%));
   }
 }
 .library-box-item {
@@ -3649,11 +3716,11 @@ a.library-box-item {
   background: $white;
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -3684,7 +3751,7 @@ a.library-box-item {
   padding-right: $gutter*2;
 }
 .library-box-item .panel-icon {
-  background-color: $cyan-1;
+  background-color: $colour-13;
   color: white;
   display: inline-block;
   font-size: 12px;
@@ -3715,13 +3782,13 @@ a.library-box-item {
   margin-left: -45px;
 }
 .library-box-item .panel-icon.icon-inner.icon-red {
-  background-color: $red-1;
+  background-color: $colour-12;
 }
 .library-box-item .panel-icon.icon-inner.icon-cyan {
-  background-color: $cyan-1;
+  background-color: $colour-13;
 }
 .library-box-item .panel-icon.icon-inner.icon-purple {
-  background-color: $purple-1;
+  background-color: $colour-7;
 }
 .library-box-item.panel {
   padding-left: 0px;
@@ -3736,17 +3803,17 @@ a.library-box-item {
 }
 
 .selected {
-  background: $green-1;
+  background: $colour-17;
 }
 
 .pricing-box-purple {
   display: block;
-  background: $purple-1;
+  background: $colour-7;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
   @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -3773,12 +3840,12 @@ a.library-box-item {
 }
 .pricing-box-red {
   display: block;
-  background: $red-1;
+  background: $colour-12;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
   @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -3805,12 +3872,12 @@ a.library-box-item {
 }
 .pricing-box-cyan {
   display: block;
-  background: $cyan-1;
+  background: $colour-13;
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
   @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
@@ -3830,8 +3897,9 @@ a.image-link {
 // New corporate Form Box
 .login-form {
   padding: $gutter*2 $gutter/2;
-  background: $gray-2;
-  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+  border: 1px solid $colour-8;
+  //background: $colour-2;
+  -moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px;
   text-align: left;
   color: #fff !important;
 }
@@ -3850,4 +3918,3 @@ a.image-link {
 .lg-image {
   width: 60%;
 }
-
