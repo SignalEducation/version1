@@ -51,7 +51,15 @@ $sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
 html {
   background: $blue-2;
   .margin-top {
-    margin-top: 70px;
+    @include breakpoint(xs-min) {
+      margin-top: 20px;
+    }
+    @include breakpoint(sm-min) {
+      margin-top: 60px;
+    }
+    @include breakpoint(lg-min) {
+      margin-top: 50px;
+    }
   }
   .no-margin-top {
     margin-top: 0;

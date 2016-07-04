@@ -80,7 +80,15 @@ $pink-2: #f092b0;
 html {
   background: $colour-1;
   .margin-top {
-    margin-top: 75px;
+    @include breakpoint(xs-min) {
+      margin-top: 40px;
+    }
+    @include breakpoint(sm-min) {
+      margin-top: 50px;
+    }
+    @include breakpoint(lg-min) {
+      margin-top: 50px;
+    }
   }
   .no-margin-top {
     margin-top: 0;
