@@ -352,6 +352,22 @@ hr {
   }
 
 }
+.l-wrap-course {
+  padding: 25px 0 50px 0;
+  margin: $gutter*2.5 $gutter*10;
+  //background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
 .l-wrap-medium {
   @include breakpoint(sm-min) {
     padding: 0 $gutter/1;
