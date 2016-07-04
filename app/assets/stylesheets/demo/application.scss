@@ -57,7 +57,7 @@ $pink-2: #f092b0;
 html {
   background: $white;
   .margin-top {
-    margin-top: 62px;
+    margin-top: 70px;
   }
   .no-margin-top {
     margin-top: 0;
@@ -309,6 +309,12 @@ hr {
 .corp-text {
   color: $text-color;
 }
+.library-heading {
+  color: $text-color;
+}
+.library-text {
+  color: $text-color;
+}
 
 // 2. Layout
 .l-wrap {
@@ -332,6 +338,22 @@ hr {
 }
 .l-wrap-dashboard {
   padding: 50px 0 250px 0;
+  margin: $gutter*2.5 $gutter*10;
+  //background: $colour-3;
+
+  @include breakpoint(xs-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter $gutter*5;
+  }
+
+}
+.l-wrap-course {
+  padding: 25px 0 50px 0;
   margin: $gutter*2.5 $gutter*10;
   //background: $colour-3;
 
@@ -512,6 +534,21 @@ hr {
   }
 }
 .l-section-corp-students {
+  padding: $gutter 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+.l-section-dashboard {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
     margin: $gutter/4 0 $gutter/2 0;
@@ -3827,4 +3864,16 @@ a.image-link {
 }
 .lg-image {
   width: 60%;
+}
+.resume-course {
+  @include breakpoint(xs-min) {
+    margin-top: $gutter/3;
+  }
+  @include breakpoint(sm-min) {
+    margin-top: $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin-top: $gutter*2;
+  }
+
 }

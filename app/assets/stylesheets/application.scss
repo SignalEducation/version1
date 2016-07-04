@@ -3864,3 +3864,16 @@ a.image-link {
   width: 60%;
 }
 
+.resume-course {
+  @include breakpoint(xs-min) {
+    margin-top: $gutter/3;
+  }
+  @include breakpoint(sm-min) {
+    margin-top: $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin-top: $gutter*2;
+  }
+
+}
+
