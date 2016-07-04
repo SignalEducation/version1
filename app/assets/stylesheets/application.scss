@@ -1,4 +1,7 @@
-// 0. Settings
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 0. Imports
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import 'bootstrap-datetimepicker';
@@ -7,50 +10,60 @@
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
-$gutter: 20px;
-$white: #fff;
-$gray-1: #6E6D75;
-$gray-2: #ecf0f1;
-$asphalt-1: #EFF3F6;
-$asphalt-2: #F8FAFF;
-$asphalt-3: #C0CFD5;
-$asphalt-4: #edeff0;
-$purple-1: #3E3F5B;
-$purple-2: #4E3F5B;
-$purple-3: rgb(83, 84, 112);
-$purple-4: #9E9FAD;
-$purple-5: lighten($purple-1, 5%);
-$red-1: #EE5457;
-$cyan-1: #3EB9CE;
-$yellow-1: #FAFEC0;
-$blue-1: #54a4ee;
-$blue-2: #34495e;
-$green-1: #D0F6BD;
-$green-2: #00cc66;
-$pink-1: #FED4CD;
-
-// Course Image Colours
-$gray-3: #ecf0f1;
-$blue-3: #3079AB;
-$blue-4: #39ADD1;
-$orange-1: #F9845B;
-$orange-2: #eb7728;
-$orange-3: #e59a13;
-$green-3: #5cb860;
-$green-4: #20898c;
-$green-5: #2c9676;
-$purple-6: #c38cd4;
-$purple-6: #c38cd4;
-$red-2: #e15258;
-$red-3: #c25975;
-$pink-2: #f092b0;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 1. Colours & Fonts
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
+$gutter: 20px;
+$white: #fff;
 
-// 1. Base
+// Primary Colours
+$colour-1: #6E6D75;
+$colour-2: #ecf0f1;
+$colour-3: #EFF3F6;
+$colour-4: #F8FAFF;
+$colour-5: #C0CFD5;
+$colour-6: #edeff0;
+$colour-7: #3E3F5B;
+$colour-8: #4E3F5B;
+$colour-9: rgb(83, 84, 112);
+$colour-10: #9E9FAD;
+$colour-11: lighten($colour-7, 5%);
+$colour-12: #EE5457;
+$colour-13: #3EB9CE;
+$colour-14: #FAFEC0;
+$colour-15: #54a4ee;
+$colour-16: #34495e;
+$colour-17: #D0F6BD;
+$colour-18: #00cc66;
+$colour-19: #FED4CD;
+
+// Secondary Colours
+$colour-20: #ecf0f1;
+$colour-21: #3079AB;
+$colour-22: #39ADD1;
+$colour-23: #F9845B;
+$colour-24: #eb7728;
+$colour-25: #e59a13;
+$colour-26: #5cb860;
+$colour-27: #20898c;
+$colour-28: #2c9676;
+$colour-29: #c38cd4;
+$colour-30: #c38cd4;
+$colour-31: #e15258;
+$colour-32: #c25975;
+$colour-33: #f092b0;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 2. Body & Layouts
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 html {
-  background: $blue-2;
-  .margin-top {
+  background: $colour-16;
+  .margin-top {                   // These Ensure content is not hidden behind Navbar
     @include breakpoint(xs-min) {
       margin-top: 20px;
     }
@@ -71,20 +84,23 @@ html {
 body {
   font-family: $sans-font;
   background: $white;
-  color: $gray-1;
+  color: $colour-1;
   @include breakpoint(md-min) {
     margin: 0 auto;
-    //max-width: 1800px;
   }
-  .default_layout {
-    background: #34495e;
-  }
-  .corporate_layout {
+  .external_layout {      // These allow for different BG colours on external pages [sign-in, sign-up, corp-home]
     background: #34495e;
   }
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 3. Text Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 a {
-  color: $red-1;
+  color: $colour-12;
   //text-decoration: underline;
   @include transition(background-color .2s ease);
   @include transition(color .2s ease);
@@ -92,27 +108,27 @@ a {
 }
 a:hover,
 a:focus {
-  color: shade($cyan-1, 10%);
+  color: shade($colour-13, 10%);
   text-decoration: underline;
 
 }
 a:active {
-  color: $purple-1;
+  color: $colour-7;
 }
 blockquote {
-  border-left: 2px solid $red-1;
+  border-left: 2px solid $colour-12;
 }
 a.link-purple {
-  color: $purple-1;
+  color: $colour-7;
   &:hover {
-    color: $cyan-1;
+    color: $colour-13;
   }
 }
 a.no-link-style {
-  color: $red-1;
+  color: $colour-12;
   text-decoration: underline;
   &:hover {
-    color: $red-1;
+    color: $colour-12;
     text-decoration: underline;
     cursor: default;
   }
@@ -127,10 +143,13 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
     color: lightcyan;
     //color: gainsboro;
   }
+  &.h-colour {
+    color: $white;
+  }
 }
 h1, .h1 {
   font-weight: normal;
-  color: $purple-1;
+  color: $colour-7;
   text-transform: none;
   font-weight: normal;
   letter-spacing: 0;
@@ -151,7 +170,7 @@ h1, .h1 {
 }
 h2, .h2 {
   font-weight: normal;
-  color: $purple-1;
+  color: $colour-7;
   line-height: 1.2;
   @include font-size(2.6);
   @include breakpoint(md-min) {
@@ -163,17 +182,17 @@ h2, .h2 {
 }
 h3, .h3 {
   font-weight: normal;
-  color: $purple-1;
+  color: $colour-7;
   text-transform: none;
   letter-spacing: 0;
   margin-top: 0;
   @include font-size(2.4);
   &.orange {
-    color: $orange-3;
+    color: $colour-25;
   }
 }
 h4, .h4 {
-  color: $purple-1;
+  color: $colour-7;
   font-weight: bold;
   @include font-size(1.6);
   @include breakpoint(md-min) {
@@ -181,7 +200,7 @@ h4, .h4 {
   }
 }
 h5, .h5 {
-  color: lighten($purple-1, 40%);
+  color: lighten($colour-7, 40%);
   text-transform: uppercase;
   letter-spacing: .2rem;
   line-height: 1.5;
@@ -193,14 +212,14 @@ h5, .h5 {
 }
 h6, .h6 {
   font-weight: bold;
-  //color: $purple-1;
+  //color: $colour-7;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
 }
 h7, .h7 {
-  color: lighten($purple-1, 60%);
+  color: lighten($colour-7, 60%);
   letter-spacing: .1rem;
   font-weight: normal;
   line-height: 1.5;
@@ -224,21 +243,21 @@ h8, .h8 {
   }
 }
 p, .p, ol, .ol, ul, .ul, address, dl {
-  color: $gray-1;
+  color: $colour-1;
   margin-bottom: $gutter;
   @include font-size(1.4);
   @include breakpoint(md-min) {
     @include font-size(1.6);
   }
   &.p-white {
-    color: lighten($purple-1, 40%);
+    color: lighten($colour-7, 40%);
   }
   &.big {
     font-size: large;
   }
 }
 hr {
-  border-color: lighten($purple-1, 60%);
+  border-color: lighten($colour-7, 60%);
   margin: $gutter*2 0;
 }
 .h-separator {
@@ -252,7 +271,7 @@ hr {
     content: "";
     width: 60px;
     height: 2px;
-    background: $cyan-1;
+    background: $colour-13;
     bottom: 0;
     @include border-radius(10px);
   }
@@ -278,7 +297,7 @@ hr {
   }
 }
 .note {
-  color: tint($gray-1, 30%);
+  color: tint($colour-1, 30%);
   position: relative;
   display: block;
   padding-left: $gutter;
@@ -294,6 +313,477 @@ hr {
     width: 16px;
   }
 }
+.full-width {
+  width: 100%;
+}
+
+// Custom Page Headings & Text
+.library-heading {
+  color: $colour-7;
+}
+.library-text {
+  color: $colour-7;
+}
+
+// Form Classes
+form {
+}
+label, .label {
+  font-weight: bold;
+  color: $colour-7;
+  cursor: pointer;
+  margin-bottom: $gutter/2;
+  padding: 0;
+  display: inline-block;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+}
+.option {
+  margin-right: $gutter/2;
+}
+.form-control {
+  padding: $gutter/2 $gutter/1.5;
+  height: 40px;
+  border: 1px solid darken($colour-3, 10%);
+  @include font-size(1.4);
+  @include box-shadow(2px, 0, 0, rgba(#000, .05));
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+  &:focus {
+    border: 1px solid darken($colour-3, 30%);
+    border: 1px solid $colour-7;
+    background: $colour-14;
+    @include box-shadow(2px, 0, 0, rgba(#000, .07));
+  }
+}
+.login-form {
+  padding: $gutter*2 $gutter/2;
+  background: $colour-2;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+  text-align: left;
+  color: #fff !important;
+}
+.form-bottom form textarea {
+  height: 100px;
+}
+.form-bottom form .input-error {
+  border-color: #de615e;
+}
+.change-password {
+  margin-top: 27px;
+}
+.checkbox {
+  padding-top: 25px;
+}
+.selected {
+  background: $colour-17;
+  color: $white;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 4. Buttons and Links
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// BTN's
+.btn {
+  @include font-size(1.1);
+  @include transition(background-color .2s ease);
+
+  @include breakpoint(xs-min) {
+    display: inline-block;
+  }
+
+  @include breakpoint(sm-min) {
+    display: inline-block;
+    @include font-size(1.2);
+  }
+
+  display: block;
+  height: 40px;
+  padding: 0 $gutter;
+  line-height: 40px;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  border: 0;
+
+  &:link, &:visited {
+    text-decoration: none;
+    color: $colour-12;
+  }
+  &:hover {
+    color: shade($colour-12, 20%);
+  }
+  &:active {
+    @include box-shadow(0, 0, 0, 0);
+  }
+  &.btn-red {
+    background: $colour-12;
+    color: $white;
+    &:hover {
+      background: shade($colour-12, 10%);
+    }
+    &:active {
+      background: ($colour-12);
+    }
+  }
+  &.btn-wide {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+
+  }
+  &.btn-lg-text {
+    line-height: 60px;
+    font-size: large;
+  }
+  &.btn-purple {
+    background: $colour-7;
+    color: $white;
+    &:hover {
+      background: shade($colour-7, 10%);
+    }
+    &:active {
+      background: ($colour-7);
+    }
+  }
+  &.btn-cyan {
+    background: $colour-13;
+    color: $white;
+    &:hover {
+      background: darken($colour-13, 6%);
+    }
+    &:active {
+      background: ($colour-13);
+    }
+  }
+  &.btn-secondary {
+    @include box-shadow(0, 0, 0, 0);
+
+    color: $colour-12;
+    background: transparent;
+    border: 2px solid $white;
+    line-height: 38px;
+    &:hover, &:active {
+      background: transparent;
+      color: shade($colour-12, 20%);
+    }
+    &.btn-red{
+      color: $colour-12;
+      border: 2px solid $colour-12;
+      &:hover {
+        background: transparent;
+        color: $colour-24;
+        border: 2px solid $colour-24;
+        //border: 1px solid shade($colour-12, 20%);
+      }
+    }
+    &.btn-green {
+      color: $colour-18;
+      border: 2px solid $colour-18;
+    }
+    &.btn-purple {
+      color: $colour-7;
+      border: 2px solid $colour-7;
+      &:hover {
+        background: transparent;
+        color: shade($colour-7, 20%);
+        border: 2px solid shade($colour-7, 20%);
+      }
+    }
+    &.btn-cyan {
+      color: $colour-13;
+      border: 2px solid $colour-13;
+      &:hover {
+        background: transparent;
+        color: shade($colour-13, 20%);
+        border: 1px solid shade($colour-13, 20%);
+      }
+    }
+  }
+  &.btn-small {
+    line-height: 28px;
+    height: 28px;
+  }
+  &.btn-lg {
+    width: 50%;
+    height: 60px;
+    line-height: 60px;
+  }
+}
+.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+  margin-left: 0; // for horizontal forms and .input-group
+}
+
+
+a.btn-block {
+  color: $white;
+  display: block;
+  padding: $gutter/1.5 $gutter;
+  text-decoration: none;
+  @include transition(background-color .2s ease);
+  @include font-size(2.2);
+  @include breakpoint(md-min) {
+    padding: $gutter*1.25 $gutter;
+  }
+  &.btn-block-purple {
+    background: $colour-7;
+    &:hover {
+      background: shade($colour-7, 10%);
+    }
+  }
+  &.btn-block-red {
+    background: $colour-12;
+    &:hover {
+      background: shade($colour-12, 10%);
+    }
+  }
+  &.btn-block-cyan {
+    background: $colour-13;
+    &:hover {
+      background: shade($colour-13, 10%);
+    }
+  }
+}
+
+.pagination > li > a, .pagination > li > span {
+  padding: 10px 18px;
+  color: $colour-7;
+  &:hover {
+
+  }
+}
+.pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
+  background-color: $colour-5;
+  border-color: $colour-5;
+}
+
+
+.fake-btn {
+  @include font-size(1.1);
+  @include transition(background-color .2s ease);
+
+  @include breakpoint(xs-min) {
+    display: inline-block;
+  }
+
+  @include breakpoint(sm-min) {
+    display: inline-block;
+    @include font-size(1.2);
+  }
+
+  display: block;
+  height: 40px;
+  padding: 0 $gutter;
+  line-height: 40px;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  border: 0;
+
+  &:link, &:visited {
+    text-decoration: none;
+    color: $colour-12;
+  }
+  &:hover {
+    color: shade($colour-12, 20%);
+  }
+  &:active {
+    @include box-shadow(0, 0, 0, 0);
+  }
+  &.btn-red {
+    background: $colour-12;
+    color: $white;
+    &:hover {
+      cursor: not-allowed;
+      background: shade($colour-12, 10%);
+    }
+    &:active {
+      background: ($colour-12);
+    }
+  }
+  &.btn-purple {
+    background: $colour-7;
+    color: $white;
+    &:hover {
+      background: shade($colour-7, 10%);
+    }
+    &:active {
+      background: ($colour-7);
+    }
+  }
+  &.btn-cyan {
+    background: $colour-13;
+    color: $white;
+    &:hover {
+      cursor: not-allowed;
+      background: shade($colour-13, 10%);
+    }
+    &:active {
+      background: ($colour-13);
+    }
+  }
+  &.btn-secondary {
+    @include box-shadow(0, 0, 0, 0);
+
+    color: $colour-12;
+    background: transparent;
+    border: 1px solid $white;
+    line-height: 38px;
+    &:hover, &:active {
+      background: transparent;
+      color: shade($colour-12, 20%);
+    }
+    &.btn-red{
+      color: $colour-12;
+      border: 1px solid $colour-12;
+      &:hover {
+        background: transparent;
+        color: shade($colour-12, 20%);
+        border: 1px solid shade($colour-12, 20%);
+      }
+    }
+    &.btn-purple {
+      color: $colour-7;
+      border: 1px solid $colour-7;
+      &:hover {
+        background: transparent;
+        color: shade($colour-7, 20%);
+        border: 1px solid shade($colour-7, 20%);
+      }
+    }
+    &.btn-cyan {
+      color: $colour-13;
+      border: 1px solid $colour-13;
+      &:hover {
+        background: transparent;
+        color: shade($colour-13, 20%);
+        border: 1px solid shade($colour-13, 20%);
+      }
+    }
+  }
+  &.btn-small {
+    line-height: 28px;
+    height: 28px;
+  }
+}
+
+//Bootstrap Social
+$bs-height-base: ($line-height-computed + $padding-base-vertical * 2);
+$bs-height-lg:   (floor($font-size-large * $line-height-base) + $padding-large-vertical * 2);
+$bs-height-sm:   (floor($font-size-small * 1.5) + $padding-small-vertical * 2);
+$bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
+
+.btn-social {
+  position: relative;
+  padding-left: ($bs-height-base + $padding-base-horizontal);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  > :first-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: $bs-height-base;
+    line-height: ($bs-height-base + 2);
+    font-size: 1.6em;
+    text-align: center;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  &.btn-lg {
+    padding-left: ($bs-height-lg + $padding-large-horizontal);
+    > :first-child {
+      line-height: $bs-height-lg;
+      width: $bs-height-lg;
+      font-size: 1.8em;
+    }
+  }
+  &.btn-sm {
+    padding-left: ($bs-height-sm + $padding-small-horizontal);
+    > :first-child {
+      line-height: $bs-height-sm;
+      width: $bs-height-sm;
+      font-size: 1.4em;
+    }
+  }
+  &.btn-xs {
+    padding-left: ($bs-height-xs + $padding-small-horizontal);
+    > :first-child {
+      line-height: $bs-height-xs;
+      width: $bs-height-xs;
+      font-size: 1.2em;
+    }
+  }
+}
+
+.btn-social-icon {
+  @extend .btn-social;
+  height: ($bs-height-base + 2);
+  width: ($bs-height-base + 2);
+  padding: 0;
+  > :first-child {
+    border: none;
+    text-align: center;
+    width: 100%!important;
+  }
+  &.btn-lg {
+    height: $bs-height-lg;
+    width: $bs-height-lg;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  &.btn-sm {
+    height: ($bs-height-sm + 2);
+    width: ($bs-height-sm + 2);
+    padding-left: 0;
+    padding-right: 0;
+  }
+  &.btn-xs {
+    height: ($bs-height-xs + 2);
+    width: ($bs-height-xs + 2);
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@mixin btn-social($color-bg, $color: #fff) {
+  background-color: $color-bg;
+  @include button-variant($color, $color-bg, rgba(0,0,0,.2));
+}
+
+
+.btn-adn           { @include btn-social(#d87a68); }
+.btn-bitbucket     { @include btn-social(#205081); }
+.btn-dropbox       { @include btn-social(#1087dd); }
+.btn-facebook      { @include btn-social(#3b5998); }
+.btn-flickr        { @include btn-social(#ff0084); }
+.btn-foursquare    { @include btn-social(#f94877); }
+.btn-github        { @include btn-social(#444444); }
+.btn-google        { @include btn-social(#dd4b39); }
+.btn-instagram     { @include btn-social(#3f729b); }
+.btn-linkedin      { @include btn-social(#007bb6); }
+.btn-microsoft     { @include btn-social(#2672ec); }
+.btn-openid        { @include btn-social(#f7931e); }
+.btn-pinterest     { @include btn-social(#cb2027); }
+.btn-reddit        { @include btn-social(#eff7ff, #000); }
+.btn-soundcloud    { @include btn-social(#ff5500); }
+.btn-tumblr        { @include btn-social(#2c4762); }
+.btn-twitter       { @include btn-social(#55acee); }
+.btn-vimeo         { @include btn-social(#1ab7ea); }
+.btn-vk            { @include btn-social(#587ea3); }
+.btn-yahoo         { @include btn-social(#720e9e); }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 5. Page Layouts and Spacing
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 .container-fluid {
   padding-right: 15px;
   padding-left: 15px;
@@ -310,18 +800,7 @@ hr {
   padding-right: 15px;
   padding-left: 15px;
 }
-.corp-text {
-  color: $white;
-}
 
-.library-heading {
-  color: $purple-1;
-}
-.library-text {
-  color: $purple-1;
-}
-
-// 2. Layout
 .l-wrap {
   @include breakpoint(sm-min) {
     padding: 0 $gutter;
@@ -613,6 +1092,9 @@ hr {
     margin: $gutter*6 $gutter*15 $gutter $gutter*15;
   }
 }
+.corporate-title {
+  margin: $gutter 0;
+}
 .default-heading {
   padding: 0;
   @include breakpoint(xs-min) {
@@ -648,299 +1130,466 @@ hr {
   width: 80%;
 }
 
-
-// 3. modules
-
-
-//BTN's
-.btn {
-  @include font-size(1.1);
-  @include transition(background-color .2s ease);
-
-  @include breakpoint(xs-min) {
-    display: inline-block;
-  }
-
-  @include breakpoint(sm-min) {
-    display: inline-block;
-    @include font-size(1.2);
-  }
-
-  display: block;
-  height: 40px;
-  padding: 0 $gutter;
-  line-height: 40px;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  border: 0;
-
-  &:link, &:visited {
-    text-decoration: none;
-    color: $red-1;
-  }
-  &:hover {
-    color: shade($red-1, 20%);
-  }
-  &:active {
-    @include box-shadow(0, 0, 0, 0);
-  }
-  &.btn-red {
-    background: $red-1;
-    color: $white;
-    &:hover {
-      background: shade($red-1, 10%);
-    }
-    &:active {
-      background: ($red-1);
-    }
-  }
-  &.btn-wide {
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-
-  }
-  &.btn-lg-text {
-    line-height: 60px;
-    font-size: large;
-  }
-  &.btn-purple {
-    background: $purple-1;
-    color: $white;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-    &:active {
-      background: ($purple-1);
-    }
-  }
-  &.btn-cyan {
-    background: $cyan-1;
-    color: $white;
-    &:hover {
-      background: darken($cyan-1, 6%);
-    }
-    &:active {
-      background: ($cyan-1);
-    }
-  }
-  &.btn-secondary {
-    @include box-shadow(0, 0, 0, 0);
-
-    color: $red-1;
-    background: transparent;
-    border: 2px solid $white;
-    line-height: 38px;
-    &:hover, &:active {
-      background: transparent;
-      color: shade($red-1, 20%);
-    }
-    &.btn-red{
-      color: $red-1;
-      border: 2px solid $red-1;
-      &:hover {
-        background: transparent;
-        color: $orange-2;
-        border: 2px solid $orange-2;
-        //border: 1px solid shade($red-1, 20%);
-      }
-    }
-    &.btn-green {
-      color: $green-2;
-      border: 2px solid $green-2;
-    }
-    &.btn-purple {
-      color: $purple-1;
-      border: 2px solid $purple-1;
-      &:hover {
-        background: transparent;
-        color: shade($purple-1, 20%);
-        border: 2px solid shade($purple-1, 20%);
-      }
-    }
-    &.btn-cyan {
-      color: $cyan-1;
-      border: 2px solid $cyan-1;
-      &:hover {
-        background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
-      }
-    }
-  }
-  &.btn-small {
-    line-height: 28px;
-    height: 28px;
-  }
-  &.btn-lg {
-    width: 50%;
-    height: 60px;
-    line-height: 60px;
-  }
-}
-.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
-  margin-left: 0; // for horizontal forms and .input-group
-}
-
-
-a.btn-block {
+// Hero
+.hero-home {
+  background: $colour-11 asset-url('home-page-1003.png') 10% 0 no-repeat;
   color: $white;
-  display: block;
-  padding: $gutter/1.5 $gutter;
-  text-decoration: none;
-  @include transition(background-color .2s ease);
-  @include font-size(2.2);
+  background-size: cover;
+  //min-height: 1100px;
   @include breakpoint(md-min) {
-    padding: $gutter*1.25 $gutter;
+    background: $colour-11 asset-url('home-page-1003.png') no-repeat;
+    background-size: cover;
   }
-  &.btn-block-purple {
-    background: $purple-1;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
+}
+.hero-inner {
+  padding: 8rem 0;
+  @include breakpoint(md-min) {
+    padding: 20rem 0;
   }
-  &.btn-block-red {
-    background: $red-1;
-    &:hover {
-      background: shade($red-1, 10%);
-    }
-  }
-  &.btn-block-cyan {
-    background: $cyan-1;
-    &:hover {
-      background: shade($cyan-1, 10%);
+  .h1 {
+    @include breakpoint(lg-min) {
+      padding-right: 10%;
     }
   }
 }
-
-.pagination > li > a, .pagination > li > span {
-  padding: 10px 18px;
-  color: $purple-1;
-  &:hover {
-
+.hero-inner-small {
+  padding: 4rem 0;
+  @include breakpoint(md-min) {
+    padding: 10rem 0;
+  }
+  .h1 {
+    @include breakpoint(lg-min) {
+      padding-right: 10%;
+    }
   }
 }
-.pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
-  background-color: $asphalt-3;
-  border-color: $asphalt-3;
+.hero-inner-wide {
+  padding: 2rem 2rem;
+  @include breakpoint(md-min) {
+    padding: 5rem 1rem;
+  }
+  .h1 {
+    @include breakpoint(lg-min) {
+      padding-right: 10%;
+    }
+  }
+}
+.hero-acca {
+  background: $colour-11 asset-url('acca-background.png') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  @include breakpoint(md-min) {
+    background: $colour-11 asset-url('acca-background.png') no-repeat;
+    background-size: cover;
+  }
+}
+.hero-why-learn {
+  background: $colour-8 asset-url('bg-acca.jpg') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $colour-8 asset-url('bg-acca.jpg') no-repeat;
+    background-size: cover;
+  }
+}
+.hero-business {
+  background: $colour-11 asset-url('business-home-1001.png') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $colour-11 asset-url('business-home-1001.png') no-repeat;
+    background-size: cover;
+  }
+}
+.hero-upcoming {
+  background: $colour-8 asset-url('bg-upcoming.jpg') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $colour-8 asset-url('bg-upcoming.jpg') no-repeat;
+    background-size: cover;
+  }
 }
 
-
-.fake-btn {
-  @include font-size(1.1);
-  @include transition(background-color .2s ease);
-
-  @include breakpoint(xs-min) {
-    display: inline-block;
+.hero-cfa {
+  background: $colour-11 asset-url('acca-background.png') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  @include breakpoint(md-min) {
+    background: $colour-11 asset-url('acca-background.png') no-repeat;
+    background-size: cover;
   }
+}
 
+.hero-sign-up {
+  background: $colour-8 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $colour-8 asset-url('bg-sign-up.jpg') no-repeat;
+    background-size: cover;
+  }
+}
+.hero-library {
+  background: $colour-8 asset-url('bg-library.jpg') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $colour-8 asset-url('bg-library.jpg') no-repeat;
+    background-size: cover;
+  }
+}
+// Landing Page Images
+.home-image-1 {
+  background: lighten($colour-7, 5%) asset-url('professional-qualifications.png') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 500px;
+  @include breakpoint(md-min) {
+    background: lighten($colour-7, 5%) asset-url('professional-qualifications.png') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    //min-height: 500px;
+  }
+}
+.home-image-2 {
+  background: lighten($colour-7, 5%) asset-url('it-perations.png') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 500px;
+  @include breakpoint(md-min) {
+    background: lighten($colour-7, 5%) asset-url('it-perations.png') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 500px;
+  }
+}
+.home-image-3 {
+  background: lighten($colour-7, 5%) asset-url('business-professionals.png') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 500px;
+  @include breakpoint(md-min) {
+    background: lighten($colour-7, 5%) asset-url('business-professionals.png') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 500px;
+  }
+}
+
+.blog-image-1 {
+  background: lighten($colour-7, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 250px;
+  @include breakpoint(md-min) {
+    background: lighten($colour-7, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 250px;
+  }
+}
+.blog-image-2 {
+  background: lighten($colour-7, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 250px;
+  @include breakpoint(md-min) {
+    background: lighten($colour-7, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 250px;
+  }
+}
+.blog-image-3 {
+  background: lighten($colour-7, 5%) asset-url('elearning-employee-retention.jpg') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 250px;
+  @include breakpoint(md-min) {
+    background: lighten($colour-7, 5%) asset-url('elearning-employee-retention.jpg') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 250px;
+  }
+}
+
+// States
+.is-disabled {
+  pointer-events: none;
+  @include opacity(0.5);
+}
+.is-lg-right {
   @include breakpoint(sm-min) {
-    display: inline-block;
-    @include font-size(1.2);
+    float: right;
   }
+}
+.is-visually-hidden {
+  left: -9999px;
+  position: absolute;
+  top: -9999px;
+}
+.is-text-disabled {
+  color: #999;
+}
+.is-text-white {
+  color: $white;
+}
+.is-bg-red {
+  background: $colour-12;
+}
+.is-bg-purple {
+  background: $colour-7;
+}
+.is-bg-purple-1 {
+  background: $colour-8;
+}
+.is-bg-purple-2 {
+  background: $colour-9;
+}
+.is-bg-cyan {
+  background: $colour-13;
+}
+.is-bg-gray {
+  background: $colour-1;
+}
+.is-bg-asphalt {
+  background: $colour-3;
+}
+.is-bg-asphalt-dark {
+  background: $colour-6;
+}
+.is-bg-white-to-asphalt {
+  @include gradient-vertical($white, $colour-3, 0%, 50%);
+}
+.is-bg-white {
+  background: $white;
+}
+.is-bg-yellow {
+  background: $colour-14;
+}
+.is-bg-green {
+  background: $colour-17;
+}
 
-  display: block;
-  height: 40px;
-  padding: 0 $gutter;
-  line-height: 40px;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  border: 0;
 
-  &:link, &:visited {
-    text-decoration: none;
-    color: $red-1;
-  }
-  &:hover {
-    color: shade($red-1, 20%);
-  }
-  &:active {
-    @include box-shadow(0, 0, 0, 0);
-  }
-  &.btn-red {
-    background: $red-1;
-    color: $white;
-    &:hover {
-      cursor: not-allowed;
-      background: shade($red-1, 10%);
-    }
-    &:active {
-      background: ($red-1);
-    }
-  }
-  &.btn-purple {
-    background: $purple-1;
-    color: $white;
-    &:hover {
-      background: shade($purple-1, 10%);
-    }
-    &:active {
-      background: ($purple-1);
-    }
-  }
-  &.btn-cyan {
-    background: $cyan-1;
-    color: $white;
-    &:hover {
-      cursor: not-allowed;
-      background: shade($cyan-1, 10%);
-    }
-    &:active {
-      background: ($cyan-1);
-    }
-  }
-  &.btn-secondary {
-    @include box-shadow(0, 0, 0, 0);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 6. Navbars, Footers & SideNav
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    color: $red-1;
-    background: transparent;
-    border: 1px solid $white;
-    line-height: 38px;
-    &:hover, &:active {
-      background: transparent;
-      color: shade($red-1, 20%);
-    }
-    &.btn-red{
-      color: $red-1;
-      border: 1px solid $red-1;
-      &:hover {
-        background: transparent;
-        color: shade($red-1, 20%);
-        border: 1px solid shade($red-1, 20%);
-      }
-    }
-    &.btn-purple {
-      color: $purple-1;
-      border: 1px solid $purple-1;
-      &:hover {
-        background: transparent;
-        color: shade($purple-1, 20%);
-        border: 1px solid shade($purple-1, 20%);
-      }
-    }
-    &.btn-cyan {
-      color: $cyan-1;
-      border: 1px solid $cyan-1;
-      &:hover {
-        background: transparent;
-        color: shade($cyan-1, 20%);
-        border: 1px solid shade($cyan-1, 20%);
-      }
-    }
+// Navbar
+.header {
+  &.header-dark {
+    background: $colour-7;
   }
-  &.btn-small {
-    line-height: 28px;
-    height: 28px;
+  &.header-fixed { // unused
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+  }
+}
+.nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 $gutter;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 $gutter*5;
+  }
+}
+.transparent-nav-wrap {
+  @include breakpoint(xs-min) {
+    margin: 0 $gutter/2;
+  }
+  @include breakpoint(sm-min) {
+    margin: 0 $gutter;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 $gutter*5;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 $gutter*5;
   }
 }
 
-//Footer
+.navbar {
+  min-height: auto;
+  margin: 0;
+  border: 0;
+  @include border-radius(0);
+}
+.navbar-default {
+  background-color: transparent;
+  border: 0;
+}
+.navbar-transparent {
+  border-bottom: 1px solid rgba($white, 0.2);
+}
+.navbar-collapse {
+  padding: 0;
+  border: 0;
+  @include box-shadow(0, 0, 0, 0);
+  @include breakpoint(sm-min) {
+    background: transparent;
+  }
+}
+.navbar-default .navbar-nav > li > a {
+  color: rgba($white, .8);
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+  text-decoration: none;
+  @include font-size(1.3);
+  &:hover, &:active {
+    color: rgba($white, 1);
+  }
+  @include breakpoint(sm-min) {
+    margin: 0;
+    border: 1px solid transparent;
+    &:hover {
+      background: transparent;
+    }
+  }
+  &.sign-up-link {
+    @include breakpoint(sm-min) {
+      @include border-radius(3px);
+      border: 1px solid $colour-12;
+      color: $colour-12;
+      &:hover {
+        border: 1px solid darken($colour-12, 15%);
+        color: $colour-12 darken($colour-12, 15%);
+      }
+    }
+  }
+  &.days-left {
+    @include breakpoint(sm-min) {
+      @include border-radius(4px);
+      border: 1px solid rgba($colour-12, 0.5);
+      &:hover {
+        border: 1px solid rgba($colour-12, 0.8);
+      }
+    }
+  }
+}
+.navbar-nav {
+  margin: 0;
+  @include breakpoint(sm-min) {
+    padding: 16px 0;
+    margin: 0;
+  }
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: $white;
+}
+.navbar-nav > li > a {
+  padding: 0 $gutter;
+  padding: $gutter/4 $gutter/2;
+  padding: $gutter/4 $gutter/1.5;
+  line-height: 40px;
+  border-top: 1px solid rgba($white, 0.2);
+  @include breakpoint(sm-min) {
+    border: 0;
+    line-height: 1.5;
+  }
+}
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+  background-color: transparent;
+  color: $white;
+}
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+  border: 0;
+}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border-color: transparent;
+}
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+  background: transparent;
+}
+.navbar-default .navbar-toggle {
+  border-color: rgba($white, 0.2);
+  margin: 11px 0 0 0;
+  @include border-radius(3px);
+}
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: $white;
+}
+.user-notification {
+  display: inline-block;
+  background: $colour-12;
+  padding: 4px;
+  min-width: 17px;
+  height: 17px;
+  line-height: 9px;
+  text-align: center;
+  @include border-radius(3px);
+  @include font-size(1.1);
+}
+.dropdown-menu {
+  border: 1px solid shade($colour-7, 20%);
+  padding: 0;
+  @include box-shadow(0, 0, 5px, rgba(#000, .3));
+  @include breakpoint(md-min) {
+    padding: $gutter/2 0;
+    background: $colour-7;
+  }
+}
+.dropdown-menu > li {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.dropdown-menu > li > a {
+  display: block;
+  padding: $gutter/4 $gutter/1.5;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: -1px;
+  border-top: 1px solid tint($colour-7, 10%);
+  border-bottom: 1px solid tint($colour-7, 10%);
+  color: $white;
+  text-decoration: none;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+    &:hover {
+      background: $colour-8;
+    }
+  }
 
+}
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+  color: $white;
+}
+.navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+  color: $white;
+}
+.navbar-nav .open .dropdown-menu>li>a {
+  line-height: 30px;
+}
+.navbar-nav > li > .dropdown-menu {
+  margin-top: 5px;
+  @include border-radius(5px);
+}
+#drop.dropdown-toggle {
+  border: 1px solid transparent;
+}
+.dropdown {
+  border-top: 1px solid rgba(#fff, 0.2);
+  border-bottom: 1px solid rgba(#fff, 0.2);
+  margin-bottom: $gutter;
+  @include breakpoint(sm-min) {
+    margin: 0;
+    border: 0;
+  }
+}
+
+// Footer
 .foot {
   position: relative;
   margin-bottom: -50px; /* negative value of footer height */
-  background: $purple-1;
-  border-top: 0px solid $asphalt-1;
+  background: $colour-7;
+  border-top: 0px solid $colour-3;
   padding: $gutter*1.5 0 $gutter*2 0;
   text-align: center;
   @include clearfix();
@@ -950,7 +1599,7 @@ a.btn-block {
     @include font-size(1.4);
   }
   .border-top {
-    border-top: 10px solid $asphalt-1;
+    border-top: 10px solid $colour-3;
   }
 }
 .foot-nav {
@@ -966,7 +1615,7 @@ a.btn-block {
   & li {
     position: relative;
     display: inline-block;
-    color: tint($purple-1, 20%);
+    color: tint($colour-7, 20%);
     margin-left: $gutter/4;
     &:before {
       content: "•";
@@ -1007,7 +1656,7 @@ a.btn-block {
   & li {
     position: relative;
     display: inline-block;
-    color: tint($purple-1, 20%);
+    color: tint($colour-7, 20%);
     margin-left: $gutter/4;
     &:before {
       content: "•";
@@ -1048,7 +1697,7 @@ a.btn-block {
   & li {
     position: relative;
     display: inline-block;
-    color: tint($purple-1, 20%);
+    color: tint($colour-7, 20%);
     margin-left: $gutter/4;
     &:before {
       position: absolute;
@@ -1097,6 +1746,1633 @@ a.btn-block {
   }
 }
 
+//Corporate Sidebar
+#wrapper {
+  padding-left: 0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+  padding-left: 250px;
+}
+
+#sidebar-wrapper {
+  position: fixed;
+  left: 250px;
+  width: 0;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  background: $colour-9;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  width: 250px;
+}
+
+#page-content-wrapper {
+  width: 100%;
+  position: absolute;
+  padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+  position: absolute;
+  margin-right: -250px;
+}
+
+.main-content {
+  //position: absolute;
+  overflow: auto;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+  position: fixed;
+  top: 0;
+  width: 250px;
+  margin-top: $gutter*8;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-nav li {
+  //text-indent: 20px;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(120,120,120,.5);
+  font-size: 17px;
+  &.first-li {
+    border-top: 1px solid rgba(120,120,120,.5);
+  }
+}
+
+.sidebar-nav li a {
+  display: block;
+  text-decoration: none;
+  color: rgba(255,255,255,0.8);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  &:hover, &:focus {
+    background: $colour-13;
+
+  }
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+  height: 75px;
+  font-size: 18px;
+  line-height: 60px;
+  margin-bottom: 30px;
+  margin-top: 100px;
+  border-bottom: none;
+  a:hover, a:focus {
+    background: none;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+}
+.brand-logo {
+  width: 50%;
+  a:hover, a:focus {
+    background: none;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+}
+
+.sidebar-nav > .sidebar-brand a {
+  color: $white;
+
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+
+@media(min-width:768px) {
+  #wrapper {
+    padding-left: 250px;
+  }
+
+  #wrapper.toggled {
+    padding-left: 0;
+  }
+
+  #sidebar-wrapper {
+    width: 250px;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    width: 0;
+  }
+
+  #page-content-wrapper {
+    padding: 20px;
+    position: relative;
+  }
+
+  #wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0;
+  }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 7. Subscriptions & Sign Ups
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//Plans
+.plans {
+  margin-top: $gutter*2;
+}
+.plan {
+  text-align: center;
+  color: $white;
+  margin-bottom: $gutter*2;
+  @include border-radius(5px);
+}
+.plan-monthly {
+  background: $colour-13;
+}
+.plan-quarterly {
+  background: $colour-12;
+}
+.plan-yearly {
+  background: $colour-7;
+}
+.plan-header {
+  background: rgba(#000, .05);
+  padding: $gutter/2 $gutter;
+}
+.plan-popular {
+  background: $colour-15;
+  padding: $gutter/2 $gutter;
+  //border: 5px solid $yellow-2;
+}
+.plan-title, .plan-price {
+  color: $white;
+  margin: 0;
+}
+.plan-price {
+  margin: 0 0 $gutter/2 0;
+}
+.plan-text {
+  color: $white;
+  margin: 0;
+}
+.plan-inner {
+  padding: $gutter*2 $gutter;
+}
+.plan-option {
+  padding: $gutter/2 $gutter;
+  display: block;
+  color: $white;
+  font-weight: normal;
+  border-top: 1px solid rgba($white, .2);
+  @include transition(background-color .2s ease);
+  &:hover {
+    background: rgba(#000, 0.1);
+  }
+}
+.plan-footer {
+  background: rgba(#000, .15);
+  padding: $gutter/2 $gutter;
+  display: block;
+  color: $white;
+  font-weight: normal;
+  border-top: 1px solid rgba($white, .2);
+  @include transition(background-color .2s ease);
+  &:hover {
+    background: rgba(#000, 0.3);
+    color: $white;
+    text-decoration: none;
+  }
+}
+.blue-border {
+  border: 1px solid $colour-15 ;
+}
+.no-card {
+  height: 40px;
+  line-height: 40px;
+  text-transform: none;
+  padding: 0;
+  text-align: center;
+  display: block;
+  @include opacity(0.6);
+  @include font-size(1.1);
+  @include breakpoint(xs-min) {
+    display: inline-block;
+    @include font-size(1.2);
+  }
+}
+.chosen-plan {
+  background: $colour-12;
+  color: $white;
+}
+
+.pricing-box-purple {
+  display: block;
+  background: $colour-7;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.box-course {
+    text-align: center;
+    margin-top: $gutter*1.5;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .box-inner {
+      padding-top: $gutter*2.5;
+    }
+  }
+}
+.pricing-box-red {
+  display: block;
+  background: $colour-12;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.box-course {
+    text-align: center;
+    margin-top: $gutter*1.5;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .box-inner {
+      padding-top: $gutter*2.5;
+    }
+  }
+}
+.pricing-box-cyan {
+  display: block;
+  background: $colour-13;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 8. Videos & Quizzes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Quizzes
+.box-item.question-box {
+  box-shadow: 0 0 0;
+  &:before {
+    position: absolute;
+    background: 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+
+}
+.border-same-backcolor {
+  border-color: $colour-3;
+  border-width: 2px;
+  box-shadow: 0 0 0px #aec2d1;
+}
+
+.round-border {
+  @include border-radius(5px);
+}
+.panel > .list-group .list-group-item {
+  border-color: $colour-3;
+  border-top-width: 2px;
+}
+.panel-body {
+  padding: 25px;
+}
+a.list-group-item {
+  //color: rgba(0,0,0,0);
+  padding: 17px;
+  p {
+    margin-bottom: $gutter/4;
+  }
+}
+.text-bold {
+  font-weight: bold;
+}
+.text-failed {
+  color: $colour-12;
+  margin-bottom: 0px;
+  margin-top:10px;
+}
+.text-passed {
+  color: green;
+  margin-bottom: 0px;
+  margin-top:10px;
+}
+.text-active {
+  color: $colour-8;
+  margin-bottom: 0px;
+  margin-top:10px;
+}
+.box-item#quiz-contents {
+  padding-top: 35px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  margin-bottom: 3px;
+
+}
+.progress {
+  height: $gutter/2;
+  border-radius: $gutter/2;
+  background-color: $colour-3;
+  box-shadow: none;
+  .progress-bar {
+    background-color: $colour-12;
+  }
+}
+.result-summary {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+.width-smaller {
+  width: 93%;
+}
+.width-bigger {
+  width: 103%;
+  float: right;
+}
+.list-group-item.current-cme {
+  background-color: $colour-4;
+  border-left: 4px solid $colour-7 !important;
+
+}
+.answer-correct {
+  background-color: $colour-17;
+  &:hover {
+    background-color: darken($colour-17, 7);
+  }
+  p {
+    color: green;
+  }
+}
+.answer-failed {
+  background-color: $colour-19;
+  &:hover {
+    background-color: darken($colour-19, 5);
+  }
+  p {
+    color: $colour-12;
+  }
+}
+.answer {
+  padding: 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.quiz-answer {
+  min-height: 100px;
+}
+.text-inline {
+  display: inline;
+}
+.scrollbar {
+  overflow-y: scroll;
+  max-height: 100%;
+}
+
+.side-nav {
+  height: 550px;
+}
+
+.sidenav-section {
+  min-height: 100px;
+}
+
+.answerpanel{
+  .list-group-item:hover {
+    background-color: $colour-3;
+    border-left: 0px solid $colour-7 !important;
+  }
+  a.list-group-item:focus{
+    background-color: $colour-3;
+    border-left: 1px solid $colour-7 !important;
+    //-webkit-animation-name: example; /* Chrome, Safari, Opera */
+    //-webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    //animation-name: example;
+    //animation-duration: 4s;
+  }
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes example {
+  0%   {border-color:red; left:0px; top:0px;}
+  25%  {border-color:yellow; left:200px; top:0px;}
+  50%  {border-color:blue; left:200px; top:200px;}
+  75%  {border-color:green; left:0px; top:200px;}
+  100% {border-color:red; left:0px; top:0px;}
+}
+
+@media (max-width: 768px) {
+  .side-nav{
+    height: auto;
+  }
+  .width-smaller {
+    width: 100%;
+  }
+  .width-bigger {
+    width: 100%;
+    //float: right;
+  }
+}
+
+.panel.clickable {
+  margin-bottom: 5px;
+  background-color: darken($white, 5);
+  &:hover {
+    cursor: pointer;
+    background-color: darken($white, 15);
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 9. Dashboard
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.one-line-text {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.coursebar {
+  color: white;
+  padding: 24px;
+  a.btn.btn-purple {
+    @include breakpoint(xs-min) {
+      margin-bottom: $gutter;
+    }
+  }
+}
+.coursebar a:hover {
+  color: white;
+  text-decoration: initial;
+}
+.coursetype {
+  text-decoration: initial;
+  padding: 13px;
+  padding-left: $gutter;
+  padding-right: $gutter;
+  margin-right: $gutter;
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+  text-decoration: none;
+  font-size: 12px;
+  background-color: $colour-7;
+  border-radius: 5%;
+  border: 0px solid $colour-7;
+  text-decoration: initial;
+  color: rgba(255, 255, 255, 0.9);
+}
+.resume-course {
+  @include breakpoint(xs-min) {
+    margin-top: $gutter/3;
+  }
+  @include breakpoint(sm-min) {
+    margin-top: $gutter*2;
+  }
+  @include breakpoint(md-min) {
+    margin-top: $gutter*2;
+  }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 10. Library
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+a.box {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .box-title {
+      //color: $colour-12;
+    }
+    .box-label {
+      background: shade($colour-12, 10%);
+    }
+  }
+}
+.box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.box-course {
+    text-align: center;
+    margin-top: $gutter;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .box-inner {
+      padding-top: $gutter*1.5;
+    }
+  }
+}
+.box-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.box-inner {
+  padding: $gutter $gutter/2;
+  height: 225px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.box-pic {
+  max-height: 50%;
+  max-width: 50%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.box-desc {
+  margin: $gutter/2 0 0 0;
+}
+.box-label {
+  background: $colour-12;
+  color: $white;
+  padding: $gutter/1.45;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+
+a.box-item {
+  color: $colour-7;
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+  &:hover, &:active {
+    border: 1px solid $colour-7;
+    @include box-shadow(0, 0, 12px, darken($colour-3, 15%));
+  }
+}
+.box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.completed-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-green.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.box-topic-item {
+  padding-right: $gutter*2;
+}
+.time {
+  position: absolute;
+  top: 16px;
+  right: 15px;
+  color: tint($colour-7, 50%);
+}
+.side-meta {
+  color: tint($colour-7, 50%);
+  display: block;
+  text-align: left;
+  @include breakpoint(sm-min) {
+    text-align: right;
+  }
+}
+.left-side-meta {
+  color: tint($colour-7, 50%);
+  display: block;
+  text-align: left;
+  @include breakpoint(sm-min) {
+    text-align: left;
+  }
+}
+a.card {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+
+  }
+  &:hover {
+    .card-title {
+      //color: $colour-12;
+    }
+    .card-label {
+      background: darken($colour-12, 5%);
+
+    }
+  }
+}
+
+.card{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.card-course {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding-top: $gutter;
+    }
+  }
+}
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.card-outer {
+  height: 275px;
+}
+.card-inner {
+  padding: $gutter $gutter;
+  height: 200px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.card-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.card-desc {
+  margin: 0 0 0 0;
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.days-left {
+  @include border-radius(16px);
+  border: 2px dashed $colour-13;
+  //width: 80%;
+}
+
+.card-label {
+  background: $colour-12;
+  color: $white;
+  padding: $gutter/1.45;
+  //letter-spacing: .2rem;
+  //text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+.course-topics-list {
+  list-style: none;
+  //margin: 0 0 $gutter*2 0;
+  padding-left: 0;
+}
+.lined-list {
+  border-top: 1px solid rgba($colour-1, .15);
+  padding: 0;
+  li {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+  }
+}
+.lined-list-item {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: $gutter/2 $gutter/2 $gutter/2 0;
+  border-bottom: 1px solid rgba($colour-1, .15);
+  position: relative;
+  .current {
+    color: #009900;
+  }
+}
+.collapse-list {
+  ul {
+    margin-top: -10px;
+    border-top: 0;
+  }
+  li {
+    padding-left: $gutter*.75;
+    padding-right: $gutter*.75;
+  }
+}
+.lib-panel {
+  cursor: pointer;
+  &:hover {
+    background: darken($white, 5);
+  }
+}
+.sign-up {
+  background: $colour-3 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
+}
+.course-info {
+  width: 60%;
+  float: right;
+  margin-top: $gutter*4;
+  @include breakpoint(xs-min) {
+    width: 100%;
+    margin-top: $gutter*2;
+  }
+
+  @include breakpoint(md-min) {
+    width: 60%;
+    margin-top: $gutter*4;
+  }
+
+}
+.course-action {
+  width: 93%;
+  float: right;
+  margin-top: $gutter*4;
+  @include breakpoint(xs-min) {
+    width: 100%;
+  }
+  @include breakpoint(md-min) {
+  }
+}
+.tutor-profile-pic {
+  float: left;
+  max-width: 50px;
+  border: 1px solid $colour-7;
+  margin-top: -15px;
+  margin-right: 10px;
+}
+.tutor-profile-title {
+  padding-top: $gutter;
+  margin: 0;
+}
+.number {
+  display: inline-block;
+  border: 1px solid $colour-7;
+  width: 40px;
+  height: 40px;
+  color: $white;
+  line-height: 40px;
+  margin-right: $gutter/2;
+  @include border-radius(100%);
+  color: $colour-7;
+}
+.final-quiz-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+      text-decoration: none;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.cert-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-test.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+      text-decoration: none;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+
+.tutor-header {
+  img.profile-pic {
+    text-decoration: none;
+
+    &:link {
+      text-decoration: none;
+    }
+    &:hover, &:active {
+      text-decoration: none;
+      @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    }
+  }
+  .profile-pic {
+    display: block;
+    max-width: 120px;
+    margin: 0 auto $gutter auto;
+    @include border-radius(100%);
+    &.profile-pic-big {
+      max-width: 170px;
+    }
+    &.profile-pic-small {
+      max-width: 80px;
+    }
+  }
+}
+.media-pic {
+  display: block;
+  max-width: 200px;
+  max-height: 150px;
+  margin: 0 auto $gutter auto;
+}
+
+//////////////////////
+a.library-box {
+  text-decoration: none;
+
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .library-box-title {
+      //color: $colour-12;
+    }
+    .library-box-label {
+      background: shade($colour-12, 10%);
+    }
+  }
+}
+.library-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.library-box-course {
+    text-align: center;
+    margin-top: $gutter*1.5;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .library-box-inner {
+      padding-top: $gutter*2.5;
+    }
+  }
+}
+.library-box-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.library-box-inner {
+  padding: $gutter*2 $gutter/2;
+}
+.library-box-desc {
+  margin: $gutter/2 0 0 0;
+}
+.library-box-label {
+  background: $colour-12;
+  color: $white;
+  padding: $gutter/1.45;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+a.library-box-item {
+  color: $colour-7;
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+  &:hover, &:active {
+    border: 1px solid $colour-7;
+    @include box-shadow(0, 0, 12px, darken($colour-3, 15%));
+  }
+}
+.library-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.library-box-topic-item {
+
+  }
+}
+.library-box-topic-item {
+  padding-right: $gutter*2;
+}
+.library-box-item .panel-icon {
+  background-color: $colour-13;
+  color: white;
+  display: inline-block;
+  font-size: 12px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  padding-top: 7px;
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  margin-left: -15px;
+  text-align: center;
+}
+.library-box-item .panel-icon.icon-big {
+  width: 40px;
+  height:40px;
+  padding-top: 12px;
+  margin-left: -18px;
+}
+.library-box-item .panel-icon.icon-inner {
+  top: 30px;
+  width: 90px;
+  height: 90px;
+  padding-top: 30px;
+  font-size: 34px;
+  margin-left: -45px;
+}
+.library-box-item .panel-icon.icon-inner.icon-red {
+  background-color: $colour-12;
+}
+.library-box-item .panel-icon.icon-inner.icon-cyan {
+  background-color: $colour-13;
+}
+.library-box-item .panel-icon.icon-inner.icon-purple {
+  background-color: $colour-7;
+}
+.library-box-item.panel {
+  padding-left: 0px;
+  padding-right:0px;
+  padding-top: 35px;
+  padding-bottom: 0px;
+
+}
+.question-bank-passed {
+  color: green;
+  //margin-bottom: 0px;
+}
+
+.selected {
+  background: $colour-17;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 11. HomePages & Footer Pages
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//Testimonials
+.testimonials {
+  background: $colour-3 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
+  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
+  &.testimonials-alt {
+    background: $white;
+  }
+}
+.testimonial {
+  h1, h2, h3, h4 {
+    text-align: center;
+  }
+}
+.testimonial-pic-wrap {
+  position: relative;
+  max-width: 140px;
+  margin: $gutter*2 auto;
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    height: 30px;
+    width: 30px;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
+    background-size: contain;
+  }
+}
+.testimonial-pic {
+  display: block;
+  max-width: 140px;
+  @include border-radius(100%);
+}
+.testimonial-sig {
+  color: darken($colour-1, 15%);
+}
+.features {
+  text-align: center;
+  background: $white;
+}
+.course-types {
+  text-align: center;
+  background: lighten($colour-7, 5%);
+  color: lighten($colour-7, 40%);
+}
+.business {
+  text-align: center;
+  background: $white;
+  color: lighten($colour-7, 40%);
+}
+.individuals {
+  text-align: center;
+  background: lighten($colour-7, 5%);
+  color: $white
+}
+.features-img {
+  display: block;
+  max-width: 110px;
+  max-height: 110px;
+  margin: $gutter*2 auto;
+}
+.padded-features-img {
+  display: block;
+  max-width: 110px;
+  max-height: 110px;
+  margin: $gutter*2.5 auto;
+}
+.start-trial {
+  & a {
+    text-decoration: none;
+  }
+  & .h5 {
+    margin-bottom: $gutter/2;
+    @include opacity(0.6);
+  }
+  & p {
+    color: $white;
+    margin: 0;
+    &:hover {
+      color: $white;
+    }
+  }
+}
+.ico-arrow-right-r {
+  padding-right: $gutter*1.5;
+  position: relative;
+  &:after {
+    position: absolute;
+    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right.png") no-repeat 0 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -10px;
+    right: 0;
+    content: "";
+    height: 19px;
+    width: 19px;
+  }
+}
+.footer-nav {
+  color: $colour-12;
+  &:hover {
+    background-color: darken($white, 5);
+  }
+  .border {
+    margin-left: $gutter;
+  }
+}
+.no-top-padding {
+  padding-top: 0;
+}
+
+
+a.tutor-box {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .tutor-box-title {
+      //color: $colour-12;
+    }
+    .tutor-box-label {
+      background: shade($colour-12, 10%);
+    }
+  }
+}
+.tutor-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.tutor-box-course {
+    text-align: center;
+    margin-top: $gutter;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .tutor-box-inner {
+      padding-top: $gutter*2;
+    }
+  }
+}
+.tutor-box-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.tutor-box-inner {
+  padding: $gutter $gutter/2;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.tutor-box-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.box-desc {
+  margin: $gutter/2 0 0 0;
+}
+.tutor-box-label {
+  background: $colour-12;
+  color: $white;
+  padding: $gutter/1.45;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+a.image-link {
+  color: $white;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 12. Corporate Layout
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.corporate-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  display: block;
+  position: relative;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+
+.corporate-box-item.chart-box {
+  padding: 40px;
+  margin-bottom: 60px;
+}
+.corporate-box-item.table-box {
+  padding: 30px;
+  margin-bottom: 60px;
+}
+.letter-space-wide {
+  letter-spacing: 1px;
+}
+.color-circle {
+  list-style: none;
+  display: inline-block;
+  background: #ccc;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  margin-right: 4px;
+  margin-left: 20px;
+
+  &.color-red {
+    background-color: $colour-12;
+  }
+  &.color-cyan {
+    background-color: $colour-13;
+  }
+  &.color-purple {
+    background-color: $colour-7;
+  }
+}
+.font-small {
+  font-size:small;
+}
+.corporate-box-item.viewed-item {
+  pointer-events: none;
+  cursor: default;
+  background-color: $colour-3;
+  @include box-shadow(0, 0, 0px, darken($colour-3, 20%));
+  @include border-radius(0px);
+  border-bottom: 1px solid darken($colour-3, 8%) ;
+  padding-left: 10px;
+  padding-top: 2px;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 13. Misc
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+.no-image-box-item {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.signal-tabs {
+  padding: 13px;
+  padding-left:0px;
+  border-bottom: 4px solid gainsboro ;
+  a {
+    color: $colour-1;
+    margin-bottom: $gutter;
+    letter-spacing: .1rem;
+    @include font-size(1.4);
+    @include breakpoint(md-min) {
+      @include font-size(1.6);
+    }
+    text-decoration: initial;
+    margin-right: 20px;
+    &:hover {
+      padding-bottom: 15px;
+      //border-bottom: 4px solid;
+      box-sizing: content-box;
+      color: $colour-7;
+      font-weight: bold;
+    }
+    &:focus {
+      padding-bottom: 15px;
+      border-bottom: 4px solid;
+      box-sizing: content-box;
+      color: $colour-7;
+      font-weight: bold;
+    }
+  }
+}
+.signal-tabs .underline {
+  padding-bottom: 15px;
+  border-bottom: 4px solid;
+  box-sizing: content-box;
+  color: $colour-7;
+  font-weight: bold;
+}
+
+
+// Iubenda
 #iubenda {
   background-color: #eee;
 }
@@ -1182,1101 +3458,6 @@ a.btn-block {
   font-weight: 900;
 }
 
-//Hero
-
-.hero-home {
-  background: $purple-5 asset-url('home-page-1003.png') 10% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  //min-height: 1100px;
-  @include breakpoint(md-min) {
-    background: $purple-5 asset-url('home-page-1003.png') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-inner {
-  padding: 8rem 0;
-  @include breakpoint(md-min) {
-    padding: 20rem 0;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.hero-inner-small {
-  padding: 4rem 0;
-  @include breakpoint(md-min) {
-    padding: 10rem 0;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.hero-inner-wide {
-  padding: 2rem 2rem;
-  @include breakpoint(md-min) {
-    padding: 5rem 1rem;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.hero-acca {
-  background: $purple-5 asset-url('acca-background.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-5 asset-url('acca-background.png') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-why-learn {
-  background: $purple-2 asset-url('bg-acca.jpg') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-acca.jpg') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-business {
-  background: $purple-5 asset-url('business-home-1001.png') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $purple-5 asset-url('business-home-1001.png') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-upcoming {
-  background: $purple-2 asset-url('bg-upcoming.jpg') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-upcoming.jpg') no-repeat;
-    background-size: cover;
-  }
-}
-
-.hero-cfa {
-  background: $purple-5 asset-url('acca-background.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $purple-5 asset-url('acca-background.png') no-repeat;
-    background-size: cover;
-  }
-}
-
-.hero-sign-up {
-  background: $purple-2 asset-url('bg-sign-up.jpg') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-sign-up.jpg') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-library {
-  background: $purple-2 asset-url('bg-library.jpg') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $purple-2 asset-url('bg-library.jpg') no-repeat;
-    background-size: cover;
-  }
-}
-// Landing Page Images
-.home-image-1 {
-  background: lighten($purple-1, 5%) asset-url('professional-qualifications.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 500px;
-  @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('professional-qualifications.png') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    //min-height: 500px;
-  }
-}
-.home-image-2 {
-  background: lighten($purple-1, 5%) asset-url('it-perations.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 500px;
-  @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('it-perations.png') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 500px;
-  }
-}
-.home-image-3 {
-  background: lighten($purple-1, 5%) asset-url('business-professionals.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 500px;
-  @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('business-professionals.png') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 500px;
-  }
-}
-
-
-
-
-.blog-image-1 {
-  background: lighten($purple-1, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 250px;
-  @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 250px;
-  }
-}
-.blog-image-2 {
-  background: lighten($purple-1, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 250px;
-  @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 250px;
-  }
-}
-.blog-image-3 {
-  background: lighten($purple-1, 5%) asset-url('elearning-employee-retention.jpg') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 250px;
-  @include breakpoint(md-min) {
-    background: lighten($purple-1, 5%) asset-url('elearning-employee-retention.jpg') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 250px;
-  }
-}
-
-
-//Plans
-
-.plans {
-  margin-top: $gutter*2;
-}
-.plan {
-  text-align: center;
-  color: $white;
-  margin-bottom: $gutter*2;
-  @include border-radius(5px);
-}
-.plan-monthly {
-  background: $cyan-1;
-}
-.plan-quarterly {
-  background: $red-1;
-}
-.plan-yearly {
-  background: $purple-1;
-}
-.plan-header {
-  background: rgba(#000, .05);
-  padding: $gutter/2 $gutter;
-}
-.plan-popular {
-  background: $blue-1;
-  padding: $gutter/2 $gutter;
-  //border: 5px solid $yellow-2;
-}
-.plan-title, .plan-price {
-  color: $white;
-  margin: 0;
-}
-.plan-price {
-  margin: 0 0 $gutter/2 0;
-}
-.plan-text {
-  color: $white;
-  margin: 0;
-}
-.plan-inner {
-  padding: $gutter*2 $gutter;
-}
-.plan-option {
-  padding: $gutter/2 $gutter;
-  display: block;
-  color: $white;
-  font-weight: normal;
-  border-top: 1px solid rgba($white, .2);
-  @include transition(background-color .2s ease);
-  &:hover {
-    background: rgba(#000, 0.1);
-  }
-}
-.plan-footer {
-  background: rgba(#000, .15);
-  padding: $gutter/2 $gutter;
-  display: block;
-  color: $white;
-  font-weight: normal;
-  border-top: 1px solid rgba($white, .2);
-  @include transition(background-color .2s ease);
-  &:hover {
-    background: rgba(#000, 0.3);
-    color: $white;
-    text-decoration: none;
-  }
-}
-.blue-border {
-  border: 1px solid $blue-1 ;
-}
-
-//Quizzes
-
-.borderless {
-  td, th {
-    border: none !important;
-  }
-}
-.box-item.question-box {
-  box-shadow: 0 0 0;
-  &:before {
-    position: absolute;
-    background: 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-
-}
-
-.image-contents {
-  padding-top: 160px;
-
-}
-
-.section-upper-image {
-  min-height: 427px;
-  position: relative;
-}
-
-.upper-image {
-  position: absolute;
-  width: 100%;
-  height:427px; // 61%;
-  overflow: hidden;
-  img {
-    width: 100%;
-    min-height: 427px;
-    min-width:1139px;
-  }
-}
-
-.header-transparent {
-  position: absolute;
-  top: 0px;
-  width: 100%;
-  z-index: 2;
-  background-color: rgba(0,0,0,0);
-}
-.full-width {
-  width: 100%;
-}
-.z-top {
-  z-index: 10;
-}
-
-.one-line-text {
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.nav-border {
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  @include border-radius(7%);
-}
-
-.border-same-backcolor {
-  border-color: $asphalt-1;
-  border-width: 2px;
-  box-shadow: 0 0 0px #aec2d1;
-}
-
-.bordercolor-cyan {
-  border-color: $cyan-1;
-}
-
-.round-border {
-  @include border-radius(5px);
-}
-
-.panel > .list-group .list-group-item {
-  border-color: $asphalt-1;
-  border-top-width: 2px;
-}
-
-.panel-body {
-  padding: 25px;
-}
-
-a.list-group-item {
-  //color: rgba(0,0,0,0);
-  padding: 17px;
-  p {
-    margin-bottom: $gutter/4;
-  }
-}
-
-.text-bold {
-  font-weight: bold;
-}
-
-.text-failed {
-  color: $red-1;
-  margin-bottom: 0px;
-  margin-top:10px;
-}
-
-.text-passed {
-  color: green;
-  margin-bottom: 0px;
-  margin-top:10px;
-}
-
-.text-active {
-  color: $purple-2;
-  margin-bottom: 0px;
-  margin-top:10px;
-}
-
-.box-item#quiz-contents {
-  padding-top: 35px;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-bottom: 30px;
-  margin-bottom: 3px;
-
-}
-
-.progress {
-  height: $gutter/2;
-  border-radius: $gutter/2;
-  background-color: $asphalt-1;
-  box-shadow: none;
-  .progress-bar {
-    background-color: $red-1;
-  }
-}
-.result-summary {
-  margin-bottom: 0;
-  margin-top: 20px;
-}
-.width-smaller {
-  width: 93%;
-}
-.width-bigger {
-  width: 103%;
-  float: right;
-}
-.list-group-item.current-cme {
-  background-color: $asphalt-2;
-  border-left: 4px solid $purple-1 !important;
-
-}
-.answer-correct {
-  background-color: $green-1;
-  &:hover {
-    background-color: darken($green-1, 7);
-  }
-  p {
-    color: green;
-  }
-}
-.answer-failed {
-  background-color: $pink-1;
-  &:hover {
-    background-color: darken($pink-1, 5);
-  }
-  p {
-    color: $red-1;
-  }
-}
-.answer {
-  padding: 15px;
-  border-radius: 7px;
-  cursor: pointer;
-}
-.quiz-answer {
-  min-height: 100px;
-}
-.text-inline {
-  display: inline;
-}
-.scrollbar {
-  overflow-y: scroll;
-  max-height: 100%;
-}
-
-.side-nav {
-  height: 550px;
-}
-
-.sidenav-section {
-  min-height: 100px;
-}
-
-.answerpanel{
-  .list-group-item:hover {
-    background-color: $asphalt-1;
-    border-left: 0px solid $purple-1 !important;
-  }
-  a.list-group-item:focus{
-    background-color: $asphalt-1;
-    border-left: 1px solid $purple-1 !important;
-    //-webkit-animation-name: example; /* Chrome, Safari, Opera */
-    //-webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
-    //animation-name: example;
-    //animation-duration: 4s;
-  }
-}
-/* Chrome, Safari, Opera */
-@-webkit-keyframes example {
-  0%   {border-color:red; left:0px; top:0px;}
-  25%  {border-color:yellow; left:200px; top:0px;}
-  50%  {border-color:blue; left:200px; top:200px;}
-  75%  {border-color:green; left:0px; top:200px;}
-  100% {border-color:red; left:0px; top:0px;}
-}
-
-@media (max-width: 768px) {
-  .side-nav{
-    height: auto;
-  }
-  .width-smaller {
-    width: 100%;
-  }
-  .width-bigger {
-    width: 100%;
-    //float: right;
-  }
-}
-
-//Testimonials
-.testimonials {
-  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
-  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
-  &.testimonials-alt {
-    background: $white;
-  }
-}
-.testimonial {
-  h1, h2, h3, h4 {
-    text-align: center;
-  }
-}
-.testimonial-pic-wrap {
-  position: relative;
-  max-width: 140px;
-  margin: $gutter*2 auto;
-  &:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    height: 30px;
-    width: 30px;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
-    background-size: contain;
-  }
-}
-.testimonial-pic {
-  display: block;
-  max-width: 140px;
-  @include border-radius(100%);
-}
-.testimonial-sig {
-  color: darken($gray-1, 15%);
-}
-
-//Bootstrap Social
-
-/*
- * Social Buttons for Bootstrap
- *
- * Copyright 2013-2015 Panayiotis Lipiridis
- * Licensed under the MIT License
- *
- * https://github.com/lipis/bootstrap-social
- */
-
-$bs-height-base: ($line-height-computed + $padding-base-vertical * 2);
-$bs-height-lg:   (floor($font-size-large * $line-height-base) + $padding-large-vertical * 2);
-$bs-height-sm:   (floor($font-size-small * 1.5) + $padding-small-vertical * 2);
-$bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
-
-.btn-social {
-  position: relative;
-  padding-left: ($bs-height-base + $padding-base-horizontal);
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  > :first-child {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: $bs-height-base;
-    line-height: ($bs-height-base + 2);
-    font-size: 1.6em;
-    text-align: center;
-    border-right: 1px solid rgba(0, 0, 0, 0.2);
-  }
-  &.btn-lg {
-    padding-left: ($bs-height-lg + $padding-large-horizontal);
-    > :first-child {
-      line-height: $bs-height-lg;
-      width: $bs-height-lg;
-      font-size: 1.8em;
-    }
-  }
-  &.btn-sm {
-    padding-left: ($bs-height-sm + $padding-small-horizontal);
-    > :first-child {
-      line-height: $bs-height-sm;
-      width: $bs-height-sm;
-      font-size: 1.4em;
-    }
-  }
-  &.btn-xs {
-    padding-left: ($bs-height-xs + $padding-small-horizontal);
-    > :first-child {
-      line-height: $bs-height-xs;
-      width: $bs-height-xs;
-      font-size: 1.2em;
-    }
-  }
-}
-
-.btn-social-icon {
-  @extend .btn-social;
-  height: ($bs-height-base + 2);
-  width: ($bs-height-base + 2);
-  padding: 0;
-  > :first-child {
-    border: none;
-    text-align: center;
-    width: 100%!important;
-  }
-  &.btn-lg {
-    height: $bs-height-lg;
-    width: $bs-height-lg;
-    padding-left: 0;
-    padding-right: 0;
-  }
-  &.btn-sm {
-    height: ($bs-height-sm + 2);
-    width: ($bs-height-sm + 2);
-    padding-left: 0;
-    padding-right: 0;
-  }
-  &.btn-xs {
-    height: ($bs-height-xs + 2);
-    width: ($bs-height-xs + 2);
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-@mixin btn-social($color-bg, $color: #fff) {
-  background-color: $color-bg;
-  @include button-variant($color, $color-bg, rgba(0,0,0,.2));
-}
-
-
-.btn-adn           { @include btn-social(#d87a68); }
-.btn-bitbucket     { @include btn-social(#205081); }
-.btn-dropbox       { @include btn-social(#1087dd); }
-.btn-facebook      { @include btn-social(#3b5998); }
-.btn-flickr        { @include btn-social(#ff0084); }
-.btn-foursquare    { @include btn-social(#f94877); }
-.btn-github        { @include btn-social(#444444); }
-.btn-google        { @include btn-social(#dd4b39); }
-.btn-instagram     { @include btn-social(#3f729b); }
-.btn-linkedin      { @include btn-social(#007bb6); }
-.btn-microsoft     { @include btn-social(#2672ec); }
-.btn-openid        { @include btn-social(#f7931e); }
-.btn-pinterest     { @include btn-social(#cb2027); }
-.btn-reddit        { @include btn-social(#eff7ff, #000); }
-.btn-soundcloud    { @include btn-social(#ff5500); }
-.btn-tumblr        { @include btn-social(#2c4762); }
-.btn-twitter       { @include btn-social(#55acee); }
-.btn-vimeo         { @include btn-social(#1ab7ea); }
-.btn-vk            { @include btn-social(#587ea3); }
-.btn-yahoo         { @include btn-social(#720e9e); }
-
-
-//Corporate Sidebar
-
-#wrapper {
-  padding-left: 0;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-  padding-left: 250px;
-}
-
-#sidebar-wrapper {
-  position: fixed;
-  left: 250px;
-  width: 0;
-  height: 100%;
-  margin-left: -250px;
-  overflow-y: auto;
-  background: $purple-3;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-  width: 250px;
-}
-
-#page-content-wrapper {
-  width: 100%;
-  position: absolute;
-  padding: 15px;
-}
-
-#wrapper.toggled #page-content-wrapper {
-  position: absolute;
-  margin-right: -250px;
-}
-
-.main-content {
-  //position: absolute;
-  overflow: auto;
-}
-
-/* Sidebar Styles */
-
-.sidebar-nav {
-  position: fixed;
-  top: 0;
-  width: 250px;
-  margin-top: $gutter*8;
-  padding: 0;
-  list-style: none;
-}
-
-.sidebar-nav li {
-  //text-indent: 20px;
-  line-height: 40px;
-  border-bottom: 1px solid rgba(120,120,120,.5);
-  font-size: 17px;
-  &.first-li {
-    border-top: 1px solid rgba(120,120,120,.5);
-  }
-}
-
-.sidebar-nav li a {
-  display: block;
-  text-decoration: none;
-  color: rgba(255,255,255,0.8);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  &:hover, &:focus {
-    background: $cyan-1;
-
-  }
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-  text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-  height: 75px;
-  font-size: 18px;
-  line-height: 60px;
-  margin-bottom: 30px;
-  margin-top: 100px;
-  border-bottom: none;
-  a:hover, a:focus {
-    background: none;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-}
-.brand-logo {
-  width: 50%;
-  a:hover, a:focus {
-    background: none;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-}
-
-.sidebar-nav > .sidebar-brand a {
-  color: $white;
-
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-  color: #fff;
-  background: none;
-}
-
-@media(min-width:768px) {
-  #wrapper {
-    padding-left: 250px;
-  }
-
-  #wrapper.toggled {
-    padding-left: 0;
-  }
-
-  #sidebar-wrapper {
-    width: 250px;
-  }
-
-  #wrapper.toggled #sidebar-wrapper {
-    width: 0;
-  }
-
-  #page-content-wrapper {
-    padding: 20px;
-    position: relative;
-  }
-
-  #wrapper.toggled #page-content-wrapper {
-    position: relative;
-    margin-right: 0;
-  }
-}
-
-.corporate-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  display: block;
-  position: relative;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-
-.corporate-box-item.chart-box {
-  padding: 40px;
-  margin-bottom: 60px;
-}
-.corporate-box-item.table-box {
-  padding: 30px;
-  margin-bottom: 60px;
-}
-.letter-space-wide {
-  letter-spacing: 1px;
-}
-.color-circle {
-  list-style: none;
-  display: inline-block;
-  background: #ccc;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  margin-right: 4px;
-  margin-left: 20px;
-
-  &.color-red {
-    background-color: $red-1;
-  }
-  &.color-cyan {
-    background-color: $cyan-1;
-  }
-  &.color-purple {
-    background-color: $purple-1;
-  }
-}
-.font-small {
-  font-size:small;
-}
-.corporate-box-item.viewed-item {
-  pointer-events: none;
-  cursor: default;
-  background-color: $asphalt-1;
-  @include box-shadow(0, 0, 0px, darken($asphalt-1, 20%));
-  @include border-radius(0px);
-  border-bottom: 1px solid darken($asphalt-1, 8%) ;
-  padding-left: 10px;
-  padding-top: 2px;
-}
-
-
-//Navbar
-
-.header {
-  &.header-dark {
-    background: $purple-1;
-  }
-  &.header-fixed { // unused
-    position: fixed;
-    width: 100%;
-    z-index: 100;
-  }
-}
-.nav-wrap {
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5;
-  }
-}
-.transparent-nav-wrap {
-  @include breakpoint(xs-min) {
-    margin: 0 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: 0 $gutter;
-  }
-  @include breakpoint(md-min) {
-    margin: 0 $gutter*5;
-  }
-  @include breakpoint(lg-min) {
-    margin: 0 $gutter*5;
-  }
-}
-
-.navbar {
-  min-height: auto;
-  margin: 0;
-  border: 0;
-  @include border-radius(0);
-}
-.navbar-default {
-  background-color: transparent;
-  border: 0;
-}
-.navbar-transparent {
-  border-bottom: 1px solid rgba($white, 0.2);
-}
-.navbar-collapse {
-  padding: 0;
-  border: 0;
-  @include box-shadow(0, 0, 0, 0);
-  @include breakpoint(sm-min) {
-    background: transparent;
-  }
-}
-.navbar-default .navbar-nav > li > a {
-  color: rgba($white, .8);
-  text-transform: uppercase;
-  letter-spacing: .2rem;
-  text-decoration: none;
-  @include font-size(1.3);
-  &:hover, &:active {
-    color: rgba($white, 1);
-  }
-  @include breakpoint(sm-min) {
-    margin: 0;
-    border: 1px solid transparent;
-    &:hover {
-      background: transparent;
-    }
-  }
-  &.sign-up-link {
-    @include breakpoint(sm-min) {
-      @include border-radius(3px);
-      border: 1px solid $red-1;
-      color: $red-1;
-      &:hover {
-        border: 1px solid darken($red-1, 15%);
-        color: $red-1 darken($red-1, 15%);
-      }
-    }
-  }
-  &.days-left {
-    @include breakpoint(sm-min) {
-      @include border-radius(4px);
-      border: 1px solid rgba($red-1, 0.5);
-      &:hover {
-        border: 1px solid rgba($red-1, 0.8);
-      }
-    }
-  }
-}
-.navbar-nav {
-  margin: 0;
-  @include breakpoint(sm-min) {
-    padding: 16px 0;
-    margin: 0;
-  }
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: $white;
-}
-.navbar-nav > li > a {
-  padding: 0 $gutter;
-  padding: $gutter/4 $gutter/2;
-  padding: $gutter/4 $gutter/1.5;
-  line-height: 40px;
-  border-top: 1px solid rgba($white, 0.2);
-  @include breakpoint(sm-min) {
-    border: 0;
-    line-height: 1.5;
-  }
-}
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-  background-color: transparent;
-  color: $white;
-}
-.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
-  border: 0;
-}
-.navbar-default .navbar-collapse, .navbar-default .navbar-form {
-  border-color: transparent;
-}
-.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
-  background: transparent;
-}
-.navbar-default .navbar-toggle {
-  border-color: rgba($white, 0.2);
-  margin: 11px 0 0 0;
-  @include border-radius(3px);
-}
-.navbar-default .navbar-toggle .icon-bar {
-  background-color: $white;
-}
-.user-notification {
-  display: inline-block;
-  background: $red-1;
-  padding: 4px;
-  min-width: 17px;
-  height: 17px;
-  line-height: 9px;
-  text-align: center;
-  @include border-radius(3px);
-  @include font-size(1.1);
-}
-.dropdown-menu {
-  border: 1px solid shade($purple-1, 20%);
-  padding: 0;
-  @include box-shadow(0, 0, 5px, rgba(#000, .3));
-  @include breakpoint(md-min) {
-    padding: $gutter/2 0;
-    background: $purple-1;
-  }
-}
-.dropdown-menu > li {
-  display: block;
-  padding: 0;
-  margin: 0;
-}
-.dropdown-menu > li > a {
-  display: block;
-  padding: $gutter/4 $gutter/1.5;
-  text-transform: none;
-  letter-spacing: 0;
-  margin-top: -1px;
-  border-top: 1px solid tint($purple-1, 10%);
-  border-bottom: 1px solid tint($purple-1, 10%);
-  color: $white;
-  text-decoration: none;
-  @include font-size(1.4);
-  @include breakpoint(md-min) {
-    @include font-size(1.6);
-    &:hover {
-      background: $purple-2;
-    }
-  }
-
-}
-.navbar-default .navbar-nav .open .dropdown-menu>li>a {
-  color: $white;
-}
-.navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
-  color: $white;
-}
-.navbar-nav .open .dropdown-menu>li>a {
-  line-height: 30px;
-}
-.navbar-nav > li > .dropdown-menu {
-  margin-top: 5px;
-  @include border-radius(5px);
-}
-#drop.dropdown-toggle {
-  border: 1px solid transparent;
-}
-.dropdown {
-  border-top: 1px solid rgba(#fff, 0.2);
-  border-bottom: 1px solid rgba(#fff, 0.2);
-  margin-bottom: $gutter;
-  @include breakpoint(sm-min) {
-    margin: 0;
-    border: 0;
-  }
-}
-
 //Table Sorting CSS
 
 /* For use with table_sorting.js */
@@ -2346,13 +3527,9 @@ ol li.highlight {
 ol li.highlight i.icon-move {
   background-image: url("../img/glyphicons-halflings-white.png");
 }
-
-
-
 .sorted_table tr {
   cursor: pointer;
 }
-
 .sorted_table tr.placeholder {
   display: block;
   background: red;
@@ -2361,7 +3538,6 @@ ol li.highlight i.icon-move {
   padding: 0;
   border: none;
 }
-
 .sorted_table tr.placeholder:before {
   content: "";
   position: absolute;
@@ -2373,16 +3549,27 @@ ol li.highlight i.icon-move {
   left: -5px;
   border-right: none;
 }
-
-.course-group-title {
-  margin-bottom: $gutter*2;
-  @include breakpoint(sm-min) {
-    margin-bottom: 0;
-  }
-  @include breakpoint(md-min) {
-    margin-bottom: $gutter*2;
-  }
+// Styles for JS sortable
+body.dragging, body.dragging * {
+  cursor: move !important;
 }
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
+
+// Images
 .logo {
   padding: $gutter 0;
   float: left;
@@ -2398,85 +3585,6 @@ ol li.highlight i.icon-move {
   @include breakpoint(sm-min) {
     max-height: 65px;
   }
-}
-.no-card {
-  height: 40px;
-  line-height: 40px;
-  text-transform: none;
-  padding: 0;
-  text-align: center;
-  display: block;
-  @include opacity(0.6);
-  @include font-size(1.1);
-  @include breakpoint(xs-min) {
-    display: inline-block;
-    @include font-size(1.2);
-  }
-}
-form {
-}
-label, .label {
-  font-weight: bold;
-  color: $purple-1;
-  cursor: pointer;
-  margin-bottom: $gutter/2;
-  padding: 0;
-  display: inline-block;
-  @include font-size(1.4);
-  @include breakpoint(md-min) {
-    @include font-size(1.6);
-  }
-}
-.option {
-  margin-right: $gutter/2;
-}
-.form-control {
-  padding: $gutter/2 $gutter/1.5;
-  height: 40px;
-  border: 1px solid darken($asphalt-1, 10%);
-  @include font-size(1.4);
-  @include box-shadow(2px, 0, 0, rgba(#000, .05));
-  @include breakpoint(md-min) {
-    @include font-size(1.6);
-  }
-  &:focus {
-    border: 1px solid darken($asphalt-1, 30%);
-    border: 1px solid $purple-1;
-    background: $yellow-1;
-    @include box-shadow(2px, 0, 0, rgba(#000, .07));
-  }
-}
-
-.features {
-  text-align: center;
-  background: $white;
-}
-.course-types {
-  text-align: center;
-  background: lighten($purple-1, 5%);
-  color: lighten($purple-1, 40%);
-}
-.business {
-  text-align: center;
-  background: $white;
-  color: lighten($purple-1, 40%);
-}
-.individuals {
-  text-align: center;
-  background: lighten($purple-1, 5%);
-  color: $white
-}
-.features-img {
-  display: block;
-  max-width: 110px;
-  max-height: 110px;
-  margin: $gutter*2 auto;
-}
-.padded-features-img {
-  display: block;
-  max-width: 110px;
-  max-height: 110px;
-  margin: $gutter*2.5 auto;
 }
 .profile-single {
   padding-bottom: $gutter*2;
@@ -2512,536 +3620,8 @@ label, .label {
     max-width: 170px;
   }
 }
-.start-trial {
-  & a {
-    text-decoration: none;
-  }
-  & .h5 {
-    margin-bottom: $gutter/2;
-    @include opacity(0.6);
-  }
-  & p {
-    color: $white;
-    margin: 0;
-    &:hover {
-      color: $white;
-    }
-  }
-}
-.ico-arrow-right-r {
-  padding-right: $gutter*1.5;
-  position: relative;
-  &:after {
-    position: absolute;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right.png") no-repeat 0 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -10px;
-    right: 0;
-    content: "";
-    height: 19px;
-    width: 19px;
-  }
-}
 
-.footer-nav {
-  color: $red-1;
-  &:hover {
-    background-color: darken($white, 5);
-  }
-  .border {
-    margin-left: $gutter;
-  }
-}
-.no-top-padding {
-  padding-top: 0;
-}
-
-.panel.clickable {
-  margin-bottom: 5px;
-  background-color: darken($white, 5);
-  &:hover {
-    cursor: pointer;
-    background-color: darken($white, 15);
-  }
-}
-a.box {
-  text-decoration: none;
-  &:link {
-    text-decoration: none;
-  }
-  &:hover, &:active {
-    text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
-  }
-  &:hover {
-    .box-title {
-      //color: $red-1;
-    }
-    .box-label {
-      background: shade($red-1, 10%);
-    }
-  }
-}
-.box {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.box-course {
-    text-align: center;
-    margin-top: $gutter;
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
-      background-size: contain;
-    }
-    & .box-inner {
-      padding-top: $gutter*1.5;
-    }
-  }
-}
-.box-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0 auto;
-}
-.box-inner {
-  padding: $gutter $gutter/2;
-  height: 225px;
-  position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-.box-pic {
-  max-height: 50%;
-  max-width: 50%;
-  fill: #3E3F5B;
-  background-position: center;
-  margin-top: 20px;
-}
-.box-desc {
-  margin: $gutter/2 0 0 0;
-}
-.box-label {
-  background: $red-1;
-  color: $white;
-  padding: $gutter/1.45;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
-  @include font-size(1.1);
-  @include breakpoint(sm-min) {
-    @include font-size(1.2);
-  }
-}
-
-a.tutor-box {
-  text-decoration: none;
-  &:link {
-    text-decoration: none;
-  }
-  &:hover, &:active {
-    text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
-  }
-  &:hover {
-    .tutor-box-title {
-      //color: $red-1;
-    }
-    .tutor-box-label {
-      background: shade($red-1, 10%);
-    }
-  }
-}
-.tutor-box {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.tutor-box-course {
-    text-align: center;
-    margin-top: $gutter;
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
-      background-size: contain;
-    }
-    & .tutor-box-inner {
-      padding-top: $gutter*2;
-    }
-  }
-}
-.tutor-box-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0 auto;
-}
-.tutor-box-inner {
-  padding: $gutter $gutter/2;
-  position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-.tutor-box-pic {
-  max-height: 60%;
-  max-width: 60%;
-  fill: #3E3F5B;
-  background-position: center;
-  margin-top: 20px;
-}
-.box-desc {
-  margin: $gutter/2 0 0 0;
-}
-.tutor-box-label {
-  background: $red-1;
-  color: $white;
-  padding: $gutter/1.45;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
-  @include font-size(1.1);
-  @include breakpoint(sm-min) {
-    @include font-size(1.2);
-  }
-}
-
-a.card {
-  text-decoration: none;
-  &:link {
-    text-decoration: none;
-  }
-  &:hover, &:active {
-    text-decoration: none;
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
-
-  }
-  &:hover {
-    .card-title {
-      //color: $red-1;
-    }
-    .card-label {
-      background: darken($red-1, 5%);
-
-    }
-  }
-}
-.card{
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: left;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.card-course {
-    text-align: left;
-    margin-top: $gutter;
-    & .card-inner {
-      padding-top: $gutter;
-    }
-  }
-}
-.card-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0 auto;
-}
-.card-outer {
-  height: 275px;
-}
-.card-inner {
-  padding: $gutter $gutter;
-  height: 200px;
-  position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-.card-pic {
-  max-height: 60%;
-  max-width: 60%;
-  fill: #3E3F5B;
-  background-position: center;
-  margin-top: 20px;
-}
-.card-desc {
-  margin: 0 0 0 0;
-  white-space: pre-line;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.card-info {
-  padding: $gutter/2 $gutter $gutter $gutter;
-}
-.days-left {
-  @include border-radius(16px);
-  border: 2px dashed $cyan-1;
-  //width: 80%;
-}
-
-.card-label {
-  background: $red-1;
-  color: $white;
-  padding: $gutter/1.45;
-  //letter-spacing: .2rem;
-  //text-transform: uppercase;
-  @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
-  @include font-size(1.1);
-  @include breakpoint(sm-min) {
-    @include font-size(1.2);
-  }
-}
-.box-label-small {
-  color: gainsboro;
-  padding: $gutter/4;
-}
-.course-topics-list {
-  list-style: none;
-  //margin: 0 0 $gutter*2 0;
-  padding-left: 0;
-}
-a.box-item {
-  color: $purple-1;
-  text-decoration: none;
-  display: block;
-  border: 1px solid $white;
-  @include transition(border .1s ease);
-  &:hover, &:active {
-    border: 1px solid $purple-1;
-    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
-  }
-}
-.box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-.completed-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-green.png") no-repeat 0 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-.box-topic-item {
-  padding-right: $gutter*2;
-}
-.time {
-  position: absolute;
-  top: 16px;
-  right: 15px;
-  color: tint($purple-1, 50%);
-}
-.side-meta {
-  color: tint($purple-1, 50%);
-  display: block;
-  text-align: left;
-  @include breakpoint(sm-min) {
-    text-align: right;
-  }
-}
-.left-side-meta {
-  color: tint($purple-1, 50%);
-  display: block;
-  text-align: left;
-  @include breakpoint(sm-min) {
-    text-align: left;
-  }
-}
-.lined-list {
-  border-top: 1px solid rgba($gray-1, .15);
-  padding: 0;
-  li {
-    list-style: none;
-  }
-  a {
-    text-decoration: none;
-  }
-}
-.lined-list-item {
-  display: block;
-  list-style: none;
-  margin: 0;
-  padding: $gutter/2 $gutter/2 $gutter/2 0;
-  border-bottom: 1px solid rgba($gray-1, .15);
-  position: relative;
-  .current {
-    color: #009900;
-  }
-}
-.collapse-list {
-  ul {
-    margin-top: -10px;
-    border-top: 0;
-  }
-  li {
-    padding-left: $gutter*.75;
-    padding-right: $gutter*.75;
-  }
-}
-.lib-panel {
-  cursor: pointer;
-  &:hover {
-    background: darken($white, 5);
-  }
-}
-.sign-up {
-  background: $asphalt-1 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
-  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
-}
-.course-info {
-  width: 60%;
-  float: right;
-  margin-top: $gutter*4;
-  @include breakpoint(xs-min) {
-    width: 100%;
-    margin-top: $gutter*2;
-  }
-
-  @include breakpoint(md-min) {
-    width: 60%;
-    margin-top: $gutter*4;
-  }
-
-}
-.course-action {
-  width: 93%;
-  float: right;
-  margin-top: $gutter*4;
-  @include breakpoint(xs-min) {
-    width: 100%;
-  }
-  @include breakpoint(md-min) {
-  }
-}
-.tutor-profile-pic {
-  float: left;
-  max-width: 50px;
-  border: 1px solid $purple-1;
-  margin-top: -15px;
-  margin-right: 10px;
-}
-.tutor-profile-title {
-  padding-top: $gutter;
-  margin: 0;
-}
-.number {
-  display: inline-block;
-  border: 1px solid $purple-1;
-  width: 40px;
-  height: 40px;
-  color: $white;
-  line-height: 40px;
-  margin-right: $gutter/2;
-  @include border-radius(100%);
-  color: $purple-1;
-}
-// 4. Print
+// Print
 @media print {
   * {
     background: #fff;
@@ -3051,66 +3631,7 @@ a.box-item {
     font: 100%/1.5 georgia, serif;
   }
 }
-
-// 5. States
-.is-disabled {
-  pointer-events: none;
-  @include opacity(0.5);
-}
-.is-lg-right {
-  @include breakpoint(sm-min) {
-    float: right;
-  }
-}
-.is-visually-hidden {
-  left: -9999px;
-  position: absolute;
-  top: -9999px;
-}
-.is-text-disabled {
-  color: #999;
-}
-.is-text-white {
-  color: $white;
-}
-.is-bg-red {
-  background: $red-1;
-}
-.is-bg-purple {
-  background: $purple-1;
-}
-.is-bg-purple-1 {
-  background: $purple-2;
-}
-.is-bg-purple-2 {
-  background: $purple-3;
-}
-.is-bg-cyan {
-  background: $cyan-1;
-}
-.is-bg-gray {
-  background: $gray-1;
-}
-.is-bg-asphalt {
-  background: $asphalt-1;
-}
-.is-bg-asphalt-dark {
-  background: $asphalt-4;
-}
-.is-bg-white-to-asphalt {
-  @include gradient-vertical($white, $asphalt-1, 0%, 50%);
-}
-.is-bg-white {
-  background: $white;
-}
-.is-bg-yellow {
-  background: $yellow-1;
-}
-.is-bg-green {
-  background: $green-1;
-}
-// 6. Vendor
-
+// Vendor
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
@@ -3143,163 +3664,17 @@ a.box-item {
   }
 }
 
-.coursebar {
-  color: white;
-  padding: 24px;
-  a.btn.btn-purple {
-    @include breakpoint(xs-min) {
-      margin-bottom: $gutter;
-    }
-  }
-}
-.coursebar a:hover {
-  color: white;
-  text-decoration: initial;
-}
-.coursetype {
-  text-decoration: initial;
-  padding: 13px;
-  padding-left: $gutter;
-  padding-right: $gutter;
-  margin-right: $gutter;
-  text-transform: uppercase;
-  letter-spacing: .2rem;
-  text-decoration: none;
-  font-size: 12px;
-  background-color: $purple-1;
-  border-radius: 5%;
-  border: 0px solid $purple-1;
-  text-decoration: initial;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-// Dashboard Boxes
-.no-image-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background: 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-.final-quiz-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-      text-decoration: none;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-
-.cert-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-test.png") no-repeat 0 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-      text-decoration: none;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-
-//Question
+// Quiz Uploading
 .question-box-item {
   display: block;
   background: darken($white, 5);
   position: relative;
   margin: 0 0 $gutter/2 0;
-  color: $purple-1;
+  color: $colour-7;
   padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
   @include clearfix();
   @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:before {
     position: absolute;
@@ -3327,33 +3702,29 @@ a.box-item {
 
   }
 }
-
-.one-line-text {
-  overflow: hidden;
-  white-space: nowrap;
+// Flash Messages
+.alert.success {
+  background: $colour-17;
+  margin-bottom: 0;
+}
+.alert.error {
+  background: $colour-12;
+  color: $white;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+.alert.warning {
+  background: $colour-12;
+  color: $white;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+.alert.alert-info {
+  background: $colour-13;
+  margin-bottom: 0;
 }
 
-#progress_circles {
-  //position: absolute;
-  padding: 0;
-  margin: 0;
-  left: 456px;
-  bottom: 40px;
-  li {
-    list-style: none;
-    display: inline-block;
-    background: #ccc;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    margin-right: 14px;
-
-  }
-  li.lesson-complete {
-    background: darken($green-1, 45);
-  }
-}
-
+// Referral System
 .referral-header {
   border: none;
 }
@@ -3421,448 +3792,9 @@ a.box-item {
   }
 }
 
-.purple-block {
-  background: $purple-1;
-  color: $white;
-  padding-top: $gutter;
-}
-
-.red-block {
-  background: $red-1;
-  color: $white;
-  padding-top: $gutter;
-}
-
-.cyan-block {
-  background: $cyan-1;
-  color: $white;
-  padding-top: $gutter;
-}
-
-.grey-block {
-  background: $gray-1;
-  color: $white;
-  padding-top: $gutter;
-}
-
-.signal-tabs {
-  padding: 13px;
-  padding-left:0px;
-  border-bottom: 4px solid gainsboro ;
-  a {
-    color: $gray-1;
-    margin-bottom: $gutter;
-    letter-spacing: .1rem;
-    @include font-size(1.4);
-    @include breakpoint(md-min) {
-      @include font-size(1.6);
-    }
-    text-decoration: initial;
-    margin-right: 20px;
-    &:hover {
-      padding-bottom: 15px;
-      //border-bottom: 4px solid;
-      box-sizing: content-box;
-      color: $purple-1;
-      font-weight: bold;
-    }
-    &:focus {
-      padding-bottom: 15px;
-      border-bottom: 4px solid;
-      box-sizing: content-box;
-      color: $purple-1;
-      font-weight: bold;
-    }
-  }
-}
-.signal-tabs .underline {
-  padding-bottom: 15px;
-  border-bottom: 4px solid;
-  box-sizing: content-box;
-  color: $purple-1;
-  font-weight: bold;
-}
-
-.change-password {
-  margin-top: 27px;
-}
-
-.checkbox {
-  padding-top: 25px;
-}
-
-.selected {
-  background: $green-1;
-  color: $white;
-}
-
-.chosen-plan {
-  background: $red-1;
-  color: $white;
-}
-
-.alert.success {
-  background: $green-1;
-  margin-bottom: 0;
-}
-.alert.error {
-  background: $red-1;
-  color: $white;
-  border-radius: 0;
-  margin-bottom: 0;
-}
-.alert.warning {
-  background: $red-1;
-  color: $white;
-  border-radius: 0;
-  margin-bottom: 0;
-}
-.alert.alert-info {
-  background: $cyan-1;
-  margin-bottom: 0;
-}
-
-// Styles for JS sortable
-body.dragging, body.dragging * {
-  cursor: move !important;
-}
-
-.dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
-}
-
-ol.example li.placeholder {
-  position: relative;
-  /** More li styles **/
-}
-ol.example li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
-}
-
-
-.tutor-header {
-  img.profile-pic {
-    text-decoration: none;
-
-    &:link {
-      text-decoration: none;
-    }
-    &:hover, &:active {
-      text-decoration: none;
-      @include box-shadow(0, 0, 12px, rgba(#000, .25));
-    }
-  }
-  .profile-pic {
-    display: block;
-    max-width: 120px;
-    margin: 0 auto $gutter auto;
-    @include border-radius(100%);
-    &.profile-pic-big {
-      max-width: 170px;
-    }
-    &.profile-pic-small {
-      max-width: 80px;
-    }
-  }
-}
-.media-pic {
-  display: block;
-  max-width: 200px;
-  max-height: 150px;
-  margin: 0 auto $gutter auto;
-}
-
-//////////////////////
-a.library-box {
-  text-decoration: none;
-
-  &:link {
-    text-decoration: none;
-  }
-  &:hover, &:active {
-    text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($asphalt-1, 20%));
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
-  }
-  &:hover {
-    .library-box-title {
-      //color: $red-1;
-    }
-    .library-box-label {
-      background: shade($red-1, 10%);
-    }
-  }
-}
-.library-box {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.library-box-course {
-    text-align: center;
-    margin-top: $gutter*1.5;
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
-      background-size: contain;
-    }
-    & .library-box-inner {
-      padding-top: $gutter*2.5;
-    }
-  }
-}
-.library-box-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0 auto;
-}
-.library-box-inner {
-  padding: $gutter*2 $gutter/2;
-}
-.library-box-desc {
-  margin: $gutter/2 0 0 0;
-}
-.library-box-label {
-  background: $red-1;
-  color: $white;
-  padding: $gutter/1.45;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
-  @include font-size(1.1);
-  @include breakpoint(sm-min) {
-    @include font-size(1.2);
-  }
-}
-a.library-box-item {
-  color: $purple-1;
-  text-decoration: none;
-  display: block;
-  border: 1px solid $white;
-  @include transition(border .1s ease);
-  &:hover, &:active {
-    border: 1px solid $purple-1;
-    @include box-shadow(0, 0, 12px, darken($asphalt-1, 15%));
-  }
-}
-.library-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $purple-1;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.library-box-topic-item {
-
-  }
-}
-.library-box-topic-item {
-  padding-right: $gutter*2;
-}
-.library-box-item .panel-icon {
-  background-color: $cyan-1;
-  color: white;
-  display: inline-block;
-  font-size: 12px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  padding-top: 7px;
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  margin-left: -15px;
-  text-align: center;
-}
-.library-box-item .panel-icon.icon-big {
-  width: 40px;
-  height:40px;
-  padding-top: 12px;
-  margin-left: -18px;
-}
-.library-box-item .panel-icon.icon-inner {
-  top: 30px;
-  width: 90px;
-  height: 90px;
-  padding-top: 30px;
-  font-size: 34px;
-  margin-left: -45px;
-}
-.library-box-item .panel-icon.icon-inner.icon-red {
-  background-color: $red-1;
-}
-.library-box-item .panel-icon.icon-inner.icon-cyan {
-  background-color: $cyan-1;
-}
-.library-box-item .panel-icon.icon-inner.icon-purple {
-  background-color: $purple-1;
-}
-.library-box-item.panel {
-  padding-left: 0px;
-  padding-right:0px;
-  padding-top: 35px;
-  padding-bottom: 0px;
-
-}
-.question-bank-passed {
-  color: green;
-  //margin-bottom: 0px;
-}
-
-.selected {
-  background: $green-1;
-}
-
-.pricing-box-purple {
-  display: block;
-  background: $purple-1;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.box-course {
-    text-align: center;
-    margin-top: $gutter*1.5;
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
-      background-size: contain;
-    }
-    & .box-inner {
-      padding-top: $gutter*2.5;
-    }
-  }
-}
-.pricing-box-red {
-  display: block;
-  background: $red-1;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.box-course {
-    text-align: center;
-    margin-top: $gutter*1.5;
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
-      background-size: contain;
-    }
-    & .box-inner {
-      padding-top: $gutter*2.5;
-    }
-  }
-}
-.pricing-box-cyan {
-  display: block;
-  background: $cyan-1;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($asphalt-1, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-}
-
-a.image-link {
-  color: $white;
-
-}
-
 // This hides the image upload BTN on the summernote modal so that only image urls can be entered
 .note-group-select-from-files {
   display: none;
-}
-
-// New corporate Form Box
-.login-form {
-  padding: $gutter*2 $gutter/2;
-  background: $gray-2;
-  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
-  text-align: left;
-  color: #fff !important;
-}
-
-.form-bottom form textarea {
-  height: 100px;
-}
-
-.form-bottom form .input-error {
-  border-color: #de615e;
 }
 
 .md-image {
@@ -3871,17 +3803,3 @@ a.image-link {
 .lg-image {
   width: 60%;
 }
-
-.resume-course {
-  @include breakpoint(xs-min) {
-    margin-top: $gutter/3;
-  }
-  @include breakpoint(sm-min) {
-    margin-top: $gutter*2;
-  }
-  @include breakpoint(md-min) {
-    margin-top: $gutter*2;
-  }
-
-}
-

@@ -82,7 +82,7 @@ body {
     margin: 0 auto;
     //max-width: 1800px;
   }
-  .corporate_layout {
+  .external_layout {
     background: $purple-1;
   }
 
@@ -129,8 +129,11 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   }
   &.h-white-faded {
     color: lightcyan;
-    //color: gainsboro;
   }
+  &.h-colour {
+    color: $text-color;
+  }
+
 }
 h1, .h1 {
   font-weight: normal;
@@ -313,9 +316,6 @@ hr {
   min-height: 1px;
   padding-right: 15px;
   padding-left: 15px;
-}
-.corp-text {
-  color: $text-color;
 }
 .library-heading {
   color: $text-color;

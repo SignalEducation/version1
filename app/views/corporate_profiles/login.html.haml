@@ -1,4 +1,4 @@
-.corporate_layout.top-content
+.external_layout.top-content
   .corporate-heading
     =render partial: 'layouts/corporate_logo'
   .l-wrap-corp-home
@@ -6,7 +6,7 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-sm-6.col-sm-offset-3.l-margin-top
-        %h3.l-margin-bottom.text-center.corp-text
+        %h3.h-colour.l-margin-bottom.text-center
           ="Verify you belong to #{current_corporate.try(:organisation_name)}"
         .login-form.l-margin-top-big
           =form_tag('/corporate_verification', method: 'post') do

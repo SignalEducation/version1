@@ -1,5 +1,5 @@
 -if current_corporate
-  .corporate_layout.top-content
+  .external_layout.top-content
     .corporate-heading
       =render partial: 'layouts/corporate_logo'
 
@@ -8,7 +8,7 @@
         -if flash[:success] || flash[:error] || flash[:warning]
           =render partial: 'layouts/flash_messages'
         .col-sm-6.col-sm-offset-3.l-margin-top
-          %h2.l-margin-bottom.text-center.corp-text
+          %h2.h-colour.l-margin-bottom.text-center
             =t('views.user_sessions.new.h1')
           .login-form.l-margin-top#sign-in
             =form_for(@user_session) do |f|
@@ -35,7 +35,7 @@
             =link_to 'create account', new_student_url, class: 'btn btn-green btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 -else
-  .default_layout.top-content
+  .external_layout.top-content
     .default-heading
       =render partial: 'layouts/corporate_logo'
     .l-wrap
