@@ -1,7 +1,7 @@
 .margin-top
   -if flash[:success] || flash[:error] || flash[:warning]
     =render partial: 'layouts/flash_messages'
-.l-section.is-bg-asphalt{style: 'padding-bottom: 0px;'}
+.l-section-profile.is-bg-asphalt{style: 'padding-bottom: 0px;'}
   .l-wrap
     .container-fluid
       .profile-single
@@ -25,7 +25,7 @@
               -#if @tutor.personal_url
                 %p
                   %a{href: "#{@tutor.personal_url}", target: "_blank"} See #{@tutor.first_name.pluralize} other work
-.l-section-small.is-bg-asphalt
+.l-section-profile.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row

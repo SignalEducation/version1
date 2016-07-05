@@ -63,15 +63,7 @@ $colour-33: #f092b0;
 html {
   background: $colour-1;
   .margin-top {               // These Ensure content is not hidden behind Navbar
-    @include breakpoint(xs-min) {
-      margin-top: 40px;
-    }
-    @include breakpoint(sm-min) {
-      margin-top: 50px;
-    }
-    @include breakpoint(lg-min) {
-      margin-top: 50px;
-    }
+    margin-top: 85px;
   }
   .no-margin-top {
     margin-top: 0;
@@ -824,20 +816,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     max-width: 1200px;
   }
 }
-.l-wrap-course {
-  padding: 50px 0 50px 0;
-  margin: $gutter*2.5 $gutter*10;
+.l-wrap-courses {
+  padding: 10px 0 50px 0;
   background: $colour-3;
-
-  @include breakpoint(xs-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter $gutter*5;
-  }
 
 }
 .l-wrap-corporate {
@@ -857,20 +838,13 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 }
 .l-wrap-dashboard {
-  padding: 50px 0 250px 0;
-  margin: $gutter*2.5 $gutter*10;
-  background: $colour-3;
-
-  @include breakpoint(xs-min) {
-    margin: $gutter $gutter*2;
-  }
   @include breakpoint(sm-min) {
-    margin: $gutter $gutter*2;
+    padding: 0 $gutter;
   }
+  margin: 0 auto;
   @include breakpoint(md-min) {
-    margin: $gutter $gutter*5;
+    max-width: 1200px;
   }
-
 }
 .l-wrap-corp-home {
   padding: 50px 0 250px 0;
@@ -900,11 +874,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .l-wrap-small {
   @include breakpoint(sm-min) {
-    padding: 0 $gutter/2;
+    padding: 0 $gutter;
   }
   margin: 0 auto;
   @include breakpoint(md-min) {
-    max-width: 1600px;
+    max-width: 1200px;
   }
 }
 .l-wrap-big {
@@ -1040,19 +1014,33 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .l-section-library {
-  padding: 5rem 0;
-  padding-bottom: 50px;
   @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2 $gutter/2 $gutter/2;
+    padding: $gutter 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter $gutter/2 $gutter;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+    padding: $gutter 0;
   }
   @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter $gutter/2 $gutter;
+    margin: 0 auto;
+    padding: $gutter 0;
+    max-width: 1150px;
   }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5 $gutter/2 $gutter*5;
+}
+.l-section-courses {
+  @include breakpoint(xs-min) {
+    padding: $gutter 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+    padding: $gutter 0;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 auto;
+    padding: $gutter 0;
+    max-width: 1150px;
   }
 }
 .l-section-corp-managers {
@@ -1086,6 +1074,23 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .l-section-dashboard {
+
+  @include breakpoint(xs-min) {
+    padding: $gutter 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+    padding: $gutter 0;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 auto;
+    padding: $gutter 0;
+    max-width: 1150px;
+  }
+
+}
+.l-section-profile {
 
   @include breakpoint(xs-min) {
     padding: $gutter 0;
