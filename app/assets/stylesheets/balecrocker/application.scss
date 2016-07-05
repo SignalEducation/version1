@@ -1140,20 +1140,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .corporate-form-margin {
   margin-left: 0;
 }
-.corporate-heading {
-  padding: 0;
-  margin: 33px $gutter*6 33px $gutter*5;
-
-  @include breakpoint(xs-min) {
-    margin: 33px $gutter*6 33px $gutter*2;
-  }
-  @include breakpoint(sm-min) {
-    margin: 33px $gutter*6 33px $gutter*2;
-  }
-  @include breakpoint(md-min) {
-    margin: 33px $gutter*6 33px $gutter*5;
-  }
-}
 .corporate-title {
   margin: $gutter 0;
 }
@@ -1169,27 +1155,23 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter*6 $gutter*15 $gutter $gutter*15;
   }
 }
-.default-title {
+.corporate-heading {
+  padding: 0;
+  margin: 33px $gutter*6 33px $gutter*5;
+
   @include breakpoint(xs-min) {
-    margin: auto;
-    width: 100%;
-    padding: 10px;
+    margin: 33px $gutter*6 33px $gutter*2;
   }
   @include breakpoint(sm-min) {
-    margin: auto;
-    width: 90%;
-    padding: 10px;
+    margin: 33px $gutter*6 33px $gutter*2;
   }
-  @include breakpoint(lg-min) {
-    margin: auto;
-    width: 65%;
-    padding: 10px;
+  @include breakpoint(md-min) {
+    margin: 33px $gutter*6 33px $gutter*5;
   }
 }
+.default-title {
+}
 .default-logo {
-  display: block;
-  margin: auto;
-  width: 80%;
 }
 
 //Hero
