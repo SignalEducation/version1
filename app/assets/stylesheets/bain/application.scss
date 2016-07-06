@@ -871,6 +871,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-wrap-corporate {
   padding: 100px 0 170px 0;
 }
+.l-wrap-corporate {
+  padding: 100px 0 170px 0;
+}
 .l-wrap-medium {
   @include breakpoint(sm-min) {
     padding: 0 $gutter/1;
