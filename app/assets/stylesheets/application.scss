@@ -65,7 +65,7 @@ html {
   background: $colour-16;
   .margin-top {                   // These Ensure content is not hidden behind Navbar
     @include breakpoint(xs-min) {
-      margin-top: 20px;
+      margin-top: 40px;
     }
     @include breakpoint(sm-min) {
       margin-top: 60px;
@@ -800,7 +800,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   padding-right: 15px;
   padding-left: 15px;
 }
-
+// Wraps
 .l-wrap {
   @include breakpoint(sm-min) {
     padding: 0 $gutter;
@@ -813,7 +813,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-wrap-default {
   padding: 100px 0 170px 0;
 }
-.l-wrap-course {
+.l-wrap-courses {
   padding: 20px 0 20px 0;
   margin: $gutter*2.5 $gutter*10;
 
@@ -883,6 +883,8 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     max-width: 1600px;
   }
 }
+
+// Sections
 .l-section {
   padding: 5rem 0;
   @include breakpoint(md-min) {
@@ -982,6 +984,12 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter/4 0 $gutter/2 0;
   }
 }
+.l-section-courses {
+  padding: 5rem 0;
+  @include breakpoint(md-min) {
+    padding: 3rem 0;
+  }
+}
 .l-section-corp-account {
   padding: $gutter*1 0;
   @include breakpoint(xs-min) {
@@ -1042,7 +1050,15 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter/4 0 $gutter/2 0;
   }
 }
+.l-section-profile {
+  padding: 5rem 0;
+  @include breakpoint(md-min) {
+    padding: 10rem 0;
+  }
 
+}
+
+// Padding
 .l-padding-zero {
   padding: 0;
 }

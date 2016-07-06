@@ -816,6 +816,10 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     max-width: 1200px;
   }
 }
+.l-wrap-default {
+  padding: 100px 0 170px 0;
+}
+
 .l-wrap-courses {
   padding: 10px 0 50px 0;
   background: $colour-3;
@@ -861,7 +865,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(md-min) {
     margin: $gutter $gutter*5;
   }
-
+}
+.l-wrap-corporate {
+  padding: 100px 0 170px 0;
 }
 .l-wrap-medium {
   @include breakpoint(sm-min) {
@@ -968,6 +974,22 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
+.l-section-library {
+  @include breakpoint(xs-min) {
+    padding: $gutter 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+    padding: $gutter 0;
+  }
+  @include breakpoint(md-min) {
+    margin: 0 auto;
+    padding: $gutter 0;
+    max-width: 1150px;
+  }
+}
+
 .l-section-corp-groups {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
@@ -1013,21 +1035,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter/4 $gutter*5 $gutter/2 0;
   }
 }
-.l-section-library {
-  @include breakpoint(xs-min) {
-    padding: $gutter 0;
-    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
-    padding: $gutter 0;
-  }
-  @include breakpoint(md-min) {
-    margin: 0 auto;
-    padding: $gutter 0;
-    max-width: 1150px;
-  }
-}
 .l-section-courses {
   @include breakpoint(xs-min) {
     padding: $gutter 0;
@@ -1043,6 +1050,22 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     max-width: 1150px;
   }
 }
+.l-section-corp-account {
+  padding: $gutter*1 0;
+  @include breakpoint(xs-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(md-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+  @include breakpoint(lg-min) {
+    margin: $gutter/4 0 $gutter/2 0;
+  }
+}
+
 .l-section-corp-managers {
   padding: $gutter 0;
   @include breakpoint(xs-min) {
@@ -1074,7 +1097,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .l-section-dashboard {
-
   @include breakpoint(xs-min) {
     padding: $gutter 0;
     margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
@@ -1088,7 +1110,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     padding: $gutter 0;
     max-width: 1150px;
   }
-
 }
 .l-section-profile {
 
