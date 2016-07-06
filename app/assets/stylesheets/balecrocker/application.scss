@@ -1863,6 +1863,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   &.first-li {
     border-top: 1px solid rgba(120,120,120,.5);
   }
+  &.current-page {
+    background: darken($colour-5, 10%);
+  }
 }
 
 .sidebar-nav li a {

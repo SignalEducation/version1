@@ -1,7 +1,22 @@
 -if current_user.corporate_customer?
   #wrapper
     .hidden-xs
-      =render partial: 'layouts/corporate_side_bar'
+      #sidebar-wrapper.text-center
+        %ul.sidebar-nav
+          %li.first-li.current-page
+            =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
+          %li
+            =link_to t('views.corporate_students.index.corp_h1'), corporate_students_url
+          %li
+            =link_to t('views.corporate_groups.index.corp_h1'), corporate_groups_url
+          %li
+            =link_to t('views.subject_courses.index.h1'), subject_courses_url
+          %li
+            =link_to t('views.groups.index.h1'), groups_url
+          %li
+            =link_to t('views.users.show.h1'), account_url
+          %li
+            =link_to t('views.corporate_students.index.corp_managers'), corporate_managers_url
 
     .main-content.full-width.margin-top
       -if flash[:success] || flash[:error] || flash[:warning]

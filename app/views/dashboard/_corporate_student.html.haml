@@ -19,7 +19,7 @@
                   .col-sm-8
                     %h3.h3.card-title.l-margin-bottom
                       =@first_corp_log.subject_course.try(:name)
-                    %p.card-desc
+                    %p.card-desc.hidden-xs
                       =@first_corp_log.subject_course.try(:short_description).truncate(185)
                     .card-info
                       -total_lesson = @first_corp_log.subject_course.cme_count

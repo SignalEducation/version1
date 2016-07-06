@@ -542,8 +542,8 @@ en:
         name_placeholder: Name
         name_url: Name URL
         name_url_placeholder: Name URL
-        description: Discription
-        description_placeholder: Discription goes here!
+        description: Description
+        description_placeholder: Description goes here!
         background_colour: Background Colour
         active: Active
         sorting_order: Sorting order
