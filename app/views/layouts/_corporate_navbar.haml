@@ -8,8 +8,12 @@
             %span.icon-bar
             %span.icon-bar
           -if current_user
-            %a{href: "#{current_corporate.try(:external_url)}", target: '_blank'}
-              =image_tag(current_corporate.logo.url, class: 'corporate-logo')
+            -if !current_corporate.try(:external_url).try(:empty?)
+              %a{href: "#{current_corporate.try(:external_url)}", target: '_blank'}
+                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
+            -else
+              =link_to root_url do
+                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
 
           -else
             =link_to root_url do

@@ -156,7 +156,7 @@ en:
         user_name: Create Account Username
         passcode: Create Account Password
         external_url: External URL (Optional)
-        footer_border_colour: Footer Border Colour (Optional)
+        footer_border_colour: Footer Border Colour
 
       index:
         h1: Corporate Customers

@@ -1,7 +1,7 @@
 -#Todo this is a bad quick fix, needs to be dynamic for all corporates
--if current_corporate
+-if current_corporate && !current_corporate.try(:footer_border_colour).try(:empty?)
   :javascript
-      // Pulls footer to bottom of page
+      // Pulls footer to bottom of page [current_corporate && footer_border_colour present]
       $(document).on('ready page:load', function() {
         var navbar = $('.foot');
         if (navbar.length > 0) {
@@ -30,7 +30,7 @@
 
 -else
   :javascript
-      // Pulls footer to bottom of page
+      // Pulls footer to bottom of page [no corporate or no footer_border_colour present]
       $(document).on('ready page:load', function() {
         var navbar = $('.foot');
         if (navbar.length > 0) {
