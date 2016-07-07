@@ -1,6 +1,21 @@
 #wrapper
   .hidden-xs
-    =render partial: 'layouts/corporate_side_bar'
+    #sidebar-wrapper.text-center
+      %ul.sidebar-nav
+        %li.first-li
+          =link_to t('views.corporate_customers.show.overview'), corporate_customer_url(current_user.corporate_customer)
+        %li
+          =link_to t('views.corporate_students.index.corp_h1'), corporate_students_url
+        %li
+          =link_to t('views.corporate_groups.index.corp_h1'), corporate_groups_url
+        %li.current-page
+          =link_to t('views.subject_courses.index.h1'), subject_courses_url
+        %li
+          =link_to t('views.groups.index.h1'), groups_url
+        %li
+          =link_to t('views.users.show.h1'), account_url
+        %li
+          =link_to t('views.corporate_students.index.corp_managers'), corporate_managers_url
   .margin-top.main-content
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
@@ -8,12 +23,12 @@
       .l-wrap
         .container-fluid
           .row.l-margin-bottom
-            .col-md-12.text-center
-              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            .col-md-12
+              %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
                 ="#{current_user.corporate_customer.organisation_name} Courses"
-              .col-md-8.col-md-offset-2
-                %p.h6
-                  Managers can create courses for internal use only.  These courses can be assigned to teams and restricted from others, (e.g. An onboarding course for a New Trainee Team).
+            .col-md-8
+              %p.h6
+                Managers can create courses for internal use only.  These courses can be assigned to teams and restricted from others, (e.g. An onboarding course for a New Trainee Team).
           .row.l-margin-top.l-margin-bottom
             .col-md-12.l-margin-top-big
               .no-image-box-item.table-box

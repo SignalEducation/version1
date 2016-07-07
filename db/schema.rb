@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160605094616) do
+ActiveRecord::Schema.define(version: 20160707123125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20160605094616) do
     t.string   "organisation_name"
     t.text     "address"
     t.integer  "country_id"
-    t.boolean  "payments_by_card",     default: false, null: false
+    t.boolean  "payments_by_card",     default: false,     null: false
     t.string   "stripe_customer_guid"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20160605094616) do
     t.string   "subdomain"
     t.string   "user_name"
     t.string   "passcode"
+    t.string   "external_url"
+    t.string   "footer_border_colour", default: "#EFF3F6"
   end
 
   add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
