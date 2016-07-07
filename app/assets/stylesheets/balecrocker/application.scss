@@ -6,7 +6,7 @@
 @import "bootstrap";
 @import 'bootstrap-datetimepicker';
 @import "font-awesome";
-@import "mixins.scss";
+@import "balecrocker_mixins.scss";
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
@@ -63,7 +63,7 @@ $colour-33: #f092b0;
 html {
   background: $colour-1;
   .margin-top {               // These Ensure content is not hidden behind Navbar
-    margin-top: 85px;
+    margin-top: 90px;
   }
   .no-margin-top {
     margin-top: 0;
@@ -1464,9 +1464,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .nav-wrap {
   padding: $gutter/2 $gutter/2;
   margin: 0 auto $gutter/4 auto;
-  @include breakpoint(md-min) {
-    max-width: 1200px;
-
+  max-width: 1010px;
+  @include breakpoint(lg-min) {
+    max-width: 1190px;
   }
 }
 .transparent-nav-wrap {
@@ -1485,7 +1485,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 
 }
 .navbar {
-  margin: 0;
+  margin: 5px 0 0 0;
   border: 0;
   @include border-radius(0);
 }
