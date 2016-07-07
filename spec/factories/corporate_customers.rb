@@ -17,6 +17,8 @@
 #  subdomain            :string
 #  user_name            :string
 #  passcode             :string
+#  external_url         :string
+#  footer_border_colour :string           default("#EFF3F6")
 #
 
 FactoryGirl.define do

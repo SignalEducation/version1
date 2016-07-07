@@ -23,7 +23,7 @@
             } else
               extra = 10;
             var newBorder = currentBorderTop + viewportHeight - bottomOfFooter + extra;
-            navbar.css('border-top', newBorder + 'px solid #fff');
+            navbar.css('border-top', newBorder + "px solid #{current_corporate.try(:footer_border_colour)}");
           }
         }
       });
