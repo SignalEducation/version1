@@ -363,6 +363,9 @@ label, .label {
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
 }
+.form-control.alternate-colour {
+  background: $white;
+}
 .login-form {
   padding: $gutter*2 $gutter/2;
   background: $colour-2;

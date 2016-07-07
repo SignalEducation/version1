@@ -15,11 +15,11 @@
                 .col-md-12
                   .form-group
                     =label_tag(:user_name, 'Username', class: 'control-label')
-                    =text_field_tag(:user_name, '', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true)
+                    =text_field_tag(:user_name, '', class: 'form-control alternate-colour input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true)
                     %br/
                   .form-group
                     =label_tag(:passcode, 'Password', class: 'control-label')
-                    =password_field_tag(:passcode, '', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;')
+                    =password_field_tag(:passcode, '', class: 'form-control alternate-colour input-group input-group-lg full-width', style: 'border-radius: 6px;')
                     %br/
                     %br/
                     =submit_tag 'Enter', class: 'btn btn-red btn-wide btn-lg-text'

@@ -18,27 +18,27 @@
                   .form-group
                     =f.label :first_name, t('views.corporate_students.form.first_name'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                      =f.text_field :first_name,  class: 'form-control', style: 'border-radius: 6px;', required: true
+                      =f.text_field :first_name,  class: 'form-control alternate-colour', style: 'border-radius: 6px;', required: true, autofocus: true
                 .col-sm-6
                   .form-group
                     =f.label :last_name, t('views.corporate_students.form.last_name'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                    =f.text_field :last_name,  class: 'form-control', style: 'border-radius: 6px;', required: true
+                    =f.text_field :last_name,  class: 'form-control alternate-colour', style: 'border-radius: 6px;', required: true
                 .col-sm-12
                   .form-group
                     =f.label :email, t('views.corporate_students.form.email'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                      =f.text_field :email,  class: 'form-control', style: 'border-radius: 6px;', required: true
+                      =f.text_field :email,  class: 'form-control alternate-colour', style: 'border-radius: 6px;', required: true
                 .col-sm-6
                   .form-group
                     =f.label :password, t('views.corporate_students.form.password'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                      =f.password_field :password, class: 'form-control', required: true, style: 'border-radius: 6px;'
+                      =f.password_field :password, class: 'form-control alternate-colour', required: true, style: 'border-radius: 6px;'
                 .col-sm-6
                   .form-group
                     =f.label :employee_guid, t('views.corporate_students.form.employee_guid'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                      =f.text_field :employee_guid,  class: 'form-control', style: 'border-radius: 6px;'
+                      =f.text_field :employee_guid,  class: 'form-control alternate-colour', style: 'border-radius: 6px;'
 
                 .col-sm-12.l-margin-bottom.l-margin-top
                   =f.submit t('views.general.create_account'), class: 'btn btn-red btn-wide btn-lg-text'
