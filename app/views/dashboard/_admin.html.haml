@@ -19,7 +19,7 @@
                   .col-sm-8
                     %h3.h3.card-title.l-margin-bottom
                       =@first_active_log.subject_course.try(:name)
-                    %p.card-desc
+                    %p.card-desc.hidden-xs
                       =@first_active_log.subject_course.try(:short_description).truncate(185)
                     .card-info
                       -total_lesson = @first_active_log.subject_course.cme_count
@@ -32,7 +32,7 @@
                       .progress
                         .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
-                  .col-sm-4.text-center.l-margin-top-big
+                  .col-sm-4.text-center.resume-course
                     =link_to 'Resume Course', course_special_link(@first_active_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
 
 

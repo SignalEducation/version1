@@ -1,6 +1,6 @@
 -# Landing Page when a subdomain is present
 
-.corporate_layout.top-content
+.external_layout.top-content
   .corporate-heading
     =render partial: 'layouts/corporate_logo'
   .l-wrap-corp-home
@@ -8,9 +8,9 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
-        %h3.corp-text
+        %h3.h-colour
           ="Welcome to the #{current_corporate.try(:organisation_name)} training platform."
-        %h3.corp-text
+        %h3.h-colour
           ='Please Login or Create an account'
       .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
         =link_to 'Login', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'

@@ -17,6 +17,8 @@
 #  subdomain            :string
 #  user_name            :string
 #  passcode             :string
+#  external_url         :string
+#  footer_border_colour :string           default("#EFF3F6")
 #
 
 class CorporateCustomer < ActiveRecord::Base
@@ -25,7 +27,8 @@ class CorporateCustomer < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
-                  :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode
+                  :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode, :external_url,
+                  :footer_border_colour
 
   # Constants
 
@@ -50,6 +53,7 @@ class CorporateCustomer < ActiveRecord::Base
   validates :subdomain, presence: true, uniqueness: true, length: {maximum: 20}
   validates :user_name, presence: true, length: {maximum: 25}
   validates :passcode, presence: true, length: {maximum: 25}
+  validates :footer_border_colour, presence: true, length: {maximum: 25}
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   # callbacks
