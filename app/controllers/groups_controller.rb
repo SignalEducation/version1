@@ -45,7 +45,8 @@ class GroupsController < ApplicationController
       if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
         corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).all_in_order
         non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
-        @courses = corporate_courses + non_restricted_courses
+        allowed_courses = corporate_courses + non_restricted_courses
+        @courses = allowed_courses.uniq
       else
         courses = courses.try(:all_not_restricted)
         @courses = courses.try(:all_in_order)

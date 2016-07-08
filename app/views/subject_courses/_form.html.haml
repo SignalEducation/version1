@@ -16,6 +16,10 @@
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           %br/
+          =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :short_description, class: 'form-control', style: 'border-radius: 6px;'
+          %br/
           -unless current_corporate
             =f.label :live_date, t('views.subject_courses.form.live_date'), class: 'control-label'
             .input-group.input-group-lg.full-width
