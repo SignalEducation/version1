@@ -3,7 +3,6 @@
 # Table name: white_papers
 #
 #  id                       :integer          not null, primary key
-#  title                    :string
 #  description              :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
@@ -17,6 +16,7 @@
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
+#  name                     :string
 #
 
 class WhitePapersController < ApplicationController
@@ -91,8 +91,8 @@ class WhitePapersController < ApplicationController
       file  = white_paper.file
       intercom = Intercom::Client.new(app_id: ENV['intercom_app_id'], api_key: ENV['intercom_api_key'])
       intercom_user = intercom.contacts.create(email: @white_paper_request.email)
-      IntercomWhitePaperEmailWorker.perform_at(1.minute.from_now, intercom_user.user_id, @white_paper_request.email, @white_paper_request.name, white_paper.title, file.url) unless Rails.env.test?
-      redirect_to white_paper_url(white_paper)
+      IntercomWhitePaperEmailWorker.perform_at(1.minute.from_now, intercom_user.user_id, @white_paper_request.email, @white_paper_request.name, white_paper.name, file.url) unless Rails.env.test?
+      redirect_to public_white_paper_url(white_paper.name_url)
     else
       render action: :new
     end
@@ -108,7 +108,7 @@ class WhitePapersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:white_paper).permit(:title, :description, :file, :sorting_order, :cover_image, :name_url)
+    params.require(:white_paper).permit(:name, :description, :file, :sorting_order, :cover_image, :name_url)
   end
 
   def request_allowed_params

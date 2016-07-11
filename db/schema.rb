@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707123125) do
+ActiveRecord::Schema.define(version: 20160711174727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1055,7 +1055,6 @@ ActiveRecord::Schema.define(version: 20160707123125) do
   add_index "white_paper_requests", ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id", using: :btree
 
   create_table "white_papers", force: :cascade do |t|
-    t.string   "title"
     t.text     "description"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
@@ -1069,8 +1068,7 @@ ActiveRecord::Schema.define(version: 20160707123125) do
     t.integer  "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.string   "name_url"
+    t.string   "name"
   end
-
-  add_index "white_papers", ["title"], name: "index_white_papers_on_title", using: :btree
 
 end

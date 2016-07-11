@@ -3,7 +3,6 @@
 # Table name: white_papers
 #
 #  id                       :integer          not null, primary key
-#  title                    :string
 #  description              :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
@@ -17,11 +16,12 @@
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
+#  name                     :string
 #
 
 FactoryGirl.define do
   factory :white_paper do
-    sequence(:title) { |n| "Title#{n}" }
+    sequence(:name) { |n| "Title#{n}" }
     sequence(:name_url) { |n| "title_#{n}" }
     description "MyText"
   end

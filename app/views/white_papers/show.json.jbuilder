@@ -1,1 +1,1 @@
-json.extract! @white_paper, :id, :title, :description, :created_at, :updated_at
+json.extract! @white_paper, :id, :name, :description, :created_at, :updated_at

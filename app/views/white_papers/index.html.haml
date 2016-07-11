@@ -16,13 +16,13 @@
               %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: white_papers_url}}
                 %thead
                   %tr
-                    %th=t('views.white_papers.form.title')
+                    %th=t('views.white_papers.form.name')
                     %th
                     %th
                 %tbody
                   -@white_papers.each do |white_paper|
                     %tr{id: white_paper.id}
-                      %td=white_paper.title
+                      %td=white_paper.name
                       %td
                         =link_to t('views.general.view'), public_white_paper_url(white_paper.try(:name_url)), class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_white_paper_url(white_paper), class: 'btn btn-cyan btn-small'

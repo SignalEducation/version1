@@ -1501,10 +1501,10 @@ en:
 
     white_papers:
       form:
-        title: Title
+        name: Title
         name_url: Name URL
         name_url_placeholder: Name URL
-        title_placeholder: Title of White Paper
+        name_placeholder: Title of White Paper
         description: Description(This accepts html tags)
         description_placeholder: Enter description here
         file_file_name: File name
