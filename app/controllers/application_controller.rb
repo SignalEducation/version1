@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'mailchimp'
 require 'prawn'
-require 'pry-remote'
+
 class ApplicationController < ActionController::Base
 
   # This array must be in ascending score order.
@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :authenticate_if_staging
-  before_action :check_current_corporate_logged_in
+  before_action :check_current_corporate_logged_in, if: 'current_corporate'
   before_action :setup_mcapi
 
   def authenticate_if_staging
