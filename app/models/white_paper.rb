@@ -3,7 +3,6 @@
 # Table name: white_papers
 #
 #  id                       :integer          not null, primary key
-#  title                    :string
 #  description              :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
@@ -17,12 +16,13 @@
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
+#  name                     :string
 #
 
 class WhitePaper < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :title, :description, :file, :cover_image, :sorting_order, :name_url
+  attr_accessible :name, :description, :file, :cover_image, :sorting_order, :name_url
 
   # Constants
 
@@ -32,7 +32,7 @@ class WhitePaper < ActiveRecord::Base
   has_attached_file :cover_image, default_url: '/assets/images/missing.png'
 
   # validation
-  validates :title, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true
   validates :name_url, presence: true, uniqueness: true
   validates :description, presence: true
   validates_attachment_content_type :file,
@@ -44,7 +44,7 @@ class WhitePaper < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :title) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
 
   # class methods
 

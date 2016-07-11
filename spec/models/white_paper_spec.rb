@@ -3,7 +3,6 @@
 # Table name: white_papers
 #
 #  id                       :integer          not null, primary key
-#  title                    :string
 #  description              :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
@@ -17,6 +16,7 @@
 #  cover_image_file_size    :integer
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
+#  name                     :string
 #
 
 require 'rails_helper'
@@ -37,7 +37,7 @@ describe WhitePaper do
   it { should have_many(:white_paper_requests) }
 
   # validation
-  it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:name_url) }
   xit { should validate_uniqueness_of(:name_url) }

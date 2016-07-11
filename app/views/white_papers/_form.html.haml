@@ -5,9 +5,9 @@
       .row
         .col-md-6
           =f.hidden_field :sorting_order
-          =f.label :title, t('views.white_papers.form.title'), class: 'control-label'
+          =f.label :name, t('views.white_papers.form.name'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.text_field :title, placeholder: t('views.white_papers.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+            =f.text_field :name, placeholder: t('views.white_papers.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true, autofocus: true
           %br/
           =f.label :name_url, t('views.white_papers.form.name_url'), class: 'control-label'
           .input-group.input-group-lg.full-width
