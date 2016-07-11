@@ -155,7 +155,7 @@ en:
         subdomain: Subdomian
         user_name: Create Account Username
         passcode: Create Account Password
-        external_url: External URL (Optional)
+        external_url: External URL - Optional (Include http://)
         footer_border_colour: Footer Border Colour
 
       index:
