@@ -6,7 +6,7 @@
 @import "bootstrap";
 @import 'bootstrap-datetimepicker';
 @import "font-awesome";
-@import "corp1_mixins.scss";
+@import "balecrocker_mixins.scss";
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 
@@ -853,20 +853,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .l-wrap-corp-home {
-  padding: 50px 0 250px 0;
-  margin: $gutter*2.5 $gutter*10;
+  padding: 10px 0 250px 0;
+  margin: 0;
+  max-width: 1200px;
   background: $colour-3;
 
-  @include breakpoint(xs-min) {
-    margin: $gutter $gutter*2;
-    padding: 50px 10px 250px 10px;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter $gutter*5;
-  }
 }
 .l-wrap-corporate {
   padding: 100px 0 170px 0;
@@ -1113,6 +1104,28 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     max-width: 1150px;
   }
 }
+.l-section-corp-home {
+  @include breakpoint(xs-min) {
+    padding: $gutter 0;
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+  }
+  @include breakpoint(sm-min) {
+    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
+    padding: $gutter 0;
+
+  }
+  @include breakpoint(md-min) {
+    margin: 0 auto;
+    padding: 0;
+    max-width: 960px;
+  }
+  @include breakpoint(lg-min) {
+    margin: 0 auto;
+    padding: 0;
+    max-width: 1150px;
+  }
+
+}
 .l-section-profile {
 
   @include breakpoint(xs-min) {
@@ -1184,22 +1197,52 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .corporate-heading {
-  padding: 0;
-  margin: 33px $gutter*6 33px $gutter*5;
-
   @include breakpoint(xs-min) {
-    margin: 33px $gutter*6 33px $gutter*2;
+    //width: 1140px;
+    margin: 25px $gutter $gutter $gutter;
   }
   @include breakpoint(sm-min) {
-    margin: 33px $gutter*6 33px $gutter*2;
+    width: 500px;
+    margin: 30px auto $gutter*1.5 auto;
   }
   @include breakpoint(md-min) {
-    margin: 33px $gutter*6 33px $gutter*5;
+    width: 960px;
+    margin: 30px auto $gutter*1.5 auto;
   }
+  @include breakpoint(lg-min) {
+    width: 1140px;
+    margin: 30px auto $gutter*1.5 auto;
+  }
+
 }
 .default-title {
+  @include breakpoint(xs-min) {
+    width: 50%;
+    margin: auto auto;
+  }
+  @include breakpoint(md-min) {
+    width: inherit;
+    margin: inherit;
+  }
+  @include breakpoint(lg-min) {
+    width: inherit;
+    margin: inherit;
+  }
+
 }
 .default-logo {
+  @include breakpoint(xs-min) {
+    width: 100%;
+    margin: auto auto;
+  }
+  @include breakpoint(md-min) {
+    width: inherit;
+    margin: inherit;
+  }
+  @include breakpoint(lg-min) {
+    width: inherit;
+    margin: inherit;
+  }
 }
 
 //Hero
