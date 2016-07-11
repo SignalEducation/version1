@@ -7,22 +7,19 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          -if current_corporate
-            =link_to root_url do
-              =image_tag(current_corporate.logo.url, class: 'corporate-logo')
-          -else
-            =link_to root_url do
-              =image_tag('ls-logo-red.svg', class: 'logo')
-
-          -#if current_user
-            -if !current_corporate.try(:external_url).try(:empty?)
-              %a{href: "#{current_corporate.try(:external_url)}", target: '_blank'}
-                =image_tag(current_corporate.logo.url, class: 'corporate-logo')
+          -if current_user && current_corporate
+            -if current_corporate.external_url
+              -if !current_corporate.external_url.empty?
+                =link_to "#{current_corporate.external_url}", target: '_blank', rel: "nofollow" do
+                  =image_tag(current_corporate.logo.url, class: 'corporate-logo')
+              -else
+                =link_to root_url do
+                  =image_tag(current_corporate.logo.url, class: 'corporate-logo')
             -else
               =link_to root_url do
                 =image_tag(current_corporate.logo.url, class: 'corporate-logo')
 
-          -#else
+          -else
             =link_to root_url do
               =image_tag(current_corporate.logo.url, class: 'corporate-logo')
 

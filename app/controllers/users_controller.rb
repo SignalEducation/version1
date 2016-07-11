@@ -98,10 +98,12 @@ class UsersController < ApplicationController
       end
       @user.reload
     end
-    if current_user.corporate_customer?
+    if current_user.corporate_manager? || current_user.corporate_customer?
       @corporate_customer = current_user.corporate_customer
+      @footer = false
+    else
+      @footer = true
     end
-    @footer = true
   end
 
   def new

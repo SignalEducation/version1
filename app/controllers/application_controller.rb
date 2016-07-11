@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :authenticate_if_staging
+  before_action :check_current_corporate_logged_in, if: 'current_corporate'
   before_action :setup_mcapi
 
   def authenticate_if_staging
@@ -26,6 +27,12 @@ class ApplicationController < ActionController::Base
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
         name == 'signal' && password == '27(South!)'
       end
+    end
+  end
+
+  def check_current_corporate_logged_in
+    unless controller_name == 'user_sessions' || controller_name == 'corporate_profiles' || controller_name == 'routes' || controller_name == 'user_password_resets' || controller_name == 'footer_pages'
+      logged_in_required
     end
   end
 
