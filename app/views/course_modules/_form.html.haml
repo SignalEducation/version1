@@ -1,4 +1,4 @@
-=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form'}) do |f|
+=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_frm'}) do |f|
   .row
     .col-md-6
       =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
@@ -39,15 +39,31 @@
       %br/
       %br/
       .col-sm-11.col-sm-offset-1
-        .checkbox
-          %label
-            =f.check_box :is_past_paper
-            =t('views.course_modules.form.is_past_paper')
+        .form-group{style: 'margin-left: 0px;'}
+          %table.col-sm-12
+            %thead
+              %tr
+                %th='Tuition'
+                %th='Test'
+                %th='Revision'
+                %th
+            %tbody
+              %tr
+                %td.check
+                  =f.check_box :tuition
+                %td.check
+                  =f.check_box :test
+                %td.check
+                  =f.check_box :revision
+                %td
+                  =link_to('Clear', '#', class: 'check clear')
+
+
       %br/
       %br/
       =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
+        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
   %br/
   %br/
@@ -57,3 +73,30 @@
     .col-md-12
       =f.submit t('views.general.save'), class: 'btn btn-red'
       =link_to t('views.general.cancel'), course_module_special_link(@course_module), class: 'btn btn-cyan'
+
+
+
+:javascript
+
+  function deselectSiblings(theThing) {
+    $('.check').find($( "input" )).prop('checked', false);
+    $(theThing).find($( "input" )).prop('checked', true);
+  }
+
+  function deselectAll() {
+    $('.check').find($( "input" )).prop('checked', false);
+  }
+
+  $(document).on('ready', function() {
+    $('.check').bind('click', function(event) {
+      event.stopPropagation();
+      deselectSiblings(this);
+    });
+  })
+
+  $(document).on('ready', function() {
+    $('.check.clear').bind('click', function(event) {
+      event.stopPropagation();
+      deselectAll();
+    });
+  })
