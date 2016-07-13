@@ -53,7 +53,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # validation
   validates :session_guid, presence: true, length: {maximum: 255}
-  validates :time_taken_in_seconds, presence: true
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
