@@ -61,6 +61,8 @@
 
       %br/
       %br/
+      %br/
+      %br/
       =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
@@ -100,3 +102,5 @@
       deselectAll();
     });
   })
+
+  document.querySelector('input[type="color"]').value = '#F2F2F2'
