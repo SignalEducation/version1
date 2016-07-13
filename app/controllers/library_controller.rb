@@ -65,10 +65,10 @@ class LibraryController < ApplicationController
         end
       else
 
-        course_modules = @course.children.all_active.all_in_order
-        @tuition_course_modules = course_modules.all_tuition
-        @test_course_modules = course_modules.all_test
-        @revision_course_modules = course_modules.all_revision
+        @course_modules = @course.children.all_active.all_in_order
+        @tuition_course_modules = @course_modules.all_tuition
+        @test_course_modules = @course_modules.all_test
+        @revision_course_modules = @course_modules.all_revision
 
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
         user_course_sets = users_sets.where(subject_course_id: @course.try(:id))

@@ -49,35 +49,40 @@
         .col-md-12
           .col-md-8.l-margin-top-big
 
-            -if @course.tuition_children?
-              -# First Section for Course Modules for Tuition
-              %p.h4.l-margin-bottom
-                =t('views.general.course_tuition')
-              =render partial: 'library/tuition'
+            -if @course.tuition_children? || @course.test_children? || @course.revision_children?
+              -if @course.tuition_children?
+                -# First Section for Course Modules for Tuition
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_tuition')
+                =render partial: 'library/tuition'
 
-            -if @course.test_children?
-              -# Second Section for Course Modules for Test
-              %br/
-              %p.h4.l-margin-bottom
-                =t('views.general.course_test')
-              =render partial: 'library/test'
+              -if @course.test_children?
+                -# Second Section for Course Modules for Test
+                %br/
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_test')
+                =render partial: 'library/test'
 
-            -if @course.revision_children?
+              -if @course.revision_children?
+                -# Third Section for Course Modules for Revision
+                %br/
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_revision')
+                =render partial: 'library/revision'
+
+            -else
               -# Third Section for Course Modules for Revision
               %br/
               %p.h4.l-margin-bottom
-                =t('views.general.course_revision')
-              =render partial: 'library/revision'
-
-
-
+                =t('views.general.course_content')
+              =render partial: 'library/all_content'
 
 
             -# Fourth Section for Final Quiz and Certificate
             -if current_user && @course.certificate
               %br/
               %p.h4.l-margin-bottom
-                =t('views.general.course_revision')
+                =t('views.general.final_exam')
               -if @course.question_bank && @course.question_bank.active?
                 -if @question_bank_passed
                   -if current_user
