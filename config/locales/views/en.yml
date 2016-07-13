@@ -20,6 +20,9 @@ en:
       course_tutor: Course Tutor
       course_structure: Course Stucture
       course_content: Course Content
+      course_tuition: Tuition
+      course_revision: Revision
+      course_test: Test
       back: Back
       browse: Browse
       by: by
