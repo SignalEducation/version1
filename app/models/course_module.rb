@@ -87,6 +87,18 @@ class CourseModule < ActiveRecord::Base
     self.children.all_active.all_in_order
   end
 
+  def category
+    if self.revision
+      'Revision'
+    elsif self.tuition
+      'Tuition'
+    elsif self.test
+      'Test'
+    else
+      ''
+    end
+  end
+
   def children
     self.course_module_elements.all
   end

@@ -66,6 +66,9 @@
       =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      -if f.object.new_record?
+        :javascript
+          document.querySelector('input[type="color"]').value = '#FFFFFF'
 
   %br/
   %br/
@@ -102,5 +105,3 @@
       deselectAll();
     });
   })
-
-  document.querySelector('input[type="color"]').value = '#F2F2F2'

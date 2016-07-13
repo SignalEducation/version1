@@ -49,20 +49,25 @@
         .col-md-12
           .col-md-8.l-margin-top-big
 
-            -# First Section for Course Modules for Tuition
-            %p.h4.l-margin-bottom
-              =t('views.general.course_tuition')
-            =render partial: 'library/tuition'
+            -if @course.tuition_children?
+              -# First Section for Course Modules for Tuition
+              %p.h4.l-margin-bottom
+                =t('views.general.course_tuition')
+              =render partial: 'library/tuition'
 
-            -# Second Section for Course Modules for Test
-            %p.h4.l-margin-bottom
-              =t('views.general.course_test')
-            =render partial: 'library/test'
+            -if @course.test_children?
+              -# Second Section for Course Modules for Test
+              %br/
+              %p.h4.l-margin-bottom
+                =t('views.general.course_test')
+              =render partial: 'library/test'
 
-            -# Third Section for Course Modules for Revision
-            %p.h4.l-margin-bottom
-              =t('views.general.course_revision')
-            =render partial: 'library/revision'
+            -if @course.revision_children?
+              -# Third Section for Course Modules for Revision
+              %br/
+              %p.h4.l-margin-bottom
+                =t('views.general.course_revision')
+              =render partial: 'library/revision'
 
 
 

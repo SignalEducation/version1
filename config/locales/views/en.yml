@@ -303,7 +303,7 @@ en:
         seo_description_placeholder: Description text that Google will show in search results
         seo_no_index: "SEO no-index flag"
         is_past_paper: Past Paper Module
-        highlight_colour: "Highlight Colour (Default Color is #F2F2F2)"
+        highlight_colour: "Highlight Colour (Default Color is #FFFFFF)"
         colour_placeholder: "eg. #fff"
 
       edit:
