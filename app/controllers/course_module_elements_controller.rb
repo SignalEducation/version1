@@ -66,6 +66,8 @@ class CourseModuleElementsController < ApplicationController
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
         course_module_id: params[:cm_id].to_i, active: false)
     @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
+    cm = CourseModule.find params[:cm_id].to_i
+    @course_modules = cm.parent.active_children
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
@@ -102,6 +104,8 @@ class CourseModuleElementsController < ApplicationController
         end
 
       end
+      cm = @course_module_element.parent
+      @course_modules = cm.parent.active_children
       set_related_cmes
     else
       redirect_to subject_course_url(@course_module_element.parent.parent)
@@ -179,6 +183,8 @@ class CourseModuleElementsController < ApplicationController
     Rails.logger.debug "CONTINUING..."
     @course_module_element.valid?
     Rails.logger.debug "DEBUG: course_module_elements_controller#update about to save. Errors:#{@course_module_element.errors.inspect}."
+    cm = @course_module_element.parent
+    @course_modules = cm.parent.active_children
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')

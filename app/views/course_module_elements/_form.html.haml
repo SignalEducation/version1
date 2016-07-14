@@ -34,6 +34,11 @@
                   =f.check_box :active
                   =t('views.course_modules.form.active')
     .col-md-6
+      -if current_user.admin? || current_user.content_manager?
+        =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        %br/
       -if @course_module_element.course_module_element_video
         =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
       -elsif @course_module_element.course_module_element_quiz
@@ -67,7 +72,7 @@
       %br/
       %br/
       %br/
-      =f.submit t('views.general.save'), class: 'btn btn-red'
+      =f.submit t('views.general.save'), class: 'btn btn-red clear-question'
       -if f.object.course_module_element_quiz
         =t('views.general.or')
         =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
@@ -78,3 +83,13 @@
 
   $('#description').summernote({
   });
+
+    onclick: " return false;"
+
+  $(document).on('ready', function() {
+    $('.clear-question').bind('click', function() {
+      if ($('#the_new_question').find('input[type=text],textarea,select').filter(':visible:first').val() == "") {
+        $('#the_new_question').remove();;
+      }
+    });
+  })
