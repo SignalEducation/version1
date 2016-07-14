@@ -48,171 +48,96 @@
       .row
         .col-md-12
           .col-md-8.l-margin-top-big
-            %p.h4.l-margin-bottom
-              =t('views.general.course_content')
-            .panel-group#accordion
-              %ul.course-topics-list
-                -@course.children.all_active.all_in_order.each_with_index do |child, counter|
-                  %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{counter}"}
-                    -if child.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                      .completed-box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"}, style: "background-color: #{child.is_past_paper ? child.try(:highlight_colour) : ""}"}
-                        .box-topic-item
-                          =truncate(child.name, length: 50)
-                        .time.hidden-xs
-                          -if child.quiz_count.to_i > 0
-                            -if child.quiz_count.to_i == 1
-                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
-                            -elsif child.quiz_count.to_i > 1
-                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
-                            -if child.video_count > 0
-                              |
-                          -if child.video_count == 1
-                            =#humanize_time(child.video_duration)
-                            =child.video_count.to_s + ' ' + t('views.library.show.video')
-                          -elsif child.video_count > 1
-                            =#humanize_time(child.estimated_time_in_seconds)
-                            =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
 
-                    -else
-                      .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{counter}"}, style: "background-color: #{child.is_past_paper ? child.try(:highlight_colour) : ""}"}
-                        .box-topic-item
-                          =truncate(child.name, length: 50)
-                        .time.hidden-xs
-                          -if child.quiz_count.to_i > 0
-                            -if child.quiz_count.to_i == 1
-                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
-                            -elsif child.quiz_count.to_i > 1
-                              =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
-                            -if child.video_count > 0
-                              |
-                          -if child.video_count == 1
-                            =#humanize_time(child.video_duration)
-                            =child.video_count.to_s + ' ' + t('views.library.show.video')
-                          -elsif child.video_count > 1
-                            =#humanize_time(child.estimated_time_in_seconds)
-                            =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+            -if @course.tuition_children? || @course.test_children? || @course.revision_children?
+              -if @course.tuition_children?
+                -# First Section for Course Modules for Tuition
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_tuition')
+                =render partial: 'library/tuition'
+
+              -if @course.test_children?
+                -# Second Section for Course Modules for Test
+                %br/
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_test')
+                =render partial: 'library/test'
+
+              -if @course.revision_children?
+                -# Third Section for Course Modules for Revision
+                %br/
+                %p.h4.l-margin-bottom
+                  =t('views.general.course_revision')
+                =render partial: 'library/revision'
+
+            -else
+              -# Third Section for Course Modules for Revision
+              %br/
+              %p.h4.l-margin-bottom
+                =t('views.general.course_content')
+              =render partial: 'library/all_content'
 
 
-                  .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
-                    -child.children.all_in_order.all_active.each do |grandchild|
-                      -if current_user
-                        =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
-                          .row
-                            .col-xs-1.col-sm-1
-                              .left-side-meta
-                                -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                                  %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
-                                    %i.glyphicon.glyphicon-check{style: 'font-size: large'}
-                                -else
-                                  %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
-                                    %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
-                            .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
-                              .pull-left
-                                =grandchild.name.html_safe
-                            .col-xs-12.col-sm-4.hidden-xs
-                              .side-meta
-                                -if grandchild.is_video
-                                  -if grandchild.course_module_element_video.try(:duration)
-                                    =humanize_time(grandchild.course_module_element_video.duration)
-                                  -elsif grandchild.try(:estimated_time_in_seconds)
-                                    =humanize_time(grandchild.try(:estimated_time_in_seconds))
-                                -elsif grandchild.is_quiz
-                                  =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                                -else
-                                  ='Flash Card'
-                      -else
-                        =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                          .row
-                            .col-xs-1.col-sm-1
-                              .left-side-meta
-                                -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                                  %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
-                                    %i.glyphicon.glyphicon-check{style: 'font-size: large'}
-                                -else
-                                  %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
-                                    %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
-                            .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
-                              .pull-left
-                                =grandchild.name
-                            .col-xs-12.col-sm-4.hidden-xs
-                              .side-meta
-                                -if grandchild.is_video
-                                  -if grandchild.try(:course_module_element_video).try(:duration)
-                                    =humanize_time(grandchild.course_module_element_video.duration)
-                                  -elsif grandchild.try(:estimated_time_in_seconds)
-                                    =humanize_time(grandchild.try(:estimated_time_in_seconds))
-                                -elsif grandchild.is_quiz
-                                  =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                                -else
-                                  ='Flash Card'
-
-
-                    -if child.course_module_jumbo_quiz && child.course_module_jumbo_quiz.active
-                      -if current_user
-                        =link_to course_special_link(child.course_module_jumbo_quiz), class: 'list-group-item link-purple box-topic-item' do
-                          .row
-                            .col-xs-12.col-sm-8
-                              =child.course_module_jumbo_quiz.name
-                            .col-xs-12.col-sm-4
-                              .side-meta
-                                =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                      -else
-                        =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                          .row
-                            .col-xs-12.col-sm-8
-                              =child.course_module_jumbo_quiz.name
-                            .col-xs-12.col-sm-4
-                              .side-meta
-                                =child.course_module_jumbo_quiz.total_number_of_questions.to_s + ' ' + t('views.library.show.questions')
-
-                -if current_user && @course.certificate
-                  -if @course.question_bank && @course.question_bank.active?
-                    -if @question_bank_passed
-                      -if current_user
-                        =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
-                          .box-topic-item
-                            =@course.question_bank.name
-                          .time.hidden-xs
-                            .question-bank-passed
-                              %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                              Passed
-                      -else
-                        =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                          .box-topic-item
-                            =@course.question_bank.name
-                          .time.hidden-xs
-                            .question-bank-passed
-                              %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                              Passed
-                      -if @subject_course_user_log.completed
-                        %hr/
-                        -if current_user
-                          =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                            .box-topic-item
-                              Click here to download your completion certificate
-                        -else
-                          =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                            .box-topic-item
-                              Click here to download your completion certificate
-                    -else
-                      -if current_user
-                        =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                          .box-topic-item
-                            =@course.question_bank.name
-                          .time.hidden-xs
-                            =@course.question_bank.number_of_questions.to_s + ' Questions'
-                      -else
-                        =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                          .box-topic-item
-                            =@course.question_bank.name
-                          .time.hidden-xs
-                            =@course.question_bank.number_of_questions.to_s + ' Questions'
+            -# Fourth Section for Final Quiz and Certificate
+            -if current_user && @course.certificate
+              %br/
+              %p.h4.l-margin-bottom
+                =t('views.general.final_exam')
+              -if @course.question_bank && @course.question_bank.active?
+                -if @question_bank_passed
+                  -if current_user
+                    =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
+                      .box-topic-item
+                        =@course.question_bank.name
+                      .time.hidden-xs
+                        .question-bank-passed
+                          %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                          Passed
                   -else
-                    -if @subject_course_user_log && @subject_course_user_log.completed
-                      %hr/
+                    =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
+                      .box-topic-item
+                        =@course.question_bank.name
+                      .time.hidden-xs
+                        .question-bank-passed
+                          %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                          Passed
+                  -if @subject_course_user_log.completed
+                    %hr/
+                    -if current_user
                       =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
                         .box-topic-item
                           Click here to download your completion certificate
+                    -else
+                      =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                        .box-topic-item
+                          Click here to download your completion certificate
+                -else
+                  -if current_user
+                    =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                      .box-topic-item
+                        =@course.question_bank.name
+                      .time.hidden-xs
+                        =@course.question_bank.number_of_questions.to_s + ' Questions'
+                  -else
+                    =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
+                      .box-topic-item
+                        =@course.question_bank.name
+                      .time.hidden-xs
+                        =@course.question_bank.number_of_questions.to_s + ' Questions'
+              -else
+                -if @subject_course_user_log && @subject_course_user_log.completed
+                  %hr/
+                  =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      Click here to download your completion certificate
+
+
+
+
+
+
+
+
 
           .col-md-4
             .course-action.l-margin-bottom-big

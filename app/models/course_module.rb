@@ -21,8 +21,10 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
-#  is_past_paper             :boolean          default(FALSE), not null
 #  highlight_colour          :string
+#  tuition                   :boolean          default(FALSE)
+#  test                      :boolean          default(FALSE)
+#  revision                  :boolean          default(FALSE)
 #
 
 class CourseModule < ActiveRecord::Base
@@ -34,8 +36,8 @@ class CourseModule < ActiveRecord::Base
   attr_accessible :name, :name_url, :description,
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
-                  :number_of_questions, :subject_course_id, :is_past_paper,
-                  :highlight_colour
+                  :number_of_questions, :subject_course_id, :highlight_colour,
+                  :tuition, :test, :revision
 
   # Constants
 
@@ -68,6 +70,9 @@ class CourseModule < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
+  scope :all_tuition, -> { where(tuition: true, destroyed_at: nil) }
+  scope :all_revision, -> { where(revision: true, destroyed_at: nil) }
+  scope :all_test, -> { where(test: true, destroyed_at: nil) }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
@@ -80,6 +85,18 @@ class CourseModule < ActiveRecord::Base
 
   def active_children
     self.children.all_active.all_in_order
+  end
+
+  def category
+    if self.revision
+      'Revision'
+    elsif self.tuition
+      'Tuition'
+    elsif self.test
+      'Test'
+    else
+      ''
+    end
   end
 
   def children

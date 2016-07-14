@@ -21,8 +21,10 @@
 #  video_duration            :float            default(0.0)
 #  video_count               :integer          default(0)
 #  quiz_count                :integer          default(0)
-#  is_past_paper             :boolean          default(FALSE), not null
 #  highlight_colour          :string
+#  tuition                   :boolean          default(FALSE)
+#  test                      :boolean          default(FALSE)
+#  revision                  :boolean          default(FALSE)
 #
 
 require 'rails_helper'

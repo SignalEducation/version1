@@ -141,7 +141,7 @@
   .row
     .col-sm-6.text-left
       -if question.object.id.nil?
-        =link_to t('views.general.delete_block'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-cyan'
+        =link_to t('views.general.delete_block'), '#', onclick: "{$('#the_new_question').remove()}; return false;", class: 'btn btn-cyan'
       -elsif question.object.destroyable?
         =link_to t('views.general.delete_block'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-cyan'
 

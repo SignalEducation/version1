@@ -78,8 +78,8 @@ class SubjectCoursesController < ApplicationController
       @subject_course.certificate = true
       @subject_course.tutor_id = current_user.id
     end
-    wistia_response = create_wistia_project(@subject_course.name)
-    @subject_course.wistia_guid = wistia_response.hashedId
+    wistia_response = create_wistia_project(@subject_course.name) unless Rails.env.test?
+    @subject_course.wistia_guid = wistia_response.hashedId unless Rails.env.test?
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url

@@ -20,6 +20,10 @@ en:
       course_tutor: Course Tutor
       course_structure: Course Stucture
       course_content: Course Content
+      course_tuition: Tuition
+      course_revision: Revision
+      course_test: Test
+      final_exam: Final Exam
       back: Back
       browse: Browse
       by: by
@@ -300,7 +304,7 @@ en:
         seo_description_placeholder: Description text that Google will show in search results
         seo_no_index: "SEO no-index flag"
         is_past_paper: Past Paper Module
-        highlight_colour: Highlight Colour
+        highlight_colour: "Highlight Colour (Default Color is #FFFFFF)"
         colour_placeholder: "eg. #fff"
 
       edit:

@@ -106,6 +106,24 @@ class SubjectCourse < ActiveRecord::Base
     self.course_modules.all
   end
 
+  def tuition_children?
+    if self.active_children.all_tuition.count >= 1
+      return true
+    end
+  end
+
+  def test_children?
+    if self.active_children.all_test.count >= 1
+      return true
+    end
+  end
+
+  def revision_children?
+    if self.active_children.all_revision.count >= 1
+      return true
+    end
+  end
+
   def completed_by_user_or_guid(user_id, session_guid)
     self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
   end
