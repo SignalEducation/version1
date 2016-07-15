@@ -4,14 +4,10 @@ class MandrillWorker
 
   sidekiq_options queue: 'high'
 
-  def perform(user_id, request_id, method_name, *template_args)
+  def perform(user_id, method_name, *template_args)
     @user = User.find_by_id(user_id)
-    @request = WhitePaperRequest.find_by_id(request_id)
     if @user && @user.email
-      mc = MandrillClient.new(@user, nil)
-      mc.send(method_name, *template_args)
-    elsif @request && @request.email
-      mc = MandrillClient.new(nil, @request)
+      mc = MandrillClient.new(@user)
       mc.send(method_name, *template_args)
     end
   end

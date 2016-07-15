@@ -1,9 +1,8 @@
 require 'mandrill'
-#None of these mails should be sending anymore; replaced by intercom messages
+
 class MandrillClient
-  def initialize(user, request)
+  def initialize(user)
     @user = user
-    @request = request
   end
 
   def send_verification_email(verification_url)
@@ -121,63 +120,5 @@ class MandrillClient
     }
   end
 
-  def request_message_stub
-    {
-        "html" => nil,
-        "text" => nil,
-        "subject" => nil,
-        "from_email" => "team@learnsignal.com",
-        "from_name" => "Learn Signal",
-        "to" => [{
-                     "email" => @request.email,
-                     "type" => "to",
-                     "name" => @request.name
-                 }],
-        "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
-        "important" => false,
-        "track_opens" => nil,
-        "track_clicks" => nil,
-        "auto_text" => nil,
-        "auto_html" => nil,
-        "inline_css" => nil,
-        "url_strip_qs" => nil,
-        "preserve_recipients" => nil,
-        "view_content_link" => nil,
-        "bcc_address" => nil, #"message.bcc_address@example.com",
-        "tracking_domain" => nil,
-        "signing_domain" => nil,
-        "return_path_domain" => nil,
-        "merge" => true,
-        "merge_language" => "mailchimp",
-        "global_merge_vars" => [
-            { "name" => "FNAME", "content" => @request.name },
-            { "name" => "COMPANY", "content" => "Signal Education" },
-            { "name" => "COMPANYURL", "content" => "https://learnsignal.com" }
-        ],
-        "merge_vars" => [
-            # { "rcpt" => "some.email@example.com",
-            #   "vars" => [{
-            #                "FNAME" => "First Name",
-            #                "COMPANY" => "Signal Education",
-            #                "COMPANYURL" => "http://learnsignal.com"
-            #              }],
-            # }
-        ],
-        "tags" => [],
-        "subaccount" => nil,
-        "google_analytics_domains" => [],
-        "google_analytics_campaign" => nil,
-        "metadata" => {},
-        "recipient_metadata" => [
-            # { "rcpt" => "recipient.email@example.com", "values" => { "user_id" => 123456 } }
-        ],
-        "attachments" => [
-            # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
-        ],
-        "images" => [
-            # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
-        ],
-    }
-  end
 
 end

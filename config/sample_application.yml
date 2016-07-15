@@ -26,7 +26,7 @@ LEARNSIGNAL3_S3_SECRET_ACCESS_KEY: 40-character-code
 intercom_app_id: 8-char-code
 
 # Mandrill
-learnsignal_mandrill_api_key: mandrill_api_key_goes_here
+learnsignal_mandrill_api_key: uKK_pGl-9PK54IhUzx5Ajg
 
 # AWS Load Balancers
 # For each configuration we have to list all load balancer IPs in
