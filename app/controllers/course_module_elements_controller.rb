@@ -117,6 +117,7 @@ class CourseModuleElementsController < ApplicationController
       params[:course_module_element][:course_module_element_quiz_attributes].delete(:quiz_questions_attributes)
     end
     @course_module_element = CourseModuleElement.new(allowed_params)
+    @course_modules = @course_module_element.parent.active_children
     set_related_cmes
     if @course_module_element.is_video
       upload_io = params[:course_module_element][:course_module_element_video_attributes][:video]
