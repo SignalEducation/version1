@@ -48,7 +48,7 @@ class CorporateManagersController < ApplicationController
       #IntercomCreateCorporateManagerWorker.perform_async(@corporate_manager.id, @corporate_manager.email, @corporate_manager.full_name, @corporate_manager.created_at, @corporate_manager.guid, @corporate_manager.user_group.name, @corporate_manager.corporate_customer_id, @corporate_manager.corporate_customer.organisation_name) unless Rails.env.test?
       #IntercomUserInviteEmailWorker.perform_at(1.minute.from_now, @corporate_manager.email, user_verification_url(email_verification_code: @corporate_manager.email_verification_code)) unless Rails.env.test?
 
-      MandrillWorker.perform_async(@corporate_manager.id,
+      MandrillWorker.perform_async(@corporate_manager.id, @corporate_manager.corporate_customer_id,
                                    'send_verification_email',
                                    user_verification_url(email_verification_code: @corporate_manager.email_verification_code))
 

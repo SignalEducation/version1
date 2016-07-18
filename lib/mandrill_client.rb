@@ -1,12 +1,19 @@
 require 'mandrill'
 
 class MandrillClient
-  def initialize(user)
+  def initialize(user, corporate)
     @user = user
+    @corporate = corporate
   end
 
   def send_verification_email(verification_url)
     msg = message_stub.merge({"subject" => "Subscription Verification"})
+    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
+    send_template('email-verification', msg)
+  end
+
+  def corporate_invite(verification_url)
+    msg = corporate_message_stub.merge({"subject" => "Welcome to #{@corporate.organisation_name} Training"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
     send_template('email-verification', msg)
   end
@@ -116,6 +123,67 @@ class MandrillClient
       ],
       "images" => [
         # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
+      ],
+    }
+  end
+
+  def corporate_message_stub
+    {
+      "html" => nil,
+      "text" => nil,
+      "subject" => nil,
+      "from_email" => "team@learnsignal.com",
+      "from_name" => @corporate.organisation_name,
+      "to" => [{
+                 "email" => @user.email,
+                 "type" => "to",
+                 "name" => @user.full_name
+               }],
+      "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
+      "important" => false,
+      "track_opens" => nil,
+      "track_clicks" => nil,
+      "auto_text" => nil,
+      "auto_html" => nil,
+      "inline_css" => nil,
+      "url_strip_qs" => nil,
+      "preserve_recipients" => nil,
+      "view_content_link" => nil,
+      "bcc_address" => nil, #"message.bcc_address@example.com",
+      "tracking_domain" => nil,
+      "signing_domain" => nil,
+      "return_path_domain" => nil,
+      "merge" => true,
+      "merge_language" => "mailchimp",
+      "global_merge_vars" => [
+        { "name" => "FNAME", "content" => @user.first_name },
+        { "name" => "LNAME", "content" => @user.last_name },
+        { "name" => "COMPANY", "content" => @corporate.organisation_name },
+        { "name" => "COMPANYURL", "content" => root_url }
+      ],
+      "merge_vars" => [
+        # { "rcpt" => "some.email@example.com",
+        #   "vars" => [{
+        #                "FNAME" => "First Name",
+        #                "COMPANY" => "Signal Education",
+        #                "COMPANYURL" => "http://learnsignal.com"
+        #              }],
+        # }
+      ],
+      "tags" => [],
+      "subaccount" => @corporate.subdomain,
+      "google_analytics_domains" => [],
+      "google_analytics_campaign" => nil,
+      "metadata" => {},
+      "recipient_metadata" => [
+        # { "rcpt" => "recipient.email@example.com", "values" => { "user_id" => 123456 } }
+      ],
+      "attachments" => [
+        # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
+      ],
+      "images" => [
+        # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
+         { "type" => @corporate.logo_content_type, "content" => @corporate.logo.url, "name" => "LOGO" }
       ],
     }
   end
