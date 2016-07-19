@@ -32,6 +32,14 @@
         .input-group.input-group-lg.full-width
           =f.text_field :external_url, class: 'form-control', style: 'border-radius: 6px;'
         %br/
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :external_logo_link
+                =t('views.corporate_customers.form.external_logo_link')
+
+        %br/
         =f.label :footer_border_colour, t('views.corporate_customers.form.footer_border_colour'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :footer_border_colour, class: 'form-control', style: 'border-radius: 6px;'

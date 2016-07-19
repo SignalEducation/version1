@@ -20,6 +20,7 @@
 #  external_url         :string
 #  footer_border_colour :string           default("#EFF3F6")
 #  corporate_email      :string
+#  external_logo_link   :boolean          default(FALSE)
 #
 
 class CorporateCustomer < ActiveRecord::Base
@@ -29,7 +30,7 @@ class CorporateCustomer < ActiveRecord::Base
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
                   :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode, :external_url,
-                  :footer_border_colour, :corporate_email
+                  :footer_border_colour, :corporate_email, :external_logo_link
 
   # Constants
 
@@ -55,6 +56,8 @@ class CorporateCustomer < ActiveRecord::Base
   validates :user_name, presence: true, length: {maximum: 25}
   validates :passcode, presence: true, length: {maximum: 25}
   validates :corporate_email, presence: true
+  validates :external_url, presence: true
+  validates :logo, presence: true
   validates :footer_border_colour, presence: true, length: {maximum: 25}
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 

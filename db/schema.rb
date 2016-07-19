@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160719102354) do
+ActiveRecord::Schema.define(version: 20160719144645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20160719102354) do
     t.string   "external_url"
     t.string   "footer_border_colour", default: "#EFF3F6"
     t.string   "corporate_email"
+    t.boolean  "external_logo_link",   default: false
   end
 
   add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
