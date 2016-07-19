@@ -15,7 +15,7 @@ class MandrillClient
   def corporate_invite(verification_url)
     msg = corporate_message_stub.merge({"subject" => "Welcome to #{@corporate.organisation_name} Training"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('email-verification', msg)
+    send_template('corporate-invite-email', msg)
   end
 
   def send_welcome_email(trial_length, library_url)
@@ -132,7 +132,7 @@ class MandrillClient
       "html" => nil,
       "text" => nil,
       "subject" => nil,
-      "from_email" => "team@learnsignal.com",
+      "from_email" => @corporate.corporate_email,
       "from_name" => @corporate.organisation_name,
       "to" => [{
                  "email" => @user.email,
@@ -159,7 +159,8 @@ class MandrillClient
         { "name" => "FNAME", "content" => @user.first_name },
         { "name" => "LNAME", "content" => @user.last_name },
         { "name" => "COMPANY", "content" => @corporate.organisation_name },
-        { "name" => "COMPANYURL", "content" => root_url }
+        { "name" => "IMAGENAME", "content" => @corporate.logo.url },
+        { "name" => "COMPANYURL", "content" => @corporate.external_url }
       ],
       "merge_vars" => [
         # { "rcpt" => "some.email@example.com",
@@ -180,11 +181,7 @@ class MandrillClient
       ],
       "attachments" => [
         # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
-      ],
-      "images" => [
-        # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
-         { "type" => @corporate.logo_content_type, "content" => @corporate.logo.url, "name" => "LOGO" }
-      ],
+      ]
     }
   end
 

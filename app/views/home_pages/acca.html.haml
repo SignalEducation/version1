@@ -36,15 +36,15 @@
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
-              Prepare for your ACCA exams with an online revision course
+              Prepare for your ACCA exams with an online course
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              ACCA exam revision courses online for a small monthly subscription
-            -country_count = '83 Countries'
+              ACCA exam courses online for a small monthly subscription
+            -amount = '£25'
 
             %p.h7
-              ="Learners in "
-              =link_to country_count, '#', class: 'no-link-style'
-              ="are using our platform to progress their careers"
+              ="All for just "
+              =link_to amount, '#', class: 'no-link-style'
+              ="per month"
 
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
             =render partial: 'sign_up_form'

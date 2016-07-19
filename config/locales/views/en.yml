@@ -160,6 +160,7 @@ en:
         user_name: Create Account Username
         passcode: Create Account Password
         external_url: External URL - Optional (Include http://)
+        corporate_email: An @learnsignal email account for this corporate account for emails
         footer_border_colour: Footer Border Colour
 
       index:
