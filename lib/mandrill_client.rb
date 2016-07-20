@@ -24,6 +24,37 @@ class MandrillClient
     send_template('admin-invite-email', msg)
   end
 
+  def corporate_password_reset_email(password_reset_url)
+    msg = corporate_message_stub.merge({"subject" => "#{@corporate.organisation_name} Password Reset"})
+    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
+    send_template('corporate-password-reset-email', msg)
+  end
+
+  def password_reset_email(password_reset_url)
+    msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
+    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
+    send_template('password-reset-email', msg)
+  end
+
+  def send_card_payment_failed_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Payment Failed"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send_template('card-payment-failed', msg)
+  end
+
+  def send_account_suspended_email
+    msg = message_stub.merge({"subject" => "Account Suspended"})
+    send_template('account-suspended', msg)
+  end
+
+
+
+
+
+
+
+
+
   def send_welcome_email(trial_length, library_url)
     msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
     msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
@@ -43,16 +74,7 @@ class MandrillClient
     send_template('free-trial-ended', msg)
   end
 
-  def send_account_suspended_email
-    msg = message_stub.merge({"subject" => "Account Suspended"})
-    send_template('account-suspended', msg)
-  end
 
-  def send_card_payment_failed_email(account_settings_url)
-    msg = message_stub.merge({"subject" => "Payment Failed"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('card-payment-failed', msg)
-  end
 
   def send_account_reactivated_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
@@ -60,11 +82,6 @@ class MandrillClient
     send_template('account-reactivated', msg)
   end
 
-  def send_password_reset_email(password_reset_url)
-    msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
-    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send_template('password-reset', msg)
-  end
 
   private
 
