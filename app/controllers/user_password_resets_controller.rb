@@ -77,7 +77,13 @@ class UserPasswordResetsController < ApplicationController
         @user_session = UserSession.create(@user)
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
         @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
-        redirect_back_or_default corporate_customer_url(@user.corporate_customer)
+        if @user.corporate_student?
+          redirect_back_or_default dashboard_url
+        elsif @user.corporate_manager?
+          redirect_back_or_default corporate_customer_url(@user.corporate_customer)
+        else
+          redirect_back_or_default root_url
+        end
       else
         @user = User.find_by_password_reset_token(params[:id])
         flash[:error] = I18n.t('controllers.user_password_resets.update.flash.error')

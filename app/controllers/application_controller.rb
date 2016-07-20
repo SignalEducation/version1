@@ -1,7 +1,6 @@
 # coding: utf-8
 require 'mailchimp'
 require 'prawn'
-require 'pry-remote'
 
 class ApplicationController < ActionController::Base
 

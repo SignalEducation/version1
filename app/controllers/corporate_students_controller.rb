@@ -53,8 +53,7 @@ class CorporateStudentsController < ApplicationController
     @corporate_student.locale = 'en'
     if @corporate_student.save
       @corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
-      IntercomCreateCorporateStudentWorker.perform_async(@corporate_student.id, @corporate_student.email, @corporate_student.full_name, @corporate_student.created_at, @corporate_student.guid, @corporate_student.user_group.name, @corporate_student.corporate_customer_id, @corporate_student.corporate_customer.organisation_name) unless Rails.env.test?
-      IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @corporate_student.id,user_verification_url(email_verification_code: @corporate_student.email_verification_code)) unless Rails.env.test?
+      MandrillWorker.perform_async(@corporate_student.id, 'corporate_invite', user_verification_url(email_verification_code: @corporate_student.email_verification_code))
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
