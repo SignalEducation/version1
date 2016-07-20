@@ -56,7 +56,7 @@ class UserPasswordResetsController < ApplicationController
 
   def corporate_new
     if params[:id].to_s.length == 20
-      @user = User.where(password_reset_token: params[:id].to_s, active: false).first
+      @user = User.where(password_reset_token: params[:id].to_s).first
       if @user
         render :corporate_new
       else
