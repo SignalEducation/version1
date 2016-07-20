@@ -7,7 +7,7 @@ class MandrillClient
   end
 
   def send_verification_email(verification_url)
-    msg = message_stub.merge({"subject" => "Subscription Verification"})
+    msg = message_stub.merge({"subject" => "LearnSignal Account Verification"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
     send_template('email-verification', msg)
   end
@@ -73,7 +73,6 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "ACCOUNTACTIVATIONURL", "content" => account_activation_url }
     send_template('free-trial-ended', msg)
   end
-
 
 
   def send_account_reactivated_email(account_settings_url)

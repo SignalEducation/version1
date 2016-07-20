@@ -121,6 +121,7 @@ class UsersController < ApplicationController
   end
 
   def student_create
+    #Duplicate in HomePages controller
     if current_user
       redirect_to dashboard_url
     else
@@ -147,8 +148,8 @@ class UsersController < ApplicationController
           @user.subscription_plan_category_id = subscription_plan_category.try(:id)
         end
         if @user.valid? && @user.save
-          # Send User Activation email through Intercom
-          IntercomVerificationMessageWorker.perform_at(1.minute.from_now, @user.id, user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+          # Send User Activation email through Mandrill
+          MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
           # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
           if cookies.encrypted[:referral_data]
             code, referrer_url = cookies.encrypted[:referral_data].split(';')
