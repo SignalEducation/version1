@@ -1226,6 +1226,10 @@ en:
         h1: Reset your password
         paragraph_1: "Enter a new password for your account:"
 
+      corporate_new:
+        h1: Set Password
+        paragraph_1: "Enter a password for your account:"
+
     user_notifications:
       form:
         user_id: User

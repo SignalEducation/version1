@@ -4,10 +4,9 @@ class UserVerificationsController < ApplicationController
     @user = User.get_and_verify(params[:email_verification_code])
     if @user && @user.password_change_required?
       @user.update_attributes(password_reset_requested_at: Time.now,
-                              password_reset_token: SecureRandom.hex(10),
-                              active: false)
-      reset_password_url = reset_password_url(id: @user.password_reset_token)
-      redirect_to reset_password_url
+                              password_reset_token: SecureRandom.hex(10))
+      set_password_url = set_password_url(id: @user.password_reset_token)
+      redirect_to set_password_url
     elsif @user
       UserSession.create(@user)
       redirect_to library_url
