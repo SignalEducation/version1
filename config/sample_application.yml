@@ -8,9 +8,11 @@ SECRET_KEY_BASE: 128-character-code
 free_trial_days: "7"
 free_trial_limit_in_seconds: "12000"
 
-# Email sending
-learnsignal_v3_server_email_address: 'some-account@gmail.com'
-learnsignal_v3_server_email_password: 'password-for-gmail-account'
+# Mandrill
+#learnsignal_mandrill_api_key: Pf3KNRuWBG7Ytfg-pn9fVg  production
+#learnsignal_mandrill_api_key: ChlsjrE7dGKKQLAWd3vwyw  staging
+learnsignal_mandrill_api_key: uKK_pGl-9PK54IhUzx5Ajg
+
 
 # Stripe
 learnsignal_v3_stripe_public_key: pk_test_some-code-goes-here

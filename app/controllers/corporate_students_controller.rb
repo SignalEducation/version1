@@ -53,7 +53,7 @@ class CorporateStudentsController < ApplicationController
     @corporate_student.locale = 'en'
     if @corporate_student.save
       @corporate_student.corporate_group_ids = params[:corporate_student][:corporate_group_ids]
-      MandrillWorker.perform_async(@corporate_student.id, 'corporate_invite', user_verification_url(email_verification_code: @corporate_student.email_verification_code))
+      MandrillWorker.perform_async(@corporate_student.id, 'corporate_invite', user_verification_url(email_verification_code: @corporate_student.email_verification_code))unless Rails.env.test?
       flash[:success] = I18n.t('controllers.corporate_students.create.flash.success')
       redirect_to corporate_students_url
     else
@@ -95,7 +95,7 @@ class CorporateStudentsController < ApplicationController
       @corporate_students = User.bulk_create(params[:csvdata], current_user)
       @corporate_students.each do |user|
         if user.save
-          MandrillWorker.perform_async(user.id, 'corporate_invite', user_verification_url(email_verification_code: user.email_verification_code))
+          MandrillWorker.perform_async(user.id, 'corporate_invite', user_verification_url(email_verification_code: user.email_verification_code)) unless Rails.env.test?
         end
       end
     else
