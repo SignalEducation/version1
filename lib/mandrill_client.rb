@@ -18,6 +18,12 @@ class MandrillClient
     send_template('corporate-invite-email', msg)
   end
 
+  def admin_invite(verification_url)
+    msg = message_stub.merge({"subject" => "Welcome to LearnSignal"})
+    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
+    send_template('admin-invite-email', msg)
+  end
+
   def send_welcome_email(trial_length, library_url)
     msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
     msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
