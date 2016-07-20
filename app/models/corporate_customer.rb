@@ -57,7 +57,7 @@ class CorporateCustomer < ActiveRecord::Base
   validates :passcode, presence: true, length: {maximum: 25}
   validates :corporate_email, presence: true
   validates :external_url, presence: true
-  validates :logo, presence: true
+  #validates :logo, presence: true
   validates :footer_border_colour, presence: true, length: {maximum: 25}
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 

@@ -68,6 +68,10 @@ describe CorporateCustomer do
   it { should validate_presence_of(:user_name) }
   it { should validate_length_of(:user_name).is_at_most(25) }
 
+  it { should validate_presence_of(:external_url) }
+  it { should validate_presence_of(:corporate_email) }
+
+
   it { should validate_presence_of(:passcode) }
   it { should validate_length_of(:passcode).is_at_most(25) }
 

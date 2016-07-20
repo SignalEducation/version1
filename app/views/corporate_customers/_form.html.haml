@@ -14,7 +14,7 @@
         .col-md-12
           = image_tag @corporate_customer.logo.url, class: 'md-image'
           %br/
-          =f.file_field :logo
+          =f.file_field :logo, required: true
       .col-md-6
         =f.label :user_name, t('views.corporate_customers.form.user_name'), class: 'control-label'
         .input-group.input-group-lg.full-width
