@@ -19,6 +19,8 @@
 #  passcode             :string
 #  external_url         :string
 #  footer_border_colour :string           default("#EFF3F6")
+#  corporate_email      :string
+#  external_logo_link   :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -65,6 +67,10 @@ describe CorporateCustomer do
 
   it { should validate_presence_of(:user_name) }
   it { should validate_length_of(:user_name).is_at_most(25) }
+
+  it { should validate_presence_of(:external_url) }
+  it { should validate_presence_of(:corporate_email) }
+
 
   it { should validate_presence_of(:passcode) }
   it { should validate_length_of(:passcode).is_at_most(25) }

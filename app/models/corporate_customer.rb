@@ -19,6 +19,8 @@
 #  passcode             :string
 #  external_url         :string
 #  footer_border_colour :string           default("#EFF3F6")
+#  corporate_email      :string
+#  external_logo_link   :boolean          default(FALSE)
 #
 
 class CorporateCustomer < ActiveRecord::Base
@@ -28,7 +30,7 @@ class CorporateCustomer < ActiveRecord::Base
   # attr-accessible
   attr_accessible :organisation_name, :address, :country_id, :payments_by_card,
                   :stripe_customer_guid, :logo, :subdomain, :user_name, :passcode, :external_url,
-                  :footer_border_colour
+                  :footer_border_colour, :corporate_email, :external_logo_link
 
   # Constants
 
@@ -53,12 +55,16 @@ class CorporateCustomer < ActiveRecord::Base
   validates :subdomain, presence: true, uniqueness: true, length: {maximum: 20}
   validates :user_name, presence: true, length: {maximum: 25}
   validates :passcode, presence: true, length: {maximum: 25}
+  validates :corporate_email, presence: true
+  validates :external_url, presence: true
+  #validates :logo, presence: true
   validates :footer_border_colour, presence: true, length: {maximum: 25}
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation { squish_fields(:organisation_name, :address) }
   #after_create :create_on_intercom
+  after_create :create_on_mandrill_subaccount
 
   # scopes
   scope :all_in_order, -> { order(:organisation_name) }
@@ -79,5 +85,20 @@ class CorporateCustomer < ActiveRecord::Base
   end
 
   protected
+
+  def create_on_mandrill_subaccount
+    begin
+      mandrill = Mandrill::API.new ENV['learnsignal_mandrill_api_key']
+      id = self.subdomain
+      name = self.organisation_name
+      result = mandrill.subaccounts.add id, name
+
+    rescue Mandrill::Error => e
+      # Mandrill errors are thrown as exceptions
+      puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      # A mandrill error occurred: Mandrill::InvalidKeyError - Invalid API key
+      raise
+    end
+  end
 
 end

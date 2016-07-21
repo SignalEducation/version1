@@ -182,8 +182,12 @@ class User < ActiveRecord::Base
       user = User.where(email: the_email_address.to_s).first
       if user
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
-        #Send reset password email from Intercom
-        IntercomPasswordResetEmailWorker.perform_async(user.id, "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
+        #Send reset password email from Mandrill
+        if user.corporate_customer_id
+          MandrillWorker.perform_async(user.id, 'corporate_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        else
+          MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        end
       end
     end
   end

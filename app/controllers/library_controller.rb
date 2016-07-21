@@ -42,6 +42,10 @@ class LibraryController < ApplicationController
     if @course.nil?
       redirect_to library_url
     else
+      @course_modules = @course.children.all_active.all_in_order
+      @tuition_course_modules = @course_modules.all_tuition
+      @test_course_modules = @course_modules.all_test
+      @revision_course_modules = @course_modules.all_revision
       tag_manager_data_layer(@course.try(:name))
       @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
       if @course.corporate_customer_id
@@ -64,12 +68,6 @@ class LibraryController < ApplicationController
           seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
         end
       else
-
-        @course_modules = @course.children.all_active.all_in_order
-        @tuition_course_modules = @course_modules.all_tuition
-        @test_course_modules = @course_modules.all_test
-        @revision_course_modules = @course_modules.all_revision
-
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
         user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
         latest_set = user_course_sets.first

@@ -127,6 +127,7 @@ class CourseModuleElementsController < ApplicationController
       thumbnail_url = wistia_data.split(',')[10].split(':{')[1].split(':')[-1].chop.prepend('https:')
       @course_module_element.course_module_element_video.thumbnail = thumbnail_url
     end
+    @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')

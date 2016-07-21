@@ -72,7 +72,6 @@ describe CourseModule do
 
   it { should validate_presence_of(:sorting_order) }
 
-  it { should_not validate_presence_of(:is_past_paper) }
 
   it { should_not validate_presence_of(:highlight_colour) }
 

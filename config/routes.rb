@@ -46,6 +46,8 @@ Rails.application.routes.draw do
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
+    get 'set_password/:id', to: 'user_password_resets#corporate_new', as: :set_password
+    put 'create_password/:id', to: 'user_password_resets#corporate_create', as: :user_create_password
 
     # special routes
     get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
