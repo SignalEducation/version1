@@ -35,11 +35,17 @@ class UserPasswordResetsController < ApplicationController
         @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
         redirect_back_or_default corporate_customer_url(@user.corporate_customer)
       elsif @user
-        UserSession.create!(@user)
+        @user_session = UserSession.create!(@user)
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
-        #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id) unless @user.password_change_required
         @user.update_attribute(:password_change_required, nil)
-        redirect_to root_url
+
+        if @user.corporate_student?
+          redirect_back_or_default dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
+        elsif @user.corporate_manager?
+          redirect_back_or_default corporate_customer_url(@user.corporate_customer, subdomain: @user_session.user.corporate_customer.try(:subdomain))
+        else
+          redirect_back_or_default root_url
+        end
       else
         @user = User.find_by_password_reset_token(params[:id])
         flash[:error] = I18n.t('controllers.user_password_resets.update.flash.error')
@@ -78,9 +84,9 @@ class UserPasswordResetsController < ApplicationController
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
         @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
         if @user.corporate_student?
-          redirect_back_or_default dashboard_url
+          redirect_back_or_default dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
         elsif @user.corporate_manager?
-          redirect_back_or_default corporate_customer_url(@user.corporate_customer)
+          redirect_back_or_default corporate_customer_url(@user.corporate_customer, subdomain: @user_session.user.corporate_customer.try(:subdomain))
         else
           redirect_back_or_default root_url
         end
