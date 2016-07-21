@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'mailchimp'
 require 'prawn'
+require 'mandrill'
 
 class ApplicationController < ActionController::Base
 
