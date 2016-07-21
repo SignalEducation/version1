@@ -506,7 +506,7 @@ class User < ActiveRecord::Base
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
     end
     # make sure the current subscription is in "good standing"
-    unless %w(active).include?(old_sub.current_status)
+    unless %w(canceled).include?(old_sub.current_status)
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
     end
     # only individual students are allowed to upgrade their plan
@@ -571,7 +571,7 @@ class User < ActiveRecord::Base
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
     end
     # make sure the current subscription is in "good standing"
-    unless %w(active).include?(old_sub.current_status)
+    unless %w(canceled).include?(old_sub.current_status)
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
     end
     # only individual students are allowed to upgrade their plan
