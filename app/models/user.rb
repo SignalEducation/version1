@@ -495,7 +495,7 @@ class User < ActiveRecord::Base
   def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
-    old_sub = user.subscriptions.first
+    old_sub = user.subscriptions.where(current_status: 'canceled').last
 
     # compare the currencies of the old and new plans,
     unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
