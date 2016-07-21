@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'mailchimp'
 require 'prawn'
+require 'mandrill'
 
 class ApplicationController < ActionController::Base
 
@@ -31,7 +32,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_current_corporate_logged_in
-    unless controller_name == 'user_sessions' || controller_name == 'corporate_profiles' || controller_name == 'routes' || controller_name == 'user_password_resets' || controller_name == 'footer_pages'
+    unless controller_name == 'user_sessions' || controller_name == 'corporate_profiles' || controller_name == 'routes' || controller_name == 'user_password_resets' || controller_name == 'footer_pages' || controller_name == 'user_verifications'
       logged_in_required
     end
   end

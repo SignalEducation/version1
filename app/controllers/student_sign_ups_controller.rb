@@ -12,7 +12,7 @@ class StudentSignUpsController < ApplicationController
       redirect_to(root_url)
     else
       flash[:success] = I18n.t('controllers.home_pages.resend_verification_mail.flash.success')
-      IntercomVerificationMessageWorker.perform_at(30.seconds.from_now, @user.id,user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
+      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
     end
   end
 

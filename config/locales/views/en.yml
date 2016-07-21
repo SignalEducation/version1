@@ -159,7 +159,9 @@ en:
         subdomain: Subdomian
         user_name: Create Account Username
         passcode: Create Account Password
-        external_url: External URL - Optional (Include http://)
+        external_url: URL of Corporates Site (Include http://)
+        external_logo_link: Make Logo an external Link
+        corporate_email: An @learnsignal email account for this corporate account for emails
         footer_border_colour: Footer Border Colour
 
       index:
@@ -1223,6 +1225,10 @@ en:
       edit:
         h1: Reset your password
         paragraph_1: "Enter a new password for your account:"
+
+      corporate_new:
+        h1: Set Password
+        paragraph_1: "Enter a password for your account:"
 
     user_notifications:
       form:

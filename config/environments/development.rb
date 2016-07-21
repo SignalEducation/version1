@@ -37,15 +37,18 @@ Rails.application.configure do
 
   # email setup
   config.action_mailer.delivery_method = :smtp
+  # email delivery through Mandrill
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-          address:              'smtp.gmail.com',
-          port:                 587,
-          #domain:              'learnsignal.com',
-          user_name:            ENV['learnsignal_v3_server_email_address'],
-          password:             ENV['learnsignal_v3_server_email_password'],
-          authentication:       'plain',
-          enable_starttls_auto: true
+      address:              ENV['learnsignal_v2_server_email_smtp'],
+      port:                 587,
+      domain:               ENV['learnsignal_v3_server_email_domain'],
+      user_name:            ENV['learnsignal_v3_server_email_address'],
+      password:             ENV['learnsignal_v3_server_email_password'],
+      authentication:       :plain,
+      enable_starttls_auto: true
   }
+  config.action_mailer.default_url_options = { host: ENV['learnsignal_v3_server_email_domain'] }
 
   # see the HerokuDevCenter Article
   # https://devcenter.heroku.com/articles/paperclip-s3

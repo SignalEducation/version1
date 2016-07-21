@@ -1,16 +1,59 @@
 require 'mandrill'
-#None of these mails should be sending anymore; replaced by intercom messages
+
 class MandrillClient
-  def initialize(user, request)
+  def initialize(user, corporate)
     @user = user
-    @request = request
+    @corporate = corporate
   end
 
   def send_verification_email(verification_url)
-    msg = message_stub.merge({"subject" => "Subscription Verification"})
+    msg = message_stub.merge({"subject" => "LearnSignal Account Verification"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
     send_template('email-verification', msg)
   end
+
+  def corporate_invite(verification_url)
+    msg = corporate_message_stub.merge({"subject" => "Welcome to #{@corporate.organisation_name} Training"})
+    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
+    send_template('corporate-invite-email', msg)
+  end
+
+  def admin_invite(verification_url)
+    msg = message_stub.merge({"subject" => "Welcome to LearnSignal"})
+    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
+    send_template('admin-invite-email', msg)
+  end
+
+  def corporate_password_reset_email(password_reset_url)
+    msg = corporate_message_stub.merge({"subject" => "#{@corporate.organisation_name} Password Reset"})
+    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
+    send_template('corporate-password-reset-email', msg)
+  end
+
+  def password_reset_email(password_reset_url)
+    msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
+    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
+    send_template('password-reset-email', msg)
+  end
+
+  def send_card_payment_failed_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Payment Failed"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send_template('card-payment-failed', msg)
+  end
+
+  def send_account_suspended_email
+    msg = message_stub.merge({"subject" => "Account Suspended"})
+    send_template('account-suspended', msg)
+  end
+
+
+
+
+
+
+
+
 
   def send_welcome_email(trial_length, library_url)
     msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
@@ -31,16 +74,6 @@ class MandrillClient
     send_template('free-trial-ended', msg)
   end
 
-  def send_account_suspended_email
-    msg = message_stub.merge({"subject" => "Account Suspended"})
-    send_template('account-suspended', msg)
-  end
-
-  def send_card_payment_failed_email(account_settings_url)
-    msg = message_stub.merge({"subject" => "Payment Failed"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('card-payment-failed', msg)
-  end
 
   def send_account_reactivated_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
@@ -48,11 +81,6 @@ class MandrillClient
     send_template('account-reactivated', msg)
   end
 
-  def send_password_reset_email(password_reset_url)
-    msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
-    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send_template('password-reset', msg)
-  end
 
   private
 
@@ -121,63 +149,63 @@ class MandrillClient
     }
   end
 
-  def request_message_stub
+  def corporate_message_stub
     {
-        "html" => nil,
-        "text" => nil,
-        "subject" => nil,
-        "from_email" => "team@learnsignal.com",
-        "from_name" => "Learn Signal",
-        "to" => [{
-                     "email" => @request.email,
-                     "type" => "to",
-                     "name" => @request.name
-                 }],
-        "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
-        "important" => false,
-        "track_opens" => nil,
-        "track_clicks" => nil,
-        "auto_text" => nil,
-        "auto_html" => nil,
-        "inline_css" => nil,
-        "url_strip_qs" => nil,
-        "preserve_recipients" => nil,
-        "view_content_link" => nil,
-        "bcc_address" => nil, #"message.bcc_address@example.com",
-        "tracking_domain" => nil,
-        "signing_domain" => nil,
-        "return_path_domain" => nil,
-        "merge" => true,
-        "merge_language" => "mailchimp",
-        "global_merge_vars" => [
-            { "name" => "FNAME", "content" => @request.name },
-            { "name" => "COMPANY", "content" => "Signal Education" },
-            { "name" => "COMPANYURL", "content" => "https://learnsignal.com" }
-        ],
-        "merge_vars" => [
-            # { "rcpt" => "some.email@example.com",
-            #   "vars" => [{
-            #                "FNAME" => "First Name",
-            #                "COMPANY" => "Signal Education",
-            #                "COMPANYURL" => "http://learnsignal.com"
-            #              }],
-            # }
-        ],
-        "tags" => [],
-        "subaccount" => nil,
-        "google_analytics_domains" => [],
-        "google_analytics_campaign" => nil,
-        "metadata" => {},
-        "recipient_metadata" => [
-            # { "rcpt" => "recipient.email@example.com", "values" => { "user_id" => 123456 } }
-        ],
-        "attachments" => [
-            # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
-        ],
-        "images" => [
-            # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
-        ],
+      "html" => nil,
+      "text" => nil,
+      "subject" => nil,
+      "from_email" => @corporate.corporate_email,
+      "from_name" => @corporate.organisation_name,
+      "to" => [{
+                 "email" => @user.email,
+                 "type" => "to",
+                 "name" => @user.full_name
+               }],
+      "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
+      "important" => false,
+      "track_opens" => nil,
+      "track_clicks" => nil,
+      "auto_text" => nil,
+      "auto_html" => nil,
+      "inline_css" => nil,
+      "url_strip_qs" => nil,
+      "preserve_recipients" => nil,
+      "view_content_link" => nil,
+      "bcc_address" => nil, #"message.bcc_address@example.com",
+      "tracking_domain" => nil,
+      "signing_domain" => nil,
+      "return_path_domain" => nil,
+      "merge" => true,
+      "merge_language" => "mailchimp",
+      "global_merge_vars" => [
+        { "name" => "FNAME", "content" => @user.first_name },
+        { "name" => "LNAME", "content" => @user.last_name },
+        { "name" => "COMPANY", "content" => @corporate.organisation_name },
+        { "name" => "IMAGENAME", "content" => @corporate.logo.url },
+        { "name" => "COMPANYURL", "content" => @corporate.external_url }
+      ],
+      "merge_vars" => [
+        # { "rcpt" => "some.email@example.com",
+        #   "vars" => [{
+        #                "FNAME" => "First Name",
+        #                "COMPANY" => "Signal Education",
+        #                "COMPANYURL" => "http://learnsignal.com"
+        #              }],
+        # }
+      ],
+      "tags" => [],
+      "subaccount" => @corporate.subdomain,
+      "google_analytics_domains" => [],
+      "google_analytics_campaign" => nil,
+      "metadata" => {},
+      "recipient_metadata" => [
+        # { "rcpt" => "recipient.email@example.com", "values" => { "user_id" => 123456 } }
+      ],
+      "attachments" => [
+        # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
+      ]
     }
   end
+
 
 end

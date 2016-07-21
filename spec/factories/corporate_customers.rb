@@ -19,18 +19,22 @@
 #  passcode             :string
 #  external_url         :string
 #  footer_border_colour :string           default("#EFF3F6")
+#  corporate_email      :string
+#  external_logo_link   :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
   factory :corporate_customer do
     sequence(:organisation_name)  {|n| "Customer #{n}"}
     address                       'MyText'
-    country_id                    1 # todo { Country.first.try(:id) || 1 }
+    country_id                    1
     payments_by_card              false
     stripe_customer_guid          'MyString'
     sequence(:subdomain)  {|n| "corp#{n}"}
     user_name          'MyString'
     passcode          'MyString'
+    external_url          'http://www.example.com'
+    corporate_email          'jamesm@learnsignal.com'
   end
 
 end

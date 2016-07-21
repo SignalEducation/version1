@@ -19,6 +19,8 @@
 #  passcode             :string
 #  external_url         :string
 #  footer_border_colour :string           default("#EFF3F6")
+#  corporate_email      :string
+#  external_logo_link   :boolean          default(FALSE)
 #
 
 require 'rails_helper'

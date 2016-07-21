@@ -110,24 +110,19 @@ class StripeApiEvent < ActiveRecord::Base
           if user
             if self.payload[:data][:object][:next_payment_attempt] == 'null'
               #Final payment attempt has failed on stripe so we cancel the current subscription
-              text = 'The third attempt to charge your card has failed. We will no longer attempt to charge your card, your account has now been suspended. If you wish to reactivate your account please please follow the link below to your account page and add a new valid payment card.'
-
               self.processed = true
               self.processed_at = Time.now
               subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription])
               subscription.immediately_cancel
-              IntercomPaymentFailedWorker.perform_async(user.id, self.account_url, text) unless Rails.env.test?
-
+              MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url)
             else
               #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due,
               #allowing access to course content until the retry window has expired.
-              text = 'The latest attempt to charge your card has failed. We will attempt to charge the card again tomorrow, if you need to update your payment card please follow the link below to your account page: '
-              IntercomPaymentFailedWorker.perform_async(user.id, self.account_url, text) unless Rails.env.test?
+              MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
               self.processed = true
               self.processed_at = Time.now
               subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription])
               subscription.update_attribute(:current_status, 'past_due')
-
             end
           else
             Rails.logger.error "ERROR: User with Stripe id #{payload[:data][:object][:customer]} does not exist."
