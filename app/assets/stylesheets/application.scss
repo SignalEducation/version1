@@ -3078,10 +3078,16 @@ a.library-box-item {
   max-height: 110px;
   margin: $gutter*2 auto;
 }
+.laptop-img {
+  display: block;
+  max-width: 200px;
+  max-height: 200px;
+  margin: $gutter*2 auto;
+}
 .padded-features-img {
   display: block;
-  max-width: 110px;
-  max-height: 110px;
+  max-width: 100px;
+  max-height: 100px;
   margin: $gutter*2.5 auto;
 }
 .start-trial {
