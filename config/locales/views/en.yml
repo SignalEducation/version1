@@ -358,12 +358,16 @@ en:
 
       edit:
         h1: Edit Course Module Element
+        video: Edit Video
+        quiz: Edit Quiz
 
       index:
         h1: Course Module Elements
 
       new:
         h1: New Course Module Element
+        video: New Video
+        quiz: New Quiz
 
       show:
         h1: Course Module Element

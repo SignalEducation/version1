@@ -63,9 +63,6 @@
     -if @course_module_element.course_module_element_resources.size > 0
       =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
-  -elsif @course_module_element.course_module_element_flash_card_pack
-    =render partial: 'course_module_element_flash_card_packs/form', locals: {f: f}
-
 
   .row
     .col-md-12
