@@ -177,10 +177,10 @@
                         %li
                           -if r.web_url && r.web_url.length > 0
                             =link_to r.web_url, target: '_blank' do
-                              .btn.btn-secondary.btn-red
+                              .btn.btn-secondary.btn-red.btn-list
                                 =r.name
                           -else
                             =link_to r.upload.url, target: '_blank' do
-                              .btn.btn-secondary.btn-red
+                              .btn.btn-secondary.btn-red.btn-list
                                 =r.name
 
