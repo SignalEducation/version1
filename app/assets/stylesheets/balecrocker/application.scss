@@ -510,6 +510,12 @@ label, .label {
     height: 60px;
     line-height: 60px;
   }
+  &.btn-list {
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   &.btn-resume {
     @include box-shadow(0, 0, 0, 0);
     color: $colour-2;
