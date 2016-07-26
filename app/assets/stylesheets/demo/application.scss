@@ -530,6 +530,12 @@ label, .label {
     height: 60px;
     line-height: 60px;
   }
+  &.btn-list {
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
   margin-left: 0; // for horizontal forms and .input-group
@@ -2414,11 +2420,11 @@ a.box {
   border-top-right-radius: 5px;
 }
 .box-pic {
-  max-height: 50%;
-  max-width: 50%;
+  max-height: 30%;
+  max-width: 30%;
   fill: #3E3F5B;
   background-position: center;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .box-desc {
   margin: $gutter/2 0 0 0;
@@ -2713,6 +2719,10 @@ a.card {
   }
   @include breakpoint(md-min) {
   }
+}
+ul.course-resources {
+  list-style: none;
+  padding-left: $gutter;
 }
 .tutor-profile-pic {
   float: left;

@@ -14,12 +14,12 @@
                   =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
                 -if child.video_count > 0
                   |
-                -if child.video_count == 1
-                  =#humanize_time(child.video_duration)
-                  =child.video_count.to_s + ' ' + t('views.library.show.video')
-              -elsif child.video_count > 1
-                =#humanize_time(child.estimated_time_in_seconds)
-                =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+                  -if child.video_count == 1
+                    =#humanize_time(child.video_duration)
+                    =child.video_count.to_s + ' ' + t('views.library.show.video')
+                  -elsif child.video_count > 1
+                    =#humanize_time(child.estimated_time_in_seconds)
+                    =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
 
         -else
           .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_revision_#{counter}"}, style: "background-color: #{child.try(:highlight_colour)}"}
@@ -33,12 +33,12 @@
                   =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
                 -if child.video_count > 0
                   |
-                -if child.video_count == 1
-                  =#humanize_time(child.video_duration)
-                  =child.video_count.to_s + ' ' + t('views.library.show.video')
-              -elsif child.video_count > 1
-                =#humanize_time(child.estimated_time_in_seconds)
-                =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+                  -if child.video_count == 1
+                    =#humanize_time(child.video_duration)
+                    =child.video_count.to_s + ' ' + t('views.library.show.video')
+                  -elsif child.video_count > 1
+                    =#humanize_time(child.estimated_time_in_seconds)
+                    =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
 
 
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_revision_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }

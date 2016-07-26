@@ -134,54 +134,53 @@
 
 
 
-
-
-
-
-
           .col-md-4
-            .course-action.l-margin-bottom-big
-              -if current_user
-                -if current_user.individual_student?
-                  -if current_user.free_member?
-                    -# Logged In User on Trial Membership
+            -if current_user
+              -if current_user.individual_student?
+                -if current_user.free_member?
+                  -# Logged In User on Trial Membership
+                  .course-action.l-margin-bottom-big
                     =link_to 'upgrade account', user_new_paid_subscription_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
                     %p.l-margin-top.text-center
                       Upgrade your membership to get full access to all content
-                  -elsif current_user.canceled_member?
-                    -# Logged In User Canceled Membership
+                -elsif current_user.canceled_member?
+                  -# Logged In User Canceled Membership
+                  .course-action.l-margin-bottom-big
                     =link_to  t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
                     %p.l-margin-top.text-center
                       Reactivate your membership to get full access to all content
-                  -else
-                    -# Logged In User on Full Membership
                 -else
-                  -# Logged In User Admin, Tutor or Corporate
-
+                  -# Logged In User on Full Membership
               -else
-                -# Logged Out User
+                -# Logged In User Admin, Tutor or Corporate
+
+            -else
+              -# Logged Out User
+              .course-action.l-margin-bottom-big
                 =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
                 %p.l-margin-top.text-center
                   Sign up for our 7-day Free Trial and get full access to all content
 
 
-            .course-resources
+            .l-margin-top-big
               -if @course_resources
                 -if @course_resources.count >= 1
                   %p.h4.l-margin-bottom
                     ='Course Resources'
                   -@course_resources.each do |r|
-                    %ul
-                      %li
-                        -if !current_user
-                          =r.name
-                        -elsif current_user && (current_user.free_member? || current_user.canceled_member?)
-                          =r.name
-                        -else
+                    %ul.course-resources
+                      -if !current_user
+                        =r.name
+                      -elsif current_user && (current_user.free_member? || current_user.canceled_member?)
+                        =r.name
+                      -else
+                        %li
                           -if r.web_url && r.web_url.length > 0
-                            .p
-                              =link_to r.name, r.web_url, target: '_blank'
+                            =link_to r.web_url, target: '_blank' do
+                              .btn.btn-secondary.btn-red.btn-list
+                                =r.name
                           -else
-                            .p
-                              =link_to r.name, r.upload.url, target: '_blank'
+                            =link_to r.upload.url, target: '_blank' do
+                              .btn.btn-secondary.btn-red.btn-list
+                                =r.name
 
