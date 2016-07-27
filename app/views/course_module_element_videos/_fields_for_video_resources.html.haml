@@ -1,5 +1,6 @@
-%h2=t('views.video_resource.new.h1')
+
 =f.fields_for :video_resource do |video_resource|
+  %h2=t('views.video_resource.new.h1')
   =video_resource.hidden_field :course_module_element_id, value: @course_module_element.id
   .col-md-12
     =video_resource.label :question, t('views.video_resource.form.question'), class: 'control-label'
@@ -21,8 +22,6 @@
     .input-group.input-group-lg.full-width
       =video_resource.text_area :transcript, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'transcript'
     %br/
-
-
 
 
 
