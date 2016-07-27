@@ -225,8 +225,8 @@ class Subscription < ActiveRecord::Base
   def reactivation_options
     SubscriptionPlan
       .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: self.subscription_plan.available_to_students,
-             available_to_corporates: self.subscription_plan.available_to_corporates)
+             available_to_students: true,
+             available_to_corporates: false)
       .where('price > 0.0')
       .generally_available
       .all_active
