@@ -425,7 +425,7 @@ en:
       edit:
 
       index:
-        h1: File Uploads
+        h1: File Uploads - (PDF's, Excel Files, etc)
 
       new:
 
@@ -1582,7 +1582,7 @@ en:
         notes: Notes
 
       edit:
-        h1: Video Resources
+        h1: Aditional Resources - (Optional)
 
       new:
-        h1: Video Resources
+        h1: Aditional Resources - (Optional)

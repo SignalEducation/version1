@@ -72,6 +72,11 @@ class CourseModuleElementsController < ApplicationController
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
+      @course_module_element.course_module_element_resources.build
+      if !@course_module_element.video_resource
+        @course_module_element.build_video_resource
+      end
+
     elsif params[:type] == 'quiz'
       spawn_quiz_children
     elsif params[:type] == 'flash_cards'

@@ -16,6 +16,14 @@
       =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      %br/
+      .form-group
+        .col-sm-8.col-sm-offset-1
+          .checkbox
+            %label
+              =f.check_box :active, default: true
+              =t('views.course_modules.form.active')
 
     .col-md-6
       -# Dropdown list of other CourseModules in the SubjectCourse, not available to Corporates
@@ -31,14 +39,6 @@
       -elsif @course_module_element.course_module_element_quiz
         =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
 
-      %br/
-      %br/
-      .form-group
-        .col-sm-8.col-sm-offset-1
-          .checkbox
-            %label
-              =f.check_box :active, default: true
-              =t('views.course_modules.form.active')
 
   -if @course_module_element.course_module_element_quiz
     -# CourseModuleElementQuiz Partial
