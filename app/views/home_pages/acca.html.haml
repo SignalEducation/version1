@@ -36,12 +36,13 @@
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
-              Prepare for your ACCA exams with an online revision course
+              Prepare for your ACCA exams with an online course.
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
               Make studying for your ACCA exams easier, cheaper, and more efficient.
 
             %p.h7
-              ="Subscription for only #{number_to_currency(@subscription_plan.price)} per Month"
+              ="Subscription for only #{number_to_currency(@subscription_plan.price)} per Month."
+              ='Start your 7-Day Free Trial.'
 
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
             =render partial: 'sign_up_form'
@@ -58,34 +59,34 @@
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('phone-icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
-              Anywhere, Anytime
+              Anywhere, Anytime, Any Device
             %p.p
               Study for your specific topics anytime, anywhere, on any device.
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
-              Small Monthly Subscription
+              Only £25 per Month
             %p.p
-              Subscription Only £25 per Month
+              Access everything for £25 per month
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
-              Expert Author Network
+              Expert ACCA Tutors
             %p.p
               Designed and Developed by ACCA tutors
 
         .row.l-margin-top
           .col-sm-4.col-sm-offset-2
             %h3.l-margin-bottom-big
-              =image_tag('globe_icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
-              Global
+              =image_tag('video_player_3.png', class: 'video_player-img', alt: 'acca-anytime-anywhere-mobile-icon')
+              Video
             .col-sm-10.col-sm-offset-1
               %p.p
-                ='Learners in over 100 countries are using LearnSignal'
+                Tuition, Testing, Solutions to Past Exam Questions
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('laptop_2.png', class: 'laptop-img', alt: 'acca-depth-of-content-icon')
-              F1 - F9 & P1 - P5
+              F1 to P7
             .col-sm-10.col-sm-offset-1
               %p.p
                 Everything you need to pass your ACCA exams
