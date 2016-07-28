@@ -331,7 +331,7 @@ en:
         name_placeholder: Give a title that users will see
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
-        description: "Description:"
+        description: Description - (Optional)
         description_placeholder: Description (This is optional)
         estimated_time_in_seconds: Estimated overall time in seconds
         estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
@@ -429,7 +429,7 @@ en:
       edit:
 
       index:
-        h1: File Uploads
+        h1: File Uploads - (PDF's, Excel Files, etc)
 
       new:
 
@@ -1588,7 +1588,7 @@ en:
         notes: Notes
 
       edit:
-        h1: Video Resources
+        h1: Aditional Resources - (Optional)
 
       new:
-        h1: Video Resources
+        h1: Aditional Resources - (Optional)

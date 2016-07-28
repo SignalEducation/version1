@@ -104,7 +104,7 @@
 
 
 .start-trial
-  %a.btn-block.btn-block-red{href: '#sign-up'}
+  %a.btn-block.btn-block-red{href: new_student_url}
     .l-wrap
       .l-section-small
         .container-fluid
@@ -115,21 +115,3 @@
               Start your 7-day free trial
               %span.ico-arrow-right-r
 
-:javascript
-    var nav = responsiveNav(".nav-collapse");
-
-  // Smooth scroll to top
-  $(document).ready(function(){
-    $('a[href^="#"]').on('click',function (e) {
-      e.preventDefault();
-
-      var target = this.hash,
-      $target = $(target);
-
-      $('html, body').stop().animate({
-        'scrollTop': $target.offset().top
-      }, 500, 'swing', function () {
-        window.location.hash = target;
-      });
-    });
-  });
