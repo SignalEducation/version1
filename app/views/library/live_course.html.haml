@@ -184,3 +184,6 @@
                               .btn.btn-secondary.btn-red.btn-list
                                 =r.name
 
+-if @subject_course_user_log && @subject_course_user_log.completed
+  :javascript
+    hj('trigger', 'coursecompletedpoll');
