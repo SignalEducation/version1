@@ -51,7 +51,7 @@ class CourseModuleElement < ActiveRecord::Base
   has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
   has_many :course_module_element_resources
-  has_one :video_resource
+  has_one :video_resource, inverse_of: :course_module_element
   has_many :course_module_element_user_logs
   has_one :course_module_element_video
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id

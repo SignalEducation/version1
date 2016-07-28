@@ -73,10 +73,7 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
       @course_module_element.course_module_element_resources.build
-      if !@course_module_element.video_resource
-        @course_module_element.build_video_resource
-      end
-
+      @course_module_element.build_video_resource
     elsif params[:type] == 'quiz'
       spawn_quiz_children
     elsif params[:type] == 'flash_cards'
@@ -132,6 +129,7 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.course_module_element_video.duration = wistia_data.split(',')[5].split(':')[1].tr("\"", "")
       thumbnail_url = wistia_data.split(',')[10].split(':{')[1].split(':')[-1].chop.prepend('https:')
       @course_module_element.course_module_element_video.thumbnail = thumbnail_url
+      @course_module_element.video_resource.course_module_element_id = @course_module_element.id
     end
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
     if @course_module_element.save
@@ -280,27 +278,13 @@ class CourseModuleElementsController < ApplicationController
     end
   end
 
-  def allowed_params # todo
-    if params[:course_module_element][:is_cme_flash_card_pack] == 't' || params[:course_module_element][:is_cme_flash_card_pack] == 'true'
-      params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes].keys.each do |index|
-        if params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Cards'
-          params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s].delete(:flash_quiz_attributes)
-        elsif params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s][:content_type] == 'Quiz'
-          params[:course_module_element][:course_module_element_flash_card_pack_attributes][:flash_card_stacks_attributes][index.to_s].delete(:flash_cards_attributes)
-        end
-      end
-    end
-
-    Rails.logger.debug "DEBUG: Revised params: #{params.inspect}."
-
+  def allowed_params
     params.require(:course_module_element).permit(
         :name,
         :name_url,
         :description,
         :estimated_time_in_seconds,
         :course_module_id,
-        # :course_module_element_video_id,
-        # :course_module_element_quiz_id,
         :sorting_order,
         :tutor_id,
         :active,
@@ -324,8 +308,6 @@ class CourseModuleElementsController < ApplicationController
             :id,
             :course_module_element_id,
             :number_of_questions,
-            # :best_possible_score_retry,
-            # :course_module_jumbo_quiz_id,
             :question_selection_strategy,
             :is_final_quiz,
             quiz_questions_attributes: [
@@ -339,8 +321,6 @@ class CourseModuleElementsController < ApplicationController
                     :quiz_answer_id,
                     :quiz_solution_id,
                     :text_content,
-                    # :contains_mathjax,
-                    # :contains_image,
                     :image,
                     :image_file_name,
                     :image_content_type,
@@ -352,7 +332,6 @@ class CourseModuleElementsController < ApplicationController
                 quiz_answers_attributes: [
                     :id,
                     :quiz_question_id,
-                    # :correct,
                     :degree_of_wrongness,
                     :wrong_answer_explanation_text,
                     :wrong_answer_video_id,
@@ -362,8 +341,6 @@ class CourseModuleElementsController < ApplicationController
                         :quiz_question_id,
                         :quiz_answer_id,
                         :text_content,
-                        # :contains_mathjax,
-                        # :contains_image,
                         :image,
                         :image_file_name,
                         :image_content_type,
@@ -377,8 +354,6 @@ class CourseModuleElementsController < ApplicationController
                     :quiz_question_id,
                     :quiz_answer_id,
                     :text_content,
-                    # :contains_mathjax,
-                    # :contains_image,
                     :image,
                     :image_file_name,
                     :image_content_type,
@@ -407,87 +382,6 @@ class CourseModuleElementsController < ApplicationController
             :answer,
             :notes,
             :transcript,
-        ],
-        course_module_element_flash_card_pack_attributes: [
-                :id,
-                :course_module_element_id,
-                :background_color,
-                :foreground_color,
-                flash_card_stacks_attributes: [
-                        :id,
-                        :course_module_element_flash_card_pack_id,
-                        :name,
-                        :sorting_order,
-                        :final_button_label,
-                        :content_type,
-                        :_destroy,
-                        flash_cards_attributes: [
-                                :id,
-                                :flash_card_stack_id,
-                                :sorting_order,
-                                :_destroy,
-                                quiz_contents_attributes: [
-                                        :id,
-                                        :text_content,
-                                        #:contains_mathjax,
-                                        #:contains_image,
-                                        :sorting_order,
-                                        :image,
-                                        :image_file_name,
-                                        :image_content_type,
-                                        :image_file_size,
-                                        :image_updated_at,
-                                        :flash_card_id,
-                                        :content_type,
-                                        :_destroy
-                                ]
-                        ],
-                        flash_quiz_attributes: [
-                                :id,
-                                :flash_card_stack_id,
-                                :background_color,
-                                :foreground_color,
-                                quiz_questions_attributes: [
-                                        :id,
-                                        :flash_quiz_id,
-                                        :course_module_element_quiz_id,
-                                        :difficulty_level,
-                                        :hints,
-                                        :_destroy,
-                                        quiz_answers_attributes: [
-                                                :id,
-                                                :quiz_question_id,
-                                                :correct,
-                                                :degree_of_wrongness,
-                                                :wrong_answer_explanation_text,
-                                                :wrong_answer_video_id,
-                                                :_destroy,
-                                                quiz_contents_attributes: [
-                                                        :id,
-                                                        :quiz_question_id,
-                                                        :quiz_answer_id,
-                                                        :text_content,
-                                                        :contains_mathjax,
-                                                        :contains_image,
-                                                        :content_type,
-                                                        :sorting_order,
-                                                        :_destroy
-                                                ]
-                                        ],
-                                        quiz_contents_attributes: [
-                                                :id,
-                                                :quiz_question_id,
-                                                :quiz_answer_id,
-                                                :text_content,
-                                                :contains_mathjax,
-                                                :contains_image,
-                                                :content_type,
-                                                :sorting_order,
-                                                :_destroy
-                                        ]
-                                ]
-                        ]
-                ]
         ]
     )
   end
