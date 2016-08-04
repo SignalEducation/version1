@@ -14,8 +14,9 @@
         =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
       %br/
       =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
+      -#TODO onscreen validation stops the form submission but summernote blocks identifying this as the issue field
       .input-group.input-group-lg.full-width
-        =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
       %br/
       %br/
       .form-group
@@ -51,7 +52,7 @@
     %br/
     =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
     .input-group.input-group-lg.full-width
-      =f.text_area :description, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
+      =f.text_area :description, required: true, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
     %br/
     %hr/
     %br/
@@ -64,7 +65,7 @@
     .col-md-12
       %br/
       %br/
-      =f.submit t('views.general.upload'), class: 'btn btn-red clear-question'
+      =f.submit t('views.general.save'), class: 'btn btn-red clear-question'
       -if f.object.course_module_element_quiz
         =t('views.general.or')
         =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'

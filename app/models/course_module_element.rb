@@ -74,6 +74,7 @@ class CourseModuleElement < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
+  validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
   validates :sorting_order, presence: true
   validates :tutor_id, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
@@ -169,6 +170,10 @@ class CourseModuleElement < ActiveRecord::Base
     else
       "Unknown"
     end
+  end
+
+  def cme_is_video?
+    self.is_video
   end
 
   def populate_estimated_time
