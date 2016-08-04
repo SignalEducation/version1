@@ -331,6 +331,8 @@ en:
         name_placeholder: Give a title that users will see
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
+        active: Active
+        delete: Delete File
         description: Description
         description_placeholder: Description (This is optional)
         estimated_time_in_seconds: Estimated overall time in seconds
@@ -424,7 +426,8 @@ en:
         upload_content_type: Upload content type
         upload_file_size: Upload file size
         upload_updated_at: Upload updated at
-        upload: Upload file
+        upload: Upload File
+        replace: Replace Current File
 
       edit:
 

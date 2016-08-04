@@ -372,7 +372,8 @@ class CourseModuleElementsController < ApplicationController
                 :upload_file_name,
                 :upload_content_type,
                 :upload_file_size,
-                :upload_updated_at
+                :upload_updated_at,
+                :_destroy
         ],
         video_resource_attributes:  [
             :id,
