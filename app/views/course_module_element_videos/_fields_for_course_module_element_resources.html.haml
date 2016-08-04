@@ -1,9 +1,16 @@
-.col-md-12
-  %br/
-  %br/
-  %h3=t('views.course_module_element_resources.index.h1')
+%br/
+%br/
+%h3.l-margin-bottom
+  =t('views.course_module_element_resources.index.h1')
 
-  =f.fields_for :course_module_element_resources do |cme_resource|
+=f.fields_for :course_module_element_resources do |cme_resource|
+  .file-upload-box
+    -if cme_resource.object.upload_file_name
+      %h4
+        Edit Upload
+    -else
+      %h4
+        New Upload
     .col-md-6
       =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
