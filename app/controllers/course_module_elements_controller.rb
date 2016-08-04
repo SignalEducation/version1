@@ -129,7 +129,6 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.course_module_element_video.duration = wistia_data.split(',')[5].split(':')[1].tr("\"", "")
       thumbnail_url = wistia_data.split(',')[10].split(':{')[1].split(':')[-1].chop.prepend('https:')
       @course_module_element.course_module_element_video.thumbnail = thumbnail_url
-      @course_module_element.video_resource.course_module_element_id = @course_module_element.id
     end
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
     if @course_module_element.save
