@@ -4,25 +4,34 @@
   =cme_video.hidden_field :duration
   =cme_video.hidden_field :thumbnail
 
-%script{:async => "", :src => "//fast.wistia.com/assets/external/api.js"}
-%link{:href => "//fast.wistia.com/assets/external/uploader.css", :rel => "stylesheet"}/
-#wistia_uploader{:style => "height:100%; width:100%;"}
-:javascript
-  window._wapiq = window._wapiq || [];
-  _wapiq.push(function(W) {
-    window.wistiaUploader = new W.Uploader({
-      accessToken: "#{ENV['learnsignal_wistia_api_key']}",
-      dropIn: "wistia_uploader",
-      projectId: "#{@course_module_element.parent.parent.wistia_guid.to_s}"
-    });
-    wistiaUploader.bind('uploadsuccess', function(file, media) {
-      //console.log("The upload succeeded. Here's the media object!", media);
 
-      $('#course_module_element_course_module_element_video_attributes_video_id').val(media.id)
-      $('#course_module_element_course_module_element_video_attributes_duration').val(media.duration)
-      $('#course_module_element_course_module_element_video_attributes_thumbnail').val(media.thumbnail.https_url)
-      $('input[type="submit"]').prop('disabled', false);
+  -if @course_module_element.course_module_element_video.thumbnail
+    =label_tag 'Current Video File:'
+    =image_tag cme_video.object.thumbnail, class: 'img-responsive', style: 'margin-top: 12px;'
+    %br/
+    =label_tag 'Replace Video File:'
+  -else
+    =label_tag 'Video File:'
 
+  %script{:async => "", :src => "//fast.wistia.com/assets/external/api.js"}
+  %link{:href => "//fast.wistia.com/assets/external/uploader.css", :rel => "stylesheet"}/
+  #wistia_uploader{:style => "height:100%; width:100%;"}
+  :javascript
+    window._wapiq = window._wapiq || [];
+    _wapiq.push(function(W) {
+      window.wistiaUploader = new W.Uploader({
+        accessToken: "#{ENV['learnsignal_wistia_api_key']}",
+        dropIn: "wistia_uploader",
+        projectId: "#{@course_module_element.parent.parent.wistia_guid.to_s}"
+      });
+      wistiaUploader.bind('uploadsuccess', function(file, media) {
+        //console.log("The upload succeeded. Here's the media object!", media);
+
+        $('#course_module_element_course_module_element_video_attributes_video_id').val(media.id)
+        $('#course_module_element_course_module_element_video_attributes_duration').val(media.duration)
+        $('#course_module_element_course_module_element_video_attributes_thumbnail').val(media.thumbnail.https_url)
+        $('input[type="submit"]').prop('disabled', false);
+
+      });
     });
-  });
 

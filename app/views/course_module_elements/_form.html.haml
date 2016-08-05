@@ -14,7 +14,7 @@
         =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
       %br/
       =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
-      -#TODO onscreen validation stops the form submission but summernote blocks
+      -#TODO onscreen validation stops the form submission but summernote blocks why
       .input-group.input-group-lg.full-width
         =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
       %br/
@@ -65,7 +65,7 @@
     .col-md-12
       %br/
       %br/
-      -if @course_module_element.course_module_element_video
+      -if @course_module_element.course_module_element_video && !@course_module_element.course_module_element_video.thumbnail
         =f.submit t('views.general.save'), class: 'btn btn-red', disabled: true
       -else
         =f.submit t('views.general.save'), class: 'btn btn-red clear-question'

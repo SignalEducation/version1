@@ -121,15 +121,6 @@ class CourseModuleElementsController < ApplicationController
     end
     @course_module_element = CourseModuleElement.new(allowed_params)
     set_related_cmes
-    if @course_module_element.is_video
-      #upload_io = params[:course_module_element][:course_module_element_video_attributes][:video]
-      #response = post_video_to_wistia(@course_module_element.name.to_s, upload_io.path)
-      #wistia_data = response.body
-      #@course_module_element.course_module_element_video.video_id = wistia_data.split(',')[6].split(':')[1].tr("\"", "")
-      #@course_module_element.course_module_element_video.duration = wistia_data.split(',')[5].split(':')[1].tr("\"", "")
-      #thumbnail_url = wistia_data.split(',')[10].split(':{')[1].split(':')[-1].chop.prepend('https:')
-      #@course_module_element.course_module_element_video.thumbnail = thumbnail_url
-    end
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -152,32 +143,6 @@ class CourseModuleElementsController < ApplicationController
       render action: :new
     end
   end
-
-  def post_video_to_wistia(name, path_to_video)
-    require 'net/http'
-    require 'net/http/post/multipart'
-    uri = URI('https://upload.wistia.com/')
-
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-
-    # Construct the request.
-    request = Net::HTTP::Post::Multipart.new uri.request_uri, {
-                                                                api_password: ENV['learnsignal_wistia_api_key'],
-                                                                name: name,
-                                                                project_id: @course_module_element.parent.parent.wistia_guid.to_s,
-
-                                                                file: UploadIO.new(
-                                                                    File.open(path_to_video),
-                                                                    'application/octet-stream',
-                                                                    File.basename(path_to_video)
-                                                                )
-                                                            }
-    wistia_response = http.request(request)
-
-    return wistia_response
-  end
-
 
   def update
     set_related_cmes
@@ -297,7 +262,6 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
-            :tags,
             :difficulty_level,
             :duration,
             :transcript,
