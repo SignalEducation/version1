@@ -301,6 +301,7 @@ class CourseModuleElementsController < ApplicationController
             :difficulty_level,
             :duration,
             :transcript,
+            :thumbnail,
             :video_id],
         course_module_element_quiz_attributes: [
             :id,
