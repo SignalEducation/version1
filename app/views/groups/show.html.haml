@@ -2,7 +2,7 @@
   -if flash[:success] || flash[:error] || flash[:warning]
     =render partial: 'layouts/flash_messages'
 .l-section-library.is-bg-asphalt
-  .l-wrap-small
+  .l-wrap
     .container-fluid
       .row
         .col-sm-4.col-md-4
@@ -16,7 +16,7 @@
             =@group.name
           %h6.l-margin-top
             =@group.description.to_s.html_safe
-  .l-wrap-small.l-margin-top
+  .l-wrap.l-margin-top
     .container-fluid
       .course-list-wrap
         .row
