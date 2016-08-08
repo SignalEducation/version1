@@ -65,6 +65,7 @@ class CorporateCustomer < ActiveRecord::Base
   before_validation { squish_fields(:organisation_name, :address) }
   #after_create :create_on_intercom
   after_create :create_on_mandrill_subaccount
+  #after_create :create_corporate_group
 
   # scopes
   scope :all_in_order, -> { order(:organisation_name) }
@@ -85,6 +86,12 @@ class CorporateCustomer < ActiveRecord::Base
   end
 
   protected
+
+  def create_corporate_group
+    # TODO this needs to wait until name_url is made optional for Groups when made by Corporates
+    group = Group.new(name: self.organisation_name, description: "#{self.organisation_name} Courses", corporate_customer_id: self.id)
+    group.save
+  end
 
   def create_on_mandrill_subaccount
     begin
