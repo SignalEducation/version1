@@ -94,17 +94,19 @@ class CorporateCustomer < ActiveRecord::Base
   end
 
   def create_on_mandrill_subaccount
-    begin
-      mandrill = Mandrill::API.new ENV['learnsignal_mandrill_api_key']
-      id = self.subdomain
-      name = self.organisation_name
-      result = mandrill.subaccounts.add id, name
+    if Rails.env.staging? || Rails.env.production?
+      begin
+        mandrill = Mandrill::API.new ENV['learnsignal_mandrill_api_key']
+        id = self.subdomain
+        name = self.organisation_name
+        result = mandrill.subaccounts.add id, name
 
-    rescue Mandrill::Error => e
-      # Mandrill errors are thrown as exceptions
-      puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      # A mandrill error occurred: Mandrill::InvalidKeyError - Invalid API key
-      raise
+      rescue Mandrill::Error => e
+        # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+        # A mandrill error occurred: Mandrill::InvalidKeyError - Invalid API key
+        raise
+      end
     end
   end
 
