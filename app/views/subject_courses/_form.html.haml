@@ -16,10 +16,10 @@
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           %br/
-          =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :short_description, class: 'form-control', style: 'border-radius: 6px;'
           -unless current_corporate
+            =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_area :short_description, class: 'form-control', style: 'border-radius: 6px;'
             %br/
             =f.label :live_date, t('views.subject_courses.form.live_date'), class: 'control-label'
             .input-group.input-group-lg.full-width
@@ -50,52 +50,58 @@
                   %label
                     =f.check_box :certificate
                     =t('views.subject_courses.form.certificate')
+          -if current_corporate
+            =f.label :short_description, t('views.subject_courses.form.description'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_area :short_description, placeholder: t('views.subject_courses.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
 
             %br/
             %br/
 
-        .col-md-12
-          %br/
-          =f.label :description, t('views.subject_courses.form.description'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_area :description, as: :summernote, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
+        -unless current_corporate
+          .col-md-12
+            %br/
+            =f.label :description, t('views.subject_courses.form.description'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_area :description, as: :summernote, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
 
-          %br/
-          .row
-            .col-md-12
-              -if current_user.admin? || current_user.content_manager? || current_user.tutor? && !current_user.corporate_customer?
+            %br/
+            .row
+              .col-md-12
+                -if current_user.admin? || current_user.content_manager? || current_user.tutor? && !current_user.corporate_customer?
 
-                .col-md-6
-                  %p.h4.l-margin-bottom
-                    Optional Fields
-                  =f.label :mailchimp_guid, t('views.subject_courses.form.mailchimp_guid'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.text_field :mailchimp_guid, placeholder: t('views.subject_courses.form.mailchimp_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                  -unless current_user.corporate_customer?
-                    %br/
-                    =f.label :forum_url, t('views.subject_courses.form.forum_url'), class: 'control-label'
+                  .col-md-6
+                    %p.h4.l-margin-bottom
+                      Optional Fields
+                    =f.label :mailchimp_guid, t('views.subject_courses.form.mailchimp_guid'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                      =f.text_field :forum_url, placeholder: t('views.subject_courses.form.forum_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                    %br/
-                    =f.label :hotjar_guid, t('views.subject_courses.form.hotjar_guid'), class: 'control-label'
-                    .input-group.input-group-lg.full-width
-                      =f.text_field :hotjar_guid, placeholder: t('views.subject_courses.form.hotjar_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                      =f.text_field :mailchimp_guid, placeholder: t('views.subject_courses.form.mailchimp_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                    -unless current_user.corporate_customer?
+                      %br/
+                      =f.label :forum_url, t('views.subject_courses.form.forum_url'), class: 'control-label'
+                      .input-group.input-group-lg.full-width
+                        =f.text_field :forum_url, placeholder: t('views.subject_courses.form.forum_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                      %br/
+                      =f.label :hotjar_guid, t('views.subject_courses.form.hotjar_guid'), class: 'control-label'
+                      .input-group.input-group-lg.full-width
+                        =f.text_field :hotjar_guid, placeholder: t('views.subject_courses.form.hotjar_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-                .col-md-6
-                  %p.h4.l-margin-bottom
-                    CPD Fields
-                  .checkbox
-                    %label
-                      =f.check_box :is_cpd
-                      =t('views.subject_courses.form.is_cpd')
-                  %br/
-                  =f.label :cpd_hours, t('views.subject_courses.form.cpd_hours'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.text_field :cpd_hours, placeholder: t('views.subject_courses.form.cpd_hours_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                  %br/
-                  =f.label :cpd_pass_rate, t('views.subject_courses.form.cpd_pass_rate'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.text_field :cpd_pass_rate, placeholder: t('views.subject_courses.form.cpd_pass_rate_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                  .col-md-6
+                    %p.h4.l-margin-bottom
+                      CPD Fields
+                    .checkbox
+                      %label
+                        =f.check_box :is_cpd
+                        =t('views.subject_courses.form.is_cpd')
+                    %br/
+                    =f.label :cpd_hours, t('views.subject_courses.form.cpd_hours'), class: 'control-label'
+                    .input-group.input-group-lg.full-width
+                      =f.text_field :cpd_hours, placeholder: t('views.subject_courses.form.cpd_hours_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                    %br/
+                    =f.label :cpd_pass_rate, t('views.subject_courses.form.cpd_pass_rate'), class: 'control-label'
+                    .input-group.input-group-lg.full-width
+                      =f.text_field :cpd_pass_rate, placeholder: t('views.subject_courses.form.cpd_pass_rate_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
       .row
         %br/
