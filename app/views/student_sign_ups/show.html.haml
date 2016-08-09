@@ -28,7 +28,7 @@
                   =link_to 'click here', resend_verification_mail_url
                   =" to resend it."
                 %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                  ="Your Free Trial will expire on #{humanize_datetime(current_user.subscriptions[0].created_at + 7.days)} or when you reach 200 minutes of video and quiz time"
+                  ="Your Free Trial will expire on #{humanize_date_and_month(current_user.subscriptions[0].created_at + 7.days)} or when you reach 200 minutes of video and quiz time"
 
       %hr/
       .text-center.l-margin-bottom-big
@@ -41,7 +41,7 @@
           .row
             -if current_user.try(:topic_interest)
               -interest = current_user.topic_interest
-              -group = Group.where('name ILIKE ?', "#{interest}").try(:last) || Group.first
+              -group = Group.where('name_url ILIKE ?', "#{interest}").try(:last) || Group.first
               -group.children.each do |course|
                 .col-sm-6.col-md-4
                   =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do

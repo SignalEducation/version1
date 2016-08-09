@@ -14,9 +14,13 @@
             %p{style: 'letter-spacing: 0.5px;'}
               ="An email containing your first invoice will be sent to #{current_user.email}"
           .col-md-10.col-md-offset-1.l-margin-top.text-center
-            %p.h3.h-separator.h-separator-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
+            %p{style: 'letter-spacing: 0.5px;'}
               ="You are now subscribed to our #{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan. Visit the"
               =link_to 'account page', account_url(anchor: 'subscriptions')
               ="to view your subscription details."
-            %p.h3.l-margin-top-big{style: 'text-align: center;  letter-spacing: 0.5px;'}
-              =link_to 'Or return to our courses.', library_url
+
+            %br/
+            .l-margin-top
+              =link_to dashboard_url do
+                .btn.btn-red.btn-wide
+                  ='Continue Learning'

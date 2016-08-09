@@ -53,9 +53,12 @@
       .l-wrap
         .container-fluid
           .row
-            .col-md-8.col-md-offset-2
-              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription'), user_new_paid_subscription_url(current_user.id)
+            .col-md-8.col-md-offset-2.text-center
+              -#%h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+
+              =link_to user_new_paid_subscription_url(current_user.id) do
+                .btn.btn-red.btn-wide.l-margin-bottom-big
+                  =t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription')
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.free_trial_limit_reached.h2')

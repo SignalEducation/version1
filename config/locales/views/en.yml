@@ -260,7 +260,7 @@ en:
           h2: Your free trial period has expired. Please upgrade your subscription.
           upgrade_subscription: Upgrade Subscription
         free_trial_limit_reached:
-          h2: You have reached your free trial limit 200 minutes of content. Please upgrade your subscription to continue.
+          h2: You have reached your free trial limit of 200 minutes of content. Please upgrade your subscription to continue.
           upgrade_subscription: Upgrade Subscription
         free_trial:
           h2: Your free trial is limited to certain content. Please upgrade your subscription to get full access.
