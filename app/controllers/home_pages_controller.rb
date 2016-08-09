@@ -44,7 +44,7 @@ class HomePagesController < ApplicationController
       country = IpAddress.get_country(request.remote_ip)
       @currency_id = country.currency_id
       @user.country_id = country.id
-      @subscription_plan = SubscriptionPlan.in_currency(currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+      @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
       #@user.country_id = 105
       # @user.subscriptions.build(subscription_plan_id: SubscriptionPlan.where(price: 0.0).pluck(:id).first)
