@@ -36,15 +36,13 @@
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
-              Prepare for your ACCA exams with an online revision course
+              Prepare for your ACCA exams with an online course
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              ACCA exam revision courses online for a small monthly subscription
-            -country_count = '83 Countries'
+              Make studying for your ACCA exams easier, cheaper, and more efficient
 
             %p.h7
-              ="Learners in "
-              =link_to country_count, '#', class: 'no-link-style'
-              ="are using our platform to progress their careers"
+              ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
+              ='Start your 7-Day Free Trial'
 
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
             =render partial: 'sign_up_form'
@@ -61,47 +59,51 @@
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('phone-icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
-              Anywhere, Anytime
+              Anywhere, Anytime, Any Device
             %p.p
-              Study for your specific topics anytime, anywhere, on any device.
+              Study for your specific topics anytime, anywhere, on any device
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
-              Small Monthly Subscription
+              ="Only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month"
             %p.p
-              Our subscription model offers you more flexibility than fixed price providers.
+              ="Access everything for #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per month"
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
-              Expert Author Network
+              Expert ACCA Tutors
             %p.p
-              Learn from the best with training designed and developed by industry experts.
+              Designed and Developed by ACCA tutors
+
+        .row.l-margin-top
+          .col-sm-4.col-sm-offset-2
+            %h3.l-margin-bottom-big
+              =image_tag('video_player_3.png', class: 'video_player-img', alt: 'acca-anytime-anywhere-mobile-icon')
+              Video
+            .col-sm-10.col-sm-offset-1
+              %p.p
+                Tuition, Testing, Solutions to Past Exam Questions
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('laptop_2.png', class: 'laptop-img', alt: 'acca-depth-of-content-icon')
+              F1 to P7
+            .col-sm-10.col-sm-offset-1
+              %p.p
+                Everything you need to pass your ACCA exams
 
 
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .row
-        .col-sm-12
-          %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
-            Access all ACCA Courses
+
       .course-list-wrap
         .row
-          .col-sm-12.col-md-12
-            -@group4.try(:active_children).all_in_order.each do |course|
-              .col-md-4.l-margin-top
-                =link_to library_special_link(course), class: 'library-box-item panel text-center' do
-                  .panel-icon.icon-big
-                    %i.glyphicon.glyphicon-arrow-right
-                  .l-margin-bottom.l-margin-top{style: 'min-height: 110px'}
-                    %h3.text-bold
-                      =course.name
-                    %p.l-margin-bottom-big
-                      Now available
-                  .box-label
-                    Browse
-
-
+          .col-md-8.col-md-offset-2
+            %script{:async => "", :src => "//fast.wistia.com/embed/medias/z4hab7r6pp.jsonp"}
+            %script{:async => "", :src => "//fast.wistia.com/assets/external/E-v1.js"}
+            .wistia_responsive_padding{:style => "padding:56.25% 0 0 0;position:relative;"}
+              .wistia_responsive_wrapper{:style => "height:100%;left:0;position:absolute;top:0;width:100%;"}
+                .wistia_embed.wistia_async_z4hab7r6pp{:class => "videoFoam=true", :style => "height:100%;width:100%"}
 
 .start-trial
   %a.btn-block.btn-block-red{href: new_student_url}
