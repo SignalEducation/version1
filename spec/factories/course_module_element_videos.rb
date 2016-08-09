@@ -24,6 +24,7 @@ FactoryGirl.define do
     estimated_study_time_seconds 1
     transcript "MyText"
     video_id 'abc123'
+    thumbnail 'abc123'
     duration 1
   end
 
