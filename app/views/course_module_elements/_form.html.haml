@@ -1,15 +1,14 @@
 =form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |f|
   .row
     =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
+    =f.hidden_field :sorting_order
+    =f.hidden_field :course_module_id
+    =f.hidden_field :is_quiz
+    =f.hidden_field :is_video
+    =f.hidden_field :is_cme_flash_card_pack
+    =f.hidden_field :tutor_id
+
     .col-md-6
-      =f.hidden_field :sorting_order
-      =f.hidden_field :course_module_id
-      =f.hidden_field :is_quiz
-      =f.hidden_field :is_video
-      =f.hidden_field :is_cme_flash_card_pack
-      =f.hidden_field :tutor_id
-      -if current_user.corporate_customer?
-        =f.hidden_field :active, value: true
       =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
@@ -18,40 +17,37 @@
       .input-group.input-group-lg.full-width
         =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
-      -unless current_user.corporate_customer?
-        -if f.object.is_cme_flash_card_pack
-          .form-group
-            .col-sm-8.col-sm-offset-4
-              .checkbox
-                %label
-                  =f.check_box :active, disabled: (f.object.id.nil?)
-                  =t('views.course_modules.form.active')
-        -else
-          .form-group
-            .col-sm-8.col-sm-offset-1
-              .checkbox
-                %label
-                  =f.check_box :active
-                  =t('views.course_modules.form.active')
+      %br/
+      .form-group
+        .col-sm-8.col-sm-offset-1
+          .checkbox
+            %label
+              =f.check_box :active, default: true
+              =t('views.course_modules.form.active')
+
     .col-md-6
+      -# Dropdown list of other CourseModules in the SubjectCourse, not available to Corporates
       -if current_user.admin? || current_user.content_manager?
         =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
         %br/
+
+      -# Extra CourseModuleElement Fields unique for Videos or Quizzes
       -if @course_module_element.course_module_element_video
         =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
       -elsif @course_module_element.course_module_element_quiz
         =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
-      -elsif @course_module_element.course_module_element_flash_card_pack
-        =render partial: 'course_module_element_flash_card_packs/fields_for', locals: {f: f}
+
 
   -if @course_module_element.course_module_element_quiz
+    -# CourseModuleElementQuiz Partial
     %hr/
     %h2.h3=t('views.course_module_elements.form.questions')
     =render partial: 'course_module_element_quizzes/fields_for_question', locals: {f: f}
 
   -elsif @course_module_element.course_module_element_video
+    -# CourseModuleElementVideo Partial
     %br/
     =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
     .input-group.input-group-lg.full-width
@@ -63,13 +59,9 @@
     -if @course_module_element.course_module_element_resources.size > 0
       =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
-  -elsif @course_module_element.course_module_element_flash_card_pack
-    =render partial: 'course_module_element_flash_card_packs/form', locals: {f: f}
-
 
   .row
     .col-md-12
-      %br/
       %br/
       %br/
       =f.submit t('views.general.save'), class: 'btn btn-red clear-question'

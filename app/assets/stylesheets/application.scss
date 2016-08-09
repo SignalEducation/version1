@@ -3089,10 +3089,22 @@ a.library-box-item {
   max-height: 110px;
   margin: $gutter*2 auto;
 }
+.laptop-img {
+  display: block;
+  max-width: 200px;
+  max-height: 200px;
+  margin: $gutter*2 auto;
+}
+.video_player-img {
+  display: block;
+  max-width: 160px;
+  max-height: 160px;
+  margin: $gutter*2.5 auto;
+}
 .padded-features-img {
   display: block;
-  max-width: 110px;
-  max-height: 110px;
+  max-width: 100px;
+  max-height: 100px;
   margin: $gutter*2.5 auto;
 }
 .start-trial {
@@ -3559,7 +3571,7 @@ ol li.highlight {
 ol li.highlight i.icon-move {
   background-image: url("../img/glyphicons-halflings-white.png");
 }
-.sorted_table tr {
+.sorted_table tr span.glyphicon.glyphicon-sort {
   cursor: pointer;
 }
 .sorted_table tr.placeholder {

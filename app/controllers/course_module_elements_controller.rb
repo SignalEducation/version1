@@ -66,11 +66,17 @@ class CourseModuleElementsController < ApplicationController
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
         course_module_id: params[:cm_id].to_i, active: false)
     @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
+    @course_module_element.active = true
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
     if params[:type] == 'video'
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
+      @course_module_element.course_module_element_resources.build
+      if !@course_module_element.video_resource
+        @course_module_element.build_video_resource
+      end
+
     elsif params[:type] == 'quiz'
       spawn_quiz_children
     elsif params[:type] == 'flash_cards'

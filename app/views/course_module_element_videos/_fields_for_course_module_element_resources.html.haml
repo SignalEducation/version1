@@ -1,20 +1,21 @@
 =f.fields_for :course_module_element_resources do |cme_resource|
+  %br/
+  %br/
   .col-md-6
-    %h2=t('views.course_module_element_resources.index.h1')
+    %h3=t('views.course_module_element_resources.index.h1')
     =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
     .input-group.input-group-lg.full-width
       =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
     %br/
     %br/
-    .col-md-12
-      =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        -if cme_resource.object.upload_file_name
-          .form-control-static
-            =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
-            =number_to_human_size(cme_resource.object.upload_file_size)
-            %br/
-            Upload a replacement if you wish
-        =cme_resource.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
-      -#if cme_resource.object.upload_file_name
-        =cme_resource.object.checkbox :delete_upload
+    =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      -if cme_resource.object.upload_file_name
+        .form-control-static
+          =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
+          =number_to_human_size(cme_resource.object.upload_file_size)
+          %br/
+          Upload a replacement if you wish
+      =cme_resource.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
+    -#if cme_resource.object.upload_file_name
+      =cme_resource.object.checkbox :delete_upload
