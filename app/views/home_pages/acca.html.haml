@@ -65,9 +65,9 @@
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
-              Only £25 per Month
+              ="Only #{number_to_currency(@subscription_plan.price)} per Month"
             %p.p
-              Access everything for £25 per month
+              ="Access everything for #{number_to_currency(@subscription_plan.price)} per month"
           .col-sm-4
             %h3.l-margin-bottom-big
               =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
