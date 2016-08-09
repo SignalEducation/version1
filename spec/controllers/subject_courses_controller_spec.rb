@@ -31,6 +31,7 @@
 #  cpd_pass_rate                           :integer
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
+#  hotjar_guid                             :string
 #
 
 require 'rails_helper'
