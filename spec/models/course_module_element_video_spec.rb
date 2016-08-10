@@ -21,7 +21,7 @@ require 'rails_helper'
 describe CourseModuleElementVideo do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at thumbnail)
+  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at)
   CourseModuleElementVideo.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
