@@ -19,13 +19,11 @@ describe HomePagesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for home_page_1
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
   let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
   let!(:home_page_3) { FactoryGirl.create(:home) }
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
   let!(:sign_up_params) { { first_name: "Test", last_name: "Student",
-                            country_id: Country.first.id,
                             locale: 'en',
                             email: "test.student@example.com", password: "dummy_pass",
                             password_confirmation: "dummy_pass" } }
@@ -37,6 +35,9 @@ describe HomePagesController, type: :controller do
   context 'Not logged in: ' do
 
     describe "GET 'show/1'" do
+      let!(:country) { FactoryGirl.create(:uk) }
+      let!(:currency_2) { FactoryGirl.create(:gbp) }
+
       it 'should see home_page_1' do
         get :show, id: home_page_3.id
         expect_show_success_with_model('home_page', home_page_3.id)

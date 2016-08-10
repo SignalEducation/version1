@@ -2,7 +2,6 @@
 require 'mailchimp'
 require 'prawn'
 require 'mandrill'
-require 'pry-remote'
 
 class ApplicationController < ActionController::Base
 

@@ -92,7 +92,7 @@ class CorporateCustomersController < ApplicationController
     @corporate_customer = CorporateCustomer.new(allowed_params)
     if @corporate_customer.save
       flash[:success] = I18n.t('controllers.corporate_customers.create.flash.success')
-      flash[:error] = "You must now create a Subject Area for the Corporate's Courses"
+      flash[:notice] = "You must now create a Subject Area for this Corporate's Courses"
       redirect_to corporate_customers_url
     else
       render action: :new
