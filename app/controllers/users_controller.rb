@@ -62,7 +62,7 @@ class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index]
   before_action :logged_out_required, only: [:student_create, :student_new]
-  before_action except: [:show, :edit, :update, :change_password, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :student_create] do
+  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :student_create, :create_subscription] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index]
@@ -125,48 +125,49 @@ class UsersController < ApplicationController
     if current_user
       redirect_to dashboard_url
     else
-      currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
-      #currency = Currency.where(iso_code: 'EUR').first
+      @navbar = false
+      @footer = false
       @topic_interests = Group.all_active.all_in_order.for_public
-      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
-      if subscription_plan
-        @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" =>  subscription_plan.id } }}))
-        @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-        @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-        #@user.country_id = 105
-        @user.account_activation_code = SecureRandom.hex(10)
-        @user.email_verification_code = SecureRandom.hex(10)
-        @user.password_confirmation = @user.password
-        # Check for CrushOffers cookie and assign it to the User
-        if cookies.encrypted[:crush_offers]
-          @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
-          cookies.delete(:crush_offers)
-        end
-        # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
-        if cookies.encrypted[:latest_subscription_plan_category_guid]
-          subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
-          @user.subscription_plan_category_id = subscription_plan_category.try(:id)
-        end
-        if @user.valid? && @user.save
-          # Send User Activation email through Mandrill
-          MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-          # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
-          if cookies.encrypted[:referral_data]
-            code, referrer_url = cookies.encrypted[:referral_data].split(';')
-            if code
-              referral_code = ReferralCode.find_by_code(code)
-              @user.create_referred_signup(referral_code_id: referral_code.id, subscription_id: @user.subscriptions.first.id, referrer_url: referrer_url) if referral_code
-              cookies.delete(:referral_data)
-            end
+
+      @user = User.new(student_allowed_params)
+      @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+      @user.account_activation_code = SecureRandom.hex(10)
+      @user.email_verification_code = SecureRandom.hex(10)
+      @user.password_confirmation = @user.password
+      # Check for CrushOffers cookie and assign it to the User
+      if cookies.encrypted[:crush_offers]
+        @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
+        cookies.delete(:crush_offers)
+      end
+      # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
+      if cookies.encrypted[:latest_subscription_plan_category_guid]
+        subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
+        @user.subscription_plan_category_id = subscription_plan_category.try(:id)
+      end
+      # Create the customer object on stripe
+      stripe_customer = Stripe::Customer.create(
+          email: @user.try(:email)
+      )
+      @user.stripe_customer_id = stripe_customer.id
+
+      if @user.valid? && @user.save
+        # Send User Activation email through Mandrill
+        MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+        # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
+        if cookies.encrypted[:referral_data]
+          code, referrer_url = cookies.encrypted[:referral_data].split(';')
+          if code
+            referral_code = ReferralCode.find_by_code(code)
+            @user.create_referred_signup(referral_code_id: referral_code.id, referrer_url: referrer_url) if referral_code
+            cookies.delete(:referral_data)
           end
-          @user.assign_anonymous_logs_to_user(current_session_guid)
-          user = User.get_and_activate(@user.account_activation_code)
-          @user.create_referral_code
-          UserSession.create(user)
-          redirect_to personal_sign_up_complete_url
-        else
-          render action: :student_new
         end
+        @user.assign_anonymous_logs_to_user(current_session_guid)
+        user = User.get_and_activate(@user.account_activation_code)
+        @user.create_referral_code
+        UserSession.create(user)
+        redirect_to personal_sign_up_complete_url
       else
         render action: :student_new
       end
@@ -271,6 +272,21 @@ class UsersController < ApplicationController
     end
   end
 
+  def new_subscription
+    redirect_to account_url if current_user.subscriptions.count > 1
+    @user = User.where(id: params[:user_id]).first
+    @user.subscriptions.build
+    currency_id = @user.country.currency_id
+    @subscription_plans = SubscriptionPlan
+                          .where('price > 0.0')
+                          .includes(:currency)
+                          .for_students
+                          .in_currency(currency_id)
+                          .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+                          .all_active
+                          .all_in_order
+  end
+
   def profile
     #/profile/id
     @tutor = User.all_tutors.where(id: params[:id]).first
@@ -289,7 +305,7 @@ class UsersController < ApplicationController
   end
 
   def upgrade_from_free_trial
-    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
+    #TODO Delete this once all production free_trial_subscriptions have been deleted
     if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial? &&
        params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       subscription_params = params[:user][:subscriptions_attributes]["0"]
@@ -308,6 +324,56 @@ class UsersController < ApplicationController
           redirect_to request.referer
           flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
         end
+      end
+    else
+      redirect_to account_url
+    end
+  end
+
+  def create_subscription
+    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
+
+    if current_user.subscriptions.count == 0 &&
+       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
+      user = User.find(params[:user_id])
+      subscription_params = params[:user][:subscriptions_attributes]["0"]
+      subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
+      coupon_code = params[:coupon] unless params[:coupon].empty?
+      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      if coupon_code && verified_coupon == 'bad_coupon'
+        redirect_to user_new_paid_subscription_url(current_user.id)
+      else
+
+        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, trial_end: 'now', source: subscription_params["stripe_token"])
+        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+
+
+        if stripe_customer && stripe_subscription
+          subscription = Subscription.new(
+              user_id: user.id,
+              subscription_plan_id: subscription_plan.id,
+              complimentary: false,
+              livemode: stripe_subscription[:plan][:livemode],
+              current_status: stripe_subscription.status,
+          )
+          # mass-assign-protected attributes
+          subscription.stripe_guid = stripe_subscription.id
+          subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+          subscription.stripe_customer_id = stripe_customer.id
+          subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
+          upgrade = subscription.save(validate: false)
+        end
+
+        if upgrade
+          current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+          redirect_to personal_upgrade_complete_url
+        else
+          redirect_to request.referer
+          flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
+        end
+
+        redirect_to personal_upgrade_complete_url
       end
     else
       redirect_to account_url
