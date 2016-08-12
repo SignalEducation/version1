@@ -16,7 +16,7 @@
 class ReferredSignup < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :referral_code_id, :user_id, :referrer_url, :subscription_id, :maturing_on, :payed_at
+  attr_accessible :referral_code_id, :user_id, :referrer_url, :maturing_on, :payed_at
 
   # Constants
 
@@ -29,7 +29,6 @@ class ReferredSignup < ActiveRecord::Base
   validates :referral_code_id, presence: true,
             uniqueness: { scope: :user_id, message: I18n.t('models.referred_signups.user_can_be_referred_only_once') }
   validates :user_id, presence: true
-  validates :subscription_id, presence: true
 
   # callbacks
   before_destroy :check_dependencies
@@ -72,9 +71,8 @@ class ReferredSignup < ActiveRecord::Base
   end
 
   def credit_stripe_account
-    referrer_subscription_plan = referrer_user.subscriptions.first.subscription_plan
-    sub_plan_currency = referrer_subscription_plan.currency
-    monthly_plan = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
+    currency = referrer_user.country.currency
+    monthly_plan = SubscriptionPlan.in_currency(currency).where(payment_frequency_in_months: 1).last
     monthly_plan_price = monthly_plan.price
     price_in_cents = (monthly_plan_price.to_d * 100).to_i
     stripe_customer = Stripe::Customer.retrieve(self.referral_code.user.stripe_customer_id)
