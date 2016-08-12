@@ -50,7 +50,6 @@ class Subscription < ActiveRecord::Base
 
 
   # callbacks
-  after_create :create_on_stripe_platform
   after_create :create_a_subscription_transaction
   after_update :update_on_stripe_platform
 
@@ -418,7 +417,6 @@ class Subscription < ActiveRecord::Base
     false
   end
 
-  protected
 
   def create_on_stripe_platform
     Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform initialised at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
@@ -493,7 +491,11 @@ class Subscription < ActiveRecord::Base
     raise ActiveRecord::Rollback
   end
 
+
+  protected
+
   def create_a_subscription_transaction
+    self.create_on_stripe_platform if self.user.subscriptions.first.free_trial?
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"

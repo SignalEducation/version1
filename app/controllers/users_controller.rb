@@ -274,6 +274,7 @@ class UsersController < ApplicationController
 
   def new_subscription
     redirect_to account_url if current_user.subscriptions.count > 1
+    @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
     currency_id = @user.country.currency_id
@@ -332,7 +333,6 @@ class UsersController < ApplicationController
 
   def create_subscription
     # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
-
     if current_user.subscriptions.count == 0 &&
        params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
       user = User.find(params[:user_id])
@@ -343,12 +343,9 @@ class UsersController < ApplicationController
       if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_new_paid_subscription_url(current_user.id)
       else
-
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
         stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, trial_end: 'now', source: subscription_params["stripe_token"])
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-
-
         if stripe_customer && stripe_subscription
           subscription = Subscription.new(
               user_id: user.id,
@@ -372,8 +369,6 @@ class UsersController < ApplicationController
           redirect_to request.referer
           flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
         end
-
-        redirect_to personal_upgrade_complete_url
       end
     else
       redirect_to account_url
