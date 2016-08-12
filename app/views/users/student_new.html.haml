@@ -19,28 +19,58 @@
                   .col-sm-6
                     .form-group
                       =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
-                      =f.text_field :first_name, autofocus: true, required: true, class: 'form-control'
+                      =f.text_field :first_name, autofocus: true, required: true, class: 'form-control', id: 'first_name'
                   .col-sm-6
                     .form-group
                       =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
-                      =f.text_field :last_name, class: 'form-control'
+                      =f.text_field :last_name, class: 'form-control', id: 'last_name'
                   .col-sm-12
                     .form-group
                       =f.label :email, t('views.users.form.email'), class: 'control-label'
-                      =f.email_field :email, class: 'form-control', required: true
+                      =f.email_field :email, class: 'form-control', required: true, id: 'email'
                   .col-sm-12
                     .form-group
                       =f.label :topic_interest, t('views.users.form.interest'), class: 'control-label'
-                      =f.collection_select :topic_interest, @topic_interests, :name, :name, {include_blank: t('views.users.form.topic_interest')}, class: 'form-control', style: 'border-radius: 6px;'
+                      =f.collection_select :topic_interest, @topic_interests, :name, :name, {include_blank: t('views.users.form.topic_interest')}, class: 'form-control', style: 'border-radius: 6px;', required: true, id: 'topic'
                   .col-sm-12
                     .form-group
                       =f.label :password, t('views.users.form.password'), class: 'control-label'
-                      =f.password_field :password, class: 'form-control'
+                      =f.password_field :password, required: true, class: 'form-control', id: 'password'
 
-                  .col-sm-12.l-margin-top#signUp
-                    =f.submit t('views.general.sign_up_now'), class: 'btn btn-red btn-wide btn-lg-text'
+                  .col-sm-12.l-margin-top
+                    =f.submit t('views.general.sign_up_now'), class: 'btn btn-red btn-wide btn-lg-text signUp'
+                    .sk-circle
+                      .sk-circle1.sk-child
+                      .sk-circle2.sk-child
+                      .sk-circle3.sk-child
+                      .sk-circle4.sk-child
+                      .sk-circle5.sk-child
+                      .sk-circle6.sk-child
+                      .sk-circle7.sk-child
+                      .sk-circle8.sk-child
+                      .sk-circle9.sk-child
+                      .sk-circle10.sk-child
+                      .sk-circle11.sk-child
+                      .sk-circle12.sk-child
 
 
       .row
         .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
           =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+
+:javascript
+
+  $(document).on('ready', function() {
+    $(".sk-circle").hide();
+
+    $(".signUp").click(function(event) {
+      if($('#first_name').val() && $('#last_name').val() && $('#email').val() && $('#topic').val() && $('#password').val() ) {
+        $(".signUp").hide();
+        $(".sk-circle").show();
+      }
+    });
+
+  });
+
+
+
