@@ -162,6 +162,11 @@ class Subscription < ActiveRecord::Base
       self.referred_signup.nil?
   end
 
+  def free_trial?
+    self.subscription_plan.free_trial?
+  end
+
+
   # setter method
   def stripe_token=(t)
     @stripe_token = t
