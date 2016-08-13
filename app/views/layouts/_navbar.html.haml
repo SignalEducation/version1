@@ -22,8 +22,11 @@
                   =link_to 'Dashboard', dashboard_url
               %li
                 =link_to 'Library', library_url
-              -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial?
-                %li=link_to "#{current_user.subscriptions[0].days_left} Days left in Trial", user_new_paid_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
+              -if current_user.subscriptions.count == 1 && current_user.subscriptions[0].subscription_plan.free_trial?
+                %li
+                  =link_to "#{current_user.subscriptions[0].days_left} Days left in Your Trial", user_new_paid_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
+              -elsif  current_user.free_member? && current_user.subscriptions.count == 0
+                %li=link_to "#{current_user.days_left} Days left in Trial", user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
 
               -#Admin Dropdown
               -if current_user.admin?
