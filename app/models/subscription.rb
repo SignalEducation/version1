@@ -51,7 +51,6 @@ class Subscription < ActiveRecord::Base
 
   # callbacks
   after_create :create_a_subscription_transaction
-  after_update :update_on_stripe_platform
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -102,28 +101,6 @@ class Subscription < ActiveRecord::Base
     Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
   end
 
-  def self.remove_orphan_from_stripe(stripe_customer_guid)
-    Rails.logger.warn 'WARN: Removing orphaned subscription from stripe STARTED'
-    local_subscription = Subscription.find_by_stripe_customer_id(stripe_customer_guid)
-    if local_subscription
-      Rails.logger.error "ERROR: Subscription#remove_orphan_from_stripe - orphaned subscription is NOT an orphan - it is actually #{local_subscription.inspect}."
-      return false
-    else
-      # local_subscription wasn't found
-      Rails.logger.warn 'WARN: Removing orphan from stripe MID 1'
-      stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid)
-      stripe_subscription = stripe_customer.subscriptions[:data].first
-      if stripe_customer && stripe_subscription && ((Time.at(stripe_subscription[:start].to_i)) + 15.seconds > Proc.new{Time.now}.call)
-        Rails.logger.warn "WARN: Subscription#remove_orphan_from_stripe - rolling back subscription and customer on stripe.com.  Customer & Subscription:#{stripe_customer.inspect}."
-        stripe_subscription.delete
-        stripe_customer.delete
-      end
-    end
-    Rails.logger.warn 'WARN: Removing from stripe FINISHED'
-  rescue => e
-    Rails.logger.error "ERROR: Subscription#remove_from_stripe - failed to remove an orphaned Stripe subscription.  Error:#{e.inspect}. Subscription:#{stripe_customer.inspect}."
-  end
-
   # instance methods
   def cancel(account_url = nil)
     # call stripe and cancel the subscription
@@ -148,7 +125,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def immediately_cancel(account_url = nil)
-    # call stripe and cancel the subscription
+    # Admin command line use only to call stripe and cancel the subscription
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     response = stripe_subscription.delete.to_hash
@@ -173,32 +150,6 @@ class Subscription < ActiveRecord::Base
       if self.changed?
         self.stripe_customer_data = stripe_subscription_hash
         self.save(validate: false)
-      end
-    end
-  end
-
-  def free_trial?
-    self.subscription_plan.free_trial?
-  end
-
-  def free_trial_expired?
-    free_trial_days = ENV["free_trial_days"].to_i
-    if self.user.subscription_plan_category_id && self.user.subscription_plan_category.trial_period_in_days
-      free_trial_days = self.user.subscription_plan_category.trial_period_in_days
-    end
-    (Time.now - self.created_at).to_i.abs / 1.day >= free_trial_days
-  end
-
-  def days_left
-    if free_trial?
-      free_trial_days = ENV["free_trial_days"].to_i
-      if self.user.subscription_plan_category_id && self.user.subscription_plan_category.trial_period_in_days
-        free_trial_days = self.user.subscription_plan_category.trial_period_in_days
-      end
-      if free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day).to_i > 0
-        free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
-      else
-        '0'
       end
     end
   end
@@ -511,10 +462,6 @@ class Subscription < ActiveRecord::Base
     else # development and all others
       "Dev-#{rand(9999)}: "
     end
-  end
-
-  def update_on_stripe_platform
-    # Not needed: this is handled by self.upgrade_plan(new_plan_id)
   end
 
 end

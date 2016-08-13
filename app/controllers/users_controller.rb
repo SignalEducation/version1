@@ -247,6 +247,7 @@ class UsersController < ApplicationController
   end
 
   def new_paid_subscription
+    #TODO Delete this once all production free_trial_subscriptions have been deleted
     redirect_to account_url if current_user.subscriptions.count > 1
     @user = User.where(id: params[:user_id]).first
     currency_id = @user.subscriptions.first.subscription_plan.currency_id

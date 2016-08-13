@@ -238,7 +238,29 @@ class User < ActiveRecord::Base
   end
 
   def free_member?
-    self.subscriptions.last.try(:free_trial?)
+    self.user_group.try(:individual_student) && self.subscriptions.count == 0
+  end
+
+  def free_trial_expired?
+    free_trial_days = ENV["free_trial_days"].to_i
+    if self.subscription_plan_category_id && self.subscription_plan_category.trial_period_in_days
+      free_trial_days = self.subscription_plan_category.trial_period_in_days
+    end
+    (Time.now - self.created_at).to_i.abs / 1.day >= free_trial_days
+  end
+
+  def days_left
+    if free_member?
+      free_trial_days = ENV["free_trial_days"].to_i
+      if self.subscription_plan_category_id && self.subscription_plan_category.trial_period_in_days
+        free_trial_days = self.subscription_plan_category.trial_period_in_days
+      end
+      if free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day).to_i > 0
+        free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
+      else
+        '0'
+      end
+    end
   end
 
   def canceled_member?
