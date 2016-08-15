@@ -33,7 +33,6 @@
         projectId: "#{@course_module_element.parent.parent.wistia_guid.to_s}"
       });
       wistiaUploader.bind('uploadsuccess', function(file, media) {
-        //console.log("The upload succeeded. Here's the media object!", media);
         $('#course_module_element_course_module_element_video_attributes_video_id').val(media.id)
         $('#course_module_element_course_module_element_video_attributes_duration').val(media.duration)
         $('#course_module_element_course_module_element_video_attributes_thumbnail').val(media.thumbnail.https_url)
