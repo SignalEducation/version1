@@ -65,6 +65,7 @@ class CorporateCustomer < ActiveRecord::Base
   before_validation { squish_fields(:organisation_name, :address) }
   #after_create :create_on_intercom
   after_create :create_on_mandrill_subaccount
+  #after_create :create_corporate_group
 
   # scopes
   scope :all_in_order, -> { order(:organisation_name) }
@@ -86,18 +87,26 @@ class CorporateCustomer < ActiveRecord::Base
 
   protected
 
-  def create_on_mandrill_subaccount
-    begin
-      mandrill = Mandrill::API.new ENV['learnsignal_mandrill_api_key']
-      id = self.subdomain
-      name = self.organisation_name
-      result = mandrill.subaccounts.add id, name
+  def create_corporate_group
+    # TODO this needs to wait until name_url is made optional for Groups when made by Corporates
+    group = Group.new(name: self.organisation_name, description: "#{self.organisation_name} Courses", corporate_customer_id: self.id)
+    group.save
+  end
 
-    rescue Mandrill::Error => e
-      # Mandrill errors are thrown as exceptions
-      puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      # A mandrill error occurred: Mandrill::InvalidKeyError - Invalid API key
-      raise
+  def create_on_mandrill_subaccount
+    if Rails.env.staging? || Rails.env.production?
+      begin
+        mandrill = Mandrill::API.new ENV['learnsignal_mandrill_api_key']
+        id = self.subdomain
+        name = self.organisation_name
+        result = mandrill.subaccounts.add id, name
+
+      rescue Mandrill::Error => e
+        # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+        # A mandrill error occurred: Mandrill::InvalidKeyError - Invalid API key
+        raise
+      end
     end
   end
 

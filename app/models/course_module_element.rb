@@ -42,7 +42,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :seo_description, :seo_no_index,
                   :course_module_element_flash_card_pack_attributes,
                   :is_cme_flash_card_pack, :number_of_questions,
-                  :video_resource_attributes, :delete_upload
+                  :video_resource_attributes, :_destroy
 
   # Constants
 
@@ -51,7 +51,7 @@ class CourseModuleElement < ActiveRecord::Base
   has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
   has_many :course_module_element_resources
-  has_one :video_resource
+  has_one :video_resource, inverse_of: :course_module_element
   has_many :course_module_element_user_logs
   has_one :course_module_element_video
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
@@ -68,12 +68,13 @@ class CourseModuleElement < ActiveRecord::Base
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video
   accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
-  accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }
+  accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
+  validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
   validates :sorting_order, presence: true
   validates :tutor_id, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
@@ -169,6 +170,10 @@ class CourseModuleElement < ActiveRecord::Base
     else
       "Unknown"
     end
+  end
+
+  def cme_is_video?
+    self.is_video
   end
 
   def populate_estimated_time

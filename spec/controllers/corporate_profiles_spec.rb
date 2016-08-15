@@ -12,6 +12,7 @@ describe CorporateProfilesController, type: :controller do
 
   before(:each) do
     @request.host = "#{corporation_1.subdomain}.example.com/login"
+    x = corporate_student_user
   end
 
   context 'Not logged in: ' do
@@ -42,7 +43,7 @@ describe CorporateProfilesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(library_url)
       end
     end
 

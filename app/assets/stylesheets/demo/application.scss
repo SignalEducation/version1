@@ -3391,6 +3391,43 @@ a.image-link {
 
   }
 }
+.file-upload-box {
+  display: block;
+  background: $colour-3;
+  position: relative;
+  margin: 0 0 $gutter 0;
+  color: $colour-8;
+  padding: $gutter;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
 .signal-tabs {
   padding: 13px;
   padding-left:0px;

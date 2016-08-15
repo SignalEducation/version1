@@ -74,8 +74,8 @@ group :development do
 end
 
 group :development, :test do
-  #gem 'pry-byebug' # halts code so you can experiment with it
-  gem 'pry-remote'
+  gem 'pry-byebug' # halts code so you can experiment with it
+  #gem 'pry-remote'
   gem 'hirb'
   gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser
@@ -83,7 +83,7 @@ group :development, :test do
   gem 'factory_girl_rails' # FactoryGirl generates fake objects
   gem 'poltergeist'
   gem 'rspec-rails' # our core testing environment
-  gem 'selenium-webdriver', '>=2.45.0'
+  gem 'selenium-webdriver', '>=2.53.4'
   gem 'thin' # new web server
   gem 'ultrahook' # allows incoming webhooks from stripe
 end

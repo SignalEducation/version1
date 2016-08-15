@@ -22,7 +22,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration
+  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration, :thumbnail
 
   # Constants
 
@@ -32,10 +32,10 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true, on: :update
   validates :video_id, presence: true, length: {maximum: 255}, on: :create
-  #validates :duration, presence: true, numericality: true
+  validates :duration, presence: true, numericality: true
   validates :tags, allow_nil: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
-  #validates :thumbnail, presence: true
+  validates :thumbnail, presence: true
 
   # callbacks
   before_validation { squish_fields(:tags) }

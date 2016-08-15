@@ -18,7 +18,7 @@ RSpec.describe "WhitePaperRequests", type: :request do
   describe "GET /white_paper_requests" do
     it "works! (now write some real specs)" do
       get white_paper_requests_path
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(302)
     end
   end
 end

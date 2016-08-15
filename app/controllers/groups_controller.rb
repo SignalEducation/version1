@@ -24,7 +24,7 @@ class GroupsController < ApplicationController
 
   before_action :logged_in_required, except: [:show]
   before_action except: [:show] do
-    ensure_user_is_of_type(['admin', 'content_manager', 'corporate_customer'])
+    ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action :get_variables
 
@@ -32,7 +32,7 @@ class GroupsController < ApplicationController
     if current_user.corporate_customer?
       @groups = Group.where(corporate_customer_id: current_user.corporate_customer_id)
     else
-      @groups = Group.where(corporate_customer_id: nil).paginate(per_page: 50, page: params[:page])
+      @groups = Group.paginate(per_page: 50, page: params[:page])
     end
     @footer = nil
   end
@@ -66,11 +66,13 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    @corporates = CorporateCustomer.all_in_order
     @footer = nil
   end
 
   def edit
     @footer = nil
+    @corporates = CorporateCustomer.all_in_order
   end
 
   def edit_courses
@@ -146,7 +148,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour, :corporate_customer_id)
   end
 
 end

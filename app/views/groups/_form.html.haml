@@ -3,7 +3,6 @@
     .col-md-12
       .col-md-6
         =render partial: '/layouts/error_messages', locals: {thing: @group, message: nil}
-        =f.hidden_field :name_url
         =f.label :name, t('views.groups.form.name'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :name, class: 'form-control update-my-url', style: 'border-radius: 6px;'
@@ -12,18 +11,16 @@
         .input-group.input-group-lg.full-width
           =f.text_field :name_url, class: 'form-control', style: 'border-radius: 6px;'
         %br/
-        -unless current_corporate
-          =f.label :background_colour, t('views.groups.form.background_colour'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.color_field :background_colour, rows: 5, class: 'form-control', style: 'border-radius: 6px;'
-          %br/
-        %br/
         .col-sm-2
           .checkbox
             %label
               =f.check_box :active
               =t('views.groups.form.active')
       .col-md-6
+        =f.label :corporate_customer_id, t('views.groups.form.corporate_customer'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :corporate_customer_id, @corporates, :id, :organisation_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        %br/
         =f.label :description, t('views.groups.form.description'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_area :description, rows: 5, class: 'form-control', style: 'border-radius: 6px;'
