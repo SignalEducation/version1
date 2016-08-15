@@ -150,7 +150,6 @@ class HomePagesController < ApplicationController
         # are restoring errors to the @user. Otherwise our redirect would destroy errors
         # and sign-up form would not display them properly.
         session[:sign_up_errors] = {} if session[:sign_up_errors].nil?
-        session[:sign_up_errors][:subscription] = ["undefined default value"] if subscription_plan.nil?
         redirect_to request.referrer
       end
     end
