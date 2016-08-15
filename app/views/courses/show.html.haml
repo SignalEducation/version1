@@ -4,7 +4,7 @@
 
 -if @course_module
   .l-section-courses.is-bg-asphalt
-    .l-wrap-courses
+    .l-wrap
       .container-fluid{style: 'margin-bottom: 60px;'}
         .row
           .col-sm-4.col-md-4
@@ -28,8 +28,6 @@
                 =render partial: 'courses/show_video', locals: {cme: @course_module_element}
               -elsif @course_module_element.try(:is_quiz)
                 =render partial: 'courses/show_quiz'
-              -elsif @course_module_element.try(:is_cme_flash_card_pack)
-                =render partial: 'course_module_element_flash_card_packs/show', locals: {cme: @course_module_element}
               -else
                 %h2 Course module element - type unknown
                 -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
@@ -41,29 +39,29 @@
                 %p=t('views.courses.show.coming_soon')
 
         -# Tabs for Question, Answer, Notes and Description
-        -if @course_module_element.try(:is_video)
+        -if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
           .row.l-margin-top-big
             .col-md-12{role: 'tablist'}
               .signal-tabs
-                -if @course_module_element.description
-                  -unless @course_module_element.description.empty?
-                    %a{href: '#description', aria: {controls: 'active'}, role: 'tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.description')
-                -if @course_module_element.try(:video_resource)
-                  -unless @course_module_element.video_resource.question.empty?
+                -if @course_module_element.description?
+                  %a{href: '#description', aria: {controls: 'active'}, role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.course_module_elements.show.tabs.description')
+
+                -if @course_module_element.video_resource
+                  -if @course_module_element.video_resource.question
                     %a{href: '#question', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.question')
-                  -unless @course_module_element.video_resource.answer.empty?
+                  -if @course_module_element.video_resource.answer
                     %a{href: '#answer', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.answer')
-                  -unless @course_module_element.video_resource.try(:transcript).try(:empty?) && @course_module_element.course_module_element_resources.count < 1
+                  -if @course_module_element.video_resource.transcript
                     %a{href: '#transcript', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.transcript')
-                  -unless @course_module_element.video_resource.try(:notes).try(:empty?) && @course_module_element.course_module_element_resources.count < 1
+                  -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
                 -else
-                  -unless @course_module_element.course_module_element_resources.count < 1
+                  -if @course_module_element.course_module_element_resources.count > 0
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
 

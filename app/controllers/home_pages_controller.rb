@@ -25,8 +25,9 @@ class HomePagesController < ApplicationController
   end
 
   def show
-    redirect_to root_url if current_corporate
-    if params[:first_element].to_s == '' && current_user
+    if current_corporate
+      redirect_to root_url
+    elsif params[:first_element].to_s == '' && current_user
       redirect_to dashboard_url
     elsif params[:first_element].to_s == '500-page'
       render file: 'public/500.html', layout: nil, status: 500
@@ -42,8 +43,13 @@ class HomePagesController < ApplicationController
       session.delete(:sign_up_errors)
 
       country = IpAddress.get_country(request.remote_ip)
-      @currency_id = country.currency_id
-      @user.country_id = country.id
+      if country
+        @currency_id = country.currency_id
+        @user.country_id = country.id
+      else
+        @currency_id = Currency.find_by_iso_code('GBP').id
+        @user.country_id = Country.find_by_name('United Kingdom').id
+      end
       @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
       #@user.country_id = 105
@@ -100,9 +106,9 @@ class HomePagesController < ApplicationController
     if current_user
       redirect_to dashboard_url
     else
-      currency = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
+      currency_id = IpAddress.get_country(request.remote_ip).try(:currency_id) || Currency.where(iso_code: 'USD').first
       #currency = Currency.where(iso_code: 'EUR').first
-      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
+      subscription_plan = SubscriptionPlan.in_currency(currency_id).where(price: 0.0).last
       if subscription_plan
         @user = User.new(student_allowed_params.merge({"subscriptions_attributes" => { "0" => { "subscription_plan_id" => subscription_plan.id } }}))
         @user.user_group_id = UserGroup.default_student_user_group.try(:id)

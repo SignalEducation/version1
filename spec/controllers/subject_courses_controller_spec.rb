@@ -44,6 +44,8 @@ describe SubjectCoursesController, type: :controller do
   include_context 'course_content'
 
   let!(:subject_course_3) { FactoryGirl.create(:inactive_subject_course) }
+  let!(:current_corp) { FactoryGirl.create(:corporate_customer) }
+  let!(:corp_group) { FactoryGirl.create(:group, corporate_customer_id: corporate_customer_user.corporate_customer_id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subject_course) }
 
   context 'Not logged in: ' do

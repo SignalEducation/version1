@@ -71,6 +71,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
+  before_validation :ensure_both_descriptions
   before_save :calculate_best_possible_score, :sanitize_name_url
   before_destroy :check_dependencies
   after_create :update_sitemap
@@ -266,6 +267,12 @@ class SubjectCourse < ActiveRecord::Base
 
   def update_course_logs
     SubjectCourseUserLogWorker.perform_async(self.id)
+  end
+
+  def ensure_both_descriptions
+    if self.short_description && self.description.blank?
+      self.description = self.short_description
+    end
   end
 
 end

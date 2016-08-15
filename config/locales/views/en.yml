@@ -331,7 +331,9 @@ en:
         name_placeholder: Give a title that users will see
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
-        description: Description - (Optional)
+        active: Active
+        delete: Delete File
+        description: Description
         description_placeholder: Description (This is optional)
         estimated_time_in_seconds: Estimated overall time in seconds
         estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
@@ -358,12 +360,16 @@ en:
 
       edit:
         h1: Edit Course Module Element
+        video: Edit Video
+        quiz: Edit Quiz
 
       index:
         h1: Course Module Elements
 
       new:
         h1: New Course Module Element
+        video: New Video
+        quiz: New Quiz
 
       show:
         h1: Course Module Element
@@ -420,7 +426,8 @@ en:
         upload_content_type: Upload content type
         upload_file_size: Upload file size
         upload_updated_at: Upload updated at
-        upload: Upload file
+        upload: Upload File
+        replace: Replace Current File
 
       edit:
 
@@ -558,6 +565,7 @@ en:
         sorting_order_placeholder: 100
         subject_id: Subject
         course_count: No. of Courses
+        corporate_customer: Corporate Customer (Optional)
 
       index:
         h1: Subject Areas

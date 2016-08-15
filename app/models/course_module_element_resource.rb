@@ -22,7 +22,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :name, :upload, :delete_upload
+  attr_accessible :course_module_element_id, :name, :upload, :_destroy
   #attr_accessible :course_module_element_id, :name, :upload
 
   # Constants

@@ -82,7 +82,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -159,7 +159,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -235,7 +235,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -312,7 +312,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -389,7 +389,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -466,7 +466,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -543,7 +543,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -620,7 +620,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 
@@ -696,7 +696,7 @@ describe WhitePapersController, type: :controller do
     describe "POST 'create_request'" do
       it 'should report OK for valid params' do
         post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', white_paper_url(white_paper_1))
+        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
       end
     end
 

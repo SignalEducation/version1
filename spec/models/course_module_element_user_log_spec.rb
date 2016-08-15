@@ -61,7 +61,7 @@ describe CourseModuleElementUserLog do
   it { should validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
 
-  it { should validate_presence_of(:time_taken_in_seconds) }
+  it { should_not validate_presence_of(:time_taken_in_seconds) }
 
   describe 'for quizzes...' do
     before :each do

@@ -36,39 +36,40 @@
       .input-group.input-group-lg.full-width
         =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
 
-      %br/
-      %br/
-      .col-sm-11.col-sm-offset-1
-        .form-group{style: 'margin-left: 0px;'}
-          %table.col-sm-12
-            %thead
-              %tr
-                %th='Tuition'
-                %th='Test'
-                %th='Revision'
-                %th
-            %tbody
-              %tr
-                %td.check
-                  =f.check_box :tuition
-                %td.check
-                  =f.check_box :test
-                %td.check
-                  =f.check_box :revision
-                %td
-                  =link_to('Clear', '#', class: 'check clear')
+      -unless current_corporate
+        %br/
+        %br/
+        .col-sm-11.col-sm-offset-1
+          .form-group{style: 'margin-left: 0px;'}
+            %table.col-sm-12
+              %thead
+                %tr
+                  %th='Tuition'
+                  %th='Test'
+                  %th='Revision'
+                  %th
+              %tbody
+                %tr
+                  %td.check
+                    =f.check_box :tuition
+                  %td.check
+                    =f.check_box :test
+                  %td.check
+                    =f.check_box :revision
+                  %td
+                    =link_to('Clear', '#', class: 'check clear')
 
 
-      %br/
-      %br/
-      %br/
-      %br/
-      =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      -if f.object.new_record?
-        :javascript
-          document.querySelector('input[type="color"]').value = '#FFFFFF'
+        %br/
+        %br/
+        %br/
+        %br/
+        =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        -if f.object.new_record?
+          :javascript
+            document.querySelector('input[type="color"]').value = '#FFFFFF'
 
   %br/
   %br/

@@ -78,6 +78,8 @@ class SubjectCoursesController < ApplicationController
       @subject_course.restricted = true
       @subject_course.certificate = true
       @subject_course.tutor_id = current_user.id
+      corporate_group = Group.where(corporate_customer_id: current_user.corporate_customer_id).first
+      @subject_course.groups << corporate_group
     end
     wistia_response = create_wistia_project(@subject_course.name) unless Rails.env.test?
     @subject_course.wistia_guid = wistia_response.hashedId unless Rails.env.test?
