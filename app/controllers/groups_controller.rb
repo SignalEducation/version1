@@ -72,6 +72,7 @@ class GroupsController < ApplicationController
 
   def edit
     @footer = nil
+    @corporates = CorporateCustomer.all_in_order
   end
 
   def edit_courses
