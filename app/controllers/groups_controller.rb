@@ -32,7 +32,7 @@ class GroupsController < ApplicationController
     if current_user.corporate_customer?
       @groups = Group.where(corporate_customer_id: current_user.corporate_customer_id)
     else
-      @groups = Group.where(corporate_customer_id: nil).paginate(per_page: 50, page: params[:page])
+      @groups = Group.paginate(per_page: 50, page: params[:page])
     end
     @footer = nil
   end
