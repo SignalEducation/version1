@@ -339,10 +339,9 @@ class UsersController < ApplicationController
       user = User.find(params[:user_id])
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-      if params[:coupon]
-        verified_coupon = verify_coupon(params[:coupon])
-      end
-      if params[:coupon] && verified_coupon == 'bad_coupon'
+      coupon_code = params[:coupon] unless params[:coupon].empty?
+      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_new_subscription_url(current_user.id)
       else
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
