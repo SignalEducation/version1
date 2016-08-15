@@ -339,13 +339,14 @@ class UsersController < ApplicationController
       user = User.find(params[:user_id])
       subscription_params = params[:user][:subscriptions_attributes]["0"]
       subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-      coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code) if coupon_code
-      if coupon_code && verified_coupon == 'bad_coupon'
-        redirect_to user_new_paid_subscription_url(current_user.id)
+      if params[:coupon]
+        verified_coupon = verify_coupon(params[:coupon])
+      end
+      if params[:coupon] && verified_coupon == 'bad_coupon'
+        redirect_to user_new_subscription_url(current_user.id)
       else
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, trial_end: 'now', source: subscription_params["stripe_token"])
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
         if stripe_customer && stripe_subscription
           subscription = Subscription.new(
@@ -420,14 +421,14 @@ class UsersController < ApplicationController
   end
 
   def verify_coupon(coupon)
-    @user_sub_currency_code = @current_subscription.subscription_plan.currency.iso_code
+    @user_currency_code = @user.country.currency_id
     verified_coupon = Stripe::Coupon.retrieve(coupon)
     unless verified_coupon.valid
       flash[:error] = 'Sorry! The coupon code you entered has expired'
       verified_coupon = 'bad_coupon'
       return verified_coupon
     end
-    if verified_coupon.currency && verified_coupon.currency != @user_sub_currency_code.downcase
+    if verified_coupon.currency && verified_coupon.currency != @user_currency_code.downcase
       flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
       verified_coupon = 'bad_coupon'
       return verified_coupon
