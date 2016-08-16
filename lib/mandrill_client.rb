@@ -47,20 +47,25 @@ class MandrillClient
     send_template('account-suspended', msg)
   end
 
-
-
-
-
-
-
-
-
-  def send_welcome_email(trial_length, library_url)
+  def send_default_welcome_email(price)
     msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
-    msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
-    msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
-    send_template('welcome-email', msg)
+    msg["global_merge_vars"] << { "name" => "PRICE", "content" => price }
+    send_template('default-welcome-email', msg)
   end
+
+  def send_acca_welcome_email(price)
+    msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
+    msg["global_merge_vars"] << { "name" => "PRICE", "content" => price }
+    send_template('acca-welcome-email', msg)
+  end
+
+
+
+
+
+
+
+
 
   def send_subscription_error_email(trial_length)
     msg = message_stub.merge({"subject" => "There's been an error with your subscription"})
