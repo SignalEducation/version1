@@ -91,6 +91,7 @@ class WhitePapersController < ApplicationController
       file  = white_paper.file
       intercom = Intercom::Client.new(app_id: ENV['intercom_app_id'], api_key: ENV['intercom_api_key'])
       intercom_user = intercom.contacts.create(email: @white_paper_request.email)
+      #TODO Mandrill Worker Send WhitePaper
       IntercomWhitePaperEmailWorker.perform_at(1.minute.from_now, intercom_user.user_id, @white_paper_request.email, @white_paper_request.name, white_paper.name, file.url) unless Rails.env.test?
       redirect_to public_white_paper_url(white_paper.name_url)
     else

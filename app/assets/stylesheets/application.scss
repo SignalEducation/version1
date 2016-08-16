@@ -1066,7 +1066,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-section-profile {
   padding: 5rem 0;
   @include breakpoint(md-min) {
-    padding: 10rem 0;
+    padding: 5rem 0;
   }
 
 }
