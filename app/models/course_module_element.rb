@@ -71,7 +71,7 @@ class CourseModuleElement < ActiveRecord::Base
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
-  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name, presence: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
   validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
