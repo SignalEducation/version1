@@ -90,13 +90,14 @@ class ConditionalMandrillMailsProcessor
 
   def self.process_free_trial_ended_notifications
     individual_user_group_id = UserGroup.find 1
-    free_trial_users = User.where(subscription_id: nil,
+    free_trial_users = User.where.not(stripe_customer_id: nil).where(
                                   user_group_id: individual_user_group_id)
 
     free_trial_users.each do |user|
       if user.free_trial_expired? &&
          user.trial_ended_notification_sent_at.nil? &&
          user.active?
+         #user.free_trial?
         MandrillWorker.perform_async(user.id,
                                      "send_free_trial_ended_email",
                                      url_helpers.user_new_subscription_url(user_id: user.id))

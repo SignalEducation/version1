@@ -71,9 +71,10 @@ class MandrillClient
     send_template('account-reactivated', msg)
   end
 
-  def send_successful_payment_email(url)
+  def send_successful_payment_email(account_url, invoice_url)
     msg = message_stub.merge({"subject" => "LearnSignal Payment Invoice "})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => url }
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    msg["global_merge_vars"] << { "name" => "INVOICEURL", "content" => invoice_url }
     send_template('invoice-payment-successful', msg)
   end
 
