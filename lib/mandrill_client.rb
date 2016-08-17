@@ -59,9 +59,9 @@ class MandrillClient
     send_template('acca-welcome-email', msg)
   end
 
-  def send_free_trial_ended_email(account_activation_url)
+  def send_free_trial_ended_email(new_subscription_url)
     msg = message_stub.merge({"subject" => "You're free trial with learn signal has just ended"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTACTIVATIONURL", "content" => account_activation_url }
+    msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
     send_template('free-trial-ended', msg)
   end
 
