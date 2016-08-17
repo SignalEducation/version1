@@ -96,8 +96,13 @@ class StripeApiEvent < ActiveRecord::Base
               user.update_attributes(stripe_account_balance: balance)
               subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription]) || user.subscriptions.last
               if subscription.try(:current_status) == 'past_due'
+                #The subscription was overdue a payment so update it's status and send account reactivation email
                 subscription.update_attributes(current_status: 'active')
                 Rails.logger.error "Notice: User Subscription was updated from past_due to active #{user.try(:current_status)}"
+                MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
+              else
+                #The subscription charge was successful so send successful payment email
+                MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url)
               end
               Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
             end

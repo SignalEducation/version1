@@ -65,7 +65,17 @@ class MandrillClient
     send_template('free-trial-ended', msg)
   end
 
+  def send_account_reactivated_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send_template('account-reactivated', msg)
+  end
 
+  def send_successful_payment_email(url)
+    msg = message_stub.merge({"subject" => "LearnSignal Payment Invoice "})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => url }
+    send_template('invoice-payment-successful', msg)
+  end
 
 
 
@@ -79,11 +89,6 @@ class MandrillClient
     send_template('subscription-error', msg)
   end
 
-  def send_account_reactivated_email(account_settings_url)
-    msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('account-reactivated', msg)
-  end
 
 
   private
