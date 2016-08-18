@@ -154,7 +154,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def add_to_user_trial_limit
     user = self.user
-    new_limit = user.try(:trial_limit_in_seconds) + self.try(:time_taken_in_seconds)
+    new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
     if user.free_member?
       user.update_columns(trial_limit_in_seconds: new_limit)
     end
