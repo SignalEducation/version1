@@ -10,7 +10,4 @@
     email_verified: current_user.try(:email_verified),
     topic_interest: current_user.try(:topic_interest),
     email_verification_code: current_user.try(:email_verification_code),
-    company: {id: current_user.try(:corporate_customer_id),
-    name: current_user.try(:corporate_customer).try(:organisation_name),
-    created_at: current_user.try(:corporate_customer).try(:created_at),
-    }}})
+    }})
