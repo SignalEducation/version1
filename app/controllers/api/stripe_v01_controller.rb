@@ -8,13 +8,8 @@ class Api::StripeV01Controller < Api::BaseController
     if event_json && StripeApiEvent::KNOWN_PAYLOAD_TYPES.include?(event_json["type"])
       StripeApiProcessorWorker.perform_async(event_json["id"],
                                              Stripe.api_version,
-                                             account_url,
-                                             invoice_url)
-      #########################
-      #########################
-      #########################
-      #########################
-      #########################
+                                             account_url)
+
     end
     render text: nil, status: 204
   rescue => e

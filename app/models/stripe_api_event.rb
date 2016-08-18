@@ -18,12 +18,12 @@ class StripeApiEvent < ActiveRecord::Base
   # Since we shouldn't access routes in models and we need profile URL
   # for sending email through Mandrill we are defining non-DB attribute
   # here which will use value passed by Stripe API controller.
-  attr_accessor :account_url, :invoice_url
+  attr_accessor :account_url
 
   serialize :payload, Hash
 
   # attr-accessible
-  attr_accessible :guid, :api_version, :account_url, :invoice_url
+  attr_accessible :guid, :api_version, :account_url
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
@@ -55,7 +55,6 @@ class StripeApiEvent < ActiveRecord::Base
   def disseminate_payload
     if self.payload && self.payload.class == Hash && self.payload[:type]
       Rails.logger.debug "DEBUG: Processing Stripe event #{payload[:type]}"
-      local_user = User.where(stripe_customer_id: self.payload[:data][:object][:customer]).last
       unless Invoice::STRIPE_LIVE_MODE == payload[:livemode]
         Rails.logger.error "ERROR: StripeAPIEvent#disseminate_payload: LiveMode of message incompatible with Rails.env. StripeMode:#{Invoice::STRIPE_LIVE_MODE}. Rails.env.#{Rails.env} -v- payload:#{payload}."
         set_process_error("Livemode incorrect")
@@ -74,6 +73,8 @@ class StripeApiEvent < ActiveRecord::Base
         when 'invoice.payment_succeeded'
           #Latest attempt to charge a user has succeeded so we check if it was a crushoffers referral
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
+          invoice = Invoice.where(stripe_guid: self.payload[:data][:object][:id]).last
+          invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf')
           price = self.payload[:data][:object][:total].to_f / 100.0
           curr = self.payload[:data][:object][:currency].upcase
           if user && user.crush_offers_session_id && price > 0
@@ -103,7 +104,7 @@ class StripeApiEvent < ActiveRecord::Base
                 MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
               else
                 #The subscription charge was successful so send successful payment email
-                MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, self.invoice_url)
+                MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
               end
               Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
             end
