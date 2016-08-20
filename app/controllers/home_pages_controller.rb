@@ -127,6 +127,7 @@ class HomePagesController < ApplicationController
           email: @user.try(:email)
       )
       @user.stripe_customer_id = stripe_customer.id
+      @user.free_trial = true
 
       if @user.valid? && @user.save
         @subscription_plan = SubscriptionPlan.in_currency(@user.country.currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first

@@ -56,6 +56,8 @@
 #  email_verified                   :boolean          default(FALSE), not null
 #  stripe_account_balance           :integer          default(0)
 #  trial_limit_in_seconds           :integer          default(0)
+#  free_trial                       :boolean          default(FALSE)
+#  trial_limit_in_days              :integer          default(0)
 #
 
 class UsersController < ApplicationController
@@ -150,6 +152,7 @@ class UsersController < ApplicationController
           email: @user.try(:email)
       )
       @user.stripe_customer_id = stripe_customer.id
+      @user.free_trial = true
 
       if @user.valid? && @user.save
         # Send User Activation email through Mandrill
@@ -365,6 +368,7 @@ class UsersController < ApplicationController
 
         if upgrade
           current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+          current_user.update_attribute(:free_trial, false)
           redirect_to personal_upgrade_complete_url
         else
           redirect_to request.referer

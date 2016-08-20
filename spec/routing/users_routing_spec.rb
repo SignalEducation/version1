@@ -56,6 +56,8 @@
 #  email_verified                   :boolean          default(FALSE), not null
 #  stripe_account_balance           :integer          default(0)
 #  trial_limit_in_seconds           :integer          default(0)
+#  free_trial                       :boolean          default(FALSE)
+#  trial_limit_in_days              :integer          default(0)
 #
 
 require 'rails_helper'

@@ -185,6 +185,9 @@ class ApplicationController < ActionController::Base
       result[:course_content][:reason] = "free_trial_expired"
     elsif current_user.permission_to_see_content
       result = allowed
+    elsif !current_user.permission_to_see_content && current_user.user_status == 'canceled_paying_member'
+      result = not_allowed
+      result[:course_content][:reason] = 'account_canceled'
     elsif !current_user.permission_to_see_content && current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
       result = not_allowed
       result[:course_content][:reason] = "free_trial_limit_reached"
