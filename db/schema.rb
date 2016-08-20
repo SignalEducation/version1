@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160819105139) do
+ActiveRecord::Schema.define(version: 20160820171523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -838,6 +838,7 @@ ActiveRecord::Schema.define(version: 20160819105139) do
     t.string   "stripe_customer_id"
     t.text     "stripe_customer_data"
     t.boolean  "livemode",              default: false
+    t.boolean  "active",                default: false
   end
 
   add_index "subscriptions", ["corporate_customer_id"], name: "index_subscriptions_on_corporate_customer_id", using: :btree

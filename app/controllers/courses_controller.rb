@@ -47,11 +47,11 @@ class CoursesController < ApplicationController
           elsif @course_module_jumbo_quiz
             set_up_jumbo_quiz
           elsif @course_module_element.try(:is_video)
-            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
           end
         end
       end
-      @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
+      @paywall = paywall_checkpoint
     else
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."

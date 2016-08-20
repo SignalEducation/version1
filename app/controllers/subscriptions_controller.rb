@@ -15,6 +15,7 @@
 #  stripe_customer_id    :string
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
+#  active                :boolean          default(FALSE)
 #
 
 class SubscriptionsController < ApplicationController

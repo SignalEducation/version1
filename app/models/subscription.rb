@@ -15,6 +15,7 @@
 #  stripe_customer_id    :string
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
+#  active                :boolean          default(FALSE)
 #
 
 class Subscription < ActiveRecord::Base
@@ -25,7 +26,7 @@ class Subscription < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode, :next_renewal_date
+                  :stripe_token, :livemode, :next_renewal_date, :active
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
@@ -55,6 +56,7 @@ class Subscription < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
   def self.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
@@ -129,7 +131,7 @@ class Subscription < ActiveRecord::Base
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     response = stripe_subscription.delete.to_hash
-    if response[:status] == 'canceled' && response[:cancel_at_period_end] == false
+    if response[:status] == 'canceled'
       self.update_attribute(:current_status, 'canceled')
       Rails.logger.info "INFO: Subscription#immediately_cancel has been triggered by repeated failed charge attempts to charge the users card therefore cancellation status updated to canceled for subscription ##{self.id}."
     else
@@ -194,7 +196,7 @@ class Subscription < ActiveRecord::Base
     latest_subscription.plan = self.subscription_plan.stripe_guid
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attribute(:current_status, 'active')
+      self.update_attributes(current_status: 'active', active: true)
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
@@ -279,6 +281,7 @@ class Subscription < ActiveRecord::Base
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complimentary: false,
+              active: true,
               livemode: (result[:plan][:livemode]),
               current_status: result[:status],
       )
@@ -289,7 +292,7 @@ class Subscription < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false) # see "sample_response_from_stripe" above
 
-      self.update_attribute(:current_status, 'previous')
+      self.update_attributes(current_status: 'previous', active: false)
       #self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
 
       return new_sub
@@ -451,7 +454,6 @@ class Subscription < ActiveRecord::Base
   protected
 
   def create_a_subscription_transaction
-    self.create_on_stripe_platform if self.user.subscriptions.first.free_trial?
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"

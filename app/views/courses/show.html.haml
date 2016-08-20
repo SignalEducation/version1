@@ -19,11 +19,11 @@
           .col-md-8.col-sm-8{style: 'margin-bottom: 150px;'}
             -if defined?(@results)
               =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-            -elsif @course_module_element && paywall_checkpoint(@course_module_element.my_position_among_siblings, false)[:course_content][:view_all] == false
+            -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
               =render partial: 'courses/content_denied'
-            -elsif @course_module_jumbo_quiz && paywall_checkpoint(0, true)[:course_content][:view_all] == false
+            -elsif @course_module_jumbo_quiz && paywall_checkpoint[:course_content][:view_all] == false
               =render partial: 'courses/content_denied'
-            -elsif @course_module_element && @course_module_element.active
+            -elsif @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
               -if @course_module_element.try(:is_video)
                 =render partial: 'courses/show_video', locals: {cme: @course_module_element}
               -elsif @course_module_element.try(:is_quiz)
@@ -129,7 +129,7 @@
     .col-sm-10.col-sm-offset-1.content-area
       -if defined?(@results)
         =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-      -elsif @question_bank && paywall_checkpoint(0, true)[:course_content][:view_all] == false
+      -elsif @question_bank && paywall_checkpoint[:course_content][:view_all] == false
         =render partial: 'courses/content_denied'
       -elsif @question_bank
         =render partial: 'courses/show_quiz'

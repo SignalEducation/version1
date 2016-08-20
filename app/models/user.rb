@@ -306,11 +306,11 @@ class User < ActiveRecord::Base
   end
 
   def free_member?
-    if self.user_status == 'valid_free_member'
-      true
-    else
-      false
-    end
+    self.user_status == 'valid_free_member'
+  end
+
+  def expired_free_member?
+    self.user_status == 'expired_free_member'
   end
 
   def no_subscription_user
@@ -322,11 +322,11 @@ class User < ActiveRecord::Base
   end
 
   def canceled_member?
-    !self.free_trial? && self.subscriptions.any? && self.subscriptions.last.current_status == 'canceled'
+    !self.free_trial? && self.subscriptions.any? && self.active_subscription.current_status == 'canceled'
   end
 
   def canceled_pending?
-    !self.free_trial? && self.subscriptions.any? && self.subscriptions.last.current_status == 'canceled-pending'
+    !self.free_trial? && self.subscriptions.any? && self.active_subscription.current_status == 'canceled-pending'
   end
 
   def referred_user
@@ -334,28 +334,36 @@ class User < ActiveRecord::Base
   end
 
   def valid_subscription
-    true if self.active_subscription.current_status == 'active'
+    true if %w(active past_due).include?(self.active_subscription.current_status)
   end
 
   def active_subscription
-    #Change this once active_subscription boolean is added to the Subscription Model
-    self.subscriptions.where(current_status: ['active', 'canceled-pending', 'past_due']).all_in_order.last || self.subscriptions.all_in_order.last
+    self.subscriptions.where(active: true).last
+  end
+
+  def one_active_subscription?
+    if self.subscriptions.any?
+      self.subscriptions.all_active.count == 1
+    end
   end
 
   def permission_to_see_content
-    if self.free_member?
-      if self.trial_limit_in_seconds.to_i < ENV['free_trial_limit_in_seconds'].to_i && self.days_left.to_i > 0
-        return true
-      else
-        return false
-      end
+    if self.user_status == 'valid_free_member'
+      return true
+    elsif self.user_status == 'expired_free_member'
+      return false
+    elsif self.user_status == 'valid_paying_member'
+      return true
+    elsif self.user_status == 'canceled_paying_member'
+      return false
+    elsif self.user_status == 'cancel_pending_member'
+      return true
+    elsif self.user_status == 'expired_paying_member'
+      return false
+    elsif self.user_status == 'unknown_user_status'
+      return false
     else
-      subs = self.subscriptions.map(&:current_status)
-      if subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')
-        return true
-      else
-        return false
-      end
+      return false
     end
   end
 
@@ -581,7 +589,7 @@ class User < ActiveRecord::Base
   def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
-    old_sub = user.subscriptions.where(current_status: 'canceled').last
+    old_sub = user.active_subscription
 
     # compare the currencies of the old and new plans,
     unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -617,6 +625,7 @@ class User < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
+          active: true,
           livemode: (result[:plan][:livemode]),
           current_status: result[:status],
       )
@@ -627,6 +636,7 @@ class User < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false)
 
+      old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
       return new_sub
@@ -646,7 +656,7 @@ class User < ActiveRecord::Base
   def resubscribe_account_without_token(user_id, new_plan_id, reactivate_account_url = nil)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
-    old_sub = user.subscriptions.where(current_status: 'canceled').last
+    old_sub = user.active_subscription
 
     # compare the currencies of the old and new plans,
     unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -681,6 +691,7 @@ class User < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
+          active: true,
           livemode: (result[:plan][:livemode]),
           current_status: result[:status],
       )
@@ -691,8 +702,10 @@ class User < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false)
 
+      old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+
       return new_sub
     end
   rescue ActiveRecord::RecordInvalid => exception

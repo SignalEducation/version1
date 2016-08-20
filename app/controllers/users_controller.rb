@@ -355,6 +355,7 @@ class UsersController < ApplicationController
               user_id: user.id,
               subscription_plan_id: subscription_plan.id,
               complimentary: false,
+              active: true,
               livemode: stripe_subscription[:plan][:livemode],
               current_status: stripe_subscription.status,
           )
