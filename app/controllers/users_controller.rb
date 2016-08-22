@@ -424,15 +424,14 @@ class UsersController < ApplicationController
     @user = params[:id].to_i > 0 && current_user.admin? ?
                   @user = User.where(id: params[:id]).first :
                   current_user
-    @email_frequencies = User::EMAIL_FREQUENCIES
     @countries = Country.all_in_order
     if (action_name == 'show' || action_name == 'edit' || action_name == 'update') && @user.admin?
       @user_groups = UserGroup.all_in_order
     else
       @user_groups = UserGroup.where(site_admin: false).all_in_order
     end
-    seo_title_maker(@user.try(:full_name), '', true)
-    @current_subscription = @user.subscriptions.all_in_order.last
+    seo_title_maker('Account Details', '', true)
+    @current_subscription = @user.active_subscription
     @corporate_customers = CorporateCustomer.all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end

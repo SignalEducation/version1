@@ -263,6 +263,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  def account_status
+    if self.user_status == 'valid_free_member'
+      'Free Trial Member'
+    elsif self.user_status == 'expired_free_member'
+      'Free Trial Expired'
+    elsif self.user_status == 'valid_paying_member'
+      'Valid Subscription'
+    elsif self.user_status == 'canceled_paying_member'
+      'Canceled Subscription'
+    elsif self.user_status == 'cancel_pending_member'
+      'Canceled Subscription'
+    elsif self.user_status == 'expired_paying_member'
+      'Expired Subscription'
+    else
+      ''
+    end
+  end
+
   def days_or_seconds_valid?
     if free_trial_days_expired? || free_trial_minutes_expired?
       false

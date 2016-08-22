@@ -1129,7 +1129,7 @@ en:
         tabs:
           personal_details: Personal details
           corporation: Corporation
-          subscriptions: Subscriptions
+          subscriptions: Account Details
           payments: Payment Information
           notifications: Notifications
           admin: Admin
@@ -1141,6 +1141,7 @@ en:
         use_this_card: "Use this card"
         your_card_details: Update Payment Info
         your_invoices: Payment History
+        free_trial_heading: Free Trial
         your_next_payment_will_be_on: "Next Bill Due: "
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
