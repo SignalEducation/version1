@@ -69,9 +69,7 @@ class SubscriptionTransaction < ActiveRecord::Base
     else
       tran_type = 'failed_payment'
     end
-    if subscription.free_trial?
-      card_id = nil
-    elsif !subscription.free_trial? && default_card
+    if default_card
       card_id = default_card.try(:id)
     else
       new_card_id = SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))

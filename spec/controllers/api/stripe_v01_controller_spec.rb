@@ -10,7 +10,6 @@ describe Api::StripeV01Controller, type: :controller do
   let!(:student) { FactoryGirl.create(:individual_student_user) }
   let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
-  let!(:free_trial_plan) { FactoryGirl.create(:student_subscription_plan_m, price: 0.0) }
   let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
   let!(:subscription_plan_q) { FactoryGirl.create(:student_subscription_plan_q) }
   let!(:card_details_1) { {number: '4242424242424242', cvc: '123', exp_month: '12', exp_year: '2019'} }
@@ -20,12 +19,10 @@ describe Api::StripeV01Controller, type: :controller do
   let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id,
                           subscription_plan_id: subscription_plan_m.id,
                           stripe_token: card_token_1.id) }
-  let!(:free_subscription_2) { FactoryGirl.create(:subscription, user_id: referred_student.id,
-                                             subscription_plan_id: free_trial_plan.id,
-                                             current_status: 'active') }
   let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: referred_student.id,
                                              subscription_plan_id: subscription_plan_m.id,
                                              current_status: 'active',
+                                             active: 'true',
                                              stripe_token: card_token_2.id) }
   let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: student.id,
                                              subscription_plan_id: subscription_plan_m.id) }
@@ -37,8 +34,8 @@ describe Api::StripeV01Controller, type: :controller do
                                              current_status: 'active') }
 
   let!(:referred_signup) { FactoryGirl.create(:referred_signup,
-                                              referral_code_id: referral_code.id,
-                                              subscription_id: free_subscription_2.id) }
+                                              referral_code_id: referral_code.id
+                                              ) }
 
   let!(:invoice_created_event) {
     StripeMock.mock_webhook_event('invoice.created',
@@ -103,6 +100,7 @@ describe Api::StripeV01Controller, type: :controller do
 
         it 'sends data to CrushOffers on payment_succeeded' do
           student.update_attribute(:crush_offers_session_id, "1234")
+          post :create, invoice_created_event.to_json
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                               customer: student.stripe_customer_id)
           uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total.to_f / 100.0}&c=#{evt.data.object.currency.upcase}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
@@ -112,7 +110,7 @@ describe Api::StripeV01Controller, type: :controller do
 
           post :create, evt.to_json
 
-          expect(StripeApiEvent.count).to eq(1)
+          expect(StripeApiEvent.count).to eq(2)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
@@ -126,6 +124,7 @@ describe Api::StripeV01Controller, type: :controller do
         end
 
         it 'does not send data to CrushOffers if their session ID is not set but does mark event as processed' do
+          post :create, invoice_created_event.to_json
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                               customer: student.stripe_customer_id)
           uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
@@ -133,13 +132,14 @@ describe Api::StripeV01Controller, type: :controller do
 
           post :create, evt.to_json
 
-          expect(StripeApiEvent.count).to eq(1)
+          expect(StripeApiEvent.count).to eq(2)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
         end
 
         it 'does not send data to CrushOffers if their session ID is not set and does not mark as processed because user is not found'  do
+          post :create, invoice_created_event.to_json
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                               customer: 'fake_user_123')
           uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
@@ -147,7 +147,7 @@ describe Api::StripeV01Controller, type: :controller do
 
           post :create, evt.to_json
 
-          expect(StripeApiEvent.count).to eq(1)
+          expect(StripeApiEvent.count).to eq(2)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
@@ -156,6 +156,7 @@ describe Api::StripeV01Controller, type: :controller do
 
         it 'does not send data to CrushOffers if price is not greater than 0' do
           student.update_attribute(:crush_offers_session_id, "1234")
+          post :create, invoice_created_event.to_json
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                               customer: student.stripe_customer_id,
                                               total: 0.0)
@@ -164,7 +165,7 @@ describe Api::StripeV01Controller, type: :controller do
 
           post :create, evt.to_json
 
-          expect(StripeApiEvent.count).to eq(1)
+          expect(StripeApiEvent.count).to eq(2)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
@@ -265,7 +266,7 @@ describe Api::StripeV01Controller, type: :controller do
       describe 'customer.subscription.created' do
         it 'marks api event as processed since users has reactivated account by subscribing to a new subscription plan' do
           subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-          free_subscription_2.update_attribute(:current_status, 'previous')
+          subscription_2.update_attribute(:current_status, 'canceled')
 
           post :create, customer_subscription_created_event.to_json
 

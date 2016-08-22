@@ -192,42 +192,34 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      it 'should be OK locally and on Stripe' do
+      it 'should be OK locally' do
         post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: corporate_customer_user.id}
-        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      xit 'should be OK locally and on Stripe' do
+      it 'should be OK locally and on Stripe' do
         put :update, id: subscription_2.id, subscription: valid_params
-        expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
+        expect_bounce_as_not_allowed
+
       end
 
       it 'should respond with ERROR as they do not own the subscription' do
         put :update, id: subscription_1.id, subscription: valid_params
-        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(root_url)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should respond with OK' do
+      it 'should respond with OK' do
         delete :destroy, id: subscription_2.id
-        expect(flash[:error]).to eq(nil)
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).current_status).to eq('canceled')
+        expect_bounce_as_not_allowed
       end
 
       it 'should respond with ERROR as they do not own the subscription' do
         delete :destroy, id: subscription_1.id
-        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect_bounce_as_not_allowed
       end
     end
 

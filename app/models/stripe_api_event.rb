@@ -74,7 +74,7 @@ class StripeApiEvent < ActiveRecord::Base
           #Latest attempt to charge a user has succeeded so we check if it was a crushoffers referral
           user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
           invoice = Invoice.where(stripe_guid: self.payload[:data][:object][:id]).last
-          invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf')
+          invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
           price = self.payload[:data][:object][:total].to_f / 100.0
           curr = self.payload[:data][:object][:currency].upcase
           if user && user.crush_offers_session_id && price > 0
@@ -136,7 +136,6 @@ class StripeApiEvent < ActiveRecord::Base
             set_process_error "User with given Stripe ID does not exist"
           end
         when 'customer.subscription.updated'
-            #User upgrading from a free_trial subscription to a paying subscription
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
           if subscription &&
              subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
@@ -148,13 +147,9 @@ class StripeApiEvent < ActiveRecord::Base
           end
         when 'customer.subscription.created'
           #User reactivating their account after it was canceled due to repeated failed charges
-
           subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
           if subscription
-            user_subscriptions = subscription.user.subscriptions.all_in_order
-            if user_subscriptions.count == 2 &&
-               user_subscriptions.first.free_trial? &&
-               user_subscriptions.first.current_status == 'previous'
+            if subscription.user.active_subscription && subscription.user.active_subscription.current_status == 'canceled'
 
               self.processed = true
               self.processed_at = Time.now

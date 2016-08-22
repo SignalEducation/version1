@@ -108,7 +108,7 @@ class HomePagesController < ApplicationController
     else
       @user = User.new(student_allowed_params)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.where(iso_code: 'IE').first.id
       @user.account_activation_code = SecureRandom.hex(10)
       @user.email_verification_code = SecureRandom.hex(10)
       @user.password_confirmation = @user.password
@@ -130,7 +130,8 @@ class HomePagesController < ApplicationController
       @user.free_trial = true
 
       if @user.valid? && @user.save
-        @subscription_plan = SubscriptionPlan.in_currency(@user.country.currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+        @subscription_plan = SubscriptionPlan.in_currency(@user.country.currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
+
         # Send User Email Verification and Use Welcome emails through Mandrill Client
         MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
         if @user.topic_interest == 'ACCA'

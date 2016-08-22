@@ -27,9 +27,8 @@ describe HomePagesController, type: :controller do
                             locale: 'en',
                             email: "test.student@example.com", password: "dummy_pass",
                             password_confirmation: "dummy_pass" } }
-  let!(:default_plan) { FactoryGirl.create(:subscription_plan, price: 0.0) }
+  let!(:default_plan) { FactoryGirl.create(:subscription_plan) }
   let!(:student) { FactoryGirl.create(:individual_student_user) }
-  let!(:currency) { FactoryGirl.create(:usd) }
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
   context 'Not logged in: ' do
@@ -74,21 +73,13 @@ describe HomePagesController, type: :controller do
 
     describe "POST 'student_sign_up'" do
       describe "invalid data" do
-        it 'does not subscribe user if default plan does not exist' do
-          request.env['HTTP_REFERER'] = '/'
-          default_plan.update_attribute(:price, 0.1)
-          post :student_sign_up, user: sign_up_params
-          expect(session[:sign_up_errors][:subscription]).to include(/undefined default value/)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
-        end
 
         it 'does not subscribe user if user with same email already exists' do
           request.env['HTTP_REFERER'] = '/'
           post :student_sign_up, user: sign_up_params.merge(email: student.email)
           expect(session[:sign_up_errors].keys).to include(:email)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/en')
+          expect(response).to redirect_to('/')
         end
 
         it 'does not subscribe user if password is blank' do
@@ -96,7 +87,7 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(password: nil)
           expect(session[:sign_up_errors].keys).to include(:password)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/en')
+          expect(response).to redirect_to('/')
         end
 
         it 'does not subscribe user if password is not of required length' do
@@ -104,7 +95,7 @@ describe HomePagesController, type: :controller do
           post :student_sign_up, user: sign_up_params.merge(password: '12345')
           expect(session[:sign_up_errors].keys).to include(:password)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to('/en')
+          expect(response).to redirect_to('/')
         end
 
       end
@@ -113,13 +104,12 @@ describe HomePagesController, type: :controller do
         it 'signs up new student' do
           referral_codes = ReferralCode.count
           post :student_sign_up, user: sign_up_params
-          #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)
           expect(ReferralCode.count).to eq(referral_codes + 1)
         end
 
-        #TODO Repurpose this to test for immediate activation of user and sending of verification mail
+
         xit 'sends verification email to the user' do
           # We do not know in advance what will be user's activation
           # code so we have to capture its value. That's why we are
@@ -136,7 +126,7 @@ describe HomePagesController, type: :controller do
 
           expect(MandrillClient).to receive(:new).and_return(mc)
           post :student_sign_up, user: sign_up_params
-          expect(mc.url).to eq(user_activation_url(activation_code: User.last.account_activation_code))
+          expect(mc.url).to eq(user_verification_url(email_verification_code: User.last.email_verification_code))
         end
 
         it 'creates referred signup if user comes from referral link' do
@@ -145,8 +135,6 @@ describe HomePagesController, type: :controller do
           #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)
-          expect(Subscription.all.count).to eq(1)
-          expect(User.last.subscriptions.count).to eq(1)
 
           expect(ReferredSignup.count).to eq(1)
           rs = ReferredSignup.first
