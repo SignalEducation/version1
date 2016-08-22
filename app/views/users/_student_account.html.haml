@@ -56,21 +56,23 @@
                                     =" on "
                                     =humanize_datetime(last_invoice.created_at)
                                     %br/
-                                %h4
-                                  =t('views.users.show.your_next_payment_will_be_on')
-                                  &nbsp;
-                                  =@current_subscription.next_renewal_date
-                                %br/
-                                %h4
-                                  ="Billing Interval: "
-                                  &nbsp;
-                                  =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
+                                -if @user.valid_subscription
+                                  %h4
+                                    =t('views.users.show.your_next_payment_will_be_on')
+                                    &nbsp;
+                                    =@current_subscription.next_renewal_date
+                                  %br/
+                                  %h4
+                                    ="Billing Interval: "
+                                    &nbsp;
+                                    =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
 
 
-                                %br/
+                                  %br/
                                 %h4
                                   -if @user.canceled_member?
                                     =t('views.users.show.your_plan_expired_on')
+                                    =humanize_datetime(@user.active_subscription.updated_at)
                                   -elsif @user.canceled_pending?
                                     =t('views.users.show.your_plan_will_expire_on')
                                     &nbsp;
