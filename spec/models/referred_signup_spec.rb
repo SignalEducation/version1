@@ -18,7 +18,7 @@ require 'rails_helper'
 describe ReferredSignup do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at subscription_id)
   ReferredSignup.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -42,8 +42,6 @@ describe ReferredSignup do
   it { should validate_uniqueness_of(:referral_code_id).scoped_to(:user_id).with_message(I18n.t('models.referred_signups.user_can_be_referred_only_once')) }
 
   it { should validate_presence_of(:user_id) }
-
-  it { should validate_presence_of(:subscription_id)}
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

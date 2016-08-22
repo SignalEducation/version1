@@ -107,12 +107,8 @@ RSpec.describe UsersController, type: :routing do
       expect(post: '/change_password').to route_to('users#change_password')
     end
 
-    it 'routes /new_paid_subscription to #new_paid_subscription' do
-      expect(get: '/users/1/new_paid_subscription').to route_to('users#new_paid_subscription', user_id: '1')
-    end
-
-    it 'routes /upgrade_from_free_trial to #upgrade_from_free_trial' do
-      expect(patch: '/users/1/upgrade_from_free_trial').to route_to('users#upgrade_from_free_trial', user_id: '1')
+    it 'routes /new_subscription to #new_subscription' do
+      expect(get: '/users/1/new_subscription').to route_to('users#new_subscription', user_id: '1')
     end
   end
 end
