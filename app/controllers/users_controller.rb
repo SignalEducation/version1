@@ -249,35 +249,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def new_paid_subscription
-    #TODO Delete this once all production free_trial_subscriptions have been deleted
-    redirect_to account_url if current_user.subscriptions.count > 1
-    @user = User.where(id: params[:user_id]).first
-    currency_id = @user.subscriptions.first.subscription_plan.currency_id
-    @country = Country.where(currency_id: currency_id).first
-    @navbar = false
-    if @user.subscriptions.first.subscription_plan == SubscriptionPlan.where(id: 51).first
-      @subscription_plans = SubscriptionPlan
-                                .where('price > 0.0')
-                                .for_students
-                                .in_currency(1)
-                                .generally_available
-                                .all_active
-                                .all_in_order
-    else
-      @subscription_plans = SubscriptionPlan
-                            .where('price > 0.0')
-                            .includes(:currency)
-                            .for_students
-                            .in_currency(@user.subscriptions.first.subscription_plan.currency_id)
-                            .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
-                            .all_active
-                            .all_in_order
-    end
-  end
-
   def new_subscription
-    redirect_to account_url if current_user.subscriptions.count > 1
+    redirect_to account_url if current_user.subscriptions.any?
     @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
@@ -309,31 +282,6 @@ class UsersController < ApplicationController
     seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
   end
 
-  def upgrade_from_free_trial
-    #TODO Delete this once all production free_trial_subscriptions have been deleted
-    if current_user.subscriptions.count == 1 && current_user.subscriptions[0].free_trial? &&
-       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
-      subscription_params = params[:user][:subscriptions_attributes]["0"]
-      current_subscription = current_user.subscriptions[0]
-      coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code) if coupon_code
-      if coupon_code && verified_coupon == 'bad_coupon'
-        redirect_to user_new_paid_subscription_url(current_user.id)
-      else
-        upgrade = current_subscription.upgrade_from_free_plan(subscription_params["subscription_plan_id"].to_i, subscription_params["stripe_token"], coupon_code)
-
-        if upgrade
-          current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-          redirect_to personal_upgrade_complete_url
-        else
-          redirect_to request.referer
-          flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
-        end
-      end
-    else
-      redirect_to account_url
-    end
-  end
 
   def create_subscription
     # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
@@ -413,15 +361,15 @@ class UsersController < ApplicationController
   end
 
   def personal_upgrade_complete
-    @subscription = current_user.subscriptions.all_of_status('active').last
+    @subscription = current_user.active_subscription
   end
 
   def reactivation_complete
-    @subscription = current_user.subscriptions.all_of_status('active').last
+    @subscription = current_user.active_subscription
   end
 
   def change_plan
-    @current_subscription = @user.subscriptions.all_in_order.last
+    @current_subscription = @user.active_subscription
   end
 
   def verify_coupon(coupon)
