@@ -41,7 +41,7 @@ class CoursesController < ApplicationController
         # The URL worked out Okay
         reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
         if current_user
-          current_user.check_and_free_trial_status if current_user.individual_student?
+          #current_user.check_and_free_trial_status if current_user.individual_student?
           if @course_module_element.try(:is_quiz)
             set_up_quiz
           elsif @course_module_jumbo_quiz

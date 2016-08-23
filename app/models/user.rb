@@ -319,7 +319,7 @@ class User < ActiveRecord::Base
 
   def check_and_free_trial_status
     if self.no_subscription_user && !self.days_or_seconds_valid?
-      self.update_attributes(free_trial: false)
+      self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)
     end
   end
 
