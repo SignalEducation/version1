@@ -56,6 +56,8 @@
 #  email_verified                   :boolean          default(FALSE), not null
 #  stripe_account_balance           :integer          default(0)
 #  trial_limit_in_seconds           :integer          default(0)
+#  free_trial                       :boolean          default(FALSE)
+#  trial_limit_in_days              :integer          default(0)
 #
 
 require 'rails_helper'
@@ -114,20 +116,11 @@ describe UsersController, type: :controller do
                                 locale: 'en',
                                 email: "test.student@example.com", password: "dummy_pass",
                                 password_confirmation: "dummy_pass" } }
-      let!(:default_plan) { FactoryGirl.create(:subscription_plan, price: 0.0) }
       let!(:student) { FactoryGirl.create(:individual_student_user) }
       let!(:currency) { FactoryGirl.create(:usd) }
       let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
       describe "invalid data" do
-        it 'does not subscribe user if default plan does not exist' do
-          request.env['HTTP_REFERER'] = '/'
-          default_plan.update_attribute(:price, 0.1)
-          post :student_create, user: sign_up_params
-
-          expect(response.status).to eq(200)
-          expect(response).to render_template(:student_new)
-        end
 
         it 'does not subscribe user if user with same email already exists' do
           request.env['HTTP_REFERER'] = '/'
@@ -156,7 +149,6 @@ describe UsersController, type: :controller do
         it 'signs up new student' do
           referral_codes = ReferralCode.count
           post :student_create, user: sign_up_params
-          #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)
           expect(ReferralCode.count).to eq(referral_codes + 1)
@@ -167,8 +159,7 @@ describe UsersController, type: :controller do
           post :student_create, user: sign_up_params
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url)
-          expect(Subscription.all.count).to eq(1)
-          expect(User.last.subscriptions.count).to eq(1)
+          expect(Subscription.all.count).to eq(0)
 
           expect(ReferredSignup.count).to eq(1)
           rs = ReferredSignup.first

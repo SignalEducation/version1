@@ -56,6 +56,8 @@
 #  email_verified                   :boolean          default(FALSE), not null
 #  stripe_account_balance           :integer          default(0)
 #  trial_limit_in_seconds           :integer          default(0)
+#  free_trial                       :boolean          default(FALSE)
+#  trial_limit_in_days              :integer          default(0)
 #
 
 class User < ActiveRecord::Base
@@ -76,12 +78,13 @@ class User < ActiveRecord::Base
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key,
-                  :stripe_account_balance, :trial_limit_in_seconds
+                  :stripe_account_balance, :trial_limit_in_seconds, :free_trial, :trial_limit_in_days
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
+  USER_STATUS = %w(valid_free_member expired_free_member valid_paying_member canceled_paying_member expired_paying_member other_user)
 
   # relationships
   belongs_to :corporate_customer
@@ -131,7 +134,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_stripe_customer_id
+  after_create :set_trial_limit_in_days
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -237,42 +240,151 @@ class User < ActiveRecord::Base
     self.user_group.try(:site_admin)
   end
 
+  def user_status
+    # returns one of these values => (valid_free_member expired_free_member valid_paying_member canceled_paying_member expired_paying_member other_user)
+    if self.individual_student?
+      if self.free_trial && !self.subscriptions.any? && days_or_seconds_valid?
+        return 'valid_free_member'
+      elsif !self.free_trial && !self.subscriptions.any? && !days_or_seconds_valid?
+        return 'expired_free_member'
+      elsif !self.free_trial && self.subscriptions.any? && self.valid_subscription
+        return 'valid_paying_member'
+      elsif !self.free_trial && self.subscriptions.any? && self.canceled_member?
+        return 'canceled_paying_member'
+      elsif !self.free_trial && self.subscriptions.any? && self.canceled_pending?
+        return 'cancel_pending_member'
+      elsif !self.free_trial && self.subscriptions.any? && self.active_subscription.current_status == 'past_due'
+        return 'expired_paying_member'
+      else
+        return 'unknown_user_status'
+      end
+    else
+      'other_user_group'
+    end
+  end
+
+  def account_status
+    if self.user_status == 'valid_free_member'
+      'Free Trial Member'
+    elsif self.user_status == 'expired_free_member'
+      'Free Trial Expired'
+    elsif self.user_status == 'valid_paying_member'
+      'Valid Subscription'
+    elsif self.user_status == 'canceled_paying_member'
+      'Canceled Subscription'
+    elsif self.user_status == 'cancel_pending_member'
+      'Canceled Subscription'
+    elsif self.user_status == 'expired_paying_member'
+      'Expired Subscription'
+    else
+      ''
+    end
+  end
+
+  def days_or_seconds_valid?
+    if free_trial_days_expired? || free_trial_minutes_expired?
+      false
+    else
+      true
+    end
+  end
+
+  def free_trial_days_expired?
+    if (Time.now - self.created_at).to_i.abs / 1.day >= self.trial_limit_in_days
+      #If the Number of days since the user was created is greater than the allowed free trial days then permission is denied
+      true
+    else
+      false
+    end
+  end
+
+  def free_trial_minutes_expired?
+    #If the Number of seconds watched is greater than the allowed free trial time then permission is denied
+    if ENV['free_trial_limit_in_seconds'].to_i >= self.trial_limit_in_seconds
+      false
+    else
+      true
+    end
+  end
+
+  def days_left
+    # Displayed in the Navbar change to return full sentence string 'X Days Left' or 'Your Trial has Expired'
+    free_trial_days = self.trial_limit_in_days.to_i
+    if free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day).to_i > 0
+      free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
+    else
+      '0'
+    end
+  end
+
+  def check_and_free_trial_status
+    if self.no_subscription_user && !self.days_or_seconds_valid?
+      self.update_attributes(free_trial: false)
+    end
+  end
+
   def free_member?
-    self.subscriptions.last.try(:free_trial?)
+    self.user_status == 'valid_free_member'
+  end
+
+  def expired_free_member?
+    self.user_status == 'expired_free_member'
+  end
+
+  def no_subscription_user
+    if !self.subscriptions.any?
+      true
+    else
+      false
+    end
   end
 
   def canceled_member?
-    self.subscriptions.last.try(:current_status) == 'canceled'
+    !self.free_trial? && self.subscriptions.any? && self.active_subscription.current_status == 'canceled'
+  end
+
+  def canceled_pending?
+    !self.free_trial? && self.subscriptions.any? && self.active_subscription.current_status == 'canceled-pending'
   end
 
   def referred_user
     self.referred_signup
   end
 
+  def valid_subscription
+    true if %w(active past_due).include?(self.active_subscription.current_status)
+  end
+
   def active_subscription
-    if permission_to_see_content
-      self.subscriptions.where(current_status: ['active', 'canceled-pending', 'past_due']).all_in_order.last || self.subscriptions.all_in_order.last
-    else
-      self.subscriptions.all_in_order.last
+    self.subscriptions.where(active: true).last
+  end
+
+  def one_active_subscription?
+    if self.subscriptions.any?
+      self.subscriptions.all_active.count == 1
     end
   end
 
   def permission_to_see_content
-    if self.free_member?
-      if self.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
-        return true
-      else
-        return false
-      end
+    if self.user_status == 'valid_free_member'
+      return true
+    elsif self.user_status == 'expired_free_member'
+      return false
+    elsif self.user_status == 'valid_paying_member'
+      return true
+    elsif self.user_status == 'canceled_paying_member'
+      return false
+    elsif self.user_status == 'cancel_pending_member'
+      return true
+    elsif self.user_status == 'expired_paying_member'
+      return false
+    elsif self.user_status == 'unknown_user_status'
+      return false
     else
-      subs = self.subscriptions.map(&:current_status)
-      if subs.include?('active') || subs.include?('canceled-pending') || subs.include?('past_due')
-        return true
-      else
-        return false
-      end
+      return false
     end
   end
+
 
   def assign_anonymous_logs_to_user(session_guid)
     model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack, SubjectCourseUserLog]
@@ -495,7 +607,7 @@ class User < ActiveRecord::Base
   def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
-    old_sub = user.subscriptions.where(current_status: 'canceled').last
+    old_sub = user.active_subscription
 
     # compare the currencies of the old and new plans,
     unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -531,6 +643,7 @@ class User < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
+          active: true,
           livemode: (result[:plan][:livemode]),
           current_status: result[:status],
       )
@@ -541,6 +654,7 @@ class User < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false)
 
+      old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
       return new_sub
@@ -560,7 +674,7 @@ class User < ActiveRecord::Base
   def resubscribe_account_without_token(user_id, new_plan_id, reactivate_account_url = nil)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
-    old_sub = user.subscriptions.where(current_status: 'canceled').last
+    old_sub = user.active_subscription
 
     # compare the currencies of the old and new plans,
     unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -595,6 +709,7 @@ class User < ActiveRecord::Base
           corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
+          active: true,
           livemode: (result[:plan][:livemode]),
           current_status: result[:status],
       )
@@ -605,8 +720,10 @@ class User < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false)
 
+      old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+
       return new_sub
     end
   rescue ActiveRecord::RecordInvalid => exception
@@ -627,12 +744,13 @@ class User < ActiveRecord::Base
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
-  def set_stripe_customer_id
-    Rails.logger.debug "DEBUG: User#set_stripe_customer_id - START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
-    if self.subscriptions.length > 0
-      self.update_attribute(:stripe_customer_id, self.subscriptions.first.stripe_customer_id)
+  def set_trial_limit_in_days
+    if self.subscription_plan_category_id && self.subscription_plan_category.trial_period_in_days
+      free_trial_days = self.subscription_plan_category.trial_period_in_days.to_i
+    else
+      free_trial_days = ENV["free_trial_days"].to_i
     end
-    Rails.logger.debug "DEBUG: User#set_stripe_customer_id - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}}"
+    self.update_attributes(trial_limit_in_days: free_trial_days)
   end
 
 end

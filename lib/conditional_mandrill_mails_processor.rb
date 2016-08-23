@@ -89,19 +89,31 @@ class ConditionalMandrillMailsProcessor
   end
 
   def self.process_free_trial_ended_notifications
-    free_plan = SubscriptionPlan.where(price: 0.0).first
-    return if free_plan.nil?
+    individual_user_group_id = UserGroup.find 1
+    free_trial_users = User.where.not(stripe_customer_id: nil).where(
+                                  user_group_id: individual_user_group_id)
+    free_days_expired = "We just wanted to let you know that your free trial of #{ENV["free_trial_days"].to_s} days has ended!"
+    free_minutes_expired = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_s} minutes!"
 
-    free_trial_subscriptions = Subscription.where(subscription_plan_id: free_plan.id,
-                                                  current_status: 'active')
-    free_trial_subscriptions.each do |subs|
-      if subs.free_trial_expired? &&
-         subs.user.trial_ended_notification_sent_at.nil? &&
-         subs.user.active?
-        MandrillWorker.perform_async(subs.user_id,
+
+    free_trial_users.each do |user|
+      if user.free_trial_expired? &&
+         user.trial_ended_notification_sent_at.nil? &&
+         user.active?
+         #user.free_trial?
+
+        if user.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
+          reason_text = free_minutes_expired
+        else
+          reason_text = free_days_expired
+        end
+
+        MandrillWorker.perform_async(user.id,
                                      "send_free_trial_ended_email",
-                                     url_helpers.user_new_paid_subscription_url(user_id: subs.user_id))
-        subs.user.update_attribute(:trial_ended_notification_sent_at, Time.now)
+                                     url_helpers.user_new_subscription_url(user_id: user.id),
+                                     reason_text
+                                    )
+        user.update_attribute(:trial_ended_notification_sent_at, Time.now)
       end
     end
   end

@@ -8,18 +8,49 @@
 
   .col-sm-6
     .form-group
-      =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+      =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', id: 'first_name'
   .col-sm-6
     .form-group
-      =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+      =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', id: 'last_name'
   .col-sm-12
     .form-group
-      =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+      =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, id: 'email'
   .col-sm-12
     .form-group
-      =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', onClick: "$('#signUp').removeClass('disabled').val('Sign Up Now');"
+      =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'password'
   .col-sm-6
-    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red', id: 'signUp', onclick: "$(this).val('loading...').addClass('disabled') "
+    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red signUp'
+    .sk-circle
+      .sk-circle1.sk-child
+      .sk-circle2.sk-child
+      .sk-circle3.sk-child
+      .sk-circle4.sk-child
+      .sk-circle5.sk-child
+      .sk-circle6.sk-child
+      .sk-circle7.sk-child
+      .sk-circle8.sk-child
+      .sk-circle9.sk-child
+      .sk-circle10.sk-child
+      .sk-circle11.sk-child
+      .sk-circle12.sk-child
+
   .col-sm-6
     %span.no-card
       =t('views.home_pages.sign_up_form.no_credit_card_needed')
+
+
+:javascript
+
+  $(document).on('ready', function() {
+    $(".sk-circle").hide();
+
+    $(".signUp").click(function(event) {
+      if($('#first_name').val() && $('#last_name').val() && $('#email').val() && $('#password').val() ) {
+        $(".signUp").hide();
+        $(".sk-circle").show();
+      }
+    });
+
+  });
+
+

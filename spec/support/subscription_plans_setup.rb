@@ -16,14 +16,6 @@ shared_context 'subscription_plans_setup' do
   # load Stripe Mock helpers
   let!(:stripe_helper) { StripeMock.create_test_helper }
 
-  # subscription plans - Free - Euro / USD / GBP
-  let!(:free_subscription_plan_eur) { FactoryGirl.create(:free_subscription_plan,
-                                   currency_id: eur.id) }
-  let!(:free_subscription_plan_usd) { FactoryGirl.create(:free_subscription_plan,
-                                   currency_id: usd.id) }
-  let!(:free_subscription_plan_gbp) { FactoryGirl.create(:free_subscription_plan,
-                                   currency_id: gbp.id) }
-
   # subscription plans - Euro - Mth / Qtr / Year
   let!(:subscription_plan_eur_m) { FactoryGirl.create(:student_subscription_plan_m,
                                    currency_id: eur.id, price: 10) }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160728100014) do
+ActiveRecord::Schema.define(version: 20160820171523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -838,6 +838,7 @@ ActiveRecord::Schema.define(version: 20160728100014) do
     t.string   "stripe_customer_id"
     t.text     "stripe_customer_data"
     t.boolean  "livemode",              default: false
+    t.boolean  "active",                default: false
   end
 
   add_index "subscriptions", ["corporate_customer_id"], name: "index_subscriptions_on_corporate_customer_id", using: :btree
@@ -997,6 +998,8 @@ ActiveRecord::Schema.define(version: 20160728100014) do
     t.boolean  "email_verified",                               default: false, null: false
     t.integer  "stripe_account_balance",                       default: 0
     t.integer  "trial_limit_in_seconds",                       default: 0
+    t.boolean  "free_trial",                                   default: false
+    t.integer  "trial_limit_in_days",                          default: 0
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

@@ -19,12 +19,15 @@
       .l-wrap
         .container-fluid
           .row
-            .col-md-6.col-md-offset-3
-              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.account_cancelled.reactivate'), account_url(anchor: 'subscriptions')
+            .col-md-8.col-md-offset-2.text-center
+
+              =link_to user_reactivate_account_url(current_user.id) do
+                .btn.btn-red.btn-wide.l-margin-bottom-big
+                  =t('views.courses.content_denied.account_cancelled.reactivate')
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.account_cancelled.h2')
+
   -elsif @paywall[:course_content][:reason][0..7] == 'account_'
     .l-section.is-bg-purple
       .l-wrap
@@ -44,7 +47,7 @@
           .row
             .col-md-6.col-md-offset-3
               %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.free_trial_expired.upgrade_subscription'), user_new_paid_subscription_url(current_user.id)
+                =link_to t('views.courses.content_denied.free_trial_expired.upgrade_subscription'), user_new_subscription_url(current_user.id)
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.free_trial_expired.h2')
@@ -53,9 +56,12 @@
       .l-wrap
         .container-fluid
           .row
-            .col-md-8.col-md-offset-2
-              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription'), user_new_paid_subscription_url(current_user.id)
+            .col-md-8.col-md-offset-2.text-center
+              -#%h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
+
+              =link_to user_new_subscription_url(current_user.id) do
+                .btn.btn-red.btn-wide.l-margin-bottom-big
+                  =t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription')
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.free_trial_limit_reached.h2')
@@ -66,7 +72,7 @@
           .row
             .col-md-6.col-md-offset-3
               %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.free_trial.upgrade_subscription'), user_new_paid_subscription_url(current_user.id)
+                =link_to t('views.courses.content_denied.free_trial.upgrade_subscription'), user_new_subscription_url(current_user.id)
 
               %p.text-center{style: 'color: #fff;'}
                 =t('views.courses.content_denied.free_trial.h2')

@@ -47,20 +47,43 @@ class MandrillClient
     send_template('account-suspended', msg)
   end
 
-
-
-
-
-
-
-
-
-  def send_welcome_email(trial_length, library_url)
+  def send_default_welcome_email(price)
     msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
-    msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
-    msg["global_merge_vars"] << { "name" => "USERLIBRARYURL", "content" => library_url }
-    send_template('welcome-email', msg)
+    msg["global_merge_vars"] << { "name" => "PRICE", "content" => price }
+    send_template('default-welcome-email', msg)
   end
+
+  def send_acca_welcome_email(price)
+    msg = message_stub.merge({"subject" => "Welcome to Learn Signal"})
+    msg["global_merge_vars"] << { "name" => "PRICE", "content" => price }
+    send_template('acca-welcome-email', msg)
+  end
+
+  def send_free_trial_ended_email(new_subscription_url, reason_text)
+    msg = message_stub.merge({"subject" => "You're free trial with learn signal has just ended"})
+    msg["global_merge_vars"] << { "name" => "REASON", "content" => reason_text }
+    msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
+    send_template('free-trial-ended', msg)
+  end
+
+  def send_account_reactivated_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send_template('account-reactivated', msg)
+  end
+
+  def send_successful_payment_email(account_url, invoice_url)
+    msg = message_stub.merge({"subject" => "LearnSignal Payment Invoice "})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    msg["global_merge_vars"] << { "name" => "INVOICEURL", "content" => invoice_url }
+    send_template('invoice-payment-successful', msg)
+  end
+
+
+
+
+
+
 
   def send_subscription_error_email(trial_length)
     msg = message_stub.merge({"subject" => "There's been an error with your subscription"})
@@ -68,18 +91,6 @@ class MandrillClient
     send_template('subscription-error', msg)
   end
 
-  def send_free_trial_ended_email(account_activation_url)
-    msg = message_stub.merge({"subject" => ":( You're free trial with learn signal has just ended"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTACTIVATIONURL", "content" => account_activation_url }
-    send_template('free-trial-ended', msg)
-  end
-
-
-  def send_account_reactivated_email(account_settings_url)
-    msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
-    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('account-reactivated', msg)
-  end
 
 
   private

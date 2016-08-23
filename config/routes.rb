@@ -24,8 +24,9 @@ Rails.application.routes.draw do
 
     # users and authentication
     resources :users do
-      get 'new_paid_subscription', to: 'users#new_paid_subscription', as: :new_paid_subscription
-      patch 'upgrade_from_free_trial', to: 'users#upgrade_from_free_trial', as: :upgrade_from_free_trial
+      get 'new_subscription', to: 'users#new_subscription', as: :new_subscription
+      patch 'create_subscription', to: 'users#create_subscription', as: :create_subscription
+
       get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
       post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
     end

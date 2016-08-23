@@ -15,6 +15,7 @@
 #  stripe_customer_id    :string
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
+#  active                :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -58,9 +59,7 @@ describe Subscription do
   it { should validate_length_of(:stripe_customer_id).is_at_most(255) }
 
   # callbacks
-  it { should callback(:create_on_stripe_platform).after(:create) }
   it { should callback(:create_a_subscription_transaction).after(:create) }
-  it { should callback(:update_on_stripe_platform).after(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -70,7 +69,6 @@ describe Subscription do
   # class methods
   it { expect(Subscription).to respond_to(:create_using_stripe_subscription) }
   it { expect(Subscription).to respond_to(:get_updates_for_user) }
-  it { expect(Subscription).to respond_to(:remove_orphan_from_stripe) }
 
   # instance methods
   it { should respond_to(:cancel) }
@@ -80,7 +78,6 @@ describe Subscription do
   it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
-  it { should respond_to(:upgrade_from_free_plan) }
   it { should respond_to(:free_trial?) }
 
 end

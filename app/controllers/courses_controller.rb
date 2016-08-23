@@ -41,16 +41,17 @@ class CoursesController < ApplicationController
         # The URL worked out Okay
         reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
         if current_user
+          current_user.check_and_free_trial_status if current_user.individual_student?
           if @course_module_element.try(:is_quiz)
             set_up_quiz
           elsif @course_module_jumbo_quiz
             set_up_jumbo_quiz
           elsif @course_module_element.try(:is_video)
-            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint(@course_module_element.my_position_among_siblings, false)
+            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
           end
         end
       end
-      @paywall = paywall_checkpoint(@course_module_element.try(:my_position_among_siblings) || 0, @course_module_jumbo_quiz.try(:id).to_i > 0)
+      @paywall = paywall_checkpoint
     else
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."

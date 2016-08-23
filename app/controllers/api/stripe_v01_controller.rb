@@ -9,6 +9,7 @@ class Api::StripeV01Controller < Api::BaseController
       StripeApiProcessorWorker.perform_async(event_json["id"],
                                              Stripe.api_version,
                                              account_url)
+
     end
     render text: nil, status: 204
   rescue => e

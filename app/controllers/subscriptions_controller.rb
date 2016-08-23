@@ -15,13 +15,14 @@
 #  stripe_customer_id    :string
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
+#  active                :boolean          default(FALSE)
 #
 
 class SubscriptionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin individual_student corporate_customer))
+    ensure_user_is_of_type(%w(admin individual_student))
   end
   before_action :get_subscription, except: :create
 

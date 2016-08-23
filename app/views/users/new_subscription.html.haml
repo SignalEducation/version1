@@ -13,8 +13,8 @@
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 #upgrade-subscription
-  =form_for @user, url: user_upgrade_from_free_trial_url(@user.id), html: {role: 'form'} do |f|
-    =f.hidden_field :country_id, value: @country.id
+  =form_for @user, url: user_create_subscription_url(@user.id), html: {role: 'form'} do |f|
+    =f.hidden_field :country_id, value: @user.country_id
     =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
     .l-wrap
       .l-section
@@ -60,26 +60,20 @@
       .l-wrap
         .container-fluid
           .row
-            .col-sm-12.col-md-6.col-md-offset-3
+            .col-sm-12.col-md-6.col-md-offset-3.payment-heading
               %h2.h3.text-center
                 %span.number
                   2
                 Payment details
           =render partial: 'subscription_payment_cards/form', locals: {f: f}
-          .l-margin-top
-            .row
-              .col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
-                .form-group
-                  %label
-                    Coupon Code
-                  =text_field_tag :coupon, nil, placeholder: 'Valid Coupon Code', class: 'form-control', default: nil
 
-
-                .form-group
-                  -if current_user == @user
-                    =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
-                  -else
-                    =link_to t('views.users.upgrade_subscription.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
+        .container-fluid
+          .col-md-12
+            .col-md-4.col-sm-offset-4.text-center
+              .spinner
+                .bounce1
+                .bounce2
+                .bounce3
 
 :javascript
 

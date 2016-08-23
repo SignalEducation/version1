@@ -15,6 +15,7 @@
 #  stripe_customer_id    :string
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
+#  active                :boolean          default(FALSE)
 #
 
 class Subscription < ActiveRecord::Base
@@ -25,7 +26,7 @@ class Subscription < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode, :next_renewal_date
+                  :stripe_token, :livemode, :next_renewal_date, :active
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
@@ -50,13 +51,12 @@ class Subscription < ActiveRecord::Base
 
 
   # callbacks
-  after_create :create_on_stripe_platform
   after_create :create_a_subscription_transaction
-  after_update :update_on_stripe_platform
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
   def self.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)
@@ -103,28 +103,6 @@ class Subscription < ActiveRecord::Base
     Rails.logger.error "ERROR: Subscription#get_updates_for_user error: #{e.message}."
   end
 
-  def self.remove_orphan_from_stripe(stripe_customer_guid)
-    Rails.logger.warn 'WARN: Removing orphaned subscription from stripe STARTED'
-    local_subscription = Subscription.find_by_stripe_customer_id(stripe_customer_guid)
-    if local_subscription
-      Rails.logger.error "ERROR: Subscription#remove_orphan_from_stripe - orphaned subscription is NOT an orphan - it is actually #{local_subscription.inspect}."
-      return false
-    else
-      # local_subscription wasn't found
-      Rails.logger.warn 'WARN: Removing orphan from stripe MID 1'
-      stripe_customer = Stripe::Customer.retrieve(stripe_customer_guid)
-      stripe_subscription = stripe_customer.subscriptions[:data].first
-      if stripe_customer && stripe_subscription && ((Time.at(stripe_subscription[:start].to_i)) + 15.seconds > Proc.new{Time.now}.call)
-        Rails.logger.warn "WARN: Subscription#remove_orphan_from_stripe - rolling back subscription and customer on stripe.com.  Customer & Subscription:#{stripe_customer.inspect}."
-        stripe_subscription.delete
-        stripe_customer.delete
-      end
-    end
-    Rails.logger.warn 'WARN: Removing from stripe FINISHED'
-  rescue => e
-    Rails.logger.error "ERROR: Subscription#remove_from_stripe - failed to remove an orphaned Stripe subscription.  Error:#{e.inspect}. Subscription:#{stripe_customer.inspect}."
-  end
-
   # instance methods
   def cancel(account_url = nil)
     # call stripe and cancel the subscription
@@ -149,11 +127,11 @@ class Subscription < ActiveRecord::Base
   end
 
   def immediately_cancel(account_url = nil)
-    # call stripe and cancel the subscription
+    # Admin command line use only to call stripe and cancel the subscription
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
     response = stripe_subscription.delete.to_hash
-    if response[:status] == 'canceled' && response[:cancel_at_period_end] == false
+    if response[:status] == 'canceled'
       self.update_attribute(:current_status, 'canceled')
       Rails.logger.info "INFO: Subscription#immediately_cancel has been triggered by repeated failed charge attempts to charge the users card therefore cancellation status updated to canceled for subscription ##{self.id}."
     else
@@ -178,32 +156,6 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def free_trial?
-    self.subscription_plan.free_trial?
-  end
-
-  def free_trial_expired?
-    free_trial_days = ENV["free_trial_days"].to_i
-    if self.user.subscription_plan_category_id && self.user.subscription_plan_category.trial_period_in_days
-      free_trial_days = self.user.subscription_plan_category.trial_period_in_days
-    end
-    (Time.now - self.created_at).to_i.abs / 1.day >= free_trial_days
-  end
-
-  def days_left
-    if free_trial?
-      free_trial_days = ENV["free_trial_days"].to_i
-      if self.user.subscription_plan_category_id && self.user.subscription_plan_category.trial_period_in_days
-        free_trial_days = self.user.subscription_plan_category.trial_period_in_days
-      end
-      if free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day).to_i > 0
-        free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
-      else
-        '0'
-      end
-    end
-  end
-
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&
@@ -211,6 +163,11 @@ class Subscription < ActiveRecord::Base
       self.livemode == Invoice::STRIPE_LIVE_MODE &&
       self.referred_signup.nil?
   end
+
+  def free_trial?
+    self.subscription_plan.free_trial?
+  end
+
 
   # setter method
   def stripe_token=(t)
@@ -239,7 +196,7 @@ class Subscription < ActiveRecord::Base
     latest_subscription.plan = self.subscription_plan.stripe_guid
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attribute(:current_status, 'active')
+      self.update_attributes(current_status: 'active', active: true)
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
@@ -324,6 +281,7 @@ class Subscription < ActiveRecord::Base
               corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complimentary: false,
+              active: true,
               livemode: (result[:plan][:livemode]),
               current_status: result[:status],
       )
@@ -334,7 +292,7 @@ class Subscription < ActiveRecord::Base
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false) # see "sample_response_from_stripe" above
 
-      self.update_attribute(:current_status, 'previous')
+      self.update_attributes(current_status: 'previous', active: false)
       #self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
 
       return new_sub
@@ -349,76 +307,6 @@ class Subscription < ActiveRecord::Base
     false
   end
 
-  def upgrade_from_free_plan(new_plan_id, stripe_token, new_paid_subscription_url = nil, coupon_code)
-    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    # compare the currencies of the old and new plans,
-    unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-      return self
-    end
-    # make sure new plan is active
-    unless new_subscription_plan.active?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-      return self
-    end
-    # make sure the current subscription is in "good standing"
-    unless %w(trialing active).include?(self.current_status)
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-      return self
-    end
-    # only individual students are allowed to upgrade their plan
-    unless self.user.individual_student? || self.user.corporate_customer?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-      return self
-    end
-
-    #### if we're here, then we're good to go.
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    stripe_subscription.plan = new_subscription_plan.stripe_guid
-    stripe_subscription.prorate = true
-    stripe_subscription.coupon = coupon_code if coupon_code
-    stripe_subscription.source = stripe_token
-    stripe_subscription.trial_end = 'now'
-    result = stripe_subscription.save # saves it at stripe.com, not in our DB
-
-    #### if we are here, the subscription change on Stripe has gone well
-    #### Now we need to create a new Subscription in our DB.
-    ActiveRecord::Base.transaction do
-      new_sub = Subscription.new(
-              user_id: self.user_id,
-              corporate_customer_id: self.corporate_customer_id,
-              subscription_plan_id: new_subscription_plan.id,
-              complimentary: false,
-              livemode: (result[:plan][:livemode]),
-              current_status: result[:status],
-      )
-      # mass-assign-protected attributes
-      new_sub.stripe_guid = result[:id]
-      new_sub.next_renewal_date = Time.at(result[:current_period_end])
-      new_sub.stripe_customer_id = self.stripe_customer_id
-      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-      new_sub.save(validate: false) # see "sample_response_from_stripe" above
-      self.update_attribute(:current_status, 'previous')
-
-      #self.update_attribute(:next_renewal_date, Proc.new{Time.now}.call)
-
-      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-      user = new_sub.user
-      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
-      return new_sub
-    end
-  rescue ActiveRecord::RecordInvalid => exception
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - AR.Transaction failed.  Details: #{exception.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  rescue => e
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - failed to update Subscription at Stripe.  Details: #{e.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  end
-
-  protected
 
   def create_on_stripe_platform
     Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform initialised at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
@@ -493,6 +381,9 @@ class Subscription < ActiveRecord::Base
     raise ActiveRecord::Rollback
   end
 
+
+  protected
+
   def create_a_subscription_transaction
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)
@@ -509,10 +400,6 @@ class Subscription < ActiveRecord::Base
     else # development and all others
       "Dev-#{rand(9999)}: "
     end
-  end
-
-  def update_on_stripe_platform
-    # Not needed: this is handled by self.upgrade_plan(new_plan_id)
   end
 
 end
