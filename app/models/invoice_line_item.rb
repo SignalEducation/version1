@@ -68,7 +68,8 @@ class InvoiceLineItem < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !Rails.env.production?
+    #!Rails.env.production?
+    true
   end
 
   protected
