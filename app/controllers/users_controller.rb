@@ -157,6 +157,12 @@ class UsersController < ApplicationController
       if @user.valid? && @user.save
         # Send User Activation email through Mandrill
         MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+        if @user.topic_interest == 'ACCA'
+          MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_acca_welcome_email', "#{@user.country.currency.leading_symbol}#{@subscription_plan.price}")
+        else
+          MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_default_welcome_email', "#{@user.country.currency.leading_symbol}#{@subscription_plan.price}")
+        end
+
         # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
         if cookies.encrypted[:referral_data]
           code, referrer_url = cookies.encrypted[:referral_data].split(';')

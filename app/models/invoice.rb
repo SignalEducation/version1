@@ -153,7 +153,8 @@ class Invoice < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !Rails.env.production? && self.invoice_line_items.empty?
+    #!Rails.env.production? && self.invoice_line_items.empty?
+    true
   end
 
   def status
