@@ -109,7 +109,7 @@ class ConditionalMandrillMailsProcessor
 
         MandrillWorker.perform_async(user.id,
                                      "send_free_trial_ended_email",
-                                     url_helpers.user_new_subscription_url(user_id: user.id),
+                                     url_helpers.user_new_subscription_url(user_id: user.id, host: request.original_url),
                                      reason_text
                                     )
         user.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)
