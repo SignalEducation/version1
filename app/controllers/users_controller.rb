@@ -133,7 +133,7 @@ class UsersController < ApplicationController
 
       @user = User.new(student_allowed_params)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
+      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.where(iso_code: 'IE').first.id
       @user.account_activation_code = SecureRandom.hex(10)
       @user.email_verification_code = SecureRandom.hex(10)
       @user.password_confirmation = @user.password
