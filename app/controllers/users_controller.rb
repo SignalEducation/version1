@@ -155,6 +155,7 @@ class UsersController < ApplicationController
       @user.free_trial = true
 
       if @user.valid? && @user.save
+        @subscription_plan = SubscriptionPlan.in_currency(@user.country.currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
         # Send User Activation email through Mandrill
         MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
         if @user.topic_interest == 'ACCA'
