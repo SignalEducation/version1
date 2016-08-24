@@ -72,9 +72,13 @@ class StripeApiEvent < ActiveRecord::Base
           end
         when 'invoice.payment_succeeded'
           #Latest attempt to charge a user has succeeded so we check if it was a crushoffers referral
-          user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
+          user = User.where(stripe_customer_id: self.payload[:data][:object][:customer]).last
           invoice = Invoice.where(stripe_guid: self.payload[:data][:object][:id]).last
-          invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
+          if invoice
+            invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
+          else
+            invoice_url = Rails.application.routes.url_helpers.account_url
+          end
           price = self.payload[:data][:object][:total].to_f / 100.0
           curr = self.payload[:data][:object][:currency].upcase
           if user && user.crush_offers_session_id && price > 0
@@ -169,6 +173,11 @@ class StripeApiEvent < ActiveRecord::Base
     else
       false
     end
+  rescue Exception => e
+    puts "SQL error in #{ __method__ }"
+    ActiveRecord::Base.connection.execute 'ROLLBACK'
+
+    raise e
   end
 
   def get_data_from_stripe
