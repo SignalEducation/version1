@@ -97,7 +97,8 @@ class ConditionalMandrillMailsProcessor
 
 
     free_trial_users.each do |user|
-      if user.free_member? &&
+      if !user.subscriptions.any? &&
+         !user.days_or_seconds_valid? &&
          user.trial_ended_notification_sent_at.nil? &&
          user.active?
 
