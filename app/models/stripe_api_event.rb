@@ -173,11 +173,6 @@ class StripeApiEvent < ActiveRecord::Base
     else
       false
     end
-  rescue Exception => e
-    puts "SQL error in #{ __method__ }"
-    ActiveRecord::Base.connection.execute 'ROLLBACK'
-
-    raise e
   end
 
   def get_data_from_stripe
