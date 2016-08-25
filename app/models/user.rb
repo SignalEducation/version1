@@ -342,11 +342,11 @@ class User < ActiveRecord::Base
   end
 
   def canceled_member?
-    !self.free_trial? && self.subscriptions.any? && self.active_subscription.current_status == 'canceled'
+    !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled'
   end
 
   def canceled_pending?
-    !self.free_trial? && self.subscriptions.any? && self.active_subscription.current_status == 'canceled-pending'
+    !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled-pending'
   end
 
   def referred_user
@@ -354,7 +354,7 @@ class User < ActiveRecord::Base
   end
 
   def valid_subscription
-    true if %w(active past_due).include?(self.active_subscription.current_status)
+    true if self.active_subscription && %w(active past_due).include?(self.active_subscription.current_status)
   end
 
   def active_subscription
