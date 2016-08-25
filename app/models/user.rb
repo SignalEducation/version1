@@ -253,7 +253,7 @@ class User < ActiveRecord::Base
         return 'canceled_paying_member'
       elsif !self.free_trial && self.subscriptions.any? && self.canceled_pending?
         return 'cancel_pending_member'
-      elsif !self.free_trial && self.subscriptions.any? && self.active_subscription.current_status == 'past_due'
+      elsif !self.free_trial && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'past_due'
         return 'expired_paying_member'
       else
         return 'unknown_user_status'
