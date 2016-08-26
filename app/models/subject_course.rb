@@ -136,6 +136,10 @@ class SubjectCourse < ActiveRecord::Base
     self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
   end
 
+  def enrolled_user_ids
+    self.enrollments.map(&:user_id)
+  end
+
   def destroyable?
     true
   end

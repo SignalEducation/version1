@@ -22,6 +22,17 @@
             %p
               =@course.description.to_s.html_safe
           .col-md-6
+            .text-center
+              -if current_user
+                %h1.h1.h-separator.h-separator-left
+                  =@course.name
+
+              -else
+                -#TODO make an enrollment object for the user if he signs up/ redirect after sign up to enrollment page/modal
+                =link_to new_student_url do
+                  .btn.btn-red.btn-secondary
+                    Enroll Now
+
             .course-info
               -if @course.tutor.try(:profile_image_file_name)
                 %p.h4.l-margin-bottom.l-margin-top

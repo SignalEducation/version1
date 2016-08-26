@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826103746) do
+ActiveRecord::Schema.define(version: 20160826110259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -293,6 +293,14 @@ ActiveRecord::Schema.define(version: 20160826103746) do
   add_index "currencies", ["active"], name: "index_currencies_on_active", using: :btree
   add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
   add_index "currencies", ["sorting_order"], name: "index_currencies_on_sorting_order", using: :btree
+
+  create_table "enrollments", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "subject_course_id"
+    t.integer  "subject_course_user_log_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "flash_card_stacks", force: :cascade do |t|
     t.integer  "course_module_element_flash_card_pack_id"
