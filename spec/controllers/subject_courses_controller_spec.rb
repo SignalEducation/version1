@@ -32,6 +32,7 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
+#  enrollment_option                       :boolean          default(FALSE)
 #
 
 require 'rails_helper'

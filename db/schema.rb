@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826102436) do
+ActiveRecord::Schema.define(version: 20160826103746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -722,6 +722,7 @@ ActiveRecord::Schema.define(version: 20160826102436) do
     t.datetime "live_date"
     t.boolean  "certificate",                             default: false, null: false
     t.string   "hotjar_guid"
+    t.boolean  "enrollment_option",                       default: false
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

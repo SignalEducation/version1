@@ -32,6 +32,7 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
+#  enrollment_option                       :boolean          default(FALSE)
 #
 
 class SubjectCoursesController < ApplicationController
@@ -141,7 +142,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :enrollment_option)
   end
 
 end
