@@ -24,8 +24,14 @@
           .col-md-6
             .text-center
               -if current_user
-                %h1.h1.h-separator.h-separator-left
-                  =@course.name
+                -#unless @course.enrolled_user_ids.include?(current_user.id)
+                  =link_to course_special_link(@course.first_active_cme) do
+                    .btn.btn-red.btn-secondary.enroll-now
+                      Enroll Now
+                -unless @course.enrolled_user_ids.include?(current_user.id)
+                  =link_to '#' do
+                    .btn.btn-red.btn-secondary.enroll-now
+                      Enroll Now
 
               -else
                 -#TODO make an enrollment object for the user if he signs up/ redirect after sign up to enrollment page/modal
@@ -195,7 +201,21 @@
                               .btn.btn-secondary.btn-red.btn-list
                                 =r.name
 
+:javascript
+
+    $(document).on('click', '.enroll-now', function(ajax) {
+      $.ajax({
+        url: '#{course_enrollment_url}',
+        dataType: 'json',
+        data: JSON.stringify({'enrollment': true, 'user_id': '#{current_user.id}', 'course_id': '#{@course.id}'}),
+        method: 'PATCH',
+        contentType: "application/json; charset=utf-8"
+      });
+    });
+
+
 -if current_user && !current_corporate && @subject_course_user_log && @subject_course_user_log.completed && @course.hotjar_guid
 
   :javascript
     hj('trigger', "#{@course.hotjar_guid}");
+

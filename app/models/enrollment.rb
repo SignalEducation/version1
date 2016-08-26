@@ -27,7 +27,7 @@ class Enrollment < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true,
+  validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks

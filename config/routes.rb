@@ -88,6 +88,7 @@ Rails.application.routes.draw do
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
+    patch '/course_enrollment', to: 'library#course_enrollment', as: :course_enrollment
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
