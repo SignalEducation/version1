@@ -38,6 +38,10 @@
           =f.text_area :second_description, placeholder: t('views.users.form.second_description'), class: 'form-control', style: 'border-radius: 6px;'
 
     .col-md-6
+      =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
       =f.label :address, t('views.users.form.address'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
