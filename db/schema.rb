@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160827084718) do
+ActiveRecord::Schema.define(version: 20160827140411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -497,6 +497,9 @@ ActiveRecord::Schema.define(version: 20160827084718) do
     t.boolean  "live_mode",         default: false
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
+    t.boolean  "active",            default: false
+    t.integer  "currency_id"
+    t.decimal  "price"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree

@@ -17,6 +17,9 @@
           .col-md-6
             %h1.h1.h-separator.h-separator-left
               =@course.name
+            %h1.h1.h-separator.h-separator-left
+              -product = @course.products.in_currency(current_user.country.currency_id).last
+              =product.price
             %p.h4.l-margin-top
               ='About this Course'
             %p

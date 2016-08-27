@@ -10,6 +10,9 @@
 #  live_mode         :boolean          default(FALSE)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  active            :boolean          default(FALSE)
+#  currency_id       :integer
+#  price             :decimal(, )
 #
 
 require 'rails_helper'

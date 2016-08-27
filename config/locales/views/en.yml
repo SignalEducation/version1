@@ -723,10 +723,11 @@ en:
       form:
         name: Name
         name_placeholder: Name of Product
+        price: Price
+        price_placeholder: Price of Product
         active: Active
         currency: Currency
         subject_course: Course
-        price: Price
 
       index:
         h1: Products

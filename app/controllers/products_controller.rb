@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: products
+#
+#  id                :integer          not null, primary key
+#  name              :string
+#  subject_course_id :integer
+#  mock_exam_id      :integer
+#  stripe_guid       :string
+#  live_mode         :boolean          default(FALSE)
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  active            :boolean          default(FALSE)
+#  currency_id       :integer
+#  price             :decimal(, )
+#
+
 class ProductsController < ApplicationController
 
   before_action :logged_in_required
@@ -23,8 +40,7 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(allowed_params)
-    #stripe_product = Stripe::Product.create(name: product.name, shippable: false, active: product.active, livemode: product.live_mode)
-    stripe_product = Stripe::Product.create(name: @product.name, shippable: false)
+    stripe_product = Stripe::Product.create(name: product.name, shippable: false, active: product.active, livemode: product.live_mode)
     @product.live_mode = stripe_product.livemode
     @product.stripe_guid = stripe_product.id
 
@@ -38,9 +54,17 @@ class ProductsController < ApplicationController
 
 
   def update
-    if @product.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.products.update.flash.success')
-      redirect_to products_url
+    stripe_product = Stripe::Product.retrieve(id: @product.stripe_guid)
+    stripe_product.name = @product.name
+    stripe_product.active = @product.active
+    if stripe_product.save
+      @product.live_mode = stripe_product.livemode
+      if @product.update_attributes(allowed_params)
+        flash[:success] = I18n.t('controllers.products.update.flash.success')
+        redirect_to products_url
+      else
+        render action: :edit
+      end
     else
       render action: :edit
     end
@@ -68,7 +92,7 @@ class ProductsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:product).permit(:name, :active, :subject_course_id, :mock_exam_id, :price, :currency_id)
+    params.require(:product).permit(:name, :active, :subject_course_id, :mock_exam_id, :price, :currency_id, :livemode)
   end
 
 end

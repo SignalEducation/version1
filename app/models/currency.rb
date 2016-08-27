@@ -24,10 +24,10 @@ class Currency < ActiveRecord::Base
   # Constants
 
   # relationships
-  # todo has_many :corporate_customer_prices
   has_many :countries
   has_many :invoices
   has_many :invoice_line_items
+  has_many :products
   has_many :subscription_plans
   has_many :subscription_transactions
 
