@@ -61,28 +61,14 @@ class SubjectCoursesController < ApplicationController
 
   def new
     @subject_course = SubjectCourse.new(sorting_order: 1)
-    @subject_course.build_product
-
     @subject_course.tutor_id = current_user.id if current_user.tutor?
-
   end
 
   def edit
   end
 
   def create
-    binding.pry
     @subject_course = SubjectCourse.new(allowed_params)
-    if params[:subject_course][:products][:name]
-      @product = Product.new(name: params[:subject_course][:products][:name])
-      product = Stripe::Product.create(name: @product.name)
-      if product
-        @product.stripe_guid = product.id
-        @product.live_mode = product.livemode
-      end
-
-    end
-
     if current_user.corporate_customer?
       @subject_course.corporate_customer_id = current_user.corporate_customer_id
       @subject_course.live = true
