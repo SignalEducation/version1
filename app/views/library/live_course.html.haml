@@ -17,9 +17,10 @@
           .col-md-6
             %h1.h1.h-separator.h-separator-left
               =@course.name
-            %h1.h1.h-separator.h-separator-left
-              -product = @course.products.in_currency(current_user.country.currency_id).last
-              =product.price
+            -if @course.products.any?
+              %h1.h1
+                -product = @course.products.in_currency(current_user.country.currency_id).last
+                =number_in_local_currency(product.price, product.currency_id)
             %p.h4.l-margin-top
               ='About this Course'
             %p

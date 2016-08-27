@@ -147,6 +147,27 @@ en:
       new:
         h1: New Category
 
+    subject_course_categories:
+      form:
+        name: Name
+        name_placeholder: Category Name
+        payment_type: Payment Type
+        active: Active
+        subdomain: Subdomain
+        subdomain_placeholder: Subdomain - Optional
+
+      index:
+        h1: Course Categories
+
+      show:
+        h1: Course Category
+
+      edit:
+        h1: Edit Course Category
+
+      new:
+        h1: New Course Category
+
     corporate_customers:
       form:
         organisation_name: Name
@@ -917,6 +938,7 @@ en:
         tutor_id: Tutor
         live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
+        subject_course_category_id: Course Category
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
@@ -939,9 +961,6 @@ en:
         cpd_pass_rate: Pass Rate for this course
         cpd_pass_rate_placeholder: CPD Pass Rate
 
-        products:
-          name: Stripe Product Name
-          name_placeholder: Name for Course Product on Stripe
 
       index:
         h1: Courses

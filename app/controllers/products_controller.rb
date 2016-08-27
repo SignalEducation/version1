@@ -86,8 +86,8 @@ class ProductsController < ApplicationController
       @product = Product.where(id: params[:id]).first
     end
     @currencies = Currency.all_in_order
-    #@subject_courses = SubjectCourse.all_active.all_in_order.all_non_subscription.where(products.any? == nil)
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @product_category = SubjectCourseCategory.all_product.first
+    @subject_courses = SubjectCourse.all_active.all_in_order.in_category(@product_category.id)
     seo_title_maker(@product.try(:name) || 'Products', '', true)
   end
 

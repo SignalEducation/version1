@@ -33,6 +33,7 @@
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
 #  enrollment_option                       :boolean          default(FALSE)
+#  subject_course_category_id              :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -42,12 +43,13 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid
+ :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id
 
   # Constants
 
   # relationships
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  belongs_to :subject_course_category
   has_and_belongs_to_many :groups
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
@@ -88,6 +90,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
+  scope :in_category, lambda { |cat_id| where(subject_course_category_id: cat_id) }
 
   # class methods
   def self.get_by_name_url(the_name_url)

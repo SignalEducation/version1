@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160827140411) do
+ActiveRecord::Schema.define(version: 20160827145218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -698,6 +698,18 @@ ActiveRecord::Schema.define(version: 20160827140411) do
   add_index "student_exam_tracks", ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id", using: :btree
   add_index "student_exam_tracks", ["user_id"], name: "index_student_exam_tracks_on_user_id", using: :btree
 
+  create_table "subject_course_categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "payment_type"
+    t.boolean  "active",       default: false
+    t.string   "subdomain"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "subject_course_categories", ["name"], name: "index_subject_course_categories_on_name", using: :btree
+  add_index "subject_course_categories", ["subdomain"], name: "index_subject_course_categories_on_subdomain", using: :btree
+
   create_table "subject_course_user_logs", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "session_guid"
@@ -749,6 +761,7 @@ ActiveRecord::Schema.define(version: 20160827140411) do
     t.boolean  "certificate",                             default: false, null: false
     t.string   "hotjar_guid"
     t.boolean  "enrollment_option",                       default: false
+    t.integer  "subject_course_category_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

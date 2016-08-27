@@ -138,6 +138,7 @@ Rails.application.routes.draw do
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
     resources :subscription_plan_categories
+    resources :subject_course_categories
     resources :tutor_applications
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     get 'careers', to: 'footer_pages#careers'

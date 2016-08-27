@@ -23,8 +23,8 @@
         .col-sm-8.col-sm-offset-4
           .checkbox
             %label
-              -#=f.check_box :active
-              -#=t('views.currencies.form.active')
+              =f.check_box :active
+              =t('views.currencies.form.active')
 
   .row
     =f.submit t('views.general.save'), class: 'btn btn-red'
