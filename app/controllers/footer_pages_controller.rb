@@ -2,6 +2,10 @@ class FooterPagesController < ApplicationController
 
   before_action :get_variables, except: [:missing_page]
 
+  def business
+    seo_title_maker('Why LearnSignal Training', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
+  end
+
   def why_learn_signal
     seo_title_maker('Why LearnSignal Training', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
   end

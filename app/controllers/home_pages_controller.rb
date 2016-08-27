@@ -9,6 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
+#  group_id                      :integer
+#  subject_course_id             :integer
 #
 
 class HomePagesController < ApplicationController
@@ -25,53 +27,45 @@ class HomePagesController < ApplicationController
   end
 
   def show
-    if current_corporate
+    if current_user
       redirect_to root_url
-    elsif params[:first_element].to_s == '' && current_user
-      redirect_to dashboard_url
-    elsif params[:first_element].to_s == '500-page'
-      render file: 'public/500.html', layout: nil, status: 500
     else
-      first_element = '/' + params[:first_element].to_s
-      @home_page = HomePage.where(public_url: first_element).first
-      @user = User.new
-      @topic_interests = Group.all_active.all_in_order.for_public
-      @url_value = params[:first_element].to_s.upcase
-      session[:sign_up_errors].each do |k, v|
-        v.each { |err| @user.errors.add(k, err) }
-      end if session[:sign_up_errors]
-      session.delete(:sign_up_errors)
+      @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
+      if @course_home_page_urls.include?(@first_element) || request.subdomain == 'course'
 
-      country = IpAddress.get_country(request.remote_ip)
-      if country
-        @currency_id = country.currency_id
-        @user.country_id = country.id
+        render :courses_show
       else
-        @currency_id = Currency.find_by_iso_code('GBP').id
-        @user.country_id = Country.find_by_name('United Kingdom').id
-      end
-      @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
-      #@user.country_id = 105
-      # @user.subscriptions.build(subscription_plan_id: SubscriptionPlan.where(price: 0.0).pluck(:id).first)
-      @group1 = Group.where(name_url: 'it-skills').first
-      @group2 = Group.where(name_url: 'it-operations').first
-      @group3 = Group.where(name_url: 'business').first
-      @group4 = Group.where(name_url: 'acca-revision').first
-      @group5 = Group.where(name_url: 'cfa-revision').first
-      if @home_page
-        seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-        cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
-        if @home_page.public_url == '/acca'
-          render :acca
-        elsif @home_page.public_url == '/cfa'
-          render :cfa
-        elsif @home_page.public_url == '/wso'
-          render :wso
-        elsif @home_page.public_url == '/business'
-          render :business
+        @home_page = HomePage.find_by_public_url(@first_element)
+
+        # Create user object and necessary variables
+        @user = User.new
+        session[:sign_up_errors].each do |k, v|
+          v.each { |err| @user.errors.add(k, err) }
+        end if session[:sign_up_errors]
+        session.delete(:sign_up_errors)
+        country = IpAddress.get_country(request.remote_ip)
+        if country
+          @currency_id = country.currency_id
+          @user.country_id = country.id
+        else
+          @currency_id = Currency.find_by_iso_code('GBP').id
+          @user.country_id = Country.find_by_name('United Kingdom').id
         end
+        @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+
+        @group = @home_page.try(:group)
+        @url_value = @group.try(:name) || params[:home_pages_public_url].to_s.upcase
+
+        if @home_page
+          seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+          cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+        else
+          seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+        end
+
       end
+
     end
   end
 
@@ -171,6 +165,10 @@ class HomePagesController < ApplicationController
       @home_page = HomePage.where(id: params[:id]).first
     end
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
+    @course_home_page_urls = HomePage.for_courses.map(&:public_url)
+    @group_home_page_urls = HomePage.for_groups.map(&:public_url)
+    @groups = Group.all_active.all_in_order.for_public
+    @subject_courses = SubjectCourse.all_active.all_in_order.for_public
   end
 
   def layout_variables
@@ -179,7 +177,7 @@ class HomePagesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:home_page).permit(:seo_title, :seo_description, :subscription_plan_category_id, :public_url)
+    params.require(:home_page).permit(:seo_title, :seo_description, :subscription_plan_category_id, :public_url, :group_id, :subject_course_id)
   end
 
   def student_allowed_params

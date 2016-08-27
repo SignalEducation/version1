@@ -106,14 +106,12 @@ Rails.application.routes.draw do
       patch 'update_courses', action: :update_courses
       put 'update_courses', action: :update_courses
     end
-
-    get 'home', to: 'home_pages#show', as: :home
-    get 'acca', to: 'home_pages#show', first_element: 'acca', as: :acca
-    get 'cfa', to: 'home_pages#show', first_element: 'cfa', as: :cfa
-    get 'wso', to: 'home_pages#show', first_element: 'wso', as: :wso
-    get 'business', to: 'home_pages#show', first_element: 'business', as: :business
-    get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     resources :home_pages, except: [:destroy]
+    get 'home', to: 'home_pages#show', as: :home
+    get ':home_pages_public_url', to: 'home_pages#show'
+
+    get 'pricing', to: 'subscription_plans#public_index', as: :pricing
+    get 'business', to: 'footer_pages#business', as: :business_url
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     get '/student_new', to: 'users#student_new', as: :new_student
     post '/student_create', to: 'users#student_create', as: :create_student
@@ -134,6 +132,7 @@ Rails.application.routes.draw do
     resources :static_page_uploads, only: [:create]
     resources :subject_courses, concerns: :supports_reordering
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
+
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans

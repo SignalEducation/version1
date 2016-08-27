@@ -9,6 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
+#  group_id                      :integer
+#  subject_course_id             :integer
 #
 
 class HomePage < ActiveRecord::Base
@@ -16,12 +18,14 @@ class HomePage < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :seo_title, :seo_description, :subscription_plan_category_id, :public_url
+  attr_accessible :seo_title, :seo_description, :subscription_plan_category_id, :public_url, :group_id, :subject_course_id
 
   # Constants
 
   # relationships
   belongs_to :subscription_plan_category
+  belongs_to :group
+  belongs_to :subject_course
 
   # validation
   validates :seo_title, presence: true, length: {maximum: 255}
@@ -34,6 +38,8 @@ class HomePage < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:seo_title) }
+  scope :for_groups, -> { where.not(group_id: nil) }
+  scope :for_courses, -> { where.not(subject_course_id: nil) }
 
   # class methods
 
