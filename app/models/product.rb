@@ -21,6 +21,7 @@ class Product < ActiveRecord::Base
 
   # relationships
   belongs_to :subject_course
+  #belongs_to :currency
   #belongs_to :mock_exam
 
   # validation

@@ -127,6 +127,7 @@ Rails.application.routes.draw do
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
+    resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index]
     resources :static_pages

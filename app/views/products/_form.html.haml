@@ -1,0 +1,27 @@
+=form_for(@product, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @product, message: nil}
+  .row
+    .col-md-8.col-md-offset-2
+      =f.label :name, t('views.products.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.products.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      -#=f.label :currency_id, t('views.products.form.currency'), class: 'control-label'
+      -#.input-group.input-group-lg.full-width
+        =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
+      =f.label :subject_course_id, t('views.products.form.subject_course'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+
+      %br/
+      .form-group
+        .col-sm-8.col-sm-offset-4
+          .checkbox
+            %label
+              -#=f.check_box :active
+              -#=t('views.currencies.form.active')
+
+  .row
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), products_path, class: 'btn btn-cyan'

@@ -57,9 +57,8 @@ class SubjectCourse < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :corporate_group_grants
-  has_one :product
+  has_many :products
 
-  accepts_nested_attributes_for :product
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}

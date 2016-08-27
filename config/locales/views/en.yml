@@ -719,6 +719,27 @@ en:
         continue_course: Continue Course
         start_course: Start Course
 
+    products:
+      form:
+        name: Name
+        name_placeholder: Name of Product
+        active: Active
+        currency: Currency
+        subject_course: Course
+        price: Price
+
+      index:
+        h1: Products
+
+      show:
+        h1: Product
+
+      edit:
+        h1: Edit Product
+
+      new:
+        h1: New Product
+
     question_banks:
       form:
         name: Name
