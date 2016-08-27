@@ -16,6 +16,15 @@
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           %br/
+
+          =f.fields_for :stripe_products do |product|
+            =product.label :name, t('views.subject_courses.form.products.name'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =product.text_field :name, placeholder: t('views.subject_courses.form.products.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+
+
+          %br/
           -unless current_corporate
             =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
             .input-group.input-group-lg.full-width

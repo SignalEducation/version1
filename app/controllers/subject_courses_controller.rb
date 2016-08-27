@@ -32,6 +32,7 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
+#  enrollment_option                       :boolean          default(FALSE)
 #
 
 class SubjectCoursesController < ApplicationController
@@ -59,18 +60,29 @@ class SubjectCoursesController < ApplicationController
   end
 
   def new
-    if current_user.tutor?
-      @subject_course = SubjectCourse.new(sorting_order: 1, tutor_id: current_user.id)
-    else
-      @subject_course = SubjectCourse.new(sorting_order: 1)
-    end
+    @subject_course = SubjectCourse.new(sorting_order: 1)
+    @subject_course.build_product
+
+    @subject_course.tutor_id = current_user.id if current_user.tutor?
+
   end
 
   def edit
   end
 
   def create
+    binding.pry
     @subject_course = SubjectCourse.new(allowed_params)
+    if params[:subject_course][:products][:name]
+      @product = Product.new(name: params[:subject_course][:products][:name])
+      product = Stripe::Product.create(name: @product.name)
+      if product
+        @product.stripe_guid = product.id
+        @product.live_mode = product.livemode
+      end
+
+    end
+
     if current_user.corporate_customer?
       @subject_course.corporate_customer_id = current_user.corporate_customer_id
       @subject_course.live = true
@@ -141,7 +153,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, product_attributes: [:name])
   end
 
 end

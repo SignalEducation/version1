@@ -917,6 +917,10 @@ en:
         cpd_pass_rate: Pass Rate for this course
         cpd_pass_rate_placeholder: CPD Pass Rate
 
+        products:
+          name: Stripe Product Name
+          name_placeholder: Name for Course Product on Stripe
+
       index:
         h1: Courses
         your_courses: Courses
