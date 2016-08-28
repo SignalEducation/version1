@@ -108,6 +108,7 @@ Rails.application.routes.draw do
     end
     resources :home_pages, except: [:destroy]
     get 'home', to: 'home_pages#show', as: :home
+    get 'courses_home', to: 'home_pages#show', default: 'courses_home', as: :courses_home
     get ':home_pages_public_url', to: 'home_pages#show'
 
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing

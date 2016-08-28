@@ -31,11 +31,26 @@ class HomePagesController < ApplicationController
       redirect_to root_url
     else
       @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
-      if @course_home_page_urls.include?(@first_element) || request.subdomain == 'course'
+      @default_element = params[:default] if params[:default]
 
+      if @default_element == 'courses_home' || @course_home_page_urls.include?(@first_element) || request.subdomain == 'courses'
+        @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+        @courses = @product_course_category.subject_courses
+        if @course_home_page_urls.include?(@first_element)
+          #This section is for showing the Course landing pages
+          @home_page = HomePage.find_by_public_url(@first_element)
+          @course = @home_page.subject_course
+
+        else
+          #This section is for showing the Default Course landing page
+
+
+
+        end
         render :courses_show
       else
 
+        #This section is for showing the Group landing pages which are also the default
         @home_page = HomePage.find_by_public_url(@first_element)
 
         # Create user object and necessary variables
@@ -165,6 +180,8 @@ class HomePagesController < ApplicationController
       @home_page = HomePage.where(id: params[:id]).first
     end
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @product_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
     @groups = Group.all_active.all_in_order.for_public

@@ -1,4 +1,5 @@
--if @first_element
+-if @first_element && File.exists?(Rails.root.join('app', 'views', 'home_pages', 'product_pages', "_#{@first_element}.html.haml"))
   =render partial: "home_pages/product_pages/#{@first_element}"
 -else
   =render partial: 'home_pages/product_pages/default'
+

@@ -10,7 +10,7 @@ class RoutesController < ApplicationController
     else
       if !request.subdomain.empty?
         case request.subdomain
-          when 'www', '', nil, 'learnsignal', 'staging', 'acca', 'cfa', 'forum', 'jobs'
+          when 'www', '', nil, 'learnsignal', 'staging', 'acca', 'cfa', 'forum', 'jobs', 'courses'
             redirect_to home_url
           else
             redirect_to corporate_home_url

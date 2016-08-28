@@ -1,66 +1,50 @@
-.hero-home
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  .header{role: 'banner'}
-    .l-wrap
-      .container-fluid
-        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
-          .navbar-header
-            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-              %span.icon-bar
-              %span.icon-bar
-              %span.icon-bar
-            =link_to root_url do
-              =image_tag('ls-logo-red.svg', class: 'logo')
-          #myNavbar.collapse.navbar-collapse
-            %ul.nav.navbar-nav.navbar-right
-              %li
-                =link_to 'Why Learn Signal', why_learn_signal_url
-              %li
-                %a{href: 'http://blog.learnsignal.com/', target: '_blank'}
-                  ='Blog'
-              %li
-                =link_to 'Pricing', pricing_url
-              %li
-                =link_to 'Library', library_url
-              %li
-                =link_to 'Sign In', sign_in_url
-              %li
-                =link_to 'Sign Up', new_student_url, class: 'sign-up-link'
+-# This view will display info on all current Product Category Subject Courses
 
-.course-types
-  .l-wrap-big
-    .l-section-small
-      .container-fluid
+=render partial: 'layouts/navbar'
+.margin-top
+
+.l-section-library.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-12.text-center.l-margin-bottom
+          %h1.h1.h-separator.h-separator-center.l-margin-bottom
+            Browse Courses
+
+  .l-wrap.l-margin-top
+    .container-fluid
+      .course-list-wrap
         .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
-              Browse Courses
-        .row
-          .col-sm-4
-            =link_to library_url, class: 'image-link' do
-              .home-image-1
-                .hero-inner-wide
-                  %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
-                    Professional Qualifications
-                  %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Revision courses for ACCA, CFA and FRM professional exams.
-          .col-sm-4
-            =link_to library_special_link(@group2), class: 'image-link' do
-              .home-image-2
-                .hero-inner-wide
-                  %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
-                    IT Operations
-                  %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Develop your skills in Excel, Access and Tableau.
-          .col-sm-4
-            =link_to library_special_link(@group3), class: 'image-link' do
-              .home-image-3
-                .hero-inner-wide
-                  %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
-                    Business Professionals
-                  %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Leadership, Management and Communication skills to prepare your future business leaders.
+          -@courses.each do |course|
+            .col-sm-6.col-md-4
+              =link_to library_special_link(course), class: 'card card-course' do
+                .card-outer
+                  .card-inner
+                    %h3.h3.card-title.l-margin-bottom
+                      =course.try(:name)
+                    %p.card-desc
+                      =course.try(:short_description).truncate(185)
+                  .card-info
+                    .col-md-6.col-xs-6
+                      -if course.try(:live_date)
+                        .days-left
+                          .h8.text-center
+                            =humanize_datetime(course.live_date)
+                    .col-md-6.col-xs-6
+                      -if course.total_video_duration.to_i > 0
+                        %h6.pull-right
+                          =simple_time(course.total_video_duration)
+
+                .card-label
+                  .row
+                    .col-md-12.col-xs-12
+                      .col-md-6.col-xs-6
+                        %h6
+                          =t('views.general.browse')
+                      .col-md-6.col-xs-6.text-right
+
+
+
 
 .business
   .l-wrap
@@ -89,75 +73,3 @@
               Expert Author Network
             %p.p
               Learn from the best with training designed and developed by industry experts.
-
-.features.is-bg-asphalt
-  .l-wrap-big
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center
-              What's New
-        .row
-          .col-sm-4
-            .hero-inner-wide
-              %h3.h4.l-margin-bottom-big
-                %a{href: 'http://blog.learnsignal.com/on-demand/maximise-employee-memory-retention-with-on-demand-training', target: '_blank', rel: 'nofollow'}
-                  .blog-image-1
-                  %br/
-                  %br/
-                  %br/
-                  %h3.h3.text-center
-                    ='Maximise employee memory retention with on-demand training'
-
-          .col-sm-4
-            .hero-inner-wide
-              %h3.h4.l-margin-bottom-big
-                %a{href: 'http://blog.learnsignal.com/on-demand/meeting-millennials-needs-with-on-demand-learning', target: '_blank', rel: 'nofollow'}
-                  .blog-image-2
-                  %br/
-                  %br/
-                  %br/
-                  %h3.h3.text-center
-                    ='Meeting millennials’ needs with on-demand learning'
-
-          .col-sm-4
-            .hero-inner-wide
-              %h3.h4.l-margin-bottom-big
-                %a{href: 'http://blog.learnsignal.com/on-demand/can-e-learning-really-improve-employee-retention', target: '_blank', rel: 'nofollow'}
-                  .blog-image-3
-                  %br/
-                  %br/
-                  %br/
-                  %h3.h3.text-center
-                    ='Can e-learning really improve employee retention?'
-
-
-.testimonials
-  .l-wrap
-    .l-section
-      .testimonial
-        .container-fluid
-          .row
-            .col-sm-12
-              %h2.h5.text-center
-                Testimonials
-              %p.h2.upcase.text-center.h-separator.h-separator-center
-                What your peers are saying
-          .row
-            .col-sm-6.col-sm-offset-3
-              .testimonial
-                .testimonial-pic-wrap
-                  =image_tag('testimonial-mike-pic.jpg', class: 'testimonial-pic')
-                %p.p
-                  When I signed up for Level I, I had 85 days to put in the 300 hours of studying while working full time. I had just finished my undergrad in Math and even though I had no finance background, I was confident that I could handle the material.
-                %p.p
-                  The challenge would be covering everything and having enough time to do mock exams. Learn Signal was the perfect solution.
-
-                %p.p
-                  The videos were quick, very well presented and contained only the essential information. The tests at the end of each section were helpful at highlighting gaps in my knowledge. I'm not sure I would have finished the material in time and passed the exam had I not used Learn Signal.
-                %p.p
-                  %strong.testimonial-sig
-                    Mike Sinclair
-                  %br/
-                  Risk Analyst Architect
