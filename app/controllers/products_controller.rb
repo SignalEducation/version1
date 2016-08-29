@@ -13,6 +13,7 @@
 #  active            :boolean          default(FALSE)
 #  currency_id       :integer
 #  price             :decimal(, )
+#  stripe_sku_guid   :string
 #
 
 class ProductsController < ApplicationController
@@ -43,7 +44,17 @@ class ProductsController < ApplicationController
     stripe_product = Stripe::Product.create(name: product.name, shippable: false, active: product.active, livemode: product.live_mode)
     @product.live_mode = stripe_product.livemode
     @product.stripe_guid = stripe_product.id
-
+    #Move this to the model
+    stripe_sku = Stripe::SKU.create(
+                                currency: @product.currency.iso_code,
+                                price: (@product.price.to_f * 100).to_i,
+                                product: @product.stripe_guid,
+                                active: @product.active,
+                                inventory: {
+                                    type: 'infinite'
+                                }
+    )
+    @product.stripe_sku_guid = stripe_sku.id
     if @product.save
       flash[:success] = I18n.t('controllers.products.create.flash.success')
       redirect_to products_url
@@ -54,17 +65,15 @@ class ProductsController < ApplicationController
 
 
   def update
+    #Move this to the model
     stripe_product = Stripe::Product.retrieve(id: @product.stripe_guid)
     stripe_product.name = @product.name
     stripe_product.active = @product.active
-    if stripe_product.save
-      @product.live_mode = stripe_product.livemode
-      if @product.update_attributes(allowed_params)
-        flash[:success] = I18n.t('controllers.products.update.flash.success')
-        redirect_to products_url
-      else
-        render action: :edit
-      end
+    @product.live_mode = stripe_product.livemode
+
+    if @product.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.products.update.flash.success')
+      redirect_to products_url
     else
       render action: :edit
     end
@@ -92,7 +101,7 @@ class ProductsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:product).permit(:name, :active, :subject_course_id, :mock_exam_id, :price, :currency_id, :livemode)
+    params.require(:product).permit(:name, :active, :subject_course_id, :mock_exam_id, :price, :currency_id, :livemode, :stripe_sku_guid)
   end
 
 end

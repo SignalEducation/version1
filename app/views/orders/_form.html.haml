@@ -1,39 +1,18 @@
 =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =f.hidden_field :stripe_token
   .row
     .col-md-12
     =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
       .form-group
-        =f.label :product_id, t('views.orders.form.product_id'), class: 'control-label col-sm-4'
+        =f.label :subject_course_id, 'Course', class: 'control-label col-sm-4'
         .col-sm-8
-          =f.collection_select :product_id, @products, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+          =f.collection_select :subject_course_id, @courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
       .form-group
-        =f.label :subject_course_id, t('views.orders.form.subject_course_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      .form-group
-        =f.label :stripe_guid, t('views.orders.form.stripe_guid'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :stripe_guid, placeholder: t('views.orders.form.stripe_guid_placeholder'), class: 'form-control'
-      .form-group
-        =f.label :stripe_customer_id, t('views.orders.form.stripe_customer_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_select :stripe_customer_id, @stripe_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      .form-group
-        .col-sm-8.col-sm-offset-4
-          .checkbox
-            %label
-              =f.check_box :live_mode
-              =t('views.orders.form.live_mode')
-      .form-group
-        =f.label :current_status, t('views.orders.form.current_status'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :current_status, placeholder: t('views.orders.form.current_status_placeholder'), class: 'form-control'
-      .form-group
-        =f.label :coupon_code, t('views.orders.form.coupon_code'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :coupon_code, placeholder: t('views.orders.form.coupon_code_placeholder'), class: 'form-control'
+        =f.fields_for :order_items do |item|
+          =item.hidden_field :quantity, value: 1
 
-      .row.l-margin-top-big
-        =f.submit t('views.general.save'), class: 'btn btn-red'
-        =t('views.general.or')
-        =link_to t('views.general.cancel'), orders_path, class: 'btn btn-cyan'
+
+    .row.l-margin-top-big
+      =f.submit t('views.general.save'), class: 'btn btn-red'
+      =t('views.general.or')
+      =link_to t('views.general.cancel'), orders_path, class: 'btn btn-cyan'

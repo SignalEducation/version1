@@ -18,7 +18,7 @@
 class Order < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status
+  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_token
 
   # Constants
 
@@ -54,6 +54,17 @@ class Order < ActiveRecord::Base
   def destroyable?
     false
   end
+
+  # setter method
+  def stripe_token=(t)
+    @stripe_token = t
+  end
+
+  # getter method
+  def stripe_token
+    @stripe_token
+  end
+
 
   protected
 

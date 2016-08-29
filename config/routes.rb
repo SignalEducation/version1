@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :orders
   concern :supports_reordering do
     post :reorder, on: :collection
   end
@@ -110,7 +109,7 @@ Rails.application.routes.draw do
     resources :home_pages, except: [:destroy]
     get 'home', to: 'home_pages#show', as: :home
     get 'courses_home', to: 'home_pages#show', default: 'courses_home', as: :courses_home
-    get ':home_pages_public_url', to: 'home_pages#show'
+
 
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'business', to: 'footer_pages#business', as: :business_url
@@ -127,6 +126,7 @@ Rails.application.routes.draw do
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
+    resources :orders
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index]
@@ -166,6 +166,8 @@ Rails.application.routes.draw do
     get 'white_paper/:white_paper_name_url', to: 'white_papers#show', as: :public_white_paper
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
+
+    get ':home_pages_public_url', to: 'home_pages#show'
 
     constraints(Subdomain) do
       get '/' => 'routes#root'

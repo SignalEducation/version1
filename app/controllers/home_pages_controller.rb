@@ -27,8 +27,10 @@ class HomePagesController < ApplicationController
   end
 
   def show
+    #There is an infinite redirect here when home_pages_public_url has a value - keeps redirecting to this method
+
     if current_user
-      redirect_to root_url
+      redirect_to dashboard_url
     else
       @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
       @default_element = params[:default] if params[:default]

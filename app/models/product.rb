@@ -13,6 +13,7 @@
 #  active            :boolean          default(FALSE)
 #  currency_id       :integer
 #  price             :decimal(, )
+#  stripe_sku_guid   :string
 #
 
 class Product < ActiveRecord::Base
@@ -21,7 +22,7 @@ class Product < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :mock_exam_id, :active, :currency_id, :price
+  attr_accessible :name, :subject_course_id, :mock_exam_id, :active, :currency_id, :price, :stripe_sku_guid
 
   # Constants
 
@@ -39,6 +40,7 @@ class Product < ActiveRecord::Base
   validates :stripe_guid, presence: true, uniqueness: true
   validates :currency_id, presence: true
   validates :price, presence: true
+  validates :stripe_sku_guid, presence: true, uniqueness: true
 
   # callbacks
   before_destroy :check_dependencies

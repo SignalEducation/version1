@@ -147,6 +147,21 @@ en:
       new:
         h1: New Category
 
+    orders:
+
+      index:
+        h1: Orders
+        subject_course_id: Course
+        user_id: User
+        current_status: Status
+        stripe_guid: Stripe Order ID
+
+      show:
+        h1: Order
+
+      new:
+        h1: New Order
+
     subject_course_categories:
       form:
         name: Name

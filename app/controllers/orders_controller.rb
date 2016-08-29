@@ -17,10 +17,10 @@
 
 class OrdersController < ApplicationController
 
-  before_action :logged_in_required, except: :new
-  #before_action do
-  #  ensure_user_is_of_type(['admin'])
-  #end
+  before_action :logged_in_required, except: [:new, :create]
+  before_action except: [:new, :create] do
+    ensure_user_is_of_type(['admin'])
+  end
   before_action :get_variables
 
   def index
@@ -34,12 +34,46 @@ class OrdersController < ApplicationController
     @order = Order.new
   end
 
-  def edit
-  end
-
   def create
-    @order = Order.new(allowed_params)
-    @order.user_id = current_user.id
+
+    if params[:order] && params[:order][:subject_course_id] && params[:order][:stripe_token]
+
+      user = current_user
+      subject_course_id = params[:order][:subject_course_id]
+      product = Product.find_by_subject_course_id(subject_course_id)
+      currency = Currency.find(product.currency_id)
+      stripe_token = params[:order][:stripe_token]
+
+      @order = Order.new(allowed_params)
+      @order.user_id = user.id
+      @order.product_id = product.id
+
+      stripe_order = Stripe::Order.create(
+          currency: currency.iso_code,
+          customer: user.stripe_customer_id,
+          email: user.email,
+          items: [{
+                      amount: (product.price.to_f * 100).to_i,
+                      currency: currency.iso_code,
+                      quantity: 1,
+                      parent: product.stripe_sku_guid
+                  }]
+      )
+
+      @order.stripe_customer_id = stripe_order.customer
+      @order.stripe_guid = stripe_order.id
+      @order.live_mode = stripe_order.livemode
+      @order.current_status = stripe_order.status
+
+      if @order.valid?
+        order = Stripe::Order.retrieve(@order.stripe_guid)
+        pay_order = order.pay(source: stripe_token)
+        #order_transaction = OrderTransaction.create_from_stripe_data(pay_order)
+      end
+    else
+      redirect_to new_order_url
+    end
+
     if @order.save
       flash[:success] = I18n.t('controllers.orders.create.flash.success')
       redirect_to orders_url
@@ -48,35 +82,18 @@ class OrdersController < ApplicationController
     end
   end
 
-  def update
-    if @order.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.orders.update.flash.success')
-      redirect_to orders_url
-    else
-      render action: :edit
-    end
-  end
-
-
-  def destroy
-    if @order.destroy
-      flash[:success] = I18n.t('controllers.orders.destroy.flash.success')
-    else
-      flash[:error] = I18n.t('controllers.orders.destroy.flash.error')
-    end
-    redirect_to orders_url
-  end
-
   protected
 
   def get_variables
     if params[:id].to_i > 0
       @order = Order.where(id: params[:id]).first
     end
+    @product_category = SubjectCourseCategory.all_product.first
+    @courses = SubjectCourse.all_active.all_in_order.in_category(@product_category.id)
   end
 
   def allowed_params
-    params.require(:order).permit(:product_id, :subject_course_id, :user_id)
+    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token)
   end
 
 end

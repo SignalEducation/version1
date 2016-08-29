@@ -13,6 +13,7 @@
 #  active            :boolean          default(FALSE)
 #  currency_id       :integer
 #  price             :decimal(, )
+#  stripe_sku_guid   :string
 #
 
 require 'rails_helper'
