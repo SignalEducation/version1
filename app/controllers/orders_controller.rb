@@ -68,7 +68,7 @@ class OrdersController < ApplicationController
       if @order.valid?
         order = Stripe::Order.retrieve(@order.stripe_guid)
         pay_order = order.pay(source: stripe_token)
-        #order_transaction = OrderTransaction.create_from_stripe_data(pay_order)
+        OrderTransaction.create_from_stripe_data(pay_order, user.id, order.id, product.id)
       end
     else
       redirect_to new_order_url
