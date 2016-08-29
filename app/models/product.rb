@@ -29,6 +29,7 @@ class Product < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :currency
   #belongs_to :mock_exam
+  has_many :orders
 
   # validation
   validates :name, presence: true, uniqueness: true

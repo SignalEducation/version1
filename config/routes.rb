@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :orders
   concern :supports_reordering do
     post :reorder, on: :collection
   end

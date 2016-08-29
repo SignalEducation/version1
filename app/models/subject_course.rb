@@ -61,6 +61,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :subject_course_user_logs
   has_many :corporate_group_grants
   has_many :products
+  has_many :orders
 
 
   # validation

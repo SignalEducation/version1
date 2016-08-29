@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160827170757) do
+ActiveRecord::Schema.define(version: 20160829091453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -490,6 +490,25 @@ ActiveRecord::Schema.define(version: 20160827170757) do
   end
 
   add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
+
+  create_table "orders", force: :cascade do |t|
+    t.integer  "product_id"
+    t.integer  "subject_course_id"
+    t.integer  "user_id"
+    t.string   "stripe_guid"
+    t.string   "stripe_customer_id"
+    t.boolean  "live_mode",          default: false
+    t.string   "current_status"
+    t.string   "coupon_code"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
+  add_index "orders", ["product_id"], name: "index_orders_on_product_id", using: :btree
+  add_index "orders", ["stripe_customer_id"], name: "index_orders_on_stripe_customer_id", using: :btree
+  add_index "orders", ["stripe_guid"], name: "index_orders_on_stripe_guid", using: :btree
+  add_index "orders", ["subject_course_id"], name: "index_orders_on_subject_course_id", using: :btree
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
