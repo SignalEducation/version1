@@ -26,7 +26,6 @@ class Order < ActiveRecord::Base
   belongs_to :product
   belongs_to :subject_course
   belongs_to :user
-  has_many :order_items
 
   # validation
   validates :product_id, presence: true,
