@@ -1272,6 +1272,8 @@ en:
         forum_manager: Forum manager
         subscription_required_at_sign_up: Subscription required at sign up
         subscription_required_to_see_content: Subscription required to see content
+        product_required_to_see_content: Product required to see content
+        product_student: Product Student
 
       edit:
         h1: Edit User Group

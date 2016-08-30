@@ -25,6 +25,7 @@ class Order < ActiveRecord::Base
   attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_order_payment_data, :stripe_token
 
   # Constants
+  ORDER_STATUS = %w(created paid canceled)
 
   # relationships
   belongs_to :product

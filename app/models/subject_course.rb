@@ -108,6 +108,10 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   # instance methods
+  def users_allowed_access
+    self.orders.map(&:user_id) if self.subject_course_category_id == SubjectCourseCategory.all_product.first.id
+  end
+
   def active_children
     self.children.all_active.all_in_order
   end

@@ -261,6 +261,10 @@ class User < ActiveRecord::Base
       else
         return 'unknown_user_status'
       end
+    elsif self.product_student?
+      if self.valid_subject_course_ids.any?
+        return 'valid_course_member'
+      end
     else
       'other_user_group'
     end
@@ -360,6 +364,16 @@ class User < ActiveRecord::Base
     true if self.active_subscription && %w(active past_due).include?(self.active_subscription.current_status)
   end
 
+  def valid_subject_course_ids
+    subject_course_ids = []
+    self.orders.each do |order|
+      if %w(paid).include?(order.current_status)
+        subject_course_ids << order.subject_course_id
+      end
+    end
+    return subject_course_ids
+  end
+
   def active_subscription
     self.subscriptions.where(active: true).last
   end
@@ -370,24 +384,37 @@ class User < ActiveRecord::Base
     end
   end
 
-  def permission_to_see_content
-    if self.user_status == 'valid_free_member'
-      return true
-    elsif self.user_status == 'expired_free_member'
-      return false
-    elsif self.user_status == 'valid_paying_member'
-      return true
-    elsif self.user_status == 'canceled_paying_member'
-      return false
-    elsif self.user_status == 'cancel_pending_member'
-      return true
-    elsif self.user_status == 'expired_paying_member'
-      return false
-    elsif self.user_status == 'unknown_user_status'
-      return false
+  def permission_to_see_content(course)
+
+    if self.individual_student?
+      if self.user_status == 'valid_free_member'
+        return true
+      elsif self.user_status == 'expired_free_member'
+        return false
+      elsif self.user_status == 'valid_paying_member'
+        return true
+      elsif self.user_status == 'canceled_paying_member'
+        return false
+      elsif self.user_status == 'cancel_pending_member'
+        return true
+      elsif self.user_status == 'expired_paying_member'
+        return false
+      elsif self.user_status == 'unknown_user_status'
+        return false
+      else
+        return false
+      end
+
+    elsif self.product_student? && self.user_status == 'valid_course_member'
+      if valid_subject_course_ids.include?(course.id)
+        return true
+      else
+        return false
+      end
     else
       return false
     end
+
   end
 
 
@@ -491,6 +518,10 @@ class User < ActiveRecord::Base
 
   def individual_student?
     self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
+  end
+
+  def product_student?
+    self.user_group.try(:product_student) && self.corporate_customer_id.to_i == 0
   end
 
   def tutor?

@@ -207,18 +207,20 @@ class ApplicationController < ActionController::Base
     if current_user.nil?
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
-    elsif !current_user.user_group.subscription_required_to_see_content
+
+    elsif !current_user.user_group.subscription_required_to_see_content && !current_user.user_group.product_required_to_see_content
       result = allowed
-    elsif current_user.permission_to_see_content
+
+    elsif current_user.permission_to_see_content(@course)
       result = allowed
-    elsif !current_user.permission_to_see_content && current_user.expired_free_member?
+    elsif !current_user.permission_to_see_content(@course) && current_user.expired_free_member?
       result = not_allowed
       if current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
         result[:course_content][:reason] = "free_trial_limit_reached"
       else
         result[:course_content][:reason] = "free_trial_expired"
       end
-    elsif !current_user.permission_to_see_content && current_user.canceled_member?
+    elsif !current_user.permission_to_see_content(@course) && current_user.canceled_member?
       result = not_allowed
       result[:course_content][:reason] = 'account_canceled'
     else

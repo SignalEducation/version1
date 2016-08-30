@@ -17,6 +17,8 @@
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
 #  updated_at                           :datetime
+#  product_required_to_see_content      :boolean          default(FALSE)
+#  product_student                      :boolean          default(FALSE)
 #
 
 class UserGroup < ActiveRecord::Base
@@ -27,7 +29,8 @@ class UserGroup < ActiveRecord::Base
   attr_accessible :name, :description, :individual_student, :tutor, :content_manager,
                   :blogger, :corporate_customer, :site_admin, :forum_manager,
                   :subscription_required_at_sign_up, :corporate_student,
-                  :subscription_required_to_see_content
+                  :subscription_required_to_see_content, :product_required_to_see_content,
+                  :product_student
 
   # Constants
   FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger forum_manager content_manager admin)
@@ -53,15 +56,19 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_complimentary_user_group
-    where(individual_student: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, product_required_to_see_content: false, product_student: false).first
   end
 
   def self.default_student_user_group
-    where(individual_student: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, forum_manager: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
+    where(individual_student: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, forum_manager: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true, product_required_to_see_content: false, product_student: false).first
+  end
+
+  def self.default_product_student_user_group
+    where(individual_student: false, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, forum_manager: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, product_required_to_see_content: true, product_student: true).first
   end
 
   def self.default_tutor_user_group
-    where(individual_student: false, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, product_required_to_see_content: false, product_student: false).first
   end
 
   # instance methods
