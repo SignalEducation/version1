@@ -64,12 +64,12 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index]
-  before_action :logged_out_required, only: [:student_create, :student_new]
-  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :new_paid_subscription, :upgrade_from_free_trial, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :student_create, :create_subscription] do
+  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user]
+  before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user]
+  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index]
+  before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user]
 
   def index
     @users = params[:search_term].to_s.blank? ?
@@ -182,6 +182,58 @@ class UsersController < ApplicationController
         redirect_to personal_sign_up_complete_url
       else
         render action: :student_new
+      end
+    end
+  end
+
+  def new_product_user
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    @product = Product.where(subject_course_id: @course.id).first
+    @user = User.new
+    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
+    @topic_interests = Group.all_active.all_in_order.for_public
+    @navbar = false
+    @footer = false
+  end
+
+  def create_product_user
+
+    if current_user
+      redirect_to dashboard_url
+    else
+      @course = SubjectCourse.find(params[:user][:subject_course_id])
+      @product = Product.where(subject_course_id: @course.id).first
+      @navbar = false
+      @footer = false
+      @topic_interests = Group.all_active.all_in_order.for_public
+      @user = User.new(student_allowed_params)
+      @user.user_group_id = UserGroup.default_product_student_user_group.try(:id)
+      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
+      @user.account_activation_code = SecureRandom.hex(10)
+      @user.email_verification_code = SecureRandom.hex(10)
+      @user.password_confirmation = @user.password
+      # Check for CrushOffers cookie and assign it to the User
+      if cookies.encrypted[:crush_offers]
+        @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
+        cookies.delete(:crush_offers)
+      end
+      # Create the customer object on stripe
+      stripe_customer = Stripe::Customer.create(
+          email: @user.try(:email)
+      )
+      @user.stripe_customer_id = stripe_customer.id
+      @user.free_trial = false
+      @user.trial_limit_in_days = 0
+
+      if @user.valid? && @user.save
+        #TODO The Email needs to be replaced welcome to Course X at LearnSignal
+        MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+
+        user = User.get_and_activate(@user.account_activation_code)
+        UserSession.create(user)
+        redirect_to users_new_order_url(@course.name_url)
+      else
+        render action: :new_product_user
       end
     end
   end
@@ -449,7 +501,7 @@ class UsersController < ApplicationController
     if current_user.admin?
       params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest)
+      params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest, :subject_course_id)
     end
   end
 

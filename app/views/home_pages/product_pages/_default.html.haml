@@ -17,7 +17,7 @@
         .row
           -@courses.each do |course|
             .col-sm-6.col-md-4
-              =link_to library_special_link(course), class: 'card card-course' do
+              =link_to course.home_page.public_url, class: 'card card-course' do
                 .card-outer
                   .card-inner
                     %h3.h3.card-title.l-margin-bottom

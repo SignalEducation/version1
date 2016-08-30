@@ -1,0 +1,24 @@
+=render partial: 'layouts/navbar'
+
+
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-library.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-top-big
+        .col-md-6
+          %h1.h1.h-separator.h-separator-left
+            =@course.name
+          -if @course.products.any?
+            %h1.h1.l-margin-top
+              =number_in_local_currency(@product.price, @product.currency_id)
+          %p.h4.l-margin-top
+            ='About this Course'
+          %p
+            =@course.description.to_s.html_safe
+        .col-md-6
+          =link_to new_product_user_url(@course.name_url), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px' do
+            =@course.parent.name
+

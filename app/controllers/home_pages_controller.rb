@@ -38,10 +38,13 @@ class HomePagesController < ApplicationController
       if @default_element == 'courses_home' || @course_home_page_urls.include?(@first_element) || request.subdomain == 'courses'
         @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
         @courses = @product_course_category.subject_courses
+        @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+
         if @course_home_page_urls.include?(@first_element)
           #This section is for showing the Course landing pages
           @home_page = HomePage.find_by_public_url(@first_element)
           @course = @home_page.subject_course
+          @product = @course.products.in_currency(@country.currency_id).last
 
         else
           #This section is for showing the Default Course landing page

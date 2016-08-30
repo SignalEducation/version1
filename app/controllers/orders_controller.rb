@@ -18,7 +18,7 @@
 
 class OrdersController < ApplicationController
 
-  before_action :logged_in_required, except: [:new, :create]
+  before_action :logged_in_required
   before_action except: [:new, :create] do
     ensure_user_is_of_type(['admin'])
   end
@@ -33,6 +33,11 @@ class OrdersController < ApplicationController
 
   def new
     @order = Order.new
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    @product = Product.where(subject_course_id: @course.id).first
+    @navbar = false
+    @footer = false
+
   end
 
   def create

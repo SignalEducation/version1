@@ -368,6 +368,13 @@ label, .label {
   text-align: left;
   color: #fff !important;
 }
+.new-product-user-form {
+  padding: $gutter*2 $gutter;
+  background: $colour-2;
+  -moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px;
+  text-align: left;
+  color: #fff !important;
+}
 .form-bottom form textarea {
   height: 100px;
 }
@@ -822,6 +829,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-wrap-default {
   padding: 100px 0 170px 0;
 }
+.l-wrap-product-user {
+  padding: 60px 0 170px 0;
+}
 .l-wrap-courses {
   padding: 20px 0 20px 0;
   margin: $gutter*2.5 $gutter*10;
@@ -1157,6 +1167,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   display: block;
   margin: auto;
   width: 80%;
+}
+.secondary-logo {
+  //display: block;
+  margin: auto;
+  width: 60%;
 }
 
 // Hero
@@ -2099,7 +2114,10 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter*.5 0 $gutter 0;
   }
 }
-
+.course-side-info {
+  background: $colour-2;
+  padding: $gutter;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 8. Videos & Quizzes

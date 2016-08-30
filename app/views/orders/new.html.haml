@@ -1,45 +1,56 @@
-.margin-top
-=form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  =f.hidden_field :stripe_token
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              =t('views.orders.new.h1')
+.top-content.external_layout
+  .l-wrap-product-user
+    .container
+      .row
+        .col-md-6
+          =link_to root_url do
+            =image_tag 'ls-logo-red.svg', class: 'secondary-logo'
+        .col-md-6
+
+      .row.l-margin-top-huge
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        .col-md-12
+          .col-md-4.l-margin-top
+            .course-side-info
+              %h2
+                =@course.name
+              %p
+                =@course.short_description
+              %hr/
+              %p.h3
+                ='Total: '
+                =number_in_local_currency(@product.price, @product.currency_id)
+
+          .col-md-8
+            =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
+              =f.hidden_field :subject_course_id, value: @course.id
+              =f.hidden_field :stripe_token
+              .l-section-small.is-bg-asphalt
+                .l-wrap
+                  .container-fluid
+                    .row.l-margin-bottom
+                      .col-md-12
+                        =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+
+                      .col-sm-12.col-md-6.col-md-offset-3.payment-heading
+                        %h2.h3.text-center
+                          %span.number
+                            2
+                          Payment details
+                    =render partial: 'order_card_form', locals: {f: f}
+
+                    .container-fluid
+                      .col-md-12
+                        .col-md-4.col-sm-offset-4.text-center
+                          .spinner
+                            .bounce1
+                            .bounce2
+                            .bounce3
 
 
-          .col-md-12
-            =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
-            .form-group
-              =f.label :subject_course_id, 'Course', class: 'control-label col-sm-4'
-              .col-sm-8
-                =f.collection_select :subject_course_id, @courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-
-
-    .l-section.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row
-            .col-sm-12.col-md-6.col-md-offset-3.payment-heading
-              %h2.h3.text-center
-                %span.number
-                  2
-                Payment details
-          =render partial: 'order_card_form', locals: {f: f}
-
-        .container-fluid
-          .col-md-12
-            .col-md-4.col-sm-offset-4.text-center
-              .spinner
-                .bounce1
-                .bounce2
-                .bounce3
-
-
-    .row.l-margin-top-big
-      =f.submit t('views.general.save'), class: 'btn btn-red'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), orders_path, class: 'btn btn-cyan'
+                  .row.l-margin-top-big
+                    =f.submit t('views.general.save'), class: 'btn btn-red'
+                    =t('views.general.or')
+                    =link_to t('views.general.cancel'), orders_path, class: 'btn btn-cyan'
 

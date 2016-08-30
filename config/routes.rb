@@ -126,6 +126,10 @@ Rails.application.routes.draw do
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
 
+    get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
+    get 'users_new_order/:subject_course_name_url', to: 'orders#new', as: :users_new_order
+    post '/create_product_user', to: 'users#create_product_user', as: :create_product_user
+
     resources :orders
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]

@@ -112,6 +112,10 @@ class SubjectCourse < ActiveRecord::Base
     self.orders.map(&:user_id) if self.subject_course_category_id == SubjectCourseCategory.all_product.first.id
   end
 
+  def home_page
+    self.home_pages.all_in_order.first
+  end
+
   def active_children
     self.children.all_active.all_in_order
   end
