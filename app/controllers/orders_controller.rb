@@ -2,17 +2,18 @@
 #
 # Table name: orders
 #
-#  id                 :integer          not null, primary key
-#  product_id         :integer
-#  subject_course_id  :integer
-#  user_id            :integer
-#  stripe_guid        :string
-#  stripe_customer_id :string
-#  live_mode          :boolean          default(FALSE)
-#  current_status     :string
-#  coupon_code        :string
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                        :integer          not null, primary key
+#  product_id                :integer
+#  subject_course_id         :integer
+#  user_id                   :integer
+#  stripe_guid               :string
+#  stripe_customer_id        :string
+#  live_mode                 :boolean          default(FALSE)
+#  current_status            :string
+#  coupon_code               :string
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  stripe_order_payment_data :text
 #
 
 class OrdersController < ApplicationController
@@ -68,8 +69,10 @@ class OrdersController < ApplicationController
       if @order.valid?
         order = Stripe::Order.retrieve(@order.stripe_guid)
         pay_order = order.pay(source: stripe_token)
-        OrderTransaction.create_from_stripe_data(pay_order, user.id, order.id, product.id)
       end
+      order = Stripe::Order.retrieve(@order.stripe_guid)
+      @order.current_status = order.status
+      @order.stripe_order_payment_data = pay_order
     else
       redirect_to new_order_url
     end

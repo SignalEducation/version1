@@ -2,17 +2,18 @@
 #
 # Table name: orders
 #
-#  id                 :integer          not null, primary key
-#  product_id         :integer
-#  subject_course_id  :integer
-#  user_id            :integer
-#  stripe_guid        :string
-#  stripe_customer_id :string
-#  live_mode          :boolean          default(FALSE)
-#  current_status     :string
-#  coupon_code        :string
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                        :integer          not null, primary key
+#  product_id                :integer
+#  subject_course_id         :integer
+#  user_id                   :integer
+#  stripe_guid               :string
+#  stripe_customer_id        :string
+#  live_mode                 :boolean          default(FALSE)
+#  current_status            :string
+#  coupon_code               :string
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  stripe_order_payment_data :text
 #
 
 require 'rails_helper'

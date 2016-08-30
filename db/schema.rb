@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829153955) do
+ActiveRecord::Schema.define(version: 20160829161717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -514,11 +514,12 @@ ActiveRecord::Schema.define(version: 20160829153955) do
     t.integer  "user_id"
     t.string   "stripe_guid"
     t.string   "stripe_customer_id"
-    t.boolean  "live_mode",          default: false
+    t.boolean  "live_mode",                 default: false
     t.string   "current_status"
     t.string   "coupon_code"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.text     "stripe_order_payment_data"
   end
 
   add_index "orders", ["product_id"], name: "index_orders_on_product_id", using: :btree

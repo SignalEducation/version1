@@ -2,23 +2,27 @@
 #
 # Table name: orders
 #
-#  id                 :integer          not null, primary key
-#  product_id         :integer
-#  subject_course_id  :integer
-#  user_id            :integer
-#  stripe_guid        :string
-#  stripe_customer_id :string
-#  live_mode          :boolean          default(FALSE)
-#  current_status     :string
-#  coupon_code        :string
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                        :integer          not null, primary key
+#  product_id                :integer
+#  subject_course_id         :integer
+#  user_id                   :integer
+#  stripe_guid               :string
+#  stripe_customer_id        :string
+#  live_mode                 :boolean          default(FALSE)
+#  current_status            :string
+#  coupon_code               :string
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  stripe_order_payment_data :text
 #
 
 class Order < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+  serialize :stripe_order_payment_data, JSON
+
   # attr-accessible
-  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_token
+  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_order_payment_data, :stripe_token
 
   # Constants
 
@@ -40,6 +44,7 @@ class Order < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  after_create :create_order_transaction
 
   # scopes
   scope :all_in_order, -> { order(:product_id) }
@@ -74,4 +79,7 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def create_order_transaction
+    OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
+  end
 end

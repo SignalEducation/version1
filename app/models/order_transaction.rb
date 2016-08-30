@@ -44,14 +44,13 @@ class OrderTransaction < ActiveRecord::Base
   # class methods
 
   def self.create_from_stripe_data(order, user_id, order_id, product_id)
-
     OrderTransaction.create!(
         user_id: user_id,
         order_id: order_id,
         product_id: product_id,
-        stripe_order_id: order[:id],
-        stripe_charge_id: order[:charge],
-        live_mode: order[:livemode],
+        stripe_order_id: order["id"],
+        stripe_charge_id: order["charge"],
+        live_mode: order["livemode"],
     )
   rescue => e
     Rails.logger.error "ERROR: OrderTransaction#create_from_stripe_data failed to save. Error:#{e.inspect}"
