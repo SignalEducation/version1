@@ -41,7 +41,7 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(allowed_params)
-    stripe_product = Stripe::Product.create(name: product.name, shippable: false, active: product.active, livemode: product.live_mode)
+    stripe_product = Stripe::Product.create(name: @product.name, shippable: false, active: @product.active)
     @product.live_mode = stripe_product.livemode
     @product.stripe_guid = stripe_product.id
     #Move this to the model

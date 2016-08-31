@@ -122,9 +122,10 @@ Rails.application.routes.draw do
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
-    get 'library', to: 'library#index', as: :library
+    get 'library/subscription_courses', to: 'library#index', as: :library
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
+    get 'library/product_courses', to: 'library#product_courses_index', as: :product_courses
 
     get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
     get 'users_new_order/:subject_course_name_url', to: 'orders#new', as: :users_new_order
@@ -171,7 +172,8 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
-    get ':home_pages_public_url', to: 'home_pages#show'
+    get '/:home_pages_public_url', to: 'home_pages#show'
+    get 'product/:home_pages_public_url', to: 'home_pages#show', as: :product_course
 
     constraints(Subdomain) do
       get '/' => 'routes#root'

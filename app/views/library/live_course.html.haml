@@ -7,10 +7,14 @@
       .row
         .col-sm-4.col-md-4
           .l-margin-bottom-huge
-            =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
-              .fa.fa-arrow-left
-              =@course.parent.name
-              =#"Library"
+            -if @course.parent
+              =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
+                .fa.fa-arrow-left
+                =@course.parent.name
+            -else
+              =link_to product_courses_url, class: 'btn btn-red btn-secondary' do
+                .fa.fa-arrow-left
+                  Back
 
       .row.l-margin-top-big
         .col-md-12

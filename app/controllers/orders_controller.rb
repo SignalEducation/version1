@@ -47,6 +47,7 @@ class OrdersController < ApplicationController
       user = current_user
       subject_course_id = params[:order][:subject_course_id]
       product = Product.find_by_subject_course_id(subject_course_id)
+      @course = product.subject_course
       currency = Currency.find(product.currency_id)
       stripe_token = params[:order][:stripe_token]
 
@@ -84,7 +85,7 @@ class OrdersController < ApplicationController
 
     if @order.save
       flash[:success] = I18n.t('controllers.orders.create.flash.success')
-      redirect_to orders_url
+      redirect_to library_special_link(@course)
     else
       render action: :new
     end

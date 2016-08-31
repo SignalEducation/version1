@@ -37,6 +37,13 @@ class LibraryController < ApplicationController
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
+  def product_courses_index
+    #A Top level Library page for all subject courses for products with a link to each course landing page or lib#show if they purchased the course
+    @category = SubjectCourseCategory.all_product.first
+    @courses = SubjectCourse.in_category(@category.id)
+
+  end
+
   def show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
     if @course.nil?
