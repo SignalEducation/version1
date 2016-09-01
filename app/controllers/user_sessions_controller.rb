@@ -21,19 +21,11 @@ class UserSessionsController < ApplicationController
       if @user_session.user.corporate_customer?
         redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer, subdomain: @user_session.user.corporate_customer.try(:subdomain))
       elsif @user_session.user.corporate_student?
-        redirect_back_or_default library_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
+        redirect_back_or_default dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
       elsif session[:return_to]
-        if Rails.env.staging?
-          redirect_back_or_default library_url(subdomain: request.subdomain)
-        else
-          redirect_back_or_default library_url(subdomain: '')
-        end
+        redirect_back_or_default dashboard_url(subdomain: '')
       else
-        if Rails.env.staging?
-          redirect_to library_url(subdomain: request.subdomain), flash: { just_signed_in: true }
-        else
-          redirect_to library_url(subdomain: ''), flash: { just_signed_in: true }
-        end
+        redirect_to dashboard_url(subdomain: ''), flash: { just_signed_in: true }
       end
     else
       render action: :new

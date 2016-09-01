@@ -62,7 +62,7 @@ module ApplicationHelper
   end
 
   def referral_code_sharing_url(referral_code)
-    "#{library_url}/?ref_code=#{referral_code.code}"
+    "#{subscription_courses_url}/?ref_code=#{referral_code.code}"
   end
 
   def plan_interval(interval)

@@ -57,8 +57,6 @@ Rails.application.routes.draw do
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
-    #get 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#new', as: :question_banks
-    #post 'library/:subject_course_name_url/question_banks/new', to: 'question_banks#create', as: :new_question_bank
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
@@ -106,10 +104,6 @@ Rails.application.routes.draw do
       patch 'update_courses', action: :update_courses
       put 'update_courses', action: :update_courses
     end
-    resources :home_pages, except: [:destroy]
-    get 'home', to: 'home_pages#show', as: :home
-    get 'courses_home', to: 'home_pages#show', default: 'courses_home', as: :courses_home
-
 
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'business', to: 'footer_pages#business', as: :business_url
@@ -122,10 +116,10 @@ Rails.application.routes.draw do
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
-    get 'library/subscription_courses', to: 'library#index', as: :library
+    get 'library/courses', to: 'library#index', as: :subscription_courses
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
     get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
-    get 'library/product_courses', to: 'library#product_courses_index', as: :product_courses
+    get 'library/diplomas', to: 'library#product_courses_index', as: :product_courses
 
     get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
     get 'new_session_product/:subject_course_name_url', to: 'users#new_session_product', as: :new_session_product
@@ -175,8 +169,15 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
-    get '/:home_pages_public_url', to: 'home_pages#show'
-    get 'product/:home_pages_public_url', to: 'home_pages#show', as: :product_course
+    resources :home_pages, only: [:index, :new, :edit, :update, :create]
+    #HomePage or Root
+    get 'home', to: 'home_pages#home', as: :home
+    #Product Course Landing Pages
+    get 'diploma/:home_pages_public_url', to: 'home_pages#diploma', as: :product_course
+    #Subscription Group/Course Landing Pages
+    get 'course/:home_pages_public_url', to: 'home_pages#course', as: :subscription_course
+    #Catch Old URL's
+    get '/%{locale}/:home_pages_public_url', to: 'home_pages#show'
 
     constraints(Subdomain) do
       get '/' => 'routes#root'

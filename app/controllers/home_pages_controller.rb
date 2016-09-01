@@ -15,20 +15,145 @@
 
 class HomePagesController < ApplicationController
 
-  before_action :logged_in_required, except: [:show, :student_sign_up]
-  before_action except: [:show, :student_sign_up] do
+  before_action :logged_in_required, only: [:index, :new, :edit, :update, :create]
+  before_action only: [:index, :new, :edit, :update, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:student_sign_up]
-  before_action :layout_variables, only: [:show]
+  before_action :get_variables, except: [:student_sign_up, :diploma, :home, :course]
+  before_action :layout_variables, only: [:diploma, :home, :course]
 
   def index
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
   def show
-    #There is an infinite redirect here when home_pages_public_url has a value - keeps redirecting to this method
+    #This is a back up that needs to redirect to course, diploma or home
 
+      @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
+      @default_element = params[:default] if params[:default]
+
+      if @default_element == 'courses_home' || @course_home_page_urls.include?(@first_element) || request.subdomain == 'courses'
+        @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+        @courses = @product_course_category.subject_courses
+        @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+
+        if @course_home_page_urls.include?(@first_element)
+          #This section is for showing the Course landing pages
+          @home_page = HomePage.find_by_public_url(@first_element)
+          @course = @home_page.subject_course
+          @product = @course.products.in_currency(@country.currency_id).last
+
+        else
+          #This section is for showing the Default Course landing page
+
+
+
+        end
+        render :courses_show
+      else
+
+        #This section is for showing the Group landing pages which are also the default
+        @home_page = HomePage.find_by_public_url(@first_element)
+
+        # Create user object and necessary variables
+        @user = User.new
+        session[:sign_up_errors].each do |k, v|
+          v.each { |err| @user.errors.add(k, err) }
+        end if session[:sign_up_errors]
+        session.delete(:sign_up_errors)
+        country = IpAddress.get_country(request.remote_ip)
+        if country
+          @currency_id = country.currency_id
+          @user.country_id = country.id
+        else
+          @currency_id = Currency.find_by_iso_code('GBP').id
+          @user.country_id = Country.find_by_name('United Kingdom').id
+        end
+        @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+
+        @group = @home_page.try(:group)
+        @url_value = @group.try(:name) || params[:home_pages_public_url].to_s.upcase
+
+        if @home_page
+          seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+          cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+        else
+          seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+        end
+
+      end
+
+  end
+
+  def diploma
+
+      @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
+      @default_element = params[:default] if params[:default]
+
+      if @default_element == 'courses_home' || @course_home_page_urls.include?(@first_element) || request.subdomain == 'courses'
+        @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+        @courses = @product_course_category.subject_courses
+        @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+
+        if @course_home_page_urls.include?(@first_element)
+          #This section is for showing the Course landing pages
+          @home_page = HomePage.find_by_public_url(@first_element)
+          @course = @home_page.subject_course
+          @product = @course.products.in_currency(@country.currency_id).last
+
+        else
+          #This section is for showing the Default Course landing page
+
+
+
+        end
+        render :courses_show
+      else
+
+        #This section is for showing the Group landing pages which are also the default
+        @home_page = HomePage.find_by_public_url(@first_element)
+
+        # Create user object and necessary variables
+        @user = User.new
+        session[:sign_up_errors].each do |k, v|
+          v.each { |err| @user.errors.add(k, err) }
+        end if session[:sign_up_errors]
+        session.delete(:sign_up_errors)
+        country = IpAddress.get_country(request.remote_ip)
+        if country
+          @currency_id = country.currency_id
+          @user.country_id = country.id
+        else
+          @currency_id = Currency.find_by_iso_code('GBP').id
+          @user.country_id = Country.find_by_name('United Kingdom').id
+        end
+        @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+
+        @group = @home_page.try(:group)
+        @url_value = @group.try(:name) || params[:home_pages_public_url].to_s.upcase
+
+        if @home_page
+          seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+          cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+        else
+          seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+        end
+
+      end
+
+  end
+
+  def home
+    #This is the main home_page
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
+    @product_courses = @product_course_category.subject_courses
+    @subscription_courses = @subscription_course_category.subject_courses
+    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+  end
+
+  def course
       @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
       @default_element = params[:default] if params[:default]
 
@@ -182,7 +307,7 @@ class HomePagesController < ApplicationController
     end
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @subecription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
+    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
     @groups = Group.all_active.all_in_order.for_public

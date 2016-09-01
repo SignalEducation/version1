@@ -24,7 +24,7 @@
               %li
                 =link_to 'Pricing', pricing_url
               %li
-                =link_to 'Library', library_url
+                =link_to 'Library', subscription_courses_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
 
@@ -72,7 +72,7 @@
       .course-list-wrap
         .row
           .col-sm-6.col-md-4
-            =link_to library_url, class: 'box box-course' do
+            =link_to subscription_courses_url, class: 'box box-course' do
               .box-inner
                 %h3.h4.box-title
                   CFA Level 1

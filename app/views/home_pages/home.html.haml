@@ -1,0 +1,40 @@
+.hero-home
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  =render partial: 'layouts/transparent_navbar'
+  .hero-inner#sign-up
+    .l-wrap-medium
+      .container-fluid
+        .row
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white.l-margin-bottom-huge
+              Anywhere, Anytime
+            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
+              The First Ever On-Demand training library for business professionals
+
+
+.course-types
+  .l-wrap-big
+    .l-section-small
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
+              Diploma Courses
+
+            -@product_courses.each do |course|
+              =link_to course.name, product_course_url(course.home_page.public_url), class: 'btn btn-red'
+
+
+.business
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              Subscription Courses
+            -@subscription_courses.each do |course|
+              =link_to course.name, library_special_link(course), class: 'btn btn-red'
+
+

@@ -372,7 +372,7 @@ class ApplicationController < ActionController::Base
           the_thing.name_url
       )
     else
-      library_url
+      subscription_courses_url
     end
   end
   helper_method :library_special_link
