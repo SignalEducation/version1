@@ -20,7 +20,7 @@ class SubjectCourseCategory < ActiveRecord::Base
   attr_accessible :name, :payment_type, :active, :subdomain
 
   # Constants
-  PAYMENT_TYPES = %w(Subscription Product)
+  PAYMENT_TYPES = %w(Subscription Product Corporate)
 
   # relationships
   has_many :subject_courses
@@ -37,8 +37,20 @@ class SubjectCourseCategory < ActiveRecord::Base
   scope :all_active, -> { where(active: true) }
   scope :all_product, -> { where(payment_type: 'Product') }
   scope :all_subscription, -> { where(payment_type: 'Subscription') }
+  scope :all_corporate, -> { where(payment_type: 'Corporate') }
 
   # class methods
+  def self.default_subscription_category
+    where(payment_type: 'Subscription', active: true).first
+  end
+
+  def self.default_product_category
+    where(payment_type: 'Product', active: true).first
+  end
+
+  def self.default_corporate_category
+    where(payment_type: 'Corporate', active: true).first
+  end
 
   # instance methods
   def destroyable?

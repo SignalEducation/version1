@@ -71,6 +71,7 @@ class SubjectCourse < ActiveRecord::Base
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
   validates :tutor_id, presence: true
   validates :description, presence: true
+  validates :subject_course_category_id, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :forum_url, allow_nil: true, length: {maximum: 255}
@@ -105,6 +106,18 @@ class SubjectCourse < ActiveRecord::Base
     else
       SubjectCourse.all_active.all_in_order
     end
+  end
+
+  def self.subscription?
+    where(corporate_customer_id: nil).in_category(SubjectCourseCategory.default_subscription_category.id)
+  end
+
+  def self.product?
+    where(corporate_customer_id: nil).in_category(SubjectCourseCategory.default_product_category.id)
+  end
+
+  def self.corporate?
+    where.not(corporate_customer_id: nil).in_category(SubjectCourseCategory.default_corporate_category.id)
   end
 
   # instance methods
