@@ -1,0 +1,44 @@
+.top-content.external_layout
+  .l-wrap-product-user
+    .container
+      .row
+        .col-md-6
+          =link_to root_url do
+            =image_tag 'ls-logo-red.svg', class: 'secondary-logo'
+        .col-md-6
+
+      .row.l-margin-top-huge
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        .col-md-12
+          .col-md-4.l-margin-top
+            .course-side-info
+              %h2
+                =@course.name
+              %p
+                =@course.short_description
+              %hr/
+              %p.h3
+                ='Total: '
+                =number_in_local_currency(@product.price, @product.currency_id)
+
+          .col-md-8
+            %h2.h-colour.l-margin-bottom.text-center
+              =t('views.user_sessions.new.h1')
+            .login-form.l-margin-top#sign-in
+              =form_for@user_session, url: create_session_product_url do |f|
+                =f.hidden_field :subject_course_id, value: @course.id
+                =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+                .col-sm-12
+                  .form-group
+                    =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
+                    =f.email_field :email, class: 'form-control alternate-colour input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true
+                .col-sm-12
+                  .form-group
+                    =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
+                    =f.password_field :password, class: 'form-control alternate-colour input-group input-group-lg full-width', style: 'border-radius: 6px;'
+
+                .col-sm-12.l-margin-bottom.l-margin-top
+                  =f.submit t('views.general.sign_in'), class: 'btn btn-red btn-wide btn-lg-text'
+                .text-center
+                  =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'

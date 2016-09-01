@@ -23,6 +23,7 @@
                 =number_in_local_currency(@product.price, @product.currency_id)
 
           .col-md-8
+            =link_to 'Already have an account?', new_session_product_url(@course.name_url), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
             .new-product-user-form.l-margin-top
               =form_for @user, url: create_product_user_url do |f|
                 =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}

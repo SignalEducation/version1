@@ -64,12 +64,12 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user]
-  before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user]
-  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user] do
+  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
+  before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
+  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user]
+  before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
 
   def index
     @users = params[:search_term].to_s.blank? ?
@@ -196,8 +196,15 @@ class UsersController < ApplicationController
     @footer = false
   end
 
-  def create_product_user
+  def new_session_product
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    @product = Product.where(subject_course_id: @course.id).first
+    @user_session = UserSession.new
+    @navbar = false
+    @footer = false
+  end
 
+  def create_product_user
     if current_user
       redirect_to dashboard_url
     else
@@ -235,6 +242,22 @@ class UsersController < ApplicationController
       else
         render action: :new_product_user
       end
+    end
+  end
+
+  def create_session_product
+    @navbar = nil
+    @footer = nil
+    @course = SubjectCourse.find_by_id(params[:user_session][:subject_course_id])
+    @product = Product.where(subject_course_id: @course.id).first
+    @user_session = UserSession.new(sign_in_params)
+    if @user_session.save
+      @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
+      @user_session.user.update_attribute(:session_key, session[:session_id])
+      flash[:error] = nil
+      redirect_to users_new_order_url(@course.name_url)
+    else
+      render action: :new_session_product
     end
   end
 
@@ -516,6 +539,10 @@ class UsersController < ApplicationController
         :password, :password_confirmation,
         :topic_interest
     )
+  end
+
+  def sign_in_params
+    params.require(:user_session).permit(:email, :password)
   end
 
 end

@@ -7,11 +7,11 @@
       .row
         .col-sm-4.col-md-4
           .l-margin-bottom-huge
-            -if @course.parent
+            -if @course.subject_course_category.payment_type == 'Subscription'
               =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
                 .fa.fa-arrow-left
                 =@course.parent.name
-            -else
+            -elsif @course.subject_course_category.payment_type == 'Product'
               =link_to product_courses_url, class: 'btn btn-red btn-secondary' do
                 .fa.fa-arrow-left
                   Back

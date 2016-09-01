@@ -128,8 +128,11 @@ Rails.application.routes.draw do
     get 'library/product_courses', to: 'library#product_courses_index', as: :product_courses
 
     get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
+    get 'new_session_product/:subject_course_name_url', to: 'users#new_session_product', as: :new_session_product
     get 'users_new_order/:subject_course_name_url', to: 'orders#new', as: :users_new_order
     post '/create_product_user', to: 'users#create_product_user', as: :create_product_user
+
+    post '/create_session_product', to: 'users#create_session_product', as: :create_session_product
 
     resources :orders
     resources :products

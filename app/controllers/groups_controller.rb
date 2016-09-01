@@ -116,7 +116,12 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:group_id]) rescue nil
     if @group &&
         (current_user.admin? || current_user.corporate_customer_id == @group.corporate_customer_id)
-      @group.subject_course_ids = params[:group][:subject_course_ids]
+      if params[:group]
+        @group.subject_course_ids = params[:group][:subject_course_ids]
+      else
+        @group.subject_course_ids = []
+      end
+
       flash[:success] = I18n.t('controllers.groups.update_subjects.flash.success')
       redirect_to groups_url
     else
