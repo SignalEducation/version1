@@ -32,6 +32,7 @@ class OrdersController < ApplicationController
   end
 
   def new
+    redirect_to new_product_user_url(@course.name_url) unless current_user
     @order = Order.new
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     @product = Product.where(subject_course_id: @course.id).first
@@ -42,7 +43,7 @@ class OrdersController < ApplicationController
 
   def create
 
-    if params[:order] && params[:order][:subject_course_id] && params[:order][:stripe_token]
+    if current_user && params[:order] && params[:order][:subject_course_id] && params[:order][:stripe_token]
 
       user = current_user
       subject_course_id = params[:order][:subject_course_id]

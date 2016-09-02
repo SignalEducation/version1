@@ -118,7 +118,8 @@ Rails.application.routes.draw do
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
     get 'library/courses', to: 'library#index', as: :subscription_courses
     get 'group/:group_name_url', to: 'groups#show', as: :library_group
-    get 'course/:subject_course_name_url', to: 'library#show', as: :library_course
+    get 'library/course/:subject_course_name_url', to: 'library#show', as: :library_course
+    get 'library/diploma/:subject_course_name_url', to: 'library#show', as: :library_diploma
     get 'library/diplomas', to: 'library#product_courses_index', as: :product_courses
 
     get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
@@ -175,7 +176,7 @@ Rails.application.routes.draw do
     #Product Course Landing Pages
     get 'diploma/:home_pages_public_url', to: 'home_pages#diploma', as: :product_course
     #Subscription Group/Course Landing Pages
-    get 'course/:home_pages_public_url', to: 'home_pages#course', as: :subscription_course
+    get 'group/:home_pages_public_url', to: 'home_pages#course', as: :group_landing
     #Catch Old URL's
     get '/%{locale}/:home_pages_public_url', to: 'home_pages#show'
 

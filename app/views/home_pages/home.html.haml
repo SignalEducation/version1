@@ -23,7 +23,7 @@
               Diploma Courses
 
             -@product_courses.each do |course|
-              =link_to course.name, product_course_url(course.home_page.public_url), class: 'btn btn-red'
+              =link_to course.name, product_special_link(course), class: 'btn btn-red'
 
 
 .business
@@ -34,7 +34,7 @@
           .col-sm-12
             %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
               Subscription Courses
-            -@subscription_courses.each do |course|
-              =link_to course.name, library_special_link(course), class: 'btn btn-red'
+            -@groups.each do |group|
+              =link_to group.name, group_special_link(group), class: 'btn btn-red'
 
 

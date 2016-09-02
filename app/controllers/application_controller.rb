@@ -377,6 +377,52 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
+  def product_special_link(the_thing)
+
+    if the_thing.class == SubjectCourse && !current_user
+        the_thing = the_thing
+      product_course_url(
+                  the_thing.home_page.public_url
+      )
+    elsif the_thing.class == SubjectCourse && current_user && current_user.valid_subject_course_ids.include?(the_thing.id)
+      the_thing = the_thing
+      library_diploma_url(
+          the_thing.name_url
+      )
+    elsif the_thing.class == SubjectCourse && current_user && !current_user.valid_subject_course_ids.include?(the_thing.id)
+      the_thing = the_thing
+      product_course_url(
+          the_thing.home_page.public_url
+      )
+    else
+      subscription_courses_url
+    end
+  end
+  helper_method :product_special_link
+
+  def group_special_link(the_thing)
+
+    if the_thing.class == Group && !current_user
+        the_thing = the_thing
+        group_landing_url(
+                  the_thing.home_page.public_url
+      )
+    elsif the_thing.class == SubjectCourse && current_user && current_user.valid_subject_course_ids.include?(the_thing.id)
+      the_thing = the_thing
+      library_diploma_url(
+          the_thing.name_url
+      )
+    elsif the_thing.class == SubjectCourse && current_user && !current_user.valid_subject_course_ids.include?(the_thing.id)
+      the_thing = the_thing
+      product_course_url(
+          the_thing.home_page.public_url
+      )
+    else
+      subscription_courses_url
+    end
+  end
+  helper_method :product_special_link
+
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
       library_course_url(
