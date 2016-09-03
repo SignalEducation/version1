@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
 
   def show
     if @group.nil?
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     else
       courses = @group.try(:active_children)
       if current_user && (current_user.corporate_student? || current_user.corporate_customer?)

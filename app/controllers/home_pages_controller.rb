@@ -22,9 +22,36 @@ class HomePagesController < ApplicationController
   before_action :get_variables, except: [:student_sign_up, :diploma, :home, :course]
   before_action :layout_variables, only: [:diploma, :home, :course]
 
-  def index
-    @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
+  def home
+    #This is the main home_page
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
+    @product_courses = @product_course_category.subject_courses
+    @subscription_courses = @subscription_course_category.subject_courses
+    @groups = Group.all_active.for_public.all_in_order
+    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
   end
+
+  def group_index
+
+  end
+
+  def diploma_index
+
+  end
+
+  def group
+
+  end
+
+  def diploma
+    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
+    @course = @home_page.subject_course
+  end
+
+
+
 
   def show
     binding.pry
@@ -84,52 +111,6 @@ class HomePagesController < ApplicationController
 
       end
 
-  end
-
-  def diploma
-    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-    @course = @home_page.subject_course
-  end
-
-  def home
-    #This is the main home_page
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
-    @product_courses = @product_course_category.subject_courses
-    @subscription_courses = @subscription_course_category.subject_courses
-    @groups = Group.all_active.for_public.all_in_order
-    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
-    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
-  end
-
-  def group
-
-  end
-
-  def new
-    @home_page = HomePage.new
-  end
-
-  def edit
-  end
-
-  def create
-    @home_page = HomePage.new(allowed_params)
-    if @home_page.save
-      flash[:success] = I18n.t('controllers.home_pages.create.flash.success')
-      redirect_to home_pages_url
-    else
-      render action: :new
-    end
-  end
-
-  def update
-    if @home_page.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.home_pages.update.flash.success')
-      redirect_to home_pages_url
-    else
-      render action: :edit
-    end
   end
 
   def student_sign_up
@@ -192,6 +173,38 @@ class HomePagesController < ApplicationController
         session[:sign_up_errors] = @user.errors unless @user.errors.empty?
         redirect_to request.referrer
       end
+    end
+  end
+
+
+
+  def index
+    @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
+  end
+
+  def new
+    @home_page = HomePage.new
+  end
+
+  def edit
+  end
+
+  def create
+    @home_page = HomePage.new(allowed_params)
+    if @home_page.save
+      flash[:success] = I18n.t('controllers.home_pages.create.flash.success')
+      redirect_to home_pages_url
+    else
+      render action: :new
+    end
+  end
+
+  def update
+    if @home_page.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.home_pages.update.flash.success')
+      redirect_to home_pages_url
+    else
+      render action: :edit
     end
   end
 

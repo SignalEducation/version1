@@ -9,10 +9,10 @@ class UserVerificationsController < ApplicationController
       redirect_to set_password_url
     elsif @user
       UserSession.create(@user)
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     end
   end
 
@@ -32,10 +32,10 @@ class UserVerificationsController < ApplicationController
                               account_activation_code: nil,
                               active: true)
       UserSession.create(@user)
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     end
 
   end

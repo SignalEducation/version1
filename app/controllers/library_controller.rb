@@ -47,7 +47,7 @@ class LibraryController < ApplicationController
   def show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
     if @course.nil?
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     else
       @course_modules = @course.children.all_active.all_in_order
       @tuition_course_modules = @course_modules.all_tuition
@@ -57,7 +57,7 @@ class LibraryController < ApplicationController
       @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
       if @course.corporate_customer_id
         if current_user.nil? || (@course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id))
-          redirect_to subscription_courses_url
+          redirect_to subscription_groups_url
         else
           users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
           user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
@@ -70,7 +70,7 @@ class LibraryController < ApplicationController
             @navbar = nil
             render 'preview_course'
           else
-            redirect_to subscription_courses_url
+            redirect_to subscription_groups_url
           end
           seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
         end
@@ -100,7 +100,7 @@ class LibraryController < ApplicationController
           @navbar = nil
           render 'preview_course'
         else
-          redirect_to subscription_courses_url
+          redirect_to subscription_groups_url
         end
       end
     end
@@ -168,6 +168,25 @@ class LibraryController < ApplicationController
         format.json{render json: {message: "Email Address Cannot be blank. Please enter valid email id."}}
       end
     end
+  end
+
+
+
+
+  def group_index
+
+  end
+
+  def group_show
+
+  end
+
+  def course_show
+
+  end
+
+  def diploma_show
+
   end
 
 end

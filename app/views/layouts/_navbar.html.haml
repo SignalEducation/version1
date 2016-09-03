@@ -21,9 +21,9 @@
                 %li
                   =link_to 'Dashboard', dashboard_url
               %li
-                =link_to 'Diplomas', product_courses_url
+                =link_to 'Diplomas', all_diplomas_url
               %li
-                =link_to 'Courses', subscription_courses_url
+                =link_to 'Courses', subscription_groups_url
               -if current_user.user_status == 'valid_free_member'
                 %li
                   %li=link_to "#{current_user.days_left} Days left in Trial", user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
@@ -93,8 +93,8 @@
               %li
                 =link_to 'Pricing', pricing_url
               %li
-                =link_to 'Diplomas', product_courses_url
+                =link_to 'Diplomas', all_diplomas_url
               %li
-                =link_to 'Courses', subscription_courses_url
+                =link_to 'Courses', subscription_groups_url
               %li
                 =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}

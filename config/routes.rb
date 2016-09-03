@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
     end
 
+    #User Account & Session
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
     get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
@@ -49,32 +50,31 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
     get 'set_password/:id', to: 'user_password_resets#corporate_new', as: :set_password
     put 'create_password/:id', to: 'user_password_resets#corporate_create', as: :user_create_password
-
-    # special routes
-    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'send_verification', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
+
+    # Internal Landing Pages - post sign-up or upgrade or purchase
+    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
+
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
-    # general resources
+    # Corporate Routes
     resources :corporate_customers
     resources :corporate_groups do
       get 'edit_members', action: :edit_members
       patch 'update_members', action: :update_members
       put 'update_members', action: :update_members
     end
-
     resources :corporate_managers
     resources :corporate_students
     resources :corporate_students do
       post :import_csv, on: :collection, action: :import_corporate_students
       post :preview_csv, on: :collection, action: :preview_corporate_students
     end
-
     get '/login', to: 'corporate_profiles#login', as: :corporate_login
     get '/corp_home', to: 'corporate_profiles#show', as: :corporate_home
     post '/corporate_verification', to: 'corporate_profiles#corporate_verification'
@@ -82,6 +82,8 @@ Rails.application.routes.draw do
     resources :corporate_profiles, only: [:new, :show]
     resources :corporate_requests
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
+
+    # General Resources
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]
@@ -116,13 +118,19 @@ Rails.application.routes.draw do
 
     post '/subscribe', to: 'library#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
-    get 'library/courses', to: 'library#index', as: :subscription_courses
-    get 'group/:group_name_url', to: 'groups#show', as: :library_group
-    get 'library/course/:subject_course_name_url', to: 'library#show', as: :library_course
-    get 'library/diploma/:subject_course_name_url', to: 'library#show', as: :library_diploma
-    get 'library/diplomas', to: 'library#product_courses_index', as: :product_courses
 
-    get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
+
+
+
+    # Library Structure
+    get 'subscription_groups', to: 'library#group_index', as: :subscription_groups
+    get 'subscription_group/:group_name_url', to: 'library#group_show', as: :subscription_group
+    get 'subscription_course/:subject_course_name_url', to: 'library#course_show', as: :subscription_course
+    get 'product_course/:subject_course_name_url', to: 'library#diploma_show', as: :diploma_course
+
+
+
+     get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
     get 'new_session_product/:subject_course_name_url', to: 'users#new_session_product', as: :new_session_product
     get 'users_new_order/:subject_course_name_url', to: 'orders#new', as: :users_new_order
     post '/create_product_user', to: 'users#create_product_user', as: :create_product_user
@@ -171,6 +179,8 @@ Rails.application.routes.draw do
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
     resources :home_pages, only: [:index, :new, :edit, :update, :create]
+
+    # HomePage Structure
     #HomePage or Root
     get 'home', to: 'home_pages#home', as: :home
     #Product Course Landing Pages
@@ -179,6 +189,9 @@ Rails.application.routes.draw do
     get 'group/:home_pages_public_url', to: 'home_pages#course', as: :group_landing
     #Catch Old URL's
     get '/%{locale}/:home_pages_public_url', to: 'home_pages#show'
+
+    get 'all_groups', to: 'home_pages#group_index', as: :all_groups
+    get 'all_diploma', to: 'home_pages#diploma_index', as: :all_diplomas
 
     constraints(Subdomain) do
       get '/' => 'routes#root'

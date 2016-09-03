@@ -8,7 +8,7 @@ class CoursesController < ApplicationController
     if @course
       if @course.corporate_customer_id
         if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
-          redirect_to subscription_courses_url
+          redirect_to subscription_groups_url
         end
       end
 
@@ -55,7 +55,7 @@ class CoursesController < ApplicationController
     else
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     end
   end
 
@@ -82,10 +82,10 @@ class CoursesController < ApplicationController
       elsif @question_bank || (@course_module && (@course_module_element || @course_module_jumbo_quiz))
         render :show
       else
-        redirect_to subscription_courses_url
+        redirect_to subscription_groups_url
       end
     else
-      redirect_to subscription_courses_url
+      redirect_to subscription_groups_url
     end
   end
 

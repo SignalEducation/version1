@@ -359,69 +359,60 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_module_special_link
 
-  # customer-facing
+
+
+  # Library Navigation Links
   def library_special_link(the_thing)
     if the_thing.class == Group
       the_thing = the_thing
-      library_group_url(
+      subscription_group_url(
                   the_thing.name_url
       )
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
-      library_course_url(
-          the_thing.name_url
-      )
+
+      if the_thing.subject_course_category_id == SubjectCourseCategory.default_subscription_category.id
+        #Sub Course
+        subscription_course_url(
+            the_thing.name_url
+        )
+
+      elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_product_category.id
+        #Product Course
+
+        if current_user
+          diploma_course_url(
+              the_thing.name_url
+          )
+        else
+          product_course_url(
+              the_thing.home_page.public_url
+          )
+        end
+
+      elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
+        #Corp Course
+        subscription_course_url(
+            the_thing.name_url
+        )
+
+      else
+        root_url
+      end
     else
-      subscription_courses_url
+      root_url
     end
   end
   helper_method :library_special_link
 
-  def product_special_link(the_thing)
 
-    if the_thing.class == SubjectCourse && !current_user
-        the_thing = the_thing
-      product_course_url(
-                  the_thing.home_page.public_url
-      )
-    elsif the_thing.class == SubjectCourse && current_user && current_user.valid_subject_course_ids.include?(the_thing.id)
-      the_thing = the_thing
-      library_diploma_url(
-          the_thing.name_url
-      )
-    elsif the_thing.class == SubjectCourse && current_user && !current_user.valid_subject_course_ids.include?(the_thing.id)
-      the_thing = the_thing
-      product_course_url(
-          the_thing.home_page.public_url
-      )
-    else
-      subscription_courses_url
-    end
+
+  def home_page_special_link(the_thing)
+
   end
-  helper_method :product_special_link
+  helper_method :home_page_special_link
 
-  def group_special_link(the_thing)
 
-    if the_thing.class == Group && !current_user
-        the_thing = the_thing
-        group_landing_url(
-                  the_thing.home_page.public_url
-      )
-    elsif the_thing.class == SubjectCourse && current_user && current_user.valid_subject_course_ids.include?(the_thing.id)
-      the_thing = the_thing
-      library_diploma_url(
-          the_thing.name_url
-      )
-    elsif the_thing.class == SubjectCourse && current_user && !current_user.valid_subject_course_ids.include?(the_thing.id)
-      the_thing = the_thing
-      product_course_url(
-          the_thing.home_page.public_url
-      )
-    else
-      subscription_courses_url
-    end
-  end
-  helper_method :product_special_link
 
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
