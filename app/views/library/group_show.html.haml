@@ -1,1 +1,98 @@
-Single Group with all its Subject Courses
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-library.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-sm-4.col-md-4
+          .l-margin-bottom-huge
+            =link_to subscription_groups_url, class: 'btn btn-red btn-secondary' do
+              .fa.fa-arrow-left
+              ="Back"
+      .row
+        .col-md-6
+          %h1.h1.h-separator.h-separator-left
+            =@group.name
+          %h6.l-margin-top
+            =@group.description.to_s.html_safe
+  .l-wrap.l-margin-top
+    .container-fluid
+      .course-list-wrap
+        .row
+          -if @courses
+            -if current_user
+              -@courses.each do |course|
+                -log = @logs.where(subject_course_id: course.id).first
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'card card-course' do
+                    .card-outer
+                      .card-inner
+                        %h3.h3.card-title.l-margin-bottom
+                          =course.try(:name)
+                        -if log
+                          %p.card-desc
+                            -total_lesson = course.cme_count
+                            -complete_lesson = log.try(:count_of_cmes_completed) || 0
+                            -complete_percent = log.try(:percentage_complete)
+                            %br/
+                            %p
+                              ="#{complete_lesson} out of #{total_lesson} lessons completed"
+
+                            .progress
+                              .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                        -else
+                          %p.card-desc
+                            =course.try(:short_description).truncate(185)
+
+                      .card-info
+                        .col-md-6.col-xs-6
+                          -if course.try(:live_date)
+                            .days-left
+                              .h8.text-center
+                                =humanize_datetime(course.live_date)
+                        .col-md-6.col-xs-6
+                          -if course.total_video_duration.to_i > 0
+                            %h6.pull-right
+                              =simple_time(course.total_video_duration)
+
+                    .card-label
+                      .row
+                        .col-md-12.col-xs-12
+                          .col-md-6.col-xs-6
+                            %h6
+                              -if log
+                                Resume
+                              -else
+                                =t('views.general.browse')
+                          .col-md-6.col-xs-6.text-right
+
+            -else
+              -@courses.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'card card-course' do
+                    .card-outer
+                      .card-inner
+                        %h3.h3.card-title.l-margin-bottom
+                          =course.try(:name)
+                        %p.card-desc
+                          =course.try(:short_description).truncate(185)
+                      .card-info
+                        .col-md-6.col-xs-6
+                          -if course.try(:live_date)
+                            .days-left
+                              .h8.text-center
+                                =humanize_datetime(course.live_date)
+                        .col-md-6.col-xs-6
+                          -if course.total_video_duration.to_i > 0
+                            %h6.pull-right
+                              =simple_time(course.total_video_duration)
+
+                    .card-label
+                      .row
+                        .col-md-12.col-xs-12
+                          .col-md-6.col-xs-6
+                            %h6
+                              =t('views.general.browse')
+                          .col-md-6.col-xs-6.text-right
+

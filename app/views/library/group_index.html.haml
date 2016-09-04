@@ -1,1 +1,33 @@
-All Groups
+-if current_corporate
+  =render partial: 'layouts/corporate_navbar'
+-else
+  =render partial: 'layouts/navbar'
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
+.l-section-library.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-6.col-md-offset-3
+          %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big.library-heading
+            Learn anytime, anywhere
+          %p.h5.text-center.l-margin-bottom-big.library-text
+            Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
+
+      .row.l-margin-top-big.l-margin-bottom-huge
+        -@groups.each do |group|
+          .col-md-4
+            =link_to library_special_link(group), class: 'box box-course' do
+              .box-inner
+                %h2{style: 'margin-bottom: 5px;'}
+                  =group.name
+                -if group.image_file_name
+                  =image_tag group.image.url, class: 'box-pic'
+                -else
+                  %p.l-margin-top
+                    =group.description.truncate(175)
+              .box-label
+                %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                  Browse Courses

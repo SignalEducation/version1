@@ -19,8 +19,8 @@ class HomePagesController < ApplicationController
   before_action only: [:index, :new, :edit, :update, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:student_sign_up, :diploma, :home, :course]
-  before_action :layout_variables, only: [:diploma, :home, :course]
+  before_action :get_variables, except: [:student_sign_up, :diploma, :home, :diploma_index]
+  before_action :layout_variables, only: [:diploma, :home, :diploma_index, :group_index]
 
   def home
     #This is the main home_page
@@ -34,7 +34,23 @@ class HomePagesController < ApplicationController
   end
 
   def group_index
+    @groups = Group.all_active.for_public.all_in_order
+    @user = User.new
+    session[:sign_up_errors].each do |k, v|
+      v.each { |err| @user.errors.add(k, err) }
+    end if session[:sign_up_errors]
+    session.delete(:sign_up_errors)
+    country = IpAddress.get_country(request.remote_ip)
+    if country
+      @currency_id = country.currency_id
+      @user.country_id = country.id
+    else
+      @currency_id = Currency.find_by_iso_code('GBP').id
+      @user.country_id = Country.find_by_name('United Kingdom').id
+    end
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
+    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
   def diploma_index
@@ -54,7 +70,7 @@ class HomePagesController < ApplicationController
 
 
   def show
-    binding.pry
+
     #This is a back up that needs to redirect to course, diploma or home
 
       @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]

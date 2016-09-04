@@ -1,9 +1,11 @@
 class LibraryController < ApplicationController
 
-  def index
+  def group_index
     @navbar = nil
+
+    #Filter Groups for corporate students by corporate_customer_id and by restrictions.
     if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-      #Filter Groups for corporate students by corporate_customer_id and by restrictions.
+
       all_groups = Group.all_active.all_in_order
       public_groups = all_groups.for_public
       private_groups = all_groups.for_corporates
@@ -37,14 +39,30 @@ class LibraryController < ApplicationController
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
-  def product_courses_index
-    #A Top level Library page for all subject courses for products with a link to each course landing page or lib#show if they purchased the course
-    @category = SubjectCourseCategory.all_product.first
-    @courses = SubjectCourse.in_category(@category.id)
-
+  def group_show
+    @group = Group.where(name_url: params[:group_name_url]).first || Group.where(id: params[:id]).first
+    if @group.nil?
+      redirect_to subscription_groups_url
+    else
+      courses = @group.try(:active_children)
+      if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
+        corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).all_in_order
+        non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
+        allowed_courses = corporate_courses + non_restricted_courses
+        @courses = allowed_courses.uniq
+      else
+        courses = courses.try(:all_not_restricted)
+        @courses = courses.try(:all_in_order)
+      end
+      if current_user
+        @logs = SubjectCourseUserLog.where(user_id: current_user.id)
+      end
+      seo_title_maker(@group.try(:name), @group.try(:description), nil)
+      tag_manager_data_layer(@group.try(:name))
+    end
   end
 
-  def show
+  def course_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
     if @course.nil?
       redirect_to subscription_groups_url
@@ -64,13 +82,11 @@ class LibraryController < ApplicationController
           latest_set = user_course_sets.first
           @latest_element_id = latest_set.try(:latest_course_module_element_id)
           @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-          if @course.try(:live)
-            render 'live_course'
-          elsif !@course.try(:live)
+          if !@course.try(:live)
             @navbar = nil
             render 'preview_course'
           else
-            redirect_to subscription_groups_url
+
           end
           seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
         end
@@ -92,18 +108,20 @@ class LibraryController < ApplicationController
         cme_ids = @course.course_module_elements.all_active.map(&:id)
         @course_resources = CourseModuleElementResource.where(course_module_element_id: cme_ids).all_in_order
 
-        if @course.try(:live)
+        if !@course.try(:live)
           seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
           render 'live_course'
-        elsif !@course.try(:live)
-          seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
-          @navbar = nil
-          render 'preview_course'
         else
-          redirect_to subscription_groups_url
+
         end
       end
     end
+  end
+
+  def diploma_show
+    @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
+    redirect_to all_diplomas_url if !current_user
+    redirect_to all_diplomas_url if current_user && !current_user.valid_subject_course_ids.include?(@course.id)
   end
 
   def cert
@@ -168,25 +186,6 @@ class LibraryController < ApplicationController
         format.json{render json: {message: "Email Address Cannot be blank. Please enter valid email id."}}
       end
     end
-  end
-
-
-
-
-  def group_index
-
-  end
-
-  def group_show
-
-  end
-
-  def course_show
-
-  end
-
-  def diploma_show
-
   end
 
 end
