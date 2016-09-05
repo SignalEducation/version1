@@ -1,56 +1,245 @@
--# This view will a basic landing page filled with info on hte course from the DB, shown if no custom partial file is found
+%header
+  .wrapper
+    .top_header
+      =image_tag('header_logo.png', alt: 'header_logo', class: 'main_logo')
+      %nav
+        %ul.top_main_nav
+          %li
+            %a{:href => "#"} Business
+          %li
+            %a{:href => "#"} Why LeannSignal
+          %li
+            %a{:href => "#"} Blog
+          %li
+            %a{:href => "#"} Pricing
+          %li
+            %a{:href => "#"} Library
+          %li
+            %a{:href => "#"} Sign in
+          %li
+            %a{:href => "#"} Sign up
+        %a.mobile_menu{:href => "#"}
+        .mobile_menu_dropdown
+          %ul.top_main_nav
+            %li
+              %a{:href => "#"} Business
+            %li
+              %a{:href => "#"} Why Leant Signal
+            %li
+              %a{:href => "#"} Blog
+            %li
+              %a{:href => "#"} Pricing
+            %li
+              %a{:href => "#"} Library
+            %li
+              %a{:href => "#"} Sign in
+            %li
+              %a{:href => "#"} Sign up
+          .close_mobile_menu
+    .diploma
+      %h3 Diploma In
+      %h2 Digital Accounting
+      %ul
+        %li
+          %p 17 hours
+        %li
+          %p study online
+        %li
+          %p
+            %span €1250
+      .diploma_links
+        %a.course_info{:href => "#"} Course Information
+        %a.enroll_now{:href => "#"} Enroll Now
+    .certeficate
+      =image_tag('certificate.png', alt: 'certificate')
+      .accredited
+        %p Accredited by:
+        =image_tag('ICM_logo.png', class: 'features-img', alt: 'ICM_logo', :width => '131')
 
-.hero-acca
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  =render partial: 'layouts/transparent_navbar'
-  .hero-inner#sign-up
-    .l-wrap-medium
-      .container-fluid
-        .row
-          .col-sm-6
-            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              =@course.name
-            %p.h5.h-white.l-margin-bottom-huge
-              =@course.short_description
 
-          .col-sm-6
-            -if current_user
-              =link_to users_new_order_url(@course.name_url), class: 'btn btn-red btn-wide btn-lg-text', style: 'line-height: 60px' do
-                Purchase Now
+%section#diploma_info
+  .wrapper
+    .diploma_descrip
+      %h2 Diploma Information
+      %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+      %nav
+        %ul
+          %li
+            %p This Diploma program commences on X Date.
+          %li
+            %p Students are advised to apply in advance to secure their place.
+          %li
+            %p The last date for enrollment is Wednesday, 31st of August.
+      %a.enroll_now{:href => "#"} Learn more
+    =image_tag('man_big.png', alt: 'man_big')
 
 
-            -else
-              =link_to new_product_user_url(@course.name_url), class: 'btn btn-red btn-wide btn-lg-text', style: 'line-height: 60px' do
-                Purchase Now
+%section#will_learn
+  .wrapper
+    %h2 What you'll learn
+    .tabs
+      %ul
+        %li
+          %a.active{:href => "#financial_accounting"} Financial Accounting
+        %li
+          %a{:href => "#management_accounting"} Management Accounting
+        %li
+          %a{:href => "#financial_management"} Financial Management
+        %li
+          %a{:href => "#taxation"} Taxation
+        %li
+          %a{:href => "#be_corp_governance"}
+            Business Ethics
+            %br Corporate Governance
+          %li
+            %a{:href => "#law"} Law
+
+      #financial_accounting.tab
+        %h3 Financial Accounting
+        %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %a.enroll_now{:href => "#"} Enroll now
+      #management_accounting.tab
+        %h3 Financial Accounting
+        %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %a.enroll_now{:href => "#"} Enroll now
+      #financial_management.tab
+        %h3 Financial Accounting
+        %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %a.enroll_now{:href => "#"} Enroll now
+      #taxation.tab
+        %h3 Financial Accounting
+        %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %a.enroll_now{:href => "#"} Enroll now
+      #be_corp_governance.tab
+        %h3 Financial Accounting
+        %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %a.enroll_now{:href => "#"} Enroll now
+      #law.tab
+        %h3 Financial Accounting
+        %p Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %a.enroll_now{:href => "#"} Enroll now
+
+
+
+%section#advance_career
+  .wrapper
+    %h2 Advance your career in Accounting
+    %p LearnSignal gives you access to world class training and certifications.
+    %ul
+      %li
+        .ac_title_bl
+          =image_tag('24h.png', alt: '24h')
+          %p Flexible study options
+        %p Whether you are studying at home, or on a tablet on your way to work, you can enjoy 24-hour access to video lectures, slide presentations, practical exercises, quizzes and a supportive student network. Never fear missing a class again.
+
+        %li
+          .ac_title_bl
+            =image_tag('world.png', alt: 'world')
+            %p.two_strings
+              World Leading
+              %br Education
+          %p LearnSignal is a global business school created by top accountancy tutors. Our courses are recognised by accreditation bodies all over the world.
+
+        %li
+          .ac_title_bl
+            =image_tag('tallent.png', alt: 'tallent')
+            %p.two_strings
+              Designed and Taught
+              %br by the Best
+          %p We have brought together the world's top accountancy tutors and the world's leading instructional designers to bring you one of the highest quality online course available anywhere in the world.
+        %li
+          .ac_title_bl
+            =image_tag('global.png', alt: 'global')
+            %p.two_strings
+              Be Part of Global
+              %br Student Body
+          %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
+          %a.enroll_now{:href => "#"} Enroll now
+
+
+%section#study_online
+  .wrapper
+    .so_descrip
+      %h2 Study online with LearnSignal
+      .option
+        %p.key Study Time:
+        %p.value 24 hrs
+      .option
+        %p.key Assessment:
+        %p.value Online exam
+      .option
+        %p.key Resources:
+        %p.value Video lectures, slide presentations, practical exercises
+      .option
+        %p.key Payment Options:
+        %p.value €1,250.00
+      %a.enroll_now{:href => "#"} Enroll now
+    =image_tag('iphone.png', alt: 'iphone')
+
+
+%section#get_answers
+  .wrapper
+    %h2 Get Answers
+    %h3 We love questions, almost as much as we love providing answers! Here are a few examples of what we're typically asked, along with our responses.
+    .question
+      %h4 Do I need to have a maths background to take this Diploma?
+      %p Anyone can apply for the Professional Diploma. A background in a related discipline is not required; the aim of the Professional Diploma is to enable you to learn everything you need to know at a foundation level, so you can kick start your digital career. You could be a business owner, a traditional or digital marketing professional, a recent graduate, or simply looking to change your career. The only prerequisite is that you have an interest in digital marketing and want to progress your career.
+    .question
+      %h4 Why should I study with LearnSignal?
+      %p The Digital Marketing Institute is the global certification standard in digital education. To date, over 17,000 people in 80 countries have graduated with a Digital Marketing Institute qualification, making ours the most widely taught digital certification standard in the world. The Digital Marketing Institute collaborates with global digital experts to define and develop the skills and qualifications required of today’s digital professionals.
+
+
+
+%section#subscribe
+  .wrapper
+    %h2 Subscribe to our newsletter
+    %form{:action => "#"}
+      %input{:placeholder => "Type your email...", :type => "email"}
+        %button{:type => "submit"}
+      %p
+        By providing us your email, you agree to the terms of our
+        %a{:href => "#"} Privacy Policy
+        and
+        %a{:href => "#"} Terms of Service
+
+
+
+%section#help
+  .wrapper
+    %h2
+      How can we
+      %br help you today?
+
+    .help_descr
+      =image_tag('call_us_icon.png', alt: 'call_us_icon')
+      .help_cont
+        %h4 Speak to one of our educational consultants
+
+        %p If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.
+
+        %a.enroll_now{:href => "#"} call us now!
 
 
 
 
-.business
-  .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-              Features
-        .row
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('phone-icon.png', class: 'features-img', alt: 'anytime-anywhere-mobile-icon')
-              Anywhere, Anytime
-            %p.p
-              Learn the skills you need anytime, anywhere, on any device.
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('magnifiying-glass-icon.png', class: 'features-img', alt: 'depth-of-content-icon')
-              Depth of Content
-            %p.p
-              Access a library of business-focused courses taught by expert tutors.
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('network-icon.png', class: 'features-img', alt: 'expert-author-network-icon')
-              Expert Author Network
-            %p.p
-              Learn from the best with training designed and developed by industry experts.
+=render partial: 'layouts/footer'
+
+
+:javascript
+
+  $(document).ready(function(){
+
+    // Tabs
+    $('.tabs').tabs();
+
+    // Mobile menu
+    $(".mobile_menu").click(function(){
+      $(".mobile_menu_dropdown").slideDown('slow');
+      return false;
+    });
+
+    $(".close_mobile_menu").click(function(){
+      $(".mobile_menu_dropdown").slideUp('slow');
+    });
+
+  });

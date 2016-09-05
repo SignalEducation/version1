@@ -102,7 +102,5 @@
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
 
-    =render partial: 'layouts/contact_modal'
-    =render partial: 'layouts/restricted_access'
-    -unless current_user
-      =render partial: 'layouts/sign_up_modal'
+    -#TODO
+    =#render partial: 'layouts/contact_modal'

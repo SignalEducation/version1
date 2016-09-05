@@ -23,7 +23,7 @@
                     element.find('li a').removeClass('active');
                     var tab = $(this).find('a').attr('href');
                     $(this).find('a').addClass('active');
-                    showTab(element, tab)
+                    showTab(element, tab);
                     // e.find('a').preventDefault();
                 });
             }
