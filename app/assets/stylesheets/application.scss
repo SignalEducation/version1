@@ -14,7 +14,20 @@
 // 1. Colours & Fonts
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
+@font-face {
+  font-family: 'Montserrat-Hairline';
+  src: font-url('montserrat_hairline.ttf');
+}
+@font-face {
+  font-family: 'Montserrat-Light';
+  src: font-url('montserrat_light.ttf');
+}
+@font-face {
+  font-family: 'Montserrat-Regular';
+  src: font-url('montserrat_reg.ttf');
+}
+
+$sans-font: Montserrat-Regular, HelveticaNeue, Helvetica, Arial, sans-serif;
 $gutter: 20px;
 $white: #fff;
 
@@ -91,6 +104,12 @@ body {
   .external_layout {      // These allow for different BG colours on external pages [sign-in, sign-up, corp-home]
     background: #34495e;
   }
+  .home_page_layout {
+    min-width: 320px;
+    line-height: 1;
+    font-family: $sans-font;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 
@@ -98,6 +117,13 @@ body {
 // 3. Text Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+img{ max-width: 100%;}
+* { margin: 0 auto;}
+:focus{ outline: none;}
+.wrapper{
+  max-width: 970px;
+  padding: 0 10px;
+}
 
 a {
   color: $colour-12;
@@ -901,6 +927,17 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(md-min) {
     max-width: 1600px;
   }
+}
+.l-wrap-home {
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+
+  @include breakpoint(md-min) {
+    padding: 0 $gutter/2;
+    max-width: 1000px;
+  }
+
 }
 
 // Sections
@@ -4067,4 +4104,684 @@ spinner {
       transform: scale(1);
     }
 }
+
+
+
+
+
+
+
+
+
+/* --- Header ---*/
+
+header{
+  background-image: asset-url('header_bg.jpg');
+  -webkit-background-size: cover;
+  background-size: cover;
+  padding: 25px 0 60px 0;
+  color: #fff;
+}
+.main_logo{
+  display: inline-block;
+  margin: 10px 0 0;
+}
+.top_header{
+  padding: 0 0 25px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.top_header nav{ float: right;}
+.top_header nav ul li{
+  display: inline-block;
+  margin: 0 15px 0 0;
+}
+.top_header nav ul li:last-child{
+  border: 2px solid #f14b4e;
+  border-radius: 5px;
+  padding: 7px 15px;
+  margin: 0;
+}
+.top_header nav ul li:last-child a{ color: #f14b4e;}
+.top_header nav ul li a{
+  color: #fff;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-family: $sans-font;
+}
+.mobile_menu, .mobile_menu_dropdown {
+  display: none;
+}
+.diploma{
+  display: inline-block;
+  vertical-align: top;
+  width: 52%;
+  padding-top: 137px;
+  margin: 0 30px 0 0;
+}
+.certificate{
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 75px;
+}
+.diploma h3{
+  font-size: 51px;
+  font-family: Montserrat-Hairline;
+}
+.diploma h2{
+  font-size: 54px;
+  line-height: 1.2;
+}
+.diploma ul{
+  margin: 24px 0 46px 0;
+  padding-left: 0;
+  color: $white;
+}
+.diploma ul li{
+  display: inline-block;
+  color: $white;
+}
+.diploma ul li:before{
+  content: "·";
+  color: $white;
+  display: inline-block;
+  font-size: 20px;
+  vertical-align: top;
+  line-height: 20px;
+  margin: 0 2px;
+}
+.diploma ul li:first-child:before{
+  content: '';
+  margin: 0;
+  color: $white;
+}
+.diploma ul li p{
+  display: inline-block;
+  text-transform: uppercase;
+  font-family: Montserrat-Light;
+  font-size: 18px;
+  color: $white;
+}
+.diploma ul li p span{ font-weight: bold;}
+.diploma_links a{
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 15px;
+  display: inline-block;
+}
+.course_info{
+  border: 2px solid #fff;
+  border-radius: 4px;
+  padding: 12px 16px;
+}
+.enroll_now{
+  font-size: 15px;
+  color: #fff;
+  text-transform: uppercase;
+  background: #f14b4e;
+  border-radius: 4px;
+  padding: 13px 23px;
+  margin: 0 0 0 15px;
+  -webkit-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+  box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+}
+.accredited{
+  text-align: center;
+  margin: 12px 0 0;
+}
+.accredited p{
+  display: inline-block;
+  vertical-align: top;
+  font-size: 19px;
+  margin: 15px 10px 0 0;
+  color: $white;
+  font-family: Montserrat-Light;
+}
+
+
+/* --- Diploma Information Section --- */
+
+
+#diploma_info{
+  padding-top: 57px;
+  color: #464646;
+  font-family: Montserrat-Light;
+  overflow: hidden;
+}
+#diploma_info img{ margin: 0 -100px 0 -15px;}
+.diploma_descrip{
+  display: inline-block;
+  width: 64%;
+  vertical-align: top;
+  margin: 82px 0 0;
+}
+.diploma_descrip h2{ font-size: 48px;}
+.diploma_descrip > p{
+  font-size: 19px;
+  margin: 28px 0;
+  line-height: 1.4;
+}
+.diploma_descrip nav ul{
+  list-style: disc inside;
+  margin: 0 0 10px 20px;
+  font-size: 19px;
+  line-height: 1.4;
+}
+.diploma_descrip nav ul li{ color: #f14b4e;}
+.diploma_descrip nav ul li p{ color: #464646;}
+.diploma_descrip .enroll_now{
+  display: inline-block;
+  margin: 34px 0 0 6px;
+  font-weight: bold;
+}
+
+
+
+
+/* --- What You'll Learn Section --- */
+
+
+#will_learn{
+  background-image: asset-url('learn_bg.jpg');
+  background-size: cover;
+  color: #fff;
+  padding: 80px 0 0;
+}
+#will_learn h2{
+  font-size: 48px;
+  font-family: Montserrat-Light;
+}
+
+
+/* --- Advance Your Career Section --- */
+
+
+#advance_career{
+  color: #464646;
+  text-align: center;
+  padding: 90px 0 0;
+  font-family: Montserrat-Light;
+}
+#advance_career h2{ font-size: 48px;}
+#advance_career .wrapper > p{
+  font-size: 24px;
+  line-height: 2;
+}
+#advance_career ul{ text-align: left;}
+#advance_career ul li{
+  display: inline-block;
+  width: 52%;
+  vertical-align: top;
+  margin: 60px 60px 0 0;
+}
+#advance_career ul li:nth-child(2n){
+  width: 41%;
+  margin: 60px 0 0;
+}
+#advance_career ul li > p{
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+.ac_title_bl img{ display: inline-block;}
+.ac_title_bl p{
+  display: inline-block;
+  vertical-align: top;
+  font-size: 25px;
+  font-family: Montserrat-Regular;
+  margin: 15px 0 0 10px;
+}
+.ac_title_bl .two_strings{ margin: 0 0 0 10px;}
+#advance_career .enroll_now{
+  margin: 70px 0 0;
+  display: inline-block;
+  padding: 18px 94px;
+  font-size: 24px;
+  font-family: Montserrat-Regular;
+}
+
+
+/* --- Study Online Section --- */
+
+
+#study_online{
+  background-image: asset-url('learnsignal_bg.jpg');
+  background-size: cover;
+  margin: 100px 0 0;
+  padding: 66px 0 73px 0;
+  color: #464646;
+}
+#study_online .wrapper > img{
+  float: right;
+  margin: -90px 0 0;
+}
+.so_descrip{
+  display: inline-block;
+  vertical-align: top;
+}
+.so_descrip h2{
+  font-size: 48px;
+  font-family: Montserrat-Light;
+  margin-bottom: 40px;
+}
+.option{ margin: 0 0 12px 0;}
+.option p{ display: inline-block;}
+.option .key{
+  font-family: Montserrat-Light;
+  font-size: 19px;
+  width: 180px;
+}
+.so_descrip .enroll_now{
+  margin: 28px 0 0;
+  display: inline-block;
+}
+
+
+/* --- Get Answers Section --- */
+
+
+#get_answers{
+  color: #464646;
+  padding: 92px 0 102px 0;
+  font-family: Montserrat-Light;
+}
+#get_answers h2{ font-size: 48px;}
+#get_answers h3{
+  font-size: 24px;
+  margin: 20px 0 0;
+  line-height: 1.2;
+}
+#get_answers h4{
+  font-family: Montserrat-Regular;
+  font-size: 19px;
+  line-height: 2.5;
+}
+.question{ margin: 29px 0 0;}
+#get_answers p{
+  line-height: 1.5;
+  font-size: 17px;
+}
+
+
+/* --- Subscribe Section --- */
+
+
+#subscribe{
+  background-image: asset-url('subscribe_bg.jpg');
+  background-size: cover;
+  text-align: center;
+  color: #fff;
+  font-family: Montserrat-Light;
+  padding: 63px 0 60px 0;
+}
+#subscribe h2{ font-size: 32px;}
+#subscribe form{
+  max-width: 655px;
+  margin-top: 28px;
+  position: relative;
+}
+#subscribe input{
+  border: none;
+  padding: 20px 27px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 5px;
+  outline: none;
+  font-size: 17px;
+  color: #515151;
+  font-family: Montserrat-Light;
+}
+#subscribe button{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 66px;
+  height: 51px;
+  background: asset-url('subscribe_icon.png') no-repeat;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+#subscribe p{
+  margin: 30px 0 0;
+  font-size: 12px;
+  color: #bc8aa3;
+}
+#subscribe a{
+  color: #fff;
+  text-decoration: underline;
+  color: #bc8aa3;
+}
+
+
+/* --- How can we help Section --- */
+
+
+#help{
+  font-family: Montserrat-Light;
+  padding: 90px 0 70px 0;
+  color: #515151;
+}
+#help h2{  font-size: 48px;}
+#help h2 br{ display: none; }
+.help_descr{
+  margin: 18px 0 0;
+  padding: 0 0 0 17px;
+}
+.help_descr img{ margin: 15px 0 0;}
+.help_descr img, .help_cont{
+  display: inline-block;
+  vertical-align: top;
+}
+.help_cont{
+  max-width: 80%;
+  margin: 0 0 0 13px;
+}
+.help_cont h4{
+  font-family: Montserrat-Regular;
+  font-size: 19px;
+  line-height: 1.7;
+}
+.help_cont p{ line-height: 1.7;}
+.help_cont .enroll_now{
+  display: inline-block;
+  margin: 24px 0 0;
+}
+
+/* --- Footer --- */
+
+
+footer{
+  font-family: Montserrat-Light;
+  padding: 28px 0 30px 0;
+  color: #fff;
+  background-color: #3d3e5c;
+}
+.copyright{
+  display: inline-block;
+  font-size: 14px;
+}
+footer nav{ float: right;}
+footer nav ul li{ display: inline-block;}
+footer nav ul li:before{
+  content: "·";
+  display: inline-block;
+  font-size: 40px;
+  vertical-align: top;
+  line-height: 12px;
+  margin: 0 8px 0 0;
+  color: #5a5b74;
+}
+footer nav ul li:first-child:before {
+  content: '';
+  margin: 0;
+}
+footer nav ul li:last-child{ margin: 0;}
+footer nav ul li a{
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+}
+
+
+@media (max-width: 980px){
+  .certificate{ width: 43%; }
+  .diploma_descrip{ width: 60%; }
+  #diploma_info img {
+    margin: 55px -100px 0 -15px;
+    max-width: 52%;
+  }
+}
+@media (max-width: 948px){
+  #advance_career ul li, #advance_career ul li:nth-child(2n) {
+    width: 75%;
+    margin: 30px auto;
+  }
+  #advance_career ul {
+    text-align: center;
+  }
+  .so_descrip {
+    max-width: 75%;
+  }
+}
+@media (max-width: 850px){
+  .top_main_nav{
+    display: none;
+  }
+  .mobile_menu_dropdown .top_main_nav {
+    display: block;
+    float: none;
+    margin: 8% auto 0 auto;
+    max-width: 36%;
+  }
+  .mobile_menu {
+    display: block;
+    float: right;
+    background: asset-url('Nav-Main-Menu-Off.png');
+    width: 27px;
+    height: 24px;
+    -webkit-background-size: cover;
+    background-size: cover;
+    margin-top: 8px;
+  }
+  .close_mobile_menu {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background-image: asset-url('Nav-Overlay-X-off.png');
+    -webkit-background-size: cover;
+    background-size: cover;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+  }
+  .mobile_menu_dropdown {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    background: #fff;
+    overflow: auto;
+  }
+  .mobile_menu_dropdown .top_main_nav li {
+    display: block;
+    padding: 20px 0;
+    border-top: 2px solid #ededed;
+  }
+  .mobile_menu_dropdown .top_main_nav li a {
+    font-size: 20px;
+    color: #464646;
+  }
+  #diploma_info img{ display: none; }
+  .diploma_descrip { width: 100%; }
+  #diploma_info{ padding-bottom: 25px }
+  #study_online .wrapper > img{ display: none; }
+  .so_descrip { max-width: 100%;}
+}
+@media (max-width: 768px){
+  footer{ text-align: center; }
+  footer nav{
+    float: none;
+    margin: 15px 0 0;
+  }
+}
+@media (max-width: 701px){
+  .diploma, .certificate{
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+  #help h2 { font-size: 43px;}
+}
+@media (max-width: 600px){
+  .top_main_nav li {
+    padding: 15px 0;
+  }
+  .top_main_nav li a {
+    font-size: 17px;
+  }
+  .mobile_menu_dropdown .top_main_nav {
+    max-width: 56%;
+  }
+  .value{ max-width: 55%; }
+  .option p { vertical-align: top;}
+  #help h2 {
+    font-size: 36px;
+    text-align: center;
+  }
+  #help h2 br{ display: block; }
+}
+@media (max-width: 550px){
+  footer nav ul li, footer nav ul li:last-child{
+    margin: 7px 0 0;
+  }
+  footer nav ul li {
+    display: block;
+  }
+  footer nav ul li:before{ content: ""}
+}
+@media (max-width: 500px){
+  .so_descrip h2 { font-size: 35px;}
+  .value {
+    max-width: 44%;
+    font-size: 16px;
+  }
+  .option .key {
+    font-size: 17px;
+    width: 160px;
+  }
+  #get_answers h2 {
+    font-size: 43px;
+  }
+  #get_answers h3 { font-size: 19px;}
+  #get_answers h4, #get_answers p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .help_descr { margin: 35px 0 0;}
+}
+@media (max-width: 420px){
+  .diploma_links a{
+    display: block;
+    max-width: 80%;
+  }
+  .diploma_links .enroll_now{
+    margin: 15px auto auto;
+  }
+  #advance_career .enroll_now{
+    padding: 18px 70px;
+    font-size: 20px;
+  }
+  #subscribe h2 { font-size: 22px;}
+  .help_cont { max-width: 75%;}
+  .mobile_menu_dropdown .top_main_nav li a { font-size: 16px;}
+}
+
+
+
+
+
+
+/* Tabs CSS begin */
+.tab {
+  display: none;
+  max-width: 46%;
+  margin: auto 0 auto auto;
+}
+.tabs{
+  margin: 45px 0 0;
+  min-height: 490px;
+}
+.tabs ul {
+  float: left;
+  margin-right: 75px;
+  width: 39%;
+}
+.tabs ul > li {list-style: none;}
+.tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: #c7c8df;
+  font-size: 24px;
+  font-family: Montserrat-Light;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.tabs ul > li:first-child a {
+  border-top: 1px solid #71738c;
+}
+.tabs ul > li a:hover {
+  background-color: #373854;
+}
+.tabs ul > li a.active {
+  background-color: #373854;
+  font-weight: bold;
+  color: #fff;
+}
+.tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  background-image: asset-url('arrow_right.png');
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.tab h3{
+  font-size: 32px;
+  line-height: 1.5;
+}
+.tab p{
+  font-family: Montserrat-Light;
+  line-height: 1.45;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .tabs ul{
+    margin-right: 65px;
+    width: 46%;
+  }
+  .tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .tabs {
+    padding: 0 0 45px 0;
+  }
+  .tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .tabs ul > li a {
+    font-size: 18px;
+  }
+  .tabs ul > li a br{ display: block; }
+  .tab h3 { font-size: 27px;}
+  .tab p{ font-size: 16px }
+}
+/* Tabs CSS end */
 

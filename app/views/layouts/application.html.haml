@@ -15,10 +15,7 @@
         =@seo_title
       -else
         Business Training Library | LearnSignal
-    -if controller_name == 'home_pages' && action_name == 'diploma'
-      =stylesheet_link_tag 'home_pages', media: 'all'
-    -else
-      =stylesheet_link_tag @css_root, media: 'all'
+    =stylesheet_link_tag @css_root, media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
