@@ -62,8 +62,17 @@ class HomePagesController < ApplicationController
   end
 
   def diploma
+    #Needs to render a custom partial if one exists or render the default
+    @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
+    @default_element = params[:default] if params[:default]
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @course = @home_page.subject_course
+    @product = @course.products.in_currency(@country.currency_id).last
+    @navbar = nil
+    @footer = nil
+
   end
 
 

@@ -7,7 +7,7 @@
       <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
-    %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
+    %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
     %title<
       -if @delivered_page
         =@delivered_page.seo_title
@@ -15,7 +15,10 @@
         =@seo_title
       -else
         Business Training Library | LearnSignal
-    =stylesheet_link_tag @css_root, media: 'all'
+    -if controller_name == 'home_pages' && action_name == 'diploma'
+      =stylesheet_link_tag 'home_pages', media: 'all'
+    -else
+      =stylesheet_link_tag @css_root, media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
