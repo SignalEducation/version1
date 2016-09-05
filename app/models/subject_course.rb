@@ -133,6 +133,10 @@ class SubjectCourse < ActiveRecord::Base
     self.children.all_active.all_in_order
   end
 
+  def first_active_child
+    self.active_children.first
+  end
+
   def children
     self.course_modules.all
   end

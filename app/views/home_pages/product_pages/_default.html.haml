@@ -2,7 +2,8 @@
   %header
     .l-wrap-home
       .top_header
-        =image_tag('header_logo.png', alt: 'header_logo', class: 'main_logo')
+        =link_to root_url do
+          =image_tag('header_logo.png', alt: 'header_logo', class: 'main_logo')
         %nav
           %ul.top_main_nav
             %li
@@ -87,12 +88,12 @@
         %ul
           -@course.active_children.each do |course_module|
             %li
-              %a{href: "##{course_module.name_url}"}
+              %a{href: "##{course_module.name_url}", class: "#{'active' if (course_module.id == @course.first_active_child.id)}", role: 'tab', data: {toggle: 'tab'}}
                 =course_module.name
 
         -@course.active_children.each do |course_module|
           .tab{id: "#{course_module.name_url}"}
-            %h3.h-white
+            %h3
               =course_module.name
             %p
               =course_module.description
