@@ -117,6 +117,7 @@ Rails.application.routes.draw do
     get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
+    post '/home_page_subscribe', to: 'home_pages#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
 
 

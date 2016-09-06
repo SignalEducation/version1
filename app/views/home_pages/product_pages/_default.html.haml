@@ -38,12 +38,16 @@
           =@course.name
         %ul
           %li
-            %p 17 hours
+            %p
+              =@course.estimated_time_in_seconds
+              ='Hours'
           %li
-            %p study online
+            %p study online8
           %li
             %p
-              %span €1250
+              %span
+                =number_in_local_currency(@product.price, @currency_id)
+
         .diploma_links
           %a.course_info{:href => "#diploma_info"} Course Information
           =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
@@ -112,29 +116,31 @@
             %p Flexible study options
           %p Whether you are studying at home, or on a tablet on your way to work, you can enjoy 24-hour access to video lectures, slide presentations, practical exercises, quizzes and a supportive student network. Never fear missing a class again.
 
-          %li
-            .ac_title_bl
-              =image_tag('world.png', alt: 'world')
-              %p.two_strings
-                World Leading
-                %br Education
-            %p LearnSignal is a global business school created by top accountancy tutors. Our courses are recognised by accreditation bodies all over the world.
+        %li
+          .ac_title_bl
+            =image_tag('world.png', alt: 'world')
+            %p.two_strings
+              World Leading
+              %br Education
+          %p LearnSignal is a global business school created by top accountancy tutors. Our courses are recognised by accreditation bodies all over the world.
 
-          %li
-            .ac_title_bl
-              =image_tag('tallent.png', alt: 'tallent')
-              %p.two_strings
-                Designed and Taught
-                %br by the Best
-            %p We have brought together the world's top accountancy tutors and the world's leading instructional designers to bring you one of the highest quality online course available anywhere in the world.
-          %li
-            .ac_title_bl
-              =image_tag('global.png', alt: 'global')
-              %p.two_strings
-                Be Part of Global
-                %br Student Body
-            %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
-            %a.enroll_now{:href => "#"} Enroll now
+        %li
+          .ac_title_bl
+            =image_tag('tallent.png', alt: 'tallent')
+            %p.two_strings
+              Designed and Taught
+              %br by the Best
+          %p We have brought together the world's top accountancy tutors and the world's leading instructional designers to bring you one of the highest quality online course available anywhere in the world.
+        %li
+          .ac_title_bl
+            =image_tag('global.png', alt: 'global')
+            %p.two_strings
+              Be Part of Global
+              %br Student Body
+          %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
+
+        =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+          Enroll Now
 
 
   %section#study_online
@@ -143,7 +149,9 @@
         %h2 Study online with LearnSignal
         .option
           %p.key Study Time:
-          %p.value 24 hrs
+          %p.value
+            =@course.estimated_time_in_seconds
+            ='hrs'
         .option
           %p.key Assessment:
           %p.value Online exam
@@ -152,8 +160,11 @@
           %p.value Video lectures, slide presentations, practical exercises
         .option
           %p.key Payment Options:
-          %p.value €1,250.00
-        %a.enroll_now{:href => "#"} Enroll now
+          %p.value
+            =number_in_local_currency(@product.price, @currency_id)
+
+        =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+          Enroll Now
       =image_tag('iphone.png', alt: 'iphone')
 
 
@@ -172,15 +183,19 @@
 
   %section#subscribe
     .l-wrap-home
-      %h2 Subscribe to our newsletter
-      %form{:action => "#"}
-        %input{:placeholder => "Type your email...", :type => "email"}
+      %h2.h-white Subscribe to our newsletter
+      #response
+        =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+          =email_field(:email, :address, {id: 'email', placeholder: 'Type your email...'})
           %button{:type => "submit"}
+
         %p
           By providing us your email, you agree to the terms of our
-          %a{:href => "#"} Privacy Policy
+          =link_to privacy_policy_url do
+            Privacy Policy
           and
-          %a{:href => "#"} Terms of Service
+          =link_to terms_and_conditions_url do
+            Terms of Service
 
 
 
@@ -197,7 +212,11 @@
 
           %p If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.
 
-          %a.enroll_now{:href => "#"} call us now!
+
+          =link_to contact_url, class: 'enroll_now' do
+            call us now!
+
+
 
 
 

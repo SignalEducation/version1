@@ -67,9 +67,10 @@ class HomePagesController < ApplicationController
     @default_element = params[:default] if params[:default]
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
     @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @currency_id = @country.currency_id
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @course = @home_page.subject_course
-    @product = @course.products.in_currency(@country.currency_id).last
+    @product = @course.products.in_currency(@currency_id).last
     @navbar = nil
     @footer = nil
 
@@ -200,6 +201,43 @@ class HomePagesController < ApplicationController
       end
     end
   end
+
+
+  def subscribe
+    email = params[:email][:address]
+    list_id = 'a716c282e2'
+    if !email.blank?
+      begin
+        @mc.lists.subscribe(list_id, {'email' => email})
+        respond_to do |format|
+          format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
+        end
+      rescue Mailchimp::ListAlreadySubscribedError
+        respond_to do |format|
+          format.json{render json: {message: "#{email} is already subscribed to the list"}}
+        end
+      rescue Mailchimp::ListDoesNotExistError
+        respond_to do |format|
+          format.json{render json: {message: "The list could not be found."}}
+        end
+      rescue Mailchimp::Error => ex
+        if ex.message
+          respond_to do |format|
+            format.json{render json: {message: "There is an error. Please enter valid email id."}}
+          end
+        else
+          respond_to do |format|
+            format.json{render json: {message: "An unknown error occurred."}}
+          end
+        end
+      end
+    else
+      respond_to do |format|
+        format.json{render json: {message: "Email Address Cannot be blank. Please enter valid email id."}}
+      end
+    end
+  end
+
 
 
 
