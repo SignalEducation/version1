@@ -4163,15 +4163,16 @@ header{
 .certificate{
   display: inline-block;
   vertical-align: top;
-  padding-top: 75px;
+  padding-top: 85px;
 }
 .diploma h3{
-  font-size: 51px;
+  font-size: 35px;
   font-family: Montserrat-Hairline;
 }
 .diploma h2{
-  font-size: 54px;
-  line-height: 1.2;
+  font-size: 40px;
+  line-height: 1.1;
+  margin-top: 15px;
 }
 .diploma ul{
   margin: 24px 0 46px 0;
@@ -4209,6 +4210,11 @@ header{
   text-transform: uppercase;
   font-size: 15px;
   display: inline-block;
+}
+.cert-image {
+  max-width: 70%;
+  display: block;
+  margin: auto;
 }
 .course_info{
   border: 2px solid #fff;
@@ -4701,7 +4707,8 @@ footer nav ul li a{
 .tabs ul {
   float: left;
   margin-right: 75px;
-  width: 39%;
+  width: 40%;
+  padding-left: 0;
 }
 .tabs ul > li {list-style: none;}
 .tabs ul > li a {
@@ -4709,7 +4716,7 @@ footer nav ul li a{
   display: block;
   border-bottom: 1px solid #71738c;
   color: #c7c8df;
-  font-size: 24px;
+  font-size: 18px;
   font-family: Montserrat-Light;
   padding: 17px 0 17px 22px;
   -webkit-transition: all .2s linear;
@@ -4738,7 +4745,7 @@ footer nav ul li a{
 }
 .tab h3{
   font-size: 32px;
-  line-height: 1.5;
+  //line-height: 1.5;
   color: $white;
 }
 .tab p{

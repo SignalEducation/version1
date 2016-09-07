@@ -39,8 +39,8 @@
         %ul
           %li
             %p
-              =@course.estimated_time_in_seconds
-              ='Hours'
+              =simple_time(@course.estimated_time_in_seconds)
+
           %li
             %p study online8
           %li
@@ -55,7 +55,7 @@
 
 
       .certificate
-        =image_tag('certificate.png', alt: 'certificate')
+        =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
 
         -#.accredited
           %p Accredited by:
@@ -139,8 +139,8 @@
               %br Student Body
           %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
 
-        =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
-          Enroll Now
+      =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+        Enroll Now
 
 
   %section#study_online
@@ -150,8 +150,8 @@
         .option
           %p.key Study Time:
           %p.value
-            =@course.estimated_time_in_seconds
-            ='hrs'
+            =simple_time(@course.estimated_time_in_seconds)
+
         .option
           %p.key Assessment:
           %p.value Online exam
