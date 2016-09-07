@@ -57,6 +57,19 @@ class SubjectCourseCategory < ActiveRecord::Base
     false
   end
 
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
+  def first_active_child
+    self.active_children.first
+  end
+
+  def children
+    self.subject_courses.all
+  end
+
+
   protected
 
   def check_dependencies

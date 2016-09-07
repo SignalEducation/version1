@@ -54,7 +54,11 @@ class HomePagesController < ApplicationController
   end
 
   def diploma_index
-
+    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @currency_id = @country.currency_id
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @navbar = nil
+    @footer = nil
   end
 
   def group
