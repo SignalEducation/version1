@@ -26,8 +26,8 @@ class HomePagesController < ApplicationController
     #This is the main home_page
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
     @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
-    @product_courses = @product_course_category.subject_courses
-    @subscription_courses = @subscription_course_category.subject_courses
+    @product_courses = @product_course_category.subject_courses if @product_course_category
+    @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
     @groups = Group.all_active.for_public.all_in_order
     @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
     seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)

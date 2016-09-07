@@ -33,9 +33,8 @@ class Product < ActiveRecord::Base
   has_many :orders
 
   # validation
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
   validates :subject_course_id, presence: true,
-            uniqueness: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :stripe_guid, presence: true, uniqueness: true
   validates :currency_id, presence: true

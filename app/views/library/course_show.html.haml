@@ -14,8 +14,13 @@
         .col-sm-4.col-md-4
         .col-sm-4.col-md-4
           .l-margin-bottom-huge
-            =link_to user_new_subscription_url(current_user), class: 'btn btn-red btn-secondary' do
-              Upgrade to Subscription
+            -if current_user
+              =link_to user_new_subscription_url(current_user), class: 'btn btn-red btn-secondary' do
+                Upgrade to Subscription
+            -else
+              =link_to new_student_url, class: 'btn btn-red btn-secondary' do
+                Sign Up For Free Trial
+
 
       .row.l-margin-top-big
         .col-md-12
