@@ -2394,6 +2394,14 @@ a.list-group-item {
 // 10. Library
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+.lib-header{
+  background-image: asset-url('header_bg.jpg');
+  -webkit-background-size: cover;
+  background-size: cover;
+  padding: 25px 0 60px 0;
+  color: #fff;
+}
+
 
 a.box {
   text-decoration: none;

@@ -3,7 +3,7 @@
     .l-wrap-home
       .top_header
         =link_to root_url do
-          =image_tag('header_logo.png', alt: 'header_logo', class: 'main_logo')
+          =image_tag('ls-logo-red.svg', alt: 'header_logo', class: 'main_logo')
         %nav
           %ul.top_main_nav
             %li
@@ -42,7 +42,7 @@
               =simple_time(@course.estimated_time_in_seconds)
 
           %li
-            %p study online8
+            %p study online
           %li
             %p
               %span
@@ -101,8 +101,13 @@
               =course_module.name
             %p
               =course_module.description
-            =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
-              Enroll Now
+
+            -if current_user && current_user.valid_subject_course_ids.include?(course.id)
+              =link_to library_special_link(@course), class: 'enroll_now' do
+                Enroll Now
+            -else
+              =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+                Enroll Now
 
 
   %section#advance_career

@@ -1,1 +1,188 @@
-Diploma Course Show
+
+%header
+  .l-wrap-home
+    =render partial: 'layouts/transparent_navbar'
+    .container-fluid
+      .row
+        .col-md-6
+          %h1.h1.h-white.l-margin-top-big
+            =@course.name
+
+
+.l-wrap-home
+  .container-fluid
+    .row.l-margin-top-big
+      .col-md-12
+        .col-md-6
+          .l-margin-bottom-huge
+            =link_to all_diplomas_url, class: 'btn btn-red btn-secondary' do
+              .fa.fa-arrow-left
+              Back
+
+          %p.h4.l-margin-top
+            ='About this Course'
+          %p
+            =@course.description.to_s.html_safe
+
+        .col-md-6
+          .course-info
+            -if @course.tutor.try(:profile_image_file_name)
+              %p.h4.l-margin-bottom.l-margin-top
+                =t('views.general.course_tutor')
+              .tutor-header
+                %p.h6
+                  =@course.tutor.full_name
+                =link_to profile_url(@course.tutor) do
+                  =image_tag @course.tutor.profile_image.url, class: 'profile-pic profile-pic-small pull-right'
+                %p
+                  =@course.tutor.try(:first_description).truncate(225).try(:html_safe)
+
+            -else
+              %p.h4.l-margin-bottom
+                =t('views.general.course_tutor')
+              .tutor-header
+                %p.h6
+                  =@course.tutor.full_name
+                -if @course.tutor.first_description
+                  %p
+                    =@course.tutor.first_description.truncate(225).html_safe
+
+
+    .row
+      .col-md-12
+        .col-md-8.l-margin-top-big
+
+          -if @course.tuition_children? || @course.test_children? || @course.revision_children?
+            -if @course.tuition_children?
+              -# First Section for Course Modules for Tuition
+              %p.h4.l-margin-bottom
+                =t('views.general.course_tuition')
+              =render partial: 'library/tuition'
+
+            -if @course.test_children?
+              -# Second Section for Course Modules for Test
+              %br/
+              %p.h4.l-margin-bottom
+                =t('views.general.course_test')
+              =render partial: 'library/test'
+
+            -if @course.revision_children?
+              -# Third Section for Course Modules for Revision
+              %br/
+              %p.h4.l-margin-bottom
+                =t('views.general.course_revision')
+              =render partial: 'library/revision'
+
+          -else
+            -# Third Section for Course Modules for Revision
+            %br/
+            %p.h4.l-margin-bottom
+              =t('views.general.course_content')
+            =render partial: 'library/all_content'
+
+
+          -# Fourth Section for Final Quiz and Certificate
+          -if current_user && @course.certificate
+            %br/
+            %p.h4.l-margin-bottom
+              =t('views.general.final_exam')
+            -if @course.question_bank && @course.question_bank.active?
+              -if @question_bank_passed
+                -if current_user
+                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      .question-bank-passed
+                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                        Passed
+                -else
+                  =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      .question-bank-passed
+                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
+                        Passed
+                -if @subject_course_user_log.completed
+                  %hr/
+                  -if current_user
+                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                      .box-topic-item
+                        Click here to download your completion certificate
+                  -else
+                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                      .box-topic-item
+                        Click here to download your completion certificate
+              -else
+                -if current_user
+                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      =@course.question_bank.number_of_questions.to_s + ' Questions'
+                -else
+                  =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
+                    .box-topic-item
+                      =@course.question_bank.name
+                    .time.hidden-xs
+                      =@course.question_bank.number_of_questions.to_s + ' Questions'
+            -else
+              -if @subject_course_user_log && @subject_course_user_log.completed
+                %hr/
+                =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                  .box-topic-item
+                    Click here to download your completion certificate
+
+
+
+
+        .col-md-4
+          -if current_user
+            -if current_user.individual_student?
+              -if current_user.free_member? || current_user.expired_free_member?
+                -# Logged In User on Trial Membership
+                .course-action.l-margin-bottom-big
+                  =link_to 'upgrade account', user_new_subscription_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+                  %p.l-margin-top.text-center
+                    Upgrade your membership to get full access to all content
+              -elsif current_user.canceled_member?
+                -# Logged In User Canceled Membership
+                .course-action.l-margin-bottom-big
+                  =link_to  t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+                  %p.l-margin-top.text-center
+                    Reactivate your membership to get full access to all content
+              -else
+                -# Logged In User on Valid Membership
+            -else
+              -# Logged In User Admin, Tutor or Corporate
+          -else
+            -# Logged Out User
+            .course-action.l-margin-bottom-big
+              =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+              %p.l-margin-top.text-center
+                Sign up for our 7-day Free Trial and get full access to all content
+
+
+          .l-margin-top-big
+            -if @course_resources
+              -if @course_resources.count >= 1
+                %p.h4.l-margin-bottom
+                  ='Course Resources'
+                -@course_resources.each do |r|
+                  %ul.course-resources
+                    -if !current_user
+                      =r.name
+                    -elsif current_user && (current_user.free_member? || current_user.expired_free_member? || current_user.canceled_member?)
+                      =r.name
+                    -else
+                      %li
+                        -if r.web_url && r.web_url.length > 0
+                          =link_to r.web_url, target: '_blank' do
+                            .btn.btn-secondary.btn-red.btn-list
+                              =r.name
+                        -else
+                          =link_to r.upload.url, target: '_blank' do
+                            .btn.btn-secondary.btn-red.btn-list
+                              =r.name
+
