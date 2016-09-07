@@ -120,7 +120,7 @@ class LibraryController < ApplicationController
 
   def diploma_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    redirect_to all_diplomas_url if !current_user
+    redirect_to all_diplomas_url if !current_user || !@course
     redirect_to all_diplomas_url if current_user && !current_user.valid_subject_course_ids.include?(@course.id)
     @course_modules = @course.children.all_active.all_in_order
     @tuition_course_modules = @course_modules.all_tuition

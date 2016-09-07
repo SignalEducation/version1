@@ -102,7 +102,7 @@
             %p
               =course_module.description
 
-            -if current_user && current_user.valid_subject_course_ids.include?(course.id)
+            -if current_user && current_user.valid_subject_course_ids.include?(@course.id)
               =link_to library_special_link(@course), class: 'enroll_now' do
                 Enroll Now
             -else
