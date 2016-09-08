@@ -4161,6 +4161,64 @@ header{
 .mobile_menu, .mobile_menu_dropdown {
   display: none;
 }
+.home{
+  display: inline-block;
+  vertical-align: top;
+  width: 75%;
+  padding-top: 110px;
+  margin: 0 30px 0 0;
+}
+.certificate{
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 85px;
+}
+.home h3{
+  font-size: 35px;
+  font-family: Montserrat-Hairline;
+}
+.home h2{
+  font-size: 40px;
+  line-height: 1.1;
+  margin-top: 15px;
+}
+.home ul{
+  margin: 24px 0 46px 0;
+  padding-left: 0;
+  color: $white;
+}
+.home ul li{
+  display: inline-block;
+  color: $white;
+}
+.home ul li:before{
+  content: "·";
+  color: $white;
+  display: inline-block;
+  font-size: 20px;
+  vertical-align: top;
+  line-height: 20px;
+  margin: 0 2px;
+}
+.home ul li:first-child:before{
+  content: '';
+  margin: 0;
+  color: $white;
+}
+.home ul li p{
+  display: inline-block;
+  text-transform: uppercase;
+  font-family: Montserrat-Light;
+  font-size: 18px;
+  color: $white;
+}
+.home ul li p span{ font-weight: bold;}
+.home_links a{
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 15px;
+  display: inline-block;
+}
 .diploma{
   display: inline-block;
   vertical-align: top;
@@ -4255,6 +4313,44 @@ header{
 }
 
 
+/* --- Home Information Section --- */
+
+
+#home_info{
+  padding-top: 57px;
+  background: #F8F8F8;
+  color: #464646;
+  font-family: Montserrat-Light;
+  overflow: hidden;
+}
+#home_info img{ margin: 0 -100px 0 -15px;}
+.home_descrip{
+  display: inline-block;
+  width: 64%;
+  vertical-align: top;
+  margin: 82px 0 0;
+}
+.home_descrip h2{ font-size: 48px;}
+.home_descrip h3{ font-size: 40px;}
+.home_descrip > p{
+  font-size: 19px;
+  margin: 28px 0;
+  line-height: 1.4;
+}
+.home_descrip nav ul{
+  list-style: disc inside;
+  margin: 0 0 10px 20px;
+  font-size: 19px;
+  line-height: 1.4;
+}
+.home_descrip nav ul li{ color: #f14b4e;}
+.home_descrip nav ul li p{ color: #464646;}
+.home_descrip .enroll_now{
+  display: inline-block;
+  margin: 34px 0 0 6px;
+  font-weight: bold;
+}
+
 /* --- Diploma Information Section --- */
 
 
@@ -4291,6 +4387,86 @@ header{
   font-weight: bold;
 }
 
+
+.course-panel{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(0px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+}
+.course-panel-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.course-panel-inner {
+  padding: $gutter $gutter*2;
+  height: 180px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.course-panel-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.course-panel-desc {
+  margin: 0 0 0 0;
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.course-panel-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+
+
+.group-panel{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(0px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+}
+.group-panel-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.group-panel-inner {
+  padding: $gutter $gutter*2;
+  height: 120px;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.group-panel-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
 
 
 

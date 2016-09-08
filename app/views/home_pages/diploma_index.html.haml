@@ -39,6 +39,22 @@
       .certificate
         =image_tag('certificate.png', alt: 'certificate')
 
+  %section#home_info
+    .l-wrap-home
+      .col-sm-12.text-center
+        %h2.l-margin-bottom-big
+          Diploma Courses
+
+        -@product_course_category.active_children.each do |course|
+          .course-panel
+            .course-panel-inner
+              %h3.course-panel-title
+                =course.name
+              %p.course-panel-desc.hidden-xs
+                =course.short_description
+
+
+
   %section#advance_career
     .l-wrap-home
       %h2 Advance your career in Accounting

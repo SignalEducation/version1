@@ -1,40 +1,54 @@
-.hero-home
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  =render partial: 'layouts/transparent_navbar'
-  .hero-inner#sign-up
-    .l-wrap-medium
-      .container-fluid
-        .row
-          .col-sm-6.col-md-8.col-lg-8
-            %p.h5.h-white.l-margin-bottom-huge
-              Anywhere, Anytime
-            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              The First Ever On-Demand training library for business professionals
+.home_page_layout
+  %header
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
+
+      .home
+        %h2.h-white
+          The First Ever On-Demand training library for business professionals
+        %ul
+          %li
+            %p study online
+          %li
+            %p
+              Anywhere
+          %li
+            %p
+              Anytime
+
+  %section#home_info
+    .l-wrap-home
+      .col-sm-12.text-center
+        %h2.l-margin-bottom-big
+          Diploma Courses
+
+        -@product_courses.each do |course|
+          .col-sm-6
+            =link_to library_special_link(course) do
+              .course-panel
+                .course-panel-inner
+                  %h3.course-panel-title
+                    =course.name
+                  %p.course-panel-desc.hidden-xs
+                    =course.short_description
 
 
-.course-types
-  .l-wrap-big
-    .l-section-small
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
-              Diploma Courses
-
-            -@product_courses.each do |course|
-              =link_to course.name, library_special_link(course), class: 'btn btn-red'
+  %section#subscribe
+    .l-wrap-home
 
 
-.business
-  .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-              Subscription Courses
-            -@groups.each do |group|
-              =link_to group.name, library_special_link(group), class: 'btn btn-red'
+  %section#home_info
+    .l-wrap-home
+      .col-sm-12.text-center
+        %h2.l-margin-bottom-big.l-margin-top
+          Subscription Courses
+
+        -@groups.each do |group|
+          .col-sm-6
+            =link_to library_special_link(group) do
+              .group-panel
+                .group-panel-inner
+                  %h3.group-panel-title
+                    =group.name
 
 
