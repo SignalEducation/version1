@@ -18,16 +18,17 @@
 
       .row.l-margin-top-big.l-margin-bottom-huge
         -@groups.each do |group|
-          .col-md-4
-            =link_to library_special_link(group), class: 'box box-course' do
-              .box-inner
-                %h2{style: 'margin-bottom: 5px;'}
-                  =group.name
-                -if group.image_file_name
-                  =image_tag group.image.url, class: 'box-pic'
-                -else
-                  %p.l-margin-top
-                    =group.description.truncate(175)
-              .box-label
-                %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                  Browse Courses
+          -if group.active_children.any?
+            .col-md-4
+              =link_to library_special_link(group), class: 'box box-course' do
+                .box-inner
+                  %h2{style: 'margin-bottom: 5px;'}
+                    =group.name
+                  -if group.image_file_name
+                    =image_tag group.image.url, class: 'box-pic'
+                  -else
+                    %p.l-margin-top
+                      =group.description.truncate(175)
+                .box-label
+                  %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                    Browse Courses
