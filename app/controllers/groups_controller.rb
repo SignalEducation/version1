@@ -47,6 +47,20 @@ class GroupsController < ApplicationController
         non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
         allowed_courses = corporate_courses + non_restricted_courses
         @courses = allowed_courses.uniq
+        if current_corporate && current_corporate.id == 12 && @group.name_url == 'acca-revision'
+          course_module_ids = []
+          group_total_time = []
+          @courses.each do |course|
+            ids = course.active_children.map(&:id)
+            group_total_time << course.total_video_duration
+            group_total_time << course.estimated_time_in_seconds
+            ids.each do |id|
+              course_module_ids << id
+            end
+          end
+          @course_modules_count = course_module_ids.count
+          @group_total_time = group_total_time.inject(:+)
+        end
       else
         courses = courses.try(:all_not_restricted)
         @courses = courses.try(:all_in_order)
