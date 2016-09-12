@@ -36,7 +36,7 @@
           -if @current_subscription
             .tab.account-tab#subscriptions
 
-              -#=render partial: 'subscriptions/account_info'
+              =render partial: 'subscription_info'
 
 
               .col-md-12
@@ -67,9 +67,12 @@
 
 
 
-
+  =render partial: 'subscription_payment_cards/modal'
   -if @user.id == current_user.id
     =render partial: 'users/change_password'
+
+
+
 
 :javascript
 
