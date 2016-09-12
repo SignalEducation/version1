@@ -374,6 +374,10 @@ class User < ActiveRecord::Base
     return subject_course_ids
   end
 
+  def valid_order?
+    self.valid_subject_course_ids.any?
+  end
+
   def active_subscription
     self.subscriptions.where(active: true).last
   end

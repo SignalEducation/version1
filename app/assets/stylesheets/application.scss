@@ -3360,6 +3360,7 @@ a.image-link {
 .corporate-box-item.table-box {
   padding: 30px;
   margin-bottom: 60px;
+  text-overflow: ellipsis;
 }
 .letter-space-wide {
   letter-spacing: 1px;
@@ -4881,23 +4882,23 @@ footer nav ul li a{
 
 
 /* Tabs CSS begin */
-.tab {
+.home-page-tab {
   display: none;
   max-width: 46%;
   margin: auto 0 auto auto;
 }
-.tabs{
+.home-page-tabs{
   margin: 45px 0 0;
   min-height: 490px;
 }
-.tabs ul {
+.home-page-tabs ul {
   float: left;
   margin-right: 75px;
   width: 40%;
   padding-left: 0;
 }
-.tabs ul > li {list-style: none;}
-.tabs ul > li a {
+.home-page-tabs ul > li {list-style: none;}
+.home-page-tabs ul > li a {
   text-decoration: none;
   display: block;
   border-bottom: 1px solid #71738c;
@@ -4910,18 +4911,18 @@ footer nav ul li a{
   -o-transition: all .2s linear;
   transition: all .2s linear;
 }
-.tabs ul > li:first-child a {
+.home-page-tabs ul > li:first-child a {
   border-top: 1px solid #71738c;
 }
-.tabs ul > li a:hover {
+.home-page-tabs ul > li a:hover {
   background-color: #373854;
 }
-.tabs ul > li a.active {
+.home-page-tabs ul > li a.active {
   background-color: #373854;
   font-weight: bold;
   color: #fff;
 }
-.tabs ul > li a.active:after{
+.home-page-tabs ul > li a.active:after{
   content: '';
   float: right;
   background-image: asset-url('arrow_right.png');
@@ -4929,54 +4930,165 @@ footer nav ul li a{
   height: 12px;
   margin: 5px 25px 0 0;
 }
-.tab h3{
+.home-page-tab h3{
   font-size: 26px;
   //line-height: 1.5;
   color: $white;
 }
-.tab p{
+.home-page-tab p{
   font-family: Montserrat-Light;
   line-height: 1.45;
   color: $white;
   margin: 13px 0 52px 0;
   font-size: 18.5px;
 }
-.tab a{
+.home-page-tab a{
   margin: 0;
 }
 @media (max-width: 965px){
-  .tabs ul{
+  .home-page-tabs ul{
     margin-right: 65px;
     width: 46%;
   }
-  .tabs ul > li a{ font-size: 21px; }
+  .home-page-tabs ul > li a{ font-size: 21px; }
 }
 @media (max-width: 768px){
-  .tabs ul {
+  .home-page-tabs ul {
     margin-right: 0;
     margin-bottom: 15px;
     width: 100%;
   }
-  .tab {
+  .home-page-tab {
     max-width: 100%;
     margin: 0;
   }
-  .tabs {
+  .home-page-tabs {
     padding: 0 0 45px 0;
   }
-  .tabs ul > li a br{ display: none; }
+  .home-page-tabs ul > li a br{ display: none; }
 }
 @media (max-width: 500px){
   #will_learn h2{
     text-align: center;
     font-size: 36px;
   }
-  .tabs ul > li a {
+  .home-page-tabs ul > li a {
     font-size: 18px;
   }
-  .tabs ul > li a br{ display: block; }
-  .tab h3 { font-size: 27px;}
-  .tab p{ font-size: 16px }
+  .home-page-tabs ul > li a br{ display: block; }
+  .home-page-tab h3 { font-size: 27px;}
+  .home-page-tab p{ font-size: 16px }
 }
 /* Tabs CSS end */
 
+
+
+/* Account Page Tabs */
+
+
+.account-tab {
+  display: none;
+  //max-width: 60%;
+  margin: auto 0 5px auto;
+  //float: left;
+}
+.account-tab-content {
+  width: 60%;
+  margin: 0;
+
+}
+.account-tabs{
+  margin: 40px 0 0;
+  min-height: 490px;
+}
+.account-tabs ul {
+  float: right;
+  margin-right: 0;
+  padding-left: 0;
+  background-color: darken(#F9FAFB, 6%);
+  width: 30%;
+}
+.account-tabs ul > li {
+  list-style: none;
+}
+.account-tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: $colour-7;
+  font-size: 18px;
+  font-family: Montserrat-Light;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.account-tabs ul > li:first-child a {
+  //border-top: 1px solid #71738c;
+}
+.account-tabs ul > li a:hover {
+  background-color: #FFFFFF;
+}
+.account-tabs ul > li a.active {
+  //background-color: #373854;
+  background-color: #FFFFFF;
+  font-weight: bold;
+
+}
+.account-tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.account-tab h3{
+  font-size: 26px;
+  //line-height: 1.5;
+  color: $white;
+}
+.account-tab p{
+  font-family: Montserrat-Light;
+  line-height: 1.45;
+  color: $white;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.account-tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .account-tabs ul{
+    margin-right: 65px;
+    width: 46%;
+  }
+  .account-tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .account-tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .account-tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .account-tabs {
+    padding: 0 0 45px 0;
+  }
+  .account-tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .account-tabs ul > li a {
+    font-size: 18px;
+  }
+  .account-tabs ul > li a br{ display: block; }
+  .account-tab h3 { font-size: 27px;}
+  .account-tab p{ font-size: 16px }
+}

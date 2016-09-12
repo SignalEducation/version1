@@ -100,7 +100,7 @@
       %h2.h-white
         Diploma Courses We Offer
 
-      .tabs
+      .tabs.home-page-tabs
         %ul
           -@product_course_category.subject_courses.each do |course|
             %li
@@ -108,7 +108,7 @@
                 =course.name
 
         -@product_course_category.subject_courses.each do |course|
-          .tab{id: "#{course.name_url}"}
+          .tab.home-page-tab{id: "#{course.name_url}"}
             %h3
               =course.name
             %p

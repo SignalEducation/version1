@@ -670,6 +670,7 @@ en:
         vat_rate_id: "VAT rated"
         issued_at: "Issued at"
         date: Date
+        subject_course: Course
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"
@@ -1004,6 +1005,12 @@ en:
       new:
         h1: New Course
 
+    subject_course_user_log:
+      show:
+        course: Course
+        completed_at: Completed At
+
+
 
     subscription_plans:
       form:
@@ -1115,7 +1122,7 @@ en:
         password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
         address: Address
-        address_placeholder: Your billing address
+        address_placeholder: Billing address
         first_description: Description 1
         first_description_placeholder: First paragraph
         second_description: Description 2
@@ -1189,10 +1196,12 @@ en:
           button_call_to_action: 'Un-cancel Now'
         re_subscribe_plan: Select a Plan below to reactivate your account
         tabs:
-          personal_details: Personal details
+          personal_details: Personal Info
           corporation: Corporation
-          subscriptions: Account Details
-          payments: Payment Information
+          subscriptions: Account Info
+          orders: Purchase History
+          payments: Payment Info
+          certificates: Certificates
           notifications: Notifications
           admin: Admin
           referral_code: Referrals

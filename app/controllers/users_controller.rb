@@ -516,7 +516,10 @@ class UsersController < ApplicationController
     end
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
+    @valid_order = @user.valid_order?
+    @orders = @user.orders
     @corporate_customers = CorporateCustomer.all_in_order
+    @certs = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(completed: true)
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 

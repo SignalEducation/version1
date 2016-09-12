@@ -88,7 +88,7 @@
       %h2.h-white
         What you'll learn
 
-      .tabs
+      .tabs.home-page-tabs
         %ul
           -@course.active_children.each do |course_module|
             %li
@@ -96,7 +96,7 @@
                 =course_module.name
 
         -@course.active_children.each do |course_module|
-          .tab{id: "#{course_module.name_url}"}
+          .tab.home-page-tab{id: "#{course_module.name_url}"}
             %h3
               =course_module.name
             %p

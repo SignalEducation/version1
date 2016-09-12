@@ -38,7 +38,7 @@ en:
     orders:
       create:
         flash:
-          success: Order has been created successfully
+          success: Your Purchase was successfull, a receipt will be emailed to you shortly.
       update:
         flash:
           success: Order details have been updated successfully
