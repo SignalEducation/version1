@@ -77,6 +77,7 @@ class SubjectCoursesController < ApplicationController
       @subject_course.restricted = true
       @subject_course.certificate = true
       @subject_course.tutor_id = current_user.id
+      @subject_course.subject_course_category_id = @subject_course_categories.default_corporate_category.id
       corporate_group = Group.where(corporate_customer_id: current_user.corporate_customer_id).first
       @subject_course.groups << corporate_group
     end

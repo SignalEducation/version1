@@ -16,10 +16,11 @@
           .input-group.input-group-lg.full-width
             =f.text_field :name_url, placeholder: t('views.subject_courses.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
           %br/
-          =f.label :subject_course_category_id, t('views.subject_courses.form.subject_course_category_id'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.collection_select :subject_course_category_id, @subject_course_categories, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
-          %br/
+          -unless current_corporate
+            =f.label :subject_course_category_id, t('views.subject_courses.form.subject_course_category_id'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.collection_select :subject_course_category_id, @subject_course_categories, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
+            %br/
 
 
           %br/
