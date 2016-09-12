@@ -44,7 +44,7 @@
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_tuition_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
         -child.children.all_in_order.all_active.each do |grandchild|
           -if current_user
-            -if current_user.subscriptions.any?
+            -if current_user.permission_to_see_content(@course)
               =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
                 .row
                   .col-xs-1.col-sm-1
@@ -70,7 +70,63 @@
                       -else
                         ='Flash Card'
             -else
-              =link_to user_new_subscription_url(current_user), class: 'list-group-item link-purple box-topic-item' do
+
+              -if @course_category.id == @subscription_category.id
+                =link_to user_new_subscription_url(current_user), class: 'list-group-item link-purple box-topic-item' do
+                  .row
+                    .col-xs-1.col-sm-1
+                      .left-side-meta
+                        -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                          %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
+                            %i.glyphicon.glyphicon-check{style: 'font-size: large'}
+                        -else
+                          %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
+                            %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
+                    .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
+                      .pull-left
+                        =grandchild.name.html_safe
+                    .col-xs-12.col-sm-4.hidden-xs
+                      .side-meta
+                        -if grandchild.is_video
+                          -if grandchild.course_module_element_video.try(:duration)
+                            =humanize_time(grandchild.course_module_element_video.duration)
+                          -elsif grandchild.try(:estimated_time_in_seconds)
+                            =humanize_time(grandchild.try(:estimated_time_in_seconds))
+                        -elsif grandchild.is_quiz
+                          =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                        -else
+                          ='Flash Card'
+              -elsif @course.product?
+                =link_to users_new_order_url(@course.name_url), class: 'list-group-item link-purple box-topic-item' do
+                  .row
+                    .col-xs-1.col-sm-1
+                      .left-side-meta
+                        -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                          %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
+                            %i.glyphicon.glyphicon-check{style: 'font-size: large'}
+                        -else
+                          %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
+                            %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
+                    .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
+                      .pull-left
+                        =grandchild.name.html_safe
+                    .col-xs-12.col-sm-4.hidden-xs
+                      .side-meta
+                        -if grandchild.is_video
+                          -if grandchild.course_module_element_video.try(:duration)
+                            =humanize_time(grandchild.course_module_element_video.duration)
+                          -elsif grandchild.try(:estimated_time_in_seconds)
+                            =humanize_time(grandchild.try(:estimated_time_in_seconds))
+                        -elsif grandchild.is_quiz
+                          =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                        -else
+                          ='Flash Card'
+
+
+          -else
+
+            -if @course.subscription?
+              =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                 .row
                   .col-xs-1.col-sm-1
                     .left-side-meta
@@ -82,11 +138,11 @@
                           %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
                   .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
                     .pull-left
-                      =grandchild.name.html_safe
+                      =grandchild.name
                   .col-xs-12.col-sm-4.hidden-xs
                     .side-meta
                       -if grandchild.is_video
-                        -if grandchild.course_module_element_video.try(:duration)
+                        -if grandchild.try(:course_module_element_video).try(:duration)
                           =humanize_time(grandchild.course_module_element_video.duration)
                         -elsif grandchild.try(:estimated_time_in_seconds)
                           =humanize_time(grandchild.try(:estimated_time_in_seconds))
@@ -94,31 +150,31 @@
                         =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
                       -else
                         ='Flash Card'
-          -else
-            =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-              .row
-                .col-xs-1.col-sm-1
-                  .left-side-meta
-                    -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-                      %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
-                        %i.glyphicon.glyphicon-check{style: 'font-size: large'}
-                    -else
-                      %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
-                        %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
-                .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
-                  .pull-left
-                    =grandchild.name
-                .col-xs-12.col-sm-4.hidden-xs
-                  .side-meta
-                    -if grandchild.is_video
-                      -if grandchild.try(:course_module_element_video).try(:duration)
-                        =humanize_time(grandchild.course_module_element_video.duration)
-                      -elsif grandchild.try(:estimated_time_in_seconds)
-                        =humanize_time(grandchild.try(:estimated_time_in_seconds))
-                    -elsif grandchild.is_quiz
-                      =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
-                    -else
-                      ='Flash Card'
+            -elsif @course.product?
+              =link_to users_new_order_url(@course.name_url), class: 'list-group-item link-purple box-topic-item' do
+                .row
+                  .col-xs-1.col-sm-1
+                    .left-side-meta
+                      -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                        %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
+                          %i.glyphicon.glyphicon-check{style: 'font-size: large'}
+                      -else
+                        %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
+                          %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
+                  .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
+                    .pull-left
+                      =grandchild.name
+                  .col-xs-12.col-sm-4.hidden-xs
+                    .side-meta
+                      -if grandchild.is_video
+                        -if grandchild.try(:course_module_element_video).try(:duration)
+                          =humanize_time(grandchild.course_module_element_video.duration)
+                        -elsif grandchild.try(:estimated_time_in_seconds)
+                          =humanize_time(grandchild.try(:estimated_time_in_seconds))
+                      -elsif grandchild.is_quiz
+                        =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
+                      -else
+                        ='Flash Card'
 
 
         -if child.course_module_jumbo_quiz && child.course_module_jumbo_quiz.active

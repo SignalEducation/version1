@@ -64,6 +64,10 @@ class LibraryController < ApplicationController
 
   def course_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
+    @course_category = @course.subject_course_category
+    @categories = SubjectCourseCategory.all_active
+    @product_category = @categories.all_product.first
+    @subscription_category = @categories.all_subscription.first
     if @course.nil?
       redirect_to subscription_groups_url
     else
@@ -121,7 +125,7 @@ class LibraryController < ApplicationController
   def diploma_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
     redirect_to all_diplomas_url if !current_user || !@course
-    redirect_to all_diplomas_url if current_user && !current_user.valid_subject_course_ids.include?(@course.id)
+    redirect_to product_course_url(@course.home_page.public_url) if current_user && !current_user.valid_subject_course_ids.include?(@course.id)
     @course_modules = @course.children.all_active.all_in_order
     @tuition_course_modules = @course_modules.all_tuition
     @test_course_modules = @course_modules.all_test

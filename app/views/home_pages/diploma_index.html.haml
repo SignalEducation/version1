@@ -46,12 +46,13 @@
           Diploma Courses
 
         -@product_course_category.active_children.each do |course|
-          .course-panel
-            .course-panel-inner
-              %h3.course-panel-title
-                =course.name
-              %p.course-panel-desc.hidden-xs
-                =course.short_description
+          =link_to library_special_link(course) do
+            .course-panel
+              .course-panel-inner
+                %h3.course-panel-title
+                  =course.name
+                %p.course-panel-desc.hidden-xs
+                  =course.short_description
 
 
 
