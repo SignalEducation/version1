@@ -18,38 +18,37 @@
 
 
   .business
-    .l-wrap
-      .l-section
-        .container-fluid
-          .row
-            .col-sm-12
-              %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-                Features
-          .row
-            .col-sm-4
-              %h3.l-margin-bottom-big
-                =image_tag('phone-icon.png', class: 'features-img', alt: 'anytime-anywhere-mobile-icon')
-                Anywhere, Anytime
-              %p.p
-                Learn the skills you need anytime, anywhere, on any device.
-            .col-sm-4
-              %h3.l-margin-bottom-big
-                =image_tag('magnifiying-glass-icon.png', class: 'features-img', alt: 'depth-of-content-icon')
-                Depth of Content
-              %p.p
-                Access a library of business-focused courses taught by expert tutors.
-            .col-sm-4
-              %h3.l-margin-bottom-big
-                =image_tag('network-icon.png', class: 'features-img', alt: 'expert-author-network-icon')
-                Expert Author Network
-              %p.p
-                Learn from the best with training designed and developed by industry experts.
+    .l-wrap-home
+      .l-section-small
+        .row
+          .col-sm-12
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              Features
+        .row
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('phone-icon.png', class: 'features-img', alt: 'anytime-anywhere-mobile-icon')
+              Anywhere, Anytime
+            %p.p
+              Learn the skills you need anytime, anywhere, on any device.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('magnifiying-glass-icon.png', class: 'features-img', alt: 'depth-of-content-icon')
+              Depth of Content
+            %p.p
+              Access a library of business-focused courses taught by expert tutors.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('network-icon.png', class: 'features-img', alt: 'expert-author-network-icon')
+              Expert Author Network
+            %p.p
+              Learn from the best with training designed and developed by industry experts.
 
   %section#subscribe
     .l-wrap-home
 
 
-  %section#advance_career
+  %section#advance_career{style: 'padding: 40px 0 40px 0;'}
     .l-wrap-home
       %h2 Advance your career in Accounting
       %p LearnSignal gives you access to world class training and certifications.
@@ -91,18 +90,16 @@
   %section#home_info
     .l-wrap-home
       .col-sm-12.text-center
-        %h2.l-margin-bottom-big
+        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
           Diploma Courses
 
         -@product_courses.each do |course|
           .col-sm-6
-            =link_to library_special_link(course) do
-              .course-panel
-                .course-panel-inner
-                  %h3.course-panel-title
-                    =course.name
-                  %p.course-panel-desc.hidden-xs
-                    =course.short_description
+            =link_to library_special_link(course), class: 'course-panel course-panel-inner' do
+              %h3.course-panel-title
+                =course.name
+              %p.course-panel-desc.hidden-xs
+                =course.short_description
 
 
   %section#subscribe
@@ -112,7 +109,8 @@
   %section#home_info
     .l-wrap-home
       .col-sm-12.text-center
-        %h2.l-margin-bottom-big.l-margin-top
+
+        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
           Subscription Courses
 
         -@groups.each do |group|
