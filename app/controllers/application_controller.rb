@@ -207,10 +207,6 @@ class ApplicationController < ActionController::Base
     if current_user.nil?
       result = not_allowed
       result[:course_content][:reason] = 'not_logged_in'
-
-    elsif !current_user.user_group.subscription_required_to_see_content && !current_user.user_group.product_required_to_see_content
-      result = allowed
-
     elsif current_user.permission_to_see_content(@course)
       result = allowed
     elsif !current_user.permission_to_see_content(@course) && current_user.expired_free_member?

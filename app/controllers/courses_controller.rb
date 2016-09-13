@@ -11,6 +11,7 @@ class CoursesController < ApplicationController
           redirect_to subscription_groups_url
         end
       end
+      redirect_to root_url unless current_user.permission_to_see_content(@course)
 
       if @course
         @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])

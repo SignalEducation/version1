@@ -418,7 +418,7 @@ class User < ActiveRecord::Base
         return false
       end
     else
-      return false
+      return true
     end
 
   end
@@ -528,6 +528,10 @@ class User < ActiveRecord::Base
 
   def product_student?
     self.user_group.try(:product_student) && self.corporate_customer_id.to_i == 0
+  end
+
+  def student_user?
+    self.user_group.try(:product_student) || self.user_group.try(:individual_student)
   end
 
   def tutor?
