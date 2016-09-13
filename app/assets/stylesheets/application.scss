@@ -3861,8 +3861,8 @@ ol.example li.placeholder:before {
   margin-bottom: 0;
 }
 .alert.warning {
-  background: $colour-12;
-  color: $white;
+  background: #FFD466;
+  color: $text-color;
   border-radius: 0;
   margin-bottom: 0;
 }
@@ -3870,6 +3870,20 @@ ol.example li.placeholder:before {
   background: $colour-13;
   margin-bottom: 0;
 }
+
+// Subscription || Order Required
+
+.notice.warning {
+  background: #FFD466;
+  color: $text-color;
+  border-radius: 4px;
+  margin-bottom: $gutter;
+  padding: $gutter/1.5;
+  .icon {
+    margin-right: $gutter/2;
+  }
+}
+
 
 // Referral System
 .referral-header {

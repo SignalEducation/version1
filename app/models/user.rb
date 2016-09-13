@@ -246,9 +246,11 @@ class User < ActiveRecord::Base
   def user_status
     # returns one of these values => (valid_free_member expired_free_member valid_paying_member canceled_paying_member expired_paying_member other_user)
     if self.individual_student?
-      if self.free_trial && !self.subscriptions.any? && days_or_seconds_valid?
+      if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid?
         return 'valid_free_member'
-      elsif !self.free_trial && !self.subscriptions.any? && !days_or_seconds_valid?
+      elsif self.free_trial && !self.subscriptions.any? && !self.days_or_seconds_valid?
+        return 'valid_free_member'
+      elsif !self.free_trial && !self.subscriptions.any? && !self.days_or_seconds_valid?
         return 'expired_free_member'
       elsif !self.free_trial && self.subscriptions.any? && self.valid_subscription
         return 'valid_paying_member'
