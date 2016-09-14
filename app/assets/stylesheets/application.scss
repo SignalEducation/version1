@@ -4448,14 +4448,11 @@ header{
   }
 }
 a.course-panel {
-
   text-decoration: none;
   display: block;
   border: 1px solid $white;
   @include transition(border .1s ease);
-
   &:hover, &:active {
-
     @include box-shadow(0, 0, 4px, darken($colour-3, 35%));
   }
 }
@@ -4468,58 +4465,39 @@ a.course-panel {
   display: block;
   margin: 0 auto;
 }
+.course-panel-group-title {
+  float: right;
+}
+
 .course-panel-inner {
   padding: $gutter $gutter*2;
-  height: 180px;
+  height: 160px;
   position: relative;
+  @include breakpoint(xs-min) {
+    height: 200px;
+  }
+  &.group-inner {
+    padding: $gutter*1.5 $gutter;
+  }
 }
 .course-panel-desc {
-  margin: 0 0 0 0;
+  color: $colour-1;
+  margin: 0;
   white-space: pre-line;
-  overflow: hidden;
   text-overflow: ellipsis;
   text-decoration: none;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+  @include breakpoint(sm-min) {
+    margin: 15px 0 0 0;
+  }
+
 }
 .course-panel-info {
   padding: $gutter/2 $gutter $gutter $gutter;
 }
-
-
-.group-panel{
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: left;
-  @include border-radius(0px);
-  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-}
-.group-panel-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0 auto;
-}
-.group-panel-inner {
-  padding: $gutter $gutter*2;
-  height: 120px;
-  position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-.group-panel-pic {
-  max-height: 60%;
-  max-width: 60%;
-  fill: #3E3F5B;
-  background-position: center;
-  margin-top: 20px;
-}
-
 
 
 /* --- What You'll Learn Section --- */

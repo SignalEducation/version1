@@ -98,7 +98,7 @@
             =link_to library_special_link(course), class: 'course-panel course-panel-inner', style: 'text-decoration: none;' do
               %h3.course-panel-title
                 =course.name
-              %p.course-panel-desc.hidden-xs
+              %p.p.course-panel-desc
                 =course.short_description
 
 
@@ -115,10 +115,9 @@
 
         -@groups.each do |group|
           .col-sm-6
-            =link_to library_special_link(group) do
-              .group-panel
-                .group-panel-inner
-                  %h3.group-panel-title
-                    =group.name
-
+            =link_to library_special_link(group), class: 'course-panel course-panel-inner group-inner' do
+              %h3.h2.course-panel-title.text-center
+                =group.name
+              %p.p.course-panel-desc
+                =group.description.truncate(150)
 
