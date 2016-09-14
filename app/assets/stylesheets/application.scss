@@ -4369,6 +4369,34 @@ header{
   font-weight: bold;
 }
 
+#diploma_courses{
+  padding-top: 57px;
+  background: #F8F8F8;
+  color: #464646;
+  font-family: Montserrat-Light;
+  overflow: hidden;
+}
+#diploma_courses img{ margin: 0 -100px 0 -15px;}
+.diploma_courses_descrip{
+  display: inline-block;
+  width: 64%;
+  vertical-align: top;
+  margin: 82px 0 0;
+}
+.diploma_courses_descrip nav ul{
+  list-style: disc inside;
+  margin: 0 0 10px 20px;
+  font-size: 19px;
+  line-height: 1.4;
+}
+.diploma_courses_descrip nav ul li{ color: #f14b4e;}
+.diploma_courses_descrip nav ul li p{ color: #464646;}
+.diploma_courses_descrip .enroll_now{
+  display: inline-block;
+  margin: 34px 0 0 6px;
+  font-weight: bold;
+}
+
 /* --- Diploma Information Section --- */
 
 
@@ -4412,16 +4440,26 @@ header{
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: left;
-  @include border-radius(0px);
+  @include border-radius(4px);
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
   }
 }
-.course-panel a:hover{
+a.course-panel {
+
   text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+
+  &:hover, &:active {
+
+    @include box-shadow(0, 0, 4px, darken($colour-3, 35%));
+  }
 }
+
 .course-panel-title {
   white-space: nowrap;
   overflow: hidden;

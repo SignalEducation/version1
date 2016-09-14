@@ -87,15 +87,15 @@
     .l-wrap-home
 
 
-  %section#home_info
+  %section#diploma_courses
     .l-wrap-home
       .col-sm-12.text-center
         %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
           Diploma Courses
 
         -@product_courses.each do |course|
-          .col-sm-6
-            =link_to library_special_link(course), class: 'course-panel course-panel-inner' do
+          .col-sm-12
+            =link_to library_special_link(course), class: 'course-panel course-panel-inner', style: 'text-decoration: none;' do
               %h3.course-panel-title
                 =course.name
               %p.course-panel-desc.hidden-xs
