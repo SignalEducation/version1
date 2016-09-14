@@ -3141,7 +3141,7 @@ a.library-box-item {
 }
 .business {
   text-align: center;
-  background: $white;
+  background: lighten($colour-7, 5%);
   color: lighten($colour-7, 40%);
 }
 .individuals {
