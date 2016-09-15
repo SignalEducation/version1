@@ -67,7 +67,7 @@ class HomePagesController < ApplicationController
     @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-    @group = @home_page.group
+    @group = @home_page.try(:group)
 
 
 

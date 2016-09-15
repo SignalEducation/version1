@@ -1,35 +1,7 @@
 .home_page_layout
   %header
     .l-wrap-home
-      .top_header
-        =link_to root_url do
-          =image_tag('header_logo.png', alt: 'header_logo', class: 'main_logo')
-        %nav
-          %ul.top_main_nav
-            %li
-              =link_to 'Why Learn Signal', why_learn_signal_url
-            %li
-              =link_to 'Pricing', pricing_url
-            %li
-              =link_to 'Diplomas', all_diplomas_url
-            %li
-              =link_to 'Courses', subscription_groups_url
-            %li
-              =link_to 'Sign In', sign_in_url
-          %a.mobile_menu{:href => "#"}
-          .mobile_menu_dropdown
-            %ul.top_main_nav
-              %li
-                =link_to 'Why Learn Signal', why_learn_signal_url
-              %li
-                =link_to 'Pricing', pricing_url
-              %li
-                =link_to 'Diplomas', all_diplomas_url
-              %li
-                =link_to 'Courses', subscription_groups_url
-              %li
-                =link_to 'Sign In', sign_in_url
-            .close_mobile_menu
+      =render partial: 'layouts/transparent_navbar'
 
       .diploma
         %h2.h-white
@@ -225,15 +197,5 @@
 
       // Tabs
       $('.tabs').tabs();
-
-      // Mobile menu
-      $(".mobile_menu").click(function(){
-        $(".mobile_menu_dropdown").slideDown('slow');
-        return false;
-      });
-
-      $(".close_mobile_menu").click(function(){
-        $(".mobile_menu_dropdown").slideUp('slow');
-      });
 
     });
