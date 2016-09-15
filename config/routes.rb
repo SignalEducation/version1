@@ -187,12 +187,11 @@ Rails.application.routes.draw do
     #Product Course Landing Pages
     get 'diploma/:home_pages_public_url', to: 'home_pages#diploma', as: :product_course
     #Subscription Group/Course Landing Pages
-    get 'group/:home_pages_public_url', to: 'home_pages#course', as: :group_landing
-    #Catch Old URL's
-    get '/%{locale}/:home_pages_public_url', to: 'home_pages#show'
+    get 'group/:home_pages_public_url', to: 'home_pages#group', as: :group_landing
 
     get 'all_groups', to: 'home_pages#group_index', as: :all_groups
     get 'all_diploma', to: 'home_pages#diploma_index', as: :all_diplomas
+
 
     constraints(Subdomain) do
       get '/' => 'routes#root'
@@ -200,6 +199,9 @@ Rails.application.routes.draw do
 
     # home page
     root 'routes#root'
+
+    #Catch Old URL
+    get '/:home_pages_public_url', to: 'home_pages#group'
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'

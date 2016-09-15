@@ -18,7 +18,7 @@
   .col-sm-12
     .form-group
       =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'password'
-  .col-sm-6
+  .col-sm-6.col-xs-6
     =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red signUp'
     .sk-circle
       .sk-circle1.sk-child
@@ -34,7 +34,7 @@
       .sk-circle11.sk-child
       .sk-circle12.sk-child
 
-  .col-sm-6
+  .col-sm-6.col-xs-6
     %span.no-card
       =t('views.home_pages.sign_up_form.no_credit_card_needed')
 

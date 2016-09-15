@@ -1,34 +1,9 @@
-.hero-acca
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  .header{role: 'banner'}
-    .l-wrap
-      .container-fluid
-        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
-          .navbar-header
-            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-              %span.icon-bar
-              %span.icon-bar
-              %span.icon-bar
-            =link_to root_url do
-              =image_tag('ls-logo-red.svg', class: 'logo')
-          #myNavbar.collapse.navbar-collapse
-            %ul.nav.navbar-nav.navbar-right
-              %li
-                =link_to 'Why Learn Signal', why_learn_signal_url
-              %li
-                %a{href: 'http://blog.learnsignal.com/', target: '_blank'}
-                  ='Blog'
-              %li
-                =link_to 'Pricing', pricing_url
-              %li
-                =link_to 'Library', subscription_groups_url
-              %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+.home_page_layout
+  %header
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
 
-  .hero-inner#sign-up
-    .l-wrap-medium
-      .container-fluid
+      .acca#sign-up
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
@@ -43,7 +18,7 @@
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
             =render partial: 'sign_up_form'
 
-.business
+.acca-business
   .l-wrap
     .l-section
       .container-fluid

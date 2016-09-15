@@ -3,7 +3,7 @@
     .l-wrap-home
       =render partial: 'layouts/transparent_navbar'
 
-      .home
+      .home.text-center
         %h2.h-white
           The First Ever On-Demand training library for business professionals
         %ul
@@ -68,13 +68,12 @@
               .col-sm-10
                 %h3
                   =course.name
-                %p.p
+                %p.p.hidden-xs
                   =course.short_description.truncate(150)
               .col-sm-2
               .col-sm-10
-                =link_to library_special_link(course) do
-                  .btn.btn-red
-                    Course Info
+                =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
+                  Course Info
 
 
 

@@ -62,7 +62,37 @@ class HomePagesController < ApplicationController
   end
 
   def group
+    @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
+    @default_element = params[:default] if params[:default]
+    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
+    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
+    @group = @home_page.group
 
+
+
+    # Create user object and necessary variables
+    @user = User.new
+    session[:sign_up_errors].each do |k, v|
+      v.each { |err| @user.errors.add(k, err) }
+    end if session[:sign_up_errors]
+    session.delete(:sign_up_errors)
+    if @country
+      @currency_id = @country.currency_id
+      @user.country_id = @country.id
+    else
+      @currency_id = Currency.find_by_iso_code('GBP').id
+      @user.country_id = Country.find_by_name('United Kingdom').id
+    end
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+
+    if @home_page
+      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+      cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+    else
+      seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+    end
+    @navbar = nil
   end
 
   def diploma
