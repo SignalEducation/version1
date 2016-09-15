@@ -1,42 +1,16 @@
-.hero-cfa
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  .header{role: 'banner'}
-    .l-wrap
-      .container-fluid
-        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
-          .navbar-header
-            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-              %span.icon-bar
-              %span.icon-bar
-              %span.icon-bar
-            =link_to root_url do
-              =image_tag('ls-logo-red.svg', class: 'logo')
-          #myNavbar.collapse.navbar-collapse
-            %ul.nav.navbar-nav.navbar-right
-              %li
-                =link_to 'Business', business_url
-              %li
-                =link_to 'Why Learn Signal', why_learn_signal_url
-              %li
-                %a{href: 'http://blog.learnsignal.com/', target: '_blank'}
-                  ='Blog'
-              %li
-                =link_to 'Pricing', pricing_url
-              %li
-                =link_to 'Library', subscription_groups_url
-              %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+.hero-cfa.home_page_layout
+  %header
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
 
-  .hero-inner#sign-up
-    .l-wrap-medium
-      .container-fluid
+      .cfa#sign-up
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
               Prepare for your CFA exams with an online revision course
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
               CFA exam revision courses online for a small monthly subscription
+
             -country_count = '83 Countries'
             %p.h7
               ="Learners in "
@@ -46,7 +20,8 @@
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
             =render partial: 'sign_up_form'
 
-.business
+
+.cfa-business
   .l-wrap
     .l-section
       .container-fluid
@@ -85,17 +60,12 @@
         .row
           .col-sm-12.col-md-12
             -@group.try(:active_children).all_in_order.each do |course|
-              .col-md-4.l-margin-top
-                =link_to library_special_link(course), class: 'library-box-item panel text-center' do
-                  .panel-icon.icon-big
-                    %i.glyphicon.glyphicon-arrow-right
-                  .l-margin-bottom.l-margin-top{style: 'min-height: 110px'}
-                    %h3.text-bold
-                      =course.name
-                    %p.l-margin-bottom-big
-                      Now available
-                  .box-label
-                    Browse
+              .col-sm-6
+                =link_to library_special_link(course), class: 'course-panel course-panel-inner group-inner' do
+                  %h3.h2.course-panel-title.text-center
+                    =course.name
+                  %p.p.course-panel-desc
+                    =course.short_description.truncate(150)
 
 .start-trial
   %a.btn-block.btn-block-red{href: '#sign-up'}

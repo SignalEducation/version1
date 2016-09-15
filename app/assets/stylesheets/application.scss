@@ -3156,6 +3156,11 @@ a.library-box-item {
   background: $white;
   color: lighten($colour-7, 40%);
 }
+.cfa-business {
+  text-align: center;
+  background: $white;
+  color: lighten($colour-7, 40%);
+}
 .individuals {
   text-align: center;
   background: lighten($colour-7, 5%);
@@ -4185,7 +4190,13 @@ header{
 .mobile_menu, .mobile_menu_dropdown {
   display: none;
 }
-.acca{
+.cfa{
+  display: inline-block;
+  vertical-align: top;
+  //width: 75%;
+  padding-top: 100px;
+  margin: 0 30px 0 0;
+}.acca{
   display: inline-block;
   vertical-align: top;
   //width: 75%;

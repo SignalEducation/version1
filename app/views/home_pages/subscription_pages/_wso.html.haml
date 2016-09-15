@@ -1,131 +1,104 @@
-.hero-cfa
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  .header{role: 'banner'}
-    .l-wrap
-      .container-fluid
-        %nav.navbar.navbar-default.navbar-transparent#navbar{role: 'navigation'}
-          .navbar-header
-            %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-              %span.icon-bar
-              %span.icon-bar
-              %span.icon-bar
-            =link_to root_url do
-              =image_tag('ls-logo-red.svg', class: 'logo')
-          #myNavbar.collapse.navbar-collapse
-            %ul.nav.navbar-nav.navbar-right
-              %li
-                =link_to 'Business', business_url
-              %li
-                =link_to 'Why Learn Signal', why_learn_signal_url
-              %li
-                %a{href: 'http://blog.learnsignal.com', target: '_blank'}
-                  ='Blog'
-              %li
-                =link_to 'Pricing', pricing_url
-              %li
-                =link_to 'Library', subscription_groups_url
-              %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}
+.hero-cfa.home_page_layout
+  %header
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
 
-  .l-section#sign-up
-    .l-wrap
-      .container-fluid
+      .cfa#sign-up
         .row
-          .col-sm-6.col-md-8.col-lg-6
+          .col-sm-6.col-md-8.col-lg-8
             %p.h3.h-white.h-separator.h-separator-left
               LearnSignal & WallStreetOasis
             %h1.h1.h-white.l-margin-top-big
               Take the quick prep course for the CFA level 1
-          .col-sm-6.col-md-4.col-lg-4.col-lg-offset-2
-            =render partial: 'sign_up_form'
 
-.l-section
+          .col-sm-6.col-md-4.col-lg-4#sign-up-form
+            .text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+            =form_for @user, url: student_sign_up_url do |f|
+              =f.hidden_field :locale, value: (params[:locale] || 'en')
+              =f.hidden_field :topic_interest, value: @url_value
+              .col-sm-12
+                %p.h5.h-white.l-margin-bottom
+                  ='7-day free trial (up to 200 minutes)'
+
+              .col-sm-6
+                .form-group
+                  =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', id: 'first_name'
+              .col-sm-6
+                .form-group
+                  =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', id: 'last_name'
+              .col-sm-12
+                .form-group
+                  =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, id: 'email'
+              .col-sm-12
+                .form-group
+                  =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'password'
+              .col-sm-6.col-xs-6
+                =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red signUp'
+                .sk-circle
+                  .sk-circle1.sk-child
+                  .sk-circle2.sk-child
+                  .sk-circle3.sk-child
+                  .sk-circle4.sk-child
+                  .sk-circle5.sk-child
+                  .sk-circle6.sk-child
+                  .sk-circle7.sk-child
+                  .sk-circle8.sk-child
+                  .sk-circle9.sk-child
+                  .sk-circle10.sk-child
+                  .sk-circle11.sk-child
+                  .sk-circle12.sk-child
+
+              .col-sm-6.col-xs-6
+                %span.no-card
+                  =t('views.home_pages.sign_up_form.no_credit_card_needed')
+
+
+
+.cfa-business
   .l-wrap
-    .container-fluid
-      .row
-        .col-sm-12
-          %h2.h5.text-center
-            Work through our extensive question bank with summary videos to fill in the gaps
-          %h3.h2.h-center.h-separator.h-separator-center.l-margin-bottom-big.text-center
-            Qbank of 1500 exam quality questions with solutions
-      .row
-        .col-sm-4
-          %h3.h4.text-center
-            Practice
-          %p.p.text-center
-            Prepare with 1500 exam standard questions and worked solutions.
-        .col-sm-4
-          %h3.h4.text-center
-            Learn
-          %p.p.text-center
-            Over 140 summary videos to understand the difficult topics.
-        .col-sm-4
-          %h3.h4.text-center
-            Support
-          %p.p.text-center
-            Get help from our team of dedicated tutors whenever you get stuck.
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              Features to support your CFA study
+        .row
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('phone-icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
+              Anywhere, Anytime
+            %p.p
+              Study for your specific topics anytime, anywhere, on any device.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
+              Small Monthly Subscription
+            %p.p
+              Our subscription model offers you more flexibility than fixed price providers.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
+              Expert Author Network
+            %p.p
+              Learn from the best with training designed and developed by industry experts.
 
 .l-section.is-bg-asphalt
   .l-wrap
     .container-fluid
+      .row
+        .col-sm-12
+          %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
+            Access all CFA Courses
       .course-list-wrap
         .row
-          .col-sm-6.col-md-4
-            =link_to subscription_groups_url, class: 'box box-course' do
-              .box-inner
-                %h3.h4.box-title
-                  CFA Level 1
-                %p.box-desc
-                  £25/Month
-              .box-label
-                Explore our CFA library
-          .col-sm-6.col-md-4
-            %a.box.box-course
-              .box-inner
-                %h3.h4.box-title.is-text-disabled
-                  CFA Level 2
-                %p.box-desc
-                  Coming soon...
-              .box-label
-                Get early access
-          .col-sm-6.col-md-4
-            %a.box.box-course
-              .box-inner
-                %h3.h4.box-title.is-text-disabled
-                  CFA Level 2
-                %p.box-desc
-                  Coming soon...
-              .box-label
-                Get early access
-.testimonials.testimonials-alt
-  .l-wrap
-    .l-section
-      .testimonial
-        .container-fluid
-          .row
-            .col-sm-12
-              %h2.h5.text-center
-                Testimonials
-              %p.h2.text-center.h-separator.h-separator-center
-                What your peers are saying
-          .row
-            .col-sm-12.col-md-6.col-md-offset-3
-              .testimonial
-                .testimonial-pic-wrap
-                  =image_tag('testimonial-mike-pic.jpg', class: 'testimonial-pic')
-                %p.p
-                  When I signed up for Level I, I had 85 days to put in the 300 hours of studying while working full time. I had just finished my undergrad in Math and even though I had no finance background, I was confident that I could handle the material.
-                %p.p
-                  The challenge would be covering everything and having enough time to do mock exams. Learn Signal was the perfect solution.
-
-                %p.p
-                  The videos were quick, very well presented and contained only the essential information. The tests at the end of each section were helpful at highlighting gaps in my knowledge. I'm not sure I would have finished the material in time and passed the exam had I not used Learn Signal.
-                %p.p
-                  %strong.testimonial-sig
-                    Mike Sinclair
-                  %br/
-                  Risk Analyst Architect
+          .col-sm-12.col-md-12
+            -@group.try(:active_children).all_in_order.each do |course|
+              .col-sm-6
+                =link_to library_special_link(course), class: 'course-panel course-panel-inner group-inner' do
+                  %h3.h2.course-panel-title.text-center
+                    =course.name
+                  %p.p.course-panel-desc
+                    =course.short_description.truncate(150)
 
 .start-trial
   %a.btn-block.btn-block-red{href: '#sign-up'}
@@ -140,10 +113,21 @@
 
 
 :javascript
-    var nav = responsiveNav(".nav-collapse");
 
-  // Smooth scroll to top
+
+
   $(document).ready(function(){
+
+    $(".sk-circle").hide();
+
+    $(".signUp").click(function(event) {
+      if($('#first_name').val() && $('#last_name').val() && $('#email').val() && $('#password').val() ) {
+        $(".signUp").hide();
+        $(".sk-circle").show();
+      }
+    });
+
+
     $('a[href^="#"]').on('click',function (e) {
       e.preventDefault();
 
@@ -157,3 +141,6 @@
       });
     });
   });
+
+
+
