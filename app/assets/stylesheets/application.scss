@@ -29,7 +29,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-$sans-font: Montserrat-Regular, HelveticaNeue, Helvetica, Arial, sans-serif;
+//$sans-font: Rubik, Montserrat, HelveticaNeue, Helvetica, Arial, sans-serif;
+$sans-font: 'Rubik', Montserrat, HelveticaNeue;
 $gutter: 20px;
 $white: #fff;
 
@@ -4193,7 +4194,7 @@ header{
 }
 .home h3{
   font-size: 35px;
-  font-family: Montserrat-Hairline;
+  font-family: Rubik-light;
 }
 .home h2{
   font-size: 40px;
@@ -4226,7 +4227,7 @@ header{
 .home ul li p{
   display: inline-block;
   text-transform: uppercase;
-  font-family: Montserrat-Light;
+  font-weight: 300;
   font-size: 18px;
   color: $white;
 }
@@ -4251,7 +4252,6 @@ header{
 }
 .diploma h3{
   font-size: 35px;
-  font-family: Montserrat-Hairline;
 }
 .diploma h2{
   font-size: 40px;
@@ -4284,7 +4284,6 @@ header{
 .diploma ul li p{
   display: inline-block;
   text-transform: uppercase;
-  font-family: Montserrat-Light;
   font-size: 18px;
   color: $white;
 }
@@ -4322,7 +4321,6 @@ header{
   font-size: 19px;
   margin: 15px 10px 0 0;
   color: $white;
-  font-family: Montserrat-Light;
 }
 
 
@@ -4333,7 +4331,6 @@ header{
   padding-top: 57px;
   background: #F8F8F8;
   color: #464646;
-  font-family: Montserrat-Light;
   overflow: hidden;
 }
 #home_info img{ margin: 0 -100px 0 -15px;}
@@ -4368,7 +4365,6 @@ header{
   padding-top: 57px;
   background: #F8F8F8;
   color: #464646;
-  font-family: Montserrat-Light;
   overflow: hidden;
 }
 #diploma_courses img{ margin: 0 -100px 0 -15px;}
@@ -4398,7 +4394,6 @@ header{
 #diploma_info{
   padding-top: 57px;
   color: #464646;
-  font-family: Montserrat-Light;
   overflow: hidden;
 }
 #diploma_info img{ margin: 0 -100px 0 -15px;}
@@ -4514,7 +4509,6 @@ a.course-panel {
 }
 #will_learn h2{
   font-size: 48px;
-  font-family: Montserrat-Light;
 }
 
 
@@ -4525,7 +4519,6 @@ a.course-panel {
   color: #464646;
   text-align: center;
   padding: 90px 0 0;
-  font-family: Montserrat-Light;
 }
 #advance_career h2{ font-size: 48px;}
 #advance_career .wrapper > p{
@@ -4553,7 +4546,6 @@ a.course-panel {
   display: inline-block;
   vertical-align: top;
   font-size: 25px;
-  font-family: Montserrat-Regular;
   margin: 15px 0 0 10px;
 }
 .ac_title_bl .two_strings{ margin: 0 0 0 10px;}
@@ -4562,7 +4554,6 @@ a.course-panel {
   display: inline-block;
   padding: 18px 94px;
   font-size: 24px;
-  font-family: Montserrat-Regular;
 }
 
 
@@ -4586,13 +4577,11 @@ a.course-panel {
 }
 .so_descrip h2{
   font-size: 48px;
-  font-family: Montserrat-Light;
   margin-bottom: 40px;
 }
 .option{ margin: 0 0 12px 0;}
 .option p{ display: inline-block;}
 .option .key{
-  font-family: Montserrat-Light;
   font-size: 19px;
   width: 180px;
 }
@@ -4608,7 +4597,6 @@ a.course-panel {
 #get_answers{
   color: #464646;
   padding: 92px 0 102px 0;
-  font-family: Montserrat-Light;
 }
 #get_answers h2{ font-size: 48px;}
 #get_answers h3{
@@ -4617,7 +4605,6 @@ a.course-panel {
   line-height: 1.2;
 }
 #get_answers h4{
-  font-family: Montserrat-Regular;
   font-size: 19px;
   line-height: 2.5;
 }
@@ -4636,7 +4623,6 @@ a.course-panel {
   background-size: cover;
   text-align: center;
   color: #fff;
-  font-family: Montserrat-Light;
   padding: 63px 0 60px 0;
 }
 #subscribe h2{ font-size: 32px;}
@@ -4656,7 +4642,6 @@ a.course-panel {
   outline: none;
   font-size: 17px;
   color: #515151;
-  font-family: Montserrat-Light;
 }
 #subscribe button{
   position: absolute;
@@ -4685,7 +4670,6 @@ a.course-panel {
 
 
 #help{
-  font-family: Montserrat-Light;
   padding: 90px 0 70px 0;
   color: #515151;
 }
@@ -4705,7 +4689,6 @@ a.course-panel {
   margin: 0 0 0 13px;
 }
 .help_cont h4{
-  font-family: Montserrat-Regular;
   font-size: 19px;
   line-height: 1.7;
 }
@@ -4719,7 +4702,6 @@ a.course-panel {
 
 
 footer{
-  font-family: Montserrat-Light;
   padding: 28px 0 30px 0;
   color: #fff;
   background-color: #3d3e5c;
@@ -4934,7 +4916,6 @@ footer nav ul li a{
   border-bottom: 1px solid #71738c;
   color: #c7c8df;
   font-size: 18px;
-  font-family: Montserrat-Light;
   padding: 17px 0 17px 22px;
   -webkit-transition: all .2s linear;
   -moz-transition: all .2s linear;
@@ -4966,7 +4947,6 @@ footer nav ul li a{
   color: $white;
 }
 .home-page-tab p{
-  font-family: Montserrat-Light;
   line-height: 1.45;
   color: $white;
   margin: 13px 0 52px 0;
@@ -5047,7 +5027,6 @@ footer nav ul li a{
   border-bottom: 1px solid #71738c;
   color: $colour-7;
   font-size: 18px;
-  font-family: Montserrat-Light;
   padding: 17px 0 17px 22px;
   -webkit-transition: all .2s linear;
   -moz-transition: all .2s linear;
@@ -5079,7 +5058,6 @@ footer nav ul li a{
   color: $white;
 }
 .account-tab p{
-  font-family: Montserrat-Light;
   line-height: 1.45;
   color: $white;
   margin: 13px 0 52px 0;
