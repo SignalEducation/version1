@@ -4295,11 +4295,6 @@ header{
   font-size: 15px;
   display: inline-block;
 }
-.cert-image {
-  max-width: 70%;
-  display: block;
-  margin: auto;
-}
 .course_info{
   border: 2px solid #fff;
   border-radius: 4px;
@@ -4471,14 +4466,20 @@ a.course-panel {
 
 .course-panel-inner {
   padding: $gutter $gutter*2;
-  height: 160px;
+  //height: 160px;
   position: relative;
   @include breakpoint(xs-min) {
     height: 200px;
+    padding: $gutter $gutter;
   }
   &.group-inner {
     padding: $gutter*1.5 $gutter;
   }
+}
+.course-panel-text {
+  display: inline-block;
+  max-width: 79%;
+
 }
 .course-panel-desc {
   color: $colour-1;
@@ -4493,12 +4494,14 @@ a.course-panel {
   @include breakpoint(sm-min) {
     margin: 15px 0 0 0;
   }
-
 }
 .course-panel-info {
   padding: $gutter/2 $gutter $gutter $gutter;
 }
 
+.cert-image {
+  padding-top: $gutter/2;
+}
 
 /* --- What You'll Learn Section --- */
 

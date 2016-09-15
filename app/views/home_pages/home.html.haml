@@ -62,11 +62,20 @@
 
         -@product_courses.all_in_order.each do |course|
           .col-sm-12
-            =link_to library_special_link(course), class: 'course-panel course-panel-inner', style: 'text-decoration: none;' do
-              %h3.course-panel-title
-                =course.name
-              %p.p.course-panel-desc
-                =course.short_description
+            .course-panel.course-panel-inner
+              .col-sm-2.hidden-xs
+                =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
+              .col-sm-10
+                %h3
+                  =course.name
+                %p.p
+                  =course.short_description.truncate(150)
+              .col-sm-2
+              .col-sm-10
+                =link_to library_special_link(course) do
+                  .btn.btn-red
+                    Course Info
+
 
 
   %section#subscribe
