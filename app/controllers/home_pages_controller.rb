@@ -68,8 +68,7 @@ class HomePagesController < ApplicationController
     @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @group = @home_page.try(:group)
-
-
+    redirect_to all_groups_url unless @group
 
     # Create user object and necessary variables
     @user = User.new
