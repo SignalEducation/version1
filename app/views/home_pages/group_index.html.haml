@@ -3,22 +3,45 @@
     .l-wrap-home
       =render partial: 'layouts/transparent_navbar'
 
-      .home.text-center
-        %h2.h-white
-          The First Ever On-Demand training library for business professionals
-        %ul
-          %li
-            %p study online
-          %li
-            %p
-              Anywhere
-          %li
-            %p
-              Anytime
+      .cfa#sign-up
+        .row
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white.l-margin-bottom-huge
+              Prepare for your finance exams with an online courses
+            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
+              Professional Finance courses
+
+            %p.h7
+              Our subscription model provides unlimited access to all content for a small monthly subscription
+
+          .col-sm-6.col-md-4.col-lg-4#sign-up-form
+            =render partial: 'sign_up_form'
 
 
+  %section#diploma_courses
+    .l-wrap-home
+      .col-sm-12.text-center
+        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+          Subscription Content
 
-  %section#advance_career{style: 'padding: 40px 0 40px 0;'}
+        -@groups.all_in_order.each do |group|
+          .col-sm-6
+            =link_to library_special_link(group) do
+              .group-panel
+                .group-panel-inner
+                  .col-sm-4.hidden-xs
+                    -if group.image_file_name
+                      =image_tag group.image.url, class: 'group-image'
+
+                  .col-sm-8.col-xs-12
+                    %h3.l-margin-top
+                      =group.name
+                .group-panel-label
+                  .label-text
+                    View Courses
+
+
+  %section#advance_career
     .l-wrap-home
       %h2 Advance your career
       %p LearnSignal gives you access to world class training and certifications.
@@ -52,49 +75,37 @@
               %br Student Body
           %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
 
+        =link_to new_student_url, class: 'enroll_now' do
+          7 Day Free Trial?
 
 
-  %section#diploma_courses
+
+
+
+
+  %section#study_online
     .l-wrap-home
-      .col-sm-12.text-center
-        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-          Diploma Courses
+      .so_descrip
+        %h2 Study online with LearnSignal
+        .option
+          %p.key Study Time:
+          %p.value
+            Over 100 hrs
+        .option
+          %p.key Assessment:
+          %p.value Online Exam
+        .option
+          %p.key Resources:
+          %p.value Video lectures, slide presentations, practical exercises
+        .option
+          %p.key Payment Options:
+          %p.value
+            ='7-day Free Trial with 200 minutes of content'
 
-        -@product_courses.all_in_order.each do |course|
-          .col-sm-12
-            .course-panel.course-panel-inner
-              .col-sm-2.hidden-xs
-                =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
-              .col-sm-10
-                %h3
-                  =course.name
-                %p.p.hidden-xs
-                  =course.short_description.truncate(150)
-              .col-sm-2
-              .col-sm-10
-                =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
-                  Course Info
+        =link_to new_student_url, class: 'enroll_now' do
+          Claim your Free Trial?
 
-
-
-  %section#subscribe
-    .l-wrap-home
-
-
-  %section#home_info
-    .l-wrap-home
-      .col-sm-12.text-center
-
-        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-          Subscription Courses
-
-        -@groups.all_in_order.each do |group|
-          .col-sm-6
-            =link_to library_special_link(group), class: 'course-panel course-panel-inner group-inner' do
-              %h3.h2.course-panel-title.text-center
-                =group.name
-              %p.p.course-panel-desc
-                =group.description.truncate(150)
+      =image_tag('iphone.png', alt: 'iphone', class: 'phone-image hidden-xs hidden-sm')
 
 
 
@@ -132,5 +143,3 @@
 
           =link_to contact_url, class: 'enroll_now' do
             contact us now!
-
-

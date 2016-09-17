@@ -4333,6 +4333,12 @@ header{
   -webkit-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
   -moz-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
   box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+  &:hover, &:active {
+    @include box-shadow(0, 0, 4px, darken(#f14b4e, 35%));
+    text-decoration: none;
+    color: #fff;
+  }
+
 }
 .accredited{
   text-align: center;
@@ -4516,9 +4522,140 @@ a.course-panel {
 .course-panel-info {
   padding: $gutter/2 $gutter $gutter $gutter;
 }
+.course-panel-label {
+  background: $colour-13;
+  color: $white;
+  padding: $gutter/2;
+  //letter-spacing: .2rem;
+  //text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+a.course-panel-label {
+  background: $colour-13;
+  color: $white;
+  text-decoration: none;
+  padding: $gutter/2;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+  &:hover, &:active {
+    background: darken($colour-13, 6%);
 
+  }
+
+}
+
+.group-panel{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(4px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &:hover, &:active {
+    @include box-shadow(0, 0, 4px, darken($colour-3, 35%));
+  }
+}
+a.group-panel {
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+}
+
+.group-panel-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  display: block;
+  margin: 0 auto;
+}
+.group-panel-group-title {
+  float: right;
+}
+
+.group-panel-inner {
+  padding: $gutter $gutter*2;
+  height: 160px;
+  position: relative;
+  @include breakpoint(xs-min) {
+    height: 100px;
+    padding: $gutter $gutter;
+    text-align: center;
+  }
+  @include breakpoint(sm-min) {
+    height: 100px;
+    padding: $gutter $gutter;
+
+  }
+}
+.group-panel-text {
+  display: inline-block;
+  max-width: 79%;
+
+}
+.group-panel-desc {
+  color: $colour-1;
+  margin: 0;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+  @include breakpoint(sm-min) {
+    margin: 15px 0 0 0;
+  }
+}
+.group-panel-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.group-panel-label {
+  background: $colour-13;
+  padding: $gutter/2;
+  text-align: center;
+  @include border-bottom-radius(4px);
+
+  .label-text {
+    color: $white;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-top: 0;
+    position: relative;
+    @include font-size(1.8);
+    @include breakpoint(sm-min) {
+      @include font-size(2.4);
+    }
+  }
+}
+
+
+.group-image {
+  //padding: $gutter/2 0;
+  max-width: 50%;
+}
 .cert-image {
   padding-top: $gutter/2;
+}
+
+.phone-image {
+  padding: $gutter $gutter ;
 }
 
 /* --- What You'll Learn Section --- */

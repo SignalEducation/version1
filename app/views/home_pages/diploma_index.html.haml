@@ -17,20 +17,26 @@
         %h2.l-margin-bottom-big
           Diploma Courses
 
-        -@product_course_category.active_children.each do |course|
-          =link_to library_special_link(course) do
-            .course-panel
-              .course-panel-inner
-                %h3.course-panel-title
+        -@product_course_category.active_children.all_in_order.each do |course|
+          .col-sm-12
+            .course-panel.course-panel-inner
+              .col-sm-2.hidden-xs
+                =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
+              .col-sm-10
+                %h3
                   =course.name
-                %p.course-panel-desc.hidden-xs
-                  =course.short_description
+                %p.p.hidden-xs
+                  =course.short_description.truncate(150)
+              .col-sm-2
+              .col-sm-10
+                =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
+                  Course Info
 
 
 
   %section#advance_career
     .l-wrap-home
-      %h2 Advance your career in Accounting
+      %h2 Advance your career
       %p LearnSignal gives you access to world class training and certifications.
       %ul
         %li
@@ -62,7 +68,6 @@
               %br Student Body
           %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
 
-        %a.enroll_now{:href => "#"} Learn more
 
 
 
@@ -106,7 +111,6 @@
               %p The last date for enrollment is Wednesday, 31st of August.
 
 
-      -#%a.enroll_now{:href => "#"} Learn more
       =image_tag('man_big.png', alt: 'man_big')
 
 
@@ -125,12 +129,6 @@
         .option
           %p.key Resources:
           %p.value Video lectures, slide presentations, practical exercises
-        .option
-          %p.key Payment Options:
-          %p.value
-            €2000
-
-        %a.enroll_now{:href => "#"} Learn more
 
       =image_tag('iphone.png', alt: 'iphone')
 
