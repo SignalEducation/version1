@@ -4159,6 +4159,14 @@ header{
   padding: 20px 0 60px 0;
   color: #fff;
 }
+.home-background {
+  background-image: asset-url('home_image_001.jpg');
+}
+.default-product-background {
+  background-image: asset-url('header_bg.jpg');
+}
+
+
 .main_logo{
   display: inline-block;
   margin: 10px 0 0;
