@@ -11,6 +11,10 @@
 .l-wrap-home
   .container-fluid
     .row.l-margin-top-big
+      .col-md-12.l-margin-bottom
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+
       .col-md-12
         .col-md-6
           .l-margin-bottom-huge

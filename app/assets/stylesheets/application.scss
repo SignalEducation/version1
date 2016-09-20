@@ -400,7 +400,7 @@ label, .label {
 .new-product-user-form {
   padding: $gutter*2 $gutter;
   background: $colour-2;
-  -moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
   text-align: left;
   color: #fff !important;
 }
@@ -859,7 +859,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   padding: 100px 0 170px 0;
 }
 .l-wrap-product-user {
-  padding: 60px 0 170px 0;
+  padding: $gutter*2 $gutter 170px $gutter;
 }
 .l-wrap-courses {
   padding: 20px 0 20px 0;
@@ -933,6 +933,19 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .l-wrap-home {
   padding: 0 $gutter/2;
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+
+  @include breakpoint(md-min) {
+    padding: 0 $gutter/2;
+    max-width: 1000px;
+  }
+
+}
+.l-wrap-purchase {
+  padding: 0 $gutter/2;
+  margin-bottom: $gutter*3;
   @include breakpoint(sm-min) {
     padding: 0 $gutter/2;
   }
@@ -2164,6 +2177,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .course-side-info {
   background: $colour-2;
   padding: $gutter;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4155,12 +4169,16 @@ spinner {
 header{
   background-image: asset-url('header_bg.jpg');
   -webkit-background-size: cover;
+  background-position: center;
   background-size: cover;
   padding: 20px 0 60px 0;
   color: #fff;
 }
 .home-background {
-  background-image: asset-url('home_image_001.jpg');
+  background-image: asset-url('home_image_006.jpg');
+}
+.purchase-background {
+  background-image: asset-url('home_image_005.jpg');
 }
 .default-product-background {
   background-image: asset-url('header_bg.jpg');

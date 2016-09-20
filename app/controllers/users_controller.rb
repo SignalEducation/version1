@@ -233,7 +233,7 @@ class UsersController < ApplicationController
       @user.trial_limit_in_days = 0
 
       if @user.valid? && @user.save
-        #TODO The Email needs to be replaced welcome to Course X at LearnSignal
+        #TODO The Email needs to be replaced welcome to Course X at LearnSignal, ACCA Requirements Enroll in Course X email campaign
         MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
 
         user = User.get_and_activate(@user.account_activation_code)

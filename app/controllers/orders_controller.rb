@@ -32,6 +32,8 @@ class OrdersController < ApplicationController
   end
 
   def new
+
+    #Ensure request.referrer is one of two options
     redirect_to new_product_user_url(@course.name_url) unless current_user
     @order = Order.new
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
