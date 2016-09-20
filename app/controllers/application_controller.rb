@@ -428,6 +428,17 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
+  def dashboard_special_link(current_user)
+    if current_user.individual_student?
+      student_dashboard_url
+    elsif current_user.admin?
+      admin_dashboard_url
+    else
+      student_dashboard_url
+    end
+  end
+  helper_method :dashboard_special_link
+
   def seo_title_maker(last_element, seo_description, seo_no_index)
     @seo_title = last_element ?
             "#{last_element.to_s.truncate(65)}" :

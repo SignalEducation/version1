@@ -16,10 +16,10 @@
                 %li
                   =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
                 %li
-                  =link_to 'Dashboard', dashboard_url
+                  =link_to 'Dashboard', dashboard_special_link(current_user)
               -else
                 %li
-                  =link_to 'Dashboard', dashboard_url
+                  =link_to 'Dashboard', dashboard_special_link(current_user)
               %li
                 =link_to 'Diplomas', all_diplomas_url
               %li

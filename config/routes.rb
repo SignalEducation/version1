@@ -98,7 +98,14 @@ Rails.application.routes.draw do
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
-    get 'dashboard', to: 'dashboard#index', as: :dashboard
+
+    get '/dashboard/student', to: 'dashboard#student', as: :student_dashboard
+    get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
+    get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
+    get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
+    get '/dashboard/corporate', to: 'dashboard#corporate', as: :corporate_dashboard
+
+    #get 'dashboard', to: 'dashboard#index', as: :dashboard
     resources :groups, concerns: :supports_reordering
     resources :groups do
       get 'edit_courses', action: :edit_courses
