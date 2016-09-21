@@ -428,11 +428,21 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
-  def dashboard_special_link(current_user)
-    if current_user.individual_student?
-      student_dashboard_url
-    elsif current_user.admin?
-      admin_dashboard_url
+  def dashboard_special_link(user = nil)
+    user = current_user if current_user && !user
+    redirect_to root_url unless user
+
+    case user.user_group_id
+      when UserGroup.default_student_user_group.id
+        student_dashboard_url
+      when UserGroup.default_admin_user_group.id
+        admin_dashboard_url
+      when UserGroup.default_tutor_user_group.id
+        tutor_dashboard_url
+      when UserGroup.default_corporate_student_user_group.id
+        corporate_student_dashboard_url
+      when UserGroup.default_corporate_student_user_group
+        corporate_customer_dashboard_url
     else
       student_dashboard_url
     end

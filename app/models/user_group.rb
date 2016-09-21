@@ -71,6 +71,10 @@ class UserGroup < ActiveRecord::Base
     where(individual_student: false, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, product_required_to_see_content: false, product_student: false).first
   end
 
+  def self.default_corporate_student_user_group
+    where(individual_student: false, corporate_student: true, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, product_required_to_see_content: false, product_student: false).first
+  end
+
   # instance methods
   def destroyable?
     self.users.empty?

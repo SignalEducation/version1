@@ -288,7 +288,7 @@ describe CorporateCustomersController, type: :controller do
 
       it 'should not see other corporate customer overview' do
         get :show, id: corporate_customer_2.id
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 

@@ -45,7 +45,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
 
       end
     end
@@ -55,7 +55,7 @@ describe RoutesController, type: :controller do
         @request.host = "#{corporation_1.subdomain}.example.com"
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to dashboard_url
+        expect(response).to redirect_to dashboard_special_link
 
       end
     end
@@ -74,7 +74,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -82,7 +82,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -126,7 +126,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -134,7 +134,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -151,7 +151,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -159,7 +159,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -176,7 +176,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -184,7 +184,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -201,7 +201,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -209,7 +209,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 

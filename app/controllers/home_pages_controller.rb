@@ -175,7 +175,7 @@ class HomePagesController < ApplicationController
   def student_sign_up
     #Duplicate in Users controller
     if current_user
-      redirect_to dashboard_url
+      redirect_to dashboard_special_link
     else
       @user = User.new(student_allowed_params)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)

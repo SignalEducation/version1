@@ -39,7 +39,7 @@ class CorporateCustomersController < ApplicationController
   end
 
   def show
-    redirect_to dashboard_url if current_user.corporate_customer? && current_user.corporate_customer_id != params[:id].to_i
+    redirect_to dashboard_special_link if current_user.corporate_customer? && current_user.corporate_customer_id != params[:id].to_i
     @compulsory_courses = SubjectCourse.all_active.all_live.where(id: @corporate_customer.corporate_groups.map { |cg| cg.compulsory_subject_course_ids}.flatten )
     corp_student_ids = @corporate_customer.students.pluck(:id)
     corp_manager_ids = @corporate_customer.managers.pluck(:id)

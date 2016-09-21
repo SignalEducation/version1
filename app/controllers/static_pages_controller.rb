@@ -105,7 +105,7 @@ class StaticPagesController < ApplicationController
 
   def deliver_page
     if params[:first_element].to_s == '' && current_user
-      redirect_to dashboard_url
+      redirect_to dashboard_special_link
     elsif params[:first_element].to_s == '500-page'
       render file: 'public/500.html', layout: nil, status: 500
     else

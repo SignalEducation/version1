@@ -162,7 +162,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -224,7 +224,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
   end
@@ -242,7 +242,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -304,7 +304,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -323,7 +323,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -385,7 +385,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -404,7 +404,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -466,7 +466,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -485,7 +485,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -547,7 +547,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -566,7 +566,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -628,7 +628,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -647,7 +647,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -709,7 +709,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 
@@ -728,7 +728,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
         expect(assigns('home_page'.to_sym).class.name).to eq('home_page'.classify)
         expect(assigns('home_page'.to_sym).id).to eq(home_page_1.id) if home_page_1.id
       end
@@ -792,7 +792,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(dashboard_special_link)
       end
     end
 

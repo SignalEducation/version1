@@ -26,10 +26,10 @@
                 %li
                   =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
                 %li
-                  =link_to 'Dashboard', dashboard_url
+                  =link_to 'Dashboard', dashboard_special_link
               -else
                 %li
-                  =link_to 'Dashboard', dashboard_url
+                  =link_to 'Dashboard', dashboard_special_link
               %li
                 =link_to 'Library', subscription_groups_url
 
