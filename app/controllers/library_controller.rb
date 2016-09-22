@@ -126,6 +126,7 @@ class LibraryController < ApplicationController
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
     redirect_to all_diplomas_url if !current_user || !@course
     redirect_to product_course_url(@course.home_page.public_url) if current_user && !current_user.valid_subject_course_ids.include?(@course.id)
+    @subject_course_user_log = SubjectCourseUserLog.where(user_id: current_user.id, subject_course_id: @course.id).first
     @course_modules = @course.children.all_active.all_in_order
     @tuition_course_modules = @course_modules.all_tuition
     @test_course_modules = @course_modules.all_test

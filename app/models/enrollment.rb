@@ -20,7 +20,7 @@ class Enrollment < ActiveRecord::Base
   # relationships
   belongs_to :user
   belongs_to :subject_course
-  has_one :subject_course_user_log
+  belongs_to :subject_course_user_log
 
   # validation
   validates :user_id, presence: true,
@@ -40,7 +40,7 @@ class Enrollment < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   protected

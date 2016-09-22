@@ -106,7 +106,7 @@ class DashboardController < ApplicationController
     @compulsory_logs = SubjectCourseUserLog.where(user_id: current_user.id)
     @incomplete_courses = @courses.where(id: active_logs_ids)
     @completed_courses = @courses.where(id: completed_logs_ids)
-    seo_title_maker('Dashboard', 'Your progress through all courses will be recorded here.', false)
+    seo_title_maker('Dashboard', 'Progress through all your courses will be recorded here.', false)
   end
 
 end
