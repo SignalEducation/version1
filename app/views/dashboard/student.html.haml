@@ -1,3 +1,5 @@
+.margin-top
+
 -if @first_active_log
   .l-section-small.is-bg-asphalt
     .l-wrap
@@ -70,15 +72,13 @@
                       .col-md-6.col-xs-6.text-right
 
 -else
-  .l-section
+  .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
         .row
-          .col-md-10.col-md-offset-1#heading-message
-            %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-              Student Dashboard
-            %p.h3.text-center
-              Please select one of the courses below to get started!
+          .col-md-8
+            %h2.h2.h-separator.h-separator-left
+              Once you start a course your Progress will be recorded here
 
 
   .l-section-small.is-bg-asphalt
@@ -100,16 +100,11 @@
                     .box-label
                       =t('views.general.start')
             -else
-              -@courses.each do |course|
-                .col-sm-6.col-md-4
-                  =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
-                    .box-inner
-                      %h3.h4.box-title
-                        =course.try(:name)
-                      %p.box-desc
-                        =course.try(:short_description).to_s.truncate(30)
-                    .box-label
-                      =t('views.general.start')
+              .col-md-8
+                =link_to subscription_groups_url do
+                  .btn.btn-red.btn-secondary
+                    Explore Library
+
 
   :javascript
     $(document).on('ready', function() {
