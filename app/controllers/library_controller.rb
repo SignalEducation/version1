@@ -199,4 +199,15 @@ class LibraryController < ApplicationController
     end
   end
 
+  def course_enrollment
+    respond_to do |format|
+      format.json {
+        new_enrollment = Enrollment.new(user_id: params[:library][:user_id], subject_course_id: params[:library][:course_id])
+        new_enrollment.save
+        render json: {}, status: :ok
+      }
+    end
+  end
+
+
 end

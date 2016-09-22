@@ -79,8 +79,10 @@ class User < ActiveRecord::Base
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
-                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code, :session_key,
-                  :stripe_account_balance, :trial_limit_in_seconds, :free_trial, :trial_limit_in_days, :trial_ended_notification_sent_at
+                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
+                  :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
+                  :trial_limit_in_days, :trial_ended_notification_sent_at, :student_number,
+                  :terms_and_conditions
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -95,6 +97,7 @@ class User < ActiveRecord::Base
   has_many :course_modules, foreign_key: :tutor_id
   has_many :completion_certificates
   has_many :course_module_element_user_logs
+  has_many :enrollments
   has_many :subject_courses, foreign_key: :tutor_id
   has_many :invoices
   has_many :quiz_attempts

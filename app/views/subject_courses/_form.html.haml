@@ -43,17 +43,24 @@
             %br/
             %br/
             .col-sm-12
-              .col-sm-4
+              .col-sm-6
                 .checkbox
                   %label
                     =f.check_box :live
                     =t('views.subject_courses.form.live')
-              .col-sm-4
+              .col-sm-6
                 .checkbox
                   %label
                     =f.check_box :active
                     =t('views.subject_courses.form.active')
-              .col-sm-4
+
+            .col-sm-12.l-margin-top
+              .col-sm-6
+                .checkbox
+                  %label
+                    =f.check_box :enrollment_option
+                    =t('views.subject_courses.form.enrollment_option')
+              .col-sm-6
                 .checkbox
                   %label
                     =f.check_box :certificate
