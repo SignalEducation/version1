@@ -1015,6 +1015,7 @@ en:
       show:
         course: Course
         started_at: Started At
+        progress: Progress
 
 
 

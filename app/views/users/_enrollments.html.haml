@@ -9,6 +9,8 @@
           %th
             =t('views.enrollments.show.started_at')
           %th
+            =t('views.enrollments.show.progress')
+          %th
 
       %tbody
         -@enrollments.each do |enrollment|
@@ -18,12 +20,15 @@
             %td
               =humanize_datetime(enrollment.created_at)
             %td
+              =enrollment.subject_course_user_log.percentage_complete
+              ='%'
+            %td
               -if enrollment.active
                 =link_to pause_enrollment_url(enrollment) do
                   .btn.btn-purple.btn-small.pull-right
-                    Pause Enrollment
+                    Pause
 
               =link_to activate_enrollment_url(enrollment) do
                 .btn.btn-purple.btn-small.pull-right
-                  Reactivate Enrollment
+                  Reactivate
 
