@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: enrollments
+#
+#  id                         :integer          not null, primary key
+#  user_id                    :integer
+#  subject_course_id          :integer
+#  subject_course_user_log_id :integer
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  active                     :boolean          default(FALSE)
+#
+
 class EnrollmentsController < ApplicationController
 
   before_action :logged_in_required
@@ -5,10 +18,19 @@ class EnrollmentsController < ApplicationController
 
   def create
     log = create_subject_course_user_log
-    @enrollment = Enrollment.new(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id)
+    @enrollment = Enrollment.new(user_id: @user.id, active: true, subject_course_user_log_id: log.id, subject_course_id: @course.id)
     if @enrollment.save
       redirect_to course_special_link(@course.first_active_cme)
     end
+  end
+
+  def pause
+
+    @enrollment = Enrollment.find(params[:enrollment_id])
+    @enrollment.update_attributes(active: false)
+
+    redirect_to course_special_link(@course.first_active_cme)
+
   end
 
 

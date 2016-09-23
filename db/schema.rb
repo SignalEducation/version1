@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830092737) do
+ActiveRecord::Schema.define(version: 20160923065312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -298,8 +298,9 @@ ActiveRecord::Schema.define(version: 20160830092737) do
     t.integer  "user_id"
     t.integer  "subject_course_id"
     t.integer  "subject_course_user_log_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.boolean  "active",                     default: false
   end
 
   create_table "flash_card_stacks", force: :cascade do |t|
@@ -802,6 +803,7 @@ ActiveRecord::Schema.define(version: 20160830092737) do
     t.string   "hotjar_guid"
     t.boolean  "enrollment_option",                       default: false
     t.integer  "subject_course_category_id"
+    t.text     "email_content"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

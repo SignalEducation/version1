@@ -8,6 +8,7 @@
 #  subject_course_user_log_id :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
+#  active                     :boolean          default(FALSE)
 #
 
 require 'rails_helper'
