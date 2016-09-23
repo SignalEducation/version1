@@ -18,6 +18,12 @@
             %td
               =humanize_datetime(enrollment.created_at)
             %td
-              =link_to library_special_link(enrollment.subject_course) do
+              -if enrollment.active
+                =link_to pause_enrollment_url(enrollment) do
+                  .btn.btn-purple.btn-small.pull-right
+                    Pause Enrollment
+
+              =link_to activate_enrollment_url(enrollment) do
                 .btn.btn-purple.btn-small.pull-right
-                  Continue
+                  Reactivate Enrollment
+

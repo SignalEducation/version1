@@ -25,12 +25,15 @@ class EnrollmentsController < ApplicationController
   end
 
   def pause
-
     @enrollment = Enrollment.find(params[:enrollment_id])
     @enrollment.update_attributes(active: false)
+    redirect_to "#{account_url}#enrollment"
+  end
 
-    redirect_to course_special_link(@course.first_active_cme)
-
+  def activate
+    @enrollment = Enrollment.find(params[:enrollment_id])
+    @enrollment.update_attributes(active: true)
+    redirect_to account_url
   end
 
 
