@@ -519,7 +519,8 @@ class UsersController < ApplicationController
     @valid_order = @user.valid_order?
     @orders = @user.orders
     @corporate_customers = CorporateCustomer.all_in_order
-    @certs = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(completed: true)
+    @certs = SubjectCourseUserLog.for_user_or_session(@user.try(:id), current_session_guid).where(completed: true)
+    @enrollments = Enrollment.where(user_id: @user.try(:id))
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 

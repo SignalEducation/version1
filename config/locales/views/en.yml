@@ -1011,6 +1011,11 @@ en:
         course: Course
         completed_at: Completed At
 
+    enrollments:
+      show:
+        course: Course
+        started_at: Started At
+
 
 
     subscription_plans:
@@ -1205,6 +1210,7 @@ en:
           orders: Purchase History
           payments: Payment Info
           certificates: Certificates
+          enrollments: Enrollments
           notifications: Notifications
           admin: Admin
           referral_code: Referrals

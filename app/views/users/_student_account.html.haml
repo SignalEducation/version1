@@ -26,6 +26,9 @@
           %li
             %a{href: '#completion-certs', role: 'tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.certificates')
+          %li
+            %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
+              =t('views.users.show.tabs.enrollments')
 
 
         .account-tab-content
@@ -58,6 +61,9 @@
 
           .tab.account-tab#completion-certs
             =render partial: 'users/completion_certificates'
+
+          .tab.account-tab#enrollments
+            =render partial: 'users/enrollments'
 
 
 
