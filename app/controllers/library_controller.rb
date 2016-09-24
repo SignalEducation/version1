@@ -95,12 +95,17 @@ class LibraryController < ApplicationController
           seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
         end
       else
+        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
+
+        if current_user && @course.enrolled_user_ids.include?(current_user.id)
+          @enrollment = @subject_course_user_log.enrollment
+        end
+
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
         user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
         latest_set = user_course_sets.first
         @latest_element_id = latest_set.try(:latest_course_module_element_id)
         @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
         cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
         scores = cmeuls.all.map(&:quiz_score_actual)
         pass_rate = @course.cpd_pass_rate || 65

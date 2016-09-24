@@ -2402,7 +2402,7 @@ a.list-group-item {
 }
 .resume-course {
   @include breakpoint(xs-min) {
-    margin-top: $gutter/3;
+    margin-top: $gutter;
   }
   @include breakpoint(sm-min) {
     margin-top: $gutter*2;
@@ -2663,7 +2663,23 @@ a.card {
     text-align: left;
     margin-top: $gutter;
     & .card-inner {
-      padding-top: $gutter;
+      padding: $gutter $gutter;
+      height: 200px;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+  }
+  &.card-library {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding: $gutter;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
     }
   }
 }
@@ -2677,12 +2693,15 @@ a.card {
 .card-outer {
   height: 275px;
 }
-.card-inner {
-  padding: $gutter $gutter;
+.card-library-outer {
+  height: 195px;
+}
+.card-library-outer-cover {
   height: 200px;
-  position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  @include breakpoint(sm-min) {
+    height: 100px;
+  }
+
 }
 .card-pic {
   max-height: 60%;
@@ -2698,6 +2717,9 @@ a.card {
   text-overflow: ellipsis;
 }
 .card-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.card-form {
   padding: $gutter/2 $gutter $gutter $gutter;
 }
 .days-left {
