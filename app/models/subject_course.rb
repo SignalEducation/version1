@@ -44,7 +44,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option
+ :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content
 
   # Constants
 
@@ -78,6 +78,8 @@ class SubjectCourse < ActiveRecord::Base
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :forum_url, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true
+  validates :email_content, presence: true, on: :update, if: :enrollment_option
+
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }

@@ -978,6 +978,7 @@ en:
         enrollment_option: Enrollment
         cpd_hours: CPD Hours
         cpd_hours_placeholder: Required CPD Hours
+        email_content: Welcome Email Content
         cpd_pass_rate: Pass Rate for this course
         cpd_pass_rate_placeholder: CPD Pass Rate
 
