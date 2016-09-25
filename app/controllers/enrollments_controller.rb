@@ -18,11 +18,21 @@ class EnrollmentsController < ApplicationController
 
   def create
     log = create_subject_course_user_log
-    @enrollment = Enrollment.new(user_id: @user.id, active: true, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
+    @enrollment = Enrollment.new(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
     if @enrollment.save
       MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, @course.try(:email_content), library_special_link(@course.name_url))
 
       redirect_to course_special_link(@course.first_active_cme)
+    end
+  end
+
+  def create_with_order
+    log = create_subject_course_user_log
+    @enrollment = Enrollment.new(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
+    if @enrollment.save
+      MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, @course.try(:email_content), library_special_link(@course.name_url))
+
+      redirect_to diploma_course_url(@course.name_url)
     end
   end
 

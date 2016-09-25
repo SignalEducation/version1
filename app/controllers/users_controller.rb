@@ -200,7 +200,7 @@ class UsersController < ApplicationController
 
   def create_product_user
     if current_user
-      redirect_to dashboard_url
+      redirect_to root_url
     else
       @course = SubjectCourse.find(params[:user][:subject_course_id])
       @product = Product.where(subject_course_id: @course.id).first
@@ -544,7 +544,8 @@ class UsersController < ApplicationController
         :email, :first_name, :last_name,
         :country_id, :locale,
         :password, :password_confirmation,
-        :topic_interest
+        :topic_interest, :student_number,
+        :terms_and_conditions
     )
   end
 

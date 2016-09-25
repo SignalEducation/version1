@@ -14,7 +14,7 @@
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id
+  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active
 
   # Constants
 

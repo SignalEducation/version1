@@ -77,18 +77,18 @@ class OrdersController < ApplicationController
 
       if @order.valid?
         order = Stripe::Order.retrieve(@order.stripe_guid)
-        pay_order = order.pay(source: stripe_token)
+        @pay_order = order.pay(source: stripe_token)
       end
       order = Stripe::Order.retrieve(@order.stripe_guid)
       @order.current_status = order.status
-      @order.stripe_order_payment_data = pay_order
+      @order.stripe_order_payment_data = @pay_order
     else
       redirect_to new_order_url
     end
 
     if @order.save
       flash[:success] = I18n.t('controllers.orders.create.flash.success')
-      redirect_to library_special_link(@course)
+      redirect_to new_order_enrollment_url(@course.name_url)
     else
       render action: :new
     end

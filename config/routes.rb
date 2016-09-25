@@ -89,6 +89,7 @@ Rails.application.routes.draw do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     get '/enrollments/:subject_course_name_url', to: 'enrollments#create', as: :new_enrollment
+    get '/orders/enrollment/:subject_course_name_url', to: 'enrollments#create_with_order', as: :new_order_enrollment
 
     post '/enrollments/:subject_course_name_url', to: 'users#enrollment', as: :user_enrollment
 
