@@ -2682,6 +2682,17 @@ a.card {
 
     }
   }
+  &.card-dashboard {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding: $gutter;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+    }
+  }
 }
 .card-title {
   white-space: nowrap;

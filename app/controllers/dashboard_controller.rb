@@ -58,7 +58,7 @@ class DashboardController < ApplicationController
   end
 
   def student
-
+    @enrollments = Enrollment.where(user_id: current_user.id, active: true)
   end
 
   def tutor
