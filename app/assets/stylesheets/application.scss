@@ -5222,20 +5222,27 @@ footer nav ul li a{
   //float: left;
 }
 .account-tab-content {
-  width: 60%;
+  //width: 60%;
   margin: 0;
 
 }
+@media (max-width: 768px) {
+  .account-tab-content {
+    width: 100%;
+    margin-top: 0;
+
+  }
+}
 .account-tabs{
-  margin: 40px 0 0;
-  min-height: 490px;
+  margin: $gutter 0 0;
+  //min-height: 490px;
 }
 .account-tabs ul {
-  float: right;
+  //float: right;
   margin-right: 0;
   padding-left: 0;
   background-color: darken(#F9FAFB, 6%);
-  width: 30%;
+  //width: 30%;
 }
 .account-tabs ul > li {
   list-style: none;
@@ -5288,7 +5295,7 @@ footer nav ul li a{
 @media (max-width: 965px){
   .account-tabs ul{
     margin-right: 65px;
-    width: 46%;
+    width: 100%;
   }
   .account-tabs ul > li a{ font-size: 21px; }
 }

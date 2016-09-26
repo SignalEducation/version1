@@ -4,68 +4,71 @@
 .l-section-profile.is-bg-asphalt
   .l-wrap
     .container-fluid
+      %h1.h1.h-separator.h-separator-left.l-margin-bottom
+        Account
 
-      .tabs.account-tabs
-        %ul
-          %li
-            %a.active{href: '#personal-details', role: 'tab', data: {toggle: 'tab'}}
-              =t('views.users.show.tabs.personal_details')
-          -if @current_subscription
-            %li
-              %a{href: '#subscriptions', role: 'tab', data: {toggle: 'tab'}}
-                =t('views.users.show.tabs.subscriptions')
-          -if @valid_order
-            %li
-              %a{href: '#orders', role: 'tab', data: {toggle: 'tab'}}
-                =t('views.users.show.tabs.orders')
-          -if @subscription_payment_cards.any?
-            %li
-              %a{href: '#payment-details', role: 'tab', data: {toggle: 'tab'}}
-                =t('views.users.show.tabs.payments')
-
-          %li
-            %a{href: '#completion-certs', role: 'tab', data: {toggle: 'tab'}}
-              =t('views.users.show.tabs.certificates')
-          %li
-            %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
-              =t('views.users.show.tabs.enrollments')
+      .tabs
+        .col-sm-8
+          .account-tab-content
+            .tab.account-tab#personal-details
+              =render partial: 'users/form_student_personal_details'
 
 
-        .account-tab-content
-          .tab.account-tab#personal-details
-            =render partial: 'users/form_student_personal_details'
+            -if @current_subscription
+              .tab.account-tab#subscriptions
+
+                =render partial: 'subscription_info'
 
 
-          -if @current_subscription
-            .tab.account-tab#subscriptions
+                .col-md-12
+                  .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
+                    %h2.l-margin-bottom-big.text-center
+                      =t('views.users.show.your_invoices')
+                    .table-responsive
+                      -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
+                      =render partial: 'invoices/index'
 
-              =render partial: 'subscription_info'
+            -if @valid_order
+              .tab.account-tab#orders
 
+                =render partial: 'orders/account_info'
 
-              .col-md-12
-                .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
-                  %h2.l-margin-bottom-big.text-center
-                    =t('views.users.show.your_invoices')
-                  .table-responsive
-                    -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
-                    =render partial: 'invoices/index'
+            -if @subscription_payment_cards.any?
+              .tab.account-tab#payment-details
+                =render partial: 'users/payment_details'
 
-          -if @valid_order
-            .tab.account-tab#orders
+            .tab.account-tab#completion-certs
+              =render partial: 'users/completion_certificates'
 
-              =render partial: 'orders/account_info'
-
-          -if @subscription_payment_cards.any?
-            .tab.account-tab#payment-details
-              =render partial: 'users/payment_details'
-
-          .tab.account-tab#completion-certs
-            =render partial: 'users/completion_certificates'
-
-          .tab.account-tab#enrollments
-            =render partial: 'users/enrollments'
+            .tab.account-tab#enrollments
+              =render partial: 'users/enrollments'
 
 
+        .col-sm-4
+          .account-tabs
+            %ul
+              %li
+                %a.active{href: '#personal-details', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.personal_details')
+              -if @current_subscription
+                %li
+                  %a{href: '#subscriptions', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.subscriptions')
+              -if @valid_order
+                %li
+                  %a{href: '#orders', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.orders')
+              -if @subscription_payment_cards.any?
+                %li
+                  %a{href: '#payment-details', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.payments')
+
+              %li
+                %a{href: '#completion-certs', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.certificates')
+              %li
+                %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.enrollments')
 
 
 
