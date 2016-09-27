@@ -402,14 +402,6 @@ class ApplicationController < ActionController::Base
   helper_method :library_special_link
 
 
-
-  def home_page_special_link(the_thing)
-
-  end
-  helper_method :home_page_special_link
-
-
-
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
       library_special_link(

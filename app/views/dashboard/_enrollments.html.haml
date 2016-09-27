@@ -15,10 +15,4 @@
               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
         .col-sm-4.text-center.resume-course
-          =link_to 'Course', diploma_course_url(enrollment.subject_course.name_url), class: 'btn btn-wide btn-cyan'
-        -#.col-sm-4.text-center.resume-course
-          -if enrollment.subject_course_user_log.student_exam_tracks.any?
-            =link_to 'Resume Course', course_special_link(enrollment.subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
-          -else
-            =link_to 'Start Course', course_special_link(enrollment.subject_course.first_active_cme), class: 'btn btn-wide btn-cyan'
-
+          =link_to 'Resume Course', library_special_link(enrollment.subject_course), class: 'btn btn-wide btn-cyan'
