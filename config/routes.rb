@@ -122,8 +122,6 @@ Rails.application.routes.draw do
       put 'update_courses', action: :update_courses
     end
 
-    get 'pricing', to: 'subscription_plans#public_index', as: :pricing
-    get 'business', to: 'footer_pages#business', as: :business_url
     post 'student_sign_up', to: 'home_pages#student_sign_up', as: :student_sign_up
     get '/student_new', to: 'users#student_new', as: :new_student
     post '/student_create', to: 'users#student_create', as: :create_student
@@ -168,11 +166,13 @@ Rails.application.routes.draw do
     resources :subscription_plan_categories
     resources :subject_course_categories
     resources :tutor_applications
-    get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
+    get 'pricing', to: 'subscription_plans#public_index', as: :pricing
+    get 'business', to: 'footer_pages#business', as: :business
     get 'careers', to: 'footer_pages#careers'
     get 'contact', to: 'footer_pages#contact'
-    get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
+    get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
+    get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_activity_logs
     resources :user_notifications
     resources :users, only: [:new, :create]
