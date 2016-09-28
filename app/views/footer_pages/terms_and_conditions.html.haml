@@ -1,8 +1,9 @@
 .hero-sign-up
-  -if current_corporate
-    =render partial: 'layouts/transparent_corporate_navbar'
-  -else
-    =render partial: 'layouts/transparent_navbar'
+  .l-wrap-home
+    -if current_corporate
+      =render partial: 'layouts/transparent_corporate_navbar'
+    -else
+      =render partial: 'layouts/transparent_navbar'
   .l-section
     .l-wrap
       .container-fluid
@@ -16,7 +17,7 @@
   =render partial: 'layouts/flash_messages'
 .l-asphalt
   .l-section
-    .l-wrap
+    .l-wrap-home
       .container-fluid
         .row
           .col-sm-12
