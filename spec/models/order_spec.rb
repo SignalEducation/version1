@@ -21,7 +21,7 @@ require 'rails_helper'
 describe Order do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at coupon_code)
   Order.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -37,7 +37,6 @@ describe Order do
   it { should belong_to(:product) }
   it { should belong_to(:subject_course) }
   it { should belong_to(:user) }
-  it { should belong_to(:stripe_customer) }
 
   # validation
   it { should validate_presence_of(:product_id) }
@@ -52,11 +51,10 @@ describe Order do
   it { should validate_presence_of(:stripe_guid) }
 
   it { should validate_presence_of(:stripe_customer_id) }
-  it { should validate_numericality_of(:stripe_customer_id) }
 
   it { should validate_presence_of(:current_status) }
 
-  it { should validate_presence_of(:coupon_code) }
+  it { should_not validate_presence_of(:coupon_code) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -69,6 +67,5 @@ describe Order do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

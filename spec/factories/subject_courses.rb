@@ -55,6 +55,7 @@ FactoryGirl.define do
     sequence(:mailchimp_guid)       {|n| "dfgsdfg#{n}"}
     forum_url "MyString"
     default_number_of_possible_exam_answers 1
+    subject_course_category_id 1
 
     factory :active_subject_course do
       active                       true

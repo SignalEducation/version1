@@ -40,7 +40,7 @@ describe Enrollment do
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
 
-  it { should validate_presence_of(:subject_course_user_log_id) }
+  it { should_not validate_presence_of(:subject_course_user_log_id) }
   it { should validate_numericality_of(:subject_course_user_log_id) }
 
   # callbacks
@@ -54,6 +54,5 @@ describe Enrollment do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

@@ -37,10 +37,10 @@ describe Group do
   subject { FactoryGirl.build(:group) }
 
   # Constants
-  #it { expect(Group.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should have_and_belong_to_many(:subject_courses) }
+  it { should have_many(:home_pages) }
 
   # validation
   it { should validate_presence_of(:name) }
@@ -54,6 +54,7 @@ describe Group do
   it { should validate_presence_of(:description) }
 
   it { should_not validate_presence_of(:image) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -68,7 +69,9 @@ describe Group do
   # instance methods
   it { should respond_to(:active_children) }
   it { should respond_to(:children) }
+  it { should respond_to(:live_children) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
 
 
 end

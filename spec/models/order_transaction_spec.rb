@@ -28,13 +28,11 @@ describe OrderTransaction do
   end
 
   # Constants
-  #it { expect(OrderTransaction.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:order) }
   it { should belong_to(:user) }
-  it { should belong_to(:stripe_charge) }
-  it { should belong_to(:stripe_charge) }
+  it { should belong_to(:product) }
 
   # validation
   it { should validate_presence_of(:order_id) }
@@ -43,12 +41,6 @@ describe OrderTransaction do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:stripe_charge_id) }
-  it { should validate_numericality_of(:stripe_charge_id) }
-
-  it { should validate_presence_of(:stripe_charge_id) }
-  it { should validate_numericality_of(:stripe_charge_id) }
-
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -56,10 +48,10 @@ describe OrderTransaction do
   it { expect(OrderTransaction).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(OrderTransaction).to respond_to(:create_from_stripe_data) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

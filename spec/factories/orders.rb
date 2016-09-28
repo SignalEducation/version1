@@ -19,13 +19,13 @@
 FactoryGirl.define do
   factory :order do
     product_id 1
-subject_course_id 1
-user_id 1
-stripe_guid "MyString"
-stripe_customer_id "MyString"
-live_mode false
-current_status "MyString"
-coupon_code "MyString"
+    subject_course_id 1
+    user_id 1
+    stripe_guid "MyString"
+    stripe_customer_id "MyString"
+    live_mode false
+    current_status "MyString"
+    coupon_code "MyString"
   end
 
 end

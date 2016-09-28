@@ -48,13 +48,15 @@ describe CourseModule do
 
   # relationships
   it { should belong_to(:subject_course) }
+  it { should belong_to(:tutor) }
+
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
   it { should have_many(:course_module_element_videos) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_one(:course_module_jumbo_quiz) }
   it { should have_many(:student_exam_tracks) }
-  it { should belong_to(:tutor) }
+
 
   # validation
 
