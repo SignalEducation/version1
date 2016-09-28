@@ -54,6 +54,8 @@ class HomePagesController < ApplicationController
   end
 
   def diploma_index
+    product = Product.first
+    redirect_to product_course_url(product.subject_course.home_pages.first.public_url)
     @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
     @currency_id = @country.currency_id
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first

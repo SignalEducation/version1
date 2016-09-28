@@ -29,6 +29,9 @@
                   =course.short_description.truncate(150)
               .col-sm-2
               .col-sm-10
+                -if course.white_papers.any?
+                  =link_to public_white_paper_url(course.white_papers.first.name_url), class: 'btn btn-cyan l-margin-top' do
+                    Download Brochure
                 =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
                   Course Info
 

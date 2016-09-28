@@ -17,6 +17,7 @@
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
 #  name                     :string
+#  subject_course_id        :integer
 #
 
 class WhitePapersController < ApplicationController
@@ -106,10 +107,11 @@ class WhitePapersController < ApplicationController
     if params[:id].to_i > 0
       @white_paper = WhitePaper.where(id: params[:id]).first
     end
+    @subject_courses = SubjectCourse.all_active.all_in_order
   end
 
   def allowed_params
-    params.require(:white_paper).permit(:name, :description, :file, :sorting_order, :cover_image, :name_url)
+    params.require(:white_paper).permit(:name, :description, :file, :sorting_order, :cover_image, :name_url, :subject_course_id)
   end
 
   def request_allowed_params

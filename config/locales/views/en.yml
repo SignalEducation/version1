@@ -1608,9 +1608,10 @@ en:
     white_papers:
       form:
         name: Title
+        name_placeholder: Title of White Paper
         name_url: Name URL
         name_url_placeholder: Name URL
-        name_placeholder: Title of White Paper
+        subject_course_id: Course
         description: Description(This accepts html tags)
         description_placeholder: Enter description here
         file_file_name: File name

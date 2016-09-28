@@ -64,6 +64,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :corporate_group_grants
   has_many :products
   has_many :orders
+  has_many :white_papers
 
 
   # validation

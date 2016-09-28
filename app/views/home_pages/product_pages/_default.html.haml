@@ -21,7 +21,11 @@
                 =number_in_local_currency(@product.price, @currency_id)
 
         .diploma_links
-          %a.course_info{:href => "#diploma_info"} Course Information
+          -if @course.white_papers.any?
+            =link_to public_white_paper_url(@course.white_papers.first.name_url), class: 'course_info' do
+              Course Information
+          -else
+            %a.course_info{:href => "#diploma_info"} Course Information
           =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
             Enroll Now
 
