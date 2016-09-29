@@ -370,6 +370,18 @@ en:
           success: User Group has been deleted
           error: User Group was not deleted
 
+    student_user_types:
+      create:
+        flash:
+          success: Student User Type has been created successfully
+      update:
+        flash:
+          success: Student User Type details have been updated successfully
+      destroy:
+        flash:
+          success: Student User Type has been deleted
+          error: Student User Type was not deleted
+
     user_notifications:
       create:
         flash:

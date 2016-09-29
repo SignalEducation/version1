@@ -1,0 +1,33 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.student_user_types.show.h1')
+            \#
+            =@student_user_type.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.student_user_types.form.name')
+                  %td.col-sm-8=@student_user_type.name
+                %tr
+                  %td.col-sm-4=t('views.student_user_types.form.description')
+                  %td.col-sm-8=@student_user_type.description
+                %tr
+                  %td.col-sm-4=t('views.student_user_types.form.subscription')
+                  %td.col-sm-8=tick_or_cross(@student_user_type.subscription)
+                %tr
+                  %td.col-sm-4=t('views.student_user_types.form.product_order')
+                  %td.col-sm-8=tick_or_cross(@student_user_type.product_order)
+              %p
+                =link_to t('views.general.back'), student_user_types_url
+                |
+                =link_to t('views.general.edit'), edit_student_user_type_url(id: @student_user_type.id), title: t('views.general.edit_tooltip')

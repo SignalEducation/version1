@@ -148,6 +148,27 @@ en:
       new:
         h1: New Category
 
+    student_user_types:
+      form:
+        name: Name
+        name_placeholder: Name
+        description: Description
+        description_placeholder: Description
+        subscription: Subscription
+        product_order: Product
+
+      index:
+        h1: Student User Types
+
+      show:
+        h1: Student User Type
+
+      edit:
+        h1: Edit Student User Type
+
+      new:
+        h1: New Student User Type
+
     orders:
 
       index:

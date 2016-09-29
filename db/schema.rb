@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160928094915) do
+ActiveRecord::Schema.define(version: 20160929172555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -739,6 +739,19 @@ ActiveRecord::Schema.define(version: 20160928094915) do
   add_index "student_exam_tracks", ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id", using: :btree
   add_index "student_exam_tracks", ["user_id"], name: "index_student_exam_tracks_on_user_id", using: :btree
 
+  create_table "student_user_types", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "subscription",  default: false
+    t.boolean  "product_order", default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "student_user_types", ["name"], name: "index_student_user_types_on_name", using: :btree
+  add_index "student_user_types", ["product_order"], name: "index_student_user_types_on_product_order", using: :btree
+  add_index "student_user_types", ["subscription"], name: "index_student_user_types_on_subscription", using: :btree
+
   create_table "subject_course_categories", force: :cascade do |t|
     t.string   "name"
     t.string   "payment_type"
@@ -1086,6 +1099,7 @@ ActiveRecord::Schema.define(version: 20160928094915) do
     t.integer  "trial_limit_in_days",                          default: 0
     t.string   "student_number"
     t.boolean  "terms_and_conditions",                         default: false
+    t.integer  "student_user_type_id"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

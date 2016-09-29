@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
         as: :old_user_activation
     resources :user_groups
+    resources :student_user_types
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
