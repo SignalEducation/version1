@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: student_user_types
+#
+#  id            :integer          not null, primary key
+#  name          :string
+#  description   :text
+#  subscription  :boolean          default(FALSE)
+#  product_order :boolean          default(FALSE)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 class StudentUserType < ActiveRecord::Base
 
   # attr-accessible
@@ -20,19 +33,20 @@ class StudentUserType < ActiveRecord::Base
 
   # class methods
   def self.default_sub_user_type
-    where(subscription: true, product_order: false)
+    where(subscription: true, product_order: false).first
   end
 
   def self.default_product_user_type
-    where(subscription: false, product_order: true)
+    where(subscription: false, product_order: true).first
   end
 
   def self.default_sub_and_product_user_type
-    where(subscription: true, product_order: true)
+    where(subscription: true, product_order: true).first
   end
 
   def self.default_no_user_type
-    where(subscription: false, product_order: false)
+    #User that created an account through purchase product process but didn't complete purchase so has an account but no access to any content
+    where(subscription: false, product_order: false).first
   end
 
   # instance methods

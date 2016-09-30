@@ -60,6 +60,7 @@
 #  trial_limit_in_days              :integer          default(0)
 #  student_number                   :string
 #  terms_and_conditions             :boolean          default(FALSE)
+#  student_user_type_id             :integer
 #
 
 class User < ActiveRecord::Base
@@ -82,7 +83,7 @@ class User < ActiveRecord::Base
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
                   :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
                   :trial_limit_in_days, :trial_ended_notification_sent_at, :student_number,
-                  :terms_and_conditions
+                  :terms_and_conditions, :student_user_type_id
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -531,12 +532,59 @@ class User < ActiveRecord::Base
     self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
   end
 
-  def product_student?
-    self.user_group.try(:product_student) && self.corporate_customer_id.to_i == 0
+  def subscription_student?
+    self.student_user_type.try(:subscription) && !self.student_user_type.try(:product_order)
   end
 
-  def student_user?
-    self.user_group.try(:product_student) || self.user_group.try(:individual_student)
+  def product_order_student?
+    self.student_user_type.try(:product_order) && !self.student_user_type.try(:subscription)
+  end
+
+  def product_and_sub_student?
+    self.student_user_type.try(:product_order) && self.student_user_type.try(:subscription)
+  end
+
+  def no_product_or_sub_student?
+    #User that created an account through purchase product process but didn't complete purchase so has an account but no access to any content
+    !self.student_user_type.try(:product_order) && !self.student_user_type.try(:subscription)
+  end
+
+  def update_user_for_create_sub
+    if self.individual_student?
+
+      if self.subscription_student?
+        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_user_type.id)
+
+      elsif self.product_order_student?
+        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_and_product_user_type.id)
+
+      elsif self.product_and_sub_student?
+        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_and_product_user_type.id)
+
+      elsif self.no_product_or_sub_student?
+        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_user_type.id)
+
+      end
+    end
+  end
+
+  def update_user_post_reactivation(balance)
+    if self.individual_student?
+
+      if self.subscription_student?
+        self.update_attributes(student_user_type_id: StudentUserType.default_sub_user_type.id, stripe_account_balance: balance)
+
+      elsif self.product_order_student?
+        self.update_attributes(student_user_type_id: StudentUserType.default_sub_and_product_user_type.id, stripe_account_balance: balance)
+
+      elsif self.product_and_sub_student?
+        self.update_attributes(student_user_type_id: StudentUserType.default_sub_and_product_user_type.id, stripe_account_balance: balance)
+
+      elsif self.no_product_or_sub_student?
+        self.update_attributes(student_user_type_id: StudentUserType.default_sub_user_type.id, stripe_account_balance: balance)
+
+      end
+    end
   end
 
   def tutor?
@@ -707,7 +755,8 @@ class User < ActiveRecord::Base
 
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+      user.update_user_post_reactivation(stripe_customer.account_balance)
+
       return new_sub
     end
   rescue ActiveRecord::RecordInvalid => exception
@@ -773,7 +822,7 @@ class User < ActiveRecord::Base
 
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
+      user.update_user_post_reactivation(stripe_customer.account_balance)
 
       return new_sub
     end

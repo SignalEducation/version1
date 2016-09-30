@@ -80,6 +80,7 @@ FactoryGirl.define do
       user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       corporate_customer_id             nil
+      student_user_type_id              1
       account_activation_code           'abc123'
 
       factory :inactive_individual_student_user do

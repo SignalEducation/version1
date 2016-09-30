@@ -128,13 +128,13 @@ class UsersController < ApplicationController
   def student_create
     #Duplicate in HomePages controller
     if current_user
-      redirect_to dashboard_url
+      redirect_to root_url
     else
       @navbar = false
       @footer = false
       @topic_interests = Group.all_active.all_in_order.for_public
-
       @user = User.new(student_allowed_params)
+      @user.student_user_type_id = StudentUserType.default_sub_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
       @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.where(iso_code: 'IE').first.id
       @user.account_activation_code = SecureRandom.hex(10)
@@ -210,6 +210,7 @@ class UsersController < ApplicationController
       @topic_interests = Group.all_active.all_in_order.for_public
       @user = User.new(student_allowed_params)
       @user.user_group_id = UserGroup.default_product_student_user_group.try(:id)
+      @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
       @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
       @user.account_activation_code = SecureRandom.hex(10)
       @user.email_verification_code = SecureRandom.hex(10)
@@ -370,48 +371,56 @@ class UsersController < ApplicationController
     seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
   end
 
-
   def create_subscription
-    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
-    if current_user.subscriptions.count == 0 &&
-       params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
-      user = User.find(params[:user_id])
-      subscription_params = params[:user][:subscriptions_attributes]["0"]
-      subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-      coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code) if coupon_code
-      if coupon_code && verified_coupon == 'bad_coupon'
-        redirect_to user_new_subscription_url(current_user.id)
-      else
-        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
-        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        if stripe_customer && stripe_subscription
-          subscription = Subscription.new(
-              user_id: user.id,
-              subscription_plan_id: subscription_plan.id,
-              complimentary: false,
-              active: true,
-              livemode: stripe_subscription[:plan][:livemode],
-              current_status: stripe_subscription.status,
-          )
-          # mass-assign-protected attributes
-          subscription.stripe_guid = stripe_subscription.id
-          subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-          subscription.stripe_customer_id = stripe_customer.id
-          subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
-          upgrade = subscription.save(validate: false)
-        end
+    ####  User creating their first subscription  #####
 
-        if upgrade
-          current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-          current_user.update_attribute(:free_trial, false)
-          redirect_to personal_upgrade_complete_url
+    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
+    if current_user && current_user.individual_student?
+      if !current_user.subscriptions.any? &&
+         params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
+        user = User.find(params[:user_id])
+        subscription_params = params[:user][:subscriptions_attributes]["0"]
+        subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
+        coupon_code = params[:coupon] unless params[:coupon].empty?
+        verified_coupon = verify_coupon(coupon_code) if coupon_code
+        if coupon_code && verified_coupon == 'bad_coupon'
+          redirect_to user_new_subscription_url(current_user.id)
         else
-          redirect_to request.referer
-          flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
+          stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+          stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
+          stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+          if stripe_customer && stripe_subscription
+            subscription = Subscription.new(
+                user_id: user.id,
+                subscription_plan_id: subscription_plan.id,
+                complimentary: false,
+                active: true,
+                livemode: stripe_subscription[:plan][:livemode],
+                current_status: stripe_subscription.status,
+            )
+            # mass-assign-protected attributes
+            subscription.stripe_guid = stripe_subscription.id
+            subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+            subscription.stripe_customer_id = stripe_customer.id
+            subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
+            upgrade = subscription.save(validate: false)
+          end
+
+          if upgrade
+            current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+            current_user.update_user_for_create_sub
+            redirect_to personal_upgrade_complete_url
+          else
+            redirect_to user_new_subscription_url(current_user.id)
+            flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
+          end
         end
+      else
+        redirect_to user_new_subscription_url(current_user.id)
+        #TODO need to add notification here for me
+        flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
       end
+
     else
       redirect_to account_url
     end
@@ -419,6 +428,7 @@ class UsersController < ApplicationController
 
   def reactivate_account
     @user = User.where(id: params[:user_id]).first
+    redirect_to root_url unless @user.individual_student?
     @subscription = @user.subscriptions.last
     redirect_to account_url unless @subscription.current_status == 'canceled'
     @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
@@ -430,6 +440,8 @@ class UsersController < ApplicationController
   end
 
   def reactivate_account_subscription
+    redirect_to root_url unless current_user.individual_student?
+    ####  User adding a subscription after previously canceling one  #####
     if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"]
       coupon_code = params[:coupon] unless params[:coupon].empty?
       verified_coupon = verify_coupon(coupon_code) if coupon_code
