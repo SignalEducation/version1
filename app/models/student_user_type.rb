@@ -9,12 +9,13 @@
 #  product_order :boolean          default(FALSE)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  free_trial    :boolean          default(FALSE)
 #
 
 class StudentUserType < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :description, :subscription, :product_order
+  attr_accessible :name, :description, :subscription, :product_order, :free_trial
 
   # Constants
 
@@ -32,21 +33,29 @@ class StudentUserType < ActiveRecord::Base
   scope :all_in_order, -> { order(:name) }
 
   # class methods
+  def self.default_free_trial_user_type
+    where(free_trial: true, subscription: false, product_order: false).first
+  end
+
   def self.default_sub_user_type
-    where(subscription: true, product_order: false).first
+    where(free_trial: false, subscription: true, product_order: false).first
   end
 
   def self.default_product_user_type
-    where(subscription: false, product_order: true).first
+    where(free_trial: false, subscription: false, product_order: true).first
   end
 
   def self.default_sub_and_product_user_type
-    where(subscription: true, product_order: true).first
+    where(free_trial: false, subscription: true, product_order: true).first
   end
 
-  def self.default_no_user_type
-    #User that created an account through purchase product process but didn't complete purchase so has an account but no access to any content
-    where(subscription: false, product_order: false).first
+  def self.default_free_trial_and_product_user_type
+    where(free_trial: true, subscription: false, product_order: true).first
+  end
+
+  def self.default_no_access_user_type
+    #User that created an account through purchase product process but didn't complete purchase so has an account but no access to any content or a subscription user with a canceled subscription
+    where(free_trial: false, subscription: false, product_order: false).first
   end
 
   # instance methods

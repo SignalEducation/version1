@@ -9,6 +9,7 @@
 #  product_order :boolean          default(FALSE)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  free_trial    :boolean          default(FALSE)
 #
 
 class StudentUserTypesController < ApplicationController
@@ -71,7 +72,7 @@ class StudentUserTypesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:student_user_type).permit(:name, :description, :subscription, :product_order)
+    params.require(:student_user_type).permit(:name, :description, :subscription, :product_order, :free_trial)
   end
 
 end

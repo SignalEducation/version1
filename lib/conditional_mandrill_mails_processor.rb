@@ -89,20 +89,31 @@ class ConditionalMandrillMailsProcessor
   end
 
   def self.process_free_trial_ended_notifications
-    individual_user_group_id = UserGroup.find 1
+    individual_user_group = UserGroup.default_student_user_group
+    free_trial_student_type = StudentUserType.default_free_trial_user_type
+    free_and_product_student_type = StudentUserType.default_free_trial_and_product_user_type
+
     free_trial_users = User.where(free_trial: true).where(
-                                  user_group_id: individual_user_group_id)
+        user_group_id: individual_user_group.id).where(
+        student_user_type_id: free_trial_student_type.id)
+
+    free_trial_product_users = User.where(free_trial: true).where(
+        user_group_id: individual_user_group.id).where(
+        student_user_type_id: free_and_product_student_type.id)
+
+    users = free_trial_product_users + free_trial_users
+
     free_days_expired = "We just wanted to let you know that your free trial of #{ENV["free_trial_days"].to_s} days has ended!"
     free_minutes_expired = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
 
 
-    free_trial_users.each do |user|
+    users.each do |user|
       if !user.subscriptions.any? &&
          !user.days_or_seconds_valid? &&
          user.trial_ended_notification_sent_at.nil? &&
          user.active?
 
-        if user.trial_limit_in_seconds < ENV['free_trial_limit_in_seconds'].to_i
+        if user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
           reason_text = free_minutes_expired
         else
           reason_text = free_days_expired
@@ -113,7 +124,16 @@ class ConditionalMandrillMailsProcessor
                                      url_helpers.user_new_subscription_url(user_id: user.id, host: 'www.learnsignal.com'),
                                      reason_text
                                     )
-        user.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)
+
+        if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
+          new_user_type_id = StudentUserType.default_no_access_user_type.id
+        elsif user.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
+          new_user_type_id = StudentUserType.default_product_user_type.id
+        else
+          new_user_type_id = user.student_user_type_id
+        end
+
+        user.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
       end
     end
   end

@@ -154,6 +154,7 @@ en:
         name_placeholder: Name
         description: Description
         description_placeholder: Description
+        free_trial: Free Trial
         subscription: Subscription
         product_order: Product
 

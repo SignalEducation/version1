@@ -134,7 +134,7 @@ class UsersController < ApplicationController
       @footer = false
       @topic_interests = Group.all_active.all_in_order.for_public
       @user = User.new(student_allowed_params)
-      @user.student_user_type_id = StudentUserType.default_sub_user_type.try(:id)
+      @user.student_user_type_id = StudentUserType.default_free_trial_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
       @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.where(iso_code: 'IE').first.id
       @user.account_activation_code = SecureRandom.hex(10)
@@ -200,44 +200,42 @@ class UsersController < ApplicationController
   end
 
   def create_product_user
-    if current_user
-      redirect_to root_url
+    redirect_to root_url if current_user
+    @navbar = false
+    @footer = false
+    @topic_interests = Group.all_active.all_in_order.for_public
+
+    @course = SubjectCourse.find(params[:user][:subject_course_id])
+    @product = Product.where(subject_course_id: @course.id).first
+    @user = User.new(student_allowed_params)
+    @user.user_group_id = UserGroup.default_product_student_user_group.try(:id)
+    @user.student_user_type_id = StudentUserType.default_no_access_user_type.try(:id)
+    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
+    @user.account_activation_code = SecureRandom.hex(10)
+    @user.email_verification_code = SecureRandom.hex(10)
+    @user.password_confirmation = @user.password
+    # Check for CrushOffers cookie and assign it to the User
+    if cookies.encrypted[:crush_offers]
+      @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
+      cookies.delete(:crush_offers)
+    end
+    # Create the customer object on stripe
+    stripe_customer = Stripe::Customer.create(
+        email: @user.try(:email)
+    )
+    @user.stripe_customer_id = stripe_customer.id
+    @user.free_trial = false
+    @user.trial_limit_in_days = 0
+
+    if @user.valid? && @user.save
+      #TODO The Email needs to be replaced welcome to Course X at LearnSignal, ACCA Requirements Enroll in Course X email campaign
+      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+
+      user = User.get_and_activate(@user.account_activation_code)
+      UserSession.create(user)
+      redirect_to users_new_order_url(@course.name_url)
     else
-      @course = SubjectCourse.find(params[:user][:subject_course_id])
-      @product = Product.where(subject_course_id: @course.id).first
-      @navbar = false
-      @footer = false
-      @topic_interests = Group.all_active.all_in_order.for_public
-      @user = User.new(student_allowed_params)
-      @user.user_group_id = UserGroup.default_product_student_user_group.try(:id)
-      @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
-      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
-      @user.account_activation_code = SecureRandom.hex(10)
-      @user.email_verification_code = SecureRandom.hex(10)
-      @user.password_confirmation = @user.password
-      # Check for CrushOffers cookie and assign it to the User
-      if cookies.encrypted[:crush_offers]
-        @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
-        cookies.delete(:crush_offers)
-      end
-      # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(
-          email: @user.try(:email)
-      )
-      @user.stripe_customer_id = stripe_customer.id
-      @user.free_trial = false
-      @user.trial_limit_in_days = 0
-
-      if @user.valid? && @user.save
-        #TODO The Email needs to be replaced welcome to Course X at LearnSignal, ACCA Requirements Enroll in Course X email campaign
-        MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-
-        user = User.get_and_activate(@user.account_activation_code)
-        UserSession.create(user)
-        redirect_to users_new_order_url(@course.name_url)
-      else
-        render action: :new_product_user
-      end
+      render action: :new_product_user
     end
   end
 
@@ -407,8 +405,20 @@ class UsersController < ApplicationController
           end
 
           if upgrade
-            current_user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-            current_user.update_user_for_create_sub
+            user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+
+            if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
+              new_user_type_id = StudentUserType.default_sub_user_type.id
+            elsif user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+              new_user_type_id = StudentUserType.default_sub_user_type.id
+
+            elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
+              new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+            else
+              new_user_type_id = user.student_user_type_id
+            end
+
+            current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
             redirect_to personal_upgrade_complete_url
           else
             redirect_to user_new_subscription_url(current_user.id)

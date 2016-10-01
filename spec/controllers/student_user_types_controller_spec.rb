@@ -9,6 +9,7 @@
 #  product_order :boolean          default(FALSE)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  free_trial    :boolean          default(FALSE)
 #
 
 require 'rails_helper'

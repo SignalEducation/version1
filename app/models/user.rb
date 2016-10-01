@@ -269,10 +269,10 @@ class User < ActiveRecord::Base
       else
         return 'unknown_user_status'
       end
-    elsif self.product_student?
-      if self.valid_subject_course_ids.any?
-        return 'valid_course_member'
-      end
+    #elsif self.product_student?
+    #  if self.valid_subject_course_ids.any?
+    #    return 'valid_course_member'
+    #  end
     else
       'other_user_group'
     end
@@ -549,44 +549,6 @@ class User < ActiveRecord::Base
     !self.student_user_type.try(:product_order) && !self.student_user_type.try(:subscription)
   end
 
-  def update_user_for_create_sub
-    if self.individual_student?
-
-      if self.subscription_student?
-        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_user_type.id)
-
-      elsif self.product_order_student?
-        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_and_product_user_type.id)
-
-      elsif self.product_and_sub_student?
-        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_and_product_user_type.id)
-
-      elsif self.no_product_or_sub_student?
-        self.update_attributes(free_trial: false, student_user_type_id: StudentUserType.default_sub_user_type.id)
-
-      end
-    end
-  end
-
-  def update_user_post_reactivation(balance)
-    if self.individual_student?
-
-      if self.subscription_student?
-        self.update_attributes(student_user_type_id: StudentUserType.default_sub_user_type.id, stripe_account_balance: balance)
-
-      elsif self.product_order_student?
-        self.update_attributes(student_user_type_id: StudentUserType.default_sub_and_product_user_type.id, stripe_account_balance: balance)
-
-      elsif self.product_and_sub_student?
-        self.update_attributes(student_user_type_id: StudentUserType.default_sub_and_product_user_type.id, stripe_account_balance: balance)
-
-      elsif self.no_product_or_sub_student?
-        self.update_attributes(student_user_type_id: StudentUserType.default_sub_user_type.id, stripe_account_balance: balance)
-
-      end
-    end
-  end
-
   def tutor?
     self.user_group.try(:tutor)
   end
@@ -755,7 +717,15 @@ class User < ActiveRecord::Base
 
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-      user.update_user_post_reactivation(stripe_customer.account_balance)
+
+      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+        new_user_type_id = StudentUserType.default_sub_user_type.id
+      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
+        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+      else
+        new_user_type_id = user.student_user_type_id
+      end
+      current_user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
 
       return new_sub
     end
@@ -822,7 +792,14 @@ class User < ActiveRecord::Base
 
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-      user.update_user_post_reactivation(stripe_customer.account_balance)
+      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+        new_user_type_id = StudentUserType.default_sub_user_type.id
+      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
+        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+      else
+        new_user_type_id = user.student_user_type_id
+      end
+      current_user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
 
       return new_sub
     end

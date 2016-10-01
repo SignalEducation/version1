@@ -82,6 +82,17 @@ class OrdersController < ApplicationController
       order = Stripe::Order.retrieve(@order.stripe_guid)
       @order.current_status = order.status
       @order.stripe_order_payment_data = @pay_order
+      #user.update_student_user_type(@order)
+      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+        new_user_type_id = StudentUserType.default_product_user_type.id
+      elsif user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
+        new_user_type_id = StudentUserType.default_free_trial_and_product_user_type.id
+      elsif user.student_user_type_id == StudentUserType.default_sub_user_type.id
+        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+      else
+        new_user_type_id = user.student_user_type_id
+      end
+      user.update_attributes(student_user_type_id: new_user_type_id)
     else
       redirect_to new_order_url
     end

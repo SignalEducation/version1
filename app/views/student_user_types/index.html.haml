@@ -18,6 +18,7 @@
                   %tr
                     %th=t('views.student_user_types.form.name')
                     %th=t('views.student_user_types.form.description')
+                    %th=t('views.student_user_types.form.free_trial')
                     %th=t('views.student_user_types.form.subscription')
                     %th=t('views.student_user_types.form.product_order')
                     %th
@@ -26,6 +27,7 @@
                     %tr{id: student_user_type.id}
                       %td=student_user_type.name
                       %td=student_user_type.description
+                      %td=tick_or_cross(student_user_type.free_trial)
                       %td=tick_or_cross(student_user_type.subscription)
                       %td=tick_or_cross(student_user_type.product_order)
                       %td

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160929172555) do
+ActiveRecord::Schema.define(version: 20161001103917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -746,6 +746,7 @@ ActiveRecord::Schema.define(version: 20160929172555) do
     t.boolean  "product_order", default: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.boolean  "free_trial",    default: false
   end
 
   add_index "student_user_types", ["name"], name: "index_student_user_types_on_name", using: :btree

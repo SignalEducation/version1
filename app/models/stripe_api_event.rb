@@ -157,6 +157,17 @@ class StripeApiEvent < ActiveRecord::Base
 
               self.processed = true
               self.processed_at = Time.now
+
+              user = subscription.user
+              if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+                new_user_type_id = StudentUserType.default_sub_user_type.id
+              elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
+                new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+              else
+                new_user_type_id = user.student_user_type_id
+              end
+              user.update_attribute(:student_user_type_id, new_user_type_id)
+
             else
               set_process_error "API Event with Stripe ID #{self.payload[:data][:object][:id]} was created but the necessary conditions for the user were not met."
             end
