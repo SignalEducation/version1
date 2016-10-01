@@ -64,9 +64,6 @@ class LibraryController < ApplicationController
 
   def course_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    @course_category = @course.subject_course_category
-    @categories = SubjectCourseCategory.all_active
-    @product_category = @categories.all_product.first
     @subscription_category = @categories.all_subscription.first
     if @course.nil?
       redirect_to subscription_groups_url

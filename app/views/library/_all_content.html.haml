@@ -27,20 +27,20 @@
               =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
                 =render partial: 'panel_content', locals: {grandchild: grandchild}
             -else
-              -if @course_category.id == @subscription_category.id
+              -if @course.subscription?
                 =link_to user_new_subscription_url(current_user), class: 'list-group-item link-purple box-topic-item' do
                   =render partial: 'panel_content', locals: {grandchild: grandchild}
 
-              -elsif @course_category.id == @product_category.id
+              -elsif @course.product?
                 =link_to users_new_order_url(@course.name_url), class: 'list-group-item link-purple box-topic-item' do
                   =render partial: 'panel_content', locals: {grandchild: grandchild}
 
           -else
-            -if @course_category.id == @subscription_category.id
+            -if @course.subscription?
               =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
                 =render partial: 'panel_content', locals: {grandchild: grandchild}
 
-            -elsif @course_category.id == @product_category.id
+            -elsif @course.product?
               =link_to users_new_order_url(@course.name_url), class: 'list-group-item link-purple box-topic-item' do
                 =render partial: 'panel_content', locals: {grandchild: grandchild}
 

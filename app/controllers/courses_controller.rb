@@ -5,17 +5,8 @@ class CoursesController < ApplicationController
   def show
     @mathjax_required = true
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    if @course
-      if @course.corporate_customer_id
-        if @course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id)
-          redirect_to subscription_groups_url
-        end
-      end
-      redirect_to root_url unless current_user.permission_to_see_content(@course)
-
-      if @course
-        @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
-      end
+    if @course && current_user.permission_to_see_content(@course)
+      @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
       if @course_module
         @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
         @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
@@ -24,7 +15,6 @@ class CoursesController < ApplicationController
         #CME name is not in the seo title because it is html_safe and could have <b></b> tags
         seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
       end
-
 
       if @course_module_element.nil? && @course_module.nil?
 
@@ -54,9 +44,8 @@ class CoursesController < ApplicationController
       end
       @paywall = paywall_checkpoint
     else
-      flash[:warning] = t('controllers.courses.show.warning')
-      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      redirect_to subscription_groups_url
+      flash[:warning] = 'Sorry, you are not permitted to access that content.'
+      redirect_to root_url
     end
   end
 

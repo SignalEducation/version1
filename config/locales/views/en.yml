@@ -300,30 +300,10 @@ en:
         coming_soon: "We don't have any content for this course module right now."
 
       content_denied:
-        panel:
-          need_to_sign_in: You need to be a Learn Signal member to view this material.
-        not_logged_in:
-          sign_up_btn: Sign up for Learn Signal
-          start_free_trial: Start your free trial
-          h2: Please Sign In To View This Content
-        account_cancelled:
-          h2: Your account is cancelled. Please re-activate it to continue.
-          reactivate: 'Re-activate Your Account'
-        account_problem:
-          h2: Looks like there is a problem with your account
-          account_details: Please Check Your Account Details
-        other:
-          h2: Oops! Something has gone wrong.
-          p: We have been notified, and will investigate it immediately.
-        free_trial_expired:
-          h2: Your free trial period has expired. Please upgrade your subscription.
-          upgrade_subscription: Upgrade Subscription
-        free_trial_limit_reached:
-          h2: You have reached your free trial limit of 200 minutes of content. Please upgrade your subscription to continue.
-          upgrade_subscription: Upgrade Subscription
-        free_trial:
-          h2: Your free trial is limited to certain content. Please upgrade your subscription to get full access.
-          upgrade_subscription: Upgrade Subscription
+          subscription: Upgrade to a Subscription
+          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
+          product: Purchase this Course
+          product_required: You must first purchase this course to access it's content.
 
       show_results:
         h1: 'Results:'

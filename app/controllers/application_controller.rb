@@ -163,65 +163,13 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_is_of_type
 
-  def old_paywall_checkpoint(cme_position, is_a_jumbo_quiz)
-    #Factors in allowing X number of cme's without account or on free trial
-    number_of_free_cmes_allowed = 2
-    allowed     = {course_content: {view_all: true, reason: nil},
-                   forum: {read: true, write: true},
-                   blog: {comment: true} }
-    not_allowed = {course_content: {view_all: false, reason: ''},
-                   forum: {read: true, write: false},
-                   blog: {comment: false} }
-    subscription_in_charge = current_user.active_subscription
-    if current_user.nil?
-      result = not_allowed
-      result[:course_content][:reason] = 'not_logged_in'
-    elsif !current_user.user_group.subscription_required_to_see_content
-      result = allowed
-    elsif subscription_in_charge && subscription_in_charge.free_trial? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
-      result = allowed
-      result[:course_content][:reason] = 'free_trial'
-    elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
-      result = not_allowed
-      result[:course_content][:reason] = "free_trial_expired"
-    elsif current_user.permission_to_see_content
-      result = allowed
-    elsif !current_user.permission_to_see_content && current_user.user_status == 'canceled_paying_member'
-      result = not_allowed
-      result[:course_content][:reason] = 'account_canceled'
-    elsif !current_user.permission_to_see_content && current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
-      result = not_allowed
-      result[:course_content][:reason] = "free_trial_limit_reached"
-    else
-      result = not_allowed
-      result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
-    end
-    result
-  end
-
   def paywall_checkpoint
     allowed     = {course_content: {view_all: true, reason: nil}}
-    not_allowed = {course_content: {view_all: false, reason: ''}}
-    subscription_in_charge = current_user.active_subscription
 
-    if current_user.nil?
-      result = not_allowed
-      result[:course_content][:reason] = 'not_logged_in'
-    elsif current_user.permission_to_see_content(@course)
+    if current_user && current_user.permission_to_see_content(@course)
       result = allowed
-    elsif !current_user.permission_to_see_content(@course) && current_user.expired_free_member?
-      result = not_allowed
-      if current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
-        result[:course_content][:reason] = "free_trial_limit_reached"
-      else
-        result[:course_content][:reason] = "free_trial_expired"
-      end
-    elsif !current_user.permission_to_see_content(@course) && current_user.canceled_member?
-      result = not_allowed
-      result[:course_content][:reason] = 'account_canceled'
     else
       result = not_allowed
-      result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
     end
     result
   end
