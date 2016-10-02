@@ -389,6 +389,20 @@ class ApplicationController < ActionController::Base
   end
   helper_method :dashboard_special_link
 
+  def new_product_order_link(course_url)
+    course = SubjectCourse.find_by_name_url(course_url)
+    if current_user
+      if current_user.valid_subject_course_ids.include?(course.id)
+         library_special_link(course)
+       else
+         users_new_order_url(course_url)
+       end
+    else
+      new_product_user_url(course_url)
+    end
+  end
+  helper_method :new_product_order_link
+
   def seo_title_maker(last_element, seo_description, seo_no_index)
     @seo_title = last_element ?
             "#{last_element.to_s.truncate(65)}" :

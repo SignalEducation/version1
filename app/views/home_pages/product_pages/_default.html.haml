@@ -26,7 +26,7 @@
               Course Information
           -else
             %a.course_info{:href => "#diploma_info"} Course Information
-          =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+          =link_to new_product_order_link(@course.name_url), class: 'enroll_now' do
             Enroll Now
 
 
@@ -78,12 +78,8 @@
             %p
               =course_module.description
 
-            -if current_user && current_user.valid_subject_course_ids.include?(@course.id)
-              =link_to library_special_link(@course), class: 'enroll_now' do
-                Enroll Now
-            -else
-              =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
-                Enroll Now
+            =link_to new_product_order_link(@course.name_url), class: 'enroll_now' do
+              Enroll Now
 
 
   %section#advance_career
@@ -120,7 +116,7 @@
               %br Student Body
           %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
 
-      =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+      =link_to new_product_order_link(@course.name_url), class: 'enroll_now' do
         Enroll Now
 
 
@@ -144,7 +140,7 @@
           %p.value
             =number_in_local_currency(@product.price, @currency_id)
 
-        =link_to new_product_user_url(@course.name_url), class: 'enroll_now' do
+        =link_to new_product_order_link(@course.name_url), class: 'enroll_now' do
           Enroll Now
       =image_tag('iphone.png', alt: 'iphone')
 
