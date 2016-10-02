@@ -342,14 +342,14 @@ class User < ActiveRecord::Base
       'Free Trial Member'
     elsif self.user_status == 'expired_free_member'
       'Free Trial Expired'
-    elsif self.user_status == 'valid_paying_member'
+    elsif self.user_status == 'valid_sub_member'
       'Valid Subscription'
-    elsif self.user_status == 'canceled_paying_member'
+    elsif self.user_status == 'canceled_sub_member'
       'Canceled Subscription'
-    elsif self.user_status == 'cancel_pending_member'
-      'Canceled Subscription'
-    elsif self.user_status == 'expired_paying_member'
-      'Expired Subscription'
+    elsif self.user_status == 'cancel_pending_sub_member'
+      'Subscription Set to Cancel'
+    elsif self.user_status == 'failed_payment_sub_member'
+      'Failed Payment'
     else
       ''
     end
@@ -790,7 +790,7 @@ class User < ActiveRecord::Base
       else
         new_user_type_id = user.student_user_type_id
       end
-      current_user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
+      user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
 
       return new_sub
     end
@@ -864,7 +864,7 @@ class User < ActiveRecord::Base
       else
         new_user_type_id = user.student_user_type_id
       end
-      current_user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
+      user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
 
       return new_sub
     end
