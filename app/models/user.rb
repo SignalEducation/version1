@@ -244,6 +244,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.process_free_trial_limit_reached
+    text = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
+    MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: user.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
+    if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
+      new_user_type_id = StudentUserType.default_no_access_user_type.id
+    elsif user.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
+      new_user_type_id = StudentUserType.default_product_user_type.id
+    else
+      new_user_type_id = user.student_user_type_id
+    end
+    user.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
+  end
 
 
   # instance methods
@@ -444,7 +456,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_to_see_content(course)
-    if course.subscription?
+    if course.subscription
       if self.free_trial && self.free_trial_student?
         return true
       elsif self.subscription_student?
@@ -452,13 +464,13 @@ class User < ActiveRecord::Base
       else
         return false
       end
-    elsif course.product?
+    elsif course.product
       if self.product_order_student? && valid_subject_course_ids.include?(course.id)
         return true
       else
         return false
       end
-    elsif course.corporate?
+    elsif course.corporate
       return false unless self.corporate_student? || self.corporate_customer? || self.corporate_manager?
       if course.restricted && self.corporate_customer_id != course.corporate_customer_id
         return false

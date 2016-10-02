@@ -6,9 +6,9 @@
           %h3.h3.card-title.l-margin-bottom
             =@course.name
           .card-info.hidden-xs
-            -total_lesson = @subject_course_user_log.subject_course.cme_count
-            -complete_lesson = @subject_course_user_log.try(:count_of_cmes_completed) || 0
-            -complete_percent = @subject_course_user_log.try(:percentage_complete)
+            -total_lesson = @enrollment.subject_course_user_log.subject_course.cme_count
+            -complete_lesson = @enrollment.subject_course_user_log.try(:count_of_cmes_completed) || 0
+            -complete_percent = @enrollment.subject_course_user_log.try(:percentage_complete)
             %br/
             %p
               ="#{complete_lesson} out of #{total_lesson} lessons completed"
@@ -17,8 +17,8 @@
               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
         .col-sm-4.col-xs-12.text-center.resume-course
-          -if @subject_course_user_log.student_exam_tracks.any?
-            =link_to 'Resume', course_special_link(@subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
+          -if @enrollment.subject_course_user_log.student_exam_tracks.any?
+            =link_to 'Resume', course_special_link(@enrollment.subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
           -else
             =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan'
 

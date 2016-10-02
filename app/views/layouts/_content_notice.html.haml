@@ -1,8 +1,8 @@
 -if current_user
   -# Logged In User
-  -if current_user.individual_student? || current_user.product_student?
+  -if current_user.individual_student?
     -# Logged In Student
-    -if @course_category.id == @subscription_category.id
+    -if @course.subscription
       -# A Subscription Course
       -if current_user.free_member?
         .notice.warning

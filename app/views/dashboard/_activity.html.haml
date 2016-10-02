@@ -15,4 +15,4 @@
               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
         .col-sm-4.text-center.resume-course
-          =link_to 'Resume Course', library_special_link(enrollment.subject_course), class: 'btn btn-wide btn-cyan'
+          =link_to 'Resume Course', library_special_link(log.subject_course), class: 'btn btn-wide btn-cyan'

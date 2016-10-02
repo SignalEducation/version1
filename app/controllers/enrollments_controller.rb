@@ -52,7 +52,12 @@ class EnrollmentsController < ApplicationController
   protected
 
   def create_subject_course_user_log
-    SubjectCourseUserLog.create!(user_id: @user.id, session_guid: current_session_guid, subject_course_id: @course.id)
+    log = @user.subject_course_user_logs.where(subject_course_id: @course.id).first
+    if log
+      log
+    else
+      SubjectCourseUserLog.create!(user_id: @user.id, session_guid: current_session_guid, subject_course_id: @course.id)
+    end
   end
 
   def get_variables

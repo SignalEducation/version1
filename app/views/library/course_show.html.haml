@@ -12,7 +12,7 @@
               =@course.parent.name
 
       -if current_user
-        -if @course_category.id == @subscription_category.id
+        -if @course.subscription
           =render partial: 'layouts/content_notice', locals: {course: @course}
 
         -if @course.enrolled_user_ids.include?(current_user.id)

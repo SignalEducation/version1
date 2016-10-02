@@ -113,21 +113,21 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  def self.subscription?
-    where(corporate_customer_id: nil).in_category(SubjectCourseCategory.default_subscription_category.id)
-  end
-
-  def self.product?
-    where(corporate_customer_id: nil).in_category(SubjectCourseCategory.default_product_category.id)
-  end
-
-  def self.corporate?
-    where.not(corporate_customer_id: nil).in_category(SubjectCourseCategory.default_corporate_category.id)
-  end
-
   # instance methods
   def users_allowed_access
     self.orders.map(&:user_id) if self.subject_course_category_id == SubjectCourseCategory.all_product.first.id
+  end
+
+  def subscription
+    self.subject_course_category_id == SubjectCourseCategory.default_subscription_category.id
+  end
+
+  def product
+    self.subject_course_category_id == SubjectCourseCategory.default_product_category.id
+  end
+
+  def corporate
+    self.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
   end
 
   def home_page

@@ -1,4 +1,4 @@
--if !current_user.student_number.empty? && current_user.terms_and_conditions
+-if (!current_user.student_number || !current_user.student_number.empty?) && current_user.terms_and_conditions
   .enrollment-form-cover
     .card.card-library
       .card-library-outer-cover
@@ -24,7 +24,7 @@
               %p{style: 'margin-bottom: 0;'}
                 Please fill in the following
               .card-form
-                -if current_user.student_number.empty?
+                -if !current_user.student_number || current_user.student_number.empty?
                   .form-group
                     =f.text_field :student_number, placeholder: t('views.users.form.student_number'), class: 'form-control'
                 -unless current_user.terms_and_conditions
