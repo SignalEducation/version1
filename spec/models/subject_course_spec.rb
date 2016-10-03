@@ -117,9 +117,6 @@ describe SubjectCourse do
   # class methods
   it { expect(SubjectCourse).to respond_to(:get_by_name_url) }
   it { expect(SubjectCourse).to respond_to(:search) }
-  it { expect(SubjectCourse).to respond_to(:subscription) }
-  it { expect(SubjectCourse).to respond_to(:product?) }
-  it { expect(SubjectCourse).to respond_to(:corporate?) }
 
   # instance methods
   it { should respond_to(:active_children) }

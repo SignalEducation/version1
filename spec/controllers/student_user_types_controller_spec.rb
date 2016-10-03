@@ -19,7 +19,6 @@ describe StudentUserTypesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for student_user_type_1
   let!(:student_user_type_1) { FactoryGirl.create(:student_user_type) }
   let!(:student_user_type_2) { FactoryGirl.create(:student_user_type) }
   let!(:valid_params) { FactoryGirl.attributes_for(:student_user_type) }
@@ -88,72 +87,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -161,12 +158,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -182,72 +179,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -255,12 +250,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -276,72 +271,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -349,12 +342,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -370,72 +363,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -443,12 +434,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -464,72 +455,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -537,12 +526,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -558,72 +547,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -631,12 +618,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -652,72 +639,70 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see student_user_type_1' do
         get :show, id: student_user_type_1.id
-        expect_show_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see student_user_type_2' do
         get :show, id: student_user_type_2.id
-        expect_show_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with student_user_type_1' do
         get :edit, id: student_user_type_1.id
-        expect_edit_success_with_model('student_user_type', student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with student_user_type_2' do
         get :edit, id: student_user_type_2.id
-        expect_edit_success_with_model('student_user_type', student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, student_user_type: valid_params
-        expect_create_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, student_user_type: {valid_params.keys.first => ''}
-        expect_create_error_with_model('student_user_type')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for student_user_type_1' do
         put :update, id: student_user_type_1.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for student_user_type_2' do
         put :update, id: student_user_type_2.id, student_user_type: valid_params
-        expect_update_success_with_model('student_user_type', student_user_types_url)
-        expect(assigns(:student_user_type).id).to eq(student_user_type_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: student_user_type_1.id, student_user_type: {valid_params.keys.first => ''}
-        expect_update_error_with_model('student_user_type')
-        expect(assigns(:student_user_type).id).to eq(student_user_type_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -725,12 +710,12 @@ describe StudentUserTypesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id
-        expect_delete_success_with_model('student_user_type', student_user_types_url)
+        expect_bounce_as_not_allowed
       end
     end
 

@@ -17,6 +17,14 @@ shared_context 'users_and_groups_setup' do
   let(:site_admin_user_group) { FactoryGirl.create(:site_admin_user_group) }
   let(:corporate_customer_user_group) { FactoryGirl.create(:corporate_customer_user_group) }
 
+  # user types
+  let!(:free_trial_user_type) { FactoryGirl.create(:free_trial_user_type) }
+  let(:subscription_user_type) { FactoryGirl.create(:subscription_user_type) }
+  let(:product_user_type) { FactoryGirl.create(:product_user_type) }
+  let(:sub_and_product_user_type) { FactoryGirl.create(:sub_and_product_user_type) }
+  let(:trial_and_product_user_type) { FactoryGirl.create(:trial_and_product_user_type) }
+  let(:no_access_user_type) { FactoryGirl.create(:no_access_user_type) }
+
   # users
   let!(:individual_student_user) { FactoryGirl.create(:individual_student_user,
                                 user_group_id: individual_student_user_group.id) }

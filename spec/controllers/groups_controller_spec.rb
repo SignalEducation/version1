@@ -44,19 +44,6 @@ describe GroupsController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
-      end
-    end
-
     describe "GET 'new'" do
       it 'should redirect to sign_in' do
         get :new
@@ -112,19 +99,6 @@ describe GroupsController, type: :controller do
       it 'should respond OK' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
       end
     end
 
@@ -213,19 +187,6 @@ describe GroupsController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -308,19 +269,6 @@ describe GroupsController, type: :controller do
       it 'should respond OK' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
       end
     end
 
@@ -409,19 +357,6 @@ describe GroupsController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -499,19 +434,6 @@ describe GroupsController, type: :controller do
       it 'should respond OK' do
         get :index
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
       end
     end
 
@@ -600,19 +522,6 @@ describe GroupsController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -698,19 +607,6 @@ describe GroupsController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
-      end
-    end
-
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
@@ -790,19 +686,6 @@ describe GroupsController, type: :controller do
       it 'should respond OK' do
         get :index
         expect_index_success_with_model('groups', 4)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see group_1' do
-        get :show, id: group_1.id
-        expect_show_success_with_model('group', group_1.id)
-      end
-
-      # optional - some other object
-      it 'should see group_2' do
-        get :show, id: group_2.id
-        expect_show_success_with_model('group', group_2.id)
       end
     end
 
