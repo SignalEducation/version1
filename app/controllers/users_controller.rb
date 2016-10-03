@@ -88,7 +88,7 @@ class UsersController < ApplicationController
     if @user.referral_code.nil?
       @user.create_referral_code
     end
-
+    @valid_order = @user.orders
     if params[:update].to_s.length > 0
       case params[:update]
         when 'invoices'
@@ -208,8 +208,8 @@ class UsersController < ApplicationController
     @course = SubjectCourse.find(params[:user][:subject_course_id])
     @product = Product.where(subject_course_id: @course.id).first
     @user = User.new(student_allowed_params)
-    @user.user_group_id = UserGroup.default_product_student_user_group.try(:id)
-    @user.student_user_type_id = StudentUserType.default_no_access_user_type.try(:id)
+    @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+    @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
     @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)

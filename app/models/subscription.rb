@@ -189,7 +189,6 @@ class Subscription < ActiveRecord::Base
     self.subscription_plan.free_trial?
   end
 
-
   # setter method
   def stripe_token=(t)
     @stripe_token = t

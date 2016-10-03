@@ -157,8 +157,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     if user.individual_student? && user.free_trial_student?
       new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
       user.update_column(:trial_limit_in_seconds, new_limit)
+      user.process_free_trial_limit_reached if user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
     end
-    user.process_free_trial_limit_reached if user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
   end
 
   def set_booleans

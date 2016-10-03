@@ -244,23 +244,23 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.process_free_trial_limit_reached
-    text = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
-    MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: user.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
-    if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-      new_user_type_id = StudentUserType.default_no_access_user_type.id
-    elsif user.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
-      new_user_type_id = StudentUserType.default_product_user_type.id
-    else
-      new_user_type_id = user.student_user_type_id
-    end
-    user.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
-  end
-
 
   # instance methods
   def admin?
     self.user_group.try(:site_admin)
+  end
+
+  def process_free_trial_limit_reached
+    text = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
+    MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: self.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
+    if self.student_user_type_id == StudentUserType.default_free_trial_user_type.id
+      new_user_type_id = StudentUserType.default_no_access_user_type.id
+    elsif self.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
+      new_user_type_id = StudentUserType.default_product_user_type.id
+    else
+      new_user_type_id = self.student_user_type_id
+    end
+    self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
   end
 
   def user_status
@@ -350,6 +350,8 @@ class User < ActiveRecord::Base
       'Subscription Set to Cancel'
     elsif self.user_status == 'failed_payment_sub_member'
       'Failed Payment'
+    elsif self.user_status == 'product_order_member' && self.subscriptions.any?
+      'Canceled Subscription'
     else
       ''
     end

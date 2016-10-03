@@ -32,15 +32,16 @@ class OrdersController < ApplicationController
   end
 
   def new
-
-    #Ensure request.referrer is one of two options
-    redirect_to new_product_user_url(@course.name_url) unless current_user
-    @order = Order.new
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @product = Product.where(subject_course_id: @course.id).first
-    @navbar = false
-    @footer = false
-
+    redirect_to new_product_user_url(@course.name_url) unless current_user
+    if current_user.valid_subject_course_ids.include?(@course.id)
+      redirect_to diploma_course_url(@course.name_url)
+    else
+      @order = Order.new
+      @product = Product.where(subject_course_id: @course.id).first
+      @navbar = false
+      @footer = false
+    end
   end
 
   def create
@@ -53,6 +54,7 @@ class OrdersController < ApplicationController
       @course = product.subject_course
       currency = Currency.find(product.currency_id)
       stripe_token = params[:order][:stripe_token]
+      redirect_to diploma_course_url(@course.name_url) if current_user.valid_subject_course_ids.include?(params[:order][:subject_course_id])
 
       @order = Order.new(allowed_params)
       @order.user_id = user.id
