@@ -58,7 +58,7 @@ class DashboardController < ApplicationController
   end
 
   def student
-    @enrollments = Enrollment.where(user_id: current_user.id, active: true)
+    @enrollments = Enrollment.where(user_id: current_user.id, active: true).all_in_order
     enrollment_ids = @enrollments.map(&:subject_course_user_log_id)
     @logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
     log_ids = @logs.map(&:id)

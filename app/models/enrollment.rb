@@ -35,13 +35,13 @@ class Enrollment < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:user_id) }
+  scope :all_in_order, -> { order(updated_at: :desc) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    true
+    false
   end
 
   protected

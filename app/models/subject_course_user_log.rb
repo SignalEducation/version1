@@ -42,6 +42,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   after_create :start_course_intercom_event if Rails.env.production? || Rails.env.staging?
+  after_save :update_enrollment
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -91,6 +92,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def elements_total
     self.subject_course.try(:cme_count) || 0
+  end
+
+  def update_enrollment
+    self.enrollment.update_attribute(:updated_at, Proc.new{Time.now}.call)
   end
 
   def last_element
