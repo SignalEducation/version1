@@ -25,6 +25,13 @@
           =link_to user_reactivate_account_url(current_user.id) do
             Reactivate Account?
 
+      -elsif current_user.no_subscription_user
+        .notice.warning
+          .fa.fa-info-circle.icon
+          A Subscription is required to access this content
+          =link_to subscription_special_link(current_user.id) do
+            Upgrade to Subscription
+
 -else
   -# Logged out User
   .notice.warning

@@ -15,12 +15,11 @@
         -if @course.subscription
           =render partial: 'layouts/content_notice', locals: {course: @course}
 
-        -if @course.enrolled_user_ids.include?(current_user.id)
-          =render partial: 'enrollment_info'
-
-        -else
-          -#Needs to be hidden and revealed upon clicking of ENROLL NOW BTN
-          =render partial: 'enrollment_form'
+        -if current_user.permission_to_see_content(@course)
+          -if @course.enrolled_user_ids.include?(current_user.id)
+            =render partial: 'enrollment_info'
+          -else
+            =render partial: 'enrollment_form'
 
 
       -else
@@ -63,7 +62,7 @@
 
 
           -# Fourth Section for Final Quiz and Certificate
-          -if current_user && @course.certificate
+          -if current_user && @course.certificate && current_user.permission_to_see_content(@course)
             %br/
             %p.h4.l-margin-bottom
               =t('views.general.final_exam')
@@ -128,7 +127,7 @@
                   %ul.course-resources
                     -if !current_user
                       =r.name
-                    -elsif current_user && (current_user.free_member? || current_user.expired_free_member? || current_user.canceled_member?)
+                    -elsif current_user && (current_user.free_member? || current_user.expired_free_member? || current_user.canceled_member? || current_user.no_subscription_user)
                       =r.name
                     -else
                       %li

@@ -410,7 +410,7 @@ class User < ActiveRecord::Base
   end
 
   def no_subscription_user
-    if !self.subscriptions.any?
+    if !self.subscriptions.any? && self.student_user_type_id == (StudentUserType.default_product_user_type.id || StudentUserType.default_no_access_user_type.id)
       true
     else
       false

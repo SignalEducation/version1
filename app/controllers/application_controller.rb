@@ -403,6 +403,23 @@ class ApplicationController < ActionController::Base
   end
   helper_method :new_product_order_link
 
+  def subscription_special_link(user_id)
+    user = User.find(user_id)
+    if user.individual_student?
+      if user.subscriptions.any?
+        if user.subscriptions.last.current_status == 'canceled'
+          reactivate_account_url
+        end
+
+      else
+        user_new_subscription_url(user_id)
+      end
+    else
+      redirect_to root_url
+    end
+  end
+  helper_method :subscription_special_link
+
   def seo_title_maker(last_element, seo_description, seo_no_index)
     @seo_title = last_element ?
             "#{last_element.to_s.truncate(65)}" :

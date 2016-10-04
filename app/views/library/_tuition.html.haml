@@ -28,7 +28,7 @@
                 =render partial: 'panel_content', locals: {grandchild: grandchild}
             -else
               -if @course.subscription
-                =link_to user_new_subscription_url(current_user), class: 'list-group-item link-purple box-topic-item' do
+                =link_to subscription_special_link(current_user.id), class: 'list-group-item link-purple box-topic-item' do
                   =render partial: 'panel_content', locals: {grandchild: grandchild}
 
               -elsif @course.product
