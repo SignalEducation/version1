@@ -353,7 +353,7 @@ class ApplicationController < ActionController::Base
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
       library_special_link(
-              the_thing.subject_course.name_url
+              the_thing.subject_course
       )
     elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
@@ -362,7 +362,6 @@ class ApplicationController < ActionController::Base
               the_thing.name_url
       )
     else
-      # shouldn't be here - re-route to /library/bla-bla
       library_special_link(the_thing)
     end
   end
