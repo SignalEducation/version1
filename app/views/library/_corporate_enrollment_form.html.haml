@@ -1,0 +1,20 @@
+.enrollment-form-cover
+  .card.card-library
+    .card-library-outer-cover
+      .card-inner
+        .col-sm-8.col-xs-12
+          %h3.h3.card-title.l-margin-bottom
+            =@course.name
+        .col-sm-4.col-xs-12.text-center
+
+          -if current_user.permission_to_see_content(@course)
+            -if @course.enrolled_user_ids.include?(current_user.id)
+              -if @enrollment.subject_course_user_log.student_exam_tracks.any?
+                =link_to 'Resume', course_special_link(@enrollment.subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
+              -else
+                =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan'
+
+            -else
+              =link_to new_enrollment_url(@course.name_url) do
+                .btn.btn-wide.btn-cyan.enroll-now
+                  Enroll Now

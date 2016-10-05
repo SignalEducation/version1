@@ -11,7 +11,7 @@
               .fa.fa-arrow-left
               =@course.parent.name
 
-      -if current_user
+      -if current_user && !current_user.corporate_user?
         -if @course.subscription
           =render partial: 'layouts/content_notice', locals: {course: @course}
 
@@ -23,6 +23,9 @@
         -else
           =render partial: 'enrollment_form'
 
+
+      -elsif current_user.corporate_user?
+        =render partial: 'corporate_enrollment_form'
 
       -else
         =render partial: 'layouts/content_notice', locals: {course: @course}

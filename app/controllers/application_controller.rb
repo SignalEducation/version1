@@ -414,7 +414,7 @@ class ApplicationController < ActionController::Base
         user_new_subscription_url(user_id)
       end
     else
-      redirect_to root_url
+      root_url
     end
   end
   helper_method :subscription_special_link

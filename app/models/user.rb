@@ -458,22 +458,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_to_see_content(course)
-    if course.subscription
-      if self.free_trial && self.free_trial_student?
-        return true
-      elsif self.subscription_student?
-        return true
-      else
-        return false
-      end
-    elsif course.product
-      if self.product_order_student? && valid_subject_course_ids.include?(course.id)
-        return true
-      else
-        return false
-      end
-    elsif course.corporate
-      return false unless self.corporate_student? || self.corporate_customer? || self.corporate_manager?
+    if self.corporate_user?
       if course.restricted && self.corporate_customer_id != course.corporate_customer_id
         return false
       else
@@ -489,6 +474,26 @@ class User < ActiveRecord::Base
           return false
         end
       end
+
+    elsif self.individual_student?
+
+      if course.subscription
+        if self.free_trial && self.free_trial_student?
+          return true
+        elsif self.subscription_student?
+          return true
+        else
+          return false
+        end
+      elsif course.product
+        if self.product_order_student? && valid_subject_course_ids.include?(course.id)
+          return true
+        else
+          return false
+        end
+      end
+    else
+      return true
     end
   end
 
@@ -592,6 +597,10 @@ class User < ActiveRecord::Base
 
   def individual_student?
     self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
+  end
+
+  def corporate_user?
+    self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
   end
 
   #######################################################
