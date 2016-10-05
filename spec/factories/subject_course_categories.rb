@@ -13,10 +13,30 @@
 
 FactoryGirl.define do
   factory :subject_course_category do
-    name 1
-payment_type "MyString"
-active false
-subdomain "MyString"
+    name 'Course Category'
+    payment_type 'Subscription'
+    active false
+    subdomain "MyString"
+
+
+    factory :product_course_category do
+      name 'Product Course Category'
+      payment_type 'Product'
+      active true
+    end
+
+    factory :subscription_course_category do
+      name 'Subscription Course Category'
+      payment_type 'Subscription'
+      active true
+    end
+
+    factory :corporate_course_category do
+      name 'Corporate Course Category'
+      payment_type 'Corporate'
+      active true
+    end
+
   end
 
 end

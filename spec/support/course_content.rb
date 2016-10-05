@@ -6,6 +6,9 @@ shared_context 'course_content' do
 
   # first set
   let!(:course_group_1) { FactoryGirl.create(:group) }
+  let!(:product_course_category) { FactoryGirl.create(:product_course_category) }
+  let!(:subscription_course_category) { FactoryGirl.create(:subscription_course_category) }
+  let!(:corporate_course_category) { FactoryGirl.create(:corporate_course_category) }
   let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course, groups: [course_group_1]) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
                            subject_course_id: subject_course_1.id,

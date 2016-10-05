@@ -731,7 +731,7 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 2)
+        expect_index_success_with_model('student_user_types', 3)
       end
     end
 
@@ -802,10 +802,6 @@ describe StudentUserTypesController, type: :controller do
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: student_user_type_1.id
-        expect_delete_error_with_model('student_user_type', student_user_types_url)
-      end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: student_user_type_2.id

@@ -18,6 +18,8 @@ FactoryGirl.define do
     seo_title 'MyString'
     seo_description 'MyString'
     subscription_plan_category_id 1
+    group_id 1
+    subject_course_id 1
     sequence(:public_url)           { |n| "abc#{n}" }
 
     factory :home do

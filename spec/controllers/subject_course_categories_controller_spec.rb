@@ -18,9 +18,9 @@ describe SubjectCourseCategoriesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for subject_course_category_1
-  let!(:subject_course_category_1) { FactoryGirl.create(:subject_course_category) }
-  let!(:subject_course_category_2) { FactoryGirl.create(:subject_course_category) }
+  let!(:product_course_category) { FactoryGirl.create(:product_course_category) }
+  let!(:subscription_course_category) { FactoryGirl.create(:subscription_course_category) }
+  let!(:corporate_course_category) { FactoryGirl.create(:corporate_course_category) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subject_course_category) }
 
   context 'Not logged in: ' do
@@ -87,85 +87,84 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
+
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        subscription_course_category
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        subscription_course_category
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        subscription_course_category
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        subscription_course_category
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        subscription_course_category
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        subscription_course_category
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        subscription_course_category
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        subscription_course_category
       end
     end
 
@@ -181,85 +180,83 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -275,85 +272,83 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -369,85 +364,83 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -463,85 +456,83 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -557,85 +548,83 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -651,85 +640,83 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_category: valid_params
-        expect_create_success_with_model('subject_course_category', subject_course_categories_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_category: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_category')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
-        expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
-        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: subscription_course_category.id
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -745,20 +732,20 @@ describe SubjectCourseCategoriesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_categories', 2)
+        expect_index_success_with_model('subject_course_categories', 3)
       end
     end
 
     describe "GET 'show/1'" do
-      it 'should see subject_course_category_1' do
-        get :show, id: subject_course_category_1.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should see subscription_course_category' do
+        get :show, id: subscription_course_category.id
+        expect_show_success_with_model('subject_course_category', subscription_course_category.id)
       end
 
       # optional - some other object
-      it 'should see subject_course_category_2' do
-        get :show, id: subject_course_category_2.id
-        expect_show_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should see product_course_category' do
+        get :show, id: product_course_category.id
+        expect_show_success_with_model('subject_course_category', product_course_category.id)
       end
     end
 
@@ -770,15 +757,15 @@ describe SubjectCourseCategoriesController, type: :controller do
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond OK with subject_course_category_1' do
-        get :edit, id: subject_course_category_1.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_1.id)
+      it 'should respond OK with subscription_course_category' do
+        get :edit, id: subscription_course_category.id
+        expect_edit_success_with_model('subject_course_category', subscription_course_category.id)
       end
 
       # optional
-      it 'should respond OK with subject_course_category_2' do
-        get :edit, id: subject_course_category_2.id
-        expect_edit_success_with_model('subject_course_category', subject_course_category_2.id)
+      it 'should respond OK with product_course_category' do
+        get :edit, id: product_course_category.id
+        expect_edit_success_with_model('subject_course_category', product_course_category.id)
       end
     end
 
@@ -795,35 +782,35 @@ describe SubjectCourseCategoriesController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_category_1' do
-        put :update, id: subject_course_category_1.id, subject_course_category: valid_params
+      it 'should respond OK to valid params for subscription_course_category' do
+        put :update, id: subscription_course_category.id, subject_course_category: valid_params
         expect_update_success_with_model('subject_course_category', subject_course_categories_url)
       end
 
       # optional
-      it 'should respond OK to valid params for subject_course_category_2' do
-        put :update, id: subject_course_category_2.id, subject_course_category: valid_params
+      it 'should respond OK to valid params for product_course_category' do
+        put :update, id: product_course_category.id, subject_course_category: valid_params
         expect_update_success_with_model('subject_course_category', subject_course_categories_url)
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_2.id)
+        expect(assigns(:subject_course_category).id).to eq(product_course_category.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_category_1.id, subject_course_category: {valid_params.keys.first => ''}
+        put :update, id: subscription_course_category.id, subject_course_category: {valid_params.keys.first => ''}
         expect_update_error_with_model('subject_course_category')
-        expect(assigns(:subject_course_category).id).to eq(subject_course_category_1.id)
+        expect(assigns(:subject_course_category).id).to eq(subscription_course_category.id)
       end
     end
 
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: subject_course_category_1.id
+        delete :destroy, id: subscription_course_category.id
         expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_category_2.id
-        expect_delete_success_with_model('subject_course_category', subject_course_categories_url)
+        delete :destroy, id: product_course_category.id
+        expect_delete_error_with_model('subject_course_category', subject_course_categories_url)
       end
     end
 

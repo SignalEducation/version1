@@ -43,7 +43,7 @@ describe CorporateProfilesController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(library_url)
+        expect(response).to redirect_to(subscription_groups_url)
       end
     end
 
