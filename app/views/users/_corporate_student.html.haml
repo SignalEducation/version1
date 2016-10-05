@@ -1,0 +1,48 @@
+.margin-top
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.l-section-profile.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      %h1.h1.h-separator.h-separator-left.l-margin-bottom
+        Account Info
+
+      .tabs
+        .col-sm-8
+          .account-tab-content
+            .tab.account-tab#personal-details
+              =render partial: 'users/form_student_personal_details'
+
+            .tab.account-tab#completion-certs
+              =render partial: 'users/completion_certificates'
+
+
+        .col-sm-4
+          .account-tabs
+            %ul
+              %li
+                %a.active{href: '#personal-details', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.personal_details')
+              %li
+                %a{href: '#completion-certs', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.certificates')
+
+
+
+
+
+
+  -if @user.id == current_user.id
+    =render partial: 'users/change_password'
+
+
+
+
+:javascript
+
+  $(document).ready(function(){
+
+    // Tabs
+    $('.tabs').tabs();
+
+  });

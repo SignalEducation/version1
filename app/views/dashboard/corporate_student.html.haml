@@ -21,8 +21,6 @@
                   .col-sm-8
                     %h3.h3.card-title.l-margin-bottom
                       =@first_corp_log.subject_course.try(:name)
-                    %p.card-desc.hidden-xs
-                      =@first_corp_log.subject_course.try(:short_description).truncate(185)
                     .card-info
                       -total_lesson = @first_corp_log.subject_course.cme_count
                       -complete_lesson = @first_corp_log.try(:count_of_cmes_completed) || 0
@@ -51,8 +49,6 @@
                     .card-inner
                       %h3.h3.card-title.l-margin-bottom
                         =course.try(:name)
-                      %p.card-desc
-                        =course.try(:short_description).truncate(185)
                       .card-info
                         -if course.started_by_user_or_guid(current_user, current_session_guid)
                           -log = course.subject_course_user_logs.for_user_or_session(current_user, current_session_guid).first

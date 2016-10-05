@@ -95,7 +95,12 @@ class LibraryController < ApplicationController
         if current_user
           if current_user && @course.enrolled_user_ids.include?(current_user.id)
             @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
-            @subject_course_user_log = @enrollment.subject_course_user_log
+            if @enrollment
+              @subject_course_user_log = @enrollment.subject_course_user_log
+            else
+              @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
+            end
+
           else
             @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
           end

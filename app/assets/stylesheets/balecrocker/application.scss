@@ -3980,3 +3980,122 @@ ol.example li.placeholder:before {
 .lg-image {
   width: 60%;
 }
+
+
+
+
+/* Account Page Tabs */
+
+
+.account-tab {
+  display: none;
+  //max-width: 60%;
+  margin: auto 0 5px auto;
+  //float: left;
+}
+.account-tab-content {
+  //width: 60%;
+  margin: 0;
+
+}
+@media (max-width: 768px) {
+  .account-tab-content {
+    width: 100%;
+    margin-top: 0;
+
+  }
+}
+.account-tabs{
+  margin: $gutter 0 0;
+  //min-height: 490px;
+}
+.account-tabs ul {
+  //float: right;
+  margin-right: 0;
+  padding-left: 0;
+  background-color: darken(#F9FAFB, 6%);
+  //width: 30%;
+}
+.account-tabs ul > li {
+  list-style: none;
+}
+.account-tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: $colour-7;
+  font-size: 18px;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.account-tabs ul > li:first-child a {
+  //border-top: 1px solid #71738c;
+}
+.account-tabs ul > li a:hover {
+  background-color: $colour-5;
+  color: $white;
+}
+.account-tabs ul > li a.active {
+  //background-color: #373854;
+  background-color: $colour-5;
+  font-weight: bold;
+  color: $white;
+}
+.account-tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.account-tab h3{
+  font-size: 26px;
+  //line-height: 1.5;
+  color: $white;
+}
+.account-tab p{
+  line-height: 1.45;
+  color: $white;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.account-tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .account-tabs ul{
+    margin-right: 65px;
+    width: 100%;
+  }
+  .account-tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .account-tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .account-tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .account-tabs {
+    padding: 0 0 45px 0;
+  }
+  .account-tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .account-tabs ul > li a {
+    font-size: 18px;
+  }
+  .account-tabs ul > li a br{ display: block; }
+  .account-tab h3 { font-size: 27px;}
+  .account-tab p{ font-size: 16px }
+}
