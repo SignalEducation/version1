@@ -4208,13 +4208,25 @@ header{
   color: #fff;
 }
 .home-background {
-  background-image: asset-url('home_image_012.jpg');
+  background-image: asset-url('cover_image_001.jpg');
+}
+.acca-background {
+  background-image: asset-url('cover_image_002.jpg');
+}
+.cfa-background {
+  background-image: asset-url('cover_image_003.jpg');
 }
 .purchase-background {
-  background-image: asset-url('home_image_005.jpg');
+  background-image: asset-url('cover_image_001.jpg');
 }
 .default-product-background {
-  background-image: asset-url('header_bg.jpg');
+  background-image: asset-url('cover_image_004.jpg');
+}
+.business-background {
+  background-image: asset-url('cover_image_002.jpg');
+}
+.why-background {
+  background-image: asset-url('cover_image_003.jpg');
 }
 
 
@@ -4255,7 +4267,8 @@ header{
   //width: 75%;
   padding-top: 100px;
   margin: 0 30px 0 0;
-}.acca{
+}
+.acca{
   display: inline-block;
   vertical-align: top;
   //width: 75%;

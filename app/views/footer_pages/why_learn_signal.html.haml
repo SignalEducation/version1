@@ -1,13 +1,16 @@
-.hero-why-learn
-  .l-wrap-home
-    =render partial: 'layouts/transparent_navbar'
-  .l-section
-    .l-wrap
-      .container-fluid
-        .row
-          .col-md-6.col-md-offset-3
-            %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe
-              Why Learn<font color="#EE5457">Signal</font>
+.home_page_layout
+  %header.why-background
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
+
+    .l-section
+      .l-wrap
+        .container-fluid
+          .row
+            .col-md-6.col-md-offset-3
+              %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe
+                Why Learn<font color="#EE5457">Signal</font>
+
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 .is-bg-asphalt

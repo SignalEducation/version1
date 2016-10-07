@@ -1,88 +1,67 @@
-.hero-business
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  .l-wrap-home
-    =render partial: 'layouts/transparent_navbar'
+.home_page_layout
+  %header.business-background
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
+      .home
+        %h2.h-white
+          Unleash your team’s potential
 
-    .hero-inner
-      .container-fluid
-        .row
-          .col-sm-6.col-md-8.col-lg-8
-            %p.h5.h-white.l-margin-bottom-huge
-              ANYWHERE, ANYTIME
-            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              Unleash your team’s potential
-            %p.h7
-              Give your staff access to a library of on-demand courses. Taught by experts.
+        %p.h7
+          ANYWHERE, ANYTIME
+        %p.h7
+          Give your staff access to a library of on-demand courses. Taught by experts.
 
 
-            %br/
-            %br/
-            .col-sm-6{style: 'padding-left: 0px;'}
-              %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}
-                ='Start Free Trial'
+        %br/
+        %br/
+        .col-sm-6{style: 'padding-left: 0px;'}
+          %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}
+            ='Start Free Trial'
 
-.course-types
-  .l-wrap-big
-    .l-section-small
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.h-white.l-margin-bottom-big
-              Browse Courses
-        .row
-          .col-sm-4
-            =link_to subscription_groups_url, class: 'image-link' do
-              .home-image-1
-                .hero-inner-wide
-                  %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
-                    Professional Qualifications
-                  %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Revision courses for ACCA, CFA and FRM professional exams.
-          .col-sm-4
-            =link_to library_special_link(@group1), class: 'image-link' do
-              .home-image-2
-                .hero-inner-wide
-                  %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
-                    IT Operations
-                  %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Develop your team's skills in Excel, Access and Tableau.
-          .col-sm-4
-            =link_to library_special_link(@group2), class: 'image-link' do
-              .home-image-3
-                .hero-inner-wide
-                  %h3.h-white.l-margin-bottom-big{style: 'padding-top: 120px; text-transform: uppercase;'}
-                    Business Professionals
-                  %p.p{style: 'padding-top: 50px; color: #fff;'}
-                    Leadership, Management and Communication skills to prepare your future business leaders.
+  %section#advance_career{style: 'padding: 40px 0 40px 0;'}
+    .l-wrap-home
+      .row
+        .col-sm-12
+          %h2.h-separator.h-separator-center.l-margin-bottom-big
+            For Business
+      .row
+        .col-sm-4
+          %h3.l-margin-bottom-big
+            =image_tag('ipad-icon.png', class: 'features-img', alt: 'reporting-analytics-icon')
+            Reporting & Analytics
+          %p.p
+            Clear overview of your team's learning performance.
+        .col-sm-4
+          %h3.l-margin-bottom-big
+            =image_tag('graph-icon.png', class: 'padded-features-img', alt: 'learning-paths-icon')
+            Learning Paths
+          %p.p
+            Keep your staff focused with customized learning paths.
+        .col-sm-4
+          %h3.l-margin-bottom-big
+            =image_tag('network-icon.png', class: 'features-img', alt: 'expert-author-network-icon')
+            Expert Author Network
+          %p.p
+            Learn from the best with training designed and developed by industry experts.
 
-.business
-  .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-              For Businesses
-        .row
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('ipad-icon.png', class: 'features-img', alt: 'reporting-analytics-icon')
-              Reporting & Analytics
-            %p.p
-              Clear overview of your team's learning performance.
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('graph-icon.png', class: 'padded-features-img', alt: 'learning-paths-icon')
-              Learning Paths
-            %p.p
-              Keep your staff focused with customized learning paths.
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('network-icon.png', class: 'features-img', alt: 'expert-author-network-icon')
-              Expert Author Network
-            %p.p
-              Learn from the best with training designed and developed by industry experts.
+
+  %section#home_info
+    .l-wrap-home
+      .row
+        .col-sm-12.text-center
+          %h2.h-separator.h-separator-center.l-margin-bottom-big
+            Browse Courses
+      .row
+        .col-md-12
+          -@groups.all_in_order.each do |group|
+            .col-sm-6
+              =link_to library_special_link(group), class: 'course-panel course-panel-inner group-inner' do
+                %h3.h2.course-panel-title.text-center
+                  =group.name
+                %p.p.course-panel-desc
+                  =group.description.truncate(150)
+
+
 .start-trial
   %a.btn-block.btn-block-red{href: '#', data: {toggle: 'modal', target: '#contactModal'}}
     .l-wrap
@@ -95,21 +74,4 @@
               Start Your Free Business Account
               %span.ico-arrow-right-r
 
-:javascript
-    var nav = responsiveNav(".nav-collapse");
-
-  // Smooth scroll to top
-  $(document).ready(function(){
-    $('a[href^="#"]').on('click',function (e) {
-      e.preventDefault();
-
-      var target = this.hash,
-      $target = $(target);
-
-      $('html, body').stop().animate({
-        'scrollTop': $target.offset().top
-      }, 500, 'swing', function () {
-        window.location.hash = target;
-      });
-    });
-  });
+=render partial: 'layouts/contact_modal'

@@ -3,6 +3,7 @@ class FooterPagesController < ApplicationController
   before_action :get_variables, except: [:missing_page]
 
   def business
+    @groups = Group.all_active.for_public.all_in_order
     seo_title_maker('Why LearnSignal Training', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
   end
 
