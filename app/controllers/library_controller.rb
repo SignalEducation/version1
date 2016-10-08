@@ -1,5 +1,7 @@
 class LibraryController < ApplicationController
 
+  before_action :logged_in_required, only: [:diploma_show, :cert]
+
   def group_index
     @navbar = nil
 
@@ -134,9 +136,10 @@ class LibraryController < ApplicationController
 
   def diploma_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-
-    redirect_to all_diplomas_url if !current_user || !@course
-    redirect_to product_course_url(@course.home_page.public_url) if current_user && !current_user.valid_subject_course_ids.include?(@course.id)
+    redirect_to root_url if !@course || current_user.corporate_user?
+    if current_user.individual_student? && !current_user.valid_subject_course_ids.include?(@course.id)
+      redirect_to product_course_url(@course.home_page.public_url)
+    end
 
     if @course.enrolled_user_ids.include?(current_user.id)
       @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
@@ -215,16 +218,6 @@ class LibraryController < ApplicationController
       respond_to do |format|
         format.json{render json: {message: "Email Address Cannot be blank. Please enter valid email id."}}
       end
-    end
-  end
-
-  def course_enrollment
-    respond_to do |format|
-      format.json {
-        new_enrollment = Enrollment.new(user_id: params[:library][:user_id], subject_course_id: params[:library][:course_id])
-        new_enrollment.save
-        render json: {}, status: :ok
-      }
     end
   end
 

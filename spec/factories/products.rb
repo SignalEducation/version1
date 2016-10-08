@@ -19,10 +19,12 @@
 FactoryGirl.define do
   factory :product do
     name "MyString"
-subject_course_id 1
-mock_exam_id 1
-stripe_guid "MyString"
-live_mode false
+    subject_course_id 1
+    mock_exam_id 1
+    stripe_guid "MyString"
+    live_mode false
+    price '999'
+    currency_id 1
   end
 
 end
