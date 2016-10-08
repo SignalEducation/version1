@@ -159,7 +159,7 @@ en:
         product_order: Product
 
       index:
-        h1: Student User Types
+        h1: Student Types
 
       show:
         h1: Student User Type

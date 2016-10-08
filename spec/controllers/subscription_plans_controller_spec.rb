@@ -35,10 +35,7 @@ describe SubscriptionPlansController, type: :controller do
   #let!(:subscription_1) { FactoryGirl.create(:subscription,
   #                        subscription_plan_id: subscription_plan_1.id,
   #                        stripe_token: stripe_helper.generate_card_token) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription,
-                                             subscription_plan_id: subscription_plan_1.id
-  ) }
-
+  let!(:subscription_1) { FactoryGirl.create(:subscription, subscription_plan_id: subscription_plan_1.id) }
   let!(:subscription_plan_2) { FactoryGirl.create(:corporate_subscription_plan) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
 

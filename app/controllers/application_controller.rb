@@ -370,7 +370,6 @@ class ApplicationController < ActionController::Base
   def dashboard_special_link(user = nil)
     user = current_user if current_user && !user
     redirect_to root_url unless user
-
     case user.user_group_id
       when UserGroup.default_student_user_group.id
         student_dashboard_url
@@ -380,7 +379,7 @@ class ApplicationController < ActionController::Base
         tutor_dashboard_url
       when UserGroup.default_corporate_student_user_group.id
         corporate_student_dashboard_url
-      when UserGroup.default_corporate_student_user_group
+      when UserGroup.default_corporate_customer_user_group.id
         corporate_customer_dashboard_url
     else
       student_dashboard_url

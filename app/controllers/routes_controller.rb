@@ -5,7 +5,7 @@ class RoutesController < ApplicationController
       if current_user.corporate_customer?
         redirect_to corporate_customer_url(current_user.corporate_customer)
       else
-        redirect_to dashboard_special_link
+        redirect_to dashboard_special_link(current_user)
       end
     else
       if !request.subdomain.empty?
