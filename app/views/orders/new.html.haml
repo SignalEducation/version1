@@ -2,18 +2,15 @@
   %header.purchase-background
     .l-wrap-purchase
       =render partial: 'layouts/transparent_navbar'
+    .l-wrap-session.l-margin-top
+      %h1.h-white.h-separator.h-separator-center.text-center
+        Payment Details
 
   .l-wrap-product-user
     .row
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-md-12
-        .col-md-12.l-margin-bottom
-          %h1.h1.h-separator.h-separator-center.text-center
-            %span.number
-              2
-            Payment Details
-
         .col-md-4.l-margin-top
           .course-side-info
             %h2.h-separator.h-separator-left.l-margin-bottom

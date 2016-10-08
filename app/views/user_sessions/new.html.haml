@@ -37,9 +37,12 @@
 
 -else
   .home_page_layout
-    %header.purchase-background
+    %header.sign-in-background
       .l-wrap-purchase
         =render partial: 'layouts/transparent_navbar'
+      .l-wrap-session
+        %h1.h-white.h-separator.h-separator-center.text-center
+          =t('views.user_sessions.new.h1')
 
     .l-wrap
       .row
@@ -47,8 +50,6 @@
           =render partial: 'layouts/flash_messages'
         .col-md-12
           .col-sm-8.col-sm-offset-2.l-margin-top
-            %h1.l-margin-bottom.l-margin-top-big.text-center
-              =t('views.user_sessions.new.h1')
             .login-form.l-margin-top#sign-in
               =form_for(@user_session) do |f|
                 =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}

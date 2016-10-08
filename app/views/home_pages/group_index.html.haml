@@ -12,7 +12,7 @@
               Professional Finance courses
 
             %p.h7
-              Our subscription model provides unlimited access to all content for a small monthly subscription
+              Our subscription model provides unlimited access to all subscription content for a small monthly subscription
 
           .col-sm-6.col-md-4.col-lg-4#sign-up-form
             =render partial: 'sign_up_form'
@@ -20,13 +20,13 @@
 
   %section#diploma_courses
     .l-wrap-home
-      .col-sm-12.text-center
+      .col-sm-12.text-center.l-margin-bottom-big
         %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
           Subscription Content
 
         -@groups.all_in_order.each do |group|
           .col-sm-6
-            =link_to library_special_link(group) do
+            =link_to library_special_link(group), style: 'text-decoration: none;' do
               .group-panel
                 .group-panel-inner
                   .col-sm-4.hidden-xs
@@ -37,8 +37,10 @@
                     %h3.l-margin-top
                       =group.name
                 .group-panel-label
-                  .label-text
+                  .label-text{style: 'text-decoration: none;'}
                     View Courses
+  %section#subscribe
+    .l-wrap-home
 
 
   %section#advance_career

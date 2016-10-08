@@ -945,7 +945,20 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .l-wrap-purchase {
   padding: 0 $gutter/2;
-  margin-bottom: $gutter*3;
+  margin-bottom: $gutter/2;
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+
+  @include breakpoint(md-min) {
+    padding: 0 $gutter/2;
+    max-width: 1000px;
+  }
+
+}
+.l-wrap-session {
+  padding: 0 $gutter/2;
+  margin-bottom: $gutter/2;
   @include breakpoint(sm-min) {
     padding: 0 $gutter/2;
   }
@@ -4214,9 +4227,12 @@ header{
   background-image: asset-url('cover_image_002.jpg');
 }
 .cfa-background {
-  background-image: asset-url('cover_image_003.jpg');
+  background-image: asset-url('cover_image_005.jpg');
 }
 .purchase-background {
+  background-image: asset-url('cover_image_001.jpg');
+}
+.sign-in-background {
   background-image: asset-url('cover_image_001.jpg');
 }
 .default-product-background {

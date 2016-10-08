@@ -24,7 +24,7 @@
           =render partial: 'enrollment_form'
 
 
-      -elsif current_user.corporate_user?
+      -elsif current_user && current_user.corporate_user?
         =render partial: 'corporate_enrollment_form'
 
       -else

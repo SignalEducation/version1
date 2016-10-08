@@ -124,7 +124,7 @@ class LibraryController < ApplicationController
 
         if !@course.try(:live)
           seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
-          render 'live_course'
+          render 'preview_course'
         else
 
         end

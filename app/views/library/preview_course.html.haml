@@ -74,7 +74,7 @@
           .col-md-8.l-margin-top-big
             %p.h4.l-margin-bottom
               =t('views.general.course_content')
-          .col-md-12.l-margin-top-big.l-margin-bottom
+          .col-md-8.l-margin-top-big.l-margin-bottom
             %ul.course-topics-list
               -if @course.children.count > 0
                 -@course.children.all_active.all_in_order.each do |child|

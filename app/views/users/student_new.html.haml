@@ -2,16 +2,15 @@
   %header.purchase-background
     .l-wrap-purchase
       =render partial: 'layouts/transparent_navbar'
-
+    .l-wrap-session
+      %h2.h-white.h-separator.h-separator-center.text-center
+        ='Sign Up for your 7-day free trial'
   .l-wrap
     .row
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-md-12
-
         .col-sm-8.col-sm-offset-2.l-margin-top
-          %h1.l-margin-bottom.l-margin-top-big.text-center
-            ='Sign Up for your 7-day free trial'
 
           .login-form.l-margin-top
             =form_for @user, url: create_student_url do |f|
