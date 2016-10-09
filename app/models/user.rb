@@ -474,7 +474,12 @@ class User < ActiveRecord::Base
           return false
         end
       end
-
+    elsif self.complimentary_user?
+      if course.subscription
+        return true
+      else
+        return true
+      end
     elsif self.individual_student?
 
       if course.subscription
@@ -597,6 +602,10 @@ class User < ActiveRecord::Base
 
   def individual_student?
     self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
+  end
+
+  def complimentary_user?
+    self.user_group.try(:complimentary) && self.corporate_customer_id.to_i == 0
   end
 
   def corporate_user?

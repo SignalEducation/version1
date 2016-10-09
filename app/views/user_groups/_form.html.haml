@@ -22,8 +22,8 @@
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label
-                =f.check_box :product_student
-                =t('views.user_groups.form.product_student')
+                =f.check_box :complimentary
+                =t('views.user_groups.form.complimentary')
         .form-group
           .col-sm-8.col-sm-offset-4
             .checkbox
@@ -73,12 +73,6 @@
               %label
                 =f.check_box :subscription_required_to_see_content
                 =t('views.user_groups.form.subscription_required_to_see_content')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :product_required_to_see_content
-                =t('views.user_groups.form.product_required_to_see_content')
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), user_groups_path, class: 'btn btn-cyan'

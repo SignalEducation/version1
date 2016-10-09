@@ -17,8 +17,7 @@
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
 #  updated_at                           :datetime
-#  product_required_to_see_content      :boolean          default(FALSE)
-#  product_student                      :boolean          default(FALSE)
+#  complimentary                        :boolean          default(FALSE)
 #
 
 require 'rails_helper'
