@@ -368,7 +368,7 @@ class ApplicationController < ActionController::Base
   helper_method :course_special_link
 
   def dashboard_special_link(user = nil)
-    user = current_user if current_user && !user
+    user = user || current_user
     redirect_to root_url unless user
     case user.user_group_id
       when UserGroup.default_student_user_group.id

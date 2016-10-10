@@ -34,6 +34,10 @@ FactoryGirl.define do
       public_url 'cfa'
     end
 
+    factory :product_1_home do
+      public_url 'product_1'
+    end
+
   end
 
 end

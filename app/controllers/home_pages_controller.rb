@@ -23,13 +23,14 @@ class HomePagesController < ApplicationController
   before_action :layout_variables, only: [:diploma, :home, :diploma_index, :group_index]
 
   def home
+    redirect_to dashboard_special_link(current_user) if current_user
     #This is the main home_page
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
     @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @product_courses = @product_course_category.subject_courses if @product_course_category
     @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
     @groups = Group.all_active.for_public.all_in_order
-    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
     seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
   end
 
@@ -56,7 +57,7 @@ class HomePagesController < ApplicationController
   def diploma_index
     product = Product.first
     redirect_to product_course_url(product.subject_course.home_pages.first.public_url)
-    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
     @currency_id = @country.currency_id
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
     @navbar = nil
@@ -67,7 +68,7 @@ class HomePagesController < ApplicationController
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
     @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
-    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @group = @home_page.try(:group)
     redirect_to all_groups_url unless @group
@@ -101,7 +102,7 @@ class HomePagesController < ApplicationController
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @country = IpAddress.get_country(request.remote_ip) || Country.find(105)
+    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
     @currency_id = @country.currency_id
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @course = @home_page.subject_course
@@ -111,11 +112,10 @@ class HomePagesController < ApplicationController
 
   end
 
-
   def student_sign_up
     #Duplicate in Users controller
     if current_user
-      redirect_to dashboard_special_link
+      redirect_to dashboard_special_link(current_user)
     else
       @user = User.new(student_allowed_params)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)

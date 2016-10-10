@@ -22,6 +22,9 @@ class OrdersController < ApplicationController
   before_action except: [:new, :create] do
     ensure_user_is_of_type(['admin'])
   end
+  before_action only: [:new, :create] do
+    ensure_user_is_of_type(['individual_student'])
+  end
   before_action :get_variables
 
   def index
@@ -33,7 +36,7 @@ class OrdersController < ApplicationController
 
   def new
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    redirect_to new_product_user_url(@course.name_url) unless current_user
+    redirect_to new_product_user_url(@course.name_url) unless current_user.individual_student?
     if current_user.valid_subject_course_ids.include?(@course.id)
       redirect_to diploma_course_url(@course.name_url)
     else
