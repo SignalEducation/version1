@@ -109,10 +109,9 @@ describe 'Subscription UX:', type: :feature do
     # sign up as a student
     sign_up_and_upgrade_from_free_trial
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
-    click_link('Subscriptions')
-    click_link(I18n.t('views.users.show.your_card_details'))
-    expect(page).to have_content maybe_upcase I18n.t('views.subscription_payment_cards.index.h1')
-    expect(page).to have_content maybe_upcase I18n.t('views.subscription_payment_cards.index.h4')
+
+    click_on I18n.t('views.users.show.tabs.payments')
+
     click_link(I18n.t('views.users.show.new_card'))
     # omitted:
     # - bad_number: can't get off the Modal
@@ -160,12 +159,14 @@ describe 'Subscription UX:', type: :feature do
     page.driver.browser.switch_to.alert.accept
 
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
-    expect(page).to have_content 'Your subscription is cancelled, you will continue to have access until:'
+    expect(page).to have_content 'Your Subscription has been cancelled'
+    click_on 'Subscription Info'
     expect(page).to have_content maybe_upcase I18n.t('views.users.show.un_cancel_subscription.h3')
     click_link(I18n.t('views.users.show.un_cancel_subscription.button_call_to_action'))
 
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
-    expect(page).to have_content I18n.t('views.users.show.your_subscription')
+    click_on 'Subscription Info'
+    expect(page).to have_content 'Account Status: Valid Subscription'
     expect(page).to have_content(I18n.t('controllers.subscriptions.update.flash.success'))
   end
 

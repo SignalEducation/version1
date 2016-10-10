@@ -8,18 +8,18 @@
 
   .col-sm-6
     .form-group
-      =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', id: 'first_name'
+      =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', id: 'user_first_name'
   .col-sm-6
     .form-group
-      =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', id: 'last_name'
+      =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', id: 'user_last_name'
   .col-sm-12
     .form-group
-      =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, id: 'email'
+      =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, id: 'user_email'
   .col-sm-12
     .form-group
-      =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'password'
+      =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'user_password'
   .col-sm-6.col-xs-6
-    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red signUp'
+    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red', id: 'signUp'
     .sk-circle
       .sk-circle1.sk-child
       .sk-circle2.sk-child

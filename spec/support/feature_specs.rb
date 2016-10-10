@@ -124,9 +124,8 @@ def student_picks_a_subscription_plan(currency, payment_frequency)
 end
 
 def sign_up_and_upgrade_from_free_trial
-  visit root_path
+  visit all_groups_path
   user_password = ApplicationController.generate_random_code(10)
-  sleep(2)
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
@@ -139,7 +138,7 @@ def sign_up_and_upgrade_from_free_trial
     find('.days-left').click
   end
   expect(page).to have_content 'Upgrade your membership'
-  student_picks_a_subscription_plan(usd, 1)
+  student_picks_a_subscription_plan(eur, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
   sleep(5)
@@ -147,7 +146,8 @@ def sign_up_and_upgrade_from_free_trial
     expect(page).to have_content 'Thanks for upgrading your subscription!'
   end
   visit_my_profile
-  click_on 'Subscriptions'
+  click_on 'Subscription Info'
+  expect(page).to have_content 'Account Status: Valid Subscription'
   expect(page).to have_content 'Billing Interval:   Monthly'
   end
 
