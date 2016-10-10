@@ -23,8 +23,8 @@ class HomePagesController < ApplicationController
   before_action :layout_variables, only: [:diploma, :home, :diploma_index, :group_index]
 
   def home
-    redirect_to dashboard_special_link(current_user) if current_user
     #This is the main home_page
+    redirect_to dashboard_special_link(current_user) if current_user
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
     @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @product_courses = @product_course_category.subject_courses if @product_course_category

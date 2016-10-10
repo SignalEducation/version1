@@ -69,7 +69,7 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_corporate_customer_user_group
-    where(individual_student: false, complimentary: false, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, complimentary: false, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
   end
 
   # instance methods
