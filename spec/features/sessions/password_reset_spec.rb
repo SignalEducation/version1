@@ -29,7 +29,7 @@ describe 'The password reset process,', type: :feature do
     end
 
     scenario 'attempt to log in and then reset password', js: true do
-      visit dashboard_path
+      visit student_dashboard_path
       visit sign_in_path
       within('.login-form') do
         fill_in 'user_session_email' , with: individual_student_user.email
