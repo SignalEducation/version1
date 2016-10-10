@@ -6,6 +6,10 @@ describe 'User changing their password', type: :feature do
   include_context 'users_and_groups_setup'
 
   before(:each) do
+    a = admin_user
+    b = individual_student_user
+    c = corporate_student_user
+    d = corporate_customer_user
     activate_authlogic
   end
 
@@ -18,8 +22,8 @@ describe 'User changing their password', type: :feature do
         click_link I18n.t('views.users.show.change_your_password.link')
         within('#change_password_modal') do
           fill_in I18n.t('views.users.form.current_password'), with: this_user.password
-          fill_in I18n.t('views.users.form.password'), with: 'abcabc123'
-          fill_in I18n.t('views.users.form.password_confirmation'), with: 'abcabc123'
+          fill_in I18n.t('views.users.form.password_placeholder'), with: 'abcabc123'
+          fill_in I18n.t('views.users.form.password_confirmation_placeholder'), with: 'abcabc123'
           click_button I18n.t('views.general.save')
         end
       elsif this_user.admin?
@@ -31,8 +35,8 @@ describe 'User changing their password', type: :feature do
         expect(page).to have_content I18n.t('views.users.show.change_your_password.h4')
         within('#change_password_modal') do
           fill_in I18n.t('views.users.form.current_password'), with: this_user.password
-          fill_in I18n.t('views.users.form.password'), with: 'abcabc123'
-          fill_in I18n.t('views.users.form.password_confirmation'), with: 'abcabc123'
+          fill_in I18n.t('views.users.form.password_placeholder'), with: 'abcabc123'
+          fill_in I18n.t('views.users.form.password_confirmation_placeholder'), with: 'abcabc123'
           click_button I18n.t('views.general.save')
         end
         expect(page).to have_content I18n.t('controllers.users.change_password.flash.success')

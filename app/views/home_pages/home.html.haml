@@ -54,26 +54,28 @@
 
 
 
-  %section#diploma_courses
-    .l-wrap-home
-      .col-sm-12.text-center
-        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-          Diploma Courses
 
-        -@product_courses.all_in_order.each do |course|
-          .col-sm-12
-            .course-panel.course-panel-inner
-              .col-sm-2.hidden-xs
-                =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
-              .col-sm-10
-                %h3
-                  =course.name
-                %p.p.hidden-xs
-                  =course.short_description.truncate(150)
-              .col-sm-2
-              .col-sm-10
-                =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
-                  Course Info
+  -if @product_courses
+    %section#diploma_courses
+      .l-wrap-home
+        .col-sm-12.text-center
+          %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+            Diploma Courses
+
+          -@product_courses.all_in_order.each do |course|
+            .col-sm-12
+              .course-panel.course-panel-inner
+                .col-sm-2.hidden-xs
+                  =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
+                .col-sm-10
+                  %h3
+                    =course.name
+                  %p.p.hidden-xs
+                    =course.short_description.truncate(150)
+                .col-sm-2
+                .col-sm-10
+                  =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
+                    Course Info
 
 
 

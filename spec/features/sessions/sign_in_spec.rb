@@ -1,9 +1,18 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 describe 'The sign in process.', type: :feature do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
+
+  before(:each) do
+    a = admin_user
+    b = individual_student_user
+    c = corporate_student_user
+    d = corporate_customer_user
+  end
 
   context 'logged in as a individual_user:' do
 
@@ -55,16 +64,79 @@ describe 'The sign in process.', type: :feature do
       expect(page).to have_content 'Your account is not active'
     end
 
-    scenario 'with correct details and then sign out' do
-      visit sign_in_path
-      within('.login-form') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
-        fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
-        click_button I18n.t('views.general.sign_in')
+    context 'with correct details and then sign out' do
+      scenario 'with free_trial user details' do
+        visit sign_in_path
+        within('.login-form') do
+          fill_in I18n.t('views.user_sessions.form.email'), with: free_trial_student.email
+          fill_in I18n.t('views.user_sessions.form.password'), with: free_trial_student.password
+          click_button I18n.t('views.general.sign_in')
+        end
+
+        find('.dropdown').click
+        click_link('Sign out')
       end
 
-      find('.dropdown').click
-      click_link('Sign out')
+      scenario 'with subscription_student user details' do
+        visit sign_in_path
+        within('.login-form') do
+          fill_in I18n.t('views.user_sessions.form.email'), with: subscription_student.email
+          fill_in I18n.t('views.user_sessions.form.password'), with: subscription_student.password
+          click_button I18n.t('views.general.sign_in')
+        end
+
+        find('.dropdown').click
+        click_link('Sign out')
+      end
+
+      scenario 'with product_student user details' do
+        visit sign_in_path
+        within('.login-form') do
+          fill_in I18n.t('views.user_sessions.form.email'), with: product_student.email
+          fill_in I18n.t('views.user_sessions.form.password'), with: product_student.password
+          click_button I18n.t('views.general.sign_in')
+        end
+
+        find('.dropdown').click
+        click_link('Sign out')
+      end
+
+      scenario 'with sub_and_product_student user details' do
+        visit sign_in_path
+        within('.login-form') do
+          fill_in I18n.t('views.user_sessions.form.email'), with: sub_and_product_student.email
+          fill_in I18n.t('views.user_sessions.form.password'), with: sub_and_product_student.password
+          click_button I18n.t('views.general.sign_in')
+        end
+
+        find('.dropdown').click
+        click_link('Sign out')
+      end
+
+      scenario 'with trial_and_product_student user details' do
+        visit sign_in_path
+        within('.login-form') do
+          fill_in I18n.t('views.user_sessions.form.email'), with: trial_and_product_student.email
+          fill_in I18n.t('views.user_sessions.form.password'), with: trial_and_product_student.password
+          click_button I18n.t('views.general.sign_in')
+        end
+
+        find('.dropdown').click
+        click_link('Sign out')
+      end
+
+      scenario 'with no_access_student user details' do
+        visit sign_in_path
+        within('.login-form') do
+          fill_in I18n.t('views.user_sessions.form.email'), with: no_access_student.email
+          fill_in I18n.t('views.user_sessions.form.password'), with: no_access_student.password
+          click_button I18n.t('views.general.sign_in')
+        end
+
+        find('.dropdown').click
+        click_link('Sign out')
+      end
+
     end
 
   end
@@ -116,7 +188,7 @@ describe 'The sign in process.', type: :feature do
         fill_in I18n.t('views.user_sessions.form.password'), with: corporate_student_user.password
         click_button I18n.t('views.general.sign_in')
       end
-      expect(page).to have_content 'Learn anytime, anywhere'
+      expect(page).to have_content 'Welcome to your Dashboard'
       find('.dropdown').click
       click_link('Sign out')
     end
@@ -170,7 +242,7 @@ describe 'The sign in process.', type: :feature do
         fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
         click_button I18n.t('views.general.sign_in')
       end
-      expect(page).to have_content maybe_upcase 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors'
+      expect(page).to have_content maybe_upcase 'Tutor Courses'
       find('.dropdown').click
       click_link('Sign out')
     end
@@ -224,7 +296,7 @@ describe 'The sign in process.', type: :feature do
         fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
         click_button I18n.t('views.general.sign_in')
       end
-      expect(page).to have_content maybe_upcase 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors'
+      #expect(page).to have_content maybe_upcase 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors'
       find('.dropdown').click
       click_link('Sign out')
     end

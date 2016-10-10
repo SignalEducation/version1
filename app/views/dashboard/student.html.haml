@@ -31,6 +31,17 @@
                 .tab.account-tab#activity
                   =render partial: 'activity'
 
+-else
+
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
+  .l-section-small.is-bg-asphalt
+    .l-wrap
+      .container-fluid
+        %h1.h1.h-separator.h-separator-left.l-margin-bottom
+          Dashboard
+
 
 
 :javascript

@@ -9,6 +9,10 @@ describe 'User changing their email', type: :feature do
   let!(:country_2) { FactoryGirl.create(:uk)}
 
   before(:each) do
+    a = admin_user
+    b = individual_student_user
+    c = corporate_student_user
+    d = corporate_customer_user
     activate_authlogic
   end
 

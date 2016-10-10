@@ -328,10 +328,12 @@ class ApplicationController < ActionController::Base
           diploma_course_url(
               the_thing.name_url
           )
-        else
+        elsif the_thing.home_page
           product_course_url(
               the_thing.home_page.public_url
           )
+        else
+          all_diplomas_url
         end
 
       elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
