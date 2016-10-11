@@ -9,8 +9,6 @@ describe 'User navigating through the library:', type: :feature do
   include_context 'course_content'
   include_context 'subscription_plans_setup'
 
-  let!(:static_page) { FactoryGirl.create(:landing_page) }
-
   before(:each) do
     activate_authlogic
   end

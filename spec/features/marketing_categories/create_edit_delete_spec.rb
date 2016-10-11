@@ -14,6 +14,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
     scenario "with valid data", js: true do
       visit marketing_categories_path
 
+      sleep(1)
       click_link(I18n.t('views.general.new'))
       fill_in I18n.t('views.marketing_categories.form.name'), with: "Dummy Category"
 
@@ -24,6 +25,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
     scenario "with invalid name", js: true do
       visit marketing_categories_path
 
+      sleep(1)
       click_link(I18n.t('views.general.new'))
       fill_in I18n.t('views.marketing_categories.form.name'), with: "Dummy, but invalid"
       click_button(I18n.t("views.general.save"))

@@ -142,9 +142,7 @@ def sign_up_and_upgrade_from_free_trial
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
   sleep(5)
-  within('#thank-you-message') do
-    expect(page).to have_content 'Thanks for upgrading your subscription!'
-  end
+  expect(page).to have_content 'Thanks for upgrading your subscription!'
   visit_my_profile
   click_on 'Subscription Info'
   expect(page).to have_content 'Account Status: Valid Subscription'
