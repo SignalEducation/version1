@@ -21,6 +21,7 @@ FactoryGirl.define do
     name "MyString"
     subject_course_id 1
     mock_exam_id 1
+    active true
     stripe_guid "MyString"
     live_mode false
     price '999'
