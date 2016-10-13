@@ -214,7 +214,8 @@ class UsersController < ApplicationController
     @user = User.new(student_allowed_params)
     @user.user_group_id = UserGroup.default_student_user_group.try(:id)
     @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
-    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
+    country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.find_by_iso_code('IE').try(:id)
+    @user.country_id = country_id
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password

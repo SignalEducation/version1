@@ -132,6 +132,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
   validates :student_user_type_id, presence: true, if: :individual_student?
+  validates :country_id, presence: true, if: :individual_student?
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
@@ -342,7 +343,7 @@ class User < ActiveRecord::Base
       'Free Trial Member'
     elsif self.user_status == 'expired_free_member'
       'Free Trial Expired'
-    elsif self.user_status == 'valid_sub_member'
+    elsif self.user_status == 'valid_sub_member' || 'valid_sub_product_member'
       'Valid Subscription'
     elsif self.user_status == 'canceled_sub_member'
       'Canceled Subscription'
