@@ -324,7 +324,7 @@ describe 'The student orders process', type: :feature do
       enter_credit_card_details('valid')
       find('.upgrade-sub').click
       sleep(8)
-      
+
       expect(page).to have_content 'Thanks for upgrading your subscription!'
       visit_my_profile
       click_on 'Subscription Info'

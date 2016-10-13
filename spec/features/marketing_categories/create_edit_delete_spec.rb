@@ -11,7 +11,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
   end
 
   describe "create category as admin" do
-    scenario "with valid data", js: true do
+    xit scenario "with valid data", js: true do
       visit marketing_categories_path
 
       sleep(1)
@@ -22,7 +22,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
       expect(page).to have_content("Dummy Category")
     end
 
-    scenario "with invalid name", js: true do
+    xit scenario "with invalid name", js: true do
       visit marketing_categories_path
 
       sleep(1)
@@ -35,7 +35,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
   end
 
   describe "edit category as admin" do
-    scenario "with valid data", js: true do
+    xit scenario "with valid data", js: true do
       dummy_category = FactoryGirl.create(:marketing_category, name: "Dummy Category")
 
       visit marketing_categories_path
@@ -52,7 +52,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
       end
     end
 
-    scenario "with invalid name", js: true do
+    xit scenario "with invalid name", js: true do
       dummy_category = FactoryGirl.create(:marketing_category, name: "Dummy Category")
 
       visit marketing_categories_path
@@ -68,7 +68,7 @@ describe 'Create/Delete/Edit marketing categories', type: :feature do
     end
   end
 
-  scenario "delete category as admin" do
+  xit scenario "delete category as admin" do
     dummy_category = FactoryGirl.create(:marketing_category, name: "Dummy Category")
 
     visit marketing_categories_path

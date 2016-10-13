@@ -486,7 +486,7 @@ class User < ActiveRecord::Base
       if course.subscription
         if self.free_trial && self.free_trial_student?
           return true
-        elsif self.subscription_student?
+        elsif self.subscription_student? && self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
           return true
         else
           return false

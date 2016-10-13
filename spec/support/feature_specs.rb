@@ -130,10 +130,8 @@ def sign_up_and_upgrade_from_free_trial
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
   sleep(2)
-  within('#thank-you-message') do
-    expect(page).to have_content 'Final Step!'
-    expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
-  end
+  expect(page).to have_content 'Final Step!'
+  expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
   within('.navbar.navbar-default') do
     find('.days-left').click
   end
@@ -141,7 +139,7 @@ def sign_up_and_upgrade_from_free_trial
   student_picks_a_subscription_plan(eur, 1)
   enter_credit_card_details('valid')
   find('.upgrade-sub').click
-  sleep(5)
+  sleep(10)
   expect(page).to have_content 'Thanks for upgrading your subscription!'
   visit_my_profile
   click_on 'Subscription Info'
