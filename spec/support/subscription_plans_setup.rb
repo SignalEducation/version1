@@ -9,6 +9,7 @@ shared_context 'subscription_plans_setup' do
   let!(:gbp) { FactoryGirl.create(:gbp) }
 
   # countries
+  let!(:country) { FactoryGirl.create(:ireland, currency_id: eur.id) }
   let!(:ireland) { country || FactoryGirl.create(:ireland, currency_id: eur.id) }
   let!(:uk) { FactoryGirl.create(:uk, currency_id: gbp.id) }
   let!(:usa) { FactoryGirl.create(:usa, currency_id: usd.id) }

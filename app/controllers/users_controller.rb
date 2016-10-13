@@ -183,9 +183,11 @@ class UsersController < ApplicationController
 
   def new_product_user
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @product = Product.where(subject_course_id: @course.id).first
     @user = User.new
-    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || 105
+    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    @currency_id = @country.currency_id
+    @user.country_id = @country.id
+    @product = @course.products.in_currency(@currency_id).last
     @topic_interests = Group.all_active.all_in_order.for_public
     @navbar = false
     @footer = false
@@ -193,7 +195,9 @@ class UsersController < ApplicationController
 
   def new_session_product
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @product = Product.where(subject_course_id: @course.id).first
+    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    @currency_id = @country.currency_id
+    @product = @course.products.in_currency(@currency_id).last
     @user_session = UserSession.new
     @navbar = false
     @footer = false
