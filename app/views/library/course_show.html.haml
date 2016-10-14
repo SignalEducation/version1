@@ -15,11 +15,8 @@
         -if @course.subscription
           =render partial: 'layouts/content_notice', locals: {course: @course}
 
-        -if current_user.permission_to_see_content(@course)
-          -if @course.enrolled_user_ids.include?(current_user.id)
-            =render partial: 'enrollment_info'
-          -else
-            =render partial: 'enrollment_form'
+        -if @course.enrolled_user_ids.include?(current_user.id)
+          =render partial: 'enrollment_info'
         -else
           =render partial: 'enrollment_form'
 
