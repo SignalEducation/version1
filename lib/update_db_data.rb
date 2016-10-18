@@ -1,11 +1,11 @@
 class UpdateDBData
 
-  def update_comp_user_group
+  def self.update_comp_user_group
     user_group = UserGroup.find 9
     user_group.update_attributes(complimentary: true, individual_student: false)
   end
 
-  def create_student_user_types
+  def self.create_student_user_types
     StudentUserType.new(name: 'Free Trial Students', description: 'Users who are on a valid free trial.', subscription: false, product_order: false, free_trial: true).tap do |user_type|
       user_type.save!
     end
@@ -26,7 +26,7 @@ class UpdateDBData
     end
   end
 
-  def update_student_users
+  def self.update_student_users
     users = User.where(user_group_id: 1)
     ActiveRecord::Base.transaction do
       users.each do |user|
