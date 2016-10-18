@@ -342,7 +342,7 @@ class UsersController < ApplicationController
   end
 
   def new_subscription
-    redirect_to account_url if current_user.subscriptions.any?
+    redirect_to account_url if current_user.subscriptions.any? || !current_user.individual_student?
     @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
