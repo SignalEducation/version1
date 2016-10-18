@@ -6,6 +6,11 @@ class UpdateDBData
   end
 
   def self.create_student_user_types
+    types = StudentUserType.all
+    types.each do |type|
+      type.destroy
+    end
+
     StudentUserType.new(name: 'Free Trial Students', description: 'Users who are on a valid free trial.', subscription: false, product_order: false, free_trial: true).tap do |user_type|
       user_type.save!
     end
@@ -32,13 +37,13 @@ class UpdateDBData
       users.each do |user|
 
         if user.free_trial && user.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i
-          user.student_user_type_id = 5
+          user.student_user_type_id = StudentUserType.default_free_trial_user_type
         elsif !user.free_trial && user.subscriptions.any? && user.active_subscription && ('active past_due canceled-pending').include?(user.active_subscription.current_status)
-          user.student_user_type_id = 1
-        elsif !user.free_trial && user.subscriptions.any? && user.active_subscription && ('active past_due canceled-pending').include?(user.active_subscription.current_status)
-          user.student_user_type_id = 3
+          user.student_user_type_id = StudentUserType.default_sub_user_type
+        elsif !user.free_trial && user.subscriptions.any? && user.active_subscription && !('active past_due canceled-pending').include?(user.active_subscription.current_status)
+          user.student_user_type_id = StudentUserType.default_no_access_user_type
         else
-          user.student_user_type_id = 5
+          user.student_user_type_id = StudentUserType.default_no_access_user_type
         end
         user.save!
       end

@@ -60,7 +60,7 @@ class StudentUserType < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.users.empty?
+    true
   end
 
   protected
