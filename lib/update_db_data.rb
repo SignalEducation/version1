@@ -36,11 +36,11 @@ class UpdateDBData
     ActiveRecord::Base.transaction do
       users.each do |user|
 
-        if user.free_trial && user.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i
+        if user.free_trial && user.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i && !user.subscriptions.any?
           user.student_user_type_id = StudentUserType.default_free_trial_user_type.id
-        elsif !user.free_trial && user.subscriptions.any? && user.active_subscription && ('active past_due canceled-pending').include?(user.active_subscription.current_status)
+        elsif user.subscriptions.any? && user.active_subscription && ('active past_due canceled-pending').include?(user.active_subscription.current_status)
           user.student_user_type_id = StudentUserType.default_sub_user_type.id
-        elsif !user.free_trial && user.subscriptions.any? && user.active_subscription && !('active past_due canceled-pending').include?(user.active_subscription.current_status)
+        elsif user.subscriptions.any? && user.active_subscription && !('active past_due canceled-pending').include?(user.active_subscription.current_status)
           user.student_user_type_id = StudentUserType.default_no_access_user_type.id
         else
           user.student_user_type_id = StudentUserType.default_no_access_user_type.id
