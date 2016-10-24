@@ -54,6 +54,24 @@
 
 
 
+  %section#home_info
+    .l-wrap-home
+      .col-sm-12.text-center
+
+        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+          Subscription Courses
+
+        -@groups.all_in_order.each do |group|
+          .col-sm-6
+            =link_to library_special_link(group), class: 'course-panel course-panel-inner group-inner' do
+              %h3.h2.course-panel-title.text-center
+                =group.name
+              %p.p.course-panel-desc
+                =group.description.truncate(150)
+
+
+  %section#subscribe
+    .l-wrap-home
 
   -if @product_courses
     %section#diploma_courses
@@ -76,27 +94,6 @@
                 .col-sm-10
                   =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
                     Course Info
-
-
-
-  %section#subscribe
-    .l-wrap-home
-
-
-  %section#home_info
-    .l-wrap-home
-      .col-sm-12.text-center
-
-        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-          Subscription Courses
-
-        -@groups.all_in_order.each do |group|
-          .col-sm-6
-            =link_to library_special_link(group), class: 'course-panel course-panel-inner group-inner' do
-              %h3.h2.course-panel-title.text-center
-                =group.name
-              %p.p.course-panel-desc
-                =group.description.truncate(150)
 
 
 
