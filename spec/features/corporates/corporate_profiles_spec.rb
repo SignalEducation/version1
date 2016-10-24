@@ -12,7 +12,11 @@ describe 'Corp User:', type: :feature do
     activate_authlogic
     switch_to_subdomain("#{corporate_organisation.subdomain}")
     visit root_path
-    x = corporate_student_user.id
+    a = admin_user
+    b = individual_student_user
+    c = corporate_student_user
+    d = corporate_customer_user
+
   end
 
   describe 'signs in' do
@@ -29,7 +33,7 @@ describe 'Corp User:', type: :feature do
     scenario 'as a corporate student', js: true  do
       click_link('Login')
       fill_in_sign_in_form(corporate_student_user)
-      expect(page).to have_content 'LEARN ANYTIME, ANYWHERE'
+      expect(page).to have_content 'Welcome to your Dashboard'
     end
 
   end

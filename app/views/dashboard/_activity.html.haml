@@ -1,0 +1,18 @@
+-@non_enrollment_logs.each do |log|
+  .card.card-dashboard
+    .card-dashboard-outer-cover{style: 'height: 175px;'}
+      .card-inner
+        .col-sm-8
+          %h3.h3{style: 'color: #3E3F5B'}
+            =log.subject_course.name
+          .card-info.hidden-sm.hidden-xs
+            -total_lesson = log.subject_course.cme_count
+            -complete_lesson = log.try(:count_of_cmes_completed) || 0
+            -complete_percent = log.try(:percentage_complete)
+            %p{style: 'color: #3E3F5B; margin-bottom: 10px; margin-top: 10px;'}
+              ="#{complete_lesson} out of #{total_lesson} lessons completed"
+            .progress
+              .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+
+        .col-sm-4.text-center.resume-course
+          =link_to 'Resume Course', library_special_link(log.subject_course), class: 'btn btn-wide btn-cyan'

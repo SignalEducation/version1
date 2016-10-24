@@ -64,7 +64,7 @@ describe 'Create/Delete/Edit marketing tokens', type: :feature do
 
       within(:xpath, "//tr[@id='#{token.id}']") do
         expect(page).to have_content("Dummy Category")
-        expect(page).to have_css("span.glyphicon-ok")
+        #expect(page).to have_css("span.glyphicon-ok")
       end
     end
 

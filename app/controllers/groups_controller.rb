@@ -22,8 +22,8 @@
 
 class GroupsController < ApplicationController
 
-  before_action :logged_in_required, except: [:show]
-  before_action except: [:show] do
+  before_action :logged_in_required
+  before_action do
     ensure_user_is_of_type(['admin', 'content_manager'])
   end
   before_action :get_variables
@@ -35,42 +35,6 @@ class GroupsController < ApplicationController
       @groups = Group.paginate(per_page: 50, page: params[:page])
     end
     @footer = nil
-  end
-
-  def show
-    if @group.nil?
-      redirect_to library_url
-    else
-      courses = @group.try(:active_children)
-      if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-        corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).all_in_order
-        non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
-        allowed_courses = corporate_courses + non_restricted_courses
-        @courses = allowed_courses.uniq
-        if current_corporate && current_corporate.id == 12 && @group.name_url == 'acca-revision'
-          course_module_ids = []
-          group_total_time = []
-          @courses.each do |course|
-            ids = course.active_children.map(&:id)
-            group_total_time << course.total_video_duration
-            group_total_time << course.estimated_time_in_seconds
-            ids.each do |id|
-              course_module_ids << id
-            end
-          end
-          @course_modules_count = course_module_ids.count
-          @group_total_time = group_total_time.inject(:+)
-        end
-      else
-        courses = courses.try(:all_not_restricted)
-        @courses = courses.try(:all_in_order)
-      end
-      if current_user
-        @logs = SubjectCourseUserLog.where(user_id: current_user.id)
-      end
-      seo_title_maker(@group.try(:name), @group.try(:description), nil)
-      tag_manager_data_layer(@group.try(:name))
-    end
   end
 
   def admin_show
@@ -130,7 +94,12 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:group_id]) rescue nil
     if @group &&
         (current_user.admin? || current_user.corporate_customer_id == @group.corporate_customer_id)
-      @group.subject_course_ids = params[:group][:subject_course_ids]
+      if params[:group]
+        @group.subject_course_ids = params[:group][:subject_course_ids]
+      else
+        @group.subject_course_ids = []
+      end
+
       flash[:success] = I18n.t('controllers.groups.update_subjects.flash.success')
       redirect_to groups_url
     else

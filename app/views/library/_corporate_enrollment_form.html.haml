@@ -1,0 +1,18 @@
+.enrollment-form-cover
+  .card.card-library
+    .card-library-outer-cover
+      .card-inner
+        .col-sm-8.col-xs-12
+          %h3.h3.card-title
+            =@course.name
+        .col-sm-4.col-xs-12.text-center
+
+          -if current_user.permission_to_see_content(@course)
+            -if @subject_course_user_log
+              -if @subject_course_user_log.student_exam_tracks.any?
+                =link_to 'Resume', course_special_link(@subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
+              -else
+                =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan'
+
+            -else
+              =link_to 'Start Course', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan'

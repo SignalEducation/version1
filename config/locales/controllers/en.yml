@@ -35,6 +35,42 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
+    orders:
+      create:
+        flash:
+          success: Your Purchase was successfull, a receipt will be emailed to you shortly.
+      update:
+        flash:
+          success: Order details have been updated successfully
+      destroy:
+        flash:
+          success: Order has been deleted
+          error: Order was not deleted
+
+    subject_course_categories:
+      create:
+        flash:
+          success: Course Category has been created successfully
+      update:
+        flash:
+          success: Course Category details have been updated successfully
+      destroy:
+        flash:
+          success: Course Category has been deleted
+          error: Course Category was not deleted
+
+    products:
+      create:
+        flash:
+          success: Product has been created successfully
+      update:
+        flash:
+          success: Product details have been updated successfully
+      destroy:
+        flash:
+          success: Product has been deleted
+          error: Product was not deleted
+
     corporate_requests:
       create:
         flash:
@@ -333,6 +369,18 @@ en:
         flash:
           success: User Group has been deleted
           error: User Group was not deleted
+
+    student_user_types:
+      create:
+        flash:
+          success: Student User Type has been created successfully
+      update:
+        flash:
+          success: Student User Type details have been updated successfully
+      destroy:
+        flash:
+          success: Student User Type has been deleted
+          error: Student User Type was not deleted
 
     user_notifications:
       create:

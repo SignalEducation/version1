@@ -36,17 +36,20 @@
                 =link_to 'create account', new_student_url, class: 'btn btn-green btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 -else
-  .external_layout.top-content
-    .default-heading
-      =render partial: 'layouts/corporate_logo'
+  .home_page_layout
+    %header.sign-in-background
+      .l-wrap-purchase
+        =render partial: 'layouts/transparent_navbar'
+      .l-wrap-session
+        %h1.h-white.h-separator.h-separator-center.text-center
+          =t('views.user_sessions.new.h1')
+
     .l-wrap
-      .container
-        .row
-          -if flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
-          .col-sm-6.col-sm-offset-3.l-margin-top
-            %h2.h-white.l-margin-bottom.l-margin-top-big.text-center
-              =t('views.user_sessions.new.h1')
+      .row
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        .col-md-12
+          .col-sm-8.col-sm-offset-2.l-margin-top
             .login-form.l-margin-top#sign-in
               =form_for(@user_session) do |f|
                 =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
@@ -64,8 +67,7 @@
                 .text-center
                   =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'
 
-        .row
-          .col-sm-6.col-sm-offset-3.text-center.l-margin-bottom-big.l-margin-top-big
+          .col-sm-8.col-sm-offset-2.text-center.l-margin-bottom-big.l-margin-top-big
             -if current_corporate
               =link_to 'create account', corporate_login_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
             -else

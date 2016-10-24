@@ -32,6 +32,9 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
+#  enrollment_option                       :boolean          default(FALSE)
+#  subject_course_category_id              :integer
+#  email_content                           :text
 #
 
 class SubjectCoursesController < ApplicationController
@@ -59,11 +62,8 @@ class SubjectCoursesController < ApplicationController
   end
 
   def new
-    if current_user.tutor?
-      @subject_course = SubjectCourse.new(sorting_order: 1, tutor_id: current_user.id)
-    else
-      @subject_course = SubjectCourse.new(sorting_order: 1)
-    end
+    @subject_course = SubjectCourse.new(sorting_order: 1)
+    @subject_course.tutor_id = current_user.id if current_user.tutor?
   end
 
   def edit
@@ -78,6 +78,7 @@ class SubjectCoursesController < ApplicationController
       @subject_course.restricted = true
       @subject_course.certificate = true
       @subject_course.tutor_id = current_user.id
+      @subject_course.subject_course_category_id = @subject_course_categories.default_corporate_category.id
       corporate_group = Group.where(corporate_customer_id: current_user.corporate_customer_id).first
       @subject_course.groups << corporate_group
     end
@@ -136,12 +137,13 @@ class SubjectCoursesController < ApplicationController
     @non_corporate_groups = @groups.for_public
     @corporate_groups = @groups.where(corporate_customer_id: current_user.corporate_customer_id)
     @tutors = User.all_tutors.all_in_order
+    @subject_course_categories = SubjectCourseCategory.all_active.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
     @footer = nil
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content)
   end
 
 end

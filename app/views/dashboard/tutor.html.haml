@@ -1,0 +1,186 @@
+.margin-top
+
+%div{role: 'tabpanel'}
+  .is-bg-purple-2.coursebar
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-12{role: 'tablist'}
+            %a.coursetype.l-margin-top{href: '#tutor', aria: {controls: 'tutor'}, role: 'tab', data: {toggle: 'tab'}}
+              ='Tutor Courses'
+            %a.coursetype.l-margin-top{href: '#active', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
+              ='Active Courses'
+            %a.coursetype.l-margin-top{href: '#completed', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
+              ='Complete Courses'
+
+  .l-section-small.is-bg-asphalt
+    .tab-content
+      .l-wrap.active.tab-pane.fade.in#tutor{role: 'tabpanel'}
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                Your Course Stats
+          .row
+            .col-md-12
+              .corporate-box-item.chart-box
+                .row.l-margin-bottom-big
+                  .col-md-6
+                    %h2.letter-space-wide Course Data
+                  .col-md-6.chart-legend.text-right
+                    .color-circle.color-red.text-inline
+                    %p.text-inline.font-small Videos Watched
+                    .color-circle.color-cyan.text-inline
+                    %p.text-inline.font-small Quizzes Taken
+                .row.l-margin-bottom
+                  %canvas#canvas{height:"300", width:"790"}
+
+
+              -@tutor_courses.each do |course|
+                %h2.l-margin-bottom
+                  =course.name
+                .no-image-box-item.table-box
+                  %table.table{style: 'font-size: 16px;'}
+                    %thead
+                      %tr
+                        %th
+                        %th This month
+                        %th Total lifetime
+                    %tbody
+                      %tr
+                        %td.row-name.text-bold Video Play Time
+                        %td
+                          -if Rails.env.production?
+                            =humanize_time(course.monthly_project_hours_watched * 3600)
+                        %td
+                          -if Rails.env.production?
+                            =humanize_time(course.total_project_hours_watched * 3600)
+                      %tr
+                        %td.row-name.text-bold Quiz Questions Answered
+                        %td
+                          =course.monthly_questions_answered
+                        %td
+                          =course.total_questions_answered
+                      %tr
+                        %td
+                        %td
+                        %td
+
+      .tab-pane.fade#active{role: 'tabpanel'}
+        .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
+          .container-fluid
+            .row
+              .col-md-12.text-center
+                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+                  -if current_user
+                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                  -else
+                    ='You are making good progress!'
+                %p{'style'=>'font-size: 24px'}
+                  Your Active Courses
+            .row.l-margin-bottom-huge
+              -@incomplete_courses.each do |course|
+                .col-md-4.l-margin-top
+                  = link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center', style: 'background-image: 0;' do
+                    .panel-icon.icon-big
+                      %i.glyphicon.glyphicon-pencil
+                    .panel-body
+                      %h4.text-bold.one-line-text
+                        =course.try(:name)
+                      %p
+                        =course.try(:short_description).to_s.truncate(30)
+
+                      - #total_lesson = course.active_children.count
+                      - #complete_lesson = course.number_complete_by_user_or_guid(current_user.id, current_session_guid)
+                      - #complete_percent = course.percentage_complete_by_user_or_guid(current_user.id, current_session_guid)
+                    -#%p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons completed
+                    -#.progress.l-margin-top-big
+                        .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                    .box-label continue
+
+      .tab-pane.fade#completed{role: 'tabpanel'}
+        .l-wrap.active.tab-pane.fade.in{role: 'tabpanel'}
+          .container-fluid
+            .row
+              .col-md-12.text-center
+                %h2.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+                  -if current_user
+                    ="You are making good progress, #{current_user.try(:first_name).try(:capitalize)}!"
+                  -else
+                    ='You are making good progress!'
+                %p{'style'=>'font-size: 24px'}
+                  Your Completed Courses
+            .row.l-margin-bottom-huge
+              -if @completed_courses.count > 0
+                -@completed_courses.each do |course|
+                  .col-md-4.l-margin-top
+                    =link_to course_special_link(course), class: 'box-item no-image-box-item panel text-center' do
+                      .panel-icon.icon-big
+                        %i.glyphicon.glyphicon-pencil
+                      .panel-body
+                        %h4.text-bold.one-line-text
+                          =course.try(:name)
+                        %p
+                          =course.try(:short_description).to_s.truncate(30)
+
+                        - #total_lesson = course.course_modules.count
+                        - #complete_lesson = course.course_modules.where(student_exam_tracks.percentage_complete = 100).count
+                        - #complete_percent = course.percentage_complete_by_user_or_guid(current_user.id, current_session_guid)
+                      -#%p.l-margin-bottom #{complete_lesson} out of #{total_lesson} lessons compeleted
+                      -#.progress.l-margin-top-big
+                          .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+                      .box-label continue
+
+
+=render partial: 'shared/activate_tab'
+:javascript
+    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+    var months = #{@labels},
+        videosThisMonth = #{@videos_this_month},
+        videosOneMonthAgo = #{@videos_one_month_ago},
+        videosTwoMonthsAgo = #{@videos_two_months_ago},
+        videosThreeMonthsAgo = #{@videos_three_months_ago},
+        videosFourMonthsAgo = #{@videos_four_months_ago},
+        videosFiveMonthsAgo = #{@videos_five_months_ago},
+        quizzesThisMonth = #{@quizzes_this_month},
+        quizzesOneMonthAgo = #{@quizzes_one_month_ago},
+        quizzesTwoMonthsAgo = #{@quizzes_two_months_ago},
+        quizzesThreeMonthsAgo = #{@quizzes_three_months_ago},
+        quizzesFourMonthsAgo = #{@quizzes_four_months_ago},
+        quizzesFiveMonthsAgo = #{@quizzes_five_months_ago}
+    var lineChartData = {
+      labels : months,
+      datasets : [
+        {
+          label: "Videos Watched",
+          fillColor : "rgba(220,220,220,0)",
+          strokeColor : "#EE5457",
+          pointColor : "#EE5457",
+          pointStrokeColor : "#EE5457",
+          pointHighlightFill : "#fff",
+          pointHighlightStroke : "rgba(220,220,220,1)",
+          data : [videosFiveMonthsAgo,videosFourMonthsAgo,videosThreeMonthsAgo,videosTwoMonthsAgo,videosOneMonthAgo,videosThisMonth]
+        },
+        {
+          label: "Quizzes Taken",
+          fillColor : "rgba(62,185,206,0.2)",
+          strokeColor : "rgba(62,185,206,1)",
+          pointColor : "rgba(62,185,206,1)",
+          //pointStrokeColor : "#fff",
+          pointHighlightFill : "#fff",
+          pointHighlightStroke : "rgba(151,187,205,1)",
+          data : [quizzesFiveMonthsAgo,quizzesFourMonthsAgo,quizzesThreeMonthsAgo,quizzesTwoMonthsAgo,quizzesOneMonthAgo,quizzesThisMonth]
+        }
+      ]
+    }
+    window.onload = function(){
+      var ctx = document.getElementById("canvas").getContext("2d");
+      window.myLine = new Chart(ctx).Line(lineChartData, {
+        responsive: true,scaleShowVerticalLines: false,datasetStrokeWidth : 3,scaleGridLineColor : "rgba(0,0,0,.1)",
+        scaleOverride: true, scaleStartValue: 0, scaleStepWidth: 10, scaleSteps: 10,scaleShowLabels: true
+      });
+    }
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });

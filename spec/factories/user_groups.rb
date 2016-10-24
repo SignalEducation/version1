@@ -17,6 +17,7 @@
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
 #  updated_at                           :datetime
+#  complimentary                        :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -33,6 +34,7 @@ FactoryGirl.define do
     forum_manager                        false
     subscription_required_at_sign_up     false
     subscription_required_to_see_content false
+    complimentary false
 
     factory :blogger_user_group do
       name 'Blogger Group'
@@ -68,6 +70,7 @@ FactoryGirl.define do
     factory :individual_student_user_group do
       name 'Individual Student Group'
       individual_student true
+      complimentary false
       subscription_required_at_sign_up true
       subscription_required_to_see_content true
     end
@@ -80,6 +83,11 @@ FactoryGirl.define do
     factory :tutor_user_group do
       name 'Tutor Group'
       tutor true
+    end
+
+    factory :complimentary_user do
+      name 'Comp User Group'
+      complimentary true
     end
 
   end

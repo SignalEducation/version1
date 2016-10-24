@@ -4,136 +4,90 @@
 .l-section-profile.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.users.show.h1')
-      .row.l-margin-bottom
-        .col-md-12{role: 'tablist'}
-          .signal-tabs
-            %a{href: '#personal-details', aria: {controls: 'in-progress'}, role: 'tab', data: {toggle: 'tab'}}
-              =t('views.users.show.tabs.personal_details')
-            %a{href: '#subscriptions', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
-              =t('views.users.show.tabs.subscriptions')
-            -if @user.active_subscription
-              %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', data: {toggle: 'tab'}}
-                =t('views.users.show.tabs.payments')
+      %h1.h1.h-separator.h-separator-left.l-margin-bottom
+        Account Info
 
-      .row
-        .l-margin-top-big
-          .l-margin-bottom
-            .tab-content
-              .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
-                .row
-                  .col-md-8.col-md-offset-2{style: 'padding-bottom: 50px;'}
-                    =render partial: 'users/form_personal_details'
-
-              .tab-pane.fade#subscriptions{role: 'tabpanel'}
-                -if @current_subscription || @user.free_member? || @user.expired_free_member?
-                  .row
-                    .col-md-12
-                      .row
-                        .col-sm-10.col-sm-offset-1.l-margin-top-big.l-margin-bottom-big
-                          .col-sm-6
-                            .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
-                              %h4
-                                ="Account Status: "
-                                &nbsp;
-                                =@user.account_status
-                              %br/
-                              %h4
-                                ="Memeber since: "
-                                &nbsp;
-                                =humanize_datetime(@user.created_at)
-                              %br/
-                              -if @current_subscription
-                                %h4
-                                  -last_invoice = @user.invoices.all_in_order.last
-                                  -if last_invoice
-                                    ="Last Payment: "
-                                    &nbsp;
-                                    =number_in_local_currency(last_invoice.total, last_invoice.currency_id)
-                                    =" on "
-                                    =humanize_datetime(last_invoice.created_at)
-                                    %br/
-                                -if @user.valid_subscription
-                                  %h4
-                                    =t('views.users.show.your_next_payment_will_be_on')
-                                    &nbsp;
-                                    =@current_subscription.next_renewal_date
-                                  %br/
-                                  %h4
-                                    ="Billing Interval: "
-                                    &nbsp;
-                                    =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
+      .tabs
+        .col-sm-8
+          .account-tab-content
+            .tab.account-tab#personal-details
+              =render partial: 'users/form_student_personal_details'
 
 
-                                  %br/
-                                %h4
-                                  -if @user.canceled_member?
-                                    =t('views.users.show.your_plan_expired_on')
-                                    =humanize_datetime(@user.active_subscription.updated_at)
-                                  -elsif @user.canceled_pending?
-                                    =t('views.users.show.your_plan_will_expire_on')
-                                    &nbsp;
-                                    =@current_subscription.next_renewal_date.to_s + '.'
+            -if @current_subscription
+              .tab.account-tab#subscriptions
 
-                          .col-sm-6
-                            -if @user.free_member? || @user.expired_free_member?
-                              .l-margin-bottom-big
-                                =link_to 'Upgrade account', user_new_subscription_url(@user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
-
-                            -elsif @user.canceled_member?
-                              %h3=t('views.users.show.reactivate_subscription.h3')
-                              =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
-                            -elsif @user.canceled_pending?
-                              %h3=t('views.users.show.un_cancel_subscription.h3')
-                              =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
+                =render partial: 'subscription_info'
 
 
-                            -elsif @user.active_subscription
-                              .row
-                                .col-sm-10.col-md-offset-2
-                                  =link_to t('views.users.show.change_subscription_plan'), account_change_plan_url, class: 'btn btn-purple  l-margin-bottom'
-                                  %a{href: '#payment-details', aria: {controls: 'completed'}, role: 'tab', class: 'btn btn-cyan l-margin-bottom', data: {toggle: 'tab'}}=t('views.users.show.add_new_card')
-                                  -if @current_subscription.current_status == 'active'
-                                    =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}, class: 'btn btn-red l-margin-bottom'
-                                  -elsif !@current_subscription.current_status.include?('canceled')
-                                    =link_to t('views.users.show.cancel_your_subscription_plan'), @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"}
+                .col-md-12
+                  .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
+                    %h2.l-margin-bottom-big.text-center
+                      =t('views.users.show.your_invoices')
+                    .table-responsive
+                      -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
+                      =render partial: 'invoices/index'
 
-                  -if @current_subscription
-                    .col-md-12
-                      .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
-                        %h2.l-margin-bottom-big.text-center
-                          =t('views.users.show.your_invoices')
-                        .table-responsive
-                          -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
-                          =render partial: 'invoices/index'
+            -if @valid_order
+              .tab.account-tab#orders
 
-              .tab-pane.fade#payment-details{role: 'tabpanel'}
-                .row
-                  .col-md-12{style: 'padding-bottom: 50px;'}
-                    =render partial: 'users/payment_details'
+                =render partial: 'orders/account_info'
+
+            -if @subscription_payment_cards.any?
+              .tab.account-tab#payment-details
+                =render partial: 'users/payment_details'
+
+            .tab.account-tab#completion-certs
+              =render partial: 'users/completion_certificates'
+
+            .tab.account-tab#enrollments
+              =render partial: 'users/enrollments'
 
 
+        .col-sm-4
+          .account-tabs
+            %ul
+              %li
+                %a.active{href: '#personal-details', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.personal_details')
+              -if @current_subscription
+                %li
+                  %a{href: '#subscriptions', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.subscriptions')
+              -if @valid_order
+                %li
+                  %a{href: '#orders', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.orders')
+              -if @subscription_payment_cards.any?
+                %li
+                  %a{href: '#payment-details', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.payments')
+
+              %li
+                %a{href: '#completion-certs', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.certificates')
+              %li
+                %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.enrollments')
+
+
+
+
+
+
+
+  =render partial: 'subscription_payment_cards/modal'
   -if @user.id == current_user.id
     =render partial: 'users/change_password'
-    -if @user.user_group_id == UserGroup.where(individual_student: true).first.id
-      =render partial: 'subscription_payment_cards/modal'
-
-  -if current_user.corporate_customer?
-    =render partial: 'users/company'
 
 
-  :javascript
-    $(document).on('ready', function() {
-      var stripped_url = document.location.toString().split("#");
-      if (stripped_url.length > 1) {
-        $("a[href='#" + stripped_url[1]+"']").first().tab('show');
-      }
-      $('.signal-tabs a:first').addClass('underline').siblings().removeClass('underline');
-    })
-    $('.signal-tabs a').on('click', function(){
-      $(this).addClass('underline').siblings().removeClass('underline');
-    });
 
+
+:javascript
+
+  $(document).ready(function(){
+
+    // Tabs
+    $('.tabs').tabs();
+
+  });

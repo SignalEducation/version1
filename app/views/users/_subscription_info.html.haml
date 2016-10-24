@@ -1,0 +1,76 @@
+.col-md-12
+  .corporate-box-item.table-box#invoices-panel
+
+
+    -if @current_subscription || @user.free_member? || @user.expired_free_member?
+      .col-sm-12
+        .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
+          %h4
+            ="Account Status: "
+            &nbsp;
+            =@user.user_subscription_status
+          %br/
+          %h4
+            ="Memeber since: "
+            &nbsp;
+            =humanize_datetime(@user.created_at)
+          %br/
+          -if @current_subscription
+            %h4
+              -last_invoice = @user.invoices.all_in_order.last
+              -if last_invoice
+                ="Last Payment: "
+                &nbsp;
+                =number_in_local_currency(last_invoice.total, last_invoice.currency_id)
+                =" on "
+                =humanize_datetime(last_invoice.created_at)
+                %br/
+            -if @user.valid_subscription
+              %h4
+                =t('views.users.show.your_next_payment_will_be_on')
+                &nbsp;
+                =@current_subscription.next_renewal_date
+              %br/
+              %h4
+                ="Billing Interval: "
+                &nbsp;
+                =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
+
+
+              %br/
+            %h4
+              -if @user.canceled_member?
+                =t('views.users.show.your_plan_expired_on')
+                =humanize_datetime(@user.active_subscription.updated_at)
+              -elsif @user.canceled_pending?
+                =t('views.users.show.your_plan_will_expire_on')
+                &nbsp;
+                =@current_subscription.next_renewal_date.to_s + '.'
+
+
+        -if @user.free_member? || @user.expired_free_member?
+          .l-margin-bottom-big
+            =link_to 'Upgrade account', user_new_subscription_url(@user.id), class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+
+        -elsif @user.canceled_member?
+          %h3=t('views.users.show.reactivate_subscription.h3')
+          =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+        -elsif @user.canceled_pending?
+          %h3=t('views.users.show.un_cancel_subscription.h3')
+          =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @current_subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
+
+
+        -elsif @user.active_subscription
+          =link_to account_change_plan_url do
+            .btn.btn-purple.l-margin-bottom
+              =t('views.users.show.change_subscription_plan')
+
+          -if @current_subscription.current_status == 'active'
+            =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"} do
+              .btn.btn-red.l-margin-bottom
+                =t('views.users.show.cancel_your_subscription_plan')
+
+          -elsif !@current_subscription.current_status.include?('canceled')
+            =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"} do
+              .btn.btn-red.l-margin-bottom
+                =t('views.users.show.cancel_your_subscription_plan')

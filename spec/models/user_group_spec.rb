@@ -17,6 +17,7 @@
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
 #  updated_at                           :datetime
+#  complimentary                        :boolean          default(FALSE)
 #
 
 require 'rails_helper'

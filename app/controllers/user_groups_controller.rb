@@ -17,6 +17,7 @@
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
 #  updated_at                           :datetime
+#  complimentary                        :boolean          default(FALSE)
 #
 
 class UserGroupsController < ApplicationController
@@ -79,7 +80,7 @@ class UserGroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user_group).permit(:name, :description, :individual_student, :corporate_student, :tutor, :content_manager, :blogger, :corporate_customer, :site_admin, :forum_manager, :subscription_required_at_sign_up, :subscription_required_to_see_content)
+    params.require(:user_group).permit(:name, :description, :individual_student, :corporate_student, :tutor, :content_manager, :blogger, :corporate_customer, :site_admin, :forum_manager, :subscription_required_at_sign_up, :subscription_required_to_see_content, :complimentary)
   end
 
 end

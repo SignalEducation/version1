@@ -1,90 +1,25 @@
 .box-item.question-box.border-same-backcolor.width-bigger.no-content-well#quiz-contents{style: 'min-height: 645px;'}
   %h2=@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
 
-  -if @paywall[:course_content][:reason] == 'not_logged_in'
+  -if @course.subscription
     .l-section.is-bg-purple
       .l-wrap
         .container-fluid
           .row
             .col-md-6.col-md-offset-3
               %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                %a.signupModal{href: '#', data: {toggle: 'modal', target: '#signupModal'}}
-                  =t('views.courses.content_denied.not_logged_in.sign_up_btn')
+                =link_to t('views.courses.content_denied.subscription'), subscription_special_link(current_user.id)
 
               %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.panel.need_to_sign_in')
-
-  -elsif @paywall[:course_content][:reason] == 'account_canceled'
-    .l-section.is-bg-purple
-      .l-wrap
-        .container-fluid
-          .row
-            .col-md-8.col-md-offset-2.text-center
-
-              =link_to user_reactivate_account_url(current_user.id) do
-                .btn.btn-red.btn-wide.l-margin-bottom-big
-                  =t('views.courses.content_denied.account_cancelled.reactivate')
-
-              %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.account_cancelled.h2')
-
-  -elsif @paywall[:course_content][:reason][0..7] == 'account_'
+                =t('views.courses.content_denied.subscription_required')
+  -elsif @course.product
     .l-section.is-bg-purple
       .l-wrap
         .container-fluid
           .row
             .col-md-6.col-md-offset-3
               %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.account_problem.account_details'), account_url(anchor: 'subscriptions')
+                =link_to t('views.courses.content_denied.product'), users_new_order_url(@course.name_url)
 
               %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.account_problem.h2')
-
-  -elsif @paywall[:course_content][:reason] == 'free_trial_expired'
-    .l-section.is-bg-purple
-      .l-wrap
-        .container-fluid
-          .row
-            .col-md-6.col-md-offset-3
-              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.free_trial_expired.upgrade_subscription'), user_new_subscription_url(current_user.id)
-
-              %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.free_trial_expired.h2')
-  -elsif @paywall[:course_content][:reason] == 'free_trial_limit_reached'
-    .l-section.is-bg-purple
-      .l-wrap
-        .container-fluid
-          .row
-            .col-md-8.col-md-offset-2.text-center
-              -#%h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-
-              =link_to user_new_subscription_url(current_user.id) do
-                .btn.btn-red.btn-wide.l-margin-bottom-big
-                  =t('views.courses.content_denied.free_trial_limit_reached.upgrade_subscription')
-
-              %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.free_trial_limit_reached.h2')
-  -elsif @paywall[:course_content][:reason] == 'free_trial'
-    .l-section.is-bg-purple
-      .l-wrap
-        .container-fluid
-          .row
-            .col-md-6.col-md-offset-3
-              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =link_to t('views.courses.content_denied.free_trial.upgrade_subscription'), user_new_subscription_url(current_user.id)
-
-              %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.free_trial.h2')
-  -else
-    .l-section.is-bg-purple
-      .l-wrap
-        .container-fluid
-          .row
-            .col-md-6.col-md-offset-3
-              %h2.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big
-                =t('views.courses.content_denied.other.h2')
-
-              %p.text-center{style: 'color: #fff;'}
-                =t('views.courses.content_denied.other.p')
-      -Rails.logger.error "ERROR: Views/Courses/_content_denied.html.  Unknown reason for refusing content.  @paywall:#{@paywall.inspect}. CurrentUser:#{current_user.try(:id)}. CourseModuleElement.ID:#{@course_module_element.try(:id)}."
+                =t('views.courses.content_denied.product_required')

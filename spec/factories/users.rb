@@ -58,6 +58,9 @@
 #  trial_limit_in_seconds           :integer          default(0)
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
+#  student_number                   :string
+#  terms_and_conditions             :boolean          default(FALSE)
+#  student_user_type_id             :integer
 #
 
 FactoryGirl.define do
@@ -77,6 +80,7 @@ FactoryGirl.define do
       user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       corporate_customer_id             nil
+      student_user_type_id              1
       account_activation_code           'abc123'
 
       factory :inactive_individual_student_user do

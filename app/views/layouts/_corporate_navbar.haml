@@ -26,12 +26,12 @@
                 %li
                   =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
                 %li
-                  =link_to 'Dashboard', dashboard_url
+                  =link_to 'Dashboard', dashboard_special_link
               -else
                 %li
-                  =link_to 'Dashboard', dashboard_url
+                  =link_to 'Dashboard', dashboard_special_link
               %li
-                =link_to 'Library', library_url
+                =link_to 'Library', subscription_groups_url
 
               %li.dropdown.dropdown-normal
                 %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}

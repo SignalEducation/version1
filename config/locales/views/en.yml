@@ -77,6 +77,7 @@ en:
       these_are_optional: These are optional
       time: Time
       toggle_navigation: Toggle navigation
+      terms_and_conditions: I Agree to LearnSignal Terms & Conditions
       tools: Tools
       view: View
       view_tooltip: click to view
@@ -146,6 +147,64 @@ en:
 
       new:
         h1: New Category
+
+    student_user_types:
+      form:
+        name: Name
+        name_placeholder: Name
+        description: Description
+        description_placeholder: Description
+        free_trial: Free Trial
+        subscription: Subscription
+        product_order: Product
+
+      index:
+        h1: Student Types
+
+      show:
+        h1: Student User Type
+
+      edit:
+        h1: Edit Student User Type
+
+      new:
+        h1: New Student User Type
+
+    orders:
+
+      index:
+        h1: Orders
+        subject_course_id: Course
+        user_id: User
+        current_status: Status
+        stripe_guid: Stripe Order ID
+
+      show:
+        h1: Order
+
+      new:
+        h1: New Order
+
+    subject_course_categories:
+      form:
+        name: Name
+        name_placeholder: Category Name
+        payment_type: Payment Type
+        active: Active
+        subdomain: Subdomain
+        subdomain_placeholder: Subdomain - Optional
+
+      index:
+        h1: Course Categories
+
+      show:
+        h1: Course Category
+
+      edit:
+        h1: Edit Course Category
+
+      new:
+        h1: New Course Category
 
     corporate_customers:
       form:
@@ -241,30 +300,10 @@ en:
         coming_soon: "We don't have any content for this course module right now."
 
       content_denied:
-        panel:
-          need_to_sign_in: You need to be a Learn Signal member to view this material.
-        not_logged_in:
-          sign_up_btn: Sign up for Learn Signal
-          start_free_trial: Start your free trial
-          h2: Please Sign In To View This Content
-        account_cancelled:
-          h2: Your account is cancelled. Please re-activate it to continue.
-          reactivate: 'Re-activate Your Account'
-        account_problem:
-          h2: Looks like there is a problem with your account
-          account_details: Please Check Your Account Details
-        other:
-          h2: Oops! Something has gone wrong.
-          p: We have been notified, and will investigate it immediately.
-        free_trial_expired:
-          h2: Your free trial period has expired. Please upgrade your subscription.
-          upgrade_subscription: Upgrade Subscription
-        free_trial_limit_reached:
-          h2: You have reached your free trial limit of 200 minutes of content. Please upgrade your subscription to continue.
-          upgrade_subscription: Upgrade Subscription
-        free_trial:
-          h2: Your free trial is limited to certain content. Please upgrade your subscription to get full access.
-          upgrade_subscription: Upgrade Subscription
+          subscription: Upgrade to a Subscription
+          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
+          product: Purchase this Course
+          product_required: You must first purchase this course to access it's content.
 
       show_results:
         h1: 'Results:'
@@ -591,6 +630,8 @@ en:
         seo_description: SEO Description
         seo_description_placeholder: SEO Description Placeholder
         subscription_plan_category_id: Subscription Plan Category
+        group_id: Group
+        subject_course_id: Course
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
 
@@ -632,6 +673,7 @@ en:
         vat_rate_id: "VAT rated"
         issued_at: "Issued at"
         date: Date
+        subject_course: Course
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"
@@ -718,6 +760,28 @@ en:
       index:
         continue_course: Continue Course
         start_course: Start Course
+
+    products:
+      form:
+        name: Name
+        name_placeholder: Name of Product
+        price: Price
+        price_placeholder: Price of Product
+        active: Active
+        currency: Currency
+        subject_course: Course
+
+      index:
+        h1: Products
+
+      show:
+        h1: Product
+
+      edit:
+        h1: Edit Product
+
+      new:
+        h1: New Product
 
     question_banks:
       form:
@@ -895,6 +959,7 @@ en:
         tutor_id: Tutor
         live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
+        subject_course_category_id: Course Category
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
@@ -912,10 +977,13 @@ en:
         group_id: Group
         is_cpd: Is this a CPD course?
         certificate: Completion Cert
+        enrollment_option: Enrollment
         cpd_hours: CPD Hours
         cpd_hours_placeholder: Required CPD Hours
+        email_content: Welcome Email Content
         cpd_pass_rate: Pass Rate for this course
         cpd_pass_rate_placeholder: CPD Pass Rate
+
 
       index:
         h1: Courses
@@ -941,6 +1009,18 @@ en:
 
       new:
         h1: New Course
+
+    subject_course_user_log:
+      show:
+        course: Course
+        completed_at: Completed At
+
+    enrollments:
+      show:
+        course: Course
+        started_at: Started At
+        progress: Progress
+
 
 
     subscription_plans:
@@ -1050,10 +1130,12 @@ en:
         current_password_placeholder: Current password
         password: Password
         password_placeholder: New Password
-        password_confirmation: Password confirmation
+        password_confirmation_placeholderpassword_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
         address: Address
-        address_placeholder: Your billing address
+        address_placeholder: Billing address
+        student_number: Student Number - If you have one
+        student_number_placeholder: Official Student Number
         first_description: Description 1
         first_description_placeholder: First paragraph
         second_description: Description 2
@@ -1104,7 +1186,7 @@ en:
         h1: Account
         edit: Edit Account
         add_new_card: Update Payment Info
-        new_card: Click Here To Add New Card
+        new_card: Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
           link: Change your password
@@ -1127,10 +1209,13 @@ en:
           button_call_to_action: 'Un-cancel Now'
         re_subscribe_plan: Select a Plan below to reactivate your account
         tabs:
-          personal_details: Personal details
+          personal_details: Personal Info
           corporation: Corporation
-          subscriptions: Account Details
-          payments: Payment Information
+          subscriptions: Subscription Info
+          orders: Purchase History
+          payments: Payment Info
+          certificates: Certificates
+          enrollments: Enrollments
           notifications: Notifications
           admin: Admin
           referral_code: Referrals
@@ -1210,6 +1295,7 @@ en:
         forum_manager: Forum manager
         subscription_required_at_sign_up: Subscription required at sign up
         subscription_required_to_see_content: Subscription required to see content
+        complimentary: Complimentary
 
       edit:
         h1: Edit User Group
@@ -1523,9 +1609,10 @@ en:
     white_papers:
       form:
         name: Title
+        name_placeholder: Title of White Paper
         name_url: Name URL
         name_url_placeholder: Name URL
-        name_placeholder: Title of White Paper
+        subject_course_id: Course
         description: Description(This accepts html tags)
         description_placeholder: Enter description here
         file_file_name: File name

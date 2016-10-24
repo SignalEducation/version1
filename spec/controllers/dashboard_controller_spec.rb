@@ -9,7 +9,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :student
         expect_bounce_as_not_signed_in
       end
     end
@@ -25,7 +25,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :student
         expect(response).to have_http_status(:success)
       end
     end
@@ -41,7 +41,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :tutor
         expect(response).to have_http_status(:success)
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :corporate_student
         expect(response).to have_http_status(:success)
       end
     end
@@ -73,7 +73,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :corporate_customer
         expect(response).to have_http_status(:success)
       end
     end
@@ -89,7 +89,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :student
         expect(response).to have_http_status(:success)
       end
     end
@@ -105,7 +105,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :student
         expect(response).to have_http_status(:success)
       end
     end
@@ -121,7 +121,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :student
         expect(response).to have_http_status(:success)
       end
     end
@@ -137,7 +137,7 @@ RSpec.describe DashboardController, :type => :controller do
 
     describe "GET index" do
       it "returns http success" do
-        get :index
+        get :admin
         expect(response).to have_http_status(:success)
       end
     end

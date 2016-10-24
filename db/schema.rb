@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160820171523) do
+ActiveRecord::Schema.define(version: 20161009100249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -294,6 +294,15 @@ ActiveRecord::Schema.define(version: 20160820171523) do
   add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
   add_index "currencies", ["sorting_order"], name: "index_currencies_on_sorting_order", using: :btree
 
+  create_table "enrollments", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "subject_course_id"
+    t.integer  "subject_course_user_log_id"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.boolean  "active",                     default: false
+  end
+
   create_table "flash_card_stacks", force: :cascade do |t|
     t.integer  "course_module_element_flash_card_pack_id"
     t.string   "name"
@@ -365,6 +374,8 @@ ActiveRecord::Schema.define(version: 20160820171523) do
     t.string   "public_url"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.integer  "group_id"
+    t.integer  "subject_course_id"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
@@ -480,6 +491,62 @@ ActiveRecord::Schema.define(version: 20160820171523) do
   end
 
   add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
+
+  create_table "order_transactions", force: :cascade do |t|
+    t.integer  "order_id"
+    t.integer  "user_id"
+    t.integer  "product_id"
+    t.string   "stripe_order_id"
+    t.string   "stripe_charge_id"
+    t.boolean  "live_mode",        default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "order_transactions", ["order_id"], name: "index_order_transactions_on_order_id", using: :btree
+  add_index "order_transactions", ["product_id"], name: "index_order_transactions_on_product_id", using: :btree
+  add_index "order_transactions", ["stripe_charge_id"], name: "index_order_transactions_on_stripe_charge_id", using: :btree
+  add_index "order_transactions", ["stripe_order_id"], name: "index_order_transactions_on_stripe_order_id", using: :btree
+  add_index "order_transactions", ["user_id"], name: "index_order_transactions_on_user_id", using: :btree
+
+  create_table "orders", force: :cascade do |t|
+    t.integer  "product_id"
+    t.integer  "subject_course_id"
+    t.integer  "user_id"
+    t.string   "stripe_guid"
+    t.string   "stripe_customer_id"
+    t.boolean  "live_mode",                 default: false
+    t.string   "current_status"
+    t.string   "coupon_code"
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.text     "stripe_order_payment_data"
+  end
+
+  add_index "orders", ["product_id"], name: "index_orders_on_product_id", using: :btree
+  add_index "orders", ["stripe_customer_id"], name: "index_orders_on_stripe_customer_id", using: :btree
+  add_index "orders", ["stripe_guid"], name: "index_orders_on_stripe_guid", using: :btree
+  add_index "orders", ["subject_course_id"], name: "index_orders_on_subject_course_id", using: :btree
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+
+  create_table "products", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "subject_course_id"
+    t.integer  "mock_exam_id"
+    t.string   "stripe_guid"
+    t.boolean  "live_mode",         default: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.boolean  "active",            default: false
+    t.integer  "currency_id"
+    t.decimal  "price"
+    t.string   "stripe_sku_guid"
+  end
+
+  add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
+  add_index "products", ["name"], name: "index_products_on_name", using: :btree
+  add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
+  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "question_banks", force: :cascade do |t|
     t.string   "question_selection_strategy"
@@ -672,6 +739,32 @@ ActiveRecord::Schema.define(version: 20160820171523) do
   add_index "student_exam_tracks", ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id", using: :btree
   add_index "student_exam_tracks", ["user_id"], name: "index_student_exam_tracks_on_user_id", using: :btree
 
+  create_table "student_user_types", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "subscription",  default: false
+    t.boolean  "product_order", default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.boolean  "free_trial",    default: false
+  end
+
+  add_index "student_user_types", ["name"], name: "index_student_user_types_on_name", using: :btree
+  add_index "student_user_types", ["product_order"], name: "index_student_user_types_on_product_order", using: :btree
+  add_index "student_user_types", ["subscription"], name: "index_student_user_types_on_subscription", using: :btree
+
+  create_table "subject_course_categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "payment_type"
+    t.boolean  "active",       default: false
+    t.string   "subdomain"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "subject_course_categories", ["name"], name: "index_subject_course_categories_on_name", using: :btree
+  add_index "subject_course_categories", ["subdomain"], name: "index_subject_course_categories_on_subdomain", using: :btree
+
   create_table "subject_course_user_logs", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "session_guid"
@@ -722,6 +815,9 @@ ActiveRecord::Schema.define(version: 20160820171523) do
     t.datetime "live_date"
     t.boolean  "certificate",                             default: false, null: false
     t.string   "hotjar_guid"
+    t.boolean  "enrollment_option",                       default: false
+    t.integer  "subject_course_category_id"
+    t.text     "email_content"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -921,6 +1017,7 @@ ActiveRecord::Schema.define(version: 20160820171523) do
     t.boolean  "subscription_required_to_see_content", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "complimentary",                        default: false
   end
 
   create_table "user_notifications", force: :cascade do |t|
@@ -1000,6 +1097,9 @@ ActiveRecord::Schema.define(version: 20160820171523) do
     t.integer  "trial_limit_in_seconds",                       default: 0
     t.boolean  "free_trial",                                   default: false
     t.integer  "trial_limit_in_days",                          default: 0
+    t.string   "student_number"
+    t.boolean  "terms_and_conditions",                         default: false
+    t.integer  "student_user_type_id"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
@@ -1077,6 +1177,7 @@ ActiveRecord::Schema.define(version: 20160820171523) do
     t.datetime "cover_image_updated_at"
     t.string   "name_url"
     t.string   "name"
+    t.integer  "subject_course_id"
   end
 
 end

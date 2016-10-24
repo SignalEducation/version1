@@ -1,0 +1,43 @@
+-if current_user
+  -# Logged In User
+  -if current_user.individual_student?
+    -# Logged In Student
+    -if @course.subscription
+      -# A Subscription Course
+      -if current_user.free_member?
+        .notice.warning
+          .fa.fa-info-circle.icon
+          Upgrade Your Account for Full Access.
+          =link_to user_new_subscription_url(current_user) do
+            Upgrade Account?
+
+      -elsif current_user.expired_free_member?
+        .notice.warning
+          .fa.fa-info-circle.icon
+          Your Free Trial has expired. You need to upgrade your account to continue learning.
+          =link_to user_new_subscription_url(current_user) do
+            Upgrade Account?
+
+      -elsif current_user.canceled_member?
+        .notice.warning
+          .fa.fa-info-circle.icon
+          Your Account is canceled.
+          =link_to user_reactivate_account_url(current_user.id) do
+            Reactivate Account?
+
+      -elsif current_user.no_subscription_user
+        .notice.warning
+          .fa.fa-info-circle.icon
+          A Subscription is required to access this content
+          =link_to subscription_special_link(current_user.id) do
+            Upgrade to Subscription
+
+-else
+  -# Logged out User
+  .notice.warning
+    .fa.fa-info-circle.icon
+    An Account is required to access this content.
+    &#160;
+    =link_to new_student_url do
+      Claim your Free Trial?
+

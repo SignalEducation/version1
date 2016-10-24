@@ -32,6 +32,9 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
+#  enrollment_option                       :boolean          default(FALSE)
+#  subject_course_category_id              :integer
+#  email_content                           :text
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -41,21 +44,28 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid
+ :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content
 
   # Constants
 
   # relationships
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  belongs_to :subject_course_category
   has_and_belongs_to_many :groups
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
+  has_many :enrollments
   has_one :question_bank
+  has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :corporate_group_grants
+  has_many :products
+  has_many :orders
+  has_many :white_papers
+
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
@@ -64,10 +74,13 @@ class SubjectCourse < ActiveRecord::Base
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
   validates :tutor_id, presence: true
   validates :description, presence: true
+  validates :subject_course_category_id, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :forum_url, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true
+  validates :email_content, presence: true, on: :update, if: :enrollment_option
+
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
@@ -85,6 +98,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
+  scope :in_category, lambda { |cat_id| where(subject_course_category_id: cat_id) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
@@ -100,8 +114,32 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   # instance methods
+  def users_allowed_access
+    self.orders.map(&:user_id) if self.subject_course_category_id == SubjectCourseCategory.all_product.first.id
+  end
+
+  def subscription
+    self.subject_course_category_id == SubjectCourseCategory.default_subscription_category.id
+  end
+
+  def product
+    self.subject_course_category_id == SubjectCourseCategory.default_product_category.id
+  end
+
+  def corporate
+    self.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
+  end
+
+  def home_page
+    self.home_pages.all_in_order.first
+  end
+
   def active_children
     self.children.all_active.all_in_order
+  end
+
+  def first_active_child
+    self.active_children.first
   end
 
   def children
@@ -132,6 +170,10 @@ class SubjectCourse < ActiveRecord::Base
 
   def started_by_user_or_guid(user_id, session_guid)
     self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+  end
+
+  def enrolled_user_ids
+    self.enrollments.map(&:user_id)
   end
 
   def destroyable?

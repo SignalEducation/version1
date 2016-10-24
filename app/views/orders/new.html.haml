@@ -1,0 +1,47 @@
+.home_page_layout
+  %header.purchase-background
+    .l-wrap-purchase
+      =render partial: 'layouts/transparent_navbar'
+    .l-wrap-session.l-margin-top
+      %h1.h-white.h-separator.h-separator-center.text-center
+        Payment Details
+
+  .l-wrap-product-user
+    .row
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
+      .col-md-12
+        .col-md-4.l-margin-top
+          .course-side-info
+            %h2.h-separator.h-separator-left.l-margin-bottom
+              =@course.name
+            %p.h3
+              ='Total: '
+              =number_in_local_currency(@product.price, @product.currency_id)
+
+
+        .col-md-8
+          .new-product-user-form.l-margin-top
+            =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
+              =f.hidden_field :subject_course_id, value: @course.id
+              =f.hidden_field :stripe_token
+              =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+              .row
+                .col-md-12
+                  .payment-heading
+
+                  =render partial: 'order_card_form', locals: {f: f}
+
+                  .container-fluid
+                    .col-md-12
+                      .col-md-4.col-sm-offset-4.text-center
+                        .spinner
+                          .bounce1
+                          .bounce2
+                          .bounce3
+
+
+                  .row.l-margin-top-big
+                    .col-md-10.col-md-offset-1
+                      =f.submit 'Purchase Course', class: 'btn btn-red'
+

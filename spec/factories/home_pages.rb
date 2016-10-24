@@ -9,6 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
+#  group_id                      :integer
+#  subject_course_id             :integer
 #
 
 FactoryGirl.define do
@@ -16,6 +18,8 @@ FactoryGirl.define do
     seo_title 'MyString'
     seo_description 'MyString'
     subscription_plan_category_id 1
+    group_id 1
+    subject_course_id 1
     sequence(:public_url)           { |n| "abc#{n}" }
 
     factory :home do
@@ -28,6 +32,10 @@ FactoryGirl.define do
 
     factory :cfa_home do
       public_url 'cfa'
+    end
+
+    factory :product_1_home do
+      public_url 'product_1'
     end
 
   end

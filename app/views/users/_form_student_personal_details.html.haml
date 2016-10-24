@@ -1,0 +1,41 @@
+=form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
+  .row
+    .col-md-12.l-margin-bottom-big
+      =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :email, t('views.users.form.email'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :address, t('views.users.form.address'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      -unless @user.terms_and_conditions
+        %br/
+        .form-group
+          .col-sm-12
+            .checkbox
+              %label
+                =f.check_box :terms_and_conditions
+                =t('views.general.terms_and_conditions')
+
+
+
+  .row.l-margin-top-big
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+
+      =link_to('#', data: {toggle: 'modal', target: '#change_password_modal'}) do
+        .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top
+          =t('views.users.show.change_your_password.link')

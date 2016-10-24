@@ -1,0 +1,54 @@
+.margin-top
+
+-if @first_active_log
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
+  .l-section-small.is-bg-asphalt
+    .l-wrap
+      .container-fluid
+        %h1.h1.h-separator.h-separator-left.l-margin-bottom
+          Dashboard
+
+        .row.tabs
+          .col-sm-3
+            .account-tabs
+              %ul
+                %li
+                  %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
+                    Enrollments
+                -if @non_enrollment_logs.any?
+                  %li
+                    %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
+                      Activity
+          .col-sm-9
+
+            .account-tab-content
+              .tab.account-tab#enrollments
+                =render partial: 'enrollments'
+
+              -if @non_enrollment_logs.any?
+                .tab.account-tab#activity
+                  =render partial: 'activity'
+
+-else
+
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
+  .l-section-small.is-bg-asphalt
+    .l-wrap
+      .container-fluid
+        %h1.h1.h-separator.h-separator-left.l-margin-bottom
+          Dashboard
+
+
+
+:javascript
+
+  $(document).ready(function(){
+
+    // Tabs
+    $('.tabs').tabs();
+
+  });

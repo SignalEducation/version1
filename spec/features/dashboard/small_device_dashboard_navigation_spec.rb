@@ -24,12 +24,6 @@ describe 'User navigating through the dashboard:', type: :feature do
 
   describe 'navigates to first cmes' do
 
-    scenario 'not logged-in user will be redirected as not allowed', js: true  do
-      visit root_path
-      visit dashboard_path
-      expect(page).to have_content 'You must be signed in to access that page - please sign in'
-    end
-
     xit scenario 'when logged in as an individual user', js: true do
       visit root_path
       sign_up_and_upgrade_from_free_trial_small_device

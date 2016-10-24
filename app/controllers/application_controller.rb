@@ -163,67 +163,13 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_is_of_type
 
-  def old_paywall_checkpoint(cme_position, is_a_jumbo_quiz)
-    #Factors in allowing X number of cme's without account or on free trial
-    number_of_free_cmes_allowed = 2
-    allowed     = {course_content: {view_all: true, reason: nil},
-                   forum: {read: true, write: true},
-                   blog: {comment: true} }
-    not_allowed = {course_content: {view_all: false, reason: ''},
-                   forum: {read: true, write: false},
-                   blog: {comment: false} }
-    subscription_in_charge = current_user.active_subscription
-    if current_user.nil?
-      result = not_allowed
-      result[:course_content][:reason] = 'not_logged_in'
-    elsif !current_user.user_group.subscription_required_to_see_content
-      result = allowed
-    elsif subscription_in_charge && subscription_in_charge.free_trial? && (cme_position.to_i > number_of_free_cmes_allowed || is_a_jumbo_quiz)
-      result = allowed
-      result[:course_content][:reason] = 'free_trial'
-    elsif subscription_in_charge && subscription_in_charge.free_trial? && subscription_in_charge.free_trial_expired?
-      result = not_allowed
-      result[:course_content][:reason] = "free_trial_expired"
-    elsif current_user.permission_to_see_content
-      result = allowed
-    elsif !current_user.permission_to_see_content && current_user.user_status == 'canceled_paying_member'
-      result = not_allowed
-      result[:course_content][:reason] = 'account_canceled'
-    elsif !current_user.permission_to_see_content && current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
-      result = not_allowed
-      result[:course_content][:reason] = "free_trial_limit_reached"
-    else
-      result = not_allowed
-      result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
-    end
-    result
-  end
-
   def paywall_checkpoint
     allowed     = {course_content: {view_all: true, reason: nil}}
-    not_allowed = {course_content: {view_all: false, reason: ''}}
-    subscription_in_charge = current_user.active_subscription
 
-    if current_user.nil?
-      result = not_allowed
-      result[:course_content][:reason] = 'not_logged_in'
-    elsif !current_user.user_group.subscription_required_to_see_content
+    if current_user && current_user.permission_to_see_content(@course)
       result = allowed
-    elsif current_user.permission_to_see_content
-      result = allowed
-    elsif !current_user.permission_to_see_content && current_user.expired_free_member?
-      result = not_allowed
-      if current_user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
-        result[:course_content][:reason] = "free_trial_limit_reached"
-      else
-        result[:course_content][:reason] = "free_trial_expired"
-      end
-    elsif !current_user.permission_to_see_content && current_user.canceled_member?
-      result = not_allowed
-      result[:course_content][:reason] = 'account_canceled'
     else
       result = not_allowed
-      result[:course_content][:reason] = 'account_' + (subscription_in_charge.try(:current_status) || 'canceled')
     end
     result
   end
@@ -357,28 +303,59 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_module_special_link
 
-  # customer-facing
+
+
+  # Library Navigation Links
   def library_special_link(the_thing)
     if the_thing.class == Group
       the_thing = the_thing
-      library_group_url(
+      subscription_group_url(
                   the_thing.name_url
       )
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
-      library_course_url(
-          the_thing.name_url
-      )
+
+      if the_thing.subject_course_category_id == SubjectCourseCategory.default_subscription_category.id
+        #Sub Course
+        subscription_course_url(
+            the_thing.name_url
+        )
+
+      elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_product_category.id
+        #Product Course
+
+        if current_user
+          diploma_course_url(
+              the_thing.name_url
+          )
+        elsif the_thing.home_page
+          product_course_url(
+              the_thing.home_page.public_url
+          )
+        else
+          all_diplomas_url
+        end
+
+      elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
+        #Corp Course
+        subscription_course_url(
+            the_thing.name_url
+        )
+
+      else
+        root_url
+      end
     else
-      library_url
+      root_url
     end
   end
   helper_method :library_special_link
 
+
   def course_special_link(the_thing, direction='forwards')
     if the_thing.class == CourseModule
-      library_course_url(
-              the_thing.subject_course.name_url
+      library_special_link(
+              the_thing.subject_course
       )
     elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
       course_url(
@@ -387,11 +364,61 @@ class ApplicationController < ActionController::Base
               the_thing.name_url
       )
     else
-      # shouldn't be here - re-route to /library/bla-bla
       library_special_link(the_thing)
     end
   end
   helper_method :course_special_link
+
+  def dashboard_special_link(user = nil)
+    user = user || current_user
+    redirect_to root_url unless user
+    case user.user_group_id
+      when UserGroup.default_student_user_group.id
+        student_dashboard_url
+      when UserGroup.default_admin_user_group.id
+        admin_dashboard_url
+      when UserGroup.default_tutor_user_group.id
+        tutor_dashboard_url
+      when UserGroup.default_corporate_student_user_group.id
+        corporate_student_dashboard_url
+      when UserGroup.default_corporate_customer_user_group.id
+        corporate_customer_dashboard_url
+    else
+      student_dashboard_url
+    end
+  end
+  helper_method :dashboard_special_link
+
+  def new_product_order_link(course_url)
+    course = SubjectCourse.find_by_name_url(course_url)
+    if current_user
+      if current_user.valid_subject_course_ids.include?(course.id)
+         library_special_link(course)
+       else
+         users_new_order_url(course_url)
+       end
+    else
+      new_product_user_url(course_url)
+    end
+  end
+  helper_method :new_product_order_link
+
+  def subscription_special_link(user_id)
+    user = User.find(user_id)
+    if user.individual_student?
+      if user.subscriptions.any?
+        if user.subscriptions.last.current_status == 'canceled'
+          reactivate_account_url
+        end
+
+      else
+        user_new_subscription_url(user_id)
+      end
+    else
+      root_url
+    end
+  end
+  helper_method :subscription_special_link
 
   def seo_title_maker(last_element, seo_description, seo_no_index)
     @seo_title = last_element ?

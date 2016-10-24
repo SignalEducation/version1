@@ -13,7 +13,7 @@ describe 'The student sign-up process', type: :feature do
 
   before(:each) do
     activate_authlogic
-    visit root_path
+    visit all_groups_path
   end
 
   #### The Successful Path
@@ -28,7 +28,7 @@ describe 'The student sign-up process', type: :feature do
     end
 
     describe 'GBP / UK /' do
-      scenario 'Free Plam', js: true do
+      scenario 'Free Plan', js: true do
         user_password = ApplicationController.generate_random_code(10)
         within('#sign-up-form') do
           student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
@@ -49,9 +49,7 @@ describe 'The student sign-up process', type: :feature do
   describe 'sign-up with to free trial valid details on users#new page:' do
     describe 'Euro / Ireland /' do
       scenario 'Free Plan', js: true do
-        within('.navbar.navbar-default') do
-          find('.sign-up-link').click
-        end
+        visit new_student_path
         user_password = ApplicationController.generate_random_code(10)
         within('.login-form') do
           signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
@@ -61,9 +59,7 @@ describe 'The student sign-up process', type: :feature do
 
     describe 'GBP / UK /' do
       scenario 'Free Plam', js: true do
-        within('.navbar.navbar-default') do
-          find('.sign-up-link').click
-        end
+        visit new_student_path
         user_password = ApplicationController.generate_random_code(10)
         within('.login-form') do
           signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
@@ -73,9 +69,7 @@ describe 'The student sign-up process', type: :feature do
 
     describe 'USD / USA /' do
       scenario 'Free Plan', js: true do
-        within('.navbar.navbar-default') do
-          find('.sign-up-link').click
-        end
+        visit new_student_path
         user_password = ApplicationController.generate_random_code(10)
         within('.login-form') do
           signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)

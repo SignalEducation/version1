@@ -17,6 +17,7 @@
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
 #  name                     :string
+#  subject_course_id        :integer
 #
 
 require 'rails_helper'

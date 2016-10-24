@@ -58,6 +58,9 @@
 #  trial_limit_in_seconds           :integer          default(0)
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
+#  student_number                   :string
+#  terms_and_conditions             :boolean          default(FALSE)
+#  student_user_type_id             :integer
 #
 
 require 'rails_helper'
@@ -67,7 +70,7 @@ describe User do
   subject { FactoryGirl.build(:individual_student_user) }
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid trial_ended_notification_sent_at crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number)
 
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
@@ -116,7 +119,7 @@ describe User do
 
   it { should_not validate_presence_of(:topic_interest) }
 
-  it { should validate_presence_of(:password).on(:create) }
+  xit { should validate_presence_of(:password).on(:create) }
   it { should validate_confirmation_of(:password).on(:create) }
   it { should validate_length_of(:password).is_at_least(6).is_at_most(255) }
 
@@ -127,7 +130,7 @@ describe User do
   context "user email validation" do
     before do
       user_group = FactoryGirl.create(:individual_student_user_group)
-      @user = FactoryGirl.create(:user, user_group_id: user_group.id)
+      @user = FactoryGirl.create(:user, user_group_id: user_group.id, student_user_type_id: 1)
     end
 
     it "validates uniqueness of email" do
@@ -149,7 +152,7 @@ describe User do
 
     it "does not validate presence for non-corporate users" do
       UserGroup.where(corporate_customer: false, corporate_student: false).each do |ug|
-        user = FactoryGirl.create(:user, user_group_id: ug.id)
+        user = FactoryGirl.create(:user, user_group_id: ug.id, student_user_type_id: 1)
         expect(user).not_to validate_presence_of(:corporate_customer_id)
       end
     end

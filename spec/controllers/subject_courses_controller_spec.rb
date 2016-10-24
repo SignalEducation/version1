@@ -32,6 +32,9 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
+#  enrollment_option                       :boolean          default(FALSE)
+#  subject_course_category_id              :integer
+#  email_content                           :text
 #
 
 require 'rails_helper'
@@ -43,7 +46,7 @@ describe SubjectCoursesController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:subject_course_3) { FactoryGirl.create(:inactive_subject_course) }
+  let!(:subject_course_5) { FactoryGirl.create(:inactive_subject_course) }
   let!(:current_corp) { FactoryGirl.create(:corporate_customer) }
   let!(:corp_group) { FactoryGirl.create(:group, corporate_customer_id: corporate_customer_user.corporate_customer_id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subject_course) }
@@ -298,7 +301,7 @@ describe SubjectCoursesController, type: :controller do
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_3.id
+        delete :destroy, id: subject_course_5.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
     end
@@ -500,7 +503,7 @@ describe SubjectCoursesController, type: :controller do
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_3.id
+        delete :destroy, id: subject_course_5.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
     end
@@ -713,7 +716,7 @@ describe SubjectCoursesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_courses', 3)
+        expect_index_success_with_model('subject_courses', 5)
       end
     end
 
@@ -796,7 +799,7 @@ describe SubjectCoursesController, type: :controller do
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_3.id
+        delete :destroy, id: subject_course_5.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
     end
@@ -813,7 +816,7 @@ describe SubjectCoursesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_courses', 3)
+        expect_index_success_with_model('subject_courses', 5)
       end
     end
 
@@ -896,7 +899,7 @@ describe SubjectCoursesController, type: :controller do
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_3.id
+        delete :destroy, id: subject_course_5.id
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
     end

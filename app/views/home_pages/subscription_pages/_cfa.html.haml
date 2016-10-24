@@ -1,0 +1,100 @@
+.hero-cfa.home_page_layout
+  %header.cfa-background
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
+
+      .cfa#sign-up
+        .row
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white.l-margin-bottom-huge
+              Prepare for your CFA exams with an online revision course
+            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
+              CFA exam revision courses online for a small monthly subscription
+
+            -country_count = '83 Countries'
+            %p.h7
+              ="Learners in "
+              =link_to country_count, '#', class: 'no-link-style'
+              ="are using our platform to progress their careers"
+
+          .col-sm-6.col-md-4.col-lg-4#sign-up-form
+            =render partial: 'sign_up_form'
+
+
+.cfa-business
+  .l-wrap
+    .l-section
+      .container-fluid
+        .row
+          .col-sm-12
+            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+              Features to support your CFA study
+        .row
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('phone-icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
+              Anywhere, Anytime
+            %p.p
+              Study for your specific topics anytime, anywhere, on any device.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
+              Small Monthly Subscription
+            %p.p
+              Our subscription model offers you more flexibility than fixed price providers.
+          .col-sm-4
+            %h3.l-margin-bottom-big
+              =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
+              Expert Author Network
+            %p.p
+              Learn from the best with training designed and developed by industry experts.
+
+.l-section.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-sm-12
+          %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
+            Access all CFA Courses
+      .course-list-wrap
+        .row
+          .col-sm-12.col-md-12
+            -@group.try(:active_children).all_in_order.each do |course|
+              .col-sm-6
+                =link_to library_special_link(course), class: 'course-panel course-panel-inner group-inner' do
+                  %h3.h2.course-panel-title.text-center
+                    =course.name
+                  %p.p.course-panel-desc
+                    =course.short_description.truncate(150)
+
+.start-trial
+  %a.btn-block.btn-block-red{href: '#sign-up'}
+    .l-wrap
+      .l-section-small
+        .container-fluid
+          .col-sm-12
+            %p.h5.text-center
+              Become a member
+            %p.h2.text-center
+              Start your 7-day free trial
+              %span.ico-arrow-right-r
+
+
+:javascript
+  var nav = responsiveNav(".nav-collapse");
+
+  // Smooth scroll to top
+  $(document).ready(function(){
+    $('a[href^="#"]').on('click',function (e) {
+      e.preventDefault();
+
+      var target = this.hash,
+      $target = $(target);
+
+      $('html, body').stop().animate({
+        'scrollTop': $target.offset().top
+      }, 500, 'swing', function () {
+        window.location.hash = target;
+      });
+    });
+  });

@@ -2,6 +2,20 @@
 // 0. Imports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+@font-face {
+  font-family: 'Montserrat-Hairline';
+  src: font-url('montserrat_hairline.ttf');
+}
+@font-face {
+  font-family: 'Montserrat-Light';
+  src: font-url('montserrat_light.ttf');
+}
+@font-face {
+  font-family: 'Montserrat-Regular';
+  src: font-url('montserrat_reg.ttf');
+}
+
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import 'bootstrap-datetimepicker';
@@ -14,7 +28,9 @@
 // 1. Colours & Fonts
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$sans-font: HelveticaNeue, Helvetica, Arial, sans-serif;
+
+//$sans-font: Rubik, Montserrat, HelveticaNeue, Helvetica, Arial, sans-serif;
+$sans-font: 'Rubik', Montserrat, HelveticaNeue;
 $gutter: 20px;
 $white: #fff;
 
@@ -91,6 +107,12 @@ body {
   .external_layout {      // These allow for different BG colours on external pages [sign-in, sign-up, corp-home]
     background: #34495e;
   }
+  .home_page_layout {
+    min-width: 320px;
+    line-height: 1;
+    font-family: $sans-font;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 
@@ -98,6 +120,13 @@ body {
 // 3. Text Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+img{ max-width: 100%;}
+* { margin: 0 auto;}
+:focus{ outline: none;}
+.wrapper{
+  max-width: 970px;
+  padding: 0 10px;
+}
 
 a {
   color: $colour-12;
@@ -109,7 +138,7 @@ a {
 a:hover,
 a:focus {
   color: shade($colour-13, 10%);
-  text-decoration: underline;
+  //text-decoration: underline;
 
 }
 a:active {
@@ -363,6 +392,13 @@ label, .label {
 }
 .login-form {
   padding: $gutter*2 $gutter/2;
+  background: $colour-2;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+  text-align: left;
+  color: #fff !important;
+}
+.new-product-user-form {
+  padding: $gutter*2 $gutter;
   background: $colour-2;
   -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
   text-align: left;
@@ -822,6 +858,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-wrap-default {
   padding: 100px 0 170px 0;
 }
+.l-wrap-product-user {
+  padding: $gutter*2 $gutter 170px $gutter;
+}
 .l-wrap-courses {
   padding: 20px 0 20px 0;
   margin: $gutter*2.5 $gutter*10;
@@ -891,6 +930,44 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(md-min) {
     max-width: 1600px;
   }
+}
+.l-wrap-home {
+  padding: 0 $gutter/2;
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+
+  @include breakpoint(md-min) {
+    padding: 0 $gutter/2;
+    max-width: 1000px;
+  }
+
+}
+.l-wrap-purchase {
+  padding: 0 $gutter/2;
+  margin-bottom: $gutter/2;
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+
+  @include breakpoint(md-min) {
+    padding: 0 $gutter/2;
+    max-width: 1000px;
+  }
+
+}
+.l-wrap-session {
+  padding: 0 $gutter/2;
+  margin-bottom: $gutter/2;
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+
+  @include breakpoint(md-min) {
+    padding: 0 $gutter/2;
+    max-width: 1000px;
+  }
+
 }
 
 // Sections
@@ -1157,6 +1234,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   display: block;
   margin: auto;
   width: 80%;
+}
+.secondary-logo {
+  //display: block;
+  margin: auto;
+  width: 60%;
 }
 
 // Hero
@@ -2005,7 +2087,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .no-card {
   height: 40px;
-  line-height: 40px;
+  line-height: 20px;
   text-transform: none;
   padding: 0;
   text-align: center;
@@ -2015,6 +2097,12 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   @include breakpoint(xs-min) {
     display: inline-block;
     @include font-size(1.2);
+    line-height: 40px;
+  }
+  @include breakpoint(sm-min) {
+    display: inline-block;
+    @include font-size(1.2);
+    line-height: 20px;
   }
 }
 .chosen-plan {
@@ -2099,7 +2187,11 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     margin: $gutter*.5 0 $gutter 0;
   }
 }
-
+.course-side-info {
+  background: $colour-2;
+  padding: $gutter;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 8. Videos & Quizzes
@@ -2323,7 +2415,7 @@ a.list-group-item {
 }
 .resume-course {
   @include breakpoint(xs-min) {
-    margin-top: $gutter/3;
+    margin-top: $gutter;
   }
   @include breakpoint(sm-min) {
     margin-top: $gutter*2;
@@ -2338,6 +2430,14 @@ a.list-group-item {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 10. Library
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.lib-header{
+  background-image: asset-url('header_bg.jpg');
+  -webkit-background-size: cover;
+  background-size: cover;
+  padding: 25px 0 60px 0;
+  color: #fff;
+}
 
 
 a.box {
@@ -2576,7 +2676,34 @@ a.card {
     text-align: left;
     margin-top: $gutter;
     & .card-inner {
-      padding-top: $gutter;
+      padding: $gutter $gutter;
+      height: 200px;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+  }
+  &.card-library {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding: $gutter;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+    }
+  }
+  &.card-dashboard {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding: $gutter;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
     }
   }
 }
@@ -2590,12 +2717,15 @@ a.card {
 .card-outer {
   height: 275px;
 }
-.card-inner {
-  padding: $gutter $gutter;
+.card-library-outer {
+  height: 195px;
+}
+.card-library-outer-cover {
   height: 200px;
-  position: relative;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  @include breakpoint(sm-min) {
+    height: 100px;
+  }
+
 }
 .card-pic {
   max-height: 60%;
@@ -2611,6 +2741,9 @@ a.card {
   text-overflow: ellipsis;
 }
 .card-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.card-form {
   padding: $gutter/2 $gutter $gutter $gutter;
 }
 .days-left {
@@ -3075,6 +3208,16 @@ a.library-box-item {
 }
 .business {
   text-align: center;
+  background: lighten($colour-7, 5%);
+  color: lighten($colour-7, 40%);
+}
+.acca-business {
+  text-align: center;
+  background: $white;
+  color: lighten($colour-7, 40%);
+}
+.cfa-business {
+  text-align: center;
   background: $white;
   color: lighten($colour-7, 40%);
 }
@@ -3295,6 +3438,7 @@ a.image-link {
 .corporate-box-item.table-box {
   padding: 30px;
   margin-bottom: 60px;
+  text-overflow: ellipsis;
 }
 .letter-space-wide {
   letter-spacing: 1px;
@@ -3795,8 +3939,8 @@ ol.example li.placeholder:before {
   margin-bottom: 0;
 }
 .alert.warning {
-  background: $colour-12;
-  color: $white;
+  background: #FFD466;
+  color: $text-color;
   border-radius: 0;
   margin-bottom: 0;
 }
@@ -3804,6 +3948,20 @@ ol.example li.placeholder:before {
   background: $colour-13;
   margin-bottom: 0;
 }
+
+// Subscription || Order Required
+
+.notice.warning {
+  background: #FFD466;
+  color: $text-color;
+  border-radius: 4px;
+  margin-bottom: $gutter;
+  padding: $gutter/1.5;
+  .icon {
+    margin-right: $gutter/2;
+  }
+}
+
 
 // Referral System
 .referral-header {
@@ -4048,4 +4206,1152 @@ spinner {
       -webkit-transform: scale(1);
       transform: scale(1);
     }
+}
+
+
+
+/* --- Header ---*/
+
+header{
+  background-image: asset-url('header_bg.jpg');
+  -webkit-background-size: cover;
+  background-position: center;
+  background-size: cover;
+  padding: 20px 0 60px 0;
+  color: #fff;
+}
+.home-background {
+  background-image: asset-url('cover_image_001.jpg');
+}
+.acca-background {
+  background-image: asset-url('cover_image_002.jpg');
+}
+.cfa-background {
+  background-image: asset-url('cover_image_005.jpg');
+}
+.purchase-background {
+  background-image: asset-url('cover_image_001.jpg');
+}
+.sign-in-background {
+  background-image: asset-url('cover_image_001.jpg');
+}
+.default-product-background {
+  background-image: asset-url('cover_image_004.jpg');
+}
+.business-background {
+  background-image: asset-url('cover_image_002.jpg');
+}
+.why-background {
+  background-image: asset-url('cover_image_003.jpg');
+}
+
+
+.main_logo{
+  display: inline-block;
+  margin: 10px 0 0;
+}
+.top_header{
+  padding: 0 0 25px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.top_header nav{ float: right;}
+.top_header nav ul li{
+  display: inline-block;
+  margin: 0 15px 0 0;
+}
+.top_header nav ul li:last-child{
+  border: 2px solid #f14b4e;
+  border-radius: 5px;
+  padding: 7px 15px;
+  margin: 0;
+}
+.top_header nav ul li:last-child a{ color: #f14b4e;}
+.top_header nav ul li a{
+  color: #fff;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-family: $sans-font;
+}
+.mobile_menu, .mobile_menu_dropdown {
+  display: none;
+}
+.cfa{
+  display: inline-block;
+  vertical-align: top;
+  //width: 75%;
+  padding-top: 100px;
+  margin: 0 30px 0 0;
+}
+.acca{
+  display: inline-block;
+  vertical-align: top;
+  //width: 75%;
+  padding-top: 100px;
+  margin: 0 30px 0 0;
+}
+.home{
+  display: inline-block;
+  vertical-align: top;
+  //width: 75%;
+  padding-top: 110px;
+  margin: 0 30px 0 0;
+}
+.certificate{
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 85px;
+}
+.home h3{
+  font-size: 35px;
+  font-family: Rubik-light;
+}
+.home h2{
+  font-size: 40px;
+  line-height: 1.1;
+  margin-top: 15px;
+}
+.home ul{
+  margin: 24px 0 46px 0;
+  padding-left: 0;
+  color: $white;
+}
+.home ul li{
+  display: inline-block;
+  color: $white;
+}
+.home ul li:before{
+  content: "·";
+  color: $white;
+  display: inline-block;
+  font-size: 20px;
+  vertical-align: top;
+  line-height: 20px;
+  margin: 0 2px;
+}
+.home ul li:first-child:before{
+  content: '';
+  margin: 0;
+  color: $white;
+}
+.home ul li p{
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 18px;
+  color: $white;
+}
+.home ul li p span{ font-weight: bold;}
+.home_links a{
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 15px;
+  display: inline-block;
+}
+.diploma{
+  display: inline-block;
+  vertical-align: top;
+  width: 52%;
+  padding-top: 137px;
+  margin: 0 30px 0 0;
+}
+.certificate{
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 85px;
+}
+.diploma h3{
+  font-size: 35px;
+}
+.diploma h2{
+  font-size: 40px;
+  line-height: 1.1;
+  margin-top: 15px;
+}
+.diploma ul{
+  margin: 24px 0 46px 0;
+  padding-left: 0;
+  color: $white;
+}
+.diploma ul li{
+  display: inline-block;
+  color: $white;
+}
+.diploma ul li:before{
+  content: "·";
+  color: $white;
+  display: inline-block;
+  font-size: 20px;
+  vertical-align: top;
+  line-height: 20px;
+  margin: 0 2px;
+}
+.diploma ul li:first-child:before{
+  content: '';
+  margin: 0;
+  color: $white;
+}
+.diploma ul li p{
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 18px;
+  color: $white;
+}
+.diploma ul li p span{ font-weight: bold;}
+.diploma_links a{
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 15px;
+  display: inline-block;
+}
+.course_info{
+  border: 2px solid #fff;
+  border-radius: 4px;
+  padding: 12px 16px;
+}
+.enroll_now{
+  font-size: 15px;
+  color: #fff;
+  text-transform: uppercase;
+  background: #f14b4e;
+  border-radius: 4px;
+  padding: 13px 23px;
+  margin: 0 0 0 15px;
+  -webkit-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+  box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+  &:hover, &:active {
+    @include box-shadow(0, 0, 4px, darken(#f14b4e, 35%));
+    text-decoration: none;
+    color: #fff;
+  }
+
+}
+.accredited{
+  text-align: center;
+  margin: 12px 0 0;
+}
+.accredited p{
+  display: inline-block;
+  vertical-align: top;
+  font-size: 19px;
+  margin: 15px 10px 0 0;
+  color: $white;
+}
+
+
+/* --- Home Information Section --- */
+
+
+#home_info{
+  padding-top: 57px;
+  background: #F8F8F8;
+  color: #464646;
+  overflow: hidden;
+}
+#home_info img{ margin: 0 -100px 0 -15px;}
+.home_descrip{
+  display: inline-block;
+  width: 64%;
+  vertical-align: top;
+  margin: 82px 0 0;
+}
+.home_descrip h2{ font-size: 48px;}
+.home_descrip h3{ font-size: 40px;}
+.home_descrip > p{
+  font-size: 19px;
+  margin: 28px 0;
+  line-height: 1.4;
+}
+.home_descrip nav ul{
+  list-style: disc inside;
+  margin: 0 0 10px 20px;
+  font-size: 19px;
+  line-height: 1.4;
+}
+.home_descrip nav ul li{ color: #f14b4e;}
+.home_descrip nav ul li p{ color: #464646;}
+.home_descrip .enroll_now{
+  display: inline-block;
+  margin: 34px 0 0 6px;
+  font-weight: bold;
+}
+
+#diploma_courses{
+  padding-top: 57px;
+  background: #F8F8F8;
+  color: #464646;
+  overflow: hidden;
+}
+#diploma_courses img{ margin: 0 -100px 0 -15px;}
+.diploma_courses_descrip{
+  display: inline-block;
+  width: 64%;
+  vertical-align: top;
+  margin: 82px 0 0;
+}
+.diploma_courses_descrip nav ul{
+  list-style: disc inside;
+  margin: 0 0 10px 20px;
+  font-size: 19px;
+  line-height: 1.4;
+}
+.diploma_courses_descrip nav ul li{ color: #f14b4e;}
+.diploma_courses_descrip nav ul li p{ color: #464646;}
+.diploma_courses_descrip .enroll_now{
+  display: inline-block;
+  margin: 34px 0 0 6px;
+  font-weight: bold;
+}
+
+/* --- Diploma Information Section --- */
+
+
+#diploma_info{
+  padding-top: 57px;
+  color: #464646;
+  overflow: hidden;
+}
+#diploma_info img{ margin: 0 -100px 0 -15px;}
+.diploma_descrip{
+  display: inline-block;
+  width: 64%;
+  vertical-align: top;
+  margin: 82px 0 0;
+}
+.diploma_descrip h2{ font-size: 48px;}
+.diploma_descrip > p{
+  font-size: 19px;
+  margin: 28px 0;
+  line-height: 1.4;
+}
+.diploma_descrip nav ul{
+  list-style: disc inside;
+  margin: 0 0 10px 20px;
+  font-size: 19px;
+  line-height: 1.4;
+}
+.diploma_descrip nav ul li{ color: #f14b4e;}
+.diploma_descrip nav ul li p{ color: #464646;}
+.diploma_descrip .enroll_now{
+  display: inline-block;
+  margin: 34px 0 0 6px;
+  font-weight: bold;
+}
+
+
+.course-panel{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(4px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+}
+a.course-panel {
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+  &:hover, &:active {
+    @include box-shadow(0, 0, 4px, darken($colour-3, 35%));
+  }
+}
+
+.course-panel-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  display: block;
+  margin: 0 auto;
+}
+.course-panel-group-title {
+  float: right;
+}
+
+.course-panel-inner {
+  padding: $gutter $gutter*2;
+  //height: 160px;
+  position: relative;
+  @include breakpoint(xs-min) {
+    height: 200px;
+    padding: $gutter $gutter;
+  }
+  &.group-inner {
+    padding: $gutter*1.5 $gutter;
+  }
+}
+.course-panel-text {
+  display: inline-block;
+  max-width: 79%;
+
+}
+.course-panel-desc {
+  color: $colour-1;
+  margin: 0;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+  @include breakpoint(sm-min) {
+    margin: 15px 0 0 0;
+  }
+}
+.course-panel-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.course-panel-label {
+  background: $colour-13;
+  color: $white;
+  padding: $gutter/2;
+  //letter-spacing: .2rem;
+  //text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+a.course-panel-label {
+  background: $colour-13;
+  color: $white;
+  text-decoration: none;
+  padding: $gutter/2;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+  &:hover, &:active {
+    background: darken($colour-13, 6%);
+
+  }
+
+}
+
+.group-panel{
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(4px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &:hover, &:active {
+    @include box-shadow(0, 0, 4px, darken($colour-3, 35%));
+  }
+}
+a.group-panel {
+  text-decoration: none;
+  display: block;
+  border: 1px solid $white;
+  @include transition(border .1s ease);
+}
+
+.group-panel-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  display: block;
+  margin: 0 auto;
+}
+.group-panel-group-title {
+  float: right;
+}
+
+.group-panel-inner {
+  padding: $gutter $gutter*2;
+  height: 160px;
+  position: relative;
+  @include breakpoint(xs-min) {
+    height: 100px;
+    padding: $gutter $gutter;
+    text-align: center;
+  }
+  @include breakpoint(sm-min) {
+    height: 100px;
+    padding: $gutter $gutter;
+
+  }
+}
+.group-panel-text {
+  display: inline-block;
+  max-width: 79%;
+
+}
+.group-panel-desc {
+  color: $colour-1;
+  margin: 0;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+  @include breakpoint(sm-min) {
+    margin: 15px 0 0 0;
+  }
+}
+.group-panel-info {
+  padding: $gutter/2 $gutter $gutter $gutter;
+}
+.group-panel-label {
+  background: $colour-13;
+  padding: $gutter/2;
+  text-align: center;
+  @include border-bottom-radius(4px);
+
+  .label-text {
+    color: $white;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-top: 0;
+    position: relative;
+    @include font-size(1.8);
+    @include breakpoint(sm-min) {
+      @include font-size(2.4);
+    }
+  }
+}
+
+
+.group-image {
+  //padding: $gutter/2 0;
+  max-width: 50%;
+}
+.cert-image {
+  padding-top: $gutter/2;
+}
+
+.phone-image {
+  padding: $gutter $gutter ;
+}
+
+/* --- What You'll Learn Section --- */
+
+
+#will_learn{
+  background-image: asset-url('learn_bg.jpg');
+  background-size: cover;
+  color: #fff;
+  padding: 80px 0 0;
+}
+#will_learn h2{
+  font-size: 48px;
+}
+
+
+/* --- Advance Your Career Section --- */
+
+
+#advance_career{
+  color: #464646;
+  text-align: center;
+  padding: 90px 0 0;
+}
+#advance_career h2{ font-size: 48px;}
+#advance_career .wrapper > p{
+  font-size: 24px;
+  line-height: 2;
+}
+#advance_career ul{ text-align: left;}
+#advance_career ul li{
+  display: inline-block;
+  width: 52%;
+  vertical-align: top;
+  margin: 60px 60px 0 0;
+}
+#advance_career ul li:nth-child(2n){
+  width: 41%;
+  margin: 60px 0 0;
+}
+#advance_career ul li > p{
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+.ac_title_bl img{ display: inline-block;}
+.ac_title_bl p{
+  display: inline-block;
+  vertical-align: top;
+  font-size: 25px;
+  margin: 15px 0 0 10px;
+}
+.ac_title_bl .two_strings{ margin: 0 0 0 10px;}
+#advance_career .enroll_now{
+  margin: 70px 0 0;
+  display: inline-block;
+  padding: 18px 94px;
+  font-size: 24px;
+}
+
+
+/* --- Study Online Section --- */
+
+
+#study_online{
+  background-image: asset-url('learnsignal_bg.jpg');
+  background-size: cover;
+  margin: 100px 0 0;
+  padding: 66px 0 73px 0;
+  color: #464646;
+}
+#study_online .wrapper > img{
+  float: right;
+  margin: -90px 0 0;
+}
+.so_descrip{
+  display: inline-block;
+  vertical-align: top;
+}
+.so_descrip h2{
+  font-size: 48px;
+  margin-bottom: 40px;
+}
+.option{ margin: 0 0 12px 0;}
+.option p{ display: inline-block;}
+.option .key{
+  font-size: 19px;
+  width: 180px;
+}
+.so_descrip .enroll_now{
+  margin: 28px 0 0;
+  display: inline-block;
+}
+
+
+/* --- Get Answers Section --- */
+
+
+#get_answers{
+  color: #464646;
+  padding: 92px 0 102px 0;
+}
+#get_answers h2{ font-size: 48px;}
+#get_answers h3{
+  font-size: 24px;
+  margin: 20px 0 0;
+  line-height: 1.2;
+}
+#get_answers h4{
+  font-size: 19px;
+  line-height: 2.5;
+}
+.question{ margin: 29px 0 0;}
+#get_answers p{
+  line-height: 1.5;
+  font-size: 17px;
+}
+
+
+/* --- Subscribe Section --- */
+
+
+#subscribe{
+  background-image: asset-url('subscribe_bg.jpg');
+  background-size: cover;
+  text-align: center;
+  color: #fff;
+  padding: 63px 0 60px 0;
+}
+#subscribe h2{ font-size: 32px;}
+#subscribe form{
+  max-width: 655px;
+  margin-top: 28px;
+  position: relative;
+}
+#subscribe input{
+  border: none;
+  padding: 20px 27px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 5px;
+  outline: none;
+  font-size: 17px;
+  color: #515151;
+}
+#subscribe button{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 66px;
+  height: 51px;
+  background: asset-url('subscribe_icon.png') no-repeat;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+#subscribe p{
+  margin: 30px 0 0;
+  font-size: 12px;
+  color: #bc8aa3;
+}
+#subscribe a{
+  color: #fff;
+  text-decoration: underline;
+  color: #bc8aa3;
+}
+
+
+/* --- How can we help Section --- */
+
+
+#help{
+  padding: 90px 0 70px 0;
+  color: #515151;
+}
+#help h2{  font-size: 48px;}
+#help h2 br{ display: none; }
+.help_descr{
+  margin: 18px 0 0;
+  padding: 0 0 0 17px;
+}
+.help_descr img{ margin: 15px 0 0;}
+.help_descr img, .help_cont{
+  display: inline-block;
+  vertical-align: top;
+}
+.help_cont{
+  max-width: 80%;
+  margin: 0 0 0 13px;
+}
+.help_cont h4{
+  font-size: 19px;
+  line-height: 1.7;
+}
+.help_cont p{ line-height: 1.7;}
+.help_cont .enroll_now{
+  display: inline-block;
+  margin: 24px 0 0;
+}
+
+/* --- Footer --- */
+
+
+footer{
+  padding: 28px 0 30px 0;
+  color: #fff;
+  background-color: #3d3e5c;
+}
+.copyright{
+  display: inline-block;
+  font-size: 14px;
+}
+footer nav{ float: right;}
+footer nav ul li{ display: inline-block;}
+footer nav ul li:before{
+  content: "·";
+  display: inline-block;
+  font-size: 40px;
+  vertical-align: top;
+  line-height: 12px;
+  margin: 0 8px 0 0;
+  color: #5a5b74;
+}
+footer nav ul li:first-child:before {
+  content: '';
+  margin: 0;
+}
+footer nav ul li:last-child{ margin: 0;}
+footer nav ul li a{
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+}
+
+
+@media (max-width: 980px){
+  .certificate{ width: 43%; }
+  .diploma_descrip{ width: 60%; }
+  #diploma_info img {
+    margin: 55px -100px 0 -15px;
+    max-width: 52%;
+  }
+}
+@media (max-width: 948px){
+  #advance_career ul li, #advance_career ul li:nth-child(2n) {
+    width: 75%;
+    margin: 30px auto;
+  }
+  #advance_career ul {
+    text-align: center;
+  }
+  .so_descrip {
+    max-width: 75%;
+  }
+}
+@media (max-width: 850px){
+  .top_main_nav{
+    display: none;
+  }
+  .mobile_menu_dropdown .top_main_nav {
+    display: block;
+    float: none;
+    margin: 8% auto 0 auto;
+    max-width: 36%;
+  }
+  .mobile_menu {
+    display: block;
+    float: right;
+    background: asset-url('Nav-Main-Menu-Off.png');
+    width: 27px;
+    height: 24px;
+    -webkit-background-size: cover;
+    background-size: cover;
+    margin-top: 8px;
+  }
+  .close_mobile_menu {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background-image: asset-url('Nav-Overlay-X-off.png');
+    -webkit-background-size: cover;
+    background-size: cover;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+  }
+  .mobile_menu_dropdown {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    background: #fff;
+    overflow: auto;
+  }
+  .mobile_menu_dropdown .top_main_nav li {
+    display: block;
+    padding: 20px 0;
+    border-top: 2px solid #ededed;
+  }
+  .mobile_menu_dropdown .top_main_nav li a {
+    font-size: 20px;
+    color: #464646;
+  }
+  #diploma_info img{ display: none; }
+  .diploma_descrip { width: 100%; }
+  #diploma_info{ padding-bottom: 25px }
+  #study_online .wrapper > img{ display: none; }
+  .so_descrip { max-width: 100%;}
+}
+@media (max-width: 768px){
+  footer{ text-align: center; }
+  footer nav{
+    float: none;
+    margin: 15px 0 0;
+  }
+}
+@media (max-width: 701px){
+  .diploma, .certificate{
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+  #help h2 { font-size: 43px;}
+}
+@media (max-width: 600px){
+  .top_main_nav li {
+    padding: 15px 0;
+  }
+  .top_main_nav li a {
+    font-size: 17px;
+  }
+  .mobile_menu_dropdown .top_main_nav {
+    max-width: 56%;
+  }
+  .value{ max-width: 55%; }
+  .option p { vertical-align: top;}
+  #help h2 {
+    font-size: 36px;
+    text-align: center;
+  }
+  #help h2 br{ display: block; }
+}
+@media (max-width: 550px){
+  footer nav ul li, footer nav ul li:last-child{
+    margin: 7px 0 0;
+  }
+  footer nav ul li {
+    display: block;
+  }
+  footer nav ul li:before{ content: ""}
+}
+@media (max-width: 500px){
+  .so_descrip h2 { font-size: 35px;}
+  .value {
+    max-width: 44%;
+    font-size: 16px;
+  }
+  .option .key {
+    font-size: 17px;
+    width: 160px;
+  }
+  #get_answers h2 {
+    font-size: 43px;
+  }
+  #get_answers h3 { font-size: 19px;}
+  #get_answers h4, #get_answers p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .help_descr { margin: 35px 0 0;}
+}
+@media (max-width: 420px){
+  .diploma_links a{
+    display: block;
+    max-width: 80%;
+  }
+  .diploma_links .enroll_now{
+    margin: 15px auto auto;
+  }
+  #advance_career .enroll_now{
+    padding: 18px 70px;
+    font-size: 20px;
+  }
+  #subscribe h2 { font-size: 22px;}
+  .help_cont { max-width: 75%;}
+  .mobile_menu_dropdown .top_main_nav li a { font-size: 16px;}
+}
+
+
+
+
+
+
+/* Tabs CSS begin */
+.home-page-tab {
+  display: none;
+  max-width: 46%;
+  margin: auto 0 auto auto;
+}
+.home-page-tabs{
+  margin: 45px 0 0;
+  min-height: 490px;
+}
+.home-page-tabs ul {
+  float: left;
+  margin-right: 75px;
+  width: 40%;
+  padding-left: 0;
+}
+.home-page-tabs ul > li {list-style: none;}
+.home-page-tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: #c7c8df;
+  font-size: 18px;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.home-page-tabs ul > li:first-child a {
+  border-top: 1px solid #71738c;
+}
+.home-page-tabs ul > li a:hover {
+  background-color: #373854;
+}
+.home-page-tabs ul > li a.active {
+  background-color: #373854;
+  font-weight: bold;
+  color: #fff;
+}
+.home-page-tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  background-image: asset-url('arrow_right.png');
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.home-page-tab h3{
+  font-size: 26px;
+  //line-height: 1.5;
+  color: $white;
+}
+.home-page-tab p{
+  line-height: 1.45;
+  color: $white;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.home-page-tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .home-page-tabs ul{
+    margin-right: 65px;
+    width: 46%;
+  }
+  .home-page-tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .home-page-tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .home-page-tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .home-page-tabs {
+    padding: 0 0 45px 0;
+  }
+  .home-page-tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .home-page-tabs ul > li a {
+    font-size: 18px;
+  }
+  .home-page-tabs ul > li a br{ display: block; }
+  .home-page-tab h3 { font-size: 27px;}
+  .home-page-tab p{ font-size: 16px }
+}
+/* Tabs CSS end */
+
+
+
+/* Account Page Tabs */
+
+
+.account-tab {
+  display: none;
+  //max-width: 60%;
+  margin: auto 0 5px auto;
+  //float: left;
+}
+.account-tab-content {
+  //width: 60%;
+  margin: 0;
+
+}
+@media (max-width: 768px) {
+  .account-tab-content {
+    width: 100%;
+    margin-top: 0;
+
+  }
+}
+.account-tabs{
+  margin: $gutter 0 0;
+  //min-height: 490px;
+}
+.account-tabs ul {
+  //float: right;
+  margin-right: 0;
+  padding-left: 0;
+  background-color: darken(#F9FAFB, 6%);
+  //width: 30%;
+}
+.account-tabs ul > li {
+  list-style: none;
+}
+.account-tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: $colour-7;
+  font-size: 18px;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.account-tabs ul > li:first-child a {
+  //border-top: 1px solid #71738c;
+}
+.account-tabs ul > li a:hover {
+  background-color: #FFFFFF;
+}
+.account-tabs ul > li a.active {
+  //background-color: #373854;
+  background-color: #FFFFFF;
+  font-weight: bold;
+
+}
+.account-tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.account-tab h3{
+  font-size: 26px;
+  //line-height: 1.5;
+  color: $white;
+}
+.account-tab p{
+  line-height: 1.45;
+  color: $white;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.account-tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .account-tabs ul{
+    margin-right: 65px;
+    width: 100%;
+  }
+  .account-tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .account-tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .account-tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .account-tabs {
+    padding: 0 0 45px 0;
+  }
+  .account-tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .account-tabs ul > li a {
+    font-size: 18px;
+  }
+  .account-tabs ul > li a br{ display: block; }
+  .account-tab h3 { font-size: 27px;}
+  .account-tab p{ font-size: 16px }
 }

@@ -33,6 +33,7 @@ class Group < ActiveRecord::Base
   # relationships
   #belongs_to :subject
   has_and_belongs_to_many :subject_courses
+  has_many :home_pages
   has_attached_file :image, default_url: "missing_corporate_logo.png"
 
 

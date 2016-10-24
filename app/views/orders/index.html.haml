@@ -1,0 +1,43 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.orders.index.h1')
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              =will_paginate @orders, renderer: BootstrapPagination::Rails
+              %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: white_papers_url}}
+                %thead
+                  %tr
+                    %th=t('views.orders.index.subject_course_id')
+                    %th=t('views.orders.index.user_id')
+                    %th=t('views.orders.index.stripe_guid')
+                    %th=t('views.orders.index.current_status')
+                    %th
+                    %th
+                %tbody
+                  -@orders.each do |order|
+                    %tr{id: order.id}
+                      %td=order.subject_course.name
+                      %td=order.user.full_name
+                      %td=order.stripe_guid
+                      %td=order.current_status
+                      %td
+                        =link_to t('views.general.view'), order
+                        =link_to t('views.general.edit'), edit_order_url(order), class: 'btn btn-info btn-xs'
+                        -if order.destroyable?
+                          =link_to t('views.general.delete'), order, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+      .row
+        .col-sm-12
+          =link_to t('views.general.new'), new_order_url, class: 'btn btn-red', title: t('views.general.new_tooltip')

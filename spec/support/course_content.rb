@@ -3,10 +3,15 @@ require 'rails_helper'
 shared_context 'course_content' do
 
   # Courses Structure
+  let!(:product_course_category) { FactoryGirl.create(:product_course_category) }
+  let!(:subscription_course_category) { FactoryGirl.create(:subscription_course_category) }
+  let!(:corporate_course_category) { FactoryGirl.create(:corporate_course_category) }
 
+  #Subscription Courses
   # first set
   let!(:course_group_1) { FactoryGirl.create(:group) }
-  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course, groups: [course_group_1]) }
+  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course, groups: [course_group_1], subject_course_category_id: subscription_course_category.id) }
+  let!(:subject_course_1_home_page)  { FactoryGirl.create(:home_page, subject_course_id: subject_course_1.id) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
                            subject_course_id: subject_course_1.id,
                            tutor_id: tutor_user.id) }
@@ -27,7 +32,7 @@ shared_context 'course_content' do
 
   # Second set
   let!(:course_group_2) { FactoryGirl.create(:group) }
-  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, groups: [course_group_2]) }
+  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, groups: [course_group_2], subject_course_category_id: subscription_course_category.id) }
 
   let!(:course_module_2) { FactoryGirl.create(:active_course_module,
                                               subject_course_id: subject_course_2.id,
@@ -87,5 +92,43 @@ shared_context 'course_content' do
                              quiz_question_id: quiz_question_2.id) }
   let!(:quiz_content_2_5)  { FactoryGirl.create(:quiz_content,
                              quiz_answer_id: quiz_answer_4.id) }
+
+
+
+
+
+
+  #Product Courses
+  # First set
+  let!(:subject_course_3)  { FactoryGirl.create(:active_subject_course, subject_course_category_id: product_course_category.id) }
+  let!(:course_module_3) { FactoryGirl.create(:active_course_module,
+                                              subject_course_id: subject_course_3.id,
+                                              tutor_id: tutor_user.id) }
+let!(:course_module_element_3_1) { FactoryGirl.create(:cme_video,
+                                                        course_module_id: course_module_3.id) }
+  let!(:course_module_element_3_2) { FactoryGirl.create(:cme_video,
+                                                        course_module_id: course_module_3.id) }
+
+  let!(:course_module_element_video_3_1_1) { FactoryGirl.create(:course_module_element_video,
+                                                                course_module_element_id: course_module_element_3_1.id,
+                                                                video_id: 'abc123') }
+  let!(:course_module_element_video_3_1_2) { FactoryGirl.create(:course_module_element_video,
+                                                                course_module_element_id: course_module_element_3_2.id,
+                                                                video_id: '123abc') }
+
+  # Second set
+  let!(:subject_course_4)    { FactoryGirl.create(:active_subject_course, subject_course_category_id: product_course_category.id) }
+
+  let!(:course_module_4) { FactoryGirl.create(:active_course_module,
+                                              subject_course_id: subject_course_4.id,
+                                              tutor_id: tutor_user.id) }
+
+  let!(:course_module_element_4_1) { FactoryGirl.create(:cme_video,
+                                                        course_module_id: course_module_4.id, active: false) }
+  let!(:course_module_element_video_4_1_1) { FactoryGirl.create(:course_module_element_video,
+                                                                course_module_element_id: course_module_element_4_1.id) }
+
+
+  let!(:subject_course_1_home_page)  { FactoryGirl.create(:home_page, subject_course_id: subject_course_3.id) }
 
 end

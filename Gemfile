@@ -45,7 +45,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
-gem 'stripe', '=1.16.0' #, git: 'https://github.com/stripe/stripe-ruby'
+gem 'stripe', '=1.51.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'summernote-rails'
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
@@ -95,7 +95,7 @@ group :test do
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
-  gem 'stripe-ruby-mock', '~> 2.0.2', require: 'stripe_mock'
+  gem 'stripe-ruby-mock', '~> 2.3.1', require: 'stripe_mock'
   gem 'webrat' # Runs tests in a "headless" browser
 end
 

@@ -17,16 +17,18 @@
 #  cover_image_updated_at   :datetime
 #  name_url                 :string
 #  name                     :string
+#  subject_course_id        :integer
 #
 
 class WhitePaper < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :description, :file, :cover_image, :sorting_order, :name_url
+  attr_accessible :name, :description, :file, :cover_image, :sorting_order, :name_url, :subject_course_id
 
   # Constants
 
   # relationships
+  belongs_to :subject_course
   has_many :white_paper_requests
   has_attached_file :file, default_url: '/assets/images/missing.png'
   has_attached_file :cover_image, default_url: '/assets/images/missing.png'

@@ -270,6 +270,9 @@ describe CorporateCustomersController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(corporate_customer_user, corporate_customer_id: corporate_customer_1.id)
+      x = admin_user
+      y = tutor_user
+      z = corporate_student_user
     end
 
     describe "GET 'index'" do
@@ -288,7 +291,7 @@ describe CorporateCustomersController, type: :controller do
 
       it 'should not see other corporate customer overview' do
         get :show, id: corporate_customer_2.id
-        expect(response).to redirect_to(dashboard_url)
+        expect(response).to redirect_to(corporate_customer_dashboard_url)
       end
     end
 

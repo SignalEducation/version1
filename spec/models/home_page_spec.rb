@@ -9,6 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
+#  group_id                      :integer
+#  subject_course_id             :integer
 #
 
 require 'rails_helper'

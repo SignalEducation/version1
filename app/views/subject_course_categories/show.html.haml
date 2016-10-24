@@ -1,0 +1,30 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.subject_course_categories.show.h1')
+            \#
+            =@subject_course_category.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.subject_course_categories.form.name')
+                  %td.col-sm-8=@subject_course_category.name
+                %tr
+                  %td.col-sm-4=t('views.subject_course_categories.form.payment_type')
+                  %td.col-sm-8=@subject_course_category.payment_type
+                %tr
+                  %td.col-sm-4=t('views.subject_course_categories.form.active')
+                  %td.col-sm-8=tick_or_cross(@subject_course_category.active)
+                %tr
+                  %td.col-sm-4=t('views.subject_course_categories.form.subdomain')
+                  %td.col-sm-8=@subject_course_category.subdomain
+              %p
+                =link_to t('views.general.back'), subject_course_categories_url
+                |
+                =link_to t('views.general.edit'), edit_subject_course_category_url(id: @subject_course_category.id), title: t('views.general.edit_tooltip')

@@ -40,7 +40,7 @@ class UserPasswordResetsController < ApplicationController
         @user.update_attribute(:password_change_required, nil)
 
         if @user.corporate_student?
-          redirect_back_or_default dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
+          redirect_back_or_default corporate_student_dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
         elsif @user.corporate_manager?
           redirect_back_or_default corporate_customer_url(@user.corporate_customer, subdomain: @user_session.user.corporate_customer.try(:subdomain))
         else
@@ -84,7 +84,7 @@ class UserPasswordResetsController < ApplicationController
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
         @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
         if @user.corporate_student?
-          redirect_back_or_default dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
+          redirect_back_or_default corporate_student_dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
         elsif @user.corporate_manager?
           redirect_back_or_default corporate_customer_url(@user.corporate_customer, subdomain: @user_session.user.corporate_customer.try(:subdomain))
         else

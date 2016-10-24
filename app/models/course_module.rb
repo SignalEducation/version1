@@ -42,14 +42,15 @@ class CourseModule < ActiveRecord::Base
   # Constants
 
   # relationships
+  belongs_to :subject_course
+  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+
   has_many :course_module_elements
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
-  has_one :course_module_jumbo_quiz
-  belongs_to :subject_course
   has_many :student_exam_tracks
-  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  has_one :course_module_jumbo_quiz
 
   # validation
   validates :subject_course_id, presence: true

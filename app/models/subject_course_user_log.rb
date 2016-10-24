@@ -31,6 +31,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
   has_many :completion_certificates
+  has_one :enrollment
 
 
   # validation
@@ -41,6 +42,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   after_create :start_course_intercom_event if Rails.env.production? || Rails.env.staging?
+  after_save :update_enrollment
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -90,6 +92,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def elements_total
     self.subject_course.try(:cme_count) || 0
+  end
+
+  def update_enrollment
+    self.enrollment.update_attribute(:updated_at, Proc.new{Time.now}.call) if self.enrollment
   end
 
   def last_element

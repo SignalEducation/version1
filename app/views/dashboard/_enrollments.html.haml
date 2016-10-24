@@ -1,0 +1,18 @@
+-@enrollments.each do |enrollment|
+  .card.card-dashboard
+    .card-dashboard-outer-cover{style: 'height: 175px;'}
+      .card-inner
+        .col-sm-8
+          %h3.h3{style: 'color: #3E3F5B'}
+            =enrollment.subject_course.name
+          .card-info.hidden-sm.hidden-xs
+            -total_lesson = enrollment.subject_course.cme_count
+            -complete_lesson = enrollment.subject_course_user_log.try(:count_of_cmes_completed) || 0
+            -complete_percent = enrollment.subject_course_user_log.try(:percentage_complete)
+            %p{style: 'color: #3E3F5B; margin-bottom: 10px; margin-top: 10px;'}
+              ="#{complete_lesson} out of #{total_lesson} lessons completed"
+            .progress
+              .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+
+        .col-sm-4.text-center.resume-course
+          =link_to 'Resume Course', library_special_link(enrollment.subject_course), class: 'btn btn-wide btn-cyan'

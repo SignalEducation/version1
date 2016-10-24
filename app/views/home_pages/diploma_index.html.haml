@@ -1,0 +1,202 @@
+.home_page_layout
+  %header
+    .l-wrap-home
+      =render partial: 'layouts/transparent_navbar'
+
+      .diploma
+        %h2.h-white
+          Diploma Courses
+
+
+      .certificate
+        =image_tag('certificate.png', alt: 'certificate')
+
+  %section#home_info
+    .l-wrap-home
+      .col-sm-12.text-center
+        %h2.l-margin-bottom-big
+          Diploma Courses
+
+        -@product_course_category.active_children.all_in_order.each do |course|
+          .col-sm-12
+            .course-panel.course-panel-inner
+              .col-sm-2.hidden-xs
+                =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
+              .col-sm-10
+                %h3
+                  =course.name
+                %p.p.hidden-xs
+                  =course.short_description.truncate(150)
+              .col-sm-2
+              .col-sm-10
+                -if course.white_papers.any?
+                  =link_to public_white_paper_url(course.white_papers.first.name_url), class: 'btn btn-cyan l-margin-top' do
+                    Download Brochure
+                =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
+                  Course Info
+
+
+
+  %section#advance_career
+    .l-wrap-home
+      %h2 Advance your career
+      %p LearnSignal gives you access to world class training and certifications.
+      %ul
+        %li
+          .ac_title_bl
+            =image_tag('24h.png', alt: '24h')
+            %p Flexible study options
+          %p Whether you are studying at home, or on a tablet on your way to work, you can enjoy 24-hour access to video lectures, slide presentations, practical exercises, quizzes and a supportive student network. Never fear missing a class again.
+
+        %li
+          .ac_title_bl
+            =image_tag('world.png', alt: 'world')
+            %p.two_strings
+              World Leading
+              %br Education
+          %p LearnSignal is a global business school created by top accountancy tutors. Our courses are recognised by accreditation bodies all over the world.
+
+        %li
+          .ac_title_bl
+            =image_tag('tallent.png', alt: 'tallent')
+            %p.two_strings
+              Designed and Taught
+              %br by the Best
+          %p We have brought together the world's top accountancy tutors and the world's leading instructional designers to bring you one of the highest quality online course available anywhere in the world.
+        %li
+          .ac_title_bl
+            =image_tag('global.png', alt: 'global')
+            %p.two_strings
+              Be Part of Global
+              %br Student Body
+          %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
+
+
+
+
+
+
+  %section#will_learn
+    .l-wrap-home
+      %h2.h-white
+        Diploma Courses We Offer
+
+      .tabs.home-page-tabs
+        %ul
+          -@product_course_category.subject_courses.each do |course|
+            %li
+              %a{href: "##{course.name_url}", class: "#{'active' if (course.id == @product_course_category.first_active_child.id)}", role: 'tab', data: {toggle: 'tab'}}
+                =course.name
+
+        -@product_course_category.subject_courses.each do |course|
+          .tab.home-page-tab{id: "#{course.name_url}"}
+            %h3
+              =course.name
+            %p
+              =course.short_description
+            =link_to library_special_link(course), class: 'enroll_now' do
+              More Info
+
+
+  %section#diploma_info
+    .l-wrap-home
+      .diploma_descrip
+        %h2 Diploma Information
+        %p
+          Demonstrate foundation knowledge in core subject areas such as Bookkeeping (manual and computerised), Cost Accounting, Business Law and Finance. Learn how to use software programmes that will help you implement these course subject areas, using tools such as excel and tableau. This course is ideal for those looking to start a career in accounting and looking to apply themselves in the area immediately.
+        %nav
+          %ul
+            %li
+              %p This Diploma program commences on X Date.
+            %li
+              %p Students are advised to apply in advance to secure their place.
+            %li
+              %p The last date for enrollment is Wednesday, 31st of August.
+
+
+      =image_tag('man_big.png', alt: 'man_big')
+
+
+
+  %section#study_online
+    .l-wrap-home
+      .so_descrip
+        %h2 Study online with LearnSignal
+        .option
+          %p.key Study Time:
+          %p.value
+            ='100 hrs'
+        .option
+          %p.key Assessment:
+          %p.value Online exam
+        .option
+          %p.key Resources:
+          %p.value Video lectures, slide presentations, practical exercises
+
+      =image_tag('iphone.png', alt: 'iphone')
+
+
+  %section#get_answers
+    .l-wrap-home
+      %h2 Get Answers
+      %h3 We love questions, almost as much as we love providing answers! Here are a few examples of what we're typically asked, along with our responses.
+      .question
+        %h4 Do I need to have a maths background to take this Diploma?
+        %p Anyone can apply for the Professional Diploma. A background in a related discipline is not required; the aim of the Professional Diploma is to enable you to learn everything you need to know at a foundation level, so you can kick start your digital career. You could be a business owner, a traditional or digital marketing professional, a recent graduate, or simply looking to change your career. The only prerequisite is that you have an interest in digital marketing and want to progress your career.
+      .question
+        %h4 Why should I study with LearnSignal?
+        %p The Digital Marketing Institute is the global certification standard in digital education. To date, over 17,000 people in 80 countries have graduated with a Digital Marketing Institute qualification, making ours the most widely taught digital certification standard in the world. The Digital Marketing Institute collaborates with global digital experts to define and develop the skills and qualifications required of today’s digital professionals.
+
+
+
+  %section#subscribe
+    .l-wrap-home
+      %h2.h-white Subscribe to our newsletter
+      #response
+        =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+          =email_field(:email, :address, {id: 'email', placeholder: 'Type your email...'})
+          %button{:type => "submit"}
+
+        %p
+          By providing us your email, you agree to the terms of our
+          =link_to privacy_policy_url do
+            Privacy Policy
+          and
+          =link_to terms_and_conditions_url do
+            Terms of Service
+
+
+
+  %section#help
+    .l-wrap-home
+      %h2
+        How can we
+        %br help you today?
+
+      .help_descr
+        =image_tag('call_us_icon.png', alt: 'call_us_icon')
+        .help_cont
+          %h4 Speak to one of our educational consultants
+
+          %p If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.
+
+
+          =link_to contact_url, class: 'enroll_now' do
+            contact us now!
+
+
+
+
+
+
+  =render partial: 'layouts/footer'
+
+
+  :javascript
+
+    $(document).ready(function(){
+
+      // Tabs
+      $('.tabs').tabs();
+
+    });
