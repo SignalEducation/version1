@@ -15,10 +15,16 @@
         -if @course.subscription
           =render partial: 'layouts/content_notice', locals: {course: @course}
 
+
         -if @course.enrolled_user_ids.include?(current_user.id)
           =render partial: 'enrollment_info'
         -else
-          =render partial: 'enrollment_form'
+          -if current_user.permission_to_see_content(@course)
+            =render partial: 'enrollment_form'
+          -else
+            %h3.h3.card-title.l-margin-bottom
+              =@course.name
+
 
 
       -elsif current_user && current_user.corporate_user?
