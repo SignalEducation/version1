@@ -340,22 +340,23 @@ class User < ActiveRecord::Base
 
   def user_subscription_status
     if self.user_status == 'valid_free_member'
-      'Free Trial Member'
+      status =  'Free Trial Member'
     elsif self.user_status == 'expired_free_member'
-      'Free Trial Expired'
-    elsif self.user_status == 'valid_sub_member' || 'valid_sub_product_member'
-      'Valid Subscription'
+      status =  'Free Trial Expired'
+    elsif self.user_status == 'valid_sub_member' || self.user_status == 'valid_sub_product_member'
+      status =  'Valid Subscription'
     elsif self.user_status == 'canceled_sub_member'
-      'Canceled Subscription'
+      status =  'Canceled Subscription'
     elsif self.user_status == 'cancel_pending_sub_member'
-      'Subscription Set to Cancel'
+      status =  'Subscription Set to Cancel'
     elsif self.user_status == 'failed_payment_sub_member'
-      'Failed Payment'
+      status =  'Failed Payment'
     elsif self.user_status == 'product_order_member' && self.subscriptions.any?
-      'Canceled Subscription'
+      status =  'Canceled Subscription'
     else
-      ''
+      status =  'Unknown'
     end
+    return status
   end
 
   def days_or_seconds_valid?
