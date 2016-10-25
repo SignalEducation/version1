@@ -106,7 +106,11 @@ class HomePagesController < ApplicationController
     @currency_id = @country.currency_id
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @course = @home_page.subject_course
-    @product = @course.products.in_currency(@currency_id).last
+    if @course.products.all_active.count > 1
+      @product = @course.products.all_active.in_currency(@currency_id).last
+    else
+      @product = @course.products.last
+    end
     @navbar = nil
     @footer = nil
 

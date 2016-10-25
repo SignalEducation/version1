@@ -17,12 +17,14 @@
                 %thead
                   %tr
                     %th=t('views.products.form.name')
+                    %th=t('views.products.form.active')
                     %th
                     %th
                 %tbody
-                  -@products.each do |product|
+                  -@products.all_in_order.each do |product|
                     %tr{id: product.id}
                       %td=product.name
+                      %td=tick_or_cross(product.active)
                       %td
                         =link_to t('views.general.view'), product_url(product), class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_product_url(product), class: 'btn btn-cyan btn-small'
