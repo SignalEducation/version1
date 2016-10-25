@@ -443,7 +443,7 @@ class UsersController < ApplicationController
 
   def reactivate_account
     @user = User.where(id: params[:user_id]).first
-    @subscription = @user.subscriptions.last
+    @subscription = @user.active_subscription || @user.subscriptions.last
     redirect_to root_url unless @user.individual_student? || @subscription
     redirect_to account_url unless @subscription.current_status == 'canceled'
     @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
