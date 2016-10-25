@@ -105,13 +105,8 @@ class HomePagesController < ApplicationController
     @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @course = @home_page.subject_course
-    if @course.products.all_active.count > 1
-      @currency_id = @country.currency_id
-      @product = @course.products.all_active.in_currency(@currency_id).last
-    else
-      @currency_id = Currency.find_by_iso_code('GBP').id
-      @product = @course.products.last
-    end
+    @currency_id = @country.currency_id
+    @product = @course.products.all_active.in_currency(@currency_id).last
     @navbar = nil
     @footer = nil
 

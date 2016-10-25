@@ -383,6 +383,8 @@ class ApplicationController < ActionController::Base
         corporate_student_dashboard_url
       when UserGroup.default_corporate_customer_user_group.id
         corporate_customer_dashboard_url
+      when UserGroup.default_content_manager_user_group.id
+        content_manager_dashboard_url
     else
       student_dashboard_url
     end
