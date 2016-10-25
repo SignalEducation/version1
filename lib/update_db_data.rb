@@ -37,15 +37,14 @@ class UpdateDBData
       users.each do |user|
 
         if user.free_trial && user.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i && !user.subscriptions.any?
-          user.student_user_type_id = StudentUserType.default_free_trial_user_type.id
+          user.update_attributes(student_user_type_id: StudentUserType.default_free_trial_user_type.id)
         elsif user.subscriptions.any? && user.active_subscription && ('active past_due canceled-pending').include?(user.active_subscription.current_status)
-          user.student_user_type_id = StudentUserType.default_sub_user_type.id
+          user.update_attributes(student_user_type_id: StudentUserType.default_sub_user_type.id)
         elsif user.subscriptions.any? && user.active_subscription && !('active past_due canceled-pending').include?(user.active_subscription.current_status)
-          user.student_user_type_id = StudentUserType.default_no_access_user_type.id
+          user.update_attributes(student_user_type_id: StudentUserType.default_no_access_user_type.id)
         else
-          user.student_user_type_id = StudentUserType.default_no_access_user_type.id
+          user.update_attributes(student_user_type_id: StudentUserType.default_no_access_user_type.id)
         end
-        user.save!
       end
     end
 
