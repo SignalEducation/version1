@@ -14,8 +14,9 @@
             %p.h7
               Our subscription model provides unlimited access to all subscription content for a small monthly subscription
 
-          .col-sm-6.col-md-4.col-lg-4#sign-up-form
-            =render partial: 'sign_up_form'
+          -unless current_user
+            .col-sm-6.col-md-4.col-lg-4#sign-up-form
+              =render partial: 'sign_up_form'
 
 
   %section#diploma_courses
