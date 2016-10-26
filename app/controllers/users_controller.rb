@@ -109,6 +109,10 @@ class UsersController < ApplicationController
     else
       @footer = true
     end
+    @user_exam_sittings = UserExamSitting.where(user_id: @user.try(:id))
+    @user_exam_sitting = UserExamSitting.new
+    @exam_sittings = ExamSitting.all_in_order
+
   end
 
   def new

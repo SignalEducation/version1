@@ -36,9 +36,11 @@ class UserExamSittingsController < ApplicationController
   def create
     @user_exam_sitting = UserExamSitting.new(allowed_params)
     @user_exam_sitting.user_id = current_user.id
+    @user_exam_sitting.subject_course_id = @user_exam_sitting.exam_sitting.subject_course_id
+    #@user_exam_sitting.date = @user_exam_sitting.exam_sitting.date unless params[:date]
     if @user_exam_sitting.save
       flash[:success] = I18n.t('controllers.user_exam_sittings.create.flash.success')
-      redirect_to user_exam_sittings_url
+      redirect_to account_url
     else
       render action: :new
     end

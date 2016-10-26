@@ -1,0 +1,52 @@
+.col-md-12
+  .corporate-box-item.table-box
+    %h3{style: 'color: #3e3f5b;'}
+      Exam Sittings
+
+    %table.table{style: 'font-size: 18px;'}
+      %thead
+        %tr
+          %th
+            =t('views.subject_course_user_log.show.course')
+          %th
+            =t('views.exam_sittings.form.date')
+          %th
+
+      %tbody
+        -@user_exam_sittings.each do |user_exam_sitting|
+          %tr
+            %td
+              =user_exam_sitting.subject_course.name.to_s.truncate(20)
+            %td
+              =user_exam_sitting.date
+
+.col-md-12
+  .corporate-box-item.table-box
+    %h3{style: 'color: #3e3f5b;'}
+      Add Exam Sittings
+
+
+    =form_for(@user_exam_sitting, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @user_exam_sitting, message: nil}
+      .row
+        .col-md-8.col-md-offset-2
+          =f.label :exam_sitting_id, t('views.user_exam_sittings.form.exam_sitting_id'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+          %br/
+          =f.collection_select :exam_sitting_id, @exam_sittings, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+          %br/
+          =f.label :date, t('views.user_exam_sittings.form.date'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :date, placeholder: t('views.user_exam_sittings.form.date'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker'
+
+      .row
+        =f.submit t('views.general.save'), class: 'btn btn-red'
+        =link_to t('views.general.cancel'), user_exam_sittings_path, class: 'btn btn-cyan'
+
+
+:javascript
+
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });
