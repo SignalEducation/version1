@@ -21,11 +21,10 @@
                     %th=t('views.user_exam_sittings.form.subject_course_id')
                     %th=t('views.user_exam_sittings.form.date')
                     %th
-                    %th
                 %tbody
                   -@user_exam_sittings.each do |user_exam_sitting|
                     %tr{id: user_exam_sitting.id}
-                      %td=user_exam_sitting.user.name
+                      %td=user_exam_sitting.user.full_name
                       %td=user_exam_sitting.exam_sitting.name
                       %td=user_exam_sitting.subject_course.name
                       %td=user_exam_sitting.date
@@ -33,7 +32,7 @@
                         =link_to t('views.general.view'), user_exam_sitting, class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_user_exam_sitting_url(user_exam_sitting), class: 'btn btn-cyan btn-small'
                         -if user_exam_sitting.destroyable?
-                          =link_to t('views.general.delete'), user_exam_sitting, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-samll'
+                          =link_to t('views.general.delete'), user_exam_sitting, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
       .row
         .col-sm-12
