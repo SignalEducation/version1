@@ -216,11 +216,13 @@ Rails.application.routes.draw do
     # home page
     root 'routes#root'
 
-    #Catch Old URL
-    get '/:home_pages_public_url', to: 'home_pages#group'
 
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
+    #Catch Old URL
+    get '/:home_pages_public_url', to: 'home_pages#group'
+
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end
 
