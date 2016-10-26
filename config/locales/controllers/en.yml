@@ -475,6 +475,19 @@ en:
           success: User Activity Log has been deleted
           error: User Activity Log was not deleted
 
+    user_exam_sittings:
+      create:
+        flash:
+          success: Users ExamSitting has been created successfully
+      update:
+        flash:
+          success: Users ExamSitting details have been updated successfully
+      destroy:
+        flash:
+          success: Users ExamSitting has been deleted
+          error: Users ExamSitting was not deleted
+
+
     user_groups:
       create:
         flash:

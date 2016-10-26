@@ -1,0 +1,33 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.user_exam_sittings.show.h1')
+            \#
+            =@user_exam_sitting.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.user_exam_sittings.form.user_id')
+                  %td.col-sm-8=@user_exam_sitting.user.name
+                %tr
+                  %td.col-sm-4=t('views.user_exam_sittings.form.exam_sitting_id')
+                  %td.col-sm-8=@user_exam_sitting.exam_sitting.name
+                %tr
+                  %td.col-sm-4=t('views.user_exam_sittings.form.subject_course_id')
+                  %td.col-sm-8=@user_exam_sitting.subject_course.name
+                %tr
+                  %td.col-sm-4=t('views.user_exam_sittings.form.date')
+                  %td.col-sm-8=@user_exam_sitting.date
+              %p
+                =link_to t('views.general.back'), user_exam_sittings_url
+                |
+                =link_to t('views.general.edit'), edit_user_exam_sitting_url(id: @user_exam_sitting.id), title: t('views.general.edit_tooltip')

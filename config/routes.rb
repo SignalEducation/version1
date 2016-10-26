@@ -176,6 +176,7 @@ Rails.application.routes.draw do
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_activity_logs
     resources :user_notifications
+    resources :user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
     resources :marketing_categories

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161026091701) do
+ActiveRecord::Schema.define(version: 20161026120245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1013,6 +1013,20 @@ ActiveRecord::Schema.define(version: 20161026091701) do
   add_index "user_activity_logs", ["original_uri"], name: "index_user_activity_logs_on_original_uri", using: :btree
   add_index "user_activity_logs", ["session_guid"], name: "index_user_activity_logs_on_session_guid", using: :btree
   add_index "user_activity_logs", ["user_id"], name: "index_user_activity_logs_on_user_id", using: :btree
+
+  create_table "user_exam_sittings", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exam_sitting_id"
+    t.integer  "subject_course_id"
+    t.date     "date"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "user_exam_sittings", ["date"], name: "index_user_exam_sittings_on_date", using: :btree
+  add_index "user_exam_sittings", ["exam_sitting_id"], name: "index_user_exam_sittings_on_exam_sitting_id", using: :btree
+  add_index "user_exam_sittings", ["subject_course_id"], name: "index_user_exam_sittings_on_subject_course_id", using: :btree
+  add_index "user_exam_sittings", ["user_id"], name: "index_user_exam_sittings_on_user_id", using: :btree
 
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"

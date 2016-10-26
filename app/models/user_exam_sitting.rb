@@ -1,42 +1,48 @@
 # == Schema Information
 #
-# Table name: exam_sittings
+# Table name: user_exam_sittings
 #
 #  id                :integer          not null, primary key
-#  name              :string
+#  user_id           :integer
+#  exam_sitting_id   :integer
 #  subject_course_id :integer
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
 
-class ExamSitting < ActiveRecord::Base
+class UserExamSitting < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :date
+  attr_accessible :user_id, :exam_sitting_id, :subject_course_id, :date
 
   # Constants
 
   # relationships
+  belongs_to :user
+  belongs_to :exam_sitting
   belongs_to :subject_course
-  has_many :user_exam_sittings
 
   # validation
-  validates :name, presence: true
+  validates :user_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :exam_sitting_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :date, presence: true
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:user_id) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   protected

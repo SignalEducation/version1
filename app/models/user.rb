@@ -113,6 +113,7 @@ class User < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :user_activity_logs
+  has_many :user_exam_sittings
   belongs_to :user_group
   has_many :user_notifications
   has_one :referral_code
