@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009100249) do
+ActiveRecord::Schema.define(version: 20161026091701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,6 +302,18 @@ ActiveRecord::Schema.define(version: 20161009100249) do
     t.datetime "updated_at",                                 null: false
     t.boolean  "active",                     default: false
   end
+
+  create_table "exam_sittings", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "subject_course_id"
+    t.date     "date"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
+  add_index "exam_sittings", ["name"], name: "index_exam_sittings_on_name", using: :btree
+  add_index "exam_sittings", ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id", using: :btree
 
   create_table "flash_card_stacks", force: :cascade do |t|
     t.integer  "course_module_element_flash_card_pack_id"

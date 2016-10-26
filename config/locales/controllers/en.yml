@@ -35,41 +35,62 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
-    orders:
+    corporate_groups:
       create:
         flash:
-          success: Your Purchase was successfull, a receipt will be emailed to you shortly.
+          success: Corporate Group has been created successfully
       update:
         flash:
-          success: Order details have been updated successfully
+          success: Corporate Group details have been updated successfully
       destroy:
         flash:
-          success: Order has been deleted
-          error: Order was not deleted
+          success: Corporate Group has been deleted
+          error: Corporate Group was not deleted
+      update_members:
+        flash:
+          success: Corporate group members have been updated successfully
 
-    subject_course_categories:
+    corporate_students:
       create:
         flash:
-          success: Course Category has been created successfully
+          success: Corporate student user has been created successfully
+          error: There was invalid data Please try again
       update:
         flash:
-          success: Course Category details have been updated successfully
+          success: Corporate student user details have been updated successfully
       destroy:
         flash:
-          success: Course Category has been deleted
-          error: Course Category was not deleted
+          success: Corporate student user has been deactivated
+          error: Corporate student user was not deactivated
+      import_csv:
+        flash:
+          error: There was an issue with your upload file, please ensure it meets the requirements
+      preview_csv:
+        flash:
+          error: There was an issue with your upload file, please ensure it meets the requirements
 
-    products:
+
+    corporate_managers:
       create:
         flash:
-          success: Product has been created successfully
+          success: Corporate manager user has been created successfully
+          error: There was invalid data Please try again
       update:
         flash:
-          success: Product details have been updated successfully
+          success: Corporate manager user details have been updated successfully
       destroy:
         flash:
-          success: Product has been deleted
-          error: Product was not deleted
+          success: Corporate manager user has been deactivated
+          error: Corporate manager user was not deactivated
+
+    corporate_profiles:
+      create:
+        flash:
+          success: Your profile has been created successfully!
+          error: Sorry an error occured while creating your profile please try again!
+      show:
+        flash:
+          error: The username and/or password are incorrect. Please try again!
 
     corporate_requests:
       create:
@@ -82,18 +103,6 @@ en:
         flash:
           success: Corporate Request has been deleted
           error: Corporate Request was not deleted
-
-    subject_courses:
-      create:
-        flash:
-          success: Subject Course has been created successfully
-      update:
-        flash:
-          success: Subject Course details have been updated successfully
-      destroy:
-        flash:
-          success: Subject Course has been deleted
-          error: Subject Course was not deleted
 
     corporate_customers:
       create:
@@ -178,6 +187,18 @@ en:
           success: Currency has been deleted
           error: Currency was not deleted
 
+    exam_sittings:
+      create:
+        flash:
+          success: ExamSitting has been created successfully
+      update:
+        flash:
+          success: ExamSitting details have been updated successfully
+      destroy:
+        flash:
+          success: ExamSitting has been deleted
+          error: ExamSitting was not deleted
+
     groups:
       create:
         flash:
@@ -192,8 +213,6 @@ en:
       update_subjects:
         flash:
           success: Course Group courses have been updated successfully
-
-
 
     home_pages:
       create:
@@ -223,6 +242,50 @@ en:
           success: Invoice has been deleted
           error: Invoice was not deleted
 
+    marketing_categories:
+      create:
+        flash:
+          success: Marketing Category has been created successfully
+      update:
+        flash:
+          success: Marketing Category details have been updated successfully
+          error: Marketing Category details have not been updated
+      destroy:
+        flash:
+          success: Marketing Category has been deleted
+          error: Marketing Category was not deleted
+
+    marketing_tokens:
+      create:
+        flash:
+          success: Marketing Token has been created successfully
+      update:
+        flash:
+          success: Marketing Token details have been updated successfully
+          error: Marketing Token details have not been updated
+      destroy:
+        flash:
+          success: Marketing Token has been deleted
+          error: Marketing Token was not deleted
+      preview_csv:
+        flash:
+          error: "Sorry, something went wrong with your data (MTC-01)"
+      import_csv:
+        flash:
+          error: "Sorry, something went wrong with your data (MTC-02)"
+
+    orders:
+      create:
+        flash:
+          success: Your Purchase was successfull, a receipt will be emailed to you shortly.
+      update:
+        flash:
+          success: Order details have been updated successfully
+      destroy:
+        flash:
+          success: Order has been deleted
+          error: Order was not deleted
+
     question_banks:
       create:
         flash:
@@ -250,6 +313,23 @@ en:
           success: Quiz Question has been deleted
           error: Quiz Question was not deleted
 
+    referral_codes:
+      create:
+        flash:
+          error: Referral code already exist
+      show:
+        flash:
+          error: Referral code does not exist
+      destroy:
+        flash:
+          success: Referral code has been deleted
+          error: Referral code was not deleted
+
+    referred_signups:
+      update:
+        flash:
+          success: Referred Signup details have been updated successfully
+
     static_pages:
       create:
         flash:
@@ -261,6 +341,43 @@ en:
         flash:
           success: Static Page has been deleted
           error: Static Page was not deleted
+
+    student_user_types:
+      create:
+        flash:
+          success: Student User Type has been created successfully
+      update:
+        flash:
+          success: Student User Type details have been updated successfully
+      destroy:
+        flash:
+          success: Student User Type has been deleted
+          error: Student User Type was not deleted
+
+    subject_courses:
+      create:
+        flash:
+          success: Subject Course has been created successfully
+      update:
+        flash:
+          success: Subject Course details have been updated successfully
+      destroy:
+        flash:
+          success: Subject Course has been deleted
+          error: Subject Course was not deleted
+
+    subject_course_categories:
+      create:
+        flash:
+          success: Course Category has been created successfully
+      update:
+        flash:
+          success: Course Category details have been updated successfully
+      destroy:
+        flash:
+          success: Course Category has been deleted
+          error: Course Category was not deleted
+
 
     subscription_payment_cards:
       create:
@@ -370,18 +487,6 @@ en:
           success: User Group has been deleted
           error: User Group was not deleted
 
-    student_user_types:
-      create:
-        flash:
-          success: Student User Type has been created successfully
-      update:
-        flash:
-          success: Student User Type details have been updated successfully
-      destroy:
-        flash:
-          success: Student User Type has been deleted
-          error: Student User Type was not deleted
-
     user_notifications:
       create:
         flash:
@@ -427,103 +532,6 @@ en:
           success: Vat Code has been deleted
           error: Vat Code was not deleted
 
-    marketing_categories:
-      create:
-        flash:
-          success: Marketing Category has been created successfully
-      update:
-        flash:
-          success: Marketing Category details have been updated successfully
-          error: Marketing Category details have not been updated
-      destroy:
-        flash:
-          success: Marketing Category has been deleted
-          error: Marketing Category was not deleted
-
-    marketing_tokens:
-      create:
-        flash:
-          success: Marketing Token has been created successfully
-      update:
-        flash:
-          success: Marketing Token details have been updated successfully
-          error: Marketing Token details have not been updated
-      destroy:
-        flash:
-          success: Marketing Token has been deleted
-          error: Marketing Token was not deleted
-      preview_csv:
-        flash:
-          error: "Sorry, something went wrong with your data (MTC-01)"
-      import_csv:
-        flash:
-          error: "Sorry, something went wrong with your data (MTC-02)"
-
-    referral_codes:
-      create:
-        flash:
-          error: Referral code already exist
-      show:
-        flash:
-          error: Referral code does not exist
-      destroy:
-        flash:
-          success: Referral code has been deleted
-          error: Referral code was not deleted
-
-    referred_signups:
-      update:
-        flash:
-          success: Referred Signup details have been updated successfully
-
-    corporate_groups:
-      create:
-        flash:
-          success: Corporate Group has been created successfully
-      update:
-        flash:
-          success: Corporate Group details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate Group has been deleted
-          error: Corporate Group was not deleted
-      update_members:
-        flash:
-          success: Corporate group members have been updated successfully
-
-    corporate_students:
-      create:
-        flash:
-          success: Corporate student user has been created successfully
-          error: There was invalid data Please try again
-      update:
-        flash:
-          success: Corporate student user details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate student user has been deactivated
-          error: Corporate student user was not deactivated
-      import_csv:
-        flash:
-          error: There was an issue with your upload file, please ensure it meets the requirements
-      preview_csv:
-        flash:
-          error: There was an issue with your upload file, please ensure it meets the requirements
-
-
-    corporate_managers:
-      create:
-        flash:
-          success: Corporate manager user has been created successfully
-          error: There was invalid data Please try again
-      update:
-        flash:
-          success: Corporate manager user details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate manager user has been deactivated
-          error: Corporate manager user was not deactivated
-
     white_papers:
       create:
         flash:
@@ -548,11 +556,3 @@ en:
           success: Request has been deleted
           error: Request was not deleted
 
-    corporate_profiles:
-      create:
-        flash:
-          success: Your profile has been created successfully!
-          error: Sorry an error occured while creating your profile please try again!
-      show:
-        flash:
-          error: The username and/or password are incorrect. Please try again!

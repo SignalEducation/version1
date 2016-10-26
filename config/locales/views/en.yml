@@ -575,6 +575,25 @@ en:
         publishes_in_next_3_days: Publishes in the next 3 days
         see_all_static_pages: See All Static Pages
 
+    exam_sittings:
+      form:
+        name: Name
+        subject_course_id: Course
+        date: Date
+
+      index:
+        h1: Exam Sittings
+
+      show:
+        h1: Exam Sitting
+
+      edit:
+        h1: Edit Exam Sitting
+
+      new:
+        h1: New Exam Sitting
+
+
     flash_cards:
       form:
         new_card: New card
