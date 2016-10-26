@@ -15,8 +15,9 @@
               ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
               ='Start your 7-Day Free Trial'
 
-          .col-sm-6.col-md-4.col-lg-4#sign-up-form
-            =render partial: 'sign_up_form'
+          -unless current_user
+            .col-sm-6.col-md-4.col-lg-4#sign-up-form
+              =render partial: 'sign_up_form'
 
 .acca-business
   .l-wrap
