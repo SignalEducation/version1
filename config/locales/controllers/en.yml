@@ -9,7 +9,7 @@ en:
       date_formats:
         simple: "%-e/%m/%Y"
         standard: "%-e %b %Y"
-      datepicker_datetime_format: "YYYY-MM-DD HH:MM"
+      datepicker_datetime_format: "YYYY-MM-DD"
       datepicker_date_format: "YYYY-MM-DD"
       difficulty_levels:
         name:

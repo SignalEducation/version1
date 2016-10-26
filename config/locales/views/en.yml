@@ -580,6 +580,7 @@ en:
         name: Name
         subject_course_id: Course
         date: Date
+        date_placeholder: "2015-01-01"
 
       index:
         h1: Exam Sittings
