@@ -20,8 +20,9 @@
               =link_to country_count, '#', class: 'no-link-style'
               ="are using our platform to progress their careers"
 
-          .col-sm-6.col-md-4.col-lg-4#sign-up-form
-            =render partial: 'sign_up_form'
+          -unless current_user
+            .col-sm-6.col-md-4.col-lg-4#sign-up-form
+              =render partial: 'sign_up_form'
 
 
 .cfa-business
