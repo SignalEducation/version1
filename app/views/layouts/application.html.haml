@@ -54,6 +54,9 @@
       =render partial: 'layouts/hotjar'
 
   %body
+    %noscript
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
+    height: 0, width: 0, style: 'display:none;visibility:hidden'}
     -if (Rails.env.production?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if Rails.env.production?
