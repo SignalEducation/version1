@@ -177,6 +177,7 @@ Rails.application.routes.draw do
     resources :user_activity_logs
     resources :user_notifications
     resources :user_exam_sittings
+    post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
     resources :marketing_categories

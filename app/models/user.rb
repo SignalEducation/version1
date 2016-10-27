@@ -615,6 +615,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
   end
 
+  def exam_sittings
+    user_exam_sittings.map(&:exam_sitting_id)
+  end
+
   #######################################################
   #StudentUserTypes
   #######################################################

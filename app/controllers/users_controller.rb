@@ -110,8 +110,9 @@ class UsersController < ApplicationController
       @footer = true
     end
 
-    @user_exam_sittings = @user.user_exam_sittings
-    @exam_sittings = ExamSitting.all_in_order
+    @user_exam_sittings = current_user.user_exam_sittings
+    ids = @user_exam_sittings.map(&:id)
+    @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
     course_ids = @exam_sittings.map(&:subject_course_id)
     @sitting_courses = SubjectCourse.where(id: course_ids)
 

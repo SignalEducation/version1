@@ -34,16 +34,13 @@ class UserExamSittingsController < ApplicationController
   end
 
   def create
-    @user_exam_sitting = UserExamSitting.new(allowed_params)
-    @user_exam_sitting.user_id = current_user.id
-    @user_exam_sitting.subject_course_id = @user_exam_sitting.exam_sitting.subject_course_id
-    #@user_exam_sitting.date = @user_exam_sitting.exam_sitting.date unless params[:date]
-    if @user_exam_sitting.save
-      flash[:success] = I18n.t('controllers.user_exam_sittings.create.flash.success')
-      redirect_to account_url
-    else
-      render action: :new
+    exam_sittings = params['user_exam_sittings']
+    exam_sittings.each do |exam_sitting|
+      sitting = ExamSitting.find(exam_sitting[0])
+      @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date)
     end
+    #@user_exam_sitting.date = @user_exam_sitting.exam_sitting.date unless params[:date]
+    redirect_to account_url
   end
 
   def update
