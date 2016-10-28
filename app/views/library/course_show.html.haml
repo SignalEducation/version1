@@ -11,6 +11,10 @@
               .fa.fa-arrow-left
               =@course.parent.name
 
+            =link_to('#', data: {toggle: 'modal', target: '#exam_sittings_form'}) do
+              .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top
+                Modal
+
       -if current_user && !current_user.corporate_user?
         -if @course.subscription
           =render partial: 'layouts/content_notice', locals: {course: @course}
@@ -158,3 +162,6 @@
 
   :javascript
     hj('trigger', "#{@course.hotjar_guid}");
+
+
+=render partial: 'layouts/user_exam_sitting_modal'
