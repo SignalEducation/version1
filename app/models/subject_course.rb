@@ -35,6 +35,7 @@
 #  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
+#  external_url                            :string
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -44,7 +45,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content
+ :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url
 
   # Constants
 

@@ -35,6 +35,7 @@
 #  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
+#  external_url                            :string
 #
 
 FactoryGirl.define do

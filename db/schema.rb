@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161026120245) do
+ActiveRecord::Schema.define(version: 20161028105357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -830,6 +830,7 @@ ActiveRecord::Schema.define(version: 20161026120245) do
     t.boolean  "enrollment_option",                       default: false
     t.integer  "subject_course_category_id"
     t.text     "email_content"
+    t.string   "external_url"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
