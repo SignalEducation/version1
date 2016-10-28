@@ -36,10 +36,15 @@ class UserExamSittingsController < ApplicationController
   def create
     exam_sittings = params['user_exam_sittings']
     exam_sittings.each do |exam_sitting|
-      sitting = ExamSitting.find(exam_sitting[0])
-      @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date)
+      if exam_sitting[1][' date']
+        sitting = ExamSitting.find(exam_sitting[0])
+        date = exam_sitting[1][' date']
+        @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: date)
+      else
+        sitting = ExamSitting.find(exam_sitting[0])
+        @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date)
+      end
     end
-    #@user_exam_sitting.date = @user_exam_sitting.exam_sitting.date unless params[:date]
     redirect_to account_url
   end
 

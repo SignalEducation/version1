@@ -43,9 +43,12 @@
                 -course.exam_sittings.each do |sitting|
                   -unless current_user.exam_sittings.include?(sitting.id)
                     %td
-                      %label
-                        =sitting.date
-                        = check_box_tag( "user_exam_sittings[#{sitting.id}]")
+                      -if sitting.date
+                        %label
+                          =sitting.date
+                          = check_box_tag( "user_exam_sittings[#{sitting.id}]")
+                      -else
+                        =text_field_tag ["user_exam_sittings[#{sitting.id}]", ["date"]], '',placeholder: 'Date ', class: 'form-control', style: 'border-radius: 6px; width: 40%;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
 
 
     .l-margin-top-huge
@@ -54,4 +57,10 @@
 :javascript
   $(document).ready(function() {
     $('#submit_btn').on('click', function() { $('#exam_sittings_form').submit(); });
+  });
+
+
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
   });
