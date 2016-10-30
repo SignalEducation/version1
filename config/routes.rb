@@ -152,6 +152,7 @@ Rails.application.routes.draw do
 
     post '/create_session_product', to: 'users#create_session_product', as: :create_session_product
 
+    resources :mock_exams, concerns: :supports_reordering
     resources :orders
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]

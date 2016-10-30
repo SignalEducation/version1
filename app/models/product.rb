@@ -29,7 +29,7 @@ class Product < ActiveRecord::Base
   # relationships
   belongs_to :subject_course
   belongs_to :currency
-  #belongs_to :mock_exam
+  belongs_to :mock_exam
   has_many :orders
 
   # validation

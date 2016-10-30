@@ -1,0 +1,30 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.mock_exams.show.h1')
+            \#
+            =@mock_exam.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.mock_exams.form.subject_course_id')
+                  %td.col-sm-8=@mock_exam.subject_course.name
+                %tr
+                  %td.col-sm-4=t('views.mock_exams.form.product_id')
+                  %td.col-sm-8=@mock_exam.product.name
+                %tr
+                  %td.col-sm-4=t('views.mock_exams.form.name')
+                  %td.col-sm-8=@mock_exam.name
+                %tr
+                  %td.col-sm-4=t('views.mock_exams.form.sorting_order')
+                  %td.col-sm-8=@mock_exam.sorting_order
+              %p
+                =link_to t('views.general.back'), mock_exams_url
+                |
+                =link_to t('views.general.edit'), edit_mock_exam_url(id: @mock_exam.id), title: t('views.general.edit_tooltip')

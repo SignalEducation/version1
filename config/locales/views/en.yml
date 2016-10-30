@@ -781,6 +781,26 @@ en:
         continue_course: Continue Course
         start_course: Start Course
 
+    mock_exams:
+      form:
+        name: Name
+        name_placeholder: Mock Exam Name
+        subject_course_id: Course
+        product_id: Product
+        sorting_order: Sorting Order
+
+      index:
+        h1: Mock Exams
+
+      show:
+        h1: Mock Exam
+
+      edit:
+        h1: Edit Mock Exam
+
+      new:
+        h1: New Mock Exam
+
     products:
       form:
         name: Name

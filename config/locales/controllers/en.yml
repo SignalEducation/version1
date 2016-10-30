@@ -274,6 +274,18 @@ en:
         flash:
           error: "Sorry, something went wrong with your data (MTC-02)"
 
+    mock_exams:
+      create:
+        flash:
+          success: Mock Exam has been created successfully
+      update:
+        flash:
+          success: Mock Exam details have been updated successfully
+      destroy:
+        flash:
+          success: Mock Exam has been deleted
+          error: Mock Exam was not deleted
+
     orders:
       create:
         flash:
@@ -285,6 +297,18 @@ en:
         flash:
           success: Order has been deleted
           error: Order was not deleted
+
+    products:
+      create:
+        flash:
+          success: Product has been created successfully
+      update:
+        flash:
+          success: Product details have been updated successfully
+      destroy:
+        flash:
+          success: Product has been deleted
+          error: Product was not deleted
 
     question_banks:
       create:

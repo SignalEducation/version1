@@ -81,7 +81,7 @@ class ProductsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:product).permit(:name, :active, :subject_course_id, :mock_exam_id, :price, :currency_id, :livemode)
+    params.require(:product).permit(:name, :active, :subject_course_id, :price, :currency_id, :livemode)
   end
 
 end

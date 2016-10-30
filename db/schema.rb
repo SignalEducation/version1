@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161028105357) do
+ActiveRecord::Schema.define(version: 20161030171025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -503,6 +503,19 @@ ActiveRecord::Schema.define(version: 20161028105357) do
   end
 
   add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
+
+  create_table "mock_exams", force: :cascade do |t|
+    t.integer  "subject_course_id"
+    t.integer  "product_id"
+    t.string   "name"
+    t.integer  "sorting_order"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "mock_exams", ["name"], name: "index_mock_exams_on_name", using: :btree
+  add_index "mock_exams", ["product_id"], name: "index_mock_exams_on_product_id", using: :btree
+  add_index "mock_exams", ["subject_course_id"], name: "index_mock_exams_on_subject_course_id", using: :btree
 
   create_table "order_transactions", force: :cascade do |t|
     t.integer  "order_id"
