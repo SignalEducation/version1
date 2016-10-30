@@ -289,6 +289,11 @@ hr {
   border-color: lighten($colour-7, 60%);
   margin: $gutter*2 0;
 }
+.modal hr{
+  border-color: lighten($colour-7, 60%);
+  margin: $gutter 0;
+}
+
 .h-separator {
   padding-bottom: $gutter*1.5;
   //margin-bottom: $gutter*2;

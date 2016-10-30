@@ -1,0 +1,34 @@
+=form_for(:user, url: user_enrollment_url, method: 'POST', html: {class: 'form-horizontal', role: 'form'}) do |f|
+
+  .modal.fade#enrollmentModal{tabindex:'-1', role:'dialog', 'aria-labelledby':'enrollmentModalLabel'}
+    .modal-dialog
+      .modal-content.is-bg-asphalt.l-padding-side-15
+        .container-fluid
+          .modal-header
+            .row
+              .col-md-12
+                %button{type: "button", class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
+                %h2.modal-title{style: 'width: 95%'}
+                  ="Enroll in #{@course.try(:name)}"
+            %hr
+            .row
+              .col-md-12
+                =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                %p
+                  If you don't have a Student Number follow this link
+                  =link_to @course.external_url_name, url_for(@course.external_url), target: '_blank'
+
+
+                -unless current_user.terms_and_conditions
+                  .form-group
+                    .checkbox{style: 'margin-left: 15px;'}
+                      %label
+                        =f.check_box :terms_and_conditions
+                        I accept all terms & conditions for using LearnSignal
+
+
+          .l-margin-top.l-margin-bottom.pull-right
+            =f.submit 'Start Course Now', class: 'btn btn-cyan'

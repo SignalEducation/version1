@@ -988,6 +988,8 @@ en:
         short_description_placeholder: Description
         mailchimp_guid: MailChimp List ID
         mailchimp_guid_placeholder: MailChimp ID
+        external_url_name: Name of Exam Body
+        external_url_name_placeholder: ACCA or CFA
         external_url: URL of Exam Body Site
         external_url_placeholder: acca.com, cfa.com
         forum_url: Forum Course URL

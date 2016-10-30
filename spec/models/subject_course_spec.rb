@@ -36,6 +36,7 @@
 #  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url                            :string
+#  external_url_name                       :string
 #
 
 require 'rails_helper'

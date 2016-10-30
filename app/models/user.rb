@@ -619,6 +619,10 @@ class User < ActiveRecord::Base
     user_exam_sittings.map(&:exam_sitting_id)
   end
 
+  def exam_sitting_courses
+    user_exam_sittings.map(&:subject_course_id)
+  end
+
   #######################################################
   #StudentUserTypes
   #######################################################

@@ -1,4 +1,4 @@
--if (!current_user.student_number || !current_user.student_number.empty?) && current_user.terms_and_conditions
+-if current_user.student_number && current_user.terms_and_conditions
   .enrollment-form-cover
     .card.card-library
       .card-library-outer-cover
@@ -26,30 +26,6 @@
 
 
 -else
-  .enrollment-form.hidden
-    .card.card-library
-      .card-library-outer
-        .card-inner
-          =form_for(:user, url: user_enrollment_url, method: 'POST', html: {class: 'form-horizontal', role: 'form'}) do |f|
-            .col-sm-8.col-xs-12
-              %h3.h3.card-title.l-margin-bottom
-                =@course.name
-              %br/
-              %p{style: 'margin-bottom: 0;'}
-                Please fill in the following
-              .card-form
-                -if !current_user.student_number || current_user.student_number.empty?
-                  .form-group
-                    =f.text_field :student_number, placeholder: t('views.users.form.student_number'), class: 'form-control'
-                -unless current_user.terms_and_conditions
-                  .form-group
-                    .checkbox{style: 'margin-left: 15px;'}
-                      %label
-                        =f.check_box :terms_and_conditions
-                        I accept all terms & conditions for using LearnSignal
-
-            .col-sm-4.col-xs-12.text-center.resume-course
-              =f.submit 'Start Now', class: 'btn btn-wide btn-cyan'
 
   .enrollment-form-cover
     .card.card-library
@@ -58,16 +34,8 @@
           .col-sm-8.col-xs-12
             %h3.h3.card-title.l-margin-bottom
               =@course.name
-          .col-sm-4.col-xs-12.text-center#enroll
-            =link_to 'Enroll', '#', class: 'btn btn-wide btn-cyan'
+          .col-sm-4.col-xs-12.text-center
 
 
-  :javascript
-
-    $(function() {
-      $('#enroll').click(function(event){
-        event.preventDefault();
-        $('.enrollment-form-cover').hide();
-        $('.enrollment-form').removeClass('hidden');
-      });
-    });
+            %a.enrollmentModal{href: '#', data: {toggle: 'modal', target: '#enrollmentModal'}, class: 'btn btn-cyan btn-wide'}
+              Enroll

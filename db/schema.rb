@@ -831,6 +831,7 @@ ActiveRecord::Schema.define(version: 20161028105357) do
     t.integer  "subject_course_category_id"
     t.text     "email_content"
     t.string   "external_url"
+    t.string   "external_url_name"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
