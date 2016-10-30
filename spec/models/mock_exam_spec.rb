@@ -9,6 +9,10 @@
 #  sorting_order     :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  file_file_name    :string
+#  file_content_type :string
+#  file_file_size    :integer
+#  file_updated_at   :datetime
 #
 
 require 'rails_helper'

@@ -9,12 +9,16 @@
 #  sorting_order     :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  file_file_name    :string
+#  file_content_type :string
+#  file_file_size    :integer
+#  file_updated_at   :datetime
 #
 
 class MockExamsController < ApplicationController
 
-  before_action :logged_in_required, except: [:index, :show]
-  before_action except: [:index, :show] do
+  before_action :logged_in_required, except: [:show]
+  before_action except: [:show] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -28,13 +32,10 @@ class MockExamsController < ApplicationController
 
   def new
     @mock_exam = MockExam.new
-    @mock_exam.build_product
   end
 
   def edit
-    if @mock_exam
-      @mock_exam.build_product
-    end
+    @mock_exam
   end
 
   def create
@@ -86,7 +87,7 @@ class MockExamsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:mock_exam).permit(:subject_course_id, :product_id, :name, :sorting_order)
+    params.require(:mock_exam).permit(:subject_course_id, :product_id, :name, :sorting_order, :file)
   end
 
 end

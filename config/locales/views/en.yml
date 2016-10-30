@@ -787,6 +787,7 @@ en:
         name_placeholder: Mock Exam Name
         subject_course_id: Course
         product_id: Product
+        file: PDF File
         sorting_order: Sorting Order
 
       index:
