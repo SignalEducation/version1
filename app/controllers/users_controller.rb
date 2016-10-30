@@ -349,7 +349,7 @@ class UsersController < ApplicationController
   end
 
   def new_subscription
-    redirect_to account_url unless current_user.individual_student?
+    redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
     @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
@@ -452,7 +452,7 @@ class UsersController < ApplicationController
     @user = User.where(id: params[:user_id]).first
     @subscription = @user.active_subscription || @user.subscriptions.last
     redirect_to root_url unless @user.individual_student? || @subscription
-    redirect_to account_url unless @subscription.current_status == 'canceled'
+    redirect_to account_url(anchor: :subscriptions) unless @subscription.current_status == 'canceled'
     @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
     currency_id = @subscription.subscription_plan.currency_id
     @country = Country.where(currency_id: currency_id).first

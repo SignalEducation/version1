@@ -45,7 +45,7 @@ class UserExamSittingsController < ApplicationController
         @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date)
       end
     end
-    redirect_to account_url
+    redirect_to account_url(anchor: :exam_sittings)
   end
 
   def update
