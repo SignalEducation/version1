@@ -2,17 +2,21 @@
 #
 # Table name: mock_exams
 #
-#  id                :integer          not null, primary key
-#  subject_course_id :integer
-#  product_id        :integer
-#  name              :string
-#  sorting_order     :integer
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  file_file_name    :string
-#  file_content_type :string
-#  file_file_size    :integer
-#  file_updated_at   :datetime
+#  id                       :integer          not null, primary key
+#  subject_course_id        :integer
+#  product_id               :integer
+#  name                     :string
+#  sorting_order            :integer
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  file_file_name           :string
+#  file_content_type        :string
+#  file_file_size           :integer
+#  file_updated_at          :datetime
+#  cover_image_file_name    :string
+#  cover_image_content_type :string
+#  cover_image_file_size    :integer
+#  cover_image_updated_at   :datetime
 #
 
 class MockExam < ActiveRecord::Base
@@ -20,7 +24,7 @@ class MockExam < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :subject_course_id, :product_id, :name, :sorting_order, :file
+  attr_accessible :subject_course_id, :product_id, :name, :sorting_order, :file, :cover_image
 
   # Constants
 
@@ -28,8 +32,8 @@ class MockExam < ActiveRecord::Base
   belongs_to :subject_course
   has_one :product
 
-  has_attached_file :file, default_url: "/images/:style/missing.png"
-  validates_attachment_content_type :file, :content_type => ['application/pdf']
+  has_attached_file :file, default_url: '/assets/images/missing.png'
+  has_attached_file :cover_image, default_url: '/assets/images/missing.png'
 
   # validation
   validates :subject_course_id, presence: true,
@@ -37,6 +41,9 @@ class MockExam < ActiveRecord::Base
   validates :product_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
+
+  validates_attachment_content_type :file, :content_type => ['application/pdf']
+  validates_attachment_content_type :cover_image, content_type: %w('image/jpg image/jpeg image/png')
 
   # callbacks
   before_destroy :check_dependencies
