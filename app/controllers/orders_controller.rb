@@ -110,6 +110,58 @@ class OrdersController < ApplicationController
     end
   end
 
+  def mock_exam_create
+
+    if current_user && params[:order] && params[:order][:mock_exam_id] && params[:order][:stripe_token]
+
+      user = current_user
+      mock_exam_id = params[:order][:mock_exam_id]
+      product = Product.find_by_mock_exam_id(mock_exam_id)
+      @mock_exam = product.mock_exam
+      currency = Currency.find(product.currency_id)
+      stripe_token = params[:order][:stripe_token]
+      #redirect_to media_library_url if current_user.valid_subject_course_ids.include?(params[:order][:subject_course_id])
+
+      @order = Order.new(allowed_params)
+      @order.user_id = user.id
+      @order.product_id = product.id
+
+      stripe_order = Stripe::Order.create(
+          currency: currency.iso_code,
+          customer: user.stripe_customer_id,
+          email: user.email,
+          items: [{
+                      amount: (product.price.to_f * 100).to_i,
+                      currency: currency.iso_code,
+                      quantity: 1,
+                      parent: product.stripe_sku_guid
+                  }]
+      )
+
+      @order.stripe_customer_id = stripe_order.customer
+      @order.stripe_guid = stripe_order.id
+      @order.live_mode = stripe_order.livemode
+      @order.current_status = stripe_order.status
+
+      if @order.valid?
+        order = Stripe::Order.retrieve(@order.stripe_guid)
+        @pay_order = order.pay(source: stripe_token)
+      end
+      order = Stripe::Order.retrieve(@order.stripe_guid)
+      @order.current_status = order.status
+      @order.stripe_order_payment_data = @pay_order
+    else
+      redirect_to media_library_url
+    end
+
+    if @order.save
+      flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+      redirect_to account_url(annchor: :orders)
+    else
+      redirect_to media_library_url
+    end
+  end
+
   protected
 
   def get_variables

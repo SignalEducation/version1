@@ -290,6 +290,7 @@ en:
       create:
         flash:
           success: Your Purchase was successfull, a receipt will be emailed to you shortly.
+          mock_exam_success: Your Purchase was successfull, your Mock Exam will now be emailed to your account.
       update:
         flash:
           success: Order details have been updated successfully
