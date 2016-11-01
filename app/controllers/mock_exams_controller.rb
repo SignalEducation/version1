@@ -32,6 +32,12 @@ class MockExamsController < ApplicationController
   end
 
   def show
+    #This functions as OrdersController#new
+    @order = Order.new
+    @product = @mock_exam.product
+    @course = @mock_exam.subject_course
+    @navbar = false
+    @footer = false
   end
 
   def new

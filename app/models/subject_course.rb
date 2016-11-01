@@ -62,6 +62,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :exam_sittings
   has_many :user_exam_sittings
   has_one :question_bank
+  has_one :mock_exam
   has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
