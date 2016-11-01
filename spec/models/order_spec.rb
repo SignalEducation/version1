@@ -14,6 +14,7 @@
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
+#  mock_exam_id              :integer
 #
 
 require 'rails_helper'

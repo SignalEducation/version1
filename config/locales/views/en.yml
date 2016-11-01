@@ -694,6 +694,7 @@ en:
         issued_at: "Issued at"
         date: Date
         subject_course: Course
+        mock_exam: Mock Exam
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"

@@ -31,6 +31,7 @@ class MockExam < ActiveRecord::Base
   # relationships
   belongs_to :subject_course
   belongs_to :product
+  has_many :orders
 
   has_attached_file :file, default_url: '/assets/images/missing.png'
   has_attached_file :cover_image, default_url: '/assets/images/missing.png'

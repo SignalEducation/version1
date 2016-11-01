@@ -14,12 +14,13 @@
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
+#  mock_exam_id              :integer
 #
 
 class OrdersController < ApplicationController
 
   before_action :logged_in_required
-  before_action except: [:new, :create] do
+  before_action except: [:new, :create, :mock_exam_create] do
     ensure_user_is_of_type(['admin'])
   end
   before_action only: [:new, :create] do
@@ -111,13 +112,12 @@ class OrdersController < ApplicationController
   end
 
   def mock_exam_create
-
     if current_user && params[:order] && params[:order][:mock_exam_id] && params[:order][:stripe_token]
 
       user = current_user
       mock_exam_id = params[:order][:mock_exam_id]
-      product = Product.find_by_mock_exam_id(mock_exam_id)
-      @mock_exam = product.mock_exam
+      @mock_exam = MockExam.find(mock_exam_id)
+      product = @mock_exam.product
       currency = Currency.find(product.currency_id)
       stripe_token = params[:order][:stripe_token]
       #redirect_to media_library_url if current_user.valid_subject_course_ids.include?(params[:order][:subject_course_id])
@@ -156,7 +156,7 @@ class OrdersController < ApplicationController
 
     if @order.save
       flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-      redirect_to account_url(annchor: :orders)
+      redirect_to account_url(anchor: :orders)
     else
       redirect_to media_library_url
     end
@@ -173,7 +173,7 @@ class OrdersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token)
+    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token, :mock_exam_id)
   end
 
 end
