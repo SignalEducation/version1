@@ -174,5 +174,5 @@
   :javascript
     hj('trigger', "#{@course.hotjar_guid}");
 
-
-=render partial: 'layouts/user_exam_sitting_modal'
+-if current_user
+  =render partial: 'layouts/user_exam_sitting_modal'

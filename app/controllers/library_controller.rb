@@ -69,8 +69,10 @@ class LibraryController < ApplicationController
     if @course.nil?
       redirect_to subscription_groups_url
     else
-      @user_exam_sittings = current_user.user_exam_sittings
-      ids = @user_exam_sittings.map(&:id)
+      if current_user
+        @user_exam_sittings = current_user.user_exam_sittings
+        ids = @user_exam_sittings.map(&:id)
+      end
       @exam_sittings = ExamSitting.where.not(id: ids).where(subject_course_id: @course.id).all_in_order
 
       @course_modules = @course.children.all_active.all_in_order
