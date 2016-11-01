@@ -168,6 +168,9 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   &.h-white {
     color: $white;
   }
+  &.h-dark {
+    color: $colour-7 !important;
+  }
   &.h-white-faded {
     color: lightcyan;
     //color: gainsboro;

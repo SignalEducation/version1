@@ -75,6 +75,14 @@ class MandrillClient
     send_template('invoice-payment-successful', msg)
   end
 
+  def send_mock_exam_email(account_url, file_name, attachment)
+    msg = message_stub.merge({"subject" => "LearnSignal Mock Exam "})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
+    send_template('mock-exam-purchase', msg)
+  end
+
 
 
 

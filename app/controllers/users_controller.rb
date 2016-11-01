@@ -115,8 +115,9 @@ class UsersController < ApplicationController
     @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
     course_ids = @exam_sittings.map(&:subject_course_id)
     @sitting_courses = SubjectCourse.where(id: course_ids)
-    @product_orders = Order.where.not(subject_course_id: nil).all_in_order
-    @mock_exam_orders = Order.where.not(mock_exam_id: nil).all_in_order
+    @orders = @user.orders
+    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
+    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
 
   end
 

@@ -156,6 +156,7 @@ class OrdersController < ApplicationController
 
     if @order.save
       flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+      MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file)
       redirect_to account_url(anchor: :orders)
     else
       redirect_to media_library_url
