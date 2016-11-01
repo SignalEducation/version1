@@ -154,6 +154,14 @@
                           =link_to r.upload.url, target: '_blank' do
                             .btn.btn-secondary.btn-red.btn-list
                               =r.name
+            -if current_user && @course.mock_exam
+              %p.h4.l-margin-bottom.l-margin-top-huge
+                Mock Exam
+              %ul.course-resources
+                %li
+                  =link_to mock_exam_url(@course.mock_exam) do
+                    .btn.btn-secondary.btn-red.btn-list
+                      =@course.mock_exam.name
 
 
       -if current_user && @course.enrolled_user_ids.include?(current_user.id)
