@@ -88,7 +88,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
     msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
     msg["global_merge_vars"] << { "name" => "DAYS_SINCE_LAST_SEEN", "content" => days }
-    send_template('we_havent_seen_you_in_a_while', msg)
+    send_template('we-havent-seen-you-in-a-while', msg)
   end
 
 
