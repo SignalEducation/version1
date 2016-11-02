@@ -433,7 +433,11 @@ class UsersController < ApplicationController
               new_user_type_id = user.student_user_type_id
             end
 
-            current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
+            if params[:user][:terms_and_conditions] == '1'
+              current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id, terms_and_conditions: true)
+            else
+              current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
+            end
             redirect_to personal_upgrade_complete_url
           else
             redirect_to user_new_subscription_url(current_user.id)

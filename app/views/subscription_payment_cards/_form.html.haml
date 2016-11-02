@@ -6,15 +6,15 @@
           Card Number
         =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
       .row
-        .form-group.col-lg-4
+        .form-group.col-sm-4
           %label
             CVV
           =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
-        .form-group.col-lg-4
+        .form-group.col-sm-4
           %label
             Expiry Month
           =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
-        .form-group.col-lg-4
+        .form-group.col-sm-4
           %label
             Expiry Year
           =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
@@ -30,13 +30,20 @@
 .l-margin-top.coupon-section
   .row
     .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
-      .form-group
-        %label
-          Coupon Code
-        =text_field_tag :coupon, nil, placeholder: 'Valid Coupon Code', class: 'form-control', default: nil
+      .col-sm-6{style: 'padding-left: 0;'}
+        .form-group
+          %label
+            Coupon Code
+          =text_field_tag :coupon, nil, placeholder: 'Valid Coupon Code', class: 'form-control', default: nil
+      .col-sm-6{style: 'padding-right: 0;'}
+        .form-group
+          .checkbox
+            %label
+              =f.check_box :terms_and_conditions, required: true
+              =t('views.general.terms_and_conditions')
 
-
-      .form-group
+    .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
+      .form-group.l-margin-top
         -if current_user == @user
           =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
         -else
