@@ -16,6 +16,31 @@
       .container-fluid
         .row
           .col-md-10.col-md-offset-1
+            .forgot-password-modal
+              %h2.text-center
+                Complaints Process
+              =form_tag(complaints_url, {class: 'form', role: 'form'}) do
+                .col-md-8.col-md-offset-2.l-margin-top-small
+                  .col-md-6
+                    =label_tag :full_name, 'Full Name'
+                    =text_field_tag :full_name, nil, class: 'form-control'
+                    %br/
+                  .col-md-6
+                    =label_tag :email, 'Email'
+                    =email_field_tag :email_address, nil, class: 'form-control'
+
+                  .col-md-12
+                    =label_tag :subject, 'Subject'
+                    =text_field_tag :subject, nil, class: 'form-control'
+                    %br/
+                    =label_tag :body, 'Please Describe Your Issue'
+                    =text_area_tag :body, nil, class: 'form-control'
+
+                .col-md-8.col-md-offset-2.l-margin-top-big
+                  = submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x', id: 'btn-send-password'
+
+        .row
+          .col-md-10.col-md-offset-1
             %h2.text-center.l-margin-bottom
               Keep in touch
             %p
