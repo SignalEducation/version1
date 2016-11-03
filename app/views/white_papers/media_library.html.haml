@@ -47,7 +47,7 @@
                         ='Purchase'
                         =mock_exam.try(:name)
                 -else
-                  =link_to sign_in_url, class: 'box box-profile' do
+                  =link_to sign_in_url(flash: :true), class: 'box box-profile' do
                     .box-inner
                       =image_tag mock_exam.try(:cover_image).try(:url), class: 'media-pic'
                       %p

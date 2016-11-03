@@ -8,6 +8,9 @@ class UserSessionsController < ApplicationController
     @navbar = nil
     @footer = nil
     @user_session = UserSession.new
+    if params[:flash]
+      flash[:error] = 'You must be signed in to access that content'
+    end
   end
 
   def create
