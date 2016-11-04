@@ -18,8 +18,11 @@
                   =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
                 %br/
                 %p
-                  If you don't have a Student Number follow this link
-                  =link_to @course.external_url_name, url_for(@course.external_url), target: '_blank'
+                  =link_to url_for(@course.external_url), target: '_blank' do
+                    ='Click here to get a Student Number'
+                    ="or for more information about "
+                    =@course.external_url_name
+
 
 
                 -unless current_user.terms_and_conditions
