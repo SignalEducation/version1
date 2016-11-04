@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161101115016) do
+ActiveRecord::Schema.define(version: 20161104113550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -852,7 +852,6 @@ ActiveRecord::Schema.define(version: 20161101115016) do
     t.boolean  "enrollment_option",                       default: false
     t.integer  "subject_course_category_id"
     t.text     "email_content"
-    t.string   "external_url"
     t.string   "external_url_name"
   end
 
