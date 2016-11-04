@@ -4,6 +4,11 @@
       ='About this Course'
     %p
       =@course.description.to_s.html_safe
+    -if @course.external_url_name && @course.external_url
+      %p
+        =link_to @course.external_url, target: '_blank' do
+          ='Click here for more information about the '
+          =@course.external_url_name
 
   .col-md-6
     -if @course.tutor.try(:profile_image_file_name)
@@ -25,4 +30,3 @@
         -if @course.tutor.first_description
           %p
             =@course.tutor.first_description.truncate(225).html_safe
-
