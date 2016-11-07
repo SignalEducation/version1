@@ -14,8 +14,11 @@
 class UserExamSittingsController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
-    ensure_user_is_of_type(['admin', 'individual_student'])
+  before_action except: [:create] do
+    ensure_user_is_of_type(['admin'])
+  end
+  before_action only: [:create] do
+    ensure_user_is_of_type(['individual_student'])
   end
   before_action :get_variables
 
@@ -34,15 +37,29 @@ class UserExamSittingsController < ApplicationController
   end
 
   def create
-    exam_sittings = params['user_exam_sittings']
-    exam_sittings.each do |exam_sitting|
-      if exam_sitting[1][' date']
-        sitting = ExamSitting.find(exam_sitting[0])
-        date = exam_sitting[1][' date']
-        @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: date)
+    if params['user_exam_sittings'].first[0] == "user_id"
+      exam_sitting = params['user_exam_sittings']
+      if exam_sitting['date']
+        sitting = ExamSitting.find(exam_sitting['exam_sitting_id'])
+        date = exam_sitting['date']
+        if sitting
+          @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: date)
+        end
       else
         sitting = ExamSitting.find(exam_sitting[0])
-        @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date)
+        @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date) if sitting
+      end
+    else
+      exam_sittings = params['user_exam_sittings']
+      exam_sittings.each do |exam_sitting|
+        if exam_sitting[1][' date']
+          sitting = ExamSitting.find(exam_sitting[0])
+          date = exam_sitting[1][' date']
+          @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: date)
+        else
+          sitting = ExamSitting.find(exam_sitting[0])
+          @user_exam_sitting = UserExamSitting.create(exam_sitting_id: sitting.id, user_id: current_user.id, subject_course_id: sitting.subject_course_id, date: sitting.date)
+        end
       end
     end
     redirect_to account_url(anchor: :exam_sittings)

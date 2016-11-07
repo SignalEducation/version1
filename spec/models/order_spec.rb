@@ -32,7 +32,6 @@ describe Order do
   end
 
   # Constants
-  #it { expect(Order.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:product) }
@@ -43,8 +42,7 @@ describe Order do
   it { should validate_presence_of(:product_id) }
   it { should validate_numericality_of(:product_id) }
 
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  it { should_not validate_presence_of(:subject_course_id) }
 
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }

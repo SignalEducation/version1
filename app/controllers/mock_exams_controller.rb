@@ -21,9 +21,12 @@
 
 class MockExamsController < ApplicationController
 
-  before_action :logged_in_required, except: [:show]
+  before_action :logged_in_required
   before_action except: [:show] do
     ensure_user_is_of_type(['admin'])
+  end
+  before_action only: [:show] do
+    ensure_user_is_of_type(['individual_student'])
   end
   before_action :get_variables
 

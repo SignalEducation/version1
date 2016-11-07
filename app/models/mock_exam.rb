@@ -56,7 +56,7 @@ class MockExam < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.orders.empty?
   end
 
   protected

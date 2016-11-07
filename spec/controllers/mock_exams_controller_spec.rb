@@ -26,9 +26,9 @@ describe MockExamsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for mock_exam_1
   let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
   let!(:mock_exam_2) { FactoryGirl.create(:mock_exam) }
+  let!(:order_1) {FactoryGirl.create(:order, mock_exam_id: mock_exam_1.id)}
   let!(:valid_params) { FactoryGirl.attributes_for(:mock_exam) }
 
   context 'Not logged in: ' do
@@ -101,7 +101,7 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -121,71 +121,69 @@ describe MockExamsController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -201,91 +199,89 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -301,91 +297,89 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -401,91 +395,89 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -501,91 +493,90 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -601,91 +592,89 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -701,91 +690,89 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
         get :edit, id: mock_exam_1.id
-        expect_edit_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
         get :edit, id: mock_exam_2.id
-        expect_edit_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, mock_exam: valid_params
-        expect_create_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, mock_exam: {valid_params.keys.first => ''}
-        expect_create_error_with_model('mock_exam')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
         put :update, id: mock_exam_1.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
         put :update, id: mock_exam_2.id, mock_exam: valid_params
-        expect_update_success_with_model('mock_exam', mock_exams_url)
-        expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
-        expect_update_error_with_model('mock_exam')
-        expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
         post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
-        expect_reorder_success
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: mock_exam_1.id
-        expect_delete_error_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: mock_exam_2.id
-        expect_delete_success_with_model('mock_exam', mock_exams_url)
+        expect_bounce_as_not_allowed
       end
     end
 

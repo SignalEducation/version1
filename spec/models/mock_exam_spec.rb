@@ -24,7 +24,7 @@ require 'rails_helper'
 describe MockExam do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at file_file_name file_content_type file_file_size file_updated_at cover_image_file_name cover_image_content_type cover_image_file_size cover_image_updated_at)
   MockExam.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -34,11 +34,11 @@ describe MockExam do
   end
 
   # Constants
-  #it { expect(MockExam.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:subject_course) }
   it { should belong_to(:product) }
+  it { should have_many(:orders) }
 
   # validation
   it { should validate_presence_of(:subject_course_id) }
@@ -48,8 +48,6 @@ describe MockExam do
   it { should validate_numericality_of(:product_id) }
 
   it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:sorting_order) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
