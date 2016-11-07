@@ -12,16 +12,20 @@
                   ="Enroll in #{@course.try(:name)}"
             %hr
             .row
-              .col-md-12
+              .col-sm-12
                 =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
                 .input-group.input-group-lg.full-width
                   =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
                 %br/
+                %hr/
+              .col-sm-12.l-margin-top
+
                 %p
+                  ="Don't have a student number for the"
+                  =@course.external_url_name
                   =link_to url_for(@course.external_url), target: '_blank' do
-                    ='Click here to get a Student Number'
-                    ="or for more information about "
-                    =@course.external_url_name
+                    =" Click here to get one."
 
 
 
@@ -34,4 +38,4 @@
 
 
           .l-margin-top.l-margin-bottom.pull-right
-            =f.submit 'Start Course Now', class: 'btn btn-cyan'
+            =f.submit 'Start Course', class: 'btn btn-cyan'

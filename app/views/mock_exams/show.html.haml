@@ -1,28 +1,36 @@
 .home_page_layout
-  %header.purchase-background
+  %header.mock-background
     .l-wrap-purchase
       =render partial: 'layouts/transparent_navbar'
     .l-wrap-session.l-margin-top
       %h1.h-white.h-separator.h-separator-center.text-center
         =@mock_exam.name
       %p.h3.h-white.text-center.l-margin-top
-        Payment Details
+        Purchase Process
 
   .l-wrap-product-user
     .row
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-md-12
-        .col-md-4.l-margin-top
+        .col-md-11.col-md-offset-1
+          %p.p
+            Please enter you payment details below to complete the purchase. Your Mock Exam will be emailed upon successful payment
+
+        .col-sm-4.l-margin-top
           .course-side-info
             %h2.h-separator.h-separator-left.l-margin-bottom
               =@mock_exam.name
-            %p.h3
+            %p.h3.l-margin-bottom
               ='Total: '
               =number_in_local_currency(@product.price, @product.currency_id)
+            .box.box-profile
+              .box-inner
+                =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
 
 
-        .col-md-8
+
+        .col-sm-8
           .new-product-user-form.l-margin-top
             =form_for(@order, url: mock_exam_create_url, html: {class: 'form-horizontal', role: 'form'}) do |f|
               =f.hidden_field :mock_exam_id, value: @mock_exam.id
