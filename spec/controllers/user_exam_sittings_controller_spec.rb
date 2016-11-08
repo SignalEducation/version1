@@ -812,10 +812,6 @@ describe UserExamSittingsController, type: :controller do
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: user_exam_sitting_1.id
-        expect_delete_success_with_model('user_exam_sitting', user_exam_sittings_url)
-      end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: user_exam_sitting_2.id
