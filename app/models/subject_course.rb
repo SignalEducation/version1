@@ -35,6 +35,8 @@
 #  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
+#  external_url_name                       :string
+#  external_url                            :string
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -44,7 +46,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content
+ :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name
 
   # Constants
 
@@ -57,7 +59,10 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
   has_many :enrollments
+  has_many :exam_sittings
+  has_many :user_exam_sittings
   has_one :question_bank
+  has_one :mock_exam
   has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs

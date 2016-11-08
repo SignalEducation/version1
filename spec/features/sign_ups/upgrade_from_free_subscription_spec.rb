@@ -33,6 +33,7 @@ describe 'The student sign-up process', type: :feature do
         expect(page).to have_content 'Upgrade your membership'
         student_picks_a_subscription_plan(eur, 1)
         enter_credit_card_details('valid')
+        check(I18n.t('views.general.terms_and_conditions'))
         find('.upgrade-sub').click
         sleep(10)
         within('#thank-you-message') do
@@ -51,6 +52,7 @@ describe 'The student sign-up process', type: :feature do
         expect(page).to have_content 'Upgrade your membership'
         student_picks_a_subscription_plan(eur, 3)
         enter_credit_card_details('valid')
+        check(I18n.t('views.general.terms_and_conditions'))
         find('.upgrade-sub').click
         sleep(10)
         within('#thank-you-message') do
@@ -69,6 +71,7 @@ describe 'The student sign-up process', type: :feature do
         expect(page).to have_content 'Upgrade your membership'
         student_picks_a_subscription_plan(eur, 12)
         enter_credit_card_details('valid')
+        check(I18n.t('views.general.terms_and_conditions'))
         find('.upgrade-sub').click
         sleep(10)
         within('#thank-you-message') do

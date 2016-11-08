@@ -43,6 +43,9 @@
             .tab.account-tab#enrollments
               =render partial: 'users/enrollments'
 
+            .tab.account-tab#exam_sittings
+              =render partial: 'exam_sittings/show'
+
 
         .col-sm-4
           .account-tabs
@@ -69,6 +72,9 @@
               %li
                 %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
                   =t('views.users.show.tabs.enrollments')
+              %li
+                %a{href: '#exam_sittings', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.exam_sittings')
 
 
 
@@ -89,5 +95,15 @@
 
     // Tabs
     $('.tabs').tabs();
+
+
+    hash = window.location.hash;
+    elements = $('a[href="' + hash + '"]');
+    if (elements.length === 0) {
+        $("ul.tabs li:first").addClass("active").show(); //Activate first tab
+        $(".tab_content:first").show(); //Show first tab content
+    } else {
+        elements.click();
+    }
 
   });

@@ -138,6 +138,7 @@ def sign_up_and_upgrade_from_free_trial
   expect(page).to have_content 'Upgrade your membership'
   student_picks_a_subscription_plan(eur, 1)
   enter_credit_card_details('valid')
+  check I18n.t('views.general.terms_and_conditions')
   find('.upgrade-sub').click
   sleep(10)
   expect(page).to have_content 'Thanks for upgrading your subscription!'

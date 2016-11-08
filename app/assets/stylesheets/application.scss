@@ -168,6 +168,9 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   &.h-white {
     color: $white;
   }
+  &.h-dark {
+    color: $colour-7 !important;
+  }
   &.h-white-faded {
     color: lightcyan;
     //color: gainsboro;
@@ -289,6 +292,11 @@ hr {
   border-color: lighten($colour-7, 60%);
   margin: $gutter*2 0;
 }
+.modal hr{
+  border-color: lighten($colour-7, 60%);
+  margin: $gutter 0;
+}
+
 .h-separator {
   padding-bottom: $gutter*1.5;
   //margin-bottom: $gutter*2;
@@ -4231,6 +4239,9 @@ header{
 }
 .purchase-background {
   background-image: asset-url('cover_image_001.jpg');
+}
+.mock-background {
+  background-image: asset-url('cover_image_003.jpg');
 }
 .sign-in-background {
   background-image: asset-url('cover_image_001.jpg');

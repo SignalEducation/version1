@@ -75,6 +75,22 @@ class MandrillClient
     send_template('invoice-payment-successful', msg)
   end
 
+  def send_mock_exam_email(account_url, file_name, attachment)
+    msg = message_stub.merge({"subject" => "LearnSignal Mock Exam "})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
+    send_template('mock-exam-purchase', msg)
+  end
+
+  def send_we_havent_seen_you_in_a_while_email(url, course_name, days)
+    msg = message_stub.merge({"subject" => "#{course_name} Study"})
+    msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
+    msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
+    msg["global_merge_vars"] << { "name" => "DAYS_SINCE_LAST_SEEN", "content" => days }
+    send_template('we-havent-seen-you-in-a-while', msg)
+  end
+
 
 
 

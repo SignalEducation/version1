@@ -1,0 +1,46 @@
+=form_for(@mock_exam, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @mock_exam, message: nil}
+  .row
+    .col-md-6
+      =f.label :name, t('views.mock_exams.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.mock_exams.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :subject_course_id, t('views.mock_exams.form.subject_course_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
+      =f.label :product_id, t('views.mock_exams.form.product_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :product_id, @products, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
+
+    .col-md-6
+      -if f.object.file_file_name
+        =f.label :file, t('views.mock_exams.form.file'), class: 'control-label'
+        .form-control-static
+          =link_to f.object.file_file_name, f.object.file.url, target: '_blank'
+          =number_to_human_size(f.object.file_file_size)
+          %br/
+          =f.label :file, t('views.white_papers.form.file_replacement'), class: 'control-label'
+      -else
+        =f.label :file, t('views.mock_exams.form.file'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.file_field :file, class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      -if f.object.cover_image_file_name
+        =f.label :file, t('views.mock_exams.form.cover_image'), class: 'control-label'
+        .form-control-static
+          =link_to f.object.cover_image_file_name, f.object.cover_image.url, target: '_blank'
+          =number_to_human_size(f.object.cover_image_file_size)
+          %br/
+          =f.label :cover_image, t('views.white_papers.form.cover_image_replacement'), class: 'control-label'
+      -else
+        =f.label :cover_image, t('views.mock_exams.form.cover_image'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.file_field :cover_image, class: 'form-control', style: 'border-radius: 6px;'
+
+
+  .row
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), mock_exams_path, class: 'btn btn-cyan'

@@ -76,12 +76,13 @@ class ProductsController < ApplicationController
     end
     @currencies = Currency.all_in_order
     @product_category = SubjectCourseCategory.all_product.first
-    @subject_courses = SubjectCourse.all_active.all_in_order.in_category(@product_category.id)
+    @subject_courses = SubjectCourse.all_active.all_in_order
+    #@subject_courses = SubjectCourse.all_active.all_in_order.in_category(@product_category.id)
     seo_title_maker(@product.try(:name) || 'Products', '', true)
   end
 
   def allowed_params
-    params.require(:product).permit(:name, :active, :subject_course_id, :mock_exam_id, :price, :currency_id, :livemode)
+    params.require(:product).permit(:name, :active, :subject_course_id, :price, :currency_id, :livemode)
   end
 
 end

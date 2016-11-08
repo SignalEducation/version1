@@ -1,0 +1,66 @@
+-if @user_exam_sittings.any?
+  .col-md-12
+    .corporate-box-item.table-box
+      %h3{style: 'color: #3e3f5b;'}
+        Current Exam Sittings
+
+      %table.table{style: 'font-size: 18px;'}
+        %thead
+          %tr
+            %th
+              =t('views.subject_course_user_log.show.course')
+            %th
+              =t('views.exam_sittings.form.date')
+            %th
+
+        %tbody
+          -@user_exam_sittings.each do |user_exam_sitting|
+            %tr
+              %td
+                =user_exam_sitting.subject_course.name.to_s.truncate(20)
+              %td
+                =user_exam_sitting.date
+
+.col-md-12
+  .corporate-box-item.table-box
+    %h3{style: 'color: #3e3f5b;'}
+      Add More Exam Sittings
+
+    .form-group{style: 'margin-left: 0px;'}
+      %table.col-sm-12
+        %thead
+          %tr
+            %th
+              =t('views.subject_course_user_log.show.course')
+            %th
+              Dates
+
+        %tbody
+          =form_tag create_user_exam_sittings_path, id: 'exam_sittings_form' do
+            -@sitting_courses.each do |course|
+              %tr
+                %td=course.name
+                -course.exam_sittings.each do |sitting|
+                  -unless current_user.exam_sittings.include?(sitting.id)
+                    %td
+                      -if sitting.date
+                        %label
+                          =sitting.date
+                          = check_box_tag( "user_exam_sittings[#{sitting.id}]")
+                      -else
+                        =text_field_tag ["user_exam_sittings[#{sitting.id}]", ["date"]], '',placeholder: 'Date ', class: 'form-control', style: 'border-radius: 6px; width: 40%;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+
+
+    .l-margin-top-huge
+      =submit_tag 'Submit', class: 'btn btn-red', id: 'submit_btn'
+
+:javascript
+  $(document).ready(function() {
+    $('#submit_btn').on('click', function() { $('#exam_sittings_form').submit(); });
+  });
+
+
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });

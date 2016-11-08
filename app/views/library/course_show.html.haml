@@ -5,11 +5,12 @@
   .l-wrap
     .container-fluid
       .row
-        .col-sm-4.col-md-4
+        .col-sm-6
           .l-margin-bottom
             =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
               .fa.fa-arrow-left
               =@course.parent.name
+
 
       -if current_user && !current_user.corporate_user?
         -if @course.subscription
@@ -21,6 +22,7 @@
         -else
           -if current_user.permission_to_see_content(@course)
             =render partial: 'enrollment_form'
+            =render partial: 'course_enrollment_modal'
           -else
             %h3.h3.card-title.l-margin-bottom
               =@course.name
@@ -127,29 +129,27 @@
 
         .col-md-4
           .l-margin-top-big
-            -if @course_resources
-              -if @course_resources.count >= 1
-                %p.h4.l-margin-bottom
-                  ='Course Resources'
-                -@course_resources.each do |r|
-                  %ul.course-resources
-                    -if !current_user
-                      =r.name
-                    -elsif current_user && (current_user.free_member? || current_user.expired_free_member? || current_user.canceled_member? || current_user.no_subscription_user)
-                      =r.name
-                    -else
-                      %li
-                        -if r.web_url && r.web_url.length > 0
-                          =link_to r.web_url, target: '_blank' do
-                            .btn.btn-secondary.btn-red.btn-list
-                              =r.name
-                        -else
-                          =link_to r.upload.url, target: '_blank' do
-                            .btn.btn-secondary.btn-red.btn-list
-                              =r.name
+            -if current_user && !current_user.exam_sitting_courses.include?(@course.id)
+              %p.h4.l-margin-bottom.l-margin-top-huge
+                Registered for any
+                =@course.external_url_name
+                Exams Sittings?
+              %ul.course-resources
+                %li
+                  %a.sittingModal{href: '#', data: {toggle: 'modal', target: '#sittingModal'}, class: 'btn btn-secondary btn-red btn-list'}
+                    Exam Sittings
+
+            -if current_user && @course.mock_exam
+              %p.h4.l-margin-bottom.l-margin-top-huge
+                Mock Exam
+              %ul.course-resources
+                %li
+                  =link_to mock_exam_url(@course.mock_exam) do
+                    .btn.btn-secondary.btn-red.btn-list
+                      =@course.mock_exam.name
 
 
-      -if current_user && @course.enrolled_user_ids.include?(current_user.id)
+      -if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
         .l-margin-top-huge
           =render partial: 'course_info'
 
@@ -158,3 +158,6 @@
 
   :javascript
     hj('trigger', "#{@course.hotjar_guid}");
+
+-if current_user
+  =render partial: 'layouts/user_exam_sitting_modal'

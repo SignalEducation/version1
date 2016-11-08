@@ -575,6 +575,26 @@ en:
         publishes_in_next_3_days: Publishes in the next 3 days
         see_all_static_pages: See All Static Pages
 
+    exam_sittings:
+      form:
+        name: Name
+        subject_course_id: Course
+        date: Date
+        date_placeholder: "2015-01-01"
+
+      index:
+        h1: Exam Sittings
+
+      show:
+        h1: Exam Sitting
+
+      edit:
+        h1: Edit Exam Sitting
+
+      new:
+        h1: New Exam Sitting
+
+
     flash_cards:
       form:
         new_card: New card
@@ -674,6 +694,7 @@ en:
         issued_at: "Issued at"
         date: Date
         subject_course: Course
+        mock_exam: Mock Exam
         stripe_guid: "Stripe GUID"
         sub_total: "Sub- total"
         total: "Total"
@@ -760,6 +781,28 @@ en:
       index:
         continue_course: Continue Course
         start_course: Start Course
+
+    mock_exams:
+      form:
+        name: Name
+        name_placeholder: Mock Exam Name
+        subject_course_id: Course
+        product_id: Product
+        file: Upload the Exam File
+        cover_image: Upload the Cover Image File
+        sorting_order: Sorting Order
+
+      index:
+        h1: Mock Exams
+
+      show:
+        h1: Mock Exam
+
+      edit:
+        h1: Edit Mock Exam
+
+      new:
+        h1: New Mock Exam
 
     products:
       form:
@@ -968,6 +1011,10 @@ en:
         short_description_placeholder: Description
         mailchimp_guid: MailChimp List ID
         mailchimp_guid_placeholder: MailChimp ID
+        external_url_name: Name of Exam Body
+        external_url_name_placeholder: ACCA or CFA
+        external_url: URL of Exam Body Site
+        external_url_placeholder: acca.com, cfa.com
         forum_url: Forum Course URL
         forum_url_placeholder: Forum Course URL
         hotjar_guid: HotJar JS Code
@@ -1216,6 +1263,7 @@ en:
           payments: Payment Info
           certificates: Certificates
           enrollments: Enrollments
+          exam_sittings: Exam Sittings
           notifications: Notifications
           admin: Admin
           referral_code: Referrals
@@ -1279,6 +1327,28 @@ en:
 
       show:
         h1: User Activity Log
+
+    user_exam_sittings:
+      form:
+        subject_course_id: Course
+        user_id: User
+        exam_sitting_id: Exam Sitting
+        date: Date
+        date_placeholder: "2015-01-01"
+
+      index:
+        h1: User Exam Sittings
+
+      show:
+        h1: User Exam Sitting
+
+      edit:
+        h1: Edit User Exam Sitting
+
+      new:
+        h1: New User Exam Sitting
+
+
 
     user_groups:
       form:
@@ -1634,6 +1704,7 @@ en:
       index:
         h1: White Papers
         library: Media Library
+        mock_exams: Mock Exams
 
       show:
         h1: White Paper

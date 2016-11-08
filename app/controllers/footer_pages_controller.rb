@@ -74,6 +74,26 @@ class FooterPagesController < ApplicationController
     end
   end
 
+  def zendesk
+    require 'zendesk_api'
+    @client = ZendeskAPI::Client.new do |config|
+      config.url = "https://learnsignal.zendesk.com/api/v2"
+      config.username = "james@learnsignal.com/token"
+      config.token = ENV['learnsignal_zendesk_api_key'].to_s
+      config.retry = true
+      require 'logger'
+      config.logger = Logger.new(STDOUT)
+    end
+    options = {:subject => params[:subject], :comment => { :value => params[:body] }, :requester => { :email => params[:email], :name => params[:full_name] }}
+    request = ZendeskAPI::Ticket.create(@client, options)
+    if request.created_at
+      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    else
+      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
+    end
+    redirect_to contact_url
+  end
+
   protected
 
   def get_variables

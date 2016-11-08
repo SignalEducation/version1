@@ -14,6 +14,7 @@
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
+#  mock_exam_id              :integer
 #
 
 class Order < ActiveRecord::Base
@@ -22,7 +23,7 @@ class Order < ActiveRecord::Base
   serialize :stripe_order_payment_data, JSON
 
   # attr-accessible
-  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_order_payment_data, :stripe_token, :stripe_order_payment_data
+  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_order_payment_data, :stripe_token, :stripe_order_payment_data, :mock_exam_id
 
   # Constants
   ORDER_STATUS = %w(created paid canceled)
@@ -30,12 +31,11 @@ class Order < ActiveRecord::Base
   # relationships
   belongs_to :product
   belongs_to :subject_course
+  belongs_to :mock_exam
   belongs_to :user
 
   # validation
   validates :product_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}

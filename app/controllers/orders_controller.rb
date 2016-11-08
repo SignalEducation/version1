@@ -14,12 +14,13 @@
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
+#  mock_exam_id              :integer
 #
 
 class OrdersController < ApplicationController
 
   before_action :logged_in_required
-  before_action except: [:new, :create] do
+  before_action except: [:new, :create, :mock_exam_create] do
     ensure_user_is_of_type(['admin'])
   end
   before_action only: [:new, :create] do
@@ -110,6 +111,58 @@ class OrdersController < ApplicationController
     end
   end
 
+  def mock_exam_create
+    if current_user && params[:order] && params[:order][:mock_exam_id] && params[:order][:stripe_token]
+
+      user = current_user
+      mock_exam_id = params[:order][:mock_exam_id]
+      @mock_exam = MockExam.find(mock_exam_id)
+      product = @mock_exam.product
+      currency = Currency.find(product.currency_id)
+      stripe_token = params[:order][:stripe_token]
+      #redirect_to media_library_url if current_user.valid_subject_course_ids.include?(params[:order][:subject_course_id])
+
+      @order = Order.new(allowed_params)
+      @order.user_id = user.id
+      @order.product_id = product.id
+
+      stripe_order = Stripe::Order.create(
+          currency: currency.iso_code,
+          customer: user.stripe_customer_id,
+          email: user.email,
+          items: [{
+                      amount: (product.price.to_f * 100).to_i,
+                      currency: currency.iso_code,
+                      quantity: 1,
+                      parent: product.stripe_sku_guid
+                  }]
+      )
+
+      @order.stripe_customer_id = stripe_order.customer
+      @order.stripe_guid = stripe_order.id
+      @order.live_mode = stripe_order.livemode
+      @order.current_status = stripe_order.status
+
+      if @order.valid?
+        order = Stripe::Order.retrieve(@order.stripe_guid)
+        @pay_order = order.pay(source: stripe_token)
+      end
+      order = Stripe::Order.retrieve(@order.stripe_guid)
+      @order.current_status = order.status
+      @order.stripe_order_payment_data = @pay_order
+    else
+      redirect_to media_library_url
+    end
+
+    if @order.save
+      flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+      MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file)
+      redirect_to account_url(anchor: :orders)
+    else
+      redirect_to media_library_url
+    end
+  end
+
   protected
 
   def get_variables
@@ -121,7 +174,7 @@ class OrdersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token)
+    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token, :mock_exam_id)
   end
 
 end

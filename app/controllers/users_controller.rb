@@ -109,6 +109,16 @@ class UsersController < ApplicationController
     else
       @footer = true
     end
+
+    @user_exam_sittings = current_user.user_exam_sittings
+    ids = @user_exam_sittings.map(&:id)
+    @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
+    course_ids = @exam_sittings.map(&:subject_course_id)
+    @sitting_courses = SubjectCourse.where(id: course_ids)
+    @orders = @user.orders
+    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
+    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
+
   end
 
   def new
@@ -342,7 +352,7 @@ class UsersController < ApplicationController
   end
 
   def new_subscription
-    redirect_to account_url unless current_user.individual_student?
+    redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
     @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
@@ -423,7 +433,11 @@ class UsersController < ApplicationController
               new_user_type_id = user.student_user_type_id
             end
 
-            current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
+            if params[:user][:terms_and_conditions] == '1'
+              current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id, terms_and_conditions: true)
+            else
+              current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
+            end
             redirect_to personal_upgrade_complete_url
           else
             redirect_to user_new_subscription_url(current_user.id)
@@ -445,7 +459,7 @@ class UsersController < ApplicationController
     @user = User.where(id: params[:user_id]).first
     @subscription = @user.active_subscription || @user.subscriptions.last
     redirect_to root_url unless @user.individual_student? || @subscription
-    redirect_to account_url unless @subscription.current_status == 'canceled'
+    redirect_to account_url(anchor: :subscriptions) unless @subscription.current_status == 'canceled'
     @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
     currency_id = @subscription.subscription_plan.currency_id
     @country = Country.where(currency_id: currency_id).first
@@ -556,7 +570,7 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image, :student_number)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image, :student_number, :student_user_type_id)
     else
       params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest, :subject_course_id, :student_number, :terms_and_conditions)
     end

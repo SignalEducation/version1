@@ -1,0 +1,26 @@
+=form_for(@exam_sitting, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @exam_sitting, message: nil}
+  .row
+    .col-md-8.col-md-offset-2
+      =f.label :name, t('views.exam_sittings.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      =f.label :subject_course_id, t('views.exam_sittings.form.subject_course_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %br/
+      =f.label :date, t('views.exam_sittings.form.date'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :date, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+
+  .row
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), exam_sittings_path, class: 'btn btn-cyan'
+
+:javascript
+
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });

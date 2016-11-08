@@ -55,6 +55,7 @@ gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
 gem 'wistia-api' #Video player data api gem, allows retrieval of data on videos and projects
 gem 'font-awesome-rails' # Font Awesome with lot of useful icons
 gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
+gem 'zendesk_api'
 gem 'mandrill-api' # official Mandrill's gem
 
 # Environment-specific gems

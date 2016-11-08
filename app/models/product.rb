@@ -22,14 +22,14 @@ class Product < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :mock_exam_id, :active, :currency_id, :price, :stripe_sku_guid, :live_mode, :stripe_guid
+  attr_accessible :name, :subject_course_id, :active, :currency_id, :price, :stripe_sku_guid, :live_mode, :stripe_guid
 
   # Constants
 
   # relationships
   belongs_to :subject_course
   belongs_to :currency
-  #belongs_to :mock_exam
+  has_one :mock_exam
   has_many :orders
 
   # validation

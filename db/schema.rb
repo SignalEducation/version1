@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009100249) do
+ActiveRecord::Schema.define(version: 20161104162407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -303,6 +303,18 @@ ActiveRecord::Schema.define(version: 20161009100249) do
     t.boolean  "active",                     default: false
   end
 
+  create_table "exam_sittings", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "subject_course_id"
+    t.date     "date"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
+  add_index "exam_sittings", ["name"], name: "index_exam_sittings_on_name", using: :btree
+  add_index "exam_sittings", ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id", using: :btree
+
   create_table "flash_card_stacks", force: :cascade do |t|
     t.integer  "course_module_element_flash_card_pack_id"
     t.string   "name"
@@ -492,6 +504,27 @@ ActiveRecord::Schema.define(version: 20161009100249) do
 
   add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
 
+  create_table "mock_exams", force: :cascade do |t|
+    t.integer  "subject_course_id"
+    t.integer  "product_id"
+    t.string   "name"
+    t.integer  "sorting_order"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.string   "cover_image_file_name"
+    t.string   "cover_image_content_type"
+    t.integer  "cover_image_file_size"
+    t.datetime "cover_image_updated_at"
+  end
+
+  add_index "mock_exams", ["name"], name: "index_mock_exams_on_name", using: :btree
+  add_index "mock_exams", ["product_id"], name: "index_mock_exams_on_product_id", using: :btree
+  add_index "mock_exams", ["subject_course_id"], name: "index_mock_exams_on_subject_course_id", using: :btree
+
   create_table "order_transactions", force: :cascade do |t|
     t.integer  "order_id"
     t.integer  "user_id"
@@ -521,6 +554,7 @@ ActiveRecord::Schema.define(version: 20161009100249) do
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
     t.text     "stripe_order_payment_data"
+    t.integer  "mock_exam_id"
   end
 
   add_index "orders", ["product_id"], name: "index_orders_on_product_id", using: :btree
@@ -818,6 +852,8 @@ ActiveRecord::Schema.define(version: 20161009100249) do
     t.boolean  "enrollment_option",                       default: false
     t.integer  "subject_course_category_id"
     t.text     "email_content"
+    t.string   "external_url_name"
+    t.string   "external_url"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -1001,6 +1037,20 @@ ActiveRecord::Schema.define(version: 20161009100249) do
   add_index "user_activity_logs", ["original_uri"], name: "index_user_activity_logs_on_original_uri", using: :btree
   add_index "user_activity_logs", ["session_guid"], name: "index_user_activity_logs_on_session_guid", using: :btree
   add_index "user_activity_logs", ["user_id"], name: "index_user_activity_logs_on_user_id", using: :btree
+
+  create_table "user_exam_sittings", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exam_sitting_id"
+    t.integer  "subject_course_id"
+    t.date     "date"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "user_exam_sittings", ["date"], name: "index_user_exam_sittings_on_date", using: :btree
+  add_index "user_exam_sittings", ["exam_sitting_id"], name: "index_user_exam_sittings_on_exam_sitting_id", using: :btree
+  add_index "user_exam_sittings", ["subject_course_id"], name: "index_user_exam_sittings_on_subject_course_id", using: :btree
+  add_index "user_exam_sittings", ["user_id"], name: "index_user_exam_sittings_on_user_id", using: :btree
 
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"

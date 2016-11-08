@@ -55,7 +55,7 @@ class EnrollmentsController < ApplicationController
   def activate
     @enrollment = Enrollment.find(params[:enrollment_id])
     @enrollment.update_attributes(active: true)
-    redirect_to account_url
+    redirect_to account_url(anchor: :enrollments)
   end
 
 

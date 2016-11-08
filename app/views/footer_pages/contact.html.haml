@@ -1,4 +1,4 @@
-.hero-acca
+.hero-library
   .l-wrap-home
     =render partial: 'layouts/transparent_navbar'
   .l-section
@@ -7,7 +7,7 @@
         .row
           .col-md-6.col-md-offset-3
             %h1.h1.h-white.h-separator.h-separator-center.text-center
-              Contact
+              Contact Us
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 .is-bg-asphalt
@@ -16,13 +16,32 @@
       .container-fluid
         .row
           .col-md-10.col-md-offset-1
-            %h2.text-center.l-margin-bottom
-              Keep in touch
-            %p
-              If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.
-            %br/
-            %h4.text-center.l-margin-top
-              =mail_to 'team@learnsignal.com', 'CONTACT US', subject: 'Contact Page Info'
+            .forgot-password-modal
+              %h2.text-center
+                Complaints Process
+              =form_tag(complaints_url, {class: 'form', role: 'form'}) do
+                .col-md-8.col-md-offset-2.l-margin-top-small
+                  .col-md-6
+                    =label_tag :full_name, 'Full Name'
+                    =text_field_tag :full_name, nil, class: 'form-control'
+                    %br/
+                  .col-md-6
+                    =label_tag :email, 'Email'
+                    =email_field_tag :email_address, nil, class: 'form-control'
+
+                  .col-md-12
+                    =label_tag :subject, 'Subject'
+                    =text_field_tag :subject, nil, class: 'form-control'
+                    %br/
+                    =label_tag :body, 'Please Describe Your Issue'
+                    =text_area_tag :body, nil, class: 'form-control'
+
+                .col-md-8.col-md-offset-2.l-margin-top-big
+                  .col-sm-12
+                    =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
+        .row
+          .col-md-10.col-md-offset-1
             %hr/
             %h4.text-center.l-margin-top-big
               Sign up for the LearnSignal newsletter

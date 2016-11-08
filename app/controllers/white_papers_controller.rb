@@ -34,6 +34,7 @@ class WhitePapersController < ApplicationController
 
   def media_library
     @white_papers = WhitePaper.all_in_order
+    @mock_exams = MockExam.all_in_order
   end
 
   def show

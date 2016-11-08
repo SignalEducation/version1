@@ -114,7 +114,7 @@ Rails.application.routes.draw do
     get '/dashboard/corporate_manager', to: 'dashboard#corporate_customer', as: :corporate_customer_dashboard
     get '/dashboard/corporate_student', to: 'dashboard#corporate_student', as: :corporate_student_dashboard
 
-    #get 'dashboard', to: 'dashboard#index', as: :dashboard
+    resources :exam_sittings
     resources :groups, concerns: :supports_reordering
     resources :groups do
       get 'edit_courses', action: :edit_courses
@@ -133,6 +133,7 @@ Rails.application.routes.draw do
     post '/subscribe', to: 'library#subscribe'
     post '/home_page_subscribe', to: 'home_pages#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
+    post '/complaints', to: 'footer_pages#zendesk'
 
 
 
@@ -152,6 +153,8 @@ Rails.application.routes.draw do
 
     post '/create_session_product', to: 'users#create_session_product', as: :create_session_product
 
+    post '/mock_exam_create', to: 'orders#mock_exam_create', as: :mock_exam_create
+    resources :mock_exams, concerns: :supports_reordering
     resources :orders
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
@@ -176,6 +179,8 @@ Rails.application.routes.draw do
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_activity_logs
     resources :user_notifications
+    resources :user_exam_sittings
+    post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
     resources :marketing_categories
