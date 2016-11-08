@@ -43,8 +43,9 @@
             .tab.account-tab#enrollments
               =render partial: 'users/enrollments'
 
-            .tab.account-tab#exam_sittings
-              =render partial: 'exam_sittings/show'
+            -if @sitting_courses.any?
+              .tab.account-tab#exam_sittings
+                =render partial: 'exam_sittings/show'
 
 
         .col-sm-4
@@ -65,16 +66,16 @@
                 %li
                   %a{href: '#payment-details', role: 'tab', data: {toggle: 'tab'}}
                     =t('views.users.show.tabs.payments')
-
               %li
                 %a{href: '#completion-certs', role: 'tab', data: {toggle: 'tab'}}
                   =t('views.users.show.tabs.certificates')
               %li
                 %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
                   =t('views.users.show.tabs.enrollments')
-              %li
-                %a{href: '#exam_sittings', role: 'tab', data: {toggle: 'tab'}}
-                  =t('views.users.show.tabs.exam_sittings')
+              -if @sitting_courses.any?
+                %li
+                  %a{href: '#exam_sittings', role: 'tab', data: {toggle: 'tab'}}
+                    =t('views.users.show.tabs.exam_sittings')
 
 
 
