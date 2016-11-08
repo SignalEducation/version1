@@ -36,7 +36,7 @@ class ExamSitting < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    self.user_exam_sittings.empty?
   end
 
   protected

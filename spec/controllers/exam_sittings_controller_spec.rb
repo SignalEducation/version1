@@ -17,9 +17,9 @@ describe ExamSittingsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for exam_sitting_1
   let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting) }
   let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting) }
+  let!(:user_exam_sitting_1) { FactoryGirl.create(:user_exam_sitting, exam_sitting_id: exam_sitting_1.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_sitting) }
 
   context 'Not logged in: ' do
@@ -86,72 +86,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -159,12 +157,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -180,72 +178,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -253,12 +249,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -274,72 +270,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -347,12 +341,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -368,72 +362,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -441,12 +433,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -462,72 +454,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -535,12 +525,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -556,72 +546,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -629,12 +617,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -650,72 +638,70 @@ describe ExamSittingsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_sittings', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_sitting_1' do
         get :show, id: exam_sitting_1.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see exam_sitting_2' do
         get :show, id: exam_sitting_2.id
-        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_sitting_1' do
         get :edit, id: exam_sitting_1.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with exam_sitting_2' do
         get :edit, id: exam_sitting_2.id
-        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, exam_sitting: valid_params
-        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, exam_sitting: {valid_params.keys.first => ''}
-        expect_create_error_with_model('exam_sitting')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_sitting_1' do
         put :update, id: exam_sitting_1.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for exam_sitting_2' do
         put :update, id: exam_sitting_2.id, exam_sitting: valid_params
-        expect_update_success_with_model('exam_sitting', exam_sittings_url)
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
-        expect_update_error_with_model('exam_sitting')
-        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -723,12 +709,12 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_bounce_as_not_allowed
       end
     end
 

@@ -788,6 +788,7 @@ describe HomePagesController, type: :controller do
       x = admin_user
       y = corporate_student_user
       a = corporate_customer_user
+      b = content_manager_user
       z = tutor_user
 
     end
@@ -933,6 +934,7 @@ describe HomePagesController, type: :controller do
       x = admin_user
       y = corporate_student_user
       a = corporate_customer_user
+      b = content_manager_user
       z = tutor_user
 
     end
@@ -1078,6 +1080,7 @@ describe HomePagesController, type: :controller do
       x = admin_user
       y = corporate_student_user
       a = corporate_customer_user
+      b = content_manager_user
       z = tutor_user
 
     end
@@ -1088,7 +1091,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
+        expect(response).to redirect_to(content_manager_dashboard_url)
       end
     end
 
@@ -1209,7 +1212,7 @@ describe HomePagesController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
+        expect(response).to redirect_to(content_manager_dashboard_url)
       end
     end
 
