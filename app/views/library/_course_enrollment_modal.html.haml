@@ -20,12 +20,12 @@
                 %br/
                 %hr/
               .col-sm-12.l-margin-top
-
-                %p
-                  ="Don't have a student number for the"
-                  =@course.external_url_name
-                  =link_to url_for(@course.external_url), target: '_blank' do
-                    =" Click here to get one."
+                -if @course.external_url_name && @course.external_url
+                  %p
+                    ="Don't have a student number for the"
+                    =@course.external_url_name
+                    =link_to url_for(@course.external_url), target: '_blank' do
+                      =" Click here to get one."
 
 
 
