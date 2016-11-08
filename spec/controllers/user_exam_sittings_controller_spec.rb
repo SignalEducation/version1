@@ -777,7 +777,6 @@ describe UserExamSittingsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, user_exam_sitting: valid_params
         post :create, user_exam_sittings: valid_params
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to be_nil
@@ -815,7 +814,7 @@ describe UserExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: user_exam_sitting_1.id
-        expect_delete_error_with_model('user_exam_sitting', user_exam_sittings_url)
+        expect_delete_success_with_model('user_exam_sitting', user_exam_sittings_url)
       end
 
       it 'should be OK as no dependencies exist' do
