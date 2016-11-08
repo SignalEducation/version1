@@ -33,6 +33,8 @@ module LearnsignalV3
     config.generators do |g|
       g.orm             :active_record
       g.template_engine :haml
+      g.view_specs      false
+      g.request_specs      false
       #g.test_framework  :rspec
       g.stylesheets     false
       g.javascripts     false
