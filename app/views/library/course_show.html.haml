@@ -26,6 +26,8 @@
           -else
             %h3.h3.card-title.l-margin-bottom
               =@course.name
+          .l-margin-top-huge
+            =render partial: 'course_info'
 
 
 
@@ -150,7 +152,7 @@
                       =@course.mock_exam.name
 
 
-      -if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
+      -if current_user && @course.enrolled_user_ids.include?(current_user.id)
         .l-margin-top-huge
           =render partial: 'course_info'
 
