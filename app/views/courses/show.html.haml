@@ -60,6 +60,9 @@
                   -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
+                    %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                      Community
+
                 -else
                   -if @course_module_element.course_module_element_resources.count > 0
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
@@ -109,6 +112,10 @@
                               -else
                                 %li
                                   =link_to r.name, r.upload.url, target: '_blank'
+                    .tab-pane.fade#community{role: 'tabpanel'}
+                      .col-md-12
+                        .l-margin-bottom-huge
+                          %div{id: 'discourse-comments'}
           -else
             .tab-pane.fade#notes{role: 'tabpanel'}
               .col-md-12
@@ -138,3 +145,14 @@
         -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
 
 =render partial: 'shared/activate_tab'
+
+
+:javascript
+
+  DiscourseEmbed = { discourseUrl: 'http://community.learnsignal.com/', topicId: 15 };
+
+  (function() {
+    var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
+    d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
+  })();
