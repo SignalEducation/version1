@@ -7,7 +7,6 @@
     -if @course.external_url_name && @course.external_url && !@course.external_url_name.empty?
       %p
         =link_to @course.external_url, target: '_blank' do
-          ='Click here for more information about the '
           =@course.external_url_name
 
   .col-md-6
