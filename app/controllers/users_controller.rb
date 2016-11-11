@@ -594,4 +594,10 @@ class UsersController < ApplicationController
     params.require(:user_session).permit(:email, :password)
   end
 
+  def discourse_api
+  @discourse = DiscourseApi::Client.new('https://community.learnsignal.com')
+  @discourse.api_key = '184c41a90ed2d607d53ab3d358236d2a4c5e0152c107e3a3e2e199a5d47c53fc'
+  @discourse.api_username = 'learnsignal1'
+  end
+
 end
