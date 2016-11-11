@@ -17,7 +17,6 @@
 #  description                             :text
 #  short_description                       :string
 #  mailchimp_guid                          :string
-#  forum_url                               :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
@@ -37,6 +36,7 @@
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
+#  discourse_topic_id                      :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -45,7 +45,7 @@ class SubjectCourse < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :discourse_topic_id, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
  :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name
 
   # Constants
@@ -82,7 +82,6 @@ class SubjectCourse < ActiveRecord::Base
   validates :subject_course_category_id, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
-  validates :forum_url, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true
   validates :email_content, presence: true, on: :update, if: :enrollment_option
 

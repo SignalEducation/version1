@@ -147,12 +147,13 @@
 =render partial: 'shared/activate_tab'
 
 
-:javascript
+-if @course.discourse_topic_id
 
-  DiscourseEmbed = { discourseUrl: 'https://community.learnsignal.com/', topicId: 15 };
+  :javascript
+    DiscourseEmbed = { discourseUrl: 'https://community.learnsignal.com/', topicId: "#{@course.discourse_topic_id}" };
 
-  (function() {
-    var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
-    d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
-  })();
+    (function() {
+      var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
+      d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
+    })();

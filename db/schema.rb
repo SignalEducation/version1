@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104162407) do
+ActiveRecord::Schema.define(version: 20161111121730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -834,7 +834,6 @@ ActiveRecord::Schema.define(version: 20161104162407) do
     t.text     "description"
     t.string   "short_description"
     t.string   "mailchimp_guid"
-    t.string   "forum_url"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
     t.float    "best_possible_first_attempt_score"
@@ -854,6 +853,7 @@ ActiveRecord::Schema.define(version: 20161104162407) do
     t.text     "email_content"
     t.string   "external_url_name"
     t.string   "external_url"
+    t.integer  "discourse_topic_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
