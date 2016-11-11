@@ -1,4 +1,4 @@
-=form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
+=form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
   =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
   .row
     .col-md-6.l-margin-bottom-big
@@ -107,7 +107,7 @@
               Upload a replacement if you wish
               %br/
             =f.file_field :profile_image, class: 'form-control'
-
+            =f.file_field :image
 
 
 
