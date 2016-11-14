@@ -283,6 +283,16 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
+  def self.generate_random_number(number_of_characters=5)
+    possible_characters = ('0'..'9').to_a
+    the_answer = ''
+    possible_character_size = possible_characters.size
+    number_of_characters.times do
+      the_answer << possible_characters[rand(possible_character_size)]
+    end
+    the_answer
+  end
+
   # tutor/admin-facing
   def course_module_special_link(the_thing)
     # used for tutor-facing links

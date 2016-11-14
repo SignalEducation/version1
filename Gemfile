@@ -19,7 +19,7 @@ gem 'browser' # user-agent detection
 gem 'chart-js-rails' #Graphs
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'dynamic_sitemaps' # Sitemap generation grm
-gem 'discourse_api', '~> 0.10.1'
+gem 'faraday', '~> 0.9.2'
 gem 'figaro' # management of ENV vars
 gem 'geocoder' # a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
