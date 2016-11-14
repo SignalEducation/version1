@@ -146,6 +146,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :set_trial_limit_in_days, :create_on_discourse
+  after_create :create_on_discourse
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -928,7 +929,7 @@ class User < ActiveRecord::Base
 
   def create_on_discourse
     username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(2)
-    DiscourseCreateUserWorker.perform_at(10.minute.from_now, username, self.email, self.password)
+    DiscourseCreateUserWorker.perform_at(10.minute.from_now, username, self.email, self.password) if self.individual_student?
   end
 
 end
