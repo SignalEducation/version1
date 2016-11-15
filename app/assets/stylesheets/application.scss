@@ -2487,11 +2487,11 @@ a.box {
       top: 0;
       left: 50%;
       content: "";
-      height: 90px;
-      width: 90px;
-      margin-left: -45px;
-      margin-top: -45px;
-      //background: asset-url('computer_1.png') repeat-x 75% 0;
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
       background-size: contain;
     }
     & .box-inner {
