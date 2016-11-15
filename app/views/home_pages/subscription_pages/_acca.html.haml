@@ -11,6 +11,9 @@
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
               Make studying for your ACCA exams easier, cheaper, and more efficient
 
+            .l-margin-bottom
+              =image_tag('ALP_Silver_LP_logo(reverse).png', alt: 'ACCA Silver Learning Provider')
+
             %p.h7
               ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
               ='Start your 7-Day Free Trial'
