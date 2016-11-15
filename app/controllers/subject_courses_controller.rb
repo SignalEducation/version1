@@ -17,7 +17,6 @@
 #  description                             :text
 #  short_description                       :string
 #  mailchimp_guid                          :string
-#  forum_url                               :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
@@ -145,7 +144,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :forum_url, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name)
   end
 
 end

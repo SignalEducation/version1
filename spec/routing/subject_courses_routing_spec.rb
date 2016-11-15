@@ -17,7 +17,6 @@
 #  description                             :text
 #  short_description                       :string
 #  mailchimp_guid                          :string
-#  forum_url                               :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float

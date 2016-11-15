@@ -17,7 +17,6 @@
 #  description                             :text
 #  short_description                       :string
 #  mailchimp_guid                          :string
-#  forum_url                               :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
@@ -55,7 +54,6 @@ FactoryGirl.define do
     description "MyText"
     short_description "MyString"
     sequence(:mailchimp_guid)       {|n| "dfgsdfg#{n}"}
-    forum_url "MyString"
     default_number_of_possible_exam_answers 1
     subject_course_category_id 1
 

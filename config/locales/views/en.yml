@@ -1015,8 +1015,8 @@ en:
         external_url_name_placeholder: ACCA or CFA
         external_url: URL of Exam Body Site
         external_url_placeholder: acca.com, cfa.com
-        forum_url: Forum Course URL
-        forum_url_placeholder: Forum Course URL
+        discourse_topic_id: Community Topic ID
+        discourse_topic_id_placeholder: Discourse ID for topic - in URL
         hotjar_guid: HotJar JS Code
         hotjar_guid_placeholder: Hotjar Javascript Trigger
         default_number_of_possible_exam_answers: Default No. of Questions

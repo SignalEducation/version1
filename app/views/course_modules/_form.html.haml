@@ -58,6 +58,10 @@
                     =f.check_box :revision
                   %td
                     =link_to('Clear', '#', class: 'check clear')
+        %br/
+        =f.label :discourse_topic_id, t('views.subject_courses.form.discourse_topic_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :discourse_topic_id, placeholder: t('views.subject_courses.form.discourse_topic_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
 
         %br/

@@ -25,6 +25,7 @@
 #  tuition                   :boolean          default(FALSE)
 #  test                      :boolean          default(FALSE)
 #  revision                  :boolean          default(FALSE)
+#  discourse_topic_id        :integer
 #
 
 class CourseModule < ActiveRecord::Base
@@ -37,7 +38,7 @@ class CourseModule < ActiveRecord::Base
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
                   :number_of_questions, :subject_course_id, :highlight_colour,
-                  :tuition, :test, :revision
+                  :tuition, :test, :revision, :discourse_topic_id
 
   # Constants
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104162407) do
+ActiveRecord::Schema.define(version: 20161115144405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(version: 20161104162407) do
     t.boolean  "tuition",                   default: false
     t.boolean  "test",                      default: false
     t.boolean  "revision",                  default: false
+    t.integer  "discourse_topic_id"
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
@@ -834,7 +835,6 @@ ActiveRecord::Schema.define(version: 20161104162407) do
     t.text     "description"
     t.string   "short_description"
     t.string   "mailchimp_guid"
-    t.string   "forum_url"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
     t.float    "best_possible_first_attempt_score"

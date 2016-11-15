@@ -202,7 +202,7 @@ class CourseModuleElement < ActiveRecord::Base
   def log_question_count_and_duration
     if self.is_video
       self.duration = self.course_module_element_video.try(:duration) unless Rails.env.test?
-      self.estimated_time_in_seconds = self.course_module_element_video.duration.round unless Rails.env.test?
+      self.estimated_time_in_seconds = self.course_module_element_video.duration.round if !Rails.env.test? && self.course_module_element_video.duration
     elsif self.is_quiz
         self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
     else

@@ -17,7 +17,6 @@
 #  description                             :text
 #  short_description                       :string
 #  mailchimp_guid                          :string
-#  forum_url                               :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
@@ -91,9 +90,6 @@ describe SubjectCourse do
 
   it { should_not validate_presence_of(:mailchimp_guid) }
   it { should validate_length_of(:mailchimp_guid).is_at_most(255) }
-
-  it { should_not validate_presence_of(:forum_url) }
-  it { should validate_length_of(:forum_url).is_at_most(255) }
 
   it { should validate_presence_of(:default_number_of_possible_exam_answers) }
 
