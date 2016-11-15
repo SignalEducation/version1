@@ -36,7 +36,6 @@
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
-#  discourse_topic_id                      :integer
 #
 
 FactoryGirl.define do

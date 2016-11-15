@@ -36,7 +36,6 @@
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
-#  discourse_topic_id                      :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -45,7 +44,7 @@ class SubjectCourse < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :discourse_topic_id, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
  :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name
 
   # Constants

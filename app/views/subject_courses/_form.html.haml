@@ -102,10 +102,6 @@
                       =f.text_field :external_url_name, placeholder: t('views.subject_courses.form.external_url_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
                     -unless current_user.corporate_customer?
                       %br/
-                      =f.label :discourse_topic_id, t('views.subject_courses.form.discourse_topic_id'), class: 'control-label'
-                      .input-group.input-group-lg.full-width
-                        =f.text_field :discourse_topic_id, placeholder: t('views.subject_courses.form.discourse_topic_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                      %br/
                       =f.label :hotjar_guid, t('views.subject_courses.form.hotjar_guid'), class: 'control-label'
                       .input-group.input-group-lg.full-width
                         =f.text_field :hotjar_guid, placeholder: t('views.subject_courses.form.hotjar_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'

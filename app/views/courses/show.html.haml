@@ -60,13 +60,14 @@
                   -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
-                    %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                      Community
 
                 -else
                   -if @course_module_element.course_module_element_resources.count > 0
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
+                -if @course_module.discourse_topic_id
+                  %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
+                    Community
 
           -if @course_module_element.try(:video_resource)
             .row
@@ -112,10 +113,11 @@
                               -else
                                 %li
                                   =link_to r.name, r.upload.url, target: '_blank'
-                    .tab-pane.fade#community{role: 'tabpanel'}
-                      .col-md-12
-                        .l-margin-bottom-huge
-                          %div{id: 'discourse-comments'}
+                    -if @course_module.discourse_topic_id
+                      .tab-pane.fade#community{role: 'tabpanel'}
+                        .col-md-12
+                          .l-margin-bottom-huge
+                            %div{id: 'discourse-comments'}
           -else
             .tab-pane.fade#notes{role: 'tabpanel'}
               .col-md-12
@@ -128,6 +130,11 @@
                       -else
                         %li
                           =link_to r.name, r.upload.url, target: '_blank'
+            -if @course_module.discourse_topic_id
+              .tab-pane.fade#community{role: 'tabpanel'}
+                .col-md-12
+                  .l-margin-bottom-huge
+                    %div{id: 'discourse-comments'}
 
 
 -else
@@ -147,10 +154,10 @@
 =render partial: 'shared/activate_tab'
 
 
--if @course.discourse_topic_id
+-if @course_module.discourse_topic_id
 
   :javascript
-    DiscourseEmbed = { discourseUrl: 'https://community.learnsignal.com/', topicId: "#{@course.discourse_topic_id}" };
+    DiscourseEmbed = { discourseUrl: 'https://community.learnsignal.com/', topicId: "#{@course_module.try(:discourse_topic_id)}" };
 
     (function() {
       var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;

@@ -25,6 +25,7 @@
 #  tuition                   :boolean          default(FALSE)
 #  test                      :boolean          default(FALSE)
 #  revision                  :boolean          default(FALSE)
+#  discourse_topic_id        :integer
 #
 
 require 'rails_helper'
