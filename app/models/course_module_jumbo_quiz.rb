@@ -65,7 +65,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   end
 
   def destroyable?
-    !Rails.env.production?
+    true
   end
 
   def destroyable_children
