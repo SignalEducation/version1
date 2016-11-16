@@ -203,35 +203,6 @@ describe CorporateProfilesController, type: :controller do
 
   end
 
-  context 'Logged in as a forum_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(forum_manager_user)
-    end
-
-    describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_signed_in
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
-        get :new
-        expect_bounce_as_signed_in
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, corporate_customer: valid_params
-        expect_bounce_as_signed_in
-      end
-    end
-  end
-
   context 'Logged in as a content_manager_user: ' do
 
     before(:each) do

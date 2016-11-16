@@ -12,7 +12,6 @@
 #  blogger                              :boolean          default(FALSE), not null
 #  corporate_customer                   :boolean          default(FALSE), not null
 #  site_admin                           :boolean          default(FALSE), not null
-#  forum_manager                        :boolean          default(FALSE), not null
 #  subscription_required_at_sign_up     :boolean          default(FALSE), not null
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime

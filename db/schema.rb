@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161115144405) do
+ActiveRecord::Schema.define(version: 20161116131259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1062,7 +1062,6 @@ ActiveRecord::Schema.define(version: 20161115144405) do
     t.boolean  "blogger",                              default: false, null: false
     t.boolean  "corporate_customer",                   default: false, null: false
     t.boolean  "site_admin",                           default: false, null: false
-    t.boolean  "forum_manager",                        default: false, null: false
     t.boolean  "subscription_required_at_sign_up",     default: false, null: false
     t.boolean  "subscription_required_to_see_content", default: false, null: false
     t.datetime "created_at"

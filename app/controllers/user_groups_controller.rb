@@ -12,7 +12,6 @@
 #  blogger                              :boolean          default(FALSE), not null
 #  corporate_customer                   :boolean          default(FALSE), not null
 #  site_admin                           :boolean          default(FALSE), not null
-#  forum_manager                        :boolean          default(FALSE), not null
 #  subscription_required_at_sign_up     :boolean          default(FALSE), not null
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
@@ -80,7 +79,7 @@ class UserGroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user_group).permit(:name, :description, :individual_student, :corporate_student, :tutor, :content_manager, :blogger, :corporate_customer, :site_admin, :forum_manager, :subscription_required_at_sign_up, :subscription_required_to_see_content, :complimentary)
+    params.require(:user_group).permit(:name, :description, :individual_student, :corporate_student, :tutor, :content_manager, :blogger, :corporate_customer, :site_admin, :subscription_required_at_sign_up, :subscription_required_to_see_content, :complimentary)
   end
 
 end

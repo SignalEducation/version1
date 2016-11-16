@@ -415,61 +415,6 @@ describe 'The sign in process.', type: :feature do
 
   end
 
-  context 'Logged in as a forum_manager_user:' do
-
-    before(:each) do
-      activate_authlogic
-      x = forum_manager_user.id
-    end
-
-    scenario 'with no details' do
-      visit sign_in_path
-      within('.login-form') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: ''
-        fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.sign_in')
-      end
-      expect(page).to have_content 'You did not provide any details for authentication.'
-      page.has_selector?('form_for')
-    end
-
-    scenario 'with bad details' do
-      visit sign_in_path
-      within('.login-form') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
-        fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
-        click_button I18n.t('views.general.sign_in')
-      end
-      expect(page).to have_content 'Email is not valid '
-      page.has_selector?('form_for')
-    end
-
-    scenario 'with no password' do
-      visit sign_in_path
-      within('.login-form') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
-        fill_in I18n.t('views.user_sessions.form.password'), with: ''
-        click_button I18n.t('views.general.sign_in')
-      end
-      expect(page).to have_content 'Password cannot be blank'
-      page.has_selector?('form_for')
-    end
-
-    #TODO When the forum manager dashboard partial is built this needs to test for it.
-    #scenario 'with correct details and then sign out' do
-    #  visit sign_in_path
-    #  within('.login-form') do
-    #    fill_in I18n.t('views.user_sessions.form.email'), with: forum_manager_user.email
-    #    fill_in I18n.t('views.user_sessions.form.password'), with: forum_manager_user.password
-    #    click_button I18n.t('views.general.go')
-    #  end
-    #  expect(page).to have_content 'Welcome back!'
-    #  click_link('navbar-cog')
-    #  click_link('Sign out')
-    #end
-
-  end
-
   context 'Logged in as a admin_user:' do
 
     before(:each) do

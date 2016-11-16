@@ -12,7 +12,6 @@
 #  blogger                              :boolean          default(FALSE), not null
 #  corporate_customer                   :boolean          default(FALSE), not null
 #  site_admin                           :boolean          default(FALSE), not null
-#  forum_manager                        :boolean          default(FALSE), not null
 #  subscription_required_at_sign_up     :boolean          default(FALSE), not null
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
@@ -319,64 +318,6 @@ describe UserGroupsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should redirect to root' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should redirect to root' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should redirect to root' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should redirect to root' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to root' do
-        post :create, user_group: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should redirect to root' do
-        put :update, id: 1, user_group: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should redirect to root' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a forum_manager_user' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(forum_manager_user)
     end
 
     describe "GET 'index'" do

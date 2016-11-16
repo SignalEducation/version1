@@ -12,7 +12,6 @@
 #  blogger                              :boolean          default(FALSE), not null
 #  corporate_customer                   :boolean          default(FALSE), not null
 #  site_admin                           :boolean          default(FALSE), not null
-#  forum_manager                        :boolean          default(FALSE), not null
 #  subscription_required_at_sign_up     :boolean          default(FALSE), not null
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
@@ -26,11 +25,11 @@ class UserGroup < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :description, :individual_student, :tutor, :content_manager,
-                  :blogger, :corporate_customer, :site_admin, :forum_manager,
+                  :blogger, :corporate_customer, :site_admin,
                   :subscription_required_at_sign_up, :corporate_student,
                   :subscription_required_to_see_content, :complimentary
   # Constants
-  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger forum_manager content_manager admin complimentary)
+  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary)
   CORPORATE_STUDENTS = 2
   CORPORATE_CUSTOMERS = 3
 
@@ -57,7 +56,7 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_student_user_group
-    where(individual_student: true, complimentary: false, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, forum_manager: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
+    where(individual_student: true, complimentary: false, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
   end
 
   def self.default_tutor_user_group

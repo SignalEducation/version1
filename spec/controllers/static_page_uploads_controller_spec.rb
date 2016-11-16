@@ -133,26 +133,6 @@ RSpec.describe StaticPageUploadsController, type: :controller do
     end
   end
 
-  context 'Logged in as a forum_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(forum_manager_user)
-    end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, static_page_upload: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should respond ERROR not permitted' do
-        post :create, static_page_upload: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-  end
-
   context 'Logged in as a content_manager_user: ' do
 
     before(:each) do

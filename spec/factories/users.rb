@@ -160,14 +160,6 @@ FactoryGirl.define do
       corporate_customer_id             nil
     end
 
-    factory :forum_manager_user do
-      sequence(:email)                  { |n| "forum.manager-#{n}@example.com" }
-      active                            true
-      user_group_id                     1
-      stripe_customer_id                nil
-      corporate_customer_id             nil
-    end
-
     factory :content_manager_user do
       sequence(:email)                  { |n| "content.manager-#{n}@example.com" }
       active                            true

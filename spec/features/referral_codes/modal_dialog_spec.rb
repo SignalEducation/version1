@@ -20,8 +20,8 @@ describe 'Referral codes modal dialog', type: :feature do
     xit scenario 'when logged in as user who is not allowed to have referral code', js: true do
       [admin_user,
        content_manager_user,
-       corporate_customer_user,
-       forum_manager_user].each do |usr|
+       corporate_customer_user
+       ].each do |usr|
         sign_in_via_sign_in_page(usr)
         expect(page).not_to have_content("Refer a friend!")
         sign_out
