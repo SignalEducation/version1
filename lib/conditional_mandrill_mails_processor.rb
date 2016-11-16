@@ -4,10 +4,8 @@ class ConditionalMandrillMailsProcessor
   end
 
   DAYS_IN_A_ROW = 9
-  DAYS_HAVENT_SEEN = 5
+  DAYS_WITHOUT_UPDATE = 5
 
-  # Sends 'Study Streak' mail to all students that have worked on one ExamLevel
-  # or ExamSection for 9 days in a row (and haven't finished it yet).
   def self.process_study_streak(start_calculation_from)
     last_log_date = start_calculation_from == 'today' ? Time.now.end_of_day : 1.day.ago.end_of_day
     # Get all users with exam track created on starting date. Exam track
@@ -59,22 +57,18 @@ class ConditionalMandrillMailsProcessor
   end
 
   def self.process_we_havent_seen_you_in_a_while
-    User.where("last_login_at > ? and last_login_at < ?", DAYS_HAVENT_SEEN.days.ago.beginning_of_day, DAYS_HAVENT_SEEN.days.ago.end_of_day).each do |user|
-      enrollments = user.enrollments
-      log_ids = enrollments.map(&:subject_course_user_log_id)
-      course_logs = SubjectCourseUserLog.where(id: log_ids)
-                   .where("percentage_complete < 100")
-                   .order("updated_at desc")
 
-      if course_logs.any?
-        course_logs.each do |log|
-          course_name = log.subject_course.name
-          days = DAYS_HAVENT_SEEN
-          url = log.subject_course
-          MandrillWorker.perform_async(user.id,
-                                       "send_we_havent_seen_you_in_a_while_email",
-                                       url, course_name, days) if log
-        end
+    course_logs = SubjectCourseUserLog.where("updated_at > ? and updated_at < ?", DAYS_WITHOUT_UPDATE.days.ago.beginning_of_day, DAYS_WITHOUT_UPDATE.days.ago.end_of_day).where("percentage_complete < 100").order("updated_at desc")
+
+    course_logs.each do |log|
+      if log.enrollment
+        course_name = log.subject_course.name
+        days = DAYS_WITHOUT_UPDATE
+        course_parent_url = log.subject_course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
+        url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{log.subject_course.name_url}"
+        MandrillWorker.perform_async(user.id,
+                                     "send_we_havent_seen_you_in_a_while_email",
+                                     url, course_name, days) if log
       end
     end
   end
