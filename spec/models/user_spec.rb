@@ -147,7 +147,6 @@ describe User do
       FactoryGirl.create(:blogger_user_group)
       @corporate_customer_group = FactoryGirl.create(:corporate_customer_user_group)
       FactoryGirl.create(:site_admin_user_group)
-      FactoryGirl.create(:forum_manager_user_group)
     end
 
     it "does not validate presence for non-corporate users" do

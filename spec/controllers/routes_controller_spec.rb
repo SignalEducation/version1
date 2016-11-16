@@ -147,31 +147,6 @@ describe RoutesController, type: :controller do
 
   end
 
-  context 'Logged in as a forum_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(forum_manager_user)
-    end
-
-    describe "GET 'root' with no subdomain" do
-      xit 'should redirect to dashboard#index' do
-        get :root
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
-      end
-    end
-
-    describe "GET 'root' with a valid subdomain" do
-      xit 'should redirect to dashboard#index' do
-        get :root
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
-      end
-    end
-
-  end
-
   context 'Logged in as a content_manager_user: ' do
 
     before(:each) do

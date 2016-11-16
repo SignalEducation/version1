@@ -12,7 +12,6 @@
 #  blogger                              :boolean          default(FALSE), not null
 #  corporate_customer                   :boolean          default(FALSE), not null
 #  site_admin                           :boolean          default(FALSE), not null
-#  forum_manager                        :boolean          default(FALSE), not null
 #  subscription_required_at_sign_up     :boolean          default(FALSE), not null
 #  subscription_required_to_see_content :boolean          default(FALSE), not null
 #  created_at                           :datetime
@@ -31,7 +30,6 @@ FactoryGirl.define do
     blogger                              false
     corporate_customer                   false
     site_admin                           false
-    forum_manager                        false
     subscription_required_at_sign_up     false
     subscription_required_to_see_content false
     complimentary false
@@ -60,11 +58,6 @@ FactoryGirl.define do
     factory :content_manager_user_group do
       name 'Content Manager Group'
       content_manager true
-    end
-
-    factory :forum_manager_user_group do
-      name 'Forum Manager Group'
-      forum_manager true
     end
 
     factory :individual_student_user_group do

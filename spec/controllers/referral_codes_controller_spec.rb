@@ -154,29 +154,6 @@ describe ReferralCodesController, type: :controller do
 
   end
 
-  context 'Logged in as a forum_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(forum_manager_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        delete :destroy, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
   context 'Logged in as a content_manager_user: ' do
 
     before(:each) do

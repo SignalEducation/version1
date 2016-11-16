@@ -385,64 +385,6 @@ describe UserActivityLogsController, type: :controller do
 
   end
 
-  context 'Logged in as a forum_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(forum_manager_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see user_activity_log_1' do
-        get :show, id: user_activity_log_1.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with user_activity_log_1' do
-        get :edit, id: user_activity_log_1.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, user_activity_log: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for user_activity_log_1' do
-        put :update, id: user_activity_log_1.id, user_activity_log: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: user_activity_log_1.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
   context 'Logged in as a content_manager_user: ' do
 
     before(:each) do

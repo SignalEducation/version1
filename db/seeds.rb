@@ -17,7 +17,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           individual_student: true, tutor: false, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up: true,
-          subscription_required_to_see_content: true, forum_manager: false
+          subscription_required_to_see_content: true
   ); print '.'
 
   UserGroup.where(id: 2).first_or_create!(
@@ -27,7 +27,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           tutor: false, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up: false,
-          subscription_required_to_see_content: false, forum_manager: false
+          subscription_required_to_see_content: false
   ); print '.'
 
   UserGroup.where(id: 3).first_or_create!(
@@ -36,7 +36,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           individual_student: false, tutor: true, content_manager: false,
           blogger: false, corporate_customer: true, site_admin: false,
           subscription_required_at_sign_up: true,
-          subscription_required_to_see_content: true, forum_manager: false
+          subscription_required_to_see_content: true
   ); print '.'
 
   UserGroup.where(id: 4).first_or_create!(
@@ -44,7 +44,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           individual_student: false, tutor: true, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up: false,
-          subscription_required_to_see_content: false, forum_manager: true
+          subscription_required_to_see_content: false
   ); print '.'
 
   UserGroup.where(id: 5).first_or_create!(
@@ -52,42 +52,34 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
           individual_student: false, tutor: false, content_manager: false,
           blogger: true, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up:false,
-          subscription_required_to_see_content: false, forum_manager: false
+          subscription_required_to_see_content: false
   ); print '.'
 
   UserGroup.where(id: 6).first_or_create!(
-          name: 'Forum manager', description: 'Can manage content on the forum',
-          individual_student: false, tutor: false, content_manager: false,
-          blogger: false, corporate_customer: false, site_admin: false,
-          subscription_required_at_sign_up: false,
-          subscription_required_to_see_content: false, forum_manager: true
-  ); print '.'
-
-  UserGroup.where(id: 7).first_or_create!(
           name: 'Content manager',
           description: 'Can manage forum, blog and static pages',
           individual_student: false, tutor: false,
           content_manager: true,
           blogger: true, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up: false,
-          subscription_required_to_see_content: false, forum_manager: true
+          subscription_required_to_see_content: false
   ); print '.'
 
-  UserGroup.where(id: 8).first_or_create!(
+  UserGroup.where(id: 7).first_or_create!(
           name: 'Admin', description: 'Can do everything', individual_student: false,
           tutor: false, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: true,
           subscription_required_at_sign_up: false,
-          subscription_required_to_see_content: false, forum_manager: true
+          subscription_required_to_see_content: false
   ); print '.'
 
-  UserGroup.where(id: 9).first_or_create!(
+  UserGroup.where(id: 8).first_or_create!(
           name: 'Complimentary users', description: 'Like a student, but free',
           individual_student: true,
           tutor: false, content_manager: false,
           blogger: false, corporate_customer: false, site_admin: false,
           subscription_required_at_sign_up: false,
-          subscription_required_to_see_content: false, forum_manager: false
+          subscription_required_to_see_content: false
   ); print '.'
 
   puts ' DONE'
