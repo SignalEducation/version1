@@ -62,6 +62,7 @@ class MandrillClient
     send_template('free-trial-ended', msg)
   end
 
+  #Turned Off because the mailchimp email template is stupid
   def send_account_reactivated_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Your Account is Reactivated"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
