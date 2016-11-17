@@ -85,6 +85,7 @@
                       .col-md-6
                         =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: course_module.id), class: 'btn btn-purple'
                         =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: course_module.id), class: 'btn btn-purple'
+                        -#should not be able to create a jumbo if the course module has no normal quizzes
                         -#unless course_module.course_module_jumbo_quiz
                           =link_to t('views.course_module_jumbo_quiz.show.h1'), new_course_module_jumbo_quiz_url(cm_id: course_module.id), class: 'btn btn-purple'
                       .col-md-6

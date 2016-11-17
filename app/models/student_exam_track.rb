@@ -147,7 +147,15 @@ class StudentExamTrack < ActiveRecord::Base
     self.count_of_cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
 
-    self.save
+    begin
+      self.save
+
+    rescue Exception => e
+      puts "SQL error in #{ __method__ }"
+      ActiveRecord::Base.connection.execute 'ROLLBACK'
+
+      raise e
+    end
   end
 
   def subject_course_user_log

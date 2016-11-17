@@ -400,7 +400,9 @@ class UsersController < ApplicationController
           redirect_to user_new_subscription_url(current_user.id)
         else
           stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-          stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
+
+          stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+
           stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
           if stripe_customer && stripe_subscription
             subscription = Subscription.new(
@@ -452,6 +454,37 @@ class UsersController < ApplicationController
 
     else
       redirect_to account_url
+    end
+  end
+
+  def create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+    begin
+      stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
+      return stripe_subscription
+    rescue Stripe::CardError => e
+      # Since it's a decline, Stripe::CardError will be caught
+      body = e.json_body
+      err  = body[:error]
+      puts "Status is: #{e.http_status}"
+      puts "Type is: #{err[:type]}"
+      puts "Code is: #{err[:code]}"
+      # param is '' in this case
+      puts "Param is: #{err[:param]}"
+      puts "Message is: #{err[:message]}"
+    rescue Stripe::RateLimitError => e
+      # Too many requests made to the API too quickly
+    rescue Stripe::InvalidRequestError => e
+      # Invalid parameters were supplied to Stripe's API
+    rescue Stripe::AuthenticationError => e
+      # Authentication with Stripe's API failed
+      # (maybe you changed API keys recently)
+    rescue Stripe::APIConnectionError => e
+      # Network communication with Stripe failed
+    rescue Stripe::StripeError => e
+      # Display a very generic error to the user, and maybe send
+      # yourself an email
+    rescue => e
+      # Something else happened, completely unrelated to Stripe
     end
   end
 

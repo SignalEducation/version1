@@ -94,9 +94,13 @@ class CorporateGroupsController < ApplicationController
 
   def update_members
     @corporate_group = CorporateGroup.find(params[:corporate_group_id]) rescue nil
-    if @corporate_group &&
-       (current_user.admin? || current_user.corporate_customer_id == @corporate_group.corporate_customer_id)
-      @corporate_group.user_ids = params[:corporate_group][:corporate_student_ids]
+    if @corporate_group && (current_user.admin? || current_user.corporate_customer_id == @corporate_group.corporate_customer_id)
+      if params[:corporate_group]
+        @corporate_group.user_ids = params[:corporate_group][:corporate_student_ids]
+      else
+        @corporate_group.user_ids = []
+      end
+
       flash[:success] = I18n.t('controllers.corporate_groups.update_members.flash.success')
       redirect_to corporate_groups_url
     else
