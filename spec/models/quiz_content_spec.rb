@@ -16,7 +16,6 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  quiz_solution_id   :integer
-#  flash_card_id      :integer
 #  destroyed_at       :datetime
 #
 
@@ -41,7 +40,6 @@ describe QuizContent do
   it { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
   it { should belong_to(:quiz_solution) }
-  it { should belong_to(:flash_card) }
 
   # validation
   # tests for custom-validator 'question_or_answer_only'

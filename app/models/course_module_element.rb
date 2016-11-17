@@ -17,7 +17,6 @@
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
-#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
 #  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
@@ -40,15 +39,13 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
-                  :course_module_element_flash_card_pack_attributes,
-                  :is_cme_flash_card_pack, :number_of_questions,
-                  :video_resource_attributes, :_destroy
+                  :number_of_questions, :video_resource_attributes,
+                  :_destroy
 
   # Constants
 
   # relationships
   belongs_to :course_module
-  has_one :course_module_element_flash_card_pack
   has_one :course_module_element_quiz
   has_many :course_module_element_resources
   has_one :video_resource, inverse_of: :course_module_element
@@ -64,7 +61,6 @@ class CourseModuleElement < ActiveRecord::Base
            foreign_key: :latest_course_module_element_id
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
-  accepts_nested_attributes_for :course_module_element_flash_card_pack
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video
   accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }

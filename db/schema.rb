@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116131259) do
+ActiveRecord::Schema.define(version: 20161117161107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,17 +116,6 @@ ActiveRecord::Schema.define(version: 20161116131259) do
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
   add_index "countries", ["sorting_order"], name: "index_countries_on_sorting_order", using: :btree
 
-  create_table "course_module_element_flash_card_packs", force: :cascade do |t|
-    t.integer  "course_module_element_id"
-    t.string   "background_color"
-    t.string   "foreground_color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "destroyed_at"
-  end
-
-  add_index "course_module_element_flash_card_packs", ["course_module_element_id"], name: "cme_flash_card_pack_cme_id", using: :btree
-
   create_table "course_module_element_quizzes", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.integer  "number_of_questions"
@@ -219,7 +208,6 @@ ActiveRecord::Schema.define(version: 20161116131259) do
     t.boolean  "is_video",                  default: false, null: false
     t.boolean  "is_quiz",                   default: false, null: false
     t.boolean  "active",                    default: true,  null: false
-    t.boolean  "is_cme_flash_card_pack",    default: false, null: false
     t.string   "seo_description"
     t.boolean  "seo_no_index",              default: false
     t.datetime "destroyed_at"
@@ -315,41 +303,6 @@ ActiveRecord::Schema.define(version: 20161116131259) do
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
   add_index "exam_sittings", ["name"], name: "index_exam_sittings_on_name", using: :btree
   add_index "exam_sittings", ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id", using: :btree
-
-  create_table "flash_card_stacks", force: :cascade do |t|
-    t.integer  "course_module_element_flash_card_pack_id"
-    t.string   "name"
-    t.integer  "sorting_order"
-    t.string   "final_button_label"
-    t.string   "content_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "destroyed_at"
-  end
-
-  add_index "flash_card_stacks", ["course_module_element_flash_card_pack_id"], name: "flash_card_stacks_cme_flash_card_pack_id", using: :btree
-
-  create_table "flash_cards", force: :cascade do |t|
-    t.integer  "flash_card_stack_id"
-    t.integer  "sorting_order"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "destroyed_at"
-  end
-
-  add_index "flash_cards", ["flash_card_stack_id"], name: "index_flash_cards_on_flash_card_stack_id", using: :btree
-  add_index "flash_cards", ["sorting_order"], name: "index_flash_cards_on_sorting_order", using: :btree
-
-  create_table "flash_quizzes", force: :cascade do |t|
-    t.integer  "flash_card_stack_id"
-    t.string   "background_color"
-    t.string   "foreground_color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "destroyed_at"
-  end
-
-  add_index "flash_quizzes", ["flash_card_stack_id"], name: "index_flash_quizzes_on_flash_card_stack_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
@@ -639,7 +592,6 @@ ActiveRecord::Schema.define(version: 20161116131259) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "quiz_solution_id"
-    t.integer  "flash_card_id"
     t.datetime "destroyed_at"
   end
 
@@ -653,7 +605,6 @@ ActiveRecord::Schema.define(version: 20161116131259) do
     t.text     "hints"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "flash_quiz_id"
     t.datetime "destroyed_at"
     t.integer  "subject_course_id"
   end
