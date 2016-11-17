@@ -1,5 +1,3 @@
-require 'update_db_data'
-
 namespace :db do
 
   desc 'Reset the test environment database'
