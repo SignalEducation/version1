@@ -9,7 +9,6 @@
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
-#  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #
@@ -34,7 +33,6 @@ describe QuizQuestion do
   # relationships
   it { should belong_to(:course_module_element_quiz) }
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:flash_quiz) }
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
   it { should have_many(:quiz_answers) }

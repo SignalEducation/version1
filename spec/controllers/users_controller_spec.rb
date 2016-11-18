@@ -121,6 +121,8 @@ describe UsersController, type: :controller do
                                 password_confirmation: "dummy_pass" } }
       let!(:student) { FactoryGirl.create(:individual_student_user) }
       let!(:currency) { FactoryGirl.create(:usd) }
+      let!(:country) { FactoryGirl.create(:uk) }
+      let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
       describe "invalid data" do
@@ -149,6 +151,9 @@ describe UsersController, type: :controller do
       end
 
       describe "valid data" do
+        let!(:country) { FactoryGirl.create(:uk) }
+        let!(:currency_2) { FactoryGirl.create(:gbp) }
+
         it 'signs up new student' do
           referral_codes = ReferralCode.count
           post :student_create, user: sign_up_params

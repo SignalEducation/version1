@@ -9,7 +9,6 @@
 #  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
-#  flash_quiz_id                 :integer
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #
@@ -23,14 +22,13 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :flash_quiz_id, :subject_course_id
+                  :quiz_solutions_attributes, :subject_course_id
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
-  belongs_to :flash_quiz, inverse_of: :quiz_questions
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
@@ -64,7 +62,7 @@ class QuizQuestion < ActiveRecord::Base
 
   def complex_question?
     answer_ids = self.quiz_answer_ids
-    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil, flash_card_id: nil).count > 4
+    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil).count > 4
   end
 
   def destroyable?
@@ -93,14 +91,12 @@ class QuizQuestion < ActiveRecord::Base
   end
 
   def set_course_module_element
-    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id) || self.flash_quiz.try(:flash_card_stack).try(:course_module_element_flash_card_pack).try(:course_module_element_id)
+    self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id)
     true
   end
 
   def set_subject_course_id
-    unless self.flash_quiz_id
-      self.subject_course_id = self.course_module_element_quiz.course_module_element.parent.subject_course_id
-    end
+    self.subject_course_id = self.course_module_element_quiz.course_module_element.parent.subject_course_id
   end
 
 end

@@ -139,6 +139,9 @@ describe HomePagesController, type: :controller do
     describe "POST 'student_sign_up'" do
       describe "invalid data" do
 
+        let!(:country) { FactoryGirl.create(:uk) }
+        let!(:currency_2) { FactoryGirl.create(:gbp) }
+
         it 'does not subscribe user if user with same email already exists' do
           request.env['HTTP_REFERER'] = '/'
           post :student_sign_up, user: sign_up_params.merge(email: student.email)
@@ -166,6 +169,10 @@ describe HomePagesController, type: :controller do
       end
 
       describe "valid data" do
+
+        let!(:country) { FactoryGirl.create(:uk) }
+        let!(:currency_2) { FactoryGirl.create(:gbp) }
+
         it 'signs up new student' do
           referral_codes = ReferralCode.count
           post :student_sign_up, user: sign_up_params

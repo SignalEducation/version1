@@ -639,7 +639,7 @@ describe StudentUserTypesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('student_user_types', 3)
+        expect_index_success_with_model('student_user_types', 8)
       end
     end
 

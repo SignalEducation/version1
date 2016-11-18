@@ -46,7 +46,7 @@ class HomePagesController < ApplicationController
       @currency_id = country.currency_id
       @user.country_id = country.id
     else
-      @currency_id = Currency.find_by_iso_code('GBP').id
+      @currency_id = Currency.find_by_iso_code('GB').id
       @user.country_id = Country.find_by_name('United Kingdom').id
     end
     @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first

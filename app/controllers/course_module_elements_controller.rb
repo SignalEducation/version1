@@ -17,7 +17,6 @@
 #  is_video                  :boolean          default(FALSE), not null
 #  is_quiz                   :boolean          default(FALSE), not null
 #  active                    :boolean          default(TRUE), not null
-#  is_cme_flash_card_pack    :boolean          default(FALSE), not null
 #  seo_description           :string
 #  seo_no_index              :boolean          default(FALSE)
 #  destroyed_at              :datetime
@@ -76,9 +75,6 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.build_video_resource
     elsif params[:type] == 'quiz'
       spawn_quiz_children
-    elsif params[:type] == 'flash_cards'
-      @course_module_element.is_cme_flash_card_pack = true
-      create_empty_cme_flash_card_pack
     end
     set_related_cmes
   end
@@ -92,20 +88,6 @@ class CourseModuleElementsController < ApplicationController
         if !@course_module_element.video_resource
           @course_module_element.build_video_resource
         end
-      elsif @course_module_element.is_cme_flash_card_pack
-        # edit_empty_cme_flash_card_pack
-        if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
-          # @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
-          # @quiz_question = @flash_quiz.quiz_questions.build
-          # @quiz_question.quiz_contents.build(sorting_order: 0)
-
-
-        else
-          # flash_card = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
-          # flash_card.quiz_contents.build(sorting_order: 0)
-
-        end
-
       end
       cm = @course_module_element.parent
       @course_modules = cm.parent.active_children
@@ -188,42 +170,6 @@ class CourseModuleElementsController < ApplicationController
 
   protected
 
-  def create_empty_cme_flash_card_pack
-    @course_module_element.build_course_module_element_flash_card_pack
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.build(content_type: 'Cards', sorting_order: 0)
-
-    # flash cards
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build(sorting_order: 0)
-
-    # flash quiz
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz(background_color: '#333333', foreground_color: '#eeeeee')
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.build
-    @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.first.quiz_contents.build(sorting_order: 0)
-    2.times do |counter|
-      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_answers.build
-      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_quiz.quiz_questions.last.quiz_answers.last.quiz_contents.build(sorting_order: counter)
-    end
-  end
-
-  def edit_empty_cme_flash_card_pack
-    if @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Cards'
-
-      # flash quiz
-      @flash_quiz = @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.build_flash_quiz
-      @quiz_question = @flash_quiz.quiz_questions.build
-      @quiz_question.quiz_contents.build(sorting_order: 0)
-      2.times do |counter|
-        @qa = @quiz_question.quiz_answers.build
-        @qa.quiz_contents.build(sorting_order: counter)
-      end
-    elsif @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.content_type == 'Quiz'
-      # build a flash card
-      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.build(sorting_order: 0)
-      @course_module_element.course_module_element_flash_card_pack.flash_card_stacks.first.flash_cards.first.quiz_contents.build(sorting_order: 0)
-    end
-  end
-
   def get_variables
     if params[:id].to_i > 0
       @course_module_element = CourseModuleElement.where(id: params[:id]).first
@@ -257,7 +203,6 @@ class CourseModuleElementsController < ApplicationController
         :is_quiz,
         :seo_description,
         :seo_no_index,
-        :is_cme_flash_card_pack,
         :number_of_questions,
         course_module_element_video_attributes: [
             :course_module_element_id,

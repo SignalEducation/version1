@@ -16,7 +16,6 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  quiz_solution_id   :integer
-#  flash_card_id      :integer
 #  destroyed_at       :datetime
 #
 
@@ -29,14 +28,13 @@ class QuizContent < ActiveRecord::Base
   attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
                   :text_content, :sorting_order, :content_type, :image,
                   :image_file_name, :image_content_type,
-                  :image_file_size, :image_updated_at, :flash_card_id
+                  :image_file_size, :image_updated_at
 
   # Constants
   CONTENT_TYPES = %w(text image mathjax)
 
   # relationships
   belongs_to :quiz_answer
-  belongs_to :flash_card
   belongs_to :quiz_question
   belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id
   has_attached_file :image, default_url: '/assets/images/missing.png'
@@ -105,7 +103,7 @@ class QuizContent < ActiveRecord::Base
   end
 
   def one_parent_only
-    test_list = [self.quiz_question_id, self.quiz_answer_id, self.quiz_solution_id, self.flash_card_id].compact # gets rid of "nil"s
+    test_list = [self.quiz_question_id, self.quiz_answer_id, self.quiz_solution_id].compact # gets rid of "nil"s
     if test_list.length > 1
       errors.add(:base, I18n.t('models.quiz_content.can_t_assign_to_multiple_things'))
     elsif test_list.length == 0
