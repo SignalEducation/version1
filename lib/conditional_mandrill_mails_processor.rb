@@ -66,7 +66,7 @@ class ConditionalMandrillMailsProcessor
         days = DAYS_WITHOUT_UPDATE
         course_parent_url = log.subject_course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
         url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{log.subject_course.name_url}"
-        MandrillWorker.perform_async(user.id,
+        MandrillWorker.perform_async(log.user.id,
                                      "send_we_havent_seen_you_in_a_while_email",
                                      url, course_name, days) if log
       end
