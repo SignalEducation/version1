@@ -25,7 +25,9 @@ class EnrollmentsController < ApplicationController
       else
         content = @course.short_description
       end
-      MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, library_special_link(@course.name_url))
+      course_parent_url = @course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
+      url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
+      MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url)
 
       redirect_to course_special_link(@course.first_active_cme)
     end
