@@ -99,7 +99,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def last_element
-    CourseModuleElement.find(self.latest_course_module_element_id)
+    CourseModuleElement.find(self.latest_course_module_element_id) || self.subject_course.first_active_cme
   end
 
   def recalculate_completeness
