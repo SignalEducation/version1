@@ -1184,6 +1184,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-margin-top-big {
   margin-top: $gutter*2;
 }
+.l-margin-top-xl {
+  margin-top: $gutter*2.5;
+}
 .l-margin-top-huge {
   margin-top: $gutter*4;
 }
@@ -2459,11 +2462,8 @@ a.box {
     @include box-shadow(0, 0, 12px, rgba(#000, .25));
   }
   &:hover {
-    .box-title {
-      //color: $colour-12;
-    }
     .box-label {
-      background: shade($colour-12, 10%);
+      background: $colour-12;
     }
   }
 }
@@ -2482,20 +2482,17 @@ a.box {
   &.box-course {
     text-align: center;
     margin-top: $gutter;
-    &:after {
+    .image {
       position: absolute;
       top: 0;
       left: 50%;
       content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      height: 100px;
+      width: 100px;
+      margin-left: -45px;
+      margin-top: -45px;
+      background: asset-url("graph_1.png") repeat-x 50% 0;
       background-size: contain;
-    }
-    & .box-inner {
-      padding-top: $gutter*1.5;
     }
   }
 }
@@ -2512,6 +2509,8 @@ a.box {
   position: relative;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .box-pic {
   max-height: 30%;
@@ -2524,9 +2523,10 @@ a.box {
   margin: $gutter/2 0 0 0;
 }
 .box-label {
-  background: $colour-12;
+  background: $white;
   color: $white;
   padding: $gutter/1.45;
+  margin-top: 10px;
   letter-spacing: .2rem;
   text-transform: uppercase;
   @include transition(background-color .2s ease);
