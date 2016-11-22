@@ -61,6 +61,7 @@
 #  student_number                   :string
 #  terms_and_conditions             :boolean          default(FALSE)
 #  student_user_type_id             :integer
+#  discourse_user                   :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

@@ -4,8 +4,14 @@
 .l-section-profile.is-bg-asphalt
   .l-wrap
     .container-fluid
-      %h1.h1.h-separator.h-separator-left.l-margin-bottom
-        Account Info
+      .col-sm-6
+        %h1.h1.h-separator.h-separator-left.l-margin-bottom
+          Account Info
+      .col-sm-6
+        -unless current_user.discourse_user
+          .pull-right
+            =link_to user_create_discourse_user_path, method: :post, class: 'btn btn-cyan' do
+              Join Our Community
 
       .tabs
         .col-sm-8
