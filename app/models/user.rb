@@ -913,8 +913,7 @@ class User < ActiveRecord::Base
   end
 
   def create_on_discourse
-
-    if !self.discourse_user
+    if Rails.env.production? && !self.discourse_user
       username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
       DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
     end
