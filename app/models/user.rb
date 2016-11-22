@@ -61,6 +61,7 @@
 #  student_number                   :string
 #  terms_and_conditions             :boolean          default(FALSE)
 #  student_user_type_id             :integer
+#  discourse_user                   :boolean          default(FALSE)
 #
 
 class User < ActiveRecord::Base
@@ -911,6 +912,14 @@ class User < ActiveRecord::Base
 
   end
 
+  def create_on_discourse
+
+    if !self.discourse_user
+      username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
+      DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
+    end
+  end
+
   protected
 
   def add_guid
@@ -925,13 +934,6 @@ class User < ActiveRecord::Base
       free_trial_days = ENV["free_trial_days"].to_i
     end
     self.update_attributes(trial_limit_in_days: free_trial_days)
-  end
-
-  def create_on_discourse
-    if Rails.env.production?
-      username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
-      DiscourseCreateUserWorker.perform_at(10.minute.from_now, username, self.email, self.password) if self.individual_student?
-    end
   end
 
 end
