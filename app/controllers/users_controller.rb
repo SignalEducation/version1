@@ -355,6 +355,7 @@ class UsersController < ApplicationController
   def create_discourse_user
     @user = current_user
     @user.create_on_discourse
+    flash[:success] = "An activation email has just been sent to #{@user.email}. Please follow its instructions to access the Community"
     redirect_to account_url
   end
 
