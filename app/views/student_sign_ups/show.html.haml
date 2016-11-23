@@ -40,9 +40,7 @@
         .course-list-wrap
           .row
             -if current_user.try(:topic_interest)
-              -interest = current_user.topic_interest
-              -group = Group.where('name_url ILIKE ?', "#{interest}").try(:last) || Group.first
-              -group.children.each do |course|
+              -@group.children.each do |course|
                 .col-sm-6.col-md-4
                   =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
                     .box-inner{style: 'height: 163px'}
