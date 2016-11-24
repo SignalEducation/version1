@@ -71,11 +71,11 @@ class HomePagesController < ApplicationController
     @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @group = @home_page.try(:group)
+    @url_value = @home_page.try(:public_url)
     redirect_to all_groups_url unless @group
 
     # Create user object and necessary variables
     @user = User.new
-    @user.topic_interest = @home_page.try(:public_url)
     session[:sign_up_errors].each do |k, v|
       v.each { |err| @user.errors.add(k, err) }
     end if session[:sign_up_errors]
