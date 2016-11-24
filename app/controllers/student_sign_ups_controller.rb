@@ -4,6 +4,15 @@ class StudentSignUpsController < ApplicationController
   before_action :get_variables
 
   def show
+    interest = current_user.topic_interest
+    home_page = HomePage.where(public_url: interest).first
+    if home_page
+      @group = home_page.group
+    else
+      @group = Group.where('name_url ILIKE ?', "#{interest}").try(:last) || Group.first
+    end
+
+
   end
 
   def resend_verification_mail

@@ -75,6 +75,7 @@ class HomePagesController < ApplicationController
 
     # Create user object and necessary variables
     @user = User.new
+    @user.topic_interest = @home_page.try(:public_url)
     session[:sign_up_errors].each do |k, v|
       v.each { |err| @user.errors.add(k, err) }
     end if session[:sign_up_errors]
