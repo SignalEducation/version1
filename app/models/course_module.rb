@@ -68,7 +68,7 @@ class CourseModule < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_create :set_sorting_order
   before_save :set_count_fields, :sanitize_name_url
-  #after_update :update_parent_and_sets
+  after_update :update_parent_and_sets
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
