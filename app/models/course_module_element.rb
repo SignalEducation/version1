@@ -79,8 +79,8 @@ class CourseModuleElement < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
   before_validation :sanitize_name_url, :log_count_fields
-  #after_save :update_parent
-  #after_destroy :update_parent
+  after_save :update_parent
+  after_destroy :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
@@ -202,13 +202,7 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def update_parent
-    if self.is_video
-      self.course_module.try(:recalculate_video_fields)
-    elsif self.is_quiz
-      self.course_module.try(:recalculate_quiz_fields)
-    else
-      true
-    end
+    self.course_module.try(:update_video_and_quiz_counts)
   end
 
 end
