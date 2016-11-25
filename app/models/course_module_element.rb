@@ -71,15 +71,16 @@ class CourseModuleElement < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
   validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
+  validates :estimated_time_in_seconds, presence: true
   validates :sorting_order, presence: true
   validates :tutor_id, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_save :sanitize_name_url, :populate_estimated_time, :log_question_count_and_duration
-  after_save :update_parent
-  after_destroy :update_parent
+  before_validation :sanitize_name_url, :log_count_fields
+  #after_save :update_parent
+  #after_destroy :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
@@ -172,14 +173,6 @@ class CourseModuleElement < ActiveRecord::Base
     self.is_video
   end
 
-  def populate_estimated_time
-    if self.is_quiz && self.estimated_time_in_seconds.nil?
-      self.estimated_time_in_seconds = (self.number_of_questions * 60)
-    else
-      true
-    end
-  end
-
   protected
 
   def self.nested_resource_is_blank?(attributes)
@@ -195,12 +188,14 @@ class CourseModuleElement < ActiveRecord::Base
     attributes['notes'].blank?
   end
 
-  def log_question_count_and_duration
+  def log_count_fields
     if self.is_video
       self.duration = self.course_module_element_video.try(:duration) unless Rails.env.test?
       self.estimated_time_in_seconds = self.course_module_element_video.duration.round if !Rails.env.test? && self.course_module_element_video.duration
     elsif self.is_quiz
+        #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
         self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
+        self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?
     else
       true
     end
