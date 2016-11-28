@@ -114,6 +114,8 @@ class SubjectCoursesController < ApplicationController
   def update_student_exam_tracks
     subject_course = SubjectCourse.where(id: params[:id]).first
     subject_course.update_all_course_sets
+
+
     redirect_to course_module_special_link(subject_course)
   end
 
