@@ -68,7 +68,7 @@ class CourseModule < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_create :set_sorting_order
   before_save :set_count_fields, :sanitize_name_url
-  after_update :update_parent_and_sets
+  after_update :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
@@ -200,9 +200,8 @@ class CourseModule < ActiveRecord::Base
     self.cme_count = children_available_count
   end
 
-  def update_parent_and_sets
+  def update_parent
     self.parent.try(:recalculate_fields)
-    StudentExamTracksWorker.perform_async(self.id)
   end
 
 end

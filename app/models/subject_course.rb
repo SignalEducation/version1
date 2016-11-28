@@ -96,7 +96,6 @@ class SubjectCourse < ActiveRecord::Base
   before_save :sanitize_name_url, :set_count_fields
   before_destroy :check_dependencies
   after_create :update_sitemap
-  after_update :update_course_logs
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -290,6 +289,13 @@ class SubjectCourse < ActiveRecord::Base
     recalculate_video_count
     set_total_video_duration
     calculate_best_possible_score
+  end
+
+  def update_all_course_sets
+    self.student_exam_tracks.each do |set|
+      StudentExamTracksWorker.perform_async(set.id)
+    end
+    SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
   end
 
   protected

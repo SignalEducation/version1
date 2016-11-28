@@ -1021,6 +1021,7 @@ en:
         add_course_module: Please create a Course module to begin
         description: Description
         info: Course Info
+        update_student_logs: Update Student Logs
 
       edit:
         h1: Edit Course

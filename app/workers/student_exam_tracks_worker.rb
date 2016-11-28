@@ -5,7 +5,7 @@ class StudentExamTracksWorker
 
   def perform(course_module_id)
     StudentExamTrack.where(course_module_id: course_module_id).find_each do |set|
-      set.recalculate_completeness
+      set.worker_update_completeness
     end
   end
 
