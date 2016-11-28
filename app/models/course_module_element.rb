@@ -78,7 +78,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_validation :sanitize_name_url, :log_count_fields
+  before_validation :log_count_fields
+  before_save :sanitize_name_url
   after_save :update_parent
   after_destroy :update_parent
 

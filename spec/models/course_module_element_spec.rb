@@ -58,7 +58,7 @@ describe CourseModuleElement do
 
   # validation
   it { should validate_presence_of(:name) }
-  #it { should validate_uniqueness_of(:name) }
+  it { should_not validate_uniqueness_of(:name) }
   it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
@@ -80,9 +80,8 @@ describe CourseModuleElement do
   it { should validate_length_of(:seo_description).is_at_most(255) }
 
   # callbacks
+  it { should callback(:log_count_fields).before(:validation) }
   it { should callback(:sanitize_name_url).before(:save) }
-  it { should callback(:log_question_count_and_duration).before(:save) }
-  it { should callback(:populate_estimated_time).before(:save) }
   it { should callback(:update_parent).after(:save) }
   it { should callback(:update_parent).after(:destroy) }
 
