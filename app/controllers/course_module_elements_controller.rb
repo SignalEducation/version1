@@ -127,6 +127,7 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def update
+    old_cm = @course_module_element.parent
     set_related_cmes
     Rails.logger.debug "STARTING...."
     @course_module_element.assign_attributes(allowed_params)
@@ -144,6 +145,9 @@ class CourseModuleElementsController < ApplicationController
         redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
+      end
+      if old_cm.id != cm.id
+        old_cm.save!
       end
     else
       Rails.logger.debug "DEBUG: course_module_elements_controller#update failed. Errors:#{@course_module_element.errors.inspect}."
