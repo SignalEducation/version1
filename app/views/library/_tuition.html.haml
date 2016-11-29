@@ -13,10 +13,11 @@
                 =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
               -if child.video_count > 0
                 |
-                -if child.video_count == 1
-                  =child.video_count.to_s + ' ' + t('views.library.show.video')
-                -elsif child.video_count > 1
-                  =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+            -if child.video_count > 0
+              -if child.video_count == 1
+                =child.video_count.to_s + ' ' + t('views.library.show.video')
+              -elsif child.video_count > 1
+                =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
 
 
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_tuition_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
