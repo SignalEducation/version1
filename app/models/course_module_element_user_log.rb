@@ -148,7 +148,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       set.subject_course_id ||= self.course_module.subject_course.id
       set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
       set.jumbo_quiz_taken = true if self.is_jumbo_quiz
-      set.recalculate_completeness
+      set.recalculate_completeness # Includes a save!
     end
   end
 

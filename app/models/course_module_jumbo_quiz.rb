@@ -100,12 +100,7 @@ class CourseModuleJumboQuiz < ActiveRecord::Base
   end
 
   def update_student_exam_tracks
-    #StudentExamTracksWorker.perform_async(self.course_module_id)
-    #true
-    StudentExamTrack.where(course_module_id: self.course_module_id).each do |set|
-      set.recalculate_completeness
-    end
-
+    StudentExamTracksWorker.perform_async(self.course_module_id)
   end
 
   def update_course_module

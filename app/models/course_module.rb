@@ -38,7 +38,8 @@ class CourseModule < ActiveRecord::Base
                   :tutor_id, :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
                   :number_of_questions, :subject_course_id, :highlight_colour,
-                  :tuition, :test, :revision, :discourse_topic_id
+                  :tuition, :test, :revision, :discourse_topic_id, :quiz_count,
+                  :video_duration, :video_count
 
   # Constants
 
@@ -66,8 +67,8 @@ class CourseModule < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
   before_create :set_sorting_order
-  before_save :set_cme_count, :calculate_estimated_time, :sanitize_name_url
-  after_update :update_parent_and_sets
+  before_save :set_count_fields, :sanitize_name_url
+  after_update :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
@@ -174,17 +175,13 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
-  def recalculate_video_fields
-    calculate_video_count
-    calculate_video_duration
-    self.save
-  end
-
-  def recalculate_quiz_fields
-    calculate_estimated_time
-    calculate_number_of_questions
-    calculate_quiz_count
-    self.save
+  def update_video_and_quiz_counts
+    estimated_time = self.course_module_elements.sum(:estimated_time_in_seconds)
+    num_questions = self.course_module_elements.sum(:number_of_questions)
+    quiz_count = self.course_module_elements.all_active.all_quizzes.count
+    duration = self.course_module_elements.sum(:duration)
+    video_count = self.course_module_elements.all_active.all_videos.count
+    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, quiz_count: quiz_count, video_duration: duration, video_count: video_count)
   end
 
   def total_time_watched_videos
@@ -194,34 +191,17 @@ class CourseModule < ActiveRecord::Base
 
   protected
 
-  def calculate_estimated_time
+  def set_count_fields
     self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
-  end
-
-  def calculate_number_of_questions
     self.number_of_questions = self.course_module_elements.sum(:number_of_questions)
-  end
-
-  def calculate_quiz_count
     self.quiz_count = self.course_module_elements.all_active.all_quizzes.count
-  end
-
-  def calculate_video_count
     self.video_count = self.course_module_elements.all_active.all_videos.count
-  end
-
-  def calculate_video_duration
     self.video_duration = self.course_module_elements.sum(:duration)
-  end
-
-  def set_cme_count
     self.cme_count = children_available_count
-    true
   end
 
-  def update_parent_and_sets
+  def update_parent
     self.parent.try(:recalculate_fields)
-    StudentExamTracksWorker.perform_async(self.id)
   end
 
 end

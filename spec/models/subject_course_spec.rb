@@ -95,10 +95,9 @@ describe SubjectCourse do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:calculate_best_possible_score).before(:save) }
+  it { should callback(:set_count_fields).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:ensure_both_descriptions).before(:validation) }
-  it { should callback(:update_course_logs).after(:update) }
 
 
   # scopes

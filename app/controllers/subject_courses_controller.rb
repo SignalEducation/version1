@@ -111,6 +111,12 @@ class SubjectCoursesController < ApplicationController
     @course_modules = @subject_course.children
   end
 
+  def update_student_exam_tracks
+    subject_course = SubjectCourse.where(id: params[:id]).first
+    subject_course.update_all_course_sets
+    redirect_to subject_course_url(subject_course)
+  end
+
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|

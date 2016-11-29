@@ -164,6 +164,7 @@ Rails.application.routes.draw do
     resources :static_page_uploads, only: [:create]
     resources :subject_courses, concerns: :supports_reordering
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
+    post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
 
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]

@@ -45,7 +45,6 @@ class StudentExamTrack < ActiveRecord::Base
   validates :course_module_id, presence: true
 
   # callbacks
-  #before_save :set_count_of_fields
   after_save :create_or_update_subject_course_user_log
 
   # scopes
@@ -130,12 +129,26 @@ class StudentExamTrack < ActiveRecord::Base
   def calculate_completeness
     self.count_of_cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    self.save
+    self.save!
+  end
 
+  def worker_update_completeness
+    #This can only be called from the StudentExamTrackWorker to ensure the parent SCUL is not updated
+    questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
+    questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
+    video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
+    unique_video_ids = video_ids.uniq
+    quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
+    unique_quiz_ids = quiz_ids.uniq
+    videos_taken = unique_video_ids.count
+    quizzes_taken = unique_quiz_ids.count
+    cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
+    percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
+    self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
   end
 
   def recalculate_completeness
-    #This can only be called externally from CMEUL model or the CourseModule model via the StudentExamTracksWorker
+    #This can only be called externally from CMEUL model
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
     self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
     video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
@@ -148,7 +161,7 @@ class StudentExamTrack < ActiveRecord::Base
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
 
     begin
-      self.save
+      self.save!
 
     rescue Exception => e
       puts "SQL error in #{ __method__ }"

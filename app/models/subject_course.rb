@@ -44,8 +44,13 @@ class SubjectCourse < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :cme_count, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd,
- :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name
+  attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid,
+                  :tutor_id, :cme_count, :description, :short_description,
+                  :mailchimp_guid, :default_number_of_possible_exam_answers,
+                  :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
+                  :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
+                  :subject_course_category_id, :enrollment_option, :email_content,
+                  :external_url, :external_url_name
 
   # Constants
 
@@ -88,10 +93,9 @@ class SubjectCourse < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
   before_validation :ensure_both_descriptions
-  before_save :calculate_best_possible_score, :sanitize_name_url
+  before_save :sanitize_name_url, :set_count_fields
   before_destroy :check_dependencies
   after_create :update_sitemap
-  after_update :update_course_logs
 
   # scopes
   scope :all_active, -> { where(active: true) }
@@ -267,12 +271,31 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def recalculate_fields
+    cme_count = self.active_children.sum(:cme_count)
+    quiz_count = self.active_children.sum(:quiz_count)
+    question_count = self.active_children.sum(:number_of_questions)
+    video_count = self.active_children.sum(:video_count)
+    video_duration = self.active_children.sum(:video_duration)
+    quiz_duration = self.active_children.sum(:estimated_time_in_seconds)
+    total_video_duration = video_duration + quiz_duration
+
+    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, question_count: question_count, video_count: video_count, total_video_duration: total_video_duration)
+  end
+
+  def set_count_fields
     recalculate_cme_count
     recalculate_quiz_count
     set_question_count
     recalculate_video_count
     set_total_video_duration
-    self.save
+    calculate_best_possible_score
+  end
+
+  def update_all_course_sets
+    self.student_exam_tracks.each do |set|
+      StudentExamTracksWorker.perform_async(set.id)
+    end
+    SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
   end
 
   protected
