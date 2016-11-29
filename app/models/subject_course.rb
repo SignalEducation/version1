@@ -50,7 +50,8 @@ class SubjectCourse < ActiveRecord::Base
                   :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
                   :subject_course_category_id, :enrollment_option, :email_content,
-                  :external_url, :external_url_name
+                  :external_url, :external_url_name, :quiz_count, :question_count,
+                  :video_count, :total_video_duration
 
   # Constants
 
