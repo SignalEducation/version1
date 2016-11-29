@@ -34,11 +34,12 @@ shared_context 'subscription_plans_setup' do
                                    currency_id: usd.id, price: 134.99) }
 
   # subscription plans - GBP - Mth / Qtr / Year
+  # currency is set to default currency which is now GDP
   let!(:subscription_plan_gbp_m) { FactoryGirl.create(:student_subscription_plan_m,
-                                   currency_id: gbp.id, price: 7.50) }
+                                   currency_id: currency.id, price: 7.50) }
   let!(:subscription_plan_gbp_q) { FactoryGirl.create(:student_subscription_plan_q,
-                                   currency_id: gbp.id, price: 22.50) }
+                                   currency_id: currency.id, price: 22.50) }
   let!(:subscription_plan_gbp_y) { FactoryGirl.create(:student_subscription_plan_y,
-                                   currency_id: gbp.id, price: 87.99) }
+                                   currency_id: currency.id, price: 87.99) }
 
 end
