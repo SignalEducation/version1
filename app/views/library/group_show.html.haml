@@ -75,7 +75,7 @@
                         .col-md-6.col-xs-6
                           -if course.total_video_duration.to_i > 0
                             %h6.pull-right
-                              =simple_time(course.total_video_duration)
+                              =humanize_time(course.total_video_duration.round)
 
                     .card-label
                       .row
