@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201132239) do
+ActiveRecord::Schema.define(version: 20161201134004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -905,41 +905,6 @@ ActiveRecord::Schema.define(version: 20161201132239) do
   end
 
   add_index "tutor_applications", ["email"], name: "index_tutor_applications_on_email", using: :btree
-
-  create_table "user_activity_logs", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "session_guid"
-    t.boolean  "signed_in",                        default: false, null: false
-    t.text     "original_uri"
-    t.string   "controller_name"
-    t.string   "action_name"
-    t.text     "params"
-    t.integer  "alert_level",                      default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "ip_address"
-    t.string   "browser"
-    t.string   "operating_system"
-    t.boolean  "phone",                            default: false, null: false
-    t.boolean  "tablet",                           default: false, null: false
-    t.boolean  "computer",                         default: false, null: false
-    t.string   "guid"
-    t.integer  "ip_address_id"
-    t.string   "browser_version"
-    t.string   "raw_user_agent"
-    t.text     "first_session_landing_page"
-    t.text     "latest_session_landing_page"
-    t.string   "post_sign_up_redirect_url"
-    t.integer  "marketing_token_id"
-    t.datetime "marketing_token_cookie_issued_at"
-  end
-
-  add_index "user_activity_logs", ["action_name"], name: "index_user_activity_logs_on_action_name", using: :btree
-  add_index "user_activity_logs", ["alert_level"], name: "index_user_activity_logs_on_alert_level", using: :btree
-  add_index "user_activity_logs", ["controller_name"], name: "index_user_activity_logs_on_controller_name", using: :btree
-  add_index "user_activity_logs", ["original_uri"], name: "index_user_activity_logs_on_original_uri", using: :btree
-  add_index "user_activity_logs", ["session_guid"], name: "index_user_activity_logs_on_session_guid", using: :btree
-  add_index "user_activity_logs", ["user_id"], name: "index_user_activity_logs_on_user_id", using: :btree
 
   create_table "user_exam_sittings", force: :cascade do |t|
     t.integer  "user_id"

@@ -43,11 +43,8 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  #before_action :process_marketing_tokens # not for Api::
-  before_action :process_crush_offers_session_id # not for Api::
   before_action :set_assets_from_subdomain
   before_action :set_navbar_and_footer
-  #before_action :log_user_activity # not for Api::
 
   helper_method :current_user_session, :current_user, :current_corporate
 
@@ -250,23 +247,6 @@ class ApplicationController < ActionController::Base
 
   def process_crush_offers_session_id
     cookies.encrypted[:crush_offers] = { value: params[:co_id], expires: 30.days.from_now, httponly: true } if params[:co_id]
-  end
-
-  def log_user_activity
-    saved_token_code, saved_epoch_time = cookies.encrypted[:marketing_data].split(',')
-    marketing_token = MarketingToken.where(code: saved_token_code).first
-    marketing_token_cookie_issued_at = Time.at(saved_epoch_time.to_i)
-    UserLoggerWorker.perform_async(   ApplicationController.generate_random_code(24),
-            current_user.try(:id),    current_session_guid,
-            request.filtered_path,    controller_name,
-            action_name,              request.filtered_parameters,
-            request.remote_ip,        request.env['HTTP_USER_AGENT'],
-            cookies.encrypted[:first_session_landing_url],
-            cookies.encrypted[:latest_session_landing_url],
-            cookies.permanent.encrypted[:post_sign_up_redirect_path],
-            marketing_token.id,
-            marketing_token_cookie_issued_at
-    )
   end
 
 

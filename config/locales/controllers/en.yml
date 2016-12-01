@@ -476,18 +476,6 @@ en:
         success: Welcome to LearnSignal, your account has been activated.
         error: Sorry, something went wrong. Please contact us for assistance.
 
-    user_activity_logs:
-      create:
-        flash:
-          success: User Activity Log has been created successfully
-      update:
-        flash:
-          success: User Activity Log details have been updated successfully
-      destroy:
-        flash:
-          success: User Activity Log has been deleted
-          error: User Activity Log was not deleted
-
     user_exam_sittings:
       create:
         flash:

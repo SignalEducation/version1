@@ -22,7 +22,6 @@ class MarketingToken < ActiveRecord::Base
 
   # relationships
   belongs_to :marketing_category
-  has_many :user_activity_logs
 
   # validation
   validates :code, presence: true, uniqueness: { case_sensitive: false },
@@ -105,7 +104,7 @@ class MarketingToken < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !system_defined? && self.user_activity_logs.empty?
+    !system_defined?
   end
 
   def editable?

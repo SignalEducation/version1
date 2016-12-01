@@ -1189,40 +1189,6 @@ en:
           subscription: Choose your subscription plan
           payment: Enter your payment details
 
-    user_activity_logs:
-      form:
-        user_id: User
-        session_guid: Session GUID
-        session_guid_placeholder: 'ABC123...'
-        signed_in: Signed in
-        original_uri: Original URI
-        original_uri_placeholder: '/en/library/finance/acca/'
-        controller_name: Controller
-        controller_name_placeholder: 'library'
-        action_name: Action
-        action_name_placeholder: 'show'
-        params: Params
-        params_placeholder: "{controller: 'library', action: 'show', subject_area_url: 'finance'}"
-        ip_address: IP address
-        ip_address_placeholder: '192.168.1.123'
-        alert_level: Alert level
-        created_at: Created
-        updated_at: Updated
-        first_session_landing_page: "First Session landing page"
-        latest_session_landing_page: "Latest Session landing page"
-        post_sign_up_redirect_url: "Post-sign-up redirect URL"
-
-      edit:
-        h1: Edit User Activity Log
-
-      index:
-        h1: User Activity Logs
-
-      new:
-        h1: New User Activity Log
-
-      show:
-        h1: User Activity Log
 
     user_exam_sittings:
       form:

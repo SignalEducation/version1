@@ -111,7 +111,6 @@ class User < ActiveRecord::Base
   has_many :subscription_transactions
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
-  has_many :user_activity_logs
   has_many :user_exam_sittings
   belongs_to :user_group
   has_many :user_notifications
@@ -593,8 +592,7 @@ class User < ActiveRecord::Base
         self.subscriptions.empty? &&
         self.subscription_payment_cards.empty? &&
         self.subscription_transactions.empty? &&
-        self.user_notifications.empty? &&
-        self.user_activity_logs.empty?
+        self.user_notifications.empty?
   end
 
   def full_name

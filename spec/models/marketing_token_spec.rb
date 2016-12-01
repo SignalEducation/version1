@@ -31,7 +31,6 @@ describe MarketingToken do
 
   # relationships
   it { should belong_to(:marketing_category) }
-  it { should have_many(:user_activity_logs) }
 
   # validation
   it { should validate_presence_of(:code) }

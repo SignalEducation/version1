@@ -33,7 +33,6 @@ describe IpAddress do
 
   # relationships
   it { should belong_to(:country) }
-  it { should have_many(:user_activity_logs) }
 
   # validation
   it { should validate_presence_of(:ip_address) }

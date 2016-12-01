@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     post 'stripe_v01', to: 'stripe_v01#create'
-    resources :user_activities, only: :create
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -177,7 +176,6 @@ Rails.application.routes.draw do
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
-    resources :user_activity_logs
     resources :user_notifications
     resources :user_exam_sittings
     post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
