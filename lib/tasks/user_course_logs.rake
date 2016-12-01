@@ -1,4 +1,4 @@
-require 'conditional_mandrill_mails_processor'
+require 'cron_tasks'
 
 namespace :user_course_logs do
 
