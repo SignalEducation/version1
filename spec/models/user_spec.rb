@@ -93,8 +93,6 @@ describe User do
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:invoices) }
   it { should have_many(:quiz_attempts) }
-  it { should have_many(:created_static_pages) }
-  it { should have_many(:updated_static_pages) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }

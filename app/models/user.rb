@@ -105,8 +105,6 @@ class User < ActiveRecord::Base
   has_many :invoices
   has_many :quiz_attempts
   has_many :question_banks
-  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
-  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :orders
   has_many :subscriptions, -> { order(:id) }, inverse_of: :user
   has_many :subscription_payment_cards
@@ -596,8 +594,6 @@ class User < ActiveRecord::Base
         self.subscription_payment_cards.empty? &&
         self.subscription_transactions.empty? &&
         self.user_notifications.empty? &&
-        self.created_static_pages.empty? &&
-        self.updated_static_pages.empty? &&
         self.user_activity_logs.empty?
   end
 

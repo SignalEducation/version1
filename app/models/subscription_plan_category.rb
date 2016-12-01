@@ -22,7 +22,6 @@ class SubscriptionPlanCategory < ActiveRecord::Base
   # Constants
 
   # relationships
-  has_many :static_pages
   has_many :subscription_plans
 
   # validation
@@ -44,7 +43,7 @@ class SubscriptionPlanCategory < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.subscription_plans.empty? && self.static_pages.empty?
+    self.subscription_plans.empty?
   end
 
   def current

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161122130938) do
+ActiveRecord::Schema.define(version: 20161201132239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -636,54 +636,6 @@ ActiveRecord::Schema.define(version: 20161122130938) do
   add_index "referred_signups", ["referral_code_id"], name: "index_referred_signups_on_referral_code_id", using: :btree
   add_index "referred_signups", ["subscription_id"], name: "index_referred_signups_on_subscription_id", using: :btree
   add_index "referred_signups", ["user_id"], name: "index_referred_signups_on_user_id", using: :btree
-
-  create_table "static_page_uploads", force: :cascade do |t|
-    t.string   "description"
-    t.integer  "static_page_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "upload_file_name"
-    t.string   "upload_content_type"
-    t.integer  "upload_file_size"
-    t.datetime "upload_updated_at"
-  end
-
-  add_index "static_page_uploads", ["static_page_id"], name: "index_static_page_uploads_on_static_page_id", using: :btree
-
-  create_table "static_pages", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "publish_from"
-    t.datetime "publish_to"
-    t.boolean  "allow_multiples",               default: false, null: false
-    t.string   "public_url"
-    t.boolean  "use_standard_page_template",    default: false, null: false
-    t.text     "head_content"
-    t.text     "body_content"
-    t.integer  "created_by"
-    t.integer  "updated_by"
-    t.boolean  "add_to_navbar",                 default: false, null: false
-    t.boolean  "add_to_footer",                 default: false, null: false
-    t.string   "menu_label"
-    t.string   "tooltip_text"
-    t.string   "language"
-    t.boolean  "mark_as_noindex",               default: false, null: false
-    t.boolean  "mark_as_nofollow",              default: false, null: false
-    t.string   "seo_title"
-    t.string   "seo_description"
-    t.text     "approved_country_ids"
-    t.boolean  "default_page_for_this_url",     default: false, null: false
-    t.boolean  "make_this_page_sticky",         default: false, null: false
-    t.boolean  "logged_in_required",            default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "show_standard_footer",          default: true
-    t.string   "post_sign_up_redirect_url"
-    t.integer  "subscription_plan_category_id"
-    t.string   "student_sign_up_h1"
-    t.string   "student_sign_up_sub_head"
-  end
-
-  add_index "static_pages", ["public_url"], name: "index_static_pages_on_public_url", using: :btree
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"

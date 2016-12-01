@@ -355,18 +355,6 @@ en:
         flash:
           success: Referred Signup details have been updated successfully
 
-    static_pages:
-      create:
-        flash:
-          success: Static Page has been created successfully
-      update:
-        flash:
-          success: Static Page details have been updated successfully
-      destroy:
-        flash:
-          success: Static Page has been deleted
-          error: Static Page was not deleted
-
     student_user_types:
       create:
         flash:
