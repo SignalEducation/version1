@@ -30,7 +30,6 @@ class IpAddress < ActiveRecord::Base
 
   # relationships
   belongs_to :country
-  has_many :user_activity_logs
 
   # validation
   validates :ip_address, presence: true, uniqueness: true, length: { maximum: 255 }
@@ -53,7 +52,7 @@ class IpAddress < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.user_activity_logs.empty?
+    true
   end
 
   protected

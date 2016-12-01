@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     post 'stripe_v01', to: 'stripe_v01#create'
-    resources :user_activities, only: :create
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -160,8 +159,6 @@ Rails.application.routes.draw do
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index]
-    resources :static_pages
-    resources :static_page_uploads, only: [:create]
     resources :subject_courses, concerns: :supports_reordering
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
@@ -179,18 +176,11 @@ Rails.application.routes.draw do
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
-    resources :user_activity_logs
     resources :user_notifications
     resources :user_exam_sittings
     post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
-    resources :marketing_categories
-    resources :marketing_tokens do
-      post :preview_csv, on: :collection, action: :preview_csv
-      post :import_csv, on: :collection, action: :import_csv
-      get :download_csv, on: :collection, action: :download_csv
-    end
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered

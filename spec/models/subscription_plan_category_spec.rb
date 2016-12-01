@@ -32,7 +32,6 @@ describe SubscriptionPlanCategory do
   #it { expect(SubscriptionPlanCategory.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should have_many(:static_pages) }
   it { should have_many(:subscription_plans) }
 
   # validation

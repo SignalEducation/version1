@@ -105,15 +105,12 @@ class User < ActiveRecord::Base
   has_many :invoices
   has_many :quiz_attempts
   has_many :question_banks
-  has_many :created_static_pages, class_name: 'StaticPage', foreign_key: :created_by
-  has_many :updated_static_pages, class_name: 'StaticPage', foreign_key: :updated_by
   has_many :orders
   has_many :subscriptions, -> { order(:id) }, inverse_of: :user
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
-  has_many :user_activity_logs
   has_many :user_exam_sittings
   belongs_to :user_group
   has_many :user_notifications
@@ -508,7 +505,7 @@ class User < ActiveRecord::Base
   end
 
   def assign_anonymous_logs_to_user(session_guid)
-    model_list = [CourseModuleElementUserLog, UserActivityLog, StudentExamTrack, SubjectCourseUserLog]
+    model_list = [CourseModuleElementUserLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
       the_model.assign_user_to_session_guid(self.id, session_guid)
     end
@@ -595,10 +592,7 @@ class User < ActiveRecord::Base
         self.subscriptions.empty? &&
         self.subscription_payment_cards.empty? &&
         self.subscription_transactions.empty? &&
-        self.user_notifications.empty? &&
-        self.created_static_pages.empty? &&
-        self.updated_static_pages.empty? &&
-        self.user_activity_logs.empty?
+        self.user_notifications.empty?
   end
 
   def full_name

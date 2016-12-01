@@ -11,7 +11,7 @@
         %ul
           %li
             %p
-              =simple_time(@course.estimated_time_in_seconds)
+              =simple_hour_time(@course.total_video_duration)
 
           %li
             %p study online
@@ -127,7 +127,7 @@
         .option
           %p.key Study Time:
           %p.value
-            =simple_time(@course.estimated_time_in_seconds)
+            =simple_hour_time(@course.total_video_duration)
 
         .option
           %p.key Assessment:

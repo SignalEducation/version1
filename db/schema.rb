@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161122130938) do
+ActiveRecord::Schema.define(version: 20161201135031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -440,24 +440,6 @@ ActiveRecord::Schema.define(version: 20161122130938) do
   add_index "ip_addresses", ["latitude"], name: "index_ip_addresses_on_latitude", using: :btree
   add_index "ip_addresses", ["longitude"], name: "index_ip_addresses_on_longitude", using: :btree
 
-  create_table "marketing_categories", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "marketing_tokens", force: :cascade do |t|
-    t.string   "code"
-    t.integer  "marketing_category_id"
-    t.boolean  "is_hard",               default: false, null: false
-    t.boolean  "is_direct",             default: false, null: false
-    t.boolean  "is_seo",                default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
-
   create_table "mock_exams", force: :cascade do |t|
     t.integer  "subject_course_id"
     t.integer  "product_id"
@@ -636,54 +618,6 @@ ActiveRecord::Schema.define(version: 20161122130938) do
   add_index "referred_signups", ["referral_code_id"], name: "index_referred_signups_on_referral_code_id", using: :btree
   add_index "referred_signups", ["subscription_id"], name: "index_referred_signups_on_subscription_id", using: :btree
   add_index "referred_signups", ["user_id"], name: "index_referred_signups_on_user_id", using: :btree
-
-  create_table "static_page_uploads", force: :cascade do |t|
-    t.string   "description"
-    t.integer  "static_page_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "upload_file_name"
-    t.string   "upload_content_type"
-    t.integer  "upload_file_size"
-    t.datetime "upload_updated_at"
-  end
-
-  add_index "static_page_uploads", ["static_page_id"], name: "index_static_page_uploads_on_static_page_id", using: :btree
-
-  create_table "static_pages", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "publish_from"
-    t.datetime "publish_to"
-    t.boolean  "allow_multiples",               default: false, null: false
-    t.string   "public_url"
-    t.boolean  "use_standard_page_template",    default: false, null: false
-    t.text     "head_content"
-    t.text     "body_content"
-    t.integer  "created_by"
-    t.integer  "updated_by"
-    t.boolean  "add_to_navbar",                 default: false, null: false
-    t.boolean  "add_to_footer",                 default: false, null: false
-    t.string   "menu_label"
-    t.string   "tooltip_text"
-    t.string   "language"
-    t.boolean  "mark_as_noindex",               default: false, null: false
-    t.boolean  "mark_as_nofollow",              default: false, null: false
-    t.string   "seo_title"
-    t.string   "seo_description"
-    t.text     "approved_country_ids"
-    t.boolean  "default_page_for_this_url",     default: false, null: false
-    t.boolean  "make_this_page_sticky",         default: false, null: false
-    t.boolean  "logged_in_required",            default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "show_standard_footer",          default: true
-    t.string   "post_sign_up_redirect_url"
-    t.integer  "subscription_plan_category_id"
-    t.string   "student_sign_up_h1"
-    t.string   "student_sign_up_sub_head"
-  end
-
-  add_index "static_pages", ["public_url"], name: "index_static_pages_on_public_url", using: :btree
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"
@@ -953,41 +887,6 @@ ActiveRecord::Schema.define(version: 20161122130938) do
   end
 
   add_index "tutor_applications", ["email"], name: "index_tutor_applications_on_email", using: :btree
-
-  create_table "user_activity_logs", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "session_guid"
-    t.boolean  "signed_in",                        default: false, null: false
-    t.text     "original_uri"
-    t.string   "controller_name"
-    t.string   "action_name"
-    t.text     "params"
-    t.integer  "alert_level",                      default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "ip_address"
-    t.string   "browser"
-    t.string   "operating_system"
-    t.boolean  "phone",                            default: false, null: false
-    t.boolean  "tablet",                           default: false, null: false
-    t.boolean  "computer",                         default: false, null: false
-    t.string   "guid"
-    t.integer  "ip_address_id"
-    t.string   "browser_version"
-    t.string   "raw_user_agent"
-    t.text     "first_session_landing_page"
-    t.text     "latest_session_landing_page"
-    t.string   "post_sign_up_redirect_url"
-    t.integer  "marketing_token_id"
-    t.datetime "marketing_token_cookie_issued_at"
-  end
-
-  add_index "user_activity_logs", ["action_name"], name: "index_user_activity_logs_on_action_name", using: :btree
-  add_index "user_activity_logs", ["alert_level"], name: "index_user_activity_logs_on_alert_level", using: :btree
-  add_index "user_activity_logs", ["controller_name"], name: "index_user_activity_logs_on_controller_name", using: :btree
-  add_index "user_activity_logs", ["original_uri"], name: "index_user_activity_logs_on_original_uri", using: :btree
-  add_index "user_activity_logs", ["session_guid"], name: "index_user_activity_logs_on_session_guid", using: :btree
-  add_index "user_activity_logs", ["user_id"], name: "index_user_activity_logs_on_user_id", using: :btree
 
   create_table "user_exam_sittings", force: :cascade do |t|
     t.integer  "user_id"
