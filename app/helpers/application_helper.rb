@@ -45,6 +45,15 @@ module ApplicationHelper
     end
   end
 
+  def simple_hour_time(seconds)
+    if seconds > 3600
+      (seconds/3600).to_s + 'h'
+    else
+      (seconds/60).to_s + 'm'
+    end
+
+  end
+
   def simple_time(seconds)  # Used in the library UI
     if seconds > 3600
       Time.at(seconds).utc.strftime('%Hh')

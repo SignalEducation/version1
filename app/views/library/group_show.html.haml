@@ -7,36 +7,11 @@
       .row
         .col-sm-4.col-md-4
       .row
-
-        -if current_corporate && current_corporate.id == 12 && @group.name_url == 'acca-revision'
-          .col-md-8
-            %h1.h1.h-separator.h-separator-left
-              ACCA Curriculum
-            %p.l-margin-top
-              Accountancy touches all aspects of business. Our curriculum includes courses on Accounts, Management, Finance, Corporate & Business Law, Performance, Audit, Governance, Risk, Ethics and dozens more topics.
-            %p.l-margin-top
-              ='Courses: '
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              =@courses.count.to_s
-            %p
-              ='Tuition Modules: '
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              =@course_modules_count.to_s
-
-            %p
-              ='Total Hours: '
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              =humanize_time(@group_total_time)
-
-
-        -else
-          .col-md-6
-            %h1.h1.h-separator.h-separator-left
-              =@group.name
-            %h6.l-margin-top
-              =@group.description.to_s.html_safe
+        .col-md-6
+          %h1.h1.h-separator.h-separator-left
+            =@group.name
+          %h6.l-margin-top
+            =@group.description.to_s.html_safe
   .l-wrap.l-margin-top
     .container-fluid
       .course-list-wrap
@@ -75,7 +50,7 @@
                         .col-md-6.col-xs-6
                           -if course.total_video_duration.to_i > 0
                             %h6.pull-right
-                              =humanize_time(course.total_video_duration.round)
+                              =simple_hour_time(course.total_video_duration.round)
 
                     .card-label
                       .row
@@ -107,7 +82,7 @@
                         .col-md-6.col-xs-6
                           -if course.total_video_duration.to_i > 0
                             %h6.pull-right
-                              =simple_time(course.total_video_duration)
+                              =simple_hour_time(course.total_video_duration)
 
                     .card-label
                       .row
