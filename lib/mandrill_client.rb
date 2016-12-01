@@ -92,6 +92,14 @@ class MandrillClient
     send_template('we-havent-seen-you-in-a-while', msg)
   end
 
+  def send_white_paper_request_email(name, title, url)
+    msg = message_stub.merge({"subject" => "#{title}"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
+    msg["global_merge_vars"] << { "name" => "TITLE", "content" => title }
+    msg["global_merge_vars"] << { "name" => "URL", "content" => url }
+    send_template('white-paper-email', msg)
+  end
+
 
 
 
@@ -123,7 +131,7 @@ class MandrillClient
       "to" => [{
                  "email" => @user.email,
                  "type" => "to",
-                 "name" => @user.full_name
+                 "name" => @user.full_name || @user.first_name
                }],
       "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
       "important" => false,
