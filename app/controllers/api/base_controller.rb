@@ -4,7 +4,6 @@ class Api::BaseController < ApplicationController
   skip_before_action :set_locale
   skip_before_action :set_session_stuff
   skip_before_action :process_referral_code
-  skip_before_action :process_marketing_tokens
   skip_before_action :process_crush_offers_session_id
 
 end

@@ -122,6 +122,13 @@ en:
       submit: Sign Up Now
       actual_submit: Submit
       user_name: "Hi, "
+      upload_csv: Upload CSV File
+      csv_upload: CSV Upload
+      csv_download: Download CSV
+      preview_csv: CSV Data Preview
+      errors: Errors
+      submit: Submit
+      file: File
 
     locales:
       en: English
@@ -1344,58 +1351,6 @@ en:
         percentage_rate_placeholder: "12.5"
         effective_from: Effective from
         effective_from_placeholder: "2014-12-31"
-
-    marketing_categories:
-      form:
-        name: Name
-        name_placeholder: Marketing Category Name
-
-      index:
-        h1: Marketing Categories
-
-      show:
-        h1: Marketing Category
-
-      edit:
-        h1: Edit Marketing Category
-
-      new:
-        h1: New Marketing Category
-
-    marketing_tokens:
-      form:
-        code: Code
-        is_hard: Hard
-        is_seo: SEO
-        is_direct: Direct
-        code_placeholder: Token Code
-        marketing_category_id: Category
-
-      index:
-        h1: Marketing Tokens
-        csv_upload: CSV Upload
-        csv_download: Download CSV
-
-      show:
-        h1: Marketing Token
-
-      edit:
-        h1: Edit Marketing Token
-
-      new:
-        h1: New Marketing Token
-
-      modal:
-        h1: Upload CSV File
-        file: File
-
-      preview_csv:
-        h1: CSV Data Preview
-        code: Code
-        is_hard: Hard Token
-        marketing_category: Category
-        errors: Errors
-        submit: Submit
 
     referral_codes:
       index:

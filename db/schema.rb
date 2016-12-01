@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201134004) do
+ActiveRecord::Schema.define(version: 20161201135031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -439,24 +439,6 @@ ActiveRecord::Schema.define(version: 20161201134004) do
   add_index "ip_addresses", ["ip_address"], name: "index_ip_addresses_on_ip_address", using: :btree
   add_index "ip_addresses", ["latitude"], name: "index_ip_addresses_on_latitude", using: :btree
   add_index "ip_addresses", ["longitude"], name: "index_ip_addresses_on_longitude", using: :btree
-
-  create_table "marketing_categories", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "marketing_tokens", force: :cascade do |t|
-    t.string   "code"
-    t.integer  "marketing_category_id"
-    t.boolean  "is_hard",               default: false, null: false
-    t.boolean  "is_direct",             default: false, null: false
-    t.boolean  "is_seo",                default: false, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "marketing_tokens", ["marketing_category_id"], name: "index_marketing_tokens_on_marketing_category_id", using: :btree
 
   create_table "mock_exams", force: :cascade do |t|
     t.integer  "subject_course_id"

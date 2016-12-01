@@ -222,29 +222,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def process_marketing_tokens
-    existing_cookie = cookies.encrypted[:marketing_data]
-    existing_token_code, saved_epoch_time = existing_cookie.split(',') if existing_cookie
-      # expired tokens will be deleted by the browser
-    existing_token = (defined?(existing_token_code) && existing_token_code) ?
-            MarketingToken.where(code: existing_token_code).first : nil
-
-    current_token = if request.params[:ls_midcode]
-                      MarketingToken.where(code: request.params[:ls_midcode]).first
-                    elsif request.env['HTTP_REFERER'] =~ /google|bing/
-                      MarketingToken.seo_token
-                    end
-
-    # Leave this assignment outside of if statement because if ls_midcode value
-    # is not valid (has code that does not exist in the DB) we will be left with
-    # current_token that is nil which will cause exception in bottom if statement.
-    current_token ||= MarketingToken.direct_token
-
-    if existing_token.nil? || current_token.is_hard? || (existing_token.system_defined? && !current_token.system_defined?)
-      cookies.encrypted[:marketing_data] = { value: "#{current_token.code},#{Time.now.to_i}", expires: 30.days.from_now, httponly: true }
-    end
-  end
-
   def process_crush_offers_session_id
     cookies.encrypted[:crush_offers] = { value: params[:co_id], expires: 30.days.from_now, httponly: true } if params[:co_id]
   end

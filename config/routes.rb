@@ -181,12 +181,6 @@ Rails.application.routes.draw do
     post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
-    resources :marketing_categories
-    resources :marketing_tokens do
-      post :preview_csv, on: :collection, action: :preview_csv
-      post :import_csv, on: :collection, action: :import_csv
-      get :download_csv, on: :collection, action: :download_csv
-    end
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered

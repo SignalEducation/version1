@@ -11,7 +11,7 @@
           .row.l-margin-bottom
             .col-md-12.text-center
               %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-                =t('views.marketing_tokens.preview_csv.h1')
+                =t('views.general.preview_csv')
               %p
                 Please check that the data below is correct and then click Submit
           .row.l-margin-top.l-margin-bottom
@@ -29,7 +29,7 @@
                           %th
                             Last Name
                           %th
-                            =t('views.marketing_tokens.preview_csv.errors')
+                            =t('views.general.errors')
                       %tbody
                         -@csv_data.each_with_index do |csd, idx|
                           %tr{id: "csvdata-#{idx}"}
@@ -47,7 +47,7 @@
                   .row
                     .col-sm-12
                       -unless @has_errors
-                        =submit_tag t('views.marketing_tokens.preview_csv.submit'), class: 'btn btn-red'
+                        =submit_tag t('views.general.submit'), class: 'btn btn-red'
                       =link_to t('views.general.cancel'), corporate_students_url, class: 'btn btn-cyan'
 
     =render partial: 'layouts/footer'
