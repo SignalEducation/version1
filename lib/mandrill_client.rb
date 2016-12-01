@@ -100,6 +100,12 @@ class MandrillClient
     send_template('white-paper-email', msg)
   end
 
+  def send_referral_discount_email(amount)
+    msg = message_stub.merge({"subject" => 'Referral Discount Achieved'})
+    msg["global_merge_vars"] << { "name" => "AMOUNT", "content" => amount }
+    send_template('referral-discount-email', msg)
+  end
+
 
 
 

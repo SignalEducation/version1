@@ -80,7 +80,7 @@ class ReferredSignup < ActiveRecord::Base
     stripe_customer.save
     referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
     amount = monthly_plan.currency.format_number(monthly_plan.price)
-    IntercomReferralsWorker.perform_async(referrer_user.email, amount) unless Rails.env.test?
+    ReferralsWorker.perform_async(referrer_user.id, 'send_referral_discount_email', amount) unless Rails.env.test?
   end
 
   def check_dependencies
