@@ -96,6 +96,7 @@ Rails.application.configure do
       storage: :s3,
       url: ':s3_domain_url',
       path: '/:class/:id/:filename',
+      s3_protocol: 'https',
       s3_host_name: 's3-eu-west-1.amazonaws.com',
       s3_credentials: {
           bucket: ENV['LEARNSIGNAL3_BUCKET_NAME'],

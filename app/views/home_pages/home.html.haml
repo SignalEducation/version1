@@ -61,13 +61,21 @@
         %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
           Subscription Courses
 
-        -@groups.all_in_order.each do |group|
-          .col-sm-6
-            =link_to library_special_link(group), class: 'course-panel course-panel-inner group-inner' do
-              %h3.h2.course-panel-title.text-center
-                =group.name
-              %p.p.course-panel-desc
-                =group.description.truncate(150)
+        -@groups.each_with_index do |group|
+          -if group.active_children.any?
+            .col-sm-6.col-md-6.l-margin-bottom-big.l-margin-top
+              =link_to library_special_link(group), class: 'box box-course' do
+                .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
+                .box-inner
+                  .l-margin-top-xl
+                    %h2{style: 'margin-bottom: 5px;'}
+                      =group.name
+                    %p.p
+                      =group.description
+
+                .box-label
+                  %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                    Browse Courses
 
 
   %section#subscribe

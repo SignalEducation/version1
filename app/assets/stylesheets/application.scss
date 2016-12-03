@@ -1431,6 +1431,19 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 
+.group_show {
+  background: asset-url('group_show_1.png') 50% 0 no-repeat;
+  color: $white;
+  background-size: cover;
+  min-height: 200px;
+  @include breakpoint(md-min) {
+    background: asset-url('group_show_1.png') 50% 25 no-repeat;
+    color: $white;
+    background-size: cover;
+    min-height: 200px;
+  }
+}
+
 // States
 .is-disabled {
   pointer-events: none;

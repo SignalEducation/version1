@@ -2,22 +2,26 @@
 #
 # Table name: groups
 #
-#  id                    :integer          not null, primary key
-#  name                  :string
-#  name_url              :string
-#  active                :boolean          default(FALSE), not null
-#  sorting_order         :integer
-#  description           :text
-#  subject_id            :integer
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  corporate_customer_id :integer
-#  destroyed_at          :datetime
-#  image_file_name       :string
-#  image_content_type    :string
-#  image_file_size       :integer
-#  image_updated_at      :datetime
-#  background_colour     :string
+#  id                            :integer          not null, primary key
+#  name                          :string
+#  name_url                      :string
+#  active                        :boolean          default(FALSE), not null
+#  sorting_order                 :integer
+#  description                   :text
+#  subject_id                    :integer
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  corporate_customer_id         :integer
+#  destroyed_at                  :datetime
+#  image_file_name               :string
+#  image_content_type            :string
+#  image_file_size               :integer
+#  image_updated_at              :datetime
+#  background_colour             :string
+#  background_image_file_name    :string
+#  background_image_content_type :string
+#  background_image_file_size    :integer
+#  background_image_updated_at   :datetime
 #
 
 class GroupsController < ApplicationController
@@ -131,7 +135,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour, :corporate_customer_id)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :corporate_customer_id, :background_image)
   end
 
 end

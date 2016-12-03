@@ -43,6 +43,32 @@
   %section#subscribe
     .l-wrap-home
 
+  -if @student_subscription_plans.any?
+    %section#diploma_courses
+      .l-wrap-home
+        .col-sm-12.text-center
+          %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+            Subscription Pricing
+
+        -@student_subscription_plans.each do |plan|
+          .col-sm-4
+            .plan{class: plan_interval_alt(plan.payment_frequency_in_months)}
+              .currency
+                .plan-header
+                  %h3.h4.plan-title
+                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                .plan-inner
+                  %h4.h3.plan-price
+                    =plan.currency.format_number(plan.price)
+                  %br/
+                  %p.plan-text
+                    =plan.unlimited_access
+                  %p.plan-text
+                    &middot;
+                  %p.plan-text
+                    =plan.cancel_anytime
+
+
 
   %section#advance_career
     .l-wrap-home

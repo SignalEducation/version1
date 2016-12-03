@@ -83,6 +83,16 @@ module ApplicationHelper
       "plan-yearly l-margin-top-big"
     end
   end
+
+  def plan_interval_alt(interval)
+    if interval == 1
+      "plan-monthly l-margin-top-big"
+    elsif interval == 3
+      "plan-quarterly l-margin-top-big"
+    elsif interval == 12
+      "plan-yearly l-margin-top-big"
+    end
+  end
 end
 
 class DanFormBuilder < ActionView::Helpers::FormBuilder
