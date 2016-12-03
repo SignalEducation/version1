@@ -25,10 +25,19 @@
         .input-group.input-group-lg.full-width
           =f.text_area :description, rows: 5, class: 'form-control', style: 'border-radius: 6px;'
         .col-md-12.l-margin-top-big
-          %p Image (optional)
-          =image_tag @group.image.url, class: 'md-image'
-          %br/
-          =f.file_field :image
+          .col-md-6
+            %p Icon
+            -if @group.image.url
+              =image_tag @group.image.url, class: 'md-image'
+            %br/
+            =f.file_field :image
+
+          .col-md-6
+            %p Background Image
+            -if @group.background_image.url
+              =image_tag @group.background_image.url, class: 'md-image'
+            %br/
+            =f.file_field :background_image
 
 
 

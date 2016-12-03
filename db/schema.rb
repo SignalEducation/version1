@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201135031) do
+ActiveRecord::Schema.define(version: 20161203135032) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -307,12 +307,12 @@ ActiveRecord::Schema.define(version: 20161201135031) do
   create_table "groups", force: :cascade do |t|
     t.string   "name"
     t.string   "name_url"
-    t.boolean  "active",                default: false, null: false
+    t.boolean  "active",                        default: false, null: false
     t.integer  "sorting_order"
     t.text     "description"
     t.integer  "subject_id"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "corporate_customer_id"
     t.datetime "destroyed_at"
     t.string   "image_file_name"
@@ -320,6 +320,10 @@ ActiveRecord::Schema.define(version: 20161201135031) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "background_colour"
+    t.string   "background_image_file_name"
+    t.string   "background_image_content_type"
+    t.integer  "background_image_file_size"
+    t.datetime "background_image_updated_at"
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
