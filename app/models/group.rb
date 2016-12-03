@@ -30,7 +30,7 @@ class Group < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_colour, :corporate_customer_id, :background_image
+  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :corporate_customer_id, :background_image
 
   # Constants
 
@@ -39,6 +39,7 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :subject_courses
   has_many :home_pages
   has_attached_file :image, default_url: "missing_corporate_logo.png"
+  has_attached_file :background_image, default_url: "missing_corporate_logo.png"
 
 
   # validation
@@ -46,6 +47,7 @@ class Group < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
+  validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_destroy :check_dependencies
