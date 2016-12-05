@@ -142,9 +142,13 @@ class LibraryController < ApplicationController
 
   def diploma_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    redirect_to root_url if !@course || current_user.corporate_user?
-    if (current_user.individual_student? && !current_user.valid_subject_course_ids.include?(@course.id)) || (!current_user.individual_student?)
+
+    if current_user.corporate_user?
+      redirect_to root_url
+    elsif @course && (current_user.individual_student? && !current_user.valid_subject_course_ids.include?(@course.id)) || (!current_user.individual_student?)
       redirect_to product_course_url(@course.home_page.public_url)
+    else
+      redirect_to root_url
     end
 
     if @course.enrolled_user_ids.include?(current_user.id)

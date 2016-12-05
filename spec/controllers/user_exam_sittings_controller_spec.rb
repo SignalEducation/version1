@@ -226,10 +226,7 @@ describe UserExamSittingsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for single set of exam_sitting params' do
         post :create, user_exam_sittings: valid_params
-        expect(flash[:error]).to be_nil
-        expect(flash[:success]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: :exam_sittings))
+        expect_bounce_as_not_allowed
       end
 
       xit 'should report OK for multiple sets of exam_sitting params' do

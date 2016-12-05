@@ -941,7 +941,7 @@ describe HomePagesController, type: :controller do
       a = corporate_customer_user
       b = content_manager_user
       z = tutor_user
-
+      v = comp_user
     end
 
     describe "GET 'home'" do

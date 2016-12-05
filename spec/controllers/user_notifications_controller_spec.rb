@@ -689,7 +689,7 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 7)
+        expect_index_success_with_model('user_notifications', 8)
       end
     end
 
