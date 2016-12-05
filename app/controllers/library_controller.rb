@@ -145,10 +145,8 @@ class LibraryController < ApplicationController
 
     if current_user.corporate_user?
       redirect_to root_url
-    elsif @course && (current_user.individual_student? && !current_user.valid_subject_course_ids.include?(@course.id)) || (!current_user.individual_student?)
+    elsif @course && (current_user.individual_student? && !current_user.valid_subject_course_ids.include?(@course.id))
       redirect_to product_course_url(@course.home_page.public_url)
-    else
-      redirect_to root_url
     end
 
     if @course.enrolled_user_ids.include?(current_user.id)
