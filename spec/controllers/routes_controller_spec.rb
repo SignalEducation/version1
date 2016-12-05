@@ -17,6 +17,8 @@ describe RoutesController, type: :controller do
     a = admin_user
     cs = corporate_student_user
     cc = corporate_customer_user
+    cm = content_manager_user
+    cu = comp_user
   end
 
 

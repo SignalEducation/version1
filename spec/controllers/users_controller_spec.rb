@@ -361,13 +361,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        get :show, id: comp_user.id
+        expect_show_success_with_model('user', comp_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        expect_show_success_with_model('user', comp_user.id)
       end
     end
 
@@ -387,13 +387,13 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
+        get :edit, id: comp_user.id
+        expect_edit_success_with_model('user', comp_user.id)
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
+        expect_edit_success_with_model('user', comp_user.id)
       end
     end
 
@@ -413,19 +413,19 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
+        put :update, id: comp_user.id, user: valid_params
         expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect(assigns(:user).id).to eq(comp_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
         expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect(assigns(:user).id).to eq(comp_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
+        put :update, id: comp_user.id, user: {email: 'a'}
         expect_update_error_with_model('user')
       end
     end
@@ -439,7 +439,7 @@ describe UsersController, type: :controller do
 
     describe "new_paid_subscription" do
       xit 'should respond OK and render upgrade page' do
-        get :new_paid_subscription, id: individual_student_user.id
+        get :new_paid_subscription, id: comp_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response).to render_template(:new_paid_subscription)

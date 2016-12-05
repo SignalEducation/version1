@@ -363,6 +363,11 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(comp_user)
+      x = admin_user
+      y = corporate_student_user
+      a = corporate_customer_user
+      b = content_manager_user
+      z = tutor_user
     end
 
     describe "GET 'home'" do

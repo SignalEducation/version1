@@ -144,11 +144,7 @@ describe OrdersController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new, subject_course_name_url: subject_course_2.name_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:new)
-
+        expect_bounce_as_not_allowed
       end
     end
 

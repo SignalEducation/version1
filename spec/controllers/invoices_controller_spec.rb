@@ -57,6 +57,8 @@ describe InvoicesController, type: :controller do
                                   user_id: corporate_customer_user.id) }
   let!(:admin_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: admin_user.id) }
+  let!(:comp_user_invoice) { FactoryGirl.create(:invoice,
+                                  user_id: comp_user.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:invoice) }
 
   context 'Not logged in: ' do
@@ -122,7 +124,7 @@ describe InvoicesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
-        get :show, id: tutor_user_invoice.id
+        get :show, id: comp_user_invoice.id
         expect_bounce_as_not_allowed
       end
 

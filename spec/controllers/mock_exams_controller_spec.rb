@@ -206,13 +206,13 @@ describe MockExamsController, type: :controller do
     describe "GET 'show/1'" do
       it 'should see mock_exam_1' do
         get :show, id: mock_exam_1.id
-        expect_show_success_with_model('mock_exam', mock_exam_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see mock_exam_2' do
         get :show, id: mock_exam_2.id
-        expect_show_success_with_model('mock_exam', mock_exam_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
