@@ -15,6 +15,7 @@ shared_context 'users_and_groups_setup' do
   let(:blogger_user_group) { FactoryGirl.create(:blogger_user_group) }
   let(:site_admin_user_group) { FactoryGirl.create(:site_admin_user_group) }
   let(:corporate_customer_user_group) { FactoryGirl.create(:corporate_customer_user_group) }
+  let(:complimentary_user_group) { FactoryGirl.create(:complimentary_user_group) }
 
   # user types
   let!(:free_trial_user_type) { FactoryGirl.create(:free_trial_user_type) }
@@ -25,6 +26,7 @@ shared_context 'users_and_groups_setup' do
   let(:no_access_user_type) { FactoryGirl.create(:no_access_user_type) }
 
   # users
+  #TODO add a individual_student_user here for each student_user_type
   let!(:individual_student_user) { FactoryGirl.create(:individual_student_user,
                                 user_group_id: individual_student_user_group.id) }
   let(:inactive_individual_student_user) { FactoryGirl.create(:inactive_individual_student_user,
@@ -41,8 +43,10 @@ shared_context 'users_and_groups_setup' do
                                 user_group_id: corporate_customer_user_group.id) }
   let(:admin_user) { FactoryGirl.create(:admin_user,
                                 user_group_id: site_admin_user_group.id) }
+  let(:comp_user) { FactoryGirl.create(:comp_user,
+                                user_group_id: complimentary_user_group.id) }
 
-  let(:user_list) { [free_trial_student, subscription_student, product_student, sub_and_product_student, trial_and_product_student, no_access_student, admin_user, tutor_user, content_manager_user, blogger_user, corporate_customer_user, corporate_student_user] }
+  let(:user_list) { [free_trial_student, subscription_student, product_student, sub_and_product_student, trial_and_product_student, no_access_student, admin_user, tutor_user, content_manager_user, blogger_user, corporate_customer_user, corporate_student_user, comp_user] }
 
   # student_type users
   let!(:free_trial_student) { FactoryGirl.create(:active_individual_student_user, user_group_id: individual_student_user_group.id, student_user_type_id: free_trial_user_type.id) }

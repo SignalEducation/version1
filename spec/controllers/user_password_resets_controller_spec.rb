@@ -136,5 +136,42 @@ RSpec.describe UserPasswordResetsController, type: :controller do
 
   end
 
+  context 'Logged in as comp_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
 
 end

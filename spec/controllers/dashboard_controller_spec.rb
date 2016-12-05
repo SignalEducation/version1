@@ -32,6 +32,22 @@ RSpec.describe DashboardController, :type => :controller do
 
   end
 
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "GET index" do
+      it "returns http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do

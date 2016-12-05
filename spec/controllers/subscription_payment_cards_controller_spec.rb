@@ -129,6 +129,42 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
     end
   end
 
+  context 'Logged in as complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should be OK with redirect' do
+        post :create, subscription_payment_card: create_params.merge(user_id: individual_student_user.id)
+        expect(flash[:error]).to eq(nil)
+        expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
+      end
+
+      it 'should report ERROR as token is invalid' do
+        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: individual_student_user.id, make_default_card: true}
+        expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
+        expect(flash[:success]).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
+      end
+    end
+
+    describe "PUT 'update'" do
+      it 'should be OK with redirect' do
+        put :update, id: card_1.id
+        expect(flash[:error]).to eq(nil)
+        expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
+      end
+    end
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do

@@ -78,7 +78,7 @@ FactoryGirl.define do
       tutor true
     end
 
-    factory :complimentary_user do
+    factory :complimentary_user_group do
       name 'Comp User Group'
       complimentary true
     end

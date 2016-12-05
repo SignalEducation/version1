@@ -106,6 +106,35 @@ describe InvoicesController, type: :controller do
 
   end
 
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see invoice' do
+        get :show, id: tutor_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should return ERROR and redirect' do
+        get :show, id: individual_student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do

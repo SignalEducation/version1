@@ -67,6 +67,33 @@ describe RoutesController, type: :controller do
       end
     end
 
+  end
+
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "GET 'root' with no subdomain" do
+      it 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+
+      end
+    end
+
+    describe "GET 'root' with a valid subdomain" do
+      it 'should respond ERROR not permitted' do
+        @request.host = "#{corporation_1.subdomain}.example.com"
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to student_dashboard_url
+
+      end
+    end
 
   end
 

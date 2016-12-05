@@ -30,7 +30,6 @@ describe CorporateCustomersController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for corporate_customer_1
   let!(:corporate_customer_1) { FactoryGirl.create(:corporate_customer) }
   let!(:child_user) { FactoryGirl.create(:corporate_customer_user,
                       corporate_customer_id: corporate_customer_1.id) }
@@ -96,6 +95,64 @@ describe CorporateCustomersController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(individual_student_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond ERROR not permitted' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, corporate_customer: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, corporate_customer: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a complimentary: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
     end
 
     describe "GET 'index'" do

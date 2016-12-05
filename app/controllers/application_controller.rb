@@ -147,6 +147,7 @@ class ApplicationController < ActionController::Base
          (the_user_group.blogger            && permitted_thing == 'blogger') ||
          (the_user_group.corporate_customer && permitted_thing == 'corporate_customer') ||
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
+         (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
          (the_user_group.site_admin)
         permission_granted = true
       end

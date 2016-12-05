@@ -151,6 +151,83 @@ describe TutorApplicationsController, type: :controller do
 
   end
 
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should reject as not allowed' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should reject as not allowed' do
+        get :show, id: tutor_application_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should reject as not allowed' do
+        get :show, id: tutor_application_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_new_success_with_model('tutor_application')
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, tutor_application: valid_params
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.tutor_applications.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_tutor_application_url)
+        expect(assigns(('tutor_application').to_sym).class.name).to eq(('tutor_application').classify)
+      end
+
+      it 'should report error for invalid params' do
+        post :create, tutor_application: {valid_params.keys.first => ''}
+        expect_create_error_with_model('tutor_application')
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should reject as not allowed' do
+        put :update, id: tutor_application_1.id, tutor_application: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject as not allowed' do
+        put :update, id: tutor_application_1.id, tutor_application: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: tutor_application_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: tutor_application_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do

@@ -12,6 +12,7 @@ describe CorporateProfilesController, type: :controller do
 
   before(:each) do
     @request.host = "#{corporation_1.subdomain}.example.com/login"
+    @request.env['HTTP_REFERER'] = "#{corporation_1.subdomain}.example.com/login"
     x = corporate_student_user
   end
 
@@ -28,7 +29,7 @@ describe CorporateProfilesController, type: :controller do
     end
 
     describe "GET 'new'" do
-      xit 'should redirect to sign_in' do
+      it 'should redirect to sign_in' do
         get :new
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -54,6 +55,36 @@ describe CorporateProfilesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(individual_student_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, corporate_customer: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
     end
 
     describe "GET 'show/1'" do

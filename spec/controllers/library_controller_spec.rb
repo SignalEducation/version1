@@ -132,6 +132,79 @@ RSpec.describe LibraryController, type: :controller do
 
   end
 
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(complimentary_user)
+    end
+
+    describe "GET group_index" do
+      it "returns http success" do
+        get :group_index
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group_index)
+        expect(Group.count).to eq(2)
+      end
+    end
+
+    describe "GET group_show" do
+      it "returns http success" do
+        get :group_show, group_name_url: course_group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group_show)
+        expect(Group.count).to eq(2)
+        expect(SubjectCourse.count).to eq(4)
+      end
+    end
+
+    describe "GET course_show" do
+      it "returns http success" do
+        get :course_show, subject_course_name_url: subject_course_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:course_show)
+        expect(Group.count).to eq(2)
+        expect(SubjectCourse.count).to eq(4)
+      end
+    end
+
+    describe "GET diploma_show" do
+      it "redirects because not purchased by user" do
+        get :diploma_show, subject_course_name_url: subject_course_3.name_url
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(product_course_url(subject_course_3.home_page.public_url))
+
+      end
+
+      it "returns http success because purchased by user" do
+
+        #TODO Change this to use the Stripe Mock Gem
+        student_order = Order.create!(product_id: product_1.id, subject_course_id: subject_course_3.id, user_id: individual_student_user.id, current_status: 'paid', stripe_guid: 'MyString', stripe_customer_id: 'MyString', live_mode: false)
+
+        get :diploma_show, subject_course_name_url: subject_course_3.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:diploma_show)
+        expect(Group.count).to eq(2)
+        expect(SubjectCourse.count).to eq(4)
+      end
+
+    end
+
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do
