@@ -137,7 +137,6 @@ class UsersController < ApplicationController
   end
 
   def student_create
-    #Duplicate in HomePages controller
     if current_user
       redirect_to root_url
     else
