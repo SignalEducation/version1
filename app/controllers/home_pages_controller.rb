@@ -35,23 +35,28 @@ class HomePagesController < ApplicationController
   end
 
   def group_index
-    @groups = Group.all_active.for_public.all_in_order
     @user = User.new
+    # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
+    country = IpAddress.get_country(request.remote_ip)
+    if country
+      @user.country_id = country.id
+      @currency_id = country.currency_id
+    else
+      gb = Country.find_by_name('United Kingdom')
+      @user.country_id = gb.id
+      @currency_id = gb.currency_id
+    end
+    #To allow displaying of sign_up_errors since this is not the users_controller
     session[:sign_up_errors].each do |k, v|
       v.each { |err| @user.errors.add(k, err) }
     end if session[:sign_up_errors]
     session.delete(:sign_up_errors)
-    country = IpAddress.get_country(request.remote_ip)
-    if country
-      @currency_id = country.currency_id
-      @user.country_id = country.id
-    else
-      @currency_id = Currency.find_by_iso_code('GB').id
-      @user.country_id = Country.find_by_name('United Kingdom').id
-    end
+    # Don't remember why this needs to be set
     @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
-    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
 
+    #To show each pricing plan on the page; not invlolved in the sign up process
+    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
+    @groups = Group.all_active.for_public.all_in_order
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
