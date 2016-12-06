@@ -142,25 +142,36 @@ class LibraryController < ApplicationController
 
   def diploma_show
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    redirect_to root_url if !@course || current_user.corporate_user?
-    if current_user.individual_student? && !current_user.valid_subject_course_ids.include?(@course.id)
-      redirect_to product_course_url(@course.home_page.public_url)
-    end
 
-    if @course.enrolled_user_ids.include?(current_user.id)
-      @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
-      @subject_course_user_log = @enrollment.subject_course_user_log
+    if current_user && @course
+      if current_user.individual_student? && current_user.valid_subject_course_ids.include?(@course.id)
+
+        if @course.enrolled_user_ids.include?(current_user.id)
+          @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
+          @subject_course_user_log = @enrollment.subject_course_user_log
+        else
+          @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
+        end
+
+        @course_modules = @course.children.all_active.all_in_order
+        @tuition_course_modules = @course_modules.all_tuition
+        @test_course_modules = @course_modules.all_test
+        @revision_course_modules = @course_modules.all_revision
+        tag_manager_data_layer(@course.try(:name))
+        @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
+        @navbar = true
+
+      else
+        if current_user.corporate_user?
+          redirect_to root_url
+        else
+          redirect_to product_course_url(@course.home_page.public_url)
+        end
+
+      end
     else
-      @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
+      redirect_to root_url
     end
-
-    @course_modules = @course.children.all_active.all_in_order
-    @tuition_course_modules = @course_modules.all_tuition
-    @test_course_modules = @course_modules.all_test
-    @revision_course_modules = @course_modules.all_revision
-    tag_manager_data_layer(@course.try(:name))
-    @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
-    @navbar = true
   end
 
   def cert

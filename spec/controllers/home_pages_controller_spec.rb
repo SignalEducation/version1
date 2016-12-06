@@ -358,6 +358,150 @@ describe HomePagesController, type: :controller do
     end
   end
 
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+      x = admin_user
+      y = corporate_student_user
+      a = corporate_customer_user
+      b = content_manager_user
+      z = tutor_user
+    end
+
+    describe "GET 'home'" do
+      it 'should see home' do
+        get :home
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'group_index'" do
+      let!(:country) { FactoryGirl.create(:uk) }
+      let!(:currency_2) { FactoryGirl.create(:gbp) }
+
+      it 'should see group_index' do
+        get :group_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group_index)
+      end
+    end
+
+    describe "GET 'diploma_index'" do
+      let!(:country) { FactoryGirl.create(:uk) }
+      let!(:country_2) { FactoryGirl.create(:ireland) }
+      let!(:currency_2) { FactoryGirl.create(:gbp) }
+      let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
+      let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
+
+      #Passes when run by itself
+      xit 'should see diploma_index' do
+        get :diploma_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(product_course_url(subject_course_1_home_page.public_url))
+      end
+    end
+
+    describe "GET 'group'" do
+      let!(:country) { FactoryGirl.create(:uk) }
+      let!(:currency_2) { FactoryGirl.create(:gbp) }
+
+      #Passes when run by itself
+      xit 'should see group' do
+        get :group, home_pages_public_url: home_page_2.public_url
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group)
+      end
+    end
+
+    describe "GET 'diploma'" do
+      let!(:country) { FactoryGirl.create(:uk) }
+      let!(:country_2) { FactoryGirl.create(:ireland) }
+      let!(:currency_2) { FactoryGirl.create(:gbp) }
+      let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
+      let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
+
+      #Passes when run by itself
+      xit 'should see diploma' do
+        get :diploma, home_pages_public_url: subject_course_1_home_page.public_url
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:diploma)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with home_page_1' do
+        get :edit, id: home_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with home_page_2' do
+        get :edit, id: home_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for home_page_1' do
+        put :update, id: home_page_1.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for home_page_2' do
+        put :update, id: home_page_2.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_sign_up'" do
+      it "should redirect to dashboard page" do
+        post :student_sign_up, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do
@@ -797,7 +941,7 @@ describe HomePagesController, type: :controller do
       a = corporate_customer_user
       b = content_manager_user
       z = tutor_user
-
+      v = comp_user
     end
 
     describe "GET 'home'" do

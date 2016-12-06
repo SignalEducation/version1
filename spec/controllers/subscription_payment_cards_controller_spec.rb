@@ -129,6 +129,33 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
     end
   end
 
+  context 'Logged in as complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should be OK with redirect' do
+        post :create, subscription_payment_card: create_params.merge(user_id: individual_student_user.id)
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report ERROR as token is invalid' do
+        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: individual_student_user.id, make_default_card: true}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update'" do
+      it 'should be OK with redirect' do
+        put :update, id: card_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do

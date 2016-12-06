@@ -177,6 +177,14 @@ FactoryGirl.define do
       corporate_customer_id             nil
     end
 
+    factory :comp_user do
+      sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+      corporate_customer_id             nil
+    end
+
   end
 
 end

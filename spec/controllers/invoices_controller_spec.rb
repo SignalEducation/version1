@@ -57,6 +57,8 @@ describe InvoicesController, type: :controller do
                                   user_id: corporate_customer_user.id) }
   let!(:admin_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: admin_user.id) }
+  let!(:comp_user_invoice) { FactoryGirl.create(:invoice,
+                                  user_id: comp_user.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:invoice) }
 
   context 'Not logged in: ' do
@@ -100,6 +102,35 @@ describe InvoicesController, type: :controller do
       # optional - some other object
       it 'should return ERROR and redirect' do
         get :show, id: corporate_student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see invoice' do
+        get :show, id: comp_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should return ERROR and redirect' do
+        get :show, id: individual_student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end

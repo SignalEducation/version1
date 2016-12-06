@@ -176,6 +176,101 @@ describe UserExamSittingsController, type: :controller do
 
   end
 
+  context 'Logged in as a complimentary_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(comp_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see user_exam_sitting_1' do
+        get :show, id: user_exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see user_exam_sitting_2' do
+        get :show, id: user_exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with user_exam_sitting_1' do
+        get :edit, id: user_exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with user_exam_sitting_2' do
+        get :edit, id: user_exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for single set of exam_sitting params' do
+        post :create, user_exam_sittings: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should report OK for multiple sets of exam_sitting params' do
+        post :create, user_exam_sittings: valid_params
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :exam_sittings))
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for user_exam_sitting_1' do
+        put :update, id: user_exam_sitting_1.id, user_exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for user_exam_sitting_2' do
+        put :update, id: user_exam_sitting_2.id, user_exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: user_exam_sitting_1.id, user_exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: user_exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: user_exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a tutor_user: ' do
 
     before(:each) do

@@ -68,7 +68,7 @@ class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product, :enrollment]
   before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
-  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user] do
+  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete,:student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]

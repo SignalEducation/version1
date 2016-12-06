@@ -147,6 +147,7 @@ class ApplicationController < ActionController::Base
          (the_user_group.blogger            && permitted_thing == 'blogger') ||
          (the_user_group.corporate_customer && permitted_thing == 'corporate_customer') ||
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
+         (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
          (the_user_group.site_admin)
         permission_granted = true
       end
@@ -351,6 +352,8 @@ class ApplicationController < ActionController::Base
         corporate_customer_dashboard_url
       when UserGroup.default_content_manager_user_group.id
         content_manager_dashboard_url
+      when UserGroup.default_complimentary_user_group.id
+        student_dashboard_url
     else
       student_dashboard_url
     end
