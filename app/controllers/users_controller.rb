@@ -129,9 +129,25 @@ class UsersController < ApplicationController
   def student_new
     redirect_to root_url if current_corporate
     @user = User.new
-    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-    #@user.country_id = 105
+    country = IpAddress.get_country(request.remote_ip)
+    if country
+      @user.country_id = country.id
+    else
+      gb = Country.find_by_name('United Kingdom')
+      @user.country_id = gb.id
+    end
     @topic_interests = Group.all_active.all_in_order.for_public
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:sign_up_errors] && session[:valid_params]
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      session.delete(:sign_up_errors)
+      session.delete(:valid_params)
+    end
     @navbar = false
     @footer = false
   end
@@ -195,6 +211,7 @@ class UsersController < ApplicationController
         redirect_to personal_sign_up_complete_url
       else
         session[:sign_up_errors] = @user.errors unless @user.errors.empty?
+        session[:valid_params] = [@user.first_name, @user.last_name, @user.email] unless @user.errors.empty?
         redirect_to request.referrer
       end
     end

@@ -46,11 +46,17 @@ class HomePagesController < ApplicationController
       @user.country_id = gb.id
       @currency_id = gb.currency_id
     end
-    #To allow displaying of sign_up_errors since this is not the users_controller
-    session[:sign_up_errors].each do |k, v|
-      v.each { |err| @user.errors.add(k, err) }
-    end if session[:sign_up_errors]
-    session.delete(:sign_up_errors)
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:sign_up_errors] && session[:valid_params]
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      session.delete(:sign_up_errors)
+      session.delete(:valid_params)
+    end
     # Don't remember why this needs to be set
     @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
@@ -91,11 +97,17 @@ class HomePagesController < ApplicationController
       @user.country_id = gb.id
       @currency_id = gb.currency_id
     end
-    #To allow displaying of sign_up_errors since this is not the users_controller
-    session[:sign_up_errors].each do |k, v|
-      v.each { |err| @user.errors.add(k, err) }
-    end if session[:sign_up_errors]
-    session.delete(:sign_up_errors)
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:sign_up_errors] && session[:valid_params]
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      session.delete(:sign_up_errors)
+      session.delete(:valid_params)
+    end
 
     @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
