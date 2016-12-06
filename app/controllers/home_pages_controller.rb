@@ -30,22 +30,18 @@ class HomePagesController < ApplicationController
     @product_courses = @product_course_category.subject_courses if @product_course_category
     @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
     @groups = Group.all_active.for_public.all_in_order
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
   end
 
   def group_index
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
-    country = IpAddress.get_country(request.remote_ip)
-    if country
-      @user.country_id = country.id
-      @currency_id = country.currency_id
-    else
-      gb = Country.find_by_name('United Kingdom')
-      @user.country_id = gb.id
-      @currency_id = gb.currency_id
-    end
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
+    @currency_id = @country.currency_id
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|
@@ -69,7 +65,8 @@ class HomePagesController < ApplicationController
   def diploma_index
     product = Product.first
     redirect_to product_course_url(product.subject_course.home_pages.first.public_url)
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country.currency_id
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
     @navbar = nil
@@ -88,15 +85,11 @@ class HomePagesController < ApplicationController
 
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
-    country = IpAddress.get_country(request.remote_ip)
-    if country
-      @user.country_id = country.id
-      @currency_id = country.currency_id
-    else
-      gb = Country.find_by_name('United Kingdom')
-      @user.country_id = gb.id
-      @currency_id = gb.currency_id
-    end
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
+    @currency_id = @country.currency_id
+
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|
@@ -125,14 +118,14 @@ class HomePagesController < ApplicationController
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
     @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @course = @home_page.subject_course
     @currency_id = @country.currency_id
     @product = @course.products.all_active.in_currency(@currency_id).last
     @navbar = nil
     @footer = nil
-
   end
 
   def subscribe

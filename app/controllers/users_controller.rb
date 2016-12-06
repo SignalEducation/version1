@@ -129,13 +129,9 @@ class UsersController < ApplicationController
   def student_new
     redirect_to root_url if current_corporate
     @user = User.new
-    country = IpAddress.get_country(request.remote_ip)
-    if country
-      @user.country_id = country.id
-    else
-      gb = Country.find_by_name('United Kingdom')
-      @user.country_id = gb.id
-    end
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
     @topic_interests = Group.all_active.all_in_order.for_public
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:sign_up_errors] && session[:valid_params]
@@ -145,8 +141,7 @@ class UsersController < ApplicationController
       @user.first_name = session[:valid_params][0]
       @user.last_name = session[:valid_params][1]
       @user.email = session[:valid_params][2]
-      session.delete(:sign_up_errors)
-      session.delete(:valid_params)
+      session.delete(:sign_up_errors, :valid_params)
     end
     @navbar = false
     @footer = false
@@ -163,13 +158,9 @@ class UsersController < ApplicationController
       @user = User.new(student_allowed_params)
       @user.student_user_type_id = StudentUserType.default_free_trial_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-      country = IpAddress.get_country(request.remote_ip).id
-      if country
-        @user.country_id = country
-      else
-        gb = Country.find_by_name('United Kingdom')
-        @user.country_id = gb.id
-      end
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      @user.country_id = @country.id
       @user.account_activation_code = SecureRandom.hex(10)
       @user.email_verification_code = SecureRandom.hex(10)
       @user.password_confirmation = @user.password
@@ -220,9 +211,10 @@ class UsersController < ApplicationController
   def new_product_user
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     @user = User.new
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
-    @currency_id = @country.currency_id
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
+    @currency_id = @country.currency_id
     @product = @course.products.in_currency(@currency_id).last
     @topic_interests = Group.all_active.all_in_order.for_public
     @navbar = false
@@ -231,7 +223,8 @@ class UsersController < ApplicationController
 
   def new_session_product
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country.currency_id
     @product = @course.products.in_currency(@currency_id).last
     @user_session = UserSession.new
@@ -250,8 +243,9 @@ class UsersController < ApplicationController
     @user = User.new(student_allowed_params)
     @user.user_group_id = UserGroup.default_student_user_group.try(:id)
     @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
-    country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.find_by_iso_code('IE').try(:id)
-    @user.country_id = country_id
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password
