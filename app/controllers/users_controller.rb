@@ -144,13 +144,21 @@ class UsersController < ApplicationController
       @navbar = false
       @footer = false
       @topic_interests = Group.all_active.all_in_order.for_public
+
       @user = User.new(student_allowed_params)
       @user.student_user_type_id = StudentUserType.default_free_trial_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.where(iso_code: 'GB').first.id
+      country = IpAddress.get_country(request.remote_ip).id
+      if country
+        @user.country_id = country
+      else
+        gb = Country.find_by_name('United Kingdom')
+        @user.country_id = gb.id
+      end
       @user.account_activation_code = SecureRandom.hex(10)
       @user.email_verification_code = SecureRandom.hex(10)
       @user.password_confirmation = @user.password
+
       # Check for CrushOffers cookie and assign it to the User
       if cookies.encrypted[:crush_offers]
         @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
@@ -187,7 +195,8 @@ class UsersController < ApplicationController
         UserSession.create(user)
         redirect_to personal_sign_up_complete_url
       else
-        render action: :student_new
+        session[:sign_up_errors] = @user.errors unless @user.errors.empty?
+        redirect_to request.referrer
       end
     end
   end
