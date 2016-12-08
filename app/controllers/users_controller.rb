@@ -84,8 +84,8 @@ class UsersController < ApplicationController
     @sort_choices = User::SORT_OPTIONS.map { |x| [x.humanize.camelcase, x] }
   end
 
-  def show
-    # account page
+  def account
+    #user account info page
     if @user.referral_code.nil?
       @user.create_referral_code
     end
@@ -119,6 +119,11 @@ class UsersController < ApplicationController
     @orders = @user.orders
     @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
+
+  end
+
+  def show
+    # admin viewing a user
 
   end
 

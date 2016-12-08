@@ -91,6 +91,11 @@
             =f.text_area :first_description, as: :summernote, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
 
 
+  .row
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'
+
+
   :javascript
 
     function handleUserGroupChange() {

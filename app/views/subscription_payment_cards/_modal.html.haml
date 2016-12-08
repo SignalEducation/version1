@@ -4,7 +4,7 @@
   =f.hidden_field :make_default_card, value: true
 
   .modal.fade#new-subscription-payment-card-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'newSubscriptionPaymentCardLabel', hidden: 'true'}}
-    =render partial: 'users/new_card_form', locals: {f: f}
+    =render partial: 'users/user_forms/new_card_form', locals: {f: f}
     -#.form-group
       .col-sm-8.col-sm-offset-4
         .checkbox
