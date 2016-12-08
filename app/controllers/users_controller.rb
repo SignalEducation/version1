@@ -66,14 +66,18 @@
 
 class UsersController < ApplicationController
 
+  #TODO these four before_actions needs attention
   before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product, :enrollment]
+
   before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
-  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete,:student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user] do
+
+  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
 
   def index
+    #TODO this needs a massive visual overhaul
     @users = params[:search_term].to_s.blank? ?
              @users = User.paginate(per_page: 50, page: params[:page]) :
              @users = User.search_for(params[:search_term].to_s).
@@ -90,6 +94,8 @@ class UsersController < ApplicationController
       @user.create_referral_code
     end
     @valid_order = @user.orders
+
+    #TODO Are these calls model necessary
     if params[:update].to_s.length > 0
       case params[:update]
         when 'invoices'
@@ -104,6 +110,7 @@ class UsersController < ApplicationController
       end
       @user.reload
     end
+
     if current_user.corporate_manager? || current_user.corporate_customer?
       @corporate_customer = current_user.corporate_customer
       @footer = false
@@ -123,7 +130,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    # admin viewing a user
+    #TODO admin viewing a user
 
   end
 
