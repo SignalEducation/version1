@@ -1,7 +1,17 @@
 =form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
+  -if current_user.admin?
+    =render partial: 'users/admin_new_user', locals: {f: f}
+  -elsif current_user.content_manager?
+
+  -elsif current_user.corporate_customer?
+
+  -elsif current_user.corporate_student?
+
+  -elsif current_user.blogger?
+
+  -else
+
+
   .row
-    .col-md-8.col-md-offset-2
-      =render partial: 'users/form_personal_details', locals: {f: f}
-      .row
-        =f.submit t('views.general.save'), class: 'btn btn-red'
-        =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'
