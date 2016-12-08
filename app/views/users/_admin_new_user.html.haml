@@ -19,13 +19,13 @@
         .input-group.input-group-lg.full-width
           =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       .col-md-6
-        =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-        %br/
         =f.label :address, t('views.users.form.address'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_area :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
         %br/
         %br/
@@ -39,7 +39,7 @@
     .row
       .col-md-12.l-margin-bottom-big
         %h3.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-          Additional Info
+          Additional Corporate Info
 
         .col-md-6
           =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label'
@@ -57,7 +57,7 @@
     .row
       .col-md-12
         %h3.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-          Additional Info
+          Additional Tutor Info
 
         .col-md-6
           =f.label :wistia_url, t('views.users.form.wistia_url'), class: 'control-label'
@@ -110,7 +110,8 @@
     }
 
     $(document).ready(function() {
-      handleUserGroupChange()
+      $('#tutor-fields').hide();
+      $('#corporate-fields').hide();
     });
 
     $('#user_user_group_id').bind('change', function() {
@@ -120,3 +121,10 @@
     $('#editor').summernote({
       disableDragAndDrop: true,
     });
+
+
+  -unless @user.new_record?
+    :javascript
+      $(document).ready(function() {
+        handleUserGroupChange()
+      });
