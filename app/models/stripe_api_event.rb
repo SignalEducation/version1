@@ -53,8 +53,6 @@ class StripeApiEvent < ActiveRecord::Base
   end
 
   def disseminate_payload
-    #TODO I think it would be tidier to separate code, for each type of subscription event, into methods in this model [invoice_created method and a invoice_payment_succeeded method etc.]
-
     if self.payload && self.payload.class == Hash && self.payload[:type]
       Rails.logger.debug "DEBUG: Processing Stripe event #{payload[:type]}"
       unless Invoice::STRIPE_LIVE_MODE == payload[:livemode]
@@ -64,56 +62,15 @@ class StripeApiEvent < ActiveRecord::Base
       else
         case self.payload[:type]
         when 'invoice.created'
-
           invoice_created(self.payload[:data][:object])
-
         when 'invoice.payment_succeeded'
-
           invoice_payment_succeeded(payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:total].to_f / 100.0, self.payload[:data][:object][:currency].upcase, self.payload[:data][:object][:subscription])
-
         when 'invoice.payment_failed'
-
           invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription])
-
         when 'customer.subscription.updated'
-
-          subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription &&
-             subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
-                                            current_status: self.payload[:data][:object][:status])
-            self.processed = true
-            self.processed_at = Time.now
-          else
-            set_process_error("Error updating subscription #{subscription.try(:id)} with Stripe ID #{self.payload[:data][:object][:id]}")
-          end
-
-
-
+          customer_subscription_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:current_period_end].to_i, self.payload[:data][:object][:status])
         when 'customer.subscription.created'
-          #User reactivating their account after it was canceled due to repeated failed charges
-          subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription
-            if subscription.user.active_subscription && subscription.user.active_subscription.current_status == 'canceled'
-
-              self.processed = true
-              self.processed_at = Time.now
-
-              user = subscription.user
-              if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-                new_user_type_id = StudentUserType.default_sub_user_type.id
-              elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-                new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-              else
-                new_user_type_id = user.student_user_type_id
-              end
-              user.update_attribute(:student_user_type_id, new_user_type_id)
-
-            else
-              set_process_error "API Event with Stripe ID #{self.payload[:data][:object][:id]} was created but the necessary conditions for the user were not met."
-            end
-          else
-            set_process_error "Unknown subscription with Stripe ID #{self.payload[:data][:object][:id]}"
-          end
+          customer_subscription_created(self.payload[:data][:object][:id])
         else
           set_process_error "Unknown event type"
         end # of case statement
@@ -164,7 +121,6 @@ class StripeApiEvent < ActiveRecord::Base
   end
 
   def invoice_payment_succeeded(stripe_user_data, stripe_invoice_data, stripe_price_date, stripe_currency_data, stripe_subscription_data)
-    #Latest attempt to charge a user has succeeded so we check if it was a crushoffers referral
     user = User.where(stripe_customer_id: stripe_user_data).last
     invoice = Invoice.where(stripe_guid: stripe_invoice_data).last
     price = stripe_price_date
@@ -200,17 +156,9 @@ class StripeApiEvent < ActiveRecord::Base
       user.update_attributes(stripe_account_balance: balance)
       Rails.logger.error "Notice: LearnSignal Users new stripe_balance #{user.try(:stripe_account_balance)}"
 
-      if subscription.try(:current_status) == 'past_due'
-        #The subscription was overdue a payment so update it's status and send account reactivation email
-        subscription.update_attributes(current_status: 'active')
-        Rails.logger.error "Notice: User Subscription was updated from past_due to active #{user.try(:current_status)}"
-
-        #TODO Mandrill doesn't have any template for this email
-        MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
-      else
-        #The subscription charge was successful so send successful payment email
-        MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
-      end
+      subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
+      #The subscription charge was successful so send successful payment email
+      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
 
     else
       set_process_error("Unknown User or Subscription #{user} - #{subscription}")
@@ -238,9 +186,54 @@ class StripeApiEvent < ActiveRecord::Base
       end
     else
       Rails.logger.error "ERROR: User with Stripe id #{stripe_user_data} does not exist."
-      set_process_error "User with given Stripe ID does not exist"
+      set_process_error "Could not find user with stripe id #{stripe_user_data}"
     end
 
+  end
+
+  def customer_subscription_updated(stripe_subscription_data, stripe_subscription_renewal_date, stripe_subscription_status)
+    subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+    if subscription &&
+        subscription.update_attributes(next_renewal_date: Time.at(stripe_subscription_renewal_date),
+                                       current_status: stripe_subscription_status)
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error("Error updating subscription #{subscription.try(:id)} with Stripe ID #{stripe_subscription_data}")
+    end
+  end
+
+  def customer_subscription_created(stripe_subscription_data)
+    #User has just created their first subscription or User reactivating their account after it was fully canceled and deleted on stripe
+    subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+    if subscription && subscription.user.active_subscription
+      if subscription.id == subscription.user.active_subscription.id && subscription.current_status == 'active'
+        #User has just created their first subscription
+        self.processed = true
+        self.processed_at = Time.now
+
+      elsif subscription.id == subscription.user.active_subscription.id && subscription.user.active_subscription.current_status == 'canceled'
+        #User reactivating their account after it was fully canceled and deleted on stripe
+        self.processed = true
+        self.processed_at = Time.now
+        user = subscription.user
+        if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+          new_user_type_id = StudentUserType.default_sub_user_type.id
+        elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
+          new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+        else
+          new_user_type_id = user.student_user_type_id
+        end
+        user.update_attribute(:student_user_type_id, new_user_type_id)
+
+        #TODO Mandrill doesn't have any template for this email
+        MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
+      else
+        set_process_error "API Event with Stripe ID #{stripe_subscription_data} was created but the necessary conditions for the user subscription were not met."
+      end
+    else
+      set_process_error "Unknown subscription with Stripe ID #{stripe_subscription_data}"
+    end
   end
 
   def set_default_values
