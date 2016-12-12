@@ -52,7 +52,7 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
                                   customer: student.reload.stripe_customer_id) }
   let!(:invoice_payment_succeeded_event_2) {
     StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                  subscription: subscription_1.stripe_guid,
+                                  subscription: subscription_7.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
   let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
   let!(:customer_subscription_created_event) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active') }
@@ -151,7 +151,7 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
 
-          subscription_1.update_attribute(:current_status, 'past_due')
+          subscription_7.update_attribute(:current_status, 'past_due')
           post :create, invoice_payment_succeeded_event_2.to_json
 
           expect(StripeApiEvent.count).to eq(1)
