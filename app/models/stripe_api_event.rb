@@ -132,31 +132,20 @@ class StripeApiEvent < ActiveRecord::Base
     if invoice
       invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
     else
-      invoice_url = Rails.application.routes.url_helpers.account_url
+      invoice_url = Rails.application.routes.url_helpers.account_url(host: 'www.learnsignal.com')
     end
-
-    # Send data to CrushOffers
-    if user && user.crush_offers_session_id && price > 0
-      uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{price}&c=#{curr}&f=pb&r=#{user.crush_offers_session_id}&t=#{self.payload[:data][:object][:id]}")
-      resp = Net::HTTP.get(uri)
-      xml_doc = Nokogiri::XML(resp)
-      result = xml_doc.at_xpath('//msg').content
-      if result != 'SUCCESS'
-        Rails.logger.error "ERROR: Notifying CrushOffers fails - response is #{resp}"
-        set_process_error "Error notifying CrushOffers"
-      end
-    end
-
-    if user && price > 0 && subscription
+    
+    if user && (price > 0) && subscription
       self.processed = true
       self.processed_at = Time.now
-      stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-      balance = stripe_customer.account_balance
-      Rails.logger.error "Notice: Stripes User balance #{balance}"
-      Rails.logger.error "Notice: LearnSignal Users old stripe_balance #{user.try(:stripe_account_balance)}"
-      user.update_attributes(stripe_account_balance: balance)
-      Rails.logger.error "Notice: LearnSignal Users new stripe_balance #{user.try(:stripe_account_balance)}"
-
+      unless Rails.env.test?
+        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+        balance = stripe_customer.account_balance
+        Rails.logger.error "Notice: Stripes User balance #{balance}"
+        Rails.logger.error "Notice: LearnSignal Users old stripe_balance #{user.try(:stripe_account_balance)}"
+        user.update_attributes(stripe_account_balance: balance)
+        Rails.logger.error "Notice: LearnSignal Users new stripe_balance #{user.try(:stripe_account_balance)}"
+      end
       subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
       #The subscription charge was successful so send successful payment email
       MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)

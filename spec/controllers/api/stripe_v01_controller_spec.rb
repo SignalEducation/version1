@@ -61,6 +61,14 @@ describe Api::StripeV01Controller, type: :controller do
     StripeMock.mock_webhook_event('invoice.payment_failed',
                                   subscription: subscription_1.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
+  let!(:invoice_payment_succeeded_event_1) {
+    StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                  subscription: subscription_1.stripe_guid,
+                                  customer: student.reload.stripe_customer_id) }
+  let!(:invoice_payment_succeeded_event_2) {
+    StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                  subscription: subscription_1.stripe_guid,
+                                  customer: student.reload.stripe_customer_id) }
   let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
   let!(:customer_subscription_created_event) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active') }
   let!(:customer_subscription_created_event_1) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active', subscription: subscription_7.stripe_guid) }
@@ -101,7 +109,7 @@ describe Api::StripeV01Controller, type: :controller do
           expect(InvoiceLineItem.count).to eq(invoice_created_event.data.object.lines.data.length)
         end
 
-        it 'payment_failed first attempt' do
+        it 'invoice.payment_failed first attempt' do
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
@@ -119,7 +127,7 @@ describe Api::StripeV01Controller, type: :controller do
 
         end
 
-        it 'payment_failed last attempt' do
+        it 'invoice.payment_failed last attempt' do
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
@@ -136,78 +144,45 @@ describe Api::StripeV01Controller, type: :controller do
           expect(subscription_1.user.student_user_type_id).to eq(no_access_user_type.id)
         end
 
-        xit 'sends data to CrushOffers on payment_succeeded' do
-          student.update_attribute(:crush_offers_session_id, "1234")
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: student.stripe_customer_id)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total.to_f / 100.0}&c=#{evt.data.object.currency.upcase}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).to receive(:get)
-                                .with(uri)
-                                .and_return("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<result>\r\n\t<code>0</code>\r\n\t<msg>SUCCESS</msg>\r\n</result>")
+        it 'invoice.payment_succeeded first attempt' do
+          mc = double
+          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
+          #expect(MandrillClient).to receive(:new).and_return(mc)
+          student.update_attribute(:stripe_customer_id, invoice_payment_succeeded_event_1.data.object.customer)
 
-          post :create, evt.to_json
+          post :create, invoice_payment_succeeded_event_1.to_json
 
-          expect(StripeApiEvent.count).to eq(2)
+          expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('active')
         end
+
+        it 'invoice.payment_succeeded after failed attempt' do
+          mc = double
+          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
+          #expect(MandrillClient).to receive(:new).and_return(mc)
+
+          subscription_1.update_attribute(:current_status, 'past_due')
+          post :create, invoice_payment_succeeded_event_2.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('active')
+        end
+
       end
 
       describe 'invoice with invalid data' do
         before(:each) do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
-        end
-
-        xit 'does not send data to CrushOffers if their session ID is not set but does mark event as processed' do
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: student.stripe_customer_id)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).not_to receive(:get)
-
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(2)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(true)
-          expect(sae.error).to eq(false)
-        end
-
-        xit 'does not send data to CrushOffers if their session ID is not set and does not mark as processed because user is not found'  do
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: 'fake_user_123')
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).not_to receive(:get)
-
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(2)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or the user could not be found")
-        end
-
-        xit 'does not send data to CrushOffers if price is not greater than 0' do
-          student.update_attribute(:crush_offers_session_id, "1234")
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: student.stripe_customer_id,
-                                              total: 0.0)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).not_to receive(:get)
-
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(2)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or the user could not be found")
         end
 
         it 'should not process invoice.created event if user with given GUID does not exist' do
