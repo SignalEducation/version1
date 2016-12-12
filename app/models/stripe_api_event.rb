@@ -134,7 +134,7 @@ class StripeApiEvent < ActiveRecord::Base
     else
       invoice_url = Rails.application.routes.url_helpers.account_url(host: 'www.learnsignal.com')
     end
-    
+
     if user && (price > 0) && subscription
       self.processed = true
       self.processed_at = Time.now
