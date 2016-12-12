@@ -1,13 +1,16 @@
 require 'rails_helper'
 require 'mandrill_client'
+require 'support/users_and_groups_setup'
 
 describe Api::StripeV01Controller, type: :controller do
+
+  include_context 'users_and_groups_setup'
 
   let!(:start_stripe_mock) { StripeMock.start }
   let(:stripe_helper) { StripeMock.create_test_helper }
 
   let!(:usd) { FactoryGirl.create(:usd) }
-  let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:student) { FactoryGirl.create(:individual_student_user, student_user_type_id: subscription_user_type.id) }
   let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
   let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
@@ -26,9 +29,6 @@ describe Api::StripeV01Controller, type: :controller do
                                              stripe_token: card_token_2.id) }
   let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: student.id,
                                              subscription_plan_id: subscription_plan_m.id) }
-  let!(:subscription_4) { FactoryGirl.create(:subscription, user_id: student.id,
-                                             subscription_plan_id: subscription_plan_m.id,
-                                             current_status: 'trialing') }
   let!(:subscription_5) { FactoryGirl.create(:subscription, user_id: referred_student.id,
                                              subscription_plan_id: subscription_plan_m.id,
                                              current_status: 'active') }
@@ -41,7 +41,12 @@ describe Api::StripeV01Controller, type: :controller do
     StripeMock.mock_webhook_event('invoice.created',
                                   subscription: subscription_3.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
-  let!(:invoice_payment_failed_event) {
+  let!(:invoice_payment_failed_event_1) {
+    StripeMock.mock_webhook_event('invoice.payment_failed',
+                                  subscription: subscription_1.stripe_guid,
+                                  next_payment_attempt: (Time.new + 24.hours),
+                                  customer: student.reload.stripe_customer_id) }
+  let!(:invoice_payment_failed_event_2) {
     StripeMock.mock_webhook_event('invoice.payment_failed',
                                   subscription: subscription_1.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
@@ -84,21 +89,42 @@ describe Api::StripeV01Controller, type: :controller do
           expect(InvoiceLineItem.count).to eq(invoice_created_event.data.object.lines.data.length)
         end
 
-        it 'payment_failed' do
+        it 'payment_failed first attempt' do
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
+          expect(subscription_1.current_status).to eq('active')
 
-          post :create, invoice_payment_failed_event.to_json
+          post :create, invoice_payment_failed_event_1.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('past_due')
+
         end
 
-        it 'sends data to CrushOffers on payment_succeeded' do
+        it 'payment_failed last attempt' do
+          mc = double
+          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
+          #expect(MandrillClient).to receive(:new).and_return(mc)
+
+          post :create, invoice_payment_failed_event_2.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('canceled')
+          expect(subscription_1.user.student_user_type_id).to eq(no_access_user_type.id)
+        end
+
+        xit 'sends data to CrushOffers on payment_succeeded' do
           student.update_attribute(:crush_offers_session_id, "1234")
           post :create, invoice_created_event.to_json
           evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',

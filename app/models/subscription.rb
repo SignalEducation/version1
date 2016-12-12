@@ -138,27 +138,33 @@ class Subscription < ActiveRecord::Base
   end
 
   def immediately_cancel(account_url = nil)
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    response = stripe_subscription.delete.to_hash
-    if response[:status] == 'canceled'
-      self.update_attribute(:current_status, 'canceled')
+    if self.stripe_customer_id
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
-      user = User.find_by_stripe_customer_id(stripe_customer.id)
-      if user.student_user_type_id == StudentUserType.default_sub_user_type.id
-        new_user_type_id = StudentUserType.default_no_access_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-        new_user_type_id = StudentUserType.default_product_user_type.id
+      if stripe_customer
+        stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+        response = stripe_subscription.delete.to_hash
+        self.update_attribute(:current_status, 'canceled') if response[:status] == 'canceled'
+        Rails.logger.info "INFO: Subscription#immediately_cancel has been triggered by repeated failed charge attempts to charge the users card therefore cancellation status updated to canceled for subscription ##{self.id}."
       else
-        new_user_type_id = user.student_user_type_id
+        self.update_attribute(:current_status, 'canceled')
+        Rails.logger.error "ERROR: Subscription#immediately_cancel failed to find subscription on stripe with guid:#{self.stripe_customer_id}. StripeResponse:#{response}. But we continued to mark the subscription as canceled"
+        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
-      user.update_attribute(:student_user_type_id, new_user_type_id)
-
-      Rails.logger.info "INFO: Subscription#immediately_cancel has been triggered by repeated failed charge attempts to charge the users card therefore cancellation status updated to canceled for subscription ##{self.id}."
     else
-      Rails.logger.error "ERROR: Subscription#immediately_cancel failed to cancel an the sub. Self:#{self}. StripeResponse:#{response}."
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      self.update_attribute(:current_status, 'canceled')
     end
+
+    user = self.user
+    if user.student_user_type_id == StudentUserType.default_sub_user_type.id
+      new_user_type_id = StudentUserType.default_no_access_user_type.id
+    elsif user.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
+      new_user_type_id = StudentUserType.default_product_user_type.id
+    else
+      new_user_type_id = user.student_user_type_id
+    end
+    user.update_attribute(:student_user_type_id, new_user_type_id)
+
     # return true or false - if everything went well
     errors.messages.count == 0
   end

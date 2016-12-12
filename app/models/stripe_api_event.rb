@@ -67,6 +67,7 @@ class StripeApiEvent < ActiveRecord::Base
           invoice_payment_succeeded(payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:total].to_f / 100.0, self.payload[:data][:object][:currency].upcase, self.payload[:data][:object][:subscription])
         when 'invoice.payment_failed'
           invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription])
+
         when 'customer.subscription.updated'
           customer_subscription_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:current_period_end].to_i, self.payload[:data][:object][:status])
         when 'customer.subscription.created'
@@ -169,20 +170,21 @@ class StripeApiEvent < ActiveRecord::Base
     #Latest attempt to charge a user has failed
     user = User.find_by_stripe_customer_id(stripe_user_data)
     if user
-      if stripe_next_attempt == 'null'
-        #Final payment attempt has failed on stripe so we cancel the current subscription
-        self.processed = true
-        self.processed_at = Time.now
-        subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
-        subscription.immediately_cancel
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url)
-      else
+
+      if stripe_next_attempt
         #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due, allowing access to course content until the retry window has expired.
         MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
         self.processed = true
         self.processed_at = Time.now
         subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
         subscription.update_attribute(:current_status, 'past_due')
+      else
+        #Final payment attempt has failed on stripe so we cancel the current subscription
+        self.processed = true
+        self.processed_at = Time.now
+        subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+        subscription.immediately_cancel
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url) if Rails.env.production?
       end
     else
       Rails.logger.error "ERROR: User with Stripe id #{stripe_user_data} does not exist."
