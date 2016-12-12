@@ -209,7 +209,7 @@ class StripeApiEvent < ActiveRecord::Base
     #User has just created their first subscription or User reactivating their account after it was fully canceled and deleted on stripe
     subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
     if subscription && subscription.user.active_subscription
-      if subscription.id == subscription.user.active_subscription.id && subscription.current_status == 'active'
+      if subscription.id == subscription.user.active_subscription.id && subscription.user.active_subscription.current_status == 'active'
         #User has just created their first subscription
         self.processed = true
         self.processed_at = Time.now
