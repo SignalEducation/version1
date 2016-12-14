@@ -4,6 +4,7 @@ shared_context 'users_and_groups_setup' do
 
   let!(:currency) { FactoryGirl.create(:euro)}
   let!(:country) { FactoryGirl.create(:ireland, currency_id: currency.id) }
+  let!(:uk) { FactoryGirl.create(:uk) }
 
   let!(:corporate_organisation) { FactoryGirl.create(:corporate_customer) }
 
