@@ -66,7 +66,6 @@
 
 class UsersController < ApplicationController
 
-  #TODO these four before_actions needs attention
   before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product, :enrollment]
 
   before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
@@ -90,34 +89,8 @@ class UsersController < ApplicationController
 
   def account
     #user account info page
-    if @user.referral_code.nil?
-      @user.create_referral_code
-    end
+    @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
-
-    #TODO Are these calls model necessary
-    if params[:update].to_s.length > 0
-      case params[:update]
-        when 'invoices'
-          Invoice.get_updates_for_user(@user.stripe_customer_id)
-        when 'cards'
-          SubscriptionPaymentCard.get_updates_for_user(@user.stripe_customer_id)
-        when 'subscriptions'
-          Rails.logger.debug 'DEBUG: start a call to Subscription#get_updates_for_user'
-          Subscription.get_updates_for_user(@user.stripe_customer_id)
-        else
-          # do nothing
-      end
-      @user.reload
-    end
-
-    if current_user.corporate_manager? || current_user.corporate_customer?
-      @corporate_customer = current_user.corporate_customer
-      @footer = false
-    else
-      @footer = true
-    end
-
     @user_exam_sittings = current_user.user_exam_sittings
     ids = @user_exam_sittings.map(&:id)
     @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
@@ -126,6 +99,13 @@ class UsersController < ApplicationController
     @orders = @user.orders
     @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
+
+    if current_user.corporate_manager? || current_user.corporate_customer?
+      @corporate_customer = current_user.corporate_customer
+      @footer = false
+    else
+      @footer = true
+    end
 
   end
 
@@ -530,7 +510,7 @@ class UsersController < ApplicationController
   def reactivate_account
     @user = User.where(id: params[:user_id]).first
     @subscription = @user.active_subscription || @user.subscriptions.last
-    redirect_to root_url unless @user.individual_student? || @subscription
+    redirect_to root_url unless @user.individual_student? && @subscription
     redirect_to account_url(anchor: :subscriptions) unless @subscription.current_status == 'canceled'
     @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
     currency_id = @subscription.subscription_plan.currency_id
