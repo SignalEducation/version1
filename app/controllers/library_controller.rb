@@ -144,7 +144,7 @@ class LibraryController < ApplicationController
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
 
     if current_user && @course
-      if current_user.individual_student? && current_user.valid_subject_course_ids.include?(@course.id)
+      if (current_user.individual_student? && current_user.valid_subject_course_ids.include?(@course.id)) || current_user.admin?
 
         if @course.enrolled_user_ids.include?(current_user.id)
           @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first

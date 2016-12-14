@@ -29,7 +29,6 @@
         accessToken: "#{ENV['learnsignal_wistia_api_key']}",
         button: "wistia_upload_button",
         dropZone: "wistia_upload_drop_zone",
-        preview: "wistia_upload_preview",
         projectId: "#{@course_module_element.parent.parent.wistia_guid.to_s}"
       });
       wistiaUploader.bind('uploadsuccess', function(file, media) {
