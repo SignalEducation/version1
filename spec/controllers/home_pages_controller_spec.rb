@@ -76,7 +76,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -89,7 +88,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -106,7 +104,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -120,7 +117,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -135,87 +131,7 @@ describe HomePagesController, type: :controller do
         expect(response).to render_template(:diploma)
       end
     end
-
-    describe "POST 'student_sign_up'" do
-      describe "invalid data" do
-
-        let!(:country) { FactoryGirl.create(:uk) }
-        let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-        it 'does not subscribe user if user with same email already exists' do
-          request.env['HTTP_REFERER'] = '/'
-          post :student_sign_up, user: sign_up_params.merge(email: student.email)
-          expect(session[:sign_up_errors].keys).to include(:email)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
-        end
-
-        it 'does not subscribe user if password is blank' do
-          request.env['HTTP_REFERER'] = '/'
-          post :student_sign_up, user: sign_up_params.merge(password: nil)
-          expect(session[:sign_up_errors].keys).to include(:password)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
-        end
-
-        it 'does not subscribe user if password is not of required length' do
-          request.env['HTTP_REFERER'] = '/'
-          post :student_sign_up, user: sign_up_params.merge(password: '12345')
-          expect(session[:sign_up_errors].keys).to include(:password)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to('/')
-        end
-
-      end
-
-      describe "valid data" do
-
-        let!(:country) { FactoryGirl.create(:uk) }
-        let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-        it 'signs up new student' do
-          referral_codes = ReferralCode.count
-          post :student_sign_up, user: sign_up_params
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url)
-          expect(ReferralCode.count).to eq(referral_codes + 1)
-        end
-
-
-        xit 'sends verification email to the user' do
-          # We do not know in advance what will be user's activation
-          # code so we have to capture its value. That's why we are
-          # defining these methods on double. This way we are also
-          # testing that 'send_verification_email' is called on
-          # MandrillClient.
-          mc = double
-          def mc.send_verification_email(url)
-            @url = url
-          end
-          def mc.url
-            return @url
-          end
-
-          expect(MandrillClient).to receive(:new).and_return(mc)
-          post :student_sign_up, user: sign_up_params
-          expect(mc.url).to eq(user_verification_url(email_verification_code: User.last.email_verification_code))
-        end
-
-        it 'creates referred signup if user comes from referral link' do
-          cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
-          post :student_sign_up, user: sign_up_params
-          #expect(flash[:success]).to eq(I18n.t('controllers.home_pages.student_sign_up.flash.success'))
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url)
-
-          expect(ReferredSignup.count).to eq(1)
-          rs = ReferredSignup.first
-          expect(rs.referral_code_id).to eq(referral_code.id)
-          expect(rs.user_id).to eq(User.last.id)
-          expect(rs.referrer_url).to eq("http://referral.example.com")
-        end
-      end
-    end
+    
 
   end
 
