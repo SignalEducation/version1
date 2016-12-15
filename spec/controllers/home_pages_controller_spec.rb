@@ -131,7 +131,7 @@ describe HomePagesController, type: :controller do
         expect(response).to render_template(:diploma)
       end
     end
-
+    
 
   end
 
@@ -153,7 +153,7 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
+      
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -166,7 +166,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -183,7 +182,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -197,7 +195,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -263,15 +260,6 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
-      end
-    end
   end
 
   context 'Logged in as a complimentary_user: ' do
@@ -297,7 +285,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -310,7 +297,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -327,7 +313,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -341,7 +326,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -407,15 +391,6 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
-      end
-    end
   end
 
   context 'Logged in as a tutor_user: ' do
@@ -439,7 +414,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -452,7 +426,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -469,7 +442,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -483,7 +455,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -546,16 +517,6 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(tutor_dashboard_url)
       end
     end
 
@@ -582,7 +543,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -595,7 +555,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -612,7 +571,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -626,7 +584,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -689,16 +646,6 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(corporate_student_dashboard_url)
       end
     end
 
@@ -725,7 +672,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -738,7 +684,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -755,7 +700,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -769,7 +713,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -832,16 +775,6 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(corporate_customer_dashboard_url)
       end
     end
 
@@ -871,7 +804,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -884,7 +816,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -901,7 +832,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -915,7 +845,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -978,16 +907,6 @@ describe HomePagesController, type: :controller do
       it 'should reject invalid params' do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 
@@ -1017,7 +936,7 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
+
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -1030,7 +949,7 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
+
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -1047,7 +966,7 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
+
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -1061,7 +980,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -1127,16 +1045,6 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(content_manager_dashboard_url)
-      end
-    end
-
   end
 
   context 'Logged in as a admin_user: ' do
@@ -1160,7 +1068,7 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
+
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -1173,7 +1081,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -1190,7 +1097,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
@@ -1204,7 +1110,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
@@ -1269,16 +1174,6 @@ describe HomePagesController, type: :controller do
         put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
         expect_update_error_with_model('home_page')
         expect(assigns(:home_page).id).to eq(home_page_1.id)
-      end
-    end
-
-    describe "POST 'student_sign_up'" do
-      it "should redirect to dashboard page" do
-        post :student_sign_up, user: sign_up_params
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(admin_dashboard_url)
       end
     end
 
