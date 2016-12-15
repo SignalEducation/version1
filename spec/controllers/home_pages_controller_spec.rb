@@ -131,7 +131,7 @@ describe HomePagesController, type: :controller do
         expect(response).to render_template(:diploma)
       end
     end
-    
+
 
   end
 
