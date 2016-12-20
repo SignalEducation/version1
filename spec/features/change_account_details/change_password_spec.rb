@@ -50,5 +50,5 @@ describe 'User changing their password', type: :feature do
       print '>'
     end
   end
-
+  sleep(10)
 end

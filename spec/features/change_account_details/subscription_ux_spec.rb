@@ -159,7 +159,6 @@ describe 'Subscription UX:', type: :feature do
     click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
     page.driver.browser.switch_to.alert.accept
 
-    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
     expect(page).to have_content 'Your Subscription has been cancelled'
     click_on 'Subscription Info'
     expect(page).to have_content I18n.t('views.users.show.un_cancel_subscription.h3')
@@ -181,6 +180,6 @@ describe 'Subscription UX:', type: :feature do
       end
     end
   end
-
+  sleep(10)
 end
 

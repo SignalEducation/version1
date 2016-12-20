@@ -22,7 +22,7 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:session_key, session[:session_id])
       flash[:error] = nil
       if @user_session.user.corporate_customer?
-        redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer, subdomain: @user_session.user.corporate_customer.try(:subdomain))
+        redirect_back_or_default corporate_customer_url(@user_session.user.corporate_customer.try(:id), subdomain: @user_session.user.corporate_customer.try(:subdomain))
       elsif @user_session.user.corporate_student?
         redirect_back_or_default corporate_student_dashboard_url(subdomain: @user_session.user.corporate_customer.try(:subdomain))
       elsif session[:return_to]

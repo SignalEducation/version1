@@ -44,5 +44,5 @@ describe 'User changing their email', type: :feature do
       print '>'
     end
   end
-
+  sleep(10)
 end

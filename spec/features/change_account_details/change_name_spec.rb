@@ -28,6 +28,7 @@ describe 'User changing their name', type: :feature do
       end
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
+      sleep(3)
       if this_user.corporate_customer?
         fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
         fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
@@ -39,10 +40,11 @@ describe 'User changing their name', type: :feature do
           click_button(I18n.t('views.general.save'))
         end
       end
+      sleep(1)
       sign_out
       print '>'
       sleep(1)
     end
   end
-
+  sleep(10)
 end

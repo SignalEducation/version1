@@ -37,6 +37,7 @@ describe 'User changing their email', type: :feature do
           click_button(I18n.t('views.general.save'))
         end
       end
+      sleep(1)
       find('.dropdown.dropdown-normal').click
       click_link(I18n.t('views.general.sign_out'))
       if this_user.corporate_user?
@@ -45,8 +46,7 @@ describe 'User changing their email', type: :feature do
         expect(page).to have_content maybe_upcase(I18n.t('views.general.sign_in'))
       end
       print '>'
-      sleep(1)
     end
   end
-
+  sleep(10)
 end
