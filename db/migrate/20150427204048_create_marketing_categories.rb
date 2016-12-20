@@ -3,10 +3,8 @@ class CreateMarketingCategories < ActiveRecord::Migration
     create_table :marketing_categories do |t|
       t.string :name
 
-      t.timestamps
+      t.timestamps null: true
     end
-
-    MarketingCategory.create(name: "SEO and Direct")
   end
 
   def down

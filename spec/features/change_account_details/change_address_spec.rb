@@ -16,6 +16,9 @@ describe 'User changing their email', type: :feature do
     b = individual_student_user
     c = corporate_student_user
     d = corporate_customer_user
+    e = comp_user
+    f = content_manager_user
+    g = tutor_user
     activate_authlogic
   end
 
@@ -31,14 +34,11 @@ describe 'User changing their email', type: :feature do
       if this_user.corporate_customer?
         fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
         click_button(I18n.t('views.general.save_changes'))
-      elsif this_user.admin?
-        expect(page).to have_content maybe_upcase "#{this_user.full_name}"
       else
         within('#personal-details') do
           fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
           click_button(I18n.t('views.general.save'))
         end
-        #expect(page).to have_content I18n.t('controllers.users.update.flash.success')
       end
       sign_out
       print '>'

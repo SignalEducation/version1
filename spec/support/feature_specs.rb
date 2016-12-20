@@ -7,8 +7,8 @@
 #### Generic
 
 def maybe_upcase(thing)
-  thing
-  #Capybara.current_driver == Capybara.javascript_driver ? thing.upcase : thing
+  #thing
+  Capybara.current_driver == Capybara.javascript_driver ? thing.upcase : thing
 end
 
 
@@ -136,7 +136,7 @@ def sign_up_and_upgrade_from_free_trial
     find('.days-left').click
   end
   expect(page).to have_content 'Upgrade your membership'
-  student_picks_a_subscription_plan(eur, 1)
+  student_picks_a_subscription_plan(gbp, 1)
   enter_credit_card_details('valid')
   check I18n.t('views.general.terms_and_conditions')
   find('.upgrade-sub').click

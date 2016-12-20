@@ -32,8 +32,6 @@ describe 'User changing their password', type: :feature do
           fill_in I18n.t('views.users.form.password_confirmation_placeholder'), with: 'abcabc123'
           click_button I18n.t('views.general.save')
         end
-      elsif this_user.admin?
-        expect(page).to have_content maybe_upcase "#{this_user.full_name}"
       else
         within('#personal-details') do
           click_link I18n.t('views.users.show.change_your_password.link')
