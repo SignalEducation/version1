@@ -9,7 +9,7 @@ describe 'The student orders process', type: :feature do
   include_context 'course_content'
   include_context 'subscription_plans_setup'
 
-  let!(:product_1)  { FactoryGirl.create(:product, subject_course_id: subject_course_3.id, currency_id: eur.id) }
+  let!(:product_1)  { FactoryGirl.create(:product, subject_course_id: subject_course_3.id, currency_id: gbp.id) }
 
 
   before(:each) do
@@ -17,7 +17,6 @@ describe 'The student orders process', type: :feature do
     visit home_path
     x = subject_course_1_home_page
     y = subject_course_3
-    z = country
   end
 
   describe 'User selects course from homepage and successfully purchases by:' do
@@ -52,7 +51,7 @@ describe 'The student orders process', type: :feature do
         sleep(5)
         expect(page).to have_content(subject_course_3.name)
         expect(page).to have_content(I18n.t('controllers.orders.create.flash.success'))
-        click_on maybe_upcase('Resume')
+        find('.resume').click
         expect(page).to have_content course_module_element_3_1.name
         within('.navbar.navbar-default') do
           click_link 'Dashboard'
@@ -127,7 +126,7 @@ describe 'The student orders process', type: :feature do
       sleep(5)
       expect(page).to have_content(subject_course_3.name)
       expect(page).to have_content(I18n.t('controllers.orders.create.flash.success'))
-      click_on maybe_upcase('Resume')
+      find('.resume').click
       expect(page).to have_content course_module_element_3_1.name
       within('.navbar.navbar-default') do
         click_link 'Dashboard'
@@ -181,7 +180,7 @@ describe 'The student orders process', type: :feature do
       end
 
       expect(page).to have_content 'Upgrade your membership'
-      student_picks_a_subscription_plan(eur, 1)
+      student_picks_a_subscription_plan(gbp, 1)
       enter_credit_card_details('valid')
       check(I18n.t('views.general.terms_and_conditions'))
       find('.upgrade-sub').click
@@ -321,7 +320,7 @@ describe 'The student orders process', type: :feature do
       click_link('Upgrade to Subscription')
 
       expect(page).to have_content 'Upgrade your membership'
-      student_picks_a_subscription_plan(eur, 1)
+      student_picks_a_subscription_plan(gbp, 1)
       enter_credit_card_details('valid')
       find('.upgrade-sub').click
       sleep(8)

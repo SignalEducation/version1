@@ -19,9 +19,9 @@
         .col-sm-4.col-xs-12.text-center.resume-course
           -if current_user.permission_to_see_content(@course)
             -if @enrollment.subject_course_user_log.student_exam_tracks.any?
-              =link_to 'Resume', course_special_link(@enrollment.subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
+              =link_to 'Resume', course_special_link(@enrollment.subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan resume'
             -else
-              =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan'
+              =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan resume'
           -else
             =link_to 'Continue', subscription_special_link(current_user.id), class: 'btn btn-wide btn-cyan'
 

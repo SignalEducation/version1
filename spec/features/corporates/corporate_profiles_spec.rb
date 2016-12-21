@@ -16,7 +16,9 @@ describe 'Corp User:', type: :feature do
     b = individual_student_user
     c = corporate_student_user
     d = corporate_customer_user
-
+    e = comp_user
+    f = content_manager_user
+    g = tutor_user
   end
 
   describe 'signs in' do

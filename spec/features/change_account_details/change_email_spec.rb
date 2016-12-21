@@ -43,7 +43,7 @@ describe 'User changing their email', type: :feature do
       if this_user.corporate_user?
         expect(page).to have_content ('Please Login or Create an account')
       else
-        expect(page).to have_content maybe_upcase(I18n.t('views.general.sign_in'))
+        expect(page).to have_content 'SIGN IN'
       end
       print '>'
     end

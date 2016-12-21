@@ -25,7 +25,6 @@ describe 'Course content Vs Paywall', type: :feature do
       parent = page.find('.course-topics-list li:first-child')
       parent.click
       click_on(course_module_element_1_1.name)
-      sleep(10)
       expect(page).to have_content('Sign Up for your 7-day free trial')
     end
   end
@@ -53,6 +52,7 @@ describe 'Course content Vs Paywall', type: :feature do
 
     scenario 'should still see all content with a cancelled pending account', js: true do
       visit_my_profile
+      sleep(2)
       click_on 'Subscription Info'
       expect(page).to have_content 'Account Status: Valid Subscription'
       expect(page).to have_content 'Billing Interval:   Monthly'
@@ -65,6 +65,7 @@ describe 'Course content Vs Paywall', type: :feature do
       click_link('Subject Course 1')
       parent = page.find('.course-topics-list li:first-child')
       parent.click
+      sleep(1)
       click_on(course_module_element_1_1.name)
       expect(page).to have_content course_module_1.name
 
@@ -73,6 +74,7 @@ describe 'Course content Vs Paywall', type: :feature do
     end
 
     scenario 'should only see free content with an account problem', js: true do
+      sleep(10)
       Subscription.last.update_column(:current_status, 'past_due')
       expect(page).to have_content(course_module_element_1_1.name)
       expect(page).to have_content(course_module_element_1_2.name)

@@ -85,6 +85,7 @@ class HomePagesController < ApplicationController
 
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
+
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
