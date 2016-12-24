@@ -20,8 +20,7 @@ describe CurrenciesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for currency_1
-  let!(:currency_1) { currency }
+  let!(:currency_1) { FactoryGirl.create(:gbp) }
   let!(:currency_2) { FactoryGirl.create(:usd) }
   let!(:valid_params) { FactoryGirl.attributes_for(:currency) }
 

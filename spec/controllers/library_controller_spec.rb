@@ -8,7 +8,8 @@ RSpec.describe LibraryController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:product_1)  { FactoryGirl.create(:product, subject_course_id: subject_course_3.id, currency_id: currency.id) }
+  let!(:gbp) { FactoryGirl.create(:gbp) }
+  let!(:product_1)  { FactoryGirl.create(:product, subject_course_id: subject_course_3.id, currency_id: gbp.id) }
 
   context 'Not logged in: ' do
 

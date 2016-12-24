@@ -21,10 +21,11 @@ describe CountriesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:country_1) { country }
+  let!(:country_1) { FactoryGirl.create(:uk) }
   let!(:some_user) { FactoryGirl.create(:individual_student_user,
                                         country_id: country_1.id)}
   let!(:country_2) { FactoryGirl.create(:usa) }
+  let!(:country_3) { FactoryGirl.create(:ireland) }
   let!(:valid_params) { FactoryGirl.attributes_for(:fr) }
 
   context 'Not logged in: ' do
