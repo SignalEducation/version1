@@ -71,6 +71,9 @@ describe UsersController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
+  let!(:country_1) { FactoryGirl.create(:uk) }
+  let!(:country_2) { FactoryGirl.create(:ireland) }
+  let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
   context 'Not logged in...' do
