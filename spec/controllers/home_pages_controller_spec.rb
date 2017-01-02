@@ -23,6 +23,9 @@ describe HomePagesController, type: :controller do
   include_context 'course_content'
   include_context 'users_and_groups_setup'
 
+  let!(:country_1) { FactoryGirl.create(:ireland) }
+  let!(:country_2) { FactoryGirl.create(:uk) }
+  let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
   let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
   let!(:home_page_3) { FactoryGirl.create(:home) }
@@ -88,7 +91,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -117,7 +119,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -153,7 +154,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group_index'" do
-      
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       it 'should see group_index' do
@@ -166,7 +166,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -195,7 +194,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -297,7 +295,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -326,7 +323,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -398,9 +394,12 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-      x = admin_user
-      y = corporate_customer_user
-      z = corporate_student_user
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'home'" do
@@ -426,7 +425,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -455,7 +453,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -527,9 +524,12 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(corporate_student_user)
-      x = admin_user
-      y = corporate_customer_user
-      z = individual_student_user
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'home'" do
@@ -555,7 +555,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -584,7 +583,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -656,9 +654,12 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(corporate_customer_user)
-      x = admin_user
-      y = corporate_student_user
-      z = tutor_user
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'home'" do
@@ -684,7 +685,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -713,7 +713,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -785,12 +784,12 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(blogger_user)
-      x = admin_user
-      y = corporate_student_user
-      a = corporate_customer_user
-      b = content_manager_user
-      z = tutor_user
-      v = comp_user
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'home'" do
@@ -816,7 +815,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -845,7 +843,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -917,12 +914,12 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(content_manager_user)
-      x = admin_user
-      y = corporate_student_user
-      a = corporate_customer_user
-      b = content_manager_user
-      z = tutor_user
-
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'home'" do
@@ -949,8 +946,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -980,7 +975,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -1052,9 +1046,12 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(admin_user)
-      x = tutor_user
-      y = corporate_customer_user
-      z = individual_student_user
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'home'" do
@@ -1081,7 +1078,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma_index'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }
@@ -1110,7 +1106,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'diploma'" do
-      let!(:country_2) { FactoryGirl.create(:ireland) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:home_page_4) { FactoryGirl.create(:product_1_home) }
       let!(:product) { FactoryGirl.create(:product, subject_course_id: subject_course_3.id) }

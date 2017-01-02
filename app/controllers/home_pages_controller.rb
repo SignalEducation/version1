@@ -56,7 +56,7 @@ class HomePagesController < ApplicationController
     # Don't remember why this needs to be set
     @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
 
-    #To show each pricing plan on the page; not invlolved in the sign up process
+    #To show each pricing plan on the page; not involved in the sign up process
     @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
     @groups = Group.all_active.for_public.all_in_order
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
