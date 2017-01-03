@@ -274,6 +274,10 @@ class ApplicationController < ActionController::Base
 
   # Library Navigation Links
   def library_special_link(the_thing)
+    product_category = SubjectCourseCategory.default_product_category
+    subscription_category = SubjectCourseCategory.default_subscription_category
+    corporate_category = SubjectCourseCategory.default_corporate_category
+
     if the_thing.class == Group
       the_thing = the_thing
       subscription_group_url(
@@ -282,13 +286,13 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
 
-      if the_thing.subject_course_category_id == SubjectCourseCategory.default_subscription_category.id
+      if subscription_category && the_thing.subject_course_category_id == subscription_category.id
         #Sub Course
         subscription_course_url(
             the_thing.name_url
         )
 
-      elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_product_category.id
+      elsif product_category && the_thing.subject_course_category_id == product_category.id
         #Product Course
 
         if current_user
@@ -303,7 +307,7 @@ class ApplicationController < ActionController::Base
           all_diplomas_url
         end
 
-      elsif the_thing.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
+      elsif corporate_category && the_thing.subject_course_category_id == corporate_category.id
         #Corp Course
         subscription_course_url(
             the_thing.name_url
