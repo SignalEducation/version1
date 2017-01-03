@@ -115,6 +115,7 @@ class HomePagesController < ApplicationController
   end
 
   def diploma
+    redirect_to root_url
     #Needs to render a custom partial if one exists or render the default
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
