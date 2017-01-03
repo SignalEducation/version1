@@ -25,6 +25,7 @@ describe 'Course content Vs Paywall', type: :feature do
       parent = page.find('.course-topics-list li:first-child')
       parent.click
       click_on(course_module_element_1_1.name)
+      sleep(2)
       expect(page).to have_content('Sign Up for your 7-day free trial')
     end
   end
