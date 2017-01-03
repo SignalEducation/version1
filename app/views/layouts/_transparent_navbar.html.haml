@@ -22,8 +22,9 @@
           -else
             %li
               =link_to 'Dashboard', dashboard_special_link
-          %li
-            =link_to 'Diplomas', all_diplomas_url
+          -if SubjectCourseCategory.all_active.all_product.all_in_order.any?
+            %li
+              =link_to 'Diplomas', all_diplomas_url
           %li
             =link_to 'Courses', subscription_groups_url
           -if current_user.user_status == 'valid_free_member'
@@ -89,8 +90,9 @@
             =link_to 'Why Learn Signal', why_learn_signal_url
           %li
             =link_to 'Business', business_url
-          %li
-            =link_to 'Diplomas', all_diplomas_url
+          -if SubjectCourseCategory.all_active.all_product.all_in_order.any?
+            %li
+              =link_to 'Diplomas', all_diplomas_url
           %li
             =link_to 'Courses', all_groups_url
           %li
