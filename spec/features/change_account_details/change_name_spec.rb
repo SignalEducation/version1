@@ -13,6 +13,9 @@ describe 'User changing their name', type: :feature do
     b = individual_student_user
     c = corporate_student_user
     d = corporate_customer_user
+    e = comp_user
+    f = content_manager_user
+    g = tutor_user
     activate_authlogic
   end
 
@@ -25,24 +28,23 @@ describe 'User changing their name', type: :feature do
       end
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
+      sleep(3)
       if this_user.corporate_customer?
         fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
         fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
         click_button(I18n.t('views.general.save_changes'))
-      elsif this_user.admin?
-        expect(page).to have_content maybe_upcase "#{this_user.full_name}"
       else
         within('#personal-details') do
           fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
           fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
           click_button(I18n.t('views.general.save'))
         end
-        #expect(page).to have_content I18n.t('controllers.users.update.flash.success')
       end
-
+      sleep(1)
       sign_out
       print '>'
+      sleep(1)
     end
   end
-
+  sleep(10)
 end

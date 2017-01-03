@@ -2,9 +2,6 @@ require 'rails_helper'
 
 shared_context 'users_and_groups_setup' do
 
-  let!(:currency) { FactoryGirl.create(:euro)}
-  let!(:country) { FactoryGirl.create(:ireland, currency_id: currency.id) }
-
   let!(:corporate_organisation) { FactoryGirl.create(:corporate_customer) }
 
   # user groups
@@ -46,7 +43,7 @@ shared_context 'users_and_groups_setup' do
   let(:comp_user) { FactoryGirl.create(:comp_user,
                                 user_group_id: complimentary_user_group.id) }
 
-  let(:user_list) { [free_trial_student, subscription_student, product_student, sub_and_product_student, trial_and_product_student, no_access_student, admin_user, tutor_user, content_manager_user, blogger_user, corporate_customer_user, corporate_student_user, comp_user] }
+  let(:user_list) {[free_trial_student, subscription_student, product_student, sub_and_product_student, trial_and_product_student, no_access_student, admin_user, tutor_user, content_manager_user, blogger_user, corporate_customer_user, corporate_student_user, comp_user] }
 
   # student_type users
   let!(:free_trial_student) { FactoryGirl.create(:active_individual_student_user, user_group_id: individual_student_user_group.id, student_user_type_id: free_trial_user_type.id) }

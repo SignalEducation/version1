@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
-    get 'account', to: 'users#show', as: :account
+    get 'account', to: 'users#account', as: :account
     get 'account/change_plan', to: 'users#change_plan', as: :account_change_plan
     get 'profile/:id', to: 'users#profile', as: :profile
     get 'profiles', to: 'users#profile_index', as: :tutors

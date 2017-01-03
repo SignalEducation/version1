@@ -21,7 +21,7 @@
             -if @subject_course_user_log.student_exam_tracks.any?
               =link_to 'Resume', course_special_link(@subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
             -else
-              =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan'
+              =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn btn-wide btn-cyan resume'
           -else
             =link_to 'Continue', subscription_special_link(current_user.id), class: 'btn btn-wide btn-cyan'
 

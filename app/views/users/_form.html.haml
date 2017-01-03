@@ -1,7 +1,0 @@
-=form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
-  .row
-    .col-md-8.col-md-offset-2
-      =render partial: 'users/form_personal_details', locals: {f: f}
-      .row
-        =f.submit t('views.general.save'), class: 'btn btn-red'
-        =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'

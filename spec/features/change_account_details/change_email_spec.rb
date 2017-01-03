@@ -13,6 +13,9 @@ describe 'User changing their email', type: :feature do
     b = individual_student_user
     c = corporate_student_user
     d = corporate_customer_user
+    e = comp_user
+    f = content_manager_user
+    g = tutor_user
     activate_authlogic
   end
 
@@ -28,18 +31,22 @@ describe 'User changing their email', type: :feature do
       if this_user.corporate_customer?
         fill_in I18n.t('views.users.form.email'), with: "user#{rand(9999)}@example.com"
         click_button(I18n.t('views.general.save'))
-      elsif this_user.admin?
-        expect(page).to have_content maybe_upcase "#{this_user.full_name}"
       else
         within('#personal-details') do
           fill_in I18n.t('views.users.form.email'), with: "user#{rand(9999)}@example.com"
           click_button(I18n.t('views.general.save'))
         end
-        #expect(page).to have_content I18n.t('controllers.users.update.flash.success')
       end
-      sign_out
+      sleep(1)
+      find('.dropdown.dropdown-normal').click
+      click_link(I18n.t('views.general.sign_out'))
+      if this_user.corporate_user?
+        expect(page).to have_content ('Please Login or Create an account')
+      else
+        expect(page).to have_content 'SIGN IN'
+      end
       print '>'
     end
   end
-
+  sleep(10)
 end

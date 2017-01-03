@@ -26,12 +26,12 @@ describe 'The student sign-up process', type: :feature do
   #Todo This needs to be replicated for USD and GBP
   describe 'sign-up with to free trial valid details:' do
     describe 'and upgrade to paying plan' do
-      scenario 'Monthly EUR', js: true do
+      scenario 'Monthly GBP', js: true do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
         expect(page).to have_content 'Upgrade your membership'
-        student_picks_a_subscription_plan(eur, 1)
+        student_picks_a_subscription_plan(gbp, 1)
         enter_credit_card_details('valid')
         check(I18n.t('views.general.terms_and_conditions'))
         find('.upgrade-sub').click
@@ -45,12 +45,12 @@ describe 'The student sign-up process', type: :feature do
         expect(page).to have_content 'Billing Interval:   Monthly'
       end
 
-      scenario 'Quarterly EUR', js: true do
+      scenario 'Quarterly GBP', js: true do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
         expect(page).to have_content 'Upgrade your membership'
-        student_picks_a_subscription_plan(eur, 3)
+        student_picks_a_subscription_plan(gbp, 3)
         enter_credit_card_details('valid')
         check(I18n.t('views.general.terms_and_conditions'))
         find('.upgrade-sub').click
@@ -64,12 +64,12 @@ describe 'The student sign-up process', type: :feature do
         expect(page).to have_content 'Billing Interval:   Quarterly'
       end
 
-      scenario 'Yearly EUR', js: true do
+      scenario 'Yearly GBP', js: true do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
         expect(page).to have_content 'Upgrade your membership'
-        student_picks_a_subscription_plan(eur, 12)
+        student_picks_a_subscription_plan(gbp, 12)
         enter_credit_card_details('valid')
         check(I18n.t('views.general.terms_and_conditions'))
         find('.upgrade-sub').click

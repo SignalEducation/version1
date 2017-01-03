@@ -63,9 +63,9 @@
   $(document).on('ready', function() {
     $(".sk-circle").hide();
 
-    $(".signUp").click(function(event) {
-      if($('#first_name').val() && $('#last_name').val() && $('#email').val() && $('#topic').val() && $('#password').val() ) {
-        $(".signUp").hide();
+    $("#signUp").click(function(event) {
+      if($('#user_first_name').val() && $('#user_last_name').val() && $('#user_email').val() && $('#user_password').val() ) {
+        $("#signUp").hide();
         $(".sk-circle").show();
       }
     });

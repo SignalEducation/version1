@@ -71,6 +71,9 @@ describe UsersController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
+  let!(:country_1) { FactoryGirl.create(:uk) }
+  let!(:country_2) { FactoryGirl.create(:ireland) }
+  let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
   context 'Not logged in...' do
@@ -122,37 +125,35 @@ describe UsersController, type: :controller do
                                 password_confirmation: "dummy_pass" } }
       let!(:student) { FactoryGirl.create(:individual_student_user) }
       let!(:currency) { FactoryGirl.create(:usd) }
-      let!(:country) { FactoryGirl.create(:uk) }
       let!(:currency_2) { FactoryGirl.create(:gbp) }
       let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 
       describe "invalid data" do
 
         it 'does not subscribe user if user with same email already exists' do
-          request.env['HTTP_REFERER'] = '/'
+          request.env['HTTP_REFERER'] = '/en/student_new'
           post :student_create, user: sign_up_params.merge(email: student.email)
-          expect(response.status).to eq(200)
-          expect(response).to render_template(:student_new)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(:new_student)
         end
 
         it 'does not subscribe user if password is blank' do
-          request.env['HTTP_REFERER'] = '/'
+          request.env['HTTP_REFERER'] = '/en/student_new'
           post :student_create, user: sign_up_params.merge(password: nil)
-          expect(response.status).to eq(200)
-          expect(response).to render_template(:student_new)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(:new_student)
         end
 
         it 'does not subscribe user if password is not of required length' do
-          request.env['HTTP_REFERER'] = '/'
+          request.env['HTTP_REFERER'] = '/en/student_new'
           post :student_create, user: sign_up_params.merge(password: '12345')
-          expect(response.status).to eq(200)
-          expect(response).to render_template(:student_new)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(:new_student)
         end
 
       end
 
       describe "valid data" do
-        let!(:country) { FactoryGirl.create(:uk) }
         let!(:currency_2) { FactoryGirl.create(:gbp) }
 
         it 'signs up new student' do
@@ -225,14 +226,20 @@ describe UsersController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see my own profile' do
+      it 'should redirect to root' do
         get :show, id: individual_student_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        expect_bounce_as_not_allowed
       end
 
-      it 'should see my own profile even if I ask for another' do
-        get :show, id: admin_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: individual_student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
       end
     end
 
@@ -251,14 +258,9 @@ describe UsersController, type: :controller do
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond with OK' do
+      it 'should redirect to root' do
         get :edit, id: individual_student_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
-      end
-
-      it 'should only allow editing of own user' do
-        get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -359,15 +361,20 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see my own profile' do
-        get :show, id: comp_user.id
-        expect_show_success_with_model('user', comp_user.id)
+    describe "GET account" do
+      it 'should render account page' do
+        get :account, id: comp_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
       end
+    end
 
-      it 'should see my own profile even if I ask for another' do
-        get :show, id: admin_user.id
-        expect_show_success_with_model('user', comp_user.id)
+    describe "GET 'show/1'" do
+      it 'should redirect to root' do
+        get :show, id: comp_user.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -386,14 +393,9 @@ describe UsersController, type: :controller do
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond with OK' do
+      it 'should respond with not allowed' do
         get :edit, id: comp_user.id
-        expect_edit_success_with_model('user', comp_user.id)
-      end
-
-      it 'should only allow editing of own user' do
-        get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', comp_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -449,23 +451,6 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "upgrade_from_free_trial as a referred sign_up user" do
-      xit 'allow upgrade as all necessary params are present' do
-        post :create, user: valid_params
-        expect_create_success_with_model('user', users_url)
-        expect(assigns(:user).password_change_required).to eq(true)
-        expect(ReferralCode.count).to eq(referral_codes + 1)
-
-
-      end
-    end
-
-    describe "upgrade_from_free_trial with wrong currency coupon" do
-      xit 'deny upgrade as currency of coupon and current sub dont match' do
-
-      end
-    end
-
     describe "POST: 'change_password'" do
       it 'should respond OK to correct details' do
         post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
@@ -495,15 +480,22 @@ describe UsersController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see my own profile' do
+      it 'should be redirected' do
         get :show, id: corporate_student_user.id
-        expect_show_success_with_model('user', corporate_student_user.id)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: corporate_student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+
       end
 
-      it 'should see my own profile even if I ask for another' do
-        get :show, id: admin_user.id
-        expect_show_success_with_model('user', corporate_student_user.id)
-      end
     end
 
     describe "GET 'student_new'" do
@@ -523,12 +515,12 @@ describe UsersController, type: :controller do
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
         get :edit, id: corporate_student_user.id
-        expect_edit_success_with_model('user', corporate_student_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', corporate_student_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -604,13 +596,24 @@ describe UsersController, type: :controller do
     describe "GET 'show/1'" do
       it 'should see my own profile' do
         get :show, id: tutor_user.id
-        expect_show_success_with_model('user', tutor_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect_show_success_with_model('user', tutor_user.id)
+        expect_bounce_as_not_allowed
       end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: tutor_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+
     end
 
     describe "GET 'student_new'" do
@@ -630,12 +633,12 @@ describe UsersController, type: :controller do
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
         get :edit, id: tutor_user.id
-        expect_edit_success_with_model('user', tutor_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', tutor_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -711,12 +714,22 @@ describe UsersController, type: :controller do
     describe "GET 'show/1'" do
       it 'should see my own profile' do
         get :show, id: corporate_customer_user.id
-        expect_show_success_with_model('user',corporate_customer_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect_show_success_with_model('user',corporate_customer_user.id)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: corporate_customer_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
       end
     end
 
@@ -737,12 +750,12 @@ describe UsersController, type: :controller do
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
         get :edit, id: corporate_customer_user.id
-        expect_edit_success_with_model('user',corporate_customer_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect_edit_success_with_model('user',corporate_customer_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -818,12 +831,22 @@ describe UsersController, type: :controller do
     describe "GET 'show/1'" do
       it 'should see my own profile' do
         get :show, id: blogger_user.id
-        expect_show_success_with_model('user', blogger_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect_show_success_with_model('user', blogger_user.id)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: blogger_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
       end
     end
 
@@ -844,13 +867,12 @@ describe UsersController, type: :controller do
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
         get :edit, id: blogger_user.id
-        expect(response.status).to eq(200)
-        expect_edit_success_with_model('user', blogger_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', blogger_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -926,12 +948,22 @@ describe UsersController, type: :controller do
     describe "GET 'show/1'" do
       it 'should see my own profile' do
         get :show, id: content_manager_user.id
-        expect_show_success_with_model('user', content_manager_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should see my own profile even if I ask for another' do
         get :show, id: admin_user.id
-        expect_show_success_with_model('user', content_manager_user.id)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: content_manager_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
       end
     end
 
@@ -952,12 +984,12 @@ describe UsersController, type: :controller do
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
         get :edit, id: content_manager_user.id
-        expect_edit_success_with_model('user', content_manager_user.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should only allow editing of own user' do
         get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', content_manager_user.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -1041,6 +1073,17 @@ describe UsersController, type: :controller do
         get :show, id: admin_user.id
         expect_show_success_with_model('user', admin_user.id)
       end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: individual_student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+
     end
 
     describe "GET 'student_new'" do

@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.created customer.subscription.updated)
+  KNOWN_PAYLOAD_TYPES = %w(customer.subscription.created customer.subscription.updated invoice.created invoice.payment_failed invoice.payment_succeeded)
 
   # relationships
 
@@ -62,118 +62,16 @@ class StripeApiEvent < ActiveRecord::Base
       else
         case self.payload[:type]
         when 'invoice.created'
-          invoice = Invoice.build_from_stripe_data(self.payload[:data][:object])
-          if invoice && invoice.errors.count == 0
-            Rails.logger.debug "DEBUG: Invoice #{invoice.id} created"
-            self.processed = true
-            self.processed_at = Time.now
-          else
-            set_process_error (invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
-          end
+          invoice_created(self.payload[:data][:object])
         when 'invoice.payment_succeeded'
-          #Latest attempt to charge a user has succeeded so we check if it was a crushoffers referral
-          user = User.where(stripe_customer_id: self.payload[:data][:object][:customer]).last
-          invoice = Invoice.where(stripe_guid: self.payload[:data][:object][:id]).last
-          if invoice
-            invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
-          else
-            invoice_url = Rails.application.routes.url_helpers.account_url
-          end
-          price = self.payload[:data][:object][:total].to_f / 100.0
-          curr = self.payload[:data][:object][:currency].upcase
-          if user && user.crush_offers_session_id && price > 0
-            uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{price}&c=#{curr}&f=pb&r=#{user.crush_offers_session_id}&t=#{self.payload[:data][:object][:id]}")
-            resp = Net::HTTP.get(uri)
-            xml_doc = Nokogiri::XML(resp)
-            result = xml_doc.at_xpath('//msg').content
-            if result != 'SUCCESS'
-              Rails.logger.error "ERROR: Notifying CrushOffers fails - response is #{resp}"
-              set_process_error "Error notifying CrushOffers"
-            end
-          end
-          if user && price > 0
-            self.processed = true
-            self.processed_at = Time.now
-            unless Rails.env.test?
-              stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-              balance = stripe_customer.account_balance
-              Rails.logger.error "Notice: User Stripe balance #{balance}"
-              Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
-              user.update_attributes(stripe_account_balance: balance)
-              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription]) || user.subscriptions.last
-              if subscription.try(:current_status) == 'past_due'
-                #The subscription was overdue a payment so update it's status and send account reactivation email
-                subscription.update_attributes(current_status: 'active')
-                Rails.logger.error "Notice: User Subscription was updated from past_due to active #{user.try(:current_status)}"
-                #MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
-              else
-                #The subscription charge was successful so send successful payment email
-                MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
-              end
-              Rails.logger.error "Notice: User Stripe balance #{user.try(:stripe_account_balance)}"
-            end
-          else
-            set_process_error "Unknown user, CrushOffers session id or the user could not be found"
-          end
+          invoice_payment_succeeded(payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:total].to_f / 100.0, self.payload[:data][:object][:currency].upcase, self.payload[:data][:object][:subscription])
         when 'invoice.payment_failed'
-          #Latest attempt to charge a user has failed
-          user = User.find_by_stripe_customer_id(self.payload[:data][:object][:customer])
-          if user
-            if self.payload[:data][:object][:next_payment_attempt] == 'null'
-              #Final payment attempt has failed on stripe so we cancel the current subscription
-              self.processed = true
-              self.processed_at = Time.now
-              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription])
-              subscription.immediately_cancel
-              MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url)
-            else
-              #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due,
-              #allowing access to course content until the retry window has expired.
-              MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
-              self.processed = true
-              self.processed_at = Time.now
-              subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:subscription])
-              subscription.update_attribute(:current_status, 'past_due')
-            end
-          else
-            Rails.logger.error "ERROR: User with Stripe id #{payload[:data][:object][:customer]} does not exist."
-            set_process_error "User with given Stripe ID does not exist"
-          end
+          invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription])
+
         when 'customer.subscription.updated'
-          subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription &&
-             subscription.update_attributes(next_renewal_date: Time.at(self.payload[:data][:object][:current_period_end].to_i),
-                                            current_status: self.payload[:data][:object][:status])
-            self.processed = true
-            self.processed_at = Time.now
-          else
-            set_process_error("Error updating subscription #{subscription.try(:id)} with Stripe ID #{self.payload[:data][:object][:id]}")
-          end
+          customer_subscription_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:current_period_end].to_i, self.payload[:data][:object][:status])
         when 'customer.subscription.created'
-          #User reactivating their account after it was canceled due to repeated failed charges
-          subscription = Subscription.find_by_stripe_guid(self.payload[:data][:object][:id])
-          if subscription
-            if subscription.user.active_subscription && subscription.user.active_subscription.current_status == 'canceled'
-
-              self.processed = true
-              self.processed_at = Time.now
-
-              user = subscription.user
-              if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-                new_user_type_id = StudentUserType.default_sub_user_type.id
-              elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-                new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-              else
-                new_user_type_id = user.student_user_type_id
-              end
-              user.update_attribute(:student_user_type_id, new_user_type_id)
-
-            else
-              set_process_error "API Event with Stripe ID #{self.payload[:data][:object][:id]} was created but the necessary conditions for the user were not met."
-            end
-          else
-            set_process_error "Unknown subscription with Stripe ID #{self.payload[:data][:object][:id]}"
-          end
+          customer_subscription_created(self.payload[:data][:object][:id])
         else
           set_process_error "Unknown event type"
         end # of case statement
@@ -209,6 +107,123 @@ class StripeApiEvent < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def invoice_created(stripe_data)
+    invoice = Invoice.build_from_stripe_data(stripe_data)
+    if invoice && invoice.errors.count == 0
+      Rails.logger.debug "DEBUG: Invoice #{invoice.id} created"
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error (invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
+    end
+  end
+
+  def invoice_payment_succeeded(stripe_user_data, stripe_invoice_data, stripe_price_date, stripe_currency_data, stripe_subscription_data)
+    user = User.where(stripe_customer_id: stripe_user_data).last
+    invoice = Invoice.where(stripe_guid: stripe_invoice_data).last
+    price = stripe_price_date
+    curr = stripe_currency_data
+    subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+
+    # Set url for mandrill email
+    if invoice
+      invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
+    else
+      invoice_url = Rails.application.routes.url_helpers.account_url(host: 'www.learnsignal.com')
+    end
+
+    if user && (price > 0) && subscription
+      self.processed = true
+      self.processed_at = Time.now
+      unless Rails.env.test?
+        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+        balance = stripe_customer.account_balance
+        Rails.logger.error "Notice: Stripes User balance #{balance}"
+        Rails.logger.error "Notice: LearnSignal Users old stripe_balance #{user.try(:stripe_account_balance)}"
+        user.update_attributes(stripe_account_balance: balance)
+        Rails.logger.error "Notice: LearnSignal Users new stripe_balance #{user.try(:stripe_account_balance)}"
+      end
+      subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
+      #The subscription charge was successful so send successful payment email
+      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+
+    else
+      set_process_error("Unknown User or Subscription #{user} - #{subscription}")
+    end
+  end
+
+  def invoice_payment_failed(stripe_user_data, stripe_next_attempt, stripe_subscription_data)
+    #Latest attempt to charge a user has failed
+    user = User.find_by_stripe_customer_id(stripe_user_data)
+    if user
+
+      if stripe_next_attempt
+        #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due, allowing access to course content until the retry window has expired.
+        MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
+        self.processed = true
+        self.processed_at = Time.now
+        subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+        subscription.update_attribute(:current_status, 'past_due')
+      else
+        #Final payment attempt has failed on stripe so we cancel the current subscription
+        self.processed = true
+        self.processed_at = Time.now
+        subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+        subscription.immediately_cancel
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url) if Rails.env.production?
+      end
+    else
+      Rails.logger.error "ERROR: User with Stripe id #{stripe_user_data} does not exist."
+      set_process_error "Could not find user with stripe id #{stripe_user_data}"
+    end
+
+  end
+
+  def customer_subscription_updated(stripe_subscription_data, stripe_subscription_renewal_date, stripe_subscription_status)
+    subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+    if subscription &&
+        subscription.update_attributes(next_renewal_date: Time.at(stripe_subscription_renewal_date),
+                                       current_status: stripe_subscription_status)
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error("Error updating subscription #{subscription.try(:id)} with Stripe ID #{stripe_subscription_data}")
+    end
+  end
+
+  def customer_subscription_created(stripe_subscription_data)
+    #User has just created their first subscription or User reactivating their account after it was fully canceled and deleted on stripe
+    subscription = Subscription.find_by_stripe_guid(stripe_subscription_data)
+    if subscription && subscription.user.active_subscription
+      if subscription.id == subscription.user.active_subscription.id && subscription.user.active_subscription.current_status == 'active'
+        #User has just created their first subscription
+        self.processed = true
+        self.processed_at = Time.now
+
+      elsif subscription.id == subscription.user.active_subscription.id && subscription.user.active_subscription.current_status == 'canceled'
+        #User reactivating their account after it was fully canceled and deleted on stripe
+        self.processed = true
+        self.processed_at = Time.now
+        user = subscription.user
+        if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
+          new_user_type_id = StudentUserType.default_sub_user_type.id
+        elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
+          new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+        else
+          new_user_type_id = user.student_user_type_id
+        end
+        user.update_attribute(:student_user_type_id, new_user_type_id)
+
+        #TODO Mandrill doesn't have any template for this email
+        MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
+      else
+        set_process_error "API Event with Stripe ID #{stripe_subscription_data} was created but the necessary conditions for the user subscription were not met."
+      end
+    else
+      set_process_error "Unknown subscription with Stripe ID #{stripe_subscription_data}"
     end
   end
 

@@ -17,13 +17,13 @@
         .col-sm-8
           .account-tab-content
             .tab.account-tab#personal-details
-              =render partial: 'users/form_student_personal_details'
+              =render partial: 'users/user_account/student_user_form'
 
 
             -if @current_subscription
               .tab.account-tab#subscriptions
 
-                =render partial: 'subscription_info'
+                =render partial: 'users/user_account/subscription_info'
 
 
                 .col-md-12
@@ -41,13 +41,13 @@
 
             -if @subscription_payment_cards.any?
               .tab.account-tab#payment-details
-                =render partial: 'users/payment_details'
+                =render partial: 'users/user_account/payment_details'
 
             .tab.account-tab#completion-certs
-              =render partial: 'users/completion_certificates'
+              =render partial: 'users/user_account/completion_certificates'
 
             .tab.account-tab#enrollments
-              =render partial: 'users/enrollments'
+              =render partial: 'users/user_account/enrollments'
 
             -if @sitting_courses.any?
               .tab.account-tab#exam_sittings
@@ -91,7 +91,7 @@
 
   =render partial: 'subscription_payment_cards/modal'
   -if @user.id == current_user.id
-    =render partial: 'users/change_password'
+    =render partial: 'users/user_forms/change_password'
 
 
 

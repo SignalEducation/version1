@@ -1,52 +1,62 @@
 require 'rails_helper'
 require 'mandrill_client'
+require 'support/users_and_groups_setup'
 
 describe Api::StripeV01Controller, type: :controller do
+
+  include_context 'users_and_groups_setup'
 
   let!(:start_stripe_mock) { StripeMock.start }
   let(:stripe_helper) { StripeMock.create_test_helper }
 
   let!(:usd) { FactoryGirl.create(:usd) }
-  let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:student) { FactoryGirl.create(:individual_student_user, student_user_type_id: subscription_user_type.id) }
+  let!(:new_student) { FactoryGirl.create(:individual_student_user, student_user_type_id: subscription_user_type.id) }
+  let!(:reactivating_student) { FactoryGirl.create(:individual_student_user, student_user_type_id: no_access_user_type.id) }
   let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
+
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
+
   let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
   let!(:subscription_plan_q) { FactoryGirl.create(:student_subscription_plan_q) }
   let!(:card_details_1) { {number: '4242424242424242', cvc: '123', exp_month: '12', exp_year: '2019'} }
   let!(:card_details_2) { {number: '4242424242424242', cvc: '123', exp_month: '11', exp_year: '2019'} }
   let!(:card_token_1)   { Stripe::Token.create(card: card_details_1) }
   let!(:card_token_2)   { Stripe::Token.create(card: card_details_2) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id,
-                          subscription_plan_id: subscription_plan_m.id,
-                          stripe_token: card_token_1.id) }
+  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id) }
   let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: referred_student.id,
-                                             subscription_plan_id: subscription_plan_m.id,
-                                             current_status: 'active',
-                                             active: 'true',
-                                             stripe_token: card_token_2.id) }
-  let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: student.id,
-                                             subscription_plan_id: subscription_plan_m.id) }
-  let!(:subscription_4) { FactoryGirl.create(:subscription, user_id: student.id,
-                                             subscription_plan_id: subscription_plan_m.id,
-                                             current_status: 'trialing') }
-  let!(:subscription_5) { FactoryGirl.create(:subscription, user_id: referred_student.id,
-                                             subscription_plan_id: subscription_plan_m.id,
-                                             current_status: 'active') }
-
-  let!(:referred_signup) { FactoryGirl.create(:referred_signup,
-                                              referral_code_id: referral_code.id
-                                              ) }
+subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: 'true', stripe_token: card_token_2.id) }
+  let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id) }
+  let!(:subscription_5) { FactoryGirl.create(:subscription, user_id: new_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
+  let!(:subscription_6) { FactoryGirl.create(:subscription, user_id: reactivating_student.id,
+subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active: true) }
+  let!(:subscription_7) { FactoryGirl.create(:subscription, user_id: reactivating_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
+  let!(:referred_signup) { FactoryGirl.create(:referred_signup, referral_code_id: referral_code.id) }
 
   let!(:invoice_created_event) {
     StripeMock.mock_webhook_event('invoice.created',
                                   subscription: subscription_3.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
-  let!(:invoice_payment_failed_event) {
+  let!(:invoice_payment_failed_event_1) {
+    StripeMock.mock_webhook_event('invoice.payment_failed',
+                                  subscription: subscription_1.stripe_guid,
+                                  next_payment_attempt: (Time.new + 24.hours),
+                                  customer: student.reload.stripe_customer_id) }
+  let!(:invoice_payment_failed_event_2) {
     StripeMock.mock_webhook_event('invoice.payment_failed',
                                   subscription: subscription_1.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
+  let!(:invoice_payment_succeeded_event_1) {
+    StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                  subscription: subscription_1.stripe_guid,
+                                  customer: student.reload.stripe_customer_id) }
+  let!(:invoice_payment_succeeded_event_2) {
+    StripeMock.mock_webhook_event('invoice.payment_succeeded',
+                                  subscription: subscription_7.stripe_guid,
+                                  customer: student.reload.stripe_customer_id) }
   let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
   let!(:customer_subscription_created_event) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active') }
+  let!(:customer_subscription_created_event_1) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active', subscription: subscription_7.stripe_guid) }
 
   describe "POST 'create'" do
     describe 'preliminary functionality: ' do
@@ -84,92 +94,80 @@ describe Api::StripeV01Controller, type: :controller do
           expect(InvoiceLineItem.count).to eq(invoice_created_event.data.object.lines.data.length)
         end
 
-        it 'payment_failed' do
+        it 'invoice.payment_failed first attempt' do
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
+          expect(subscription_1.current_status).to eq('active')
 
-          post :create, invoice_payment_failed_event.to_json
+          post :create, invoice_payment_failed_event_1.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('past_due')
+
         end
 
-        it 'sends data to CrushOffers on payment_succeeded' do
-          student.update_attribute(:crush_offers_session_id, "1234")
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: student.stripe_customer_id)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total.to_f / 100.0}&c=#{evt.data.object.currency.upcase}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).to receive(:get)
-                                .with(uri)
-                                .and_return("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<result>\r\n\t<code>0</code>\r\n\t<msg>SUCCESS</msg>\r\n</result>")
+        it 'invoice.payment_failed last attempt' do
+          mc = double
+          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
+          #expect(MandrillClient).to receive(:new).and_return(mc)
 
-          post :create, evt.to_json
+          post :create, invoice_payment_failed_event_2.to_json
 
-          expect(StripeApiEvent.count).to eq(2)
+          expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('canceled')
+          expect(subscription_1.user.student_user_type_id).to eq(no_access_user_type.id)
         end
+
+        it 'invoice.payment_succeeded first attempt' do
+          mc = double
+          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
+          #expect(MandrillClient).to receive(:new).and_return(mc)
+          student.update_attribute(:stripe_customer_id, invoice_payment_succeeded_event_1.data.object.customer)
+
+          post :create, invoice_payment_succeeded_event_1.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('active')
+        end
+
+        it 'invoice.payment_succeeded after failed attempt' do
+          mc = double
+          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
+          #expect(MandrillClient).to receive(:new).and_return(mc)
+
+          subscription_7.update_attribute(:current_status, 'past_due')
+          post :create, invoice_payment_succeeded_event_2.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(sae.error_message).to eq(nil)
+          subscription_1.reload
+          expect(subscription_1.current_status).to eq('active')
+        end
+
       end
 
       describe 'invoice with invalid data' do
         before(:each) do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
-        end
-
-        it 'does not send data to CrushOffers if their session ID is not set but does mark event as processed' do
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: student.stripe_customer_id)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).not_to receive(:get)
-
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(2)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(true)
-          expect(sae.error).to eq(false)
-        end
-
-        it 'does not send data to CrushOffers if their session ID is not set and does not mark as processed because user is not found'  do
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: 'fake_user_123')
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).not_to receive(:get)
-
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(2)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or the user could not be found")
-        end
-
-        it 'does not send data to CrushOffers if price is not greater than 0' do
-          student.update_attribute(:crush_offers_session_id, "1234")
-          post :create, invoice_created_event.to_json
-          evt = StripeMock.mock_webhook_event('invoice.payment_succeeded',
-                                              customer: student.stripe_customer_id,
-                                              total: 0.0)
-          uri = URI("https://crushpay.com/p.ashx?o=29&e=22&p=#{evt.data.object.total}&f=pb&r=#{student.crush_offers_session_id}&t=#{evt.data.object.id}")
-          expect(Net::HTTP).not_to receive(:get)
-
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(2)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Unknown user, CrushOffers session id or the user could not be found")
         end
 
         it 'should not process invoice.created event if user with given GUID does not exist' do
@@ -227,23 +225,11 @@ describe Api::StripeV01Controller, type: :controller do
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("User with given Stripe ID does not exist")
+          expect(sae.error_message).to eq("Could not find user with stripe id #{evt.data.object.customer}")
         end
       end
 
       describe 'customer.subscription.updated' do
-
-        it 'with unknown subscription GUID' do
-          post :create, customer_subscription_updated_event.to_json
-
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to start_with("Error updating subscription")
-
-          expect(subscription_4.reload.current_status).to eq('trialing')
-        end
 
         it 'with valid data' do
           evt = StripeMock.mock_webhook_event("customer.subscription.updated", status: 'trialing')
@@ -264,9 +250,8 @@ describe Api::StripeV01Controller, type: :controller do
       end
 
       describe 'customer.subscription.created' do
-        it 'marks api event as processed since users has reactivated account by subscribing to a new subscription plan' do
+        it 'marks api event as processed since users is creating their first subscription' do
           subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-          subscription_2.update_attribute(:current_status, 'canceled')
 
           post :create, customer_subscription_created_event.to_json
 
@@ -275,19 +260,21 @@ describe Api::StripeV01Controller, type: :controller do
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
+          expect(subscription_1.user.student_user_type_id).to eq(subscription_user_type.id)
         end
 
 
-        it 'does not marks api event as processed because users old plan is still valid' do
-          subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
+        it 'marks api event as processed since the users is re-activating their account by subscribing to a new plan' do
+          subscription_7.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
+          expect(subscription_7.user.student_user_type_id).to eq(no_access_user_type.id)
 
           post :create, customer_subscription_created_event.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("API Event with Stripe ID #{customer_subscription_created_event.data.object.id} was created but the necessary conditions for the user were not met.")
+          expect(sae.processed).to eq(true)
+          expect(sae.error).to eq(false)
+          expect(subscription_1.user.student_user_type_id).to eq(subscription_user_type.id)
         end
 
       end

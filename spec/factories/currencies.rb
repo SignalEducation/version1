@@ -49,7 +49,7 @@ FactoryGirl.define do
     factory :gbp do
       active                  true
       name                    'Pounds Sterling'
-      iso_code                'GB'
+      iso_code                'GBP'
       leading_symbol          '£'
       trailing_symbol         'p'
     end

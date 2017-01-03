@@ -67,13 +67,16 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product, :enrollment]
+
   before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
-  before_action except: [:show, :edit, :update, :change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete,:student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user] do
+
+  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user, :account, :update] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
 
   def index
+    #TODO this needs a massive visual overhaul [pagination, search, filtering]
     @users = params[:search_term].to_s.blank? ?
              @users = User.paginate(per_page: 50, page: params[:page]) :
              @users = User.search_for(params[:search_term].to_s).
@@ -84,33 +87,10 @@ class UsersController < ApplicationController
     @sort_choices = User::SORT_OPTIONS.map { |x| [x.humanize.camelcase, x] }
   end
 
-  def show
-    # account page
-    if @user.referral_code.nil?
-      @user.create_referral_code
-    end
+  def account
+    #user account info page
+    @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
-    if params[:update].to_s.length > 0
-      case params[:update]
-        when 'invoices'
-          Invoice.get_updates_for_user(@user.stripe_customer_id)
-        when 'cards'
-          SubscriptionPaymentCard.get_updates_for_user(@user.stripe_customer_id)
-        when 'subscriptions'
-          Rails.logger.debug 'DEBUG: start a call to Subscription#get_updates_for_user'
-          Subscription.get_updates_for_user(@user.stripe_customer_id)
-        else
-          # do nothing
-      end
-      @user.reload
-    end
-    if current_user.corporate_manager? || current_user.corporate_customer?
-      @corporate_customer = current_user.corporate_customer
-      @footer = false
-    else
-      @footer = true
-    end
-
     @user_exam_sittings = current_user.user_exam_sittings
     ids = @user_exam_sittings.map(&:id)
     @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
@@ -119,6 +99,18 @@ class UsersController < ApplicationController
     @orders = @user.orders
     @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
+
+    if current_user.corporate_manager? || current_user.corporate_customer?
+      @corporate_customer = current_user.corporate_customer
+      @footer = false
+    else
+      @footer = true
+    end
+
+  end
+
+  def show
+    #TODO admin viewing a user
 
   end
 
@@ -129,28 +121,42 @@ class UsersController < ApplicationController
   def student_new
     redirect_to root_url if current_corporate
     @user = User.new
-    @user.country_id = IpAddress.get_country(request.remote_ip).try(:id)
-    #@user.country_id = 105
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
     @topic_interests = Group.all_active.all_in_order.for_public
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:sign_up_errors] && session[:valid_params]
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      session.delete(:sign_up_errors, :valid_params)
+    end
     @navbar = false
     @footer = false
   end
 
   def student_create
-    #Duplicate in HomePages controller
     if current_user
       redirect_to root_url
     else
       @navbar = false
       @footer = false
       @topic_interests = Group.all_active.all_in_order.for_public
+
       @user = User.new(student_allowed_params)
       @user.student_user_type_id = StudentUserType.default_free_trial_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-      @user.country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.where(iso_code: 'GB').first.id
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      @user.country_id = @country.id
       @user.account_activation_code = SecureRandom.hex(10)
       @user.email_verification_code = SecureRandom.hex(10)
       @user.password_confirmation = @user.password
+
       # Check for CrushOffers cookie and assign it to the User
       if cookies.encrypted[:crush_offers]
         @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
@@ -187,7 +193,9 @@ class UsersController < ApplicationController
         UserSession.create(user)
         redirect_to personal_sign_up_complete_url
       else
-        render action: :student_new
+        session[:sign_up_errors] = @user.errors unless @user.errors.empty?
+        session[:valid_params] = [@user.first_name, @user.last_name, @user.email] unless @user.errors.empty?
+        redirect_to request.referrer
       end
     end
   end
@@ -195,9 +203,10 @@ class UsersController < ApplicationController
   def new_product_user
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     @user = User.new
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
-    @currency_id = @country.currency_id
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
+    @currency_id = @country.currency_id
     @product = @course.products.in_currency(@currency_id).last
     @topic_interests = Group.all_active.all_in_order.for_public
     @navbar = false
@@ -206,7 +215,8 @@ class UsersController < ApplicationController
 
   def new_session_product
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @country = IpAddress.get_country(request.remote_ip) || Country.find_by_iso_code('IE')
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country.currency_id
     @product = @course.products.in_currency(@currency_id).last
     @user_session = UserSession.new
@@ -225,8 +235,9 @@ class UsersController < ApplicationController
     @user = User.new(student_allowed_params)
     @user.user_group_id = UserGroup.default_student_user_group.try(:id)
     @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
-    country_id = IpAddress.get_country(request.remote_ip).try(:id) || Country.find_by_iso_code('IE').try(:id)
-    @user.country_id = country_id
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password
@@ -499,7 +510,7 @@ class UsersController < ApplicationController
   def reactivate_account
     @user = User.where(id: params[:user_id]).first
     @subscription = @user.active_subscription || @user.subscriptions.last
-    redirect_to root_url unless @user.individual_student? || @subscription
+    redirect_to root_url unless @user.individual_student? && @subscription
     redirect_to account_url(anchor: :subscriptions) unless @subscription.current_status == 'canceled'
     @valid_card = @user.subscription_payment_cards.all_default_cards.last.check_valid_dates
     currency_id = @subscription.subscription_plan.currency_id

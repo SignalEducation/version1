@@ -1,9 +1,2 @@
--if current_user.corporate_customer?
-  =render partial: 'corporate_customer_account'
--elsif current_user.admin?
-  =render partial: 'admin_student_overview'
--elsif current_user.corporate_student?
-  =render partial: 'corporate_student'
--else
-  =render partial: 'student_account'
+-# Change this to be info an admin would need to see about the user
 

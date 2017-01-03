@@ -1,5 +1,5 @@
 .text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
-=form_for @user, url: student_sign_up_url do |f|
+=form_for @user, url: create_student_url do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :topic_interest, value: @url_value
   .col-sm-12
@@ -44,9 +44,9 @@
   $(document).on('ready', function() {
     $(".sk-circle").hide();
 
-    $(".signUp").click(function(event) {
-      if($('#first_name').val() && $('#last_name').val() && $('#email').val() && $('#password').val() ) {
-        $(".signUp").hide();
+    $("#signUp").click(function(event) {
+      if($('#user_first_name').val() && $('#user_last_name').val() && $('#user_email').val() && $('#user_password').val() ) {
+        $("#signUp").hide();
         $(".sk-circle").show();
       }
     });

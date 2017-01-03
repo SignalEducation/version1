@@ -129,6 +129,7 @@ describe 'Subscription UX:', type: :feature do
 
       # back at the subscriptions page
       if this_card.include?('valid')
+        sleep(1)
         expect(page).to have_content I18n.t('controllers.subscription_payment_cards.create.flash.success')
         expect(page).not_to have_content I18n.t('controllers.subscription_payment_cards.create.flash.error')
       else
@@ -158,10 +159,9 @@ describe 'Subscription UX:', type: :feature do
     click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
     page.driver.browser.switch_to.alert.accept
 
-    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
     expect(page).to have_content 'Your Subscription has been cancelled'
     click_on 'Subscription Info'
-    expect(page).to have_content maybe_upcase I18n.t('views.users.show.un_cancel_subscription.h3')
+    expect(page).to have_content I18n.t('views.users.show.un_cancel_subscription.h3')
     click_link(I18n.t('views.users.show.un_cancel_subscription.button_call_to_action'))
 
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
@@ -180,6 +180,6 @@ describe 'Subscription UX:', type: :feature do
       end
     end
   end
-
+  sleep(10)
 end
 

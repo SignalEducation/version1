@@ -327,9 +327,12 @@ describe CorporateCustomersController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(corporate_customer_user, corporate_customer_id: corporate_customer_1.id)
-      x = admin_user
-      y = tutor_user
-      z = corporate_student_user
+      a = admin_user
+      b = corporate_student_user
+      c = corporate_customer_user
+      d = content_manager_user
+      e = tutor_user
+      f = comp_user
     end
 
     describe "GET 'index'" do

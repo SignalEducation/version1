@@ -342,6 +342,8 @@ class ApplicationController < ActionController::Base
     case user.user_group_id
       when UserGroup.default_student_user_group.id
         student_dashboard_url
+      when UserGroup.default_complimentary_user_group.id
+        student_dashboard_url
       when UserGroup.default_admin_user_group.id
         admin_dashboard_url
       when UserGroup.default_tutor_user_group.id
@@ -352,8 +354,6 @@ class ApplicationController < ActionController::Base
         corporate_customer_dashboard_url
       when UserGroup.default_content_manager_user_group.id
         content_manager_dashboard_url
-      when UserGroup.default_complimentary_user_group.id
-        student_dashboard_url
     else
       student_dashboard_url
     end

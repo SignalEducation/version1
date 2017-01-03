@@ -38,6 +38,13 @@ FactoryGirl.define do
         country_tld '.uk'
         currency_id 2
       end
+
+      factory :fr do
+        name 'France'
+        iso_code 'FR'
+        country_tld '.fr'
+        currency_id 1
+      end
     end
 
     factory :non_eu_country do

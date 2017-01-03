@@ -43,9 +43,10 @@ class EnrollmentsController < ApplicationController
         content = @course.short_description
       end
       course_parent_url = @course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
-      url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
-      MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url)
-
+      unless Rails.env.test?
+        url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
+        MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url)
+      end
       redirect_to diploma_course_url(@course.name_url)
     end
   end

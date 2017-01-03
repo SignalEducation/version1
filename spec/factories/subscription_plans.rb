@@ -35,14 +35,6 @@ FactoryGirl.define do
     livemode                        false
     available_to_students           true
 
-    factory :free_subscription_plan do
-      available_to_students         true
-      available_to_corporates       false
-      sequence(:name)                 { |n| "Free #{n}" }
-      payment_frequency_in_months     12
-      price                           0.00
-      trial_period_in_days            0
-    end
 
     factory :student_subscription_plan do
       available_to_students         true
@@ -58,19 +50,6 @@ FactoryGirl.define do
       end
     end
 
-    factory :corporate_subscription_plan do
-      available_to_students         false
-      available_to_corporates       true
-      factory :corporate_subscription_plan_m do # monthly
-        payment_frequency_in_months 1
-      end
-      factory :corporate_subscription_plan_q do # quarterly
-        payment_frequency_in_months 3
-      end
-      factory :corporate_subscription_plan_y do # yearly
-        payment_frequency_in_months 12
-      end
-    end
   end
 
 end
