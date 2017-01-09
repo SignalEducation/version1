@@ -133,7 +133,8 @@ class UsersController < ApplicationController
       @user.first_name = session[:valid_params][0]
       @user.last_name = session[:valid_params][1]
       @user.email = session[:valid_params][2]
-      session.delete(:sign_up_errors, :valid_params)
+      session.delete(:sign_up_errors)
+      session.delete(:valid_params)
     end
     @navbar = false
     @footer = false
