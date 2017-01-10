@@ -924,6 +924,7 @@ en:
         live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
         subject_course_category_id: Course Category
+        exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description

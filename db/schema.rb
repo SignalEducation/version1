@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170110190158) do
+ActiveRecord::Schema.define(version: 20170110194019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(version: 20170110190158) do
     t.date     "date"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "exam_body_id"
   end
 
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
@@ -756,6 +757,7 @@ ActiveRecord::Schema.define(version: 20170110190158) do
     t.text     "email_content"
     t.string   "external_url_name"
     t.string   "external_url"
+    t.integer  "exam_body_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

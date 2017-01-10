@@ -36,7 +36,7 @@ class ExamBody < ActiveRecord::Base
   # instance methods
   def destroyable?
     true
-    #self.exam_sittings.empty? && self.enrollments.empty? && self.subject_courses.empty?
+    self.exam_sittings.empty? && self.enrollments.empty? && self.subject_courses.empty?
   end
 
   protected

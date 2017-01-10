@@ -36,6 +36,7 @@
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
+#  exam_body_id                            :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -51,12 +52,12 @@ class SubjectCourse < ActiveRecord::Base
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
                   :subject_course_category_id, :enrollment_option, :email_content,
                   :external_url, :external_url_name, :quiz_count, :question_count,
-                  :video_count, :total_video_duration
+                  :video_count, :total_video_duration, :exam_body_id
 
   # Constants
 
   # relationships
-  #belongs_to :exam_body
+  belongs_to :exam_body
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   belongs_to :subject_course_category
   has_and_belongs_to_many :groups

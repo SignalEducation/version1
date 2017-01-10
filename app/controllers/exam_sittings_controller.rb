@@ -8,6 +8,7 @@
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  exam_body_id      :integer
 #
 
 class ExamSittingsController < ApplicationController
