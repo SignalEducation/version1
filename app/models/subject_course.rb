@@ -56,6 +56,7 @@ class SubjectCourse < ActiveRecord::Base
   # Constants
 
   # relationships
+  #belongs_to :exam_body
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   belongs_to :subject_course_category
   has_and_belongs_to_many :groups
@@ -64,10 +65,6 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
   has_many :enrollments
-  has_many :exam_sittings
-  has_many :user_exam_sittings
-  has_one :question_bank
-  has_one :mock_exam
   has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
@@ -75,6 +72,9 @@ class SubjectCourse < ActiveRecord::Base
   has_many :products
   has_many :orders
   has_many :white_papers
+  has_one :exam_sitting
+  has_one :question_bank
+  has_one :mock_exam
 
 
   # validation

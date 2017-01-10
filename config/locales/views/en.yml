@@ -574,6 +574,25 @@ en:
         publishes_in_next_3_days: Publishes in the next 3 days
         see_all_static_pages: See All Static Pages
 
+    exam_bodies:
+      form:
+        name: Name
+        name_placeholder: Name of Examining Body
+        url: Url
+        url_placeholder: Home URL of Examining Body
+
+      index:
+        h1: Exam Bodies
+
+      show:
+        h1: Exam Body
+
+      edit:
+        h1: Edit Exam Body
+
+      new:
+        h1: New Exam Body
+
     exam_sittings:
       form:
         name: Name

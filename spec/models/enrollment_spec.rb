@@ -32,6 +32,7 @@ describe Enrollment do
   it { should belong_to(:user) }
   it { should belong_to(:subject_course) }
   it { should belong_to(:subject_course_user_log) }
+  xit { should belong_to(:exam_body) }
 
   # validation
   it { should validate_presence_of(:user_id) }

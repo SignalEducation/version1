@@ -18,6 +18,7 @@ class ExamSitting < ActiveRecord::Base
   # Constants
 
   # relationships
+  #belongs_to :exam_body
   belongs_to :subject_course
   has_many :user_exam_sittings
 

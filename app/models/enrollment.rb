@@ -19,6 +19,7 @@ class Enrollment < ActiveRecord::Base
   # Constants
 
   # relationships
+  #belongs_to :exam_body
   belongs_to :user
   belongs_to :subject_course
   belongs_to :subject_course_user_log

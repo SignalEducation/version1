@@ -114,6 +114,7 @@ Rails.application.routes.draw do
     get '/dashboard/corporate_manager', to: 'dashboard#corporate_customer', as: :corporate_customer_dashboard
     get '/dashboard/corporate_student', to: 'dashboard#corporate_student', as: :corporate_student_dashboard
 
+    resources :exam_bodies
     resources :exam_sittings
     resources :groups, concerns: :supports_reordering
     resources :groups do

@@ -56,6 +56,7 @@ describe SubjectCourse do
 
   # relationships
   it { should belong_to(:subject_course_category) }
+  xit { should belong_to(:exam_body) }
   it { should have_many(:corporate_group_grants) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_elements) }
