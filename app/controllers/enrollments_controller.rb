@@ -9,6 +9,10 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  active                     :boolean          default(FALSE)
+#  student_number             :string
+#  exam_body_id               :integer
+#  exam_date                  :date
+#  registered                 :boolean          default(FALSE)
 #
 
 class EnrollmentsController < ApplicationController
