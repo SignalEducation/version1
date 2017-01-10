@@ -69,10 +69,11 @@ class ExamSittingsController < ApplicationController
       @exam_sitting = ExamSitting.where(id: params[:id]).first
     end
     @subject_courses = SubjectCourse.all_active.all_live.for_public.all_in_order
+    @exam_bodies = ExamBody.all_in_order
   end
 
   def allowed_params
-    params.require(:exam_sitting).permit(:name, :subject_course_id, :date)
+    params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id)
   end
 
 end
