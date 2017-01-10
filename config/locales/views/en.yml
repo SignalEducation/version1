@@ -1103,8 +1103,6 @@ en:
         password_confirmation_placeholder: Password confirmation
         address: Address
         address_placeholder: Billing address
-        student_number: Student Number - If you have one
-        student_number_placeholder: Official Student Number
         first_description: Description 1
         first_description_placeholder: First paragraph
         second_description: Description 2
