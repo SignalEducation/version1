@@ -38,6 +38,7 @@ class Enrollment < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  before_validation :set_empty_strings_to_nil
 
   # scopes
   scope :all_in_order, -> { order(updated_at: :desc) }
@@ -46,7 +47,11 @@ class Enrollment < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
+  end
+
+  def set_empty_strings_to_nil
+    self.student_number = nil if self.student_number && self.student_number.empty?
   end
 
   protected

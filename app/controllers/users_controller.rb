@@ -66,11 +66,11 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product, :enrollment]
+  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
 
   before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
 
-  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user, :account, :update] do
+  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :create_discourse_user, :account, :update] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
@@ -326,15 +326,6 @@ class UsersController < ApplicationController
       end
     else
       render action: :edit
-    end
-  end
-
-  def enrollment
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    if @user.update_attributes(allowed_params)
-      redirect_to new_enrollment_url(@course.name_url)
-    else
-      redirect_to library_special_link(@course.name_url)
     end
   end
 

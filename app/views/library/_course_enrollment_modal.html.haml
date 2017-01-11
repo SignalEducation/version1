@@ -1,4 +1,4 @@
-=form_for(:user, url: user_enrollment_url, method: 'POST', html: {class: 'form-horizontal', role: 'form'}) do |f|
+=form_for(@enrollment, url: create_enrollment_url, html: {class: 'form-horizontal', role: 'form'}) do |f|
 
   .modal.fade#enrollmentModal{tabindex:'-1', role:'dialog', 'aria-labelledby':'enrollmentModalLabel'}
     .modal-dialog
@@ -10,32 +10,40 @@
                 %button{type: "button", class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
                 %h2.modal-title{style: 'width: 95%'}
                   ="Enroll in #{@course.try(:name)}"
-            %hr
             .row
+              .col-sm-12.l-margin-top
+                %p
+                  ='Have you registered to take this exam with'
+                  =@course.exam_body.name
+                  &nbsp;
+                  &nbsp;
+                  &nbsp;
+                  %label
+                    %input{type: "checkbox", class: 'radio', value: 1, name: 'registered'}
+                      Yes
+                  &nbsp;
+                  &nbsp;
+                  %label
+                    %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
+                      No
+
+
+
               .col-sm-12
-                =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
+                =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                  =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), value: nil, class: 'form-control', style: 'border-radius: 6px;'
 
                 %br/
                 %hr/
-              .col-sm-12.l-margin-top
-                -if @course.external_url_name && @course.external_url
-                  %p
-                    ="Don't have a student number for the"
-                    =@course.external_url_name
-                    =link_to url_for(@course.external_url), target: '_blank' do
-                      =" Click here to get one."
-
-
-
-                -unless current_user.terms_and_conditions
-                  .form-group
-                    .checkbox{style: 'margin-left: 15px;'}
-                      %label
-                        =f.check_box :terms_and_conditions
-                        I accept all terms & conditions for using LearnSignal
 
 
           .l-margin-top.l-margin-bottom.pull-right
             =f.submit 'Start Course', class: 'btn btn-cyan'
+
+
+
+:javascript
+  $('input[type="checkbox"]').on('change', function() {
+    $('input[type="checkbox"]').not(this).prop('checked', false);
+  });

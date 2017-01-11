@@ -131,17 +131,6 @@
 
         .col-md-4
           .l-margin-top-big
-            -if @course.exam_sittings.any?
-              -if current_user && !current_user.exam_sitting_courses.include?(@course.id)
-                %p.h4.l-margin-bottom.l-margin-top-huge
-                  Registered for any
-                  =@course.external_url_name
-                  Exams Sittings?
-                %ul.course-resources
-                  %li
-                    %a.sittingModal{href: '#', data: {toggle: 'modal', target: '#sittingModal'}, class: 'btn btn-secondary btn-red btn-list'}
-                      Exam Sittings
-
             -if current_user && @course.mock_exam
               %p.h4.l-margin-bottom.l-margin-top-huge
                 Mock Exam
@@ -161,6 +150,3 @@
 
   :javascript
     hj('trigger', "#{@course.hotjar_guid}");
-
--if current_user && @course.exam_sittings.any?
-  =render partial: 'layouts/user_exam_sitting_modal'
