@@ -19,7 +19,7 @@
                   &nbsp;
                   &nbsp;
                   %label
-                    %input{type: "checkbox", class: 'radio', value: 1, name: 'registered'}
+                    %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
                       Yes
                   &nbsp;
                   &nbsp;
@@ -27,7 +27,8 @@
                     %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
                       No
 
-              .col-sm-12
+            .row#enrollment_form
+              .col-sm-12.l-margin-top
                 .col-sm-6
                   =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
                   .input-group.input-group-lg.full-width
@@ -59,6 +60,17 @@
                 %br/
                 %hr/
 
+            .row#registration_info
+              .col-sm-12.l-margin-top-big
+                %p
+                  Not an ACCA member ? You can register for the exam
+                  =@course.external_url_name
+                  =link_to url_for(@course.external_url), target: '_blank' do
+                    Here
+                %p
+                  Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.
+
+
 
           .l-margin-top.l-margin-bottom.pull-right
             =f.submit 'Enroll Now', class: 'btn btn-cyan'
@@ -66,15 +78,31 @@
 
 
 :javascript
+
+  $( document ).ready(function() {
+    $("#registration_info").hide();
+    $("#enrollment_form").hide();
+  });
+
   $('input[type="checkbox"]').on('change', function() {
     $('input[type="checkbox"]').not(this).prop('checked', false);
+    if(document.getElementById('registered_selection').checked) {
+      $("#enrollment_form").show();
+      $("#registration_info").hide();
+    } else {
+      $("#registration_info").show();
+      $("#enrollment_form").hide();
+    }
   });
+
+
 
   $(function () {
     $('#datetimepicker1').datetimepicker();
       format: 'DD/MM/YYYY'
   });
-    $(function () {
+
+  $(function () {
     $('#datetimepicker2').datetimepicker();
       format: 'DD/MM/YYYY'
   });
