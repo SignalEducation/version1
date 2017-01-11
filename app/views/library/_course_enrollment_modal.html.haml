@@ -28,17 +28,32 @@
                       No
 
               .col-sm-12
-                =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
-                .input-group.input-group-lg.full-width
-                  =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
-                %br/
-              -unless current_user.date_of_birth
-                .col-sm-12
-                  %label{class: 'control-label'}
-                    =t('views.users.form.date_of_birth')
+                .col-sm-6
+                  =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
                   .input-group.input-group-lg.full-width
-                    %input{type: "date", class: 'form-control', name: 'date_of_birth', style: 'border-radius: 6px;'}
+                    =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+                  %br/
+                .col-sm-6
+                  -unless current_user.date_of_birth
+                    .col-sm-12
+                      %label{class: 'control-label'}
+                        =t('views.users.form.date_of_birth')
+                      .input-group.input-group-lg.full-width
+                        %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'date_of_birth', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker1'}
+
+
+              .col-sm-12
+                .col-sm-6
+                  =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;'}
+
+                .col-sm-6
+                  %label{class: 'control-label'}
+                    ='Enter Online Exam Date'
+                  .input-group.input-group-lg.full-width
+                    %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker2'}
 
 
                 %br/
@@ -46,11 +61,20 @@
 
 
           .l-margin-top.l-margin-bottom.pull-right
-            =f.submit 'Start Course', class: 'btn btn-cyan'
+            =f.submit 'Enroll Now', class: 'btn btn-cyan'
 
 
 
 :javascript
   $('input[type="checkbox"]').on('change', function() {
     $('input[type="checkbox"]').not(this).prop('checked', false);
+  });
+
+  $(function () {
+    $('#datetimepicker1').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });
+    $(function () {
+    $('#datetimepicker2').datetimepicker();
+      format: 'DD/MM/YYYY'
   });
