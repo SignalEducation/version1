@@ -28,7 +28,10 @@ class EnrollmentsController < ApplicationController
     @enrollment.subject_course_id = @course.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true
+    @enrollment.registered = true if params[:registered] && !params[:not_registered]
     dob = params[:date_of_birth] if params[:date_of_birth]
+    custom_date = params[:custom_exam_date] if !@enrollment.exam_date && params[:custom_exam_date]
+    @enrollment.exam_date = custom_date if !@enrollment.exam_date && params[:custom_exam_date]
     if @enrollment.save
       @user.update_attribute(:date_of_birth, dob) if params[:date_of_birth]
       send_welcome_email
