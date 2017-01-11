@@ -1146,6 +1146,7 @@ en:
         employee_guid_placeholder: Employee GUID
         profile_image: Profile Image
         date_of_birth: Date of Birth
+        date_of_birth_placeholder: D.O.B
 
       edit:
         h1: Edit Account

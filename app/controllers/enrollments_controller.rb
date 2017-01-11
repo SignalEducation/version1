@@ -28,7 +28,9 @@ class EnrollmentsController < ApplicationController
     @enrollment.subject_course_id = @course.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true
+    dob = params[:date_of_birth] if params[:date_of_birth]
     if @enrollment.save
+      @user.update_attribute(:date_of_birth, dob) if params[:date_of_birth]
       send_welcome_email
       redirect_to course_special_link(@course.first_active_cme)
     else
@@ -91,7 +93,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:enrollment).permit(:user_id, :subject_course_id, :student_number, :exam_date, :registered)
+    params.require(:enrollment).permit(:subject_course_id, :student_number, :exam_date, :registered)
   end
 
   def get_variables

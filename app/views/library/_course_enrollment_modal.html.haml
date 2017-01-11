@@ -27,12 +27,19 @@
                     %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
                       No
 
-
-
               .col-sm-12
                 =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), value: nil, class: 'form-control', style: 'border-radius: 6px;'
+                  =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+                %br/
+              -unless current_user.date_of_birth
+                .col-sm-12
+                  %label{class: 'control-label'}
+                    =t('views.users.form.date_of_birth')
+                  .input-group.input-group-lg.full-width
+                    %input{type: "date", class: 'form-control', name: 'date_of_birth', style: 'border-radius: 6px;'}
+
 
                 %br/
                 %hr/
