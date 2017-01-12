@@ -6,22 +6,23 @@
         ="Enroll in #{@course.try(:name)}"
   =form_for(@enrollment, url: create_enrollment_url, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
     .row.l-margin-top
-      .col-sm-12
-        .col-sm-12.l-margin-top.text-left
+      .col-sm-12.l-margin-top.text-left
+        .col-sm-8
+          -name = @course.exam_body.name
           %p
             ='Have you registered to take this exam with'
-            =@course.exam_body.name
-            &nbsp;
-            &nbsp;
-            &nbsp;
-            %label
-              %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
-                Yes
-            &nbsp;
-            &nbsp;
-            %label
-              %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
-                No
+            =name << '?'
+
+        .col-sm-4
+          .col-sm-12
+            .inline-field
+              %label{style: 'padding-right: 10px;'}
+                %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
+                  Yes
+
+              %label{style: 'padding-left: 10px;'}
+                %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
+                  No
 
     .row#enrollment_form.text-left
       .col-sm-12.l-margin-top
