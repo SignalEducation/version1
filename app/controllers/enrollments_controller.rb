@@ -22,16 +22,21 @@ class EnrollmentsController < ApplicationController
 
   def create
     log = create_subject_course_user_log
-    @enrollment = Enrollment.new(allowed_params)
+    if params[:registered] && !params[:not_registered]
+      @enrollment = Enrollment.new(allowed_params)
+      @enrollment.registered = true
+      dob = params[:date_of_birth] if params[:date_of_birth]
+      custom_date = params[:custom_exam_date] if !@enrollment.exam_date && params[:custom_exam_date]
+      @enrollment.exam_date = custom_date if !@enrollment.exam_date && params[:custom_exam_date]
+    elsif !params[:registered] && params[:not_registered]
+      @enrollment = Enrollment.new(limited_params)
+    end
     @enrollment.user_id = @user.id
     @enrollment.subject_course_user_log_id = log.id
     @enrollment.subject_course_id = @course.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true
-    @enrollment.registered = true if params[:registered] && !params[:not_registered]
-    dob = params[:date_of_birth] if params[:date_of_birth]
-    custom_date = params[:custom_exam_date] if !@enrollment.exam_date && params[:custom_exam_date]
-    @enrollment.exam_date = custom_date if !@enrollment.exam_date && params[:custom_exam_date]
+
     if @enrollment.save
       @user.update_attribute(:date_of_birth, dob) if params[:date_of_birth]
       send_welcome_email
@@ -97,6 +102,10 @@ class EnrollmentsController < ApplicationController
 
   def allowed_params
     params.require(:enrollment).permit(:subject_course_id, :student_number, :exam_date, :registered)
+  end
+
+  def limited_params
+    params.require(:enrollment).permit(:registered)
   end
 
   def get_variables

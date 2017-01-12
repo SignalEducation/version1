@@ -994,7 +994,7 @@ en:
 
       form:
         registered: Registered
-        exam_date: Exam Date
+        exam_date: Select your Exam Date
         student_number: Student Number
         student_number_placeholder: Student Number
 
