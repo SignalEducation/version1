@@ -72,6 +72,7 @@ $colour-30: #c38cd4;
 $colour-31: #e15258;
 $colour-32: #c25975;
 $colour-33: #f092b0;
+$colour-34: #cedbe4; // Modal background
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5380,4 +5381,8 @@ footer nav ul li a{
   .account-tabs ul > li a br{ display: block; }
   .account-tab h3 { font-size: 27px;}
   .account-tab p{ font-size: 16px }
+}
+
+.remodal {
+  background: $colour-34;
 }

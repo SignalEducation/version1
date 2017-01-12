@@ -2,27 +2,28 @@
   .row
     .col-md-12
       %button.remodal-close{"data-remodal-action" => "close"}
-      %h2.modal-title{style: 'width: 95%'}
+      %h2
         ="Enroll in #{@course.try(:name)}"
   =form_for(@enrollment, url: create_enrollment_url, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
-    .row
-      .col-sm-12.l-margin-top
-        %p
-          ='Have you registered to take this exam with'
-          =@course.exam_body.name
-          &nbsp;
-          &nbsp;
-          &nbsp;
-          %label
-            %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
-              Yes
-          &nbsp;
-          &nbsp;
-          %label
-            %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
-              No
+    .row.l-margin-top
+      .col-sm-12
+        .col-sm-12.l-margin-top.text-left
+          %p
+            ='Have you registered to take this exam with'
+            =@course.exam_body.name
+            &nbsp;
+            &nbsp;
+            &nbsp;
+            %label
+              %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
+                Yes
+            &nbsp;
+            &nbsp;
+            %label
+              %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
+                No
 
-    .row#enrollment_form
+    .row#enrollment_form.text-left
       .col-sm-12.l-margin-top
         .col-sm-6
           =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
@@ -43,35 +44,33 @@
         .col-sm-6
           =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;'}
+            =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
 
-        .col-sm-6
+        .col-sm-6#custom_exam_date
           %label{class: 'control-label'}
             ='Enter Online Exam Date'
           .input-group.input-group-lg.full-width
             %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker2'}
 
 
-        %br/
-        %hr/
 
-    .row#registration_info
-      .col-sm-12.l-margin-top-big
-        %p
-          Not an ACCA member ? You can register for the exam
-          =@course.external_url_name
-          =link_to url_for(@course.external_url), target: '_blank' do
-            Here
-        %p
-          Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.
+    .row#registration_info.text-left
+      .col-sm-12
+        .col-sm-12.l-margin-top-big
+          %p
+            Not an ACCA member ? You can register for the exam
+            =@course.external_url_name
+            =link_to url_for(@course.external_url), target: '_blank' do
+              Here
+          %p
+            Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.
 
 
     %br/
-
-    .btn.btn-cyan{"data-remodal-action" => "close"}
-      Cancel
-    .btn.btn-red{"data-remodal-action" => "confirm"}
-      Enroll Now
+    .col-sm-12#actions_btns
+      .col-sm-4.col-sm-offset-8
+        .btn.btn-cyan{"data-remodal-action" => "confirm"}
+          Enroll Now
 
 
 
@@ -81,10 +80,13 @@
   $( document ).ready(function() {
     $("#registration_info").hide();
     $("#enrollment_form").hide();
+    $("#actions_btns").hide();
+    $("#custom_exam_date").hide();
   });
 
   $('input[type="checkbox"]').on('change', function() {
     $('input[type="checkbox"]').not(this).prop('checked', false);
+
     if(document.getElementById('registered_selection').checked) {
       $("#enrollment_form").show();
       $("#registration_info").hide();
@@ -92,10 +94,25 @@
       $("#registration_info").show();
       $("#enrollment_form").hide();
     }
+    $("#actions_btns").show();
+  });
+
+  $('select[name="exam_date"]').change(function () {
+    if ((this).selectedIndex == 1) {
+      $("#custom_exam_date").show();
+    } else {
+      $("#custom_exam_date").hide();
+    }
   });
 
   $(document).on('confirmation', '.remodal', function () {
     document.forms['enrollment_modal_form'].submit();
+  });
+
+  $(document).on('closing', '.remodal', function () {
+    $('input[type="checkbox"]').prop('checked', false);
+    $("#enrollment_form").hide();
+    $("#registration_info").hide();
   });
 
   $(function () {
