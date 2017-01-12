@@ -29,7 +29,7 @@
         .col-sm-6
           =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'student_number'
 
           %br/
         .col-sm-6
@@ -70,7 +70,7 @@
     %br/
     .col-sm-12#actions_btns
       .col-sm-4.col-sm-offset-8
-        .btn.btn-cyan{"data-remodal-action" => "confirm"}
+        .btn.btn-cyan#enroll_now{"data-remodal-action" => "confirm"}
           Enroll Now
 
 
@@ -78,26 +78,39 @@
 
 :javascript
 
+  // Hide specific sections on page load
   $( document ).ready(function() {
     $("#registration_info").hide();
     $("#enrollment_form").hide();
     $("#actions_btns").hide();
+    $("#enroll_now").attr("disabled", true);
     $("#custom_exam_date").hide();
   });
 
+  // Hide and show the form or info section depending on which checkbox is selected
   $('input[type="checkbox"]').on('change', function() {
     $('input[type="checkbox"]').not(this).prop('checked', false);
-
     if(document.getElementById('registered_selection').checked) {
       $("#enrollment_form").show();
       $("#registration_info").hide();
+      $("#enroll_now").text('Enroll Now');
+      $("#enroll_now").attr("disabled", true);
+      $('#student_number').keyup(function(){
+        if($(this).val().length !=0)
+            $('#enroll_now').attr('disabled', false);
+        else
+            $('#enroll_now').attr('disabled',true);
+      })
     } else {
       $("#registration_info").show();
       $("#enrollment_form").hide();
+      $("#enroll_now").text('Enroll Anyway');
+      $("#enroll_now").attr("disabled", false);
     }
     $("#actions_btns").show();
   });
 
+  // Reveal the custom_exam_date field only if correct value is selected in the exam_date dropdown
   $('select[name="exam_date"]').change(function () {
     if ((this).selectedIndex == 1) {
       $("#custom_exam_date").show();
@@ -106,6 +119,7 @@
     }
   });
 
+  // JS to submit form when modal confirmation btn is clicked
   $(document).on('confirmation', '.remodal', function () {
     document.forms['enrollment_modal_form'].submit();
   });
@@ -116,11 +130,13 @@
     $("#registration_info").hide();
   });
 
+
+
+  // Both Date Pickers
   $(function () {
     $('#datetimepicker1').datetimepicker();
       format: 'DD/MM/YYYY'
   });
-
   $(function () {
     $('#datetimepicker2').datetimepicker();
       format: 'DD/MM/YYYY'
