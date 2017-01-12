@@ -124,7 +124,11 @@
           $('#enroll_now').attr('disabled', true);
         }
       });
-
+      $('#datetimepicker2').focusout(function(){
+        if ($('#datetimepicker2').val().length !=0) {
+          $('#enroll_now').attr('disabled', false);
+        }
+      });
     } else {
       $("#registration_info").show();
       $("#enrollment_form").hide();

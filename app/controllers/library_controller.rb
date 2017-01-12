@@ -72,7 +72,9 @@ class LibraryController < ApplicationController
     else
       if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
 
-        @enrollment = Enrollment.new
+        @enrollments = @course.exam_body.enrollments.where(user_id: current_user.id)
+        possible_student_number = @enrollments.map(&:student_number).first
+        @enrollment = Enrollment.new(student_number: possible_student_number)
         @exam_sittings = ExamSitting.where(subject_course_id: @course.id).all_in_order
       end
 
