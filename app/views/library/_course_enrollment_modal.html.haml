@@ -1,79 +1,78 @@
-=form_for(@enrollment, url: create_enrollment_url, html: {class: 'form-horizontal', role: 'form'}) do |f|
+.remodal{"data-remodal-id" => "modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      %h2.modal-title{style: 'width: 95%'}
+        ="Enroll in #{@course.try(:name)}"
+  =form_for(@enrollment, url: create_enrollment_url, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+    .row
+      .col-sm-12.l-margin-top
+        %p
+          ='Have you registered to take this exam with'
+          =@course.exam_body.name
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          %label
+            %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
+              Yes
+          &nbsp;
+          &nbsp;
+          %label
+            %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
+              No
 
-  .modal.fade#enrollmentModal{tabindex:'-1', role:'dialog', 'aria-labelledby':'enrollmentModalLabel'}
-    .modal-dialog
-      .modal-content.is-bg-asphalt.l-padding-side-15
-        .container-fluid
-          .modal-header
-            .row
-              .col-md-12
-                %button{type: "button", class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
-                %h2.modal-title{style: 'width: 95%'}
-                  ="Enroll in #{@course.try(:name)}"
-            .row
-              .col-sm-12.l-margin-top
-                %p
-                  ='Have you registered to take this exam with'
-                  =@course.exam_body.name
-                  &nbsp;
-                  &nbsp;
-                  &nbsp;
-                  %label
-                    %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
-                      Yes
-                  &nbsp;
-                  &nbsp;
-                  %label
-                    %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
-                      No
+    .row#enrollment_form
+      .col-sm-12.l-margin-top
+        .col-sm-6
+          =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-            .row#enrollment_form
-              .col-sm-12.l-margin-top
-                .col-sm-6
-                  =f.label :student_number, t('views.enrollments.form.student_number'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
-                  %br/
-                .col-sm-6
-                  -unless current_user.date_of_birth
-                    .col-sm-12
-                      %label{class: 'control-label'}
-                        =t('views.users.form.date_of_birth')
-                      .input-group.input-group-lg.full-width
-                        %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'date_of_birth', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker1'}
+          %br/
+        .col-sm-6
+          -unless current_user.date_of_birth
+            .col-sm-12
+              %label{class: 'control-label'}
+                =t('views.users.form.date_of_birth')
+              .input-group.input-group-lg.full-width
+                %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'date_of_birth', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker1'}
 
 
-              .col-sm-12
-                .col-sm-6
-                  =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;'}
+      .col-sm-12
+        .col-sm-6
+          =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;'}
 
-                .col-sm-6
-                  %label{class: 'control-label'}
-                    ='Enter Online Exam Date'
-                  .input-group.input-group-lg.full-width
-                    %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker2'}
-
-
-                %br/
-                %hr/
-
-            .row#registration_info
-              .col-sm-12.l-margin-top-big
-                %p
-                  Not an ACCA member ? You can register for the exam
-                  =@course.external_url_name
-                  =link_to url_for(@course.external_url), target: '_blank' do
-                    Here
-                %p
-                  Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.
+        .col-sm-6
+          %label{class: 'control-label'}
+            ='Enter Online Exam Date'
+          .input-group.input-group-lg.full-width
+            %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker2'}
 
 
+        %br/
+        %hr/
 
-          .l-margin-top.l-margin-bottom.pull-right
-            =f.submit 'Enroll Now', class: 'btn btn-cyan'
+    .row#registration_info
+      .col-sm-12.l-margin-top-big
+        %p
+          Not an ACCA member ? You can register for the exam
+          =@course.external_url_name
+          =link_to url_for(@course.external_url), target: '_blank' do
+            Here
+        %p
+          Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.
+
+
+    %br/
+
+    .btn.btn-cyan{"data-remodal-action" => "close"}
+      Cancel
+    .btn.btn-red{"data-remodal-action" => "confirm"}
+      Enroll Now
+
 
 
 
@@ -95,7 +94,9 @@
     }
   });
 
-
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['enrollment_modal_form'].submit();
+  });
 
   $(function () {
     $('#datetimepicker1').datetimepicker();

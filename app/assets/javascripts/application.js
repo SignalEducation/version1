@@ -22,4 +22,5 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require summernote
+//= require remodal
 //= require_tree .
