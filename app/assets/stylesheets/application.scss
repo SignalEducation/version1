@@ -5341,7 +5341,7 @@ footer nav ul li a{
 }
 .account-tab p{
   line-height: 1.45;
-  color: $white;
+  color: $colour-7;
   margin: 13px 0 52px 0;
   font-size: 18.5px;
 }
@@ -5398,4 +5398,35 @@ footer nav ul li a{
     margin: $gutter 0;
   }
 
+}
+
+.enrollment-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  display: block;
+  position: relative;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
 }
