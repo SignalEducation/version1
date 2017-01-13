@@ -20,7 +20,6 @@ describe ExamSittingsController, type: :controller do
 
   let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting) }
   let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting) }
-  let!(:user_exam_sitting_1) { FactoryGirl.create(:user_exam_sitting, exam_sitting_id: exam_sitting_1.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_sitting) }
 
   context 'Not logged in: ' do

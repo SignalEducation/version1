@@ -1224,26 +1224,6 @@ en:
           payment: Enter your payment details
 
 
-    user_exam_sittings:
-      form:
-        subject_course_id: Course
-        user_id: User
-        exam_sitting_id: Exam Sitting
-        date: Date
-        date_placeholder: "2015-01-01"
-
-      index:
-        h1: User Exam Sittings
-
-      show:
-        h1: User Exam Sitting
-
-      edit:
-        h1: Edit User Exam Sitting
-
-      new:
-        h1: New User Exam Sitting
-
 
 
     user_groups:

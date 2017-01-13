@@ -111,7 +111,6 @@ class User < ActiveRecord::Base
   has_many :subscription_transactions
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
-  has_many :user_exam_sittings
   belongs_to :user_group
   has_many :user_notifications
   has_one :referral_code
@@ -609,14 +608,6 @@ class User < ActiveRecord::Base
 
   def corporate_user?
     self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
-  end
-
-  def exam_sittings
-    user_exam_sittings.map(&:exam_sitting_id)
-  end
-
-  def exam_sitting_courses
-    user_exam_sittings.map(&:subject_course_id)
   end
 
   #######################################################

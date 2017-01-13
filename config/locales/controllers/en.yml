@@ -456,18 +456,6 @@ en:
         success: Welcome to LearnSignal, your account has been activated.
         error: Sorry, something went wrong. Please contact us for assistance.
 
-    user_exam_sittings:
-      create:
-        flash:
-          success: Users ExamSitting has been created successfully
-      update:
-        flash:
-          success: Users ExamSitting details have been updated successfully
-      destroy:
-        flash:
-          success: Users ExamSitting has been deleted
-          error: Users ExamSitting was not deleted
-
 
     user_groups:
       create:

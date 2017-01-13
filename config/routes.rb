@@ -177,8 +177,6 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_notifications
-    resources :user_exam_sittings
-    post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]

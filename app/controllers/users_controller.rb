@@ -91,11 +91,6 @@ class UsersController < ApplicationController
     #user account info page
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
-    @user_exam_sittings = current_user.user_exam_sittings
-    ids = @user_exam_sittings.map(&:id)
-    @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
-    course_ids = @exam_sittings.map(&:subject_course_id)
-    @sitting_courses = SubjectCourse.where(id: course_ids)
     @orders = @user.orders
     @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
