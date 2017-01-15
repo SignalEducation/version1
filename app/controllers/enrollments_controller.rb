@@ -25,9 +25,13 @@ class EnrollmentsController < ApplicationController
     if params[:registered] && !params[:not_registered]
       @enrollment = Enrollment.new(allowed_params)
       @enrollment.registered = true
-      dob = params[:date_of_birth] if params[:date_of_birth]
-      custom_date = params[:custom_exam_date] if !@enrollment.exam_date && params[:custom_exam_date]
-      @enrollment.exam_date = custom_date if !@enrollment.exam_date && params[:custom_exam_date]
+      dob = params[:date_of_birth] if params[:date_of_birth] && params[:date_of_birth].present?
+      if params[:custom_exam_date].present? && !params[:exam_date].present?
+        date = params[:custom_exam_date]
+      elsif !params[:custom_exam_date].present? && params[:exam_date].present?
+        date = params[:exam_date]
+      end
+      @enrollment.exam_date = date
     elsif !params[:registered] && params[:not_registered]
       @enrollment = Enrollment.new(limited_params)
     end
