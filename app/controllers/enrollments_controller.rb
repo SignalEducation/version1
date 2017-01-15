@@ -51,6 +51,17 @@ class EnrollmentsController < ApplicationController
     end
   end
 
+  def update
+    binding.pry
+    if @enrollment.update_attributes(allowed_params)
+
+      redirect_to account_url(anchor: :enrollments)
+    else
+      redirect_to account_url(anchor: :enrollments)
+    end
+
+  end
+
   def send_welcome_email
     if @course.email_content
       content = @course.email_content

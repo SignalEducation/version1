@@ -1,13 +1,15 @@
 .row
   -@enrollments.each do |enrollment|
-    .col-md-4
-      .enrollment-box.text-center
-        .col-md-12
-          %h4.l-margin-top
+    .col-sm-6.l-margin-bottom-big.l-margin-top
+      %a{data: {remodal: {target: 'modal'}}, style: 'cursor: pointer;', class: 'box box-enrollment'}
+        .box-inner.enrollment-box-inner
+          %h4
             =enrollment.subject_course.name
-          %p.l-margin-top
+          %p.p
             =enrollment.exam_date
-          %p
-            =enrollment.student_number
+        .box-label
+          %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+            Edit Enrolment
 
 
+    =render partial: 'users/user_account/enrollment_edit', locals: {enrollment: enrollment}

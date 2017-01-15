@@ -2511,6 +2511,10 @@ a.box {
       background-size: contain;
     }
   }
+  &.box-enrollment {
+    text-align: center;
+    margin-top: $gutter;
+  }
 }
 .box-title {
   white-space: nowrap;
@@ -2527,6 +2531,9 @@ a.box {
   border-top-right-radius: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
+  &.enrollment-box-inner {
+    height: 125px;
+  }
 }
 .box-pic {
   max-height: 30%;
@@ -5400,33 +5407,4 @@ footer nav ul li a{
 
 }
 
-.enrollment-box {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  display: block;
-  position: relative;
-  color: $colour-7;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-}
+

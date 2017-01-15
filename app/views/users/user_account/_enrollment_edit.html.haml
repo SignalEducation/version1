@@ -1,0 +1,168 @@
+.remodal{"data-remodal-id" => "modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          Edit Enrollment
+
+  =form_for(enrollment, url: edit_enrollment_url(enrollment), html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+    -if enrollment.registered
+
+    -else
+      .row.l-margin-top
+        .col-sm-12.l-margin-top.text-left
+          .col-sm-8
+            -exam_sittings = ExamSitting.where(subject_course_id: enrollment.subject_course.id).all_in_order
+            -name = enrollment.subject_course.exam_body.name
+            -question = name.to_s + '?'
+            %p
+              ='Have you registered to take this exam with'
+              =question
+
+          .col-sm-4
+            .col-sm-12
+              .inline-field
+                %label{style: 'padding-right: 10px;'}
+                  %input{type: "checkbox", class: 'radio', value: 1, name: 'registered', id: 'registered_selection'}
+                    Yes
+
+                %label{style: 'padding-left: 10px;'}
+                  %input{type: "checkbox", class: 'radio', value: 1, name: 'not_registered'}
+                    No
+
+
+      .row#enrollment_form.text-left
+        .col-sm-12
+          .col-sm-12
+            %hr/
+          .col-sm-6
+            =f.label :student_number, "Enter your #{name} Student Number", class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'student_number'
+
+            %br/
+          .col-sm-6
+            -unless current_user.date_of_birth
+              %label{class: 'control-label'}
+                =t('views.users.form.date_of_birth')
+              .input-group.input-group-lg.full-width
+                %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'date_of_birth', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker1'}
+
+
+        .col-sm-12
+          .col-sm-6
+            =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.collection_select :exam_date, exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
+
+          .col-sm-6#custom_exam_date
+            %label{class: 'control-label'}
+              ='Enter Online Exam Date'
+            .input-group.input-group-lg.full-width
+              %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker2'}
+
+
+
+      .row#registration_info.text-left
+        .col-sm-12
+          .col-sm-12.l-margin-top-big
+            %p
+              Not an ACCA member ? You can register for the exam
+              =link_to url_for(enrollment.subject_course.external_url), target: '_blank' do
+                here
+            %p
+              The ACCA is the world's most progressive and supportive accountancy body, driving your career towards even greater opportunity. Join the fastest-growing gateway to the accountancy profession and build your success story.
+
+
+      %br/
+      .col-sm-12#actions_btns
+        .col-sm-4.col-sm-offset-8
+          .btn.btn-cyan#enroll_now{"data-remodal-action" => "confirm"}
+            Enroll Now
+
+
+-if enrollment.registered
+  :javascript
+
+-else
+  :javascript
+
+    // Hide specific sections on page load
+    $( document ).ready(function() {
+      $("#registration_info").hide();
+      $("#enrollment_form").hide();
+      $("#actions_btns").hide();
+      $("#enroll_now").attr("disabled", true);
+      $("#custom_exam_date").hide();
+    });
+
+    // Hide and show the form or info section depending on which checkbox is selected
+    $('input[type="checkbox"]').on('change', function() {
+      $('input[type="checkbox"]').not(this).prop('checked', false);
+      if(document.getElementById('registered_selection').checked) {
+        $("#enrollment_form").show();
+        $("#registration_info").hide();
+        $("#enroll_now").text('Enroll Now');
+        $("#enroll_now").attr("disabled", true);
+        $('#student_number').keyup(function(){
+          if($('#student_number').val().length !=0 && $('select[name="exam_date"]').val() != '' )
+              $('#enroll_now').attr('disabled', false);
+          else
+              $('#enroll_now').attr('disabled',true);
+        })
+        $('#exam_date').change(function () {
+          if($('#student_number').val().length !=0 && $('select[name="exam_date"]').val() != '' )
+              $('#enroll_now').attr('disabled', false);
+          else
+              $('#enroll_now').attr('disabled',true);
+        })
+        // Reveal the custom_exam_date field only if correct value is selected in the exam_date dropdown
+        $('select[name="exam_date"]').change(function () {
+          if ((this).selectedIndex == 1) {
+            $("#custom_exam_date").show();
+            $('#enroll_now').attr('disabled', true);
+          } else if ($('select[name="exam_date"]').val() != '' && ($('#student_number').val().length !=0)) {
+            $('#enroll_now').attr('disabled', false);
+            $("#custom_exam_date").hide();
+          } else {
+            $("#custom_exam_date").hide();
+            $('#enroll_now').attr('disabled', true);
+          }
+        });
+        $('#datetimepicker2').focusout(function(){
+          if ($('#datetimepicker2').val().length !=0) {
+            $('#enroll_now').attr('disabled', false);
+          }
+        });
+      } else {
+        $("#registration_info").show();
+        $("#enrollment_form").hide();
+        $("#enroll_now").text('Enroll Anyway');
+        $("#enroll_now").attr("disabled", false);
+      }
+      $("#actions_btns").show();
+    });
+
+
+    // JS to submit form when modal confirmation btn is clicked
+    $(document).on('confirmation', '.remodal', function () {
+      document.forms['enrollment_modal_form'].submit();
+    });
+
+    $(document).on('closing', '.remodal', function () {
+      $('input[type="checkbox"]').prop('checked', false);
+      $("#enrollment_form").hide();
+      $("#registration_info").hide();
+    });
+
+
+    // Both Date Pickers
+    $(function () {
+      $('#datetimepicker1').datetimepicker();
+        format: 'DD/MM/YYYY'
+    });
+    $(function () {
+      $('#datetimepicker2').datetimepicker();
+        format: 'DD/MM/YYYY'
+    });
