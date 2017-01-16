@@ -52,7 +52,6 @@ class EnrollmentsController < ApplicationController
   end
 
   def update
-    binding.pry
     if @enrollment.update_attributes(allowed_params)
 
       redirect_to account_url(anchor: :enrollments)

@@ -1,7 +1,7 @@
 .row
   -@enrollments.each do |enrollment|
     .col-sm-6.l-margin-bottom-big.l-margin-top
-      %a{data: {remodal: {target: 'modal'}}, style: 'cursor: pointer;', class: 'box box-enrollment'}
+      %a{data: {remodal: {target: 'modal', remote: edit_enrollment_url(enrollment)}}, style: 'cursor: pointer;', class: 'box box-enrollment'}
         .box-inner.enrollment-box-inner
           %h4
             =enrollment.subject_course.name

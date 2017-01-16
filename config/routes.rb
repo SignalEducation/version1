@@ -91,7 +91,7 @@ Rails.application.routes.draw do
     get '/enrollments/:subject_course_name_url', to: 'enrollments#new', as: :new_enrollment
     get '/orders/enrollment/:subject_course_name_url', to: 'enrollments#create_with_order', as: :new_order_enrollment
     post '/enrollments/:subject_course_name_url', to: 'enrollments#create', as: :create_enrollment
-    patch '/enrollments/:id', to: 'enrollments#update', as: :edit_enrollment
+    patch '/enrollments/:id', to: 'enrollments#update', as: :update_enrollment
     post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
 
     get 'enrollments/:enrollment_id/pause', to: 'enrollments#pause', as: :pause_enrollment
