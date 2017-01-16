@@ -41,7 +41,7 @@ class Enrollment < ActiveRecord::Base
   before_validation :set_empty_strings_to_nil
 
   # scopes
-  scope :all_in_order, -> { order(updated_at: :desc) }
+  scope :all_in_order, -> { order(created_at: :desc) }
 
   # class methods
 
