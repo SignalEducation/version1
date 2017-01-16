@@ -6,7 +6,7 @@
           %h4
             =enrollment.subject_course.name
           %p.p
-            =enrollment.exam_date
+            =exam_sitting_date(enrollment.exam_date)
         .box-label
           -if enrollment.active
             %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}

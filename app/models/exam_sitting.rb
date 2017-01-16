@@ -42,6 +42,10 @@ class ExamSitting < ActiveRecord::Base
     true
   end
 
+  def formatted_date
+    date.strftime("%B %Y")
+  end
+
   protected
 
   def check_dependencies

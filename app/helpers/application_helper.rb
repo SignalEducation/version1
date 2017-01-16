@@ -70,6 +70,10 @@ module ApplicationHelper
     date.utc.strftime('%d %b')
   end
 
+  def exam_sitting_date(date)  # Used in the library UI
+    date.strftime("%B %Y")
+  end
+
   def referral_code_sharing_url(referral_code)
     "#{subscription_groups_url}/?ref_code=#{referral_code.code}"
   end

@@ -50,7 +50,7 @@
         .col-sm-6
           =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
+            =f.collection_select :exam_date, @exam_sittings, :date, :formatted_date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
 
         .col-sm-6#custom_exam_date
           %label{class: 'control-label'}
