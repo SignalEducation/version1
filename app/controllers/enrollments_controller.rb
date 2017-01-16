@@ -53,14 +53,17 @@ class EnrollmentsController < ApplicationController
 
   def edit
     @enrollment = Enrollment.find(params[:id])
+    @exam_sittings = ExamSitting.where(subject_course_id: @enrollment.subject_course.id).all_in_order
   end
 
   def update
     @enrollment = Enrollment.find(params[:id])
-    
+
     if params[:custom_exam_date].present? && !params[:exam_date].present?
       date = params[:custom_exam_date]
     elsif !params[:custom_exam_date].present? && params[:exam_date].present?
+      date = params[:exam_date]
+    elsif params[:custom_exam_date].present? && params[:exam_date].present?
       date = params[:exam_date]
     end
     @enrollment.exam_date = date

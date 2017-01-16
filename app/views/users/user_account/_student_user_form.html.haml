@@ -14,9 +14,9 @@
       .input-group.input-group-lg.full-width
         =f.text_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
-      =f.label :address, t('views.users.form.address'), class: 'control-label'
+      =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.text_field :address, placeholder: t('views.users.form.address_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'dob', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
       %br/
 
 
@@ -28,3 +28,12 @@
       =link_to('#', data: {toggle: 'modal', target: '#change_password_modal'}) do
         .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top
           =t('views.users.show.change_your_password.link')
+
+
+
+:javascript
+
+  $(function () {
+    $('#dob').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });
