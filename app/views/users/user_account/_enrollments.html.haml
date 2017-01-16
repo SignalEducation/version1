@@ -1,15 +1,16 @@
 .row
   -@enrollments.each do |enrollment|
     .col-sm-6.l-margin-bottom-big.l-margin-top
-      %a{data: {remodal: {target: 'modal', remote: edit_enrollment_url(enrollment)}}, style: 'cursor: pointer;', class: 'box box-enrollment'}
+      =link_to edit_enrollment_url(enrollment), style: 'cursor: pointer;', class: 'box box-enrollment' do
         .box-inner.enrollment-box-inner
           %h4
             =enrollment.subject_course.name
           %p.p
             =enrollment.exam_date
         .box-label
-          %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-            Edit Enrolment
-
-
-    =render partial: 'users/user_account/enrollment_edit', locals: {enrollment: enrollment}
+          -if enrollment.active
+            %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+              Pause/Edit Enrolment
+          -else
+            %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+              Reactivate/Edit Enrolment

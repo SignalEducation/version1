@@ -18,7 +18,7 @@
 class EnrollmentsController < ApplicationController
 
   before_action :logged_in_required
-  before_action :get_variables
+  before_action :get_variables, except: [:edit, :update]
 
   def create
     log = create_subject_course_user_log
@@ -51,8 +51,22 @@ class EnrollmentsController < ApplicationController
     end
   end
 
+  def edit
+    @enrollment = Enrollment.find(params[:id])
+  end
+
   def update
-    if @enrollment.update_attributes(allowed_params)
+    @enrollment = Enrollment.find(params[:id])
+    
+    if params[:custom_exam_date].present? && !params[:exam_date].present?
+      date = params[:custom_exam_date]
+    elsif !params[:custom_exam_date].present? && params[:exam_date].present?
+      date = params[:exam_date]
+    end
+    @enrollment.exam_date = date
+    @enrollment.student_number = params[:enrollment][:student_number]
+
+    if @enrollment.save
 
       redirect_to account_url(anchor: :enrollments)
     else
