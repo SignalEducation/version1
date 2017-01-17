@@ -31,7 +31,6 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
@@ -152,7 +151,7 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :enrollment_option, :email_content, :external_url, :external_url_name, :exam_body_id)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :email_content, :external_url, :external_url_name, :exam_body_id)
   end
 
 end

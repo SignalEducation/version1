@@ -947,7 +947,6 @@ en:
         group_id: Group
         is_cpd: Is this a CPD course?
         certificate: Completion Cert
-        enrollment_option: Enrollment
         cpd_hours: CPD Hours
         cpd_hours_placeholder: Required CPD Hours
         email_content: Welcome Email Content
