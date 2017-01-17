@@ -42,6 +42,7 @@ class Enrollment < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
 

@@ -95,7 +95,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def update_enrollment
-    self.enrollment.update_attribute(:updated_at, Proc.new{Time.now}.call) if self.enrollment
+    if self.enrollment && !self.enrollment.active
+      self.enrollment.update_attributes(updated_at: Proc.new{Time.now}.call, active: true)
+    elsif self.enrollment && self.enrollment.active
+      self.enrollment.update_attribute(:updated_at, Proc.new{Time.now}.call)
+    else
+
+    end
   end
 
   def last_element
