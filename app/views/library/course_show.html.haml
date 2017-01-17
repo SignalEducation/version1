@@ -22,7 +22,7 @@
         -else
           -if current_user.permission_to_see_content(@course)
             =render partial: 'enrollment_form'
-            =render partial: 'course_enrollment_modal'
+            =render partial: 'course_enrollment_modal' if @course.exam_body
           -else
             %h3.h3.card-title.l-margin-bottom
               =@course.name

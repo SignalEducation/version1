@@ -7,6 +7,11 @@
             =@course.name
         .col-sm-4.col-xs-12.text-center
 
-          %a{data: {remodal: {target: 'modal'}}, class: 'btn btn-cyan btn-wide'}
-            Enroll
+          -if @course.exam_body
+            %a{data: {remodal: {target: 'modal'}}, class: 'btn btn-cyan btn-wide'}
+              Enroll
+          -else
+            =link_to enrollment_basic_create_url(@course.name_url) do
+              .btn.btn-wide.btn-cyan
+                Enroll Now
 

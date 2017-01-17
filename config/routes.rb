@@ -88,16 +88,15 @@ Rails.application.routes.draw do
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
-    get '/enrollments/:subject_course_name_url', to: 'enrollments#new', as: :new_enrollment
+    post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
     get '/orders/enrollment/:subject_course_name_url', to: 'enrollments#create_with_order', as: :new_order_enrollment
     post '/enrollments/:subject_course_name_url', to: 'enrollments#create', as: :create_enrollment
-    resources :enrollments, only: [:edit, :update]
     #get '/enrollments/:id', to: 'enrollments#edit', as: :edit_enrollment
     #patch '/enrollments/:id', to: 'enrollments#update', as: :update_enrollment
-    post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
-
+    get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
     get 'enrollments/:enrollment_id/pause', to: 'enrollments#pause', as: :pause_enrollment
     get 'enrollments/:enrollment_id/activate', to: 'enrollments#activate', as: :activate_enrollment
+    resources :enrollments, only: [:edit, :update]
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
