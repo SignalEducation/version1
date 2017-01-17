@@ -90,6 +90,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def create_with_order
+    #Needs a review before Diplomas are reactivated
     log = create_subject_course_user_log
     @enrollment = Enrollment.new(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
     if @enrollment.save

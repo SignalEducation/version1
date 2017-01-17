@@ -26,8 +26,8 @@ describe ExamBody do
   # Constants
 
   # relationships
-  xit { should have_many(:enrollments) }
-  xit { should have_many(:subject_courses) }
+  it { should have_many(:enrollments) }
+  it { should have_many(:subject_courses) }
 
   # validation
   it { should validate_presence_of(:name) }
