@@ -23,6 +23,11 @@
           -if current_user.permission_to_see_content(@course)
             =render partial: 'enrollment_form'
             =render partial: 'course_enrollment_modal' if @course.exam_body
+
+            -if current_user.subject_course_user_log_course_ids.include?(@course.id)
+              =render partial: 'layouts/enrollment_notice', locals: {course: @course}
+
+
           -else
             %h3.h3.card-title.l-margin-bottom
               =@course.name

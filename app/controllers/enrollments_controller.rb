@@ -113,6 +113,7 @@ class EnrollmentsController < ApplicationController
     log = create_subject_course_user_log
     @enrollment = Enrollment.create(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
     redirect_to course_special_link(@course.first_active_cme)
+    flash[:success] = "Thank you for enrolling in #{@course.name}"
   end
 
   def pause

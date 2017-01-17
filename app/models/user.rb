@@ -610,6 +610,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
   end
 
+  def subject_course_user_log_course_ids
+    self.subject_course_user_logs.map(&:subject_course_id)
+  end
+
   #######################################################
   #StudentUserTypes
   #######################################################
