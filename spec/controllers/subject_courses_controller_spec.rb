@@ -311,7 +311,6 @@ describe SubjectCoursesController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:index)
         expect(assigns('subject_courses'.to_sym).count).to eq(0)
-
       end
     end
 

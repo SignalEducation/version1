@@ -53,6 +53,7 @@ FactoryGirl.define do
     question_count 1
     description "MyText"
     short_description "MyString"
+    email_content "MyString"
     sequence(:mailchimp_guid)       {|n| "dfgsdfg#{n}"}
     default_number_of_possible_exam_answers 1
     subject_course_category_id 1
