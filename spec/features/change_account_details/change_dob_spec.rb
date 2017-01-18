@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 
-describe 'User changing their email', type: :feature do
+describe 'User changing their date of birth', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
@@ -32,11 +32,10 @@ describe 'User changing their email', type: :feature do
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
       if this_user.corporate_customer?
-        fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
-        click_button(I18n.t('views.general.save_changes'))
+
       else
         within('#personal-details') do
-          fill_in I18n.t('views.users.form.address_placeholder'), with: '123 Fake Street'
+          fill_in I18n.t('views.users.form.date_of_birth_placeholder'), with: '20-02-1990'
           click_button(I18n.t('views.general.save'))
         end
       end
