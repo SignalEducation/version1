@@ -1,5 +1,9 @@
 .notice.warning
   .fa.fa-info-circle.icon
   Students who enroll in courses perform better in exams.
-  =link_to enrollment_basic_create_url(@course.name_url) do
-    Please enroll
+  -if @course.exam_body
+    %a{data: {remodal: {target: 'modal'}}}
+      Please Enroll
+  -else
+    =link_to enrollment_basic_create_url(@course.name_url) do
+      Please enroll

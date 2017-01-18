@@ -6,7 +6,8 @@
         %h2
           ="Enroll in #{@course.try(:name)}"
 
-  =form_for(@enrollment, url: create_enrollment_url, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+  =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+    =f.hidden_field :subject_course_id, value: @course.id
     .row.l-margin-top
       .col-sm-12.l-margin-top.text-left
         .col-sm-8
