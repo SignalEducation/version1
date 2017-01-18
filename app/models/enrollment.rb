@@ -48,7 +48,7 @@ class Enrollment < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def set_empty_strings_to_nil

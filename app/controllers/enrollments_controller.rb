@@ -18,9 +18,11 @@
 class EnrollmentsController < ApplicationController
 
   before_action :logged_in_required
-  before_action :get_variables, except: [:edit, :update, :basic_create]
+  before_action :get_variables
 
   def create
+    @course = SubjectCourse.find(params[:enrollment][:subject_course_id])
+    @exam_body = @course.exam_body if @course.exam_body_id
     log = create_subject_course_user_log
     if params[:registered] && !params[:not_registered]
       @enrollment = Enrollment.new(allowed_params)
@@ -37,7 +39,6 @@ class EnrollmentsController < ApplicationController
     end
     @enrollment.user_id = @user.id
     @enrollment.subject_course_user_log_id = log.id
-    @enrollment.subject_course_id = @course.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true
 
@@ -150,8 +151,6 @@ class EnrollmentsController < ApplicationController
   end
 
   def get_variables
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @exam_body = @course.exam_body if @course.exam_body_id
     @user = current_user
   end
 

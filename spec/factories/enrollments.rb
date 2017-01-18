@@ -18,8 +18,11 @@
 FactoryGirl.define do
   factory :enrollment do
     user_id 1
-subject_course_id 1
-subject_course_user_log_id ""
+    subject_course_id 1
+    student_number 123534
+    exam_date "2017-01-17"
+    exam_body_id 1
+    registered true
   end
 
 end
