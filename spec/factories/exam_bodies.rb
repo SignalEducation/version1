@@ -11,7 +11,7 @@
 
 FactoryGirl.define do
   factory :exam_body do
-    name "MyString"
+    sequence(:name)           { |n| "Exam Body #{n}" }
     url "MyString"
   end
 
