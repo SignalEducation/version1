@@ -1,7 +1,7 @@
 class StudentSignUpsController < ApplicationController
 
-  before_action :logged_in_required, only: [:account_verified]
-  before_action :logged_out_required, except: [:account_verified]
+  before_action :logged_in_required, only: [:account_verified, :admin_resend_verification_mail]
+  before_action :logged_out_required, except: [:account_verified, :admin_resend_verification_mail]
   before_action :get_variables
 
   def show
@@ -27,6 +27,18 @@ class StudentSignUpsController < ApplicationController
       MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
     else
       redirect_to(root_url)
+    end
+  end
+
+  def admin_resend_verification_mail
+    @user = User.find_by_email_verification_code(params[:email_verification_code])
+    if @user
+      flash[:success] = 'Verification Email sent'
+      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+      redirect_to users_url
+    else
+      flash[:error] = 'Verification Email was not sent'
+      redirect_to users_url
     end
   end
 

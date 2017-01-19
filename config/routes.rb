@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     get 'set_password/:id', to: 'user_password_resets#corporate_new', as: :set_password
     put 'create_password/:id', to: 'user_password_resets#corporate_create', as: :user_create_password
     get 'send_verification/:email_verification_code', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
+    get 'resend_verification/:email_verification_code', to: 'student_sign_ups#admin_resend_verification_mail', as: :admin_resend_verification_mail
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
