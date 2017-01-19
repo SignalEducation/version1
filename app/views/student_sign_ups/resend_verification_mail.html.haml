@@ -7,7 +7,7 @@
       .row.l-margin-bottom#thank-you-message
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            ="Welcome, #{current_user.first_name}"
+            Thanks for Signing Up
         .col-md-10.col-md-offset-1.l-margin-bottom-6x
           .corporate-box-item
             .container-fluid
@@ -26,42 +26,4 @@
                 %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
                   ="If you don't receive your verification email in the next 5 minutes please click on the speech bubble in the bottom right of your screen to talk with us directly."
 
-      %hr/
-      .text-center.l-margin-bottom-big
-        %h3
-          Get Started!
-        %p
-          Select your first course to begin advancing your career.
-      .container-fluid.l-margin-bottom-huge
-        .course-list-wrap
-          .row
-            -if current_user.try(:topic_interest)
-              -interest = current_user.topic_interest
-              -group = Group.where('name ILIKE ?', "#{interest}").try(:last) || Group.first
-              -group.children.each do |course|
-                .col-sm-6.col-md-4
-                  =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
-                    .box-inner{style: 'height: 163px'}
-                      %h3.h4.box-title
-                        =course.try(:name)
-                      %p.box-desc
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.description.to_s.truncate(30)
-                    .box-label
-                      =t('views.general.start')
-            -else
-              -@courses.each do |course|
-                .col-sm-6.col-md-4
-                  =link_to library_special_link(course), class: 'library-box library-box-item panel text-center' do
-                    .box-inner{style: 'height: 163px'}
-                      %h3.h4.box-title
-                        =course.try(:name)
-                      %p.box-desc
-                        -if course.short_description
-                          =course.try(:short_description).to_s.truncate(30)
-                        -else
-                          =course.description.to_s.truncate(30)
-                    .box-label
-                      =t('views.general.start')
+-#TODO FAQ will be added here when static page changes are done

@@ -1,0 +1,60 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom#thank-you-message
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Verification Complete
+        .col-md-10.col-md-offset-1.l-margin-bottom-6x
+          .corporate-box-item
+            .container-fluid
+              .row
+                .col-sm-6.col-sm-offset-3
+                  .text-center
+                    %h4.h3.l-margin-bottom
+                      Your account is now active
+                    %p.p
+                      ="Your Free Trial is valid until #{humanize_date_and_month(current_user.created_at + 7.days)} or you reach 200 minutes of course content"
+
+
+      .text-center.l-margin-top-huge.l-margin-bottom-huge
+        %h2
+          What courses are you interested in ?
+      .container-fluid.l-margin-bottom-huge
+        .course-list-wrap
+          .row
+            -if current_user.topic_interest && current_user.topic_interest.present?
+              -@group.children.each do |course|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(course), class: 'box box-course' do
+                    .box-inner
+                      .l-margin-top-xl
+                        %h2{style: 'margin-bottom: 5px;'}
+                          =course.try(:name)
+                        %p.p
+                          -if course.short_description
+                            =course.try(:short_description).to_s.truncate(30)
+                          -else
+                            =course.description.to_s.truncate(30)
+                    .box-label
+                      =t('views.general.start')
+
+            -else
+              -@groups.each_with_index do |group|
+                -if group.active_children.any?
+                  .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
+                    =link_to library_special_link(group), class: 'box box-course' do
+                      .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
+                      .box-inner
+                        .l-margin-top-xl
+                          %h2{style: 'margin-bottom: 5px;'}
+                            =group.name
+                          %p.p
+                            =group.description
+
+                      .box-label
+                        %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                          Browse Courses

@@ -189,10 +189,8 @@ class UsersController < ApplicationController
           end
         end
         @user.assign_anonymous_logs_to_user(current_session_guid)
-        user = User.get_and_activate(@user.account_activation_code)
         @user.create_referral_code
-        UserSession.create(user)
-        redirect_to personal_sign_up_complete_url
+        redirect_to personal_sign_up_complete_url(@user.account_activation_code)
       else
         session[:sign_up_errors] = @user.errors unless @user.errors.empty?
         session[:valid_params] = [@user.first_name, @user.last_name, @user.email] unless @user.errors.empty?
