@@ -163,7 +163,7 @@ class User < ActiveRecord::Base
   end
 
   def self.get_and_activate(activation_code)
-    user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
+    user = User.where(active: false).where(account_activation_code: activation_code, account_activated_at: nil).first
     time_now = Proc.new{Time.now}.call
     user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) if user
     return user

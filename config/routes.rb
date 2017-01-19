@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     #User Account & Session
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
-    get 'account_verified/:email_verification_code', to: 'student_sign_ups#account_verified',
+    get 'account_verified', to: 'student_sign_ups#account_verified',
         as: :account_verified
     get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
         as: :old_user_activation
