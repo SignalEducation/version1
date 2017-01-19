@@ -164,29 +164,15 @@ class User < ActiveRecord::Base
 
   def self.get_and_activate(activation_code)
     user = User.where.not(active: true).where(account_activation_code: activation_code, account_activated_at: nil).first
-    duplicate_users = User.where(email: user.email)
-    if duplicate_users.count > 1
-      duplicate_user = duplicate_users.last
-      duplicate_user.active = false
-      duplicate_user.email = duplicate_user.email.prepend('copy-')
-      duplicate_user.save!
-    else
-      user.account_activated_at = Proc.new{Time.now}.call
-      user.account_activation_code = nil
-      user.active = true
-      user.save!
-    end
+    time_now = Proc.new{Time.now}.call
+    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) if user
     return user
   end
 
   def self.get_and_verify(email_verification_code)
+    time_now = Proc.new{Time.now}.call
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
-    if user
-      user.email_verified_at = Proc.new{Time.now}.call
-      user.email_verification_code = nil
-      user.email_verified = true
-      user.save!
-    end
+    user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true) if user
     return user
   end
 

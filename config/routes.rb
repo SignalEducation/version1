@@ -33,6 +33,8 @@ Rails.application.routes.draw do
     #User Account & Session
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
+    get 'account_verified/:email_verification_code', to: 'student_sign_ups#account_verified',
+        as: :account_verified
     get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
         as: :old_user_activation
     resources :user_groups
@@ -50,10 +52,10 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
     get 'set_password/:id', to: 'user_password_resets#corporate_new', as: :set_password
     put 'create_password/:id', to: 'user_password_resets#corporate_create', as: :user_create_password
-    get 'send_verification', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
+    get 'send_verification/:email_verification_code', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
-    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
+    get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
