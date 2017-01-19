@@ -3,14 +3,12 @@ class UserSessionsController < ApplicationController
   before_filter :logged_out_required, only: [:new, :create]
   before_filter :logged_in_required,  only: :destroy
   before_filter :set_variables
+  before_filter :check_email_verification, only: [:create]
 
   def new
     @navbar = nil
     @footer = nil
     @user_session = UserSession.new
-    if params[:flash]
-      flash[:error] = 'You must be signed in to access that content'
-    end
   end
 
   def create
@@ -44,6 +42,14 @@ class UserSessionsController < ApplicationController
 
   def allowed_params
     params.require(:user_session).permit(:email, :password)
+  end
+
+  def check_email_verification
+    user = User.find_by_email(params[:user_session][:email])
+    unless user.email_verified
+      flash[:warning] = 'The email for that account has not been verified. Please follow the instructions in the verification email we sent you.'
+      redirect_to sign_in_url
+    end
   end
 
   def set_variables

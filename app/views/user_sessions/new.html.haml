@@ -43,11 +43,10 @@
       .l-wrap-session
         %h1.h-white.h-separator.h-separator-center.text-center
           =t('views.user_sessions.new.h1')
-
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
     .l-wrap
       .row
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
         .col-md-12
           .col-sm-8.col-sm-offset-2.l-margin-top
             .login-form.l-margin-top#sign-in
