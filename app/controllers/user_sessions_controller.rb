@@ -46,7 +46,7 @@ class UserSessionsController < ApplicationController
 
   def check_email_verification
     user = User.find_by_email(params[:user_session][:email])
-    unless user.email_verified
+    if !user.email_verified && user.individual_student?
       flash[:warning] = 'The email for that account has not been verified. Please follow the instructions in the verification email we sent you.'
       redirect_to sign_in_url
     end
