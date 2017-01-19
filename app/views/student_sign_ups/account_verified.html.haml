@@ -26,7 +26,7 @@
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap
           .row
-            -if current_user.topic_interest && current_user.topic_interest.present?
+            -if @group
               -@group.children.each do |course|
                 .col-sm-6.col-md-4
                   =link_to library_special_link(course), class: 'box box-course' do

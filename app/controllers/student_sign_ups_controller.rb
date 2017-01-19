@@ -15,7 +15,7 @@ class StudentSignUpsController < ApplicationController
     #This is the post email verification page
     if current_user.topic_interest.present?
       home_page = HomePage.where(public_url: current_user.topic_interest).first
-      @group = home_page.group
+      @group = home_page.group if home_page
     end
     @groups = Group.for_public.all_active.all_in_order
   end
