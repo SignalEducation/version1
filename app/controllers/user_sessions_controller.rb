@@ -3,6 +3,7 @@ class UserSessionsController < ApplicationController
   before_filter :logged_out_required, only: [:new, :create]
   before_filter :logged_in_required,  only: :destroy
   before_filter :set_variables
+  before_filter :check_email_verification, only: [:create]
 
   def new
     @navbar = nil
