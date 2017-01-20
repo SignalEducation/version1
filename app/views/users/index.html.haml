@@ -55,6 +55,8 @@
                       %td=tick_or_cross(user.active)
                       %td
                         =tick_or_cross(user.email_verified)
+                        -if !user.email_verified && user.email_verification_code
+                          =link_to 'Resend Email', admin_resend_verification_mail_url(user.email_verification_code), class: 'btn btn-red btn-small'
                       %td=user.corporate_customer.try(:organisation_name)
                       %td
                         =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
