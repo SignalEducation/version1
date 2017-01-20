@@ -16,6 +16,7 @@
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
 #  active                :boolean          default(FALSE)
+#  terms_and_conditions  :boolean          default(FALSE)
 #
 
 class Subscription < ActiveRecord::Base
@@ -26,7 +27,8 @@ class Subscription < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
                   :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode, :next_renewal_date, :active
+                  :stripe_token, :livemode, :next_renewal_date, :active,
+                  :terms_and_conditions
 
   # Constants
   STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
@@ -41,6 +43,7 @@ class Subscription < ActiveRecord::Base
   has_one :referred_signup
 
   # validation
+  validates :terms_and_conditions, presence: true, on: :update
   validates :user_id, presence: true, on: :update
   validates :subscription_plan_id, presence: true
   validates :next_renewal_date, presence: true, on: :update

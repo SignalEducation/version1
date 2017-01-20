@@ -421,6 +421,7 @@ class UsersController < ApplicationController
             subscription.stripe_guid = stripe_subscription.id
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
             subscription.stripe_customer_id = stripe_customer.id
+            subscription.terms_and_conditions = subscription_params["terms_and_conditions"]
             subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
             upgrade = subscription.save(validate: false)
           end

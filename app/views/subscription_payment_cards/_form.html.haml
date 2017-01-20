@@ -39,8 +39,8 @@
         .form-group
           .checkbox
             %label
-              =f.check_box :terms_and_conditions, required: true
-              =t('views.general.terms_and_conditions')
+              %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
+                =t('views.general.terms_and_conditions')
 
     .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       .form-group.l-margin-top
@@ -53,6 +53,15 @@
 -if action_name == 'new_paid_subscription' || action_name == 'new_subscription'
 
   :javascript
+
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#terms_and_conditions').prop('checked') == true) {
+        $("#hidden_term_and_conditions").val('true');
+      } else if($('#terms_and_conditions').prop('checked') == false) {
+        $("#hidden_term_and_conditions").val('false');
+      }
+    });
+
 
     Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
 
@@ -148,6 +157,14 @@
 -elsif action_name == 'reactivate_account'
 
   :javascript
+
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#terms_and_conditions').prop('checked') == true) {
+        $("#hidden_term_and_conditions").val('true');
+      } else if($('#terms_and_conditions').prop('checked') == false) {
+        $("#hidden_term_and_conditions").val('false');
+      }
+    });
 
     Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
 
