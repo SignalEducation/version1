@@ -10,8 +10,7 @@ class AddFieldsToEnrollment < ActiveRecord::Migration
     users = User.where.not(student_number: nil).where.not(student_number: '')
     users.each do |user|
       user.enrollments.each do |enrollment|
-        enrollment.student_number = user.student_number
-        enrollment.save
+        enrollment.update_attribute(:student_number, user.student_number) if user.student_number
       end
     end
   end
