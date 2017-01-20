@@ -33,10 +33,8 @@ describe 'The student orders process', type: :feature do
         expect(page).to have_content(product_1.price)
         expect(page).to have_content('Create Account')
         user_password = ApplicationController.generate_random_code(10)
-        student_number = ApplicationController.generate_random_code(6)
         within('#sign-up-form') do
           enter_user_details('John', 'Smith', 'john@example.com', user_password)
-          fill_in('user_student_number', with: student_number)
           check('user_terms')
           page.all(:css, '#signUp').first.click
           sleep 1
@@ -268,10 +266,8 @@ describe 'The student orders process', type: :feature do
       expect(page).to have_content(product_1.price)
       expect(page).to have_content('Create Account')
       user_password = ApplicationController.generate_random_code(10)
-      student_number = ApplicationController.generate_random_code(6)
       within('#sign-up-form') do
         enter_user_details('John', 'Smith', 'john@example.com', user_password)
-        fill_in('user_student_number', with: student_number)
         check('user_terms')
         page.all(:css, '#signUp').first.click
         sleep 1

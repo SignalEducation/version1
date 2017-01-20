@@ -187,6 +187,18 @@ en:
           success: Currency has been deleted
           error: Currency was not deleted
 
+    exam_bodies:
+      create:
+        flash:
+          success: Exam Body has been created successfully
+      update:
+        flash:
+          success: Exam Body details have been updated successfully
+      destroy:
+        flash:
+          success: Exam Body has been deleted
+          error: Exam Body was not deleted
+
     exam_sittings:
       create:
         flash:
@@ -443,18 +455,6 @@ en:
       update:
         success: Welcome to LearnSignal, your account has been activated.
         error: Sorry, something went wrong. Please contact us for assistance.
-
-    user_exam_sittings:
-      create:
-        flash:
-          success: Users ExamSitting has been created successfully
-      update:
-        flash:
-          success: Users ExamSitting details have been updated successfully
-      destroy:
-        flash:
-          success: Users ExamSitting has been deleted
-          error: Users ExamSitting was not deleted
 
 
     user_groups:

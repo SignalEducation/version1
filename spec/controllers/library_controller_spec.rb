@@ -527,8 +527,8 @@ RSpec.describe LibraryController, type: :controller do
       it "returns http success" do
         get :diploma_show, subject_course_name_url: subject_course_3.name_url
         expect(flash[:success]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(product_course_url(subject_course_3.home_page.public_url))
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:diploma_show)
       end
 
     end

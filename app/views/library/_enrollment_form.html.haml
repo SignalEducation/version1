@@ -1,41 +1,17 @@
--if current_user.student_number && current_user.terms_and_conditions
-  .enrollment-form-cover
-    .card.card-library
-      .card-library-outer-cover
-        .card-inner
-          .col-sm-8.col-xs-12
-            %h3.h3.card-title.l-margin-bottom
-              =@course.name
-          .col-sm-4.col-xs-12.text-center
+.enrollment-form-cover
+  .card.card-library
+    .card-library-outer-cover
+      .card-inner
+        .col-sm-8.col-xs-12
+          %h3.h3.card-title.l-margin-bottom
+            =@course.name
+        .col-sm-4.col-xs-12.text-center
 
-            -if current_user.permission_to_see_content(@course)
-              =link_to new_enrollment_url(@course.name_url) do
-                .btn.btn-wide.btn-cyan.enroll-now
-                  Enroll Now
-
-            -else
-              -if @course.subscription
-                =link_to user_new_subscription_url(current_user) do
-                  .btn.btn-wide.btn-cyan.enroll-now
-                    Enroll Now
-              -elsif @course.product
-                =link_to users_new_order_url(@course.name_url) do
-                  .btn.btn-wide.btn-cyan.enroll-now
-                    Enroll Now
-
-
-
--else
-
-  .enrollment-form-cover
-    .card.card-library
-      .card-library-outer-cover
-        .card-inner
-          .col-sm-8.col-xs-12
-            %h3.h3.card-title.l-margin-bottom
-              =@course.name
-          .col-sm-4.col-xs-12.text-center
-
-
-            %a.enrollmentModal{href: '#', data: {toggle: 'modal', target: '#enrollmentModal'}, class: 'btn btn-cyan btn-wide'}
+          -if @course.exam_body
+            %a{data: {remodal: {target: 'modal'}}, class: 'btn btn-cyan btn-wide'}
               Enroll
+          -else
+            =link_to enrollment_basic_create_url(@course.name_url) do
+              .btn.btn-wide.btn-cyan
+                Enroll Now
+

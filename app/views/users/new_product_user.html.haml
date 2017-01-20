@@ -40,10 +40,6 @@
                     .form-group
                       =f.label :email, t('views.users.form.email'), class: 'control-label'
                       =f.email_field :email, class: 'form-control', required: true, id: 'user_email'
-                  .col-sm-12
-                    .form-group
-                      =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
-                      =f.text_field :student_number, class: 'form-control', id: 'user_student_number'
                   .col-sm-6
                     .form-group
                       =f.label :password, t('views.users.form.password'), class: 'control-label'

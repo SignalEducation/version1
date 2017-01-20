@@ -1,0 +1,15 @@
+=form_for(@exam_body, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @exam_body, message: nil}
+  .row
+    .col-md-8.col-md-offset-2
+      =f.label :name, t('views.exam_bodies.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.exam_bodies.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      =f.label :url, t('views.exam_bodies.form.url'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :url, placeholder: t('views.exam_bodies.form.url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+  .row.l-margin-top-big
+    =f.submit t('views.general.save'), class: 'btn btn-red'
+    =link_to t('views.general.cancel'), exam_bodies_path, class: 'btn btn-cyan'

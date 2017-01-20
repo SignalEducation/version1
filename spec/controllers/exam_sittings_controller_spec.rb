@@ -8,6 +8,7 @@
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  exam_body_id      :integer
 #
 
 require 'rails_helper'
@@ -19,7 +20,6 @@ describe ExamSittingsController, type: :controller do
 
   let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting) }
   let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting) }
-  let!(:user_exam_sitting_1) { FactoryGirl.create(:user_exam_sitting, exam_sitting_id: exam_sitting_1.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_sitting) }
 
   context 'Not logged in: ' do
@@ -801,11 +801,6 @@ describe ExamSittingsController, type: :controller do
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: exam_sitting_1.id
-        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
-      end
-
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
         expect_delete_success_with_model('exam_sitting', exam_sittings_url)

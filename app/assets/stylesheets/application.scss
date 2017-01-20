@@ -23,6 +23,8 @@
 @import "mixins.scss";
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
+@import "remodal-default-theme";
+@import "remodal";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. Colours & Fonts
@@ -70,6 +72,7 @@ $colour-30: #c38cd4;
 $colour-31: #e15258;
 $colour-32: #c25975;
 $colour-33: #f092b0;
+$colour-34: #cedbe4; // Modal background
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2508,6 +2511,10 @@ a.box {
       background-size: contain;
     }
   }
+  &.box-enrollment {
+    text-align: center;
+    margin-top: $gutter;
+  }
 }
 .box-title {
   white-space: nowrap;
@@ -2524,6 +2531,9 @@ a.box {
   border-top-right-radius: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
+  &.enrollment-box-inner {
+    height: 125px;
+  }
 }
 .box-pic {
   max-height: 30%;
@@ -5338,7 +5348,7 @@ footer nav ul li a{
 }
 .account-tab p{
   line-height: 1.45;
-  color: $white;
+  color: $colour-7;
   margin: 13px 0 52px 0;
   font-size: 18.5px;
 }
@@ -5379,3 +5389,22 @@ footer nav ul li a{
   .account-tab h3 { font-size: 27px;}
   .account-tab p{ font-size: 16px }
 }
+
+.remodal {
+  background: $colour-34;
+
+  .inline-field input,
+  .inline-field label {
+    display: inline-block;
+    //margin-bottom: 0; /* I added this after I posted my reply */
+    vertical-align: middle; /* Fixes any weird issues in Firefox and IE */
+  }
+
+  hr {
+    border-color: #979797;
+    margin: $gutter 0;
+  }
+
+}
+
+

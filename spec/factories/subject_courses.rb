@@ -31,11 +31,11 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
+#  exam_body_id                            :integer
 #
 
 FactoryGirl.define do
@@ -53,6 +53,7 @@ FactoryGirl.define do
     question_count 1
     description "MyText"
     short_description "MyString"
+    email_content "MyString"
     sequence(:mailchimp_guid)       {|n| "dfgsdfg#{n}"}
     default_number_of_possible_exam_answers 1
     subject_course_category_id 1

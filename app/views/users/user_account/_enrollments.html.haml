@@ -1,34 +1,17 @@
-.col-md-12
-  .corporate-box-item.table-box
-
-    %table.table{style: 'font-size: 18px;'}
-      %thead
-        %tr
-          %th
-            =t('views.subject_course_user_log.show.course')
-          %th
-            =t('views.enrollments.show.started_at')
-          %th
-            =t('views.enrollments.show.progress')
-          %th
-
-      %tbody
-        -@enrollments.each do |enrollment|
-          %tr
-            %td
-              =enrollment.subject_course.name.to_s.truncate(20)
-            %td
-              =humanize_datetime(enrollment.created_at)
-            %td
-              =enrollment.subject_course_user_log.percentage_complete
-              ='%'
-            %td
-              -if enrollment.active
-                =link_to pause_enrollment_url(enrollment) do
-                  .btn.btn-purple.btn-small.pull-right
-                    Pause
-
-              =link_to activate_enrollment_url(enrollment) do
-                .btn.btn-purple.btn-small.pull-right
-                  Reactivate
-
+.row
+  -@enrollments.each do |enrollment|
+    .col-sm-6.l-margin-bottom-big.l-margin-top
+      =link_to edit_enrollment_url(enrollment), style: 'cursor: pointer;', class: 'box box-enrollment' do
+        .box-inner.enrollment-box-inner
+          %h4
+            =enrollment.subject_course.name
+          -if enrollment.exam_date
+            %p.p
+              =exam_sitting_date(enrollment.exam_date)
+        .box-label
+          -if enrollment.active
+            %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+              Pause/Edit Enrolment
+          -else
+            %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+              Reactivate/Edit Enrolment

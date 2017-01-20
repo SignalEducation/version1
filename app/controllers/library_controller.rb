@@ -65,15 +65,23 @@ class LibraryController < ApplicationController
   end
 
   def course_show
+
     @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
     if @course.nil?
       redirect_to subscription_groups_url
     else
-      if current_user
-        @user_exam_sittings = current_user.user_exam_sittings
-        ids = @user_exam_sittings.map(&:id)
+      if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
+
+        if @course.exam_body
+          @exam_body = @course.exam_body
+          @enrollments = @exam_body.enrollments.where(user_id: current_user.id)
+          possible_student_number = @enrollments.map(&:student_number).first
+        else
+          possible_student_number = nil
+        end
+        @enrollment = Enrollment.new(student_number: possible_student_number)
+        @exam_sittings = ExamSitting.where(subject_course_id: @course.id).all_in_order
       end
-      @exam_sittings = ExamSitting.where.not(id: ids).where(subject_course_id: @course.id).all_in_order
 
       @course_modules = @course.children.all_active.all_in_order
       @tuition_course_modules = @course_modules.all_tuition

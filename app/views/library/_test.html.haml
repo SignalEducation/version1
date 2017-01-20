@@ -1,23 +1,32 @@
 .panel-group#accordion
   %ul.course-topics-list
     -@test_course_modules.each_with_index do |child, counter|
-      %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_test_#{counter}"}
-        .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_test_#{counter}"}, style: "background-color: #{child.try(:highlight_colour)}"}
-          .box-topic-item
-            =truncate(child.name, length: 50)
-          .time.hidden-xs
-            -if child.quiz_count.to_i > 0
-              -if child.quiz_count.to_i == 1
-                =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
-              -elsif child.quiz_count.to_i > 1
-                =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
+      -if child.children.any?
+        %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_test_#{counter}"}
+          .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_test_#{counter}"}, style: "background-color: #{child.try(:highlight_colour)}"}
+            .box-topic-item
+              =truncate(child.name, length: 50)
+            .time.hidden-xs
+              -if child.quiz_count.to_i > 0
+                -if child.quiz_count.to_i == 1
+                  =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
+                -elsif child.quiz_count.to_i > 1
+                  =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
+                -if child.video_count > 0
+                  |
               -if child.video_count > 0
-                |
-            -if child.video_count > 0
-              -if child.video_count == 1
-                =child.video_count.to_s + ' ' + t('views.library.show.video')
-              -elsif child.video_count > 1
-                =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+                -if child.video_count == 1
+                  =child.video_count.to_s + ' ' + t('views.library.show.video')
+                -elsif child.video_count > 1
+                  =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+      -else
+        %li
+          .box-item.lib-panel{style: "background-color: #{child.try(:highlight_colour)}"}
+            .box-topic-item
+              =truncate(child.name, length: 50)
+            .time
+              %p{style: 'color: #EE5457;'}
+                ='Coming Soon!'
 
 
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_test_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }

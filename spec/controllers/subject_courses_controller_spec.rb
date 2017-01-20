@@ -31,11 +31,11 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
+#  exam_body_id                            :integer
 #
 
 require 'rails_helper'
@@ -311,7 +311,6 @@ describe SubjectCoursesController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:index)
         expect(assigns('subject_courses'.to_sym).count).to eq(0)
-
       end
     end
 

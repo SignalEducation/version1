@@ -58,19 +58,19 @@
 #  trial_limit_in_seconds           :integer          default(0)
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
-#  student_number                   :string
 #  terms_and_conditions             :boolean          default(FALSE)
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
+#  date_of_birth                    :date
 #
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product, :enrollment]
+  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
 
   before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
 
-  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :enrollment, :create_discourse_user, :account, :update] do
+  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :create_discourse_user, :account, :update] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
@@ -91,11 +91,6 @@ class UsersController < ApplicationController
     #user account info page
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
-    @user_exam_sittings = current_user.user_exam_sittings
-    ids = @user_exam_sittings.map(&:id)
-    @exam_sittings = ExamSitting.where.not(id: ids).all_in_order
-    course_ids = @exam_sittings.map(&:subject_course_id)
-    @sitting_courses = SubjectCourse.where(id: course_ids)
     @orders = @user.orders
     @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
@@ -324,15 +319,6 @@ class UsersController < ApplicationController
       end
     else
       render action: :edit
-    end
-  end
-
-  def enrollment
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    if @user.update_attributes(allowed_params)
-      redirect_to new_enrollment_url(@course.name_url)
-    else
-      redirect_to library_special_link(@course.name_url)
     end
   end
 
@@ -615,15 +601,15 @@ class UsersController < ApplicationController
     @orders = @user.orders
     @corporate_customers = CorporateCustomer.all_in_order
     @certs = SubjectCourseUserLog.for_user_or_session(@user.try(:id), current_session_guid).where(completed: true)
-    @enrollments = Enrollment.where(user_id: @user.try(:id))
+    @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image, :student_number, :student_user_type_id)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image, :date_of_birth, :student_user_type_id)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest, :subject_course_id, :student_number, :terms_and_conditions)
+      params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest, :subject_course_id, :date_of_birth, :terms_and_conditions)
     end
   end
 
@@ -636,7 +622,7 @@ class UsersController < ApplicationController
         :email, :first_name, :last_name,
         :country_id, :locale,
         :password, :password_confirmation,
-        :topic_interest, :student_number,
+        :topic_interest, :date_of_birth,
         :terms_and_conditions
     )
   end

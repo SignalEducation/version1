@@ -1,0 +1,27 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.exam_bodies.show.h1')
+            \#
+            =@exam_body.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.exam_bodies.form.name')
+                  %td.col-sm-8=@exam_body.name
+                %tr
+                  %td.col-sm-4=t('views.exam_bodies.form.url')
+                  %td.col-sm-8=@exam_body.url
+              %p
+                =link_to t('views.general.back'), exam_bodies_url
+                |
+                =link_to t('views.general.edit'), edit_exam_body_url(id: @exam_body.id), title: t('views.general.edit_tooltip')

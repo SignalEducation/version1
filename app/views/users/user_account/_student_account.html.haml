@@ -49,10 +49,6 @@
             .tab.account-tab#enrollments
               =render partial: 'users/user_account/enrollments'
 
-            -if @sitting_courses.any?
-              .tab.account-tab#exam_sittings
-                =render partial: 'exam_sittings/show'
-
 
         .col-sm-4
           .account-tabs
@@ -78,11 +74,6 @@
               %li
                 %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
                   =t('views.users.show.tabs.enrollments')
-              -if @sitting_courses.any?
-                %li
-                  %a{href: '#exam_sittings', role: 'tab', data: {toggle: 'tab'}}
-                    =t('views.users.show.tabs.exam_sittings')
-
 
 
 

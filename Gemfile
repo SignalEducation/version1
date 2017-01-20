@@ -41,6 +41,7 @@ gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'rack-attack'
 gem 'remotipart' # enables file upload in forms that work using AJAX
+gem 'remodal-rails'
 gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long

@@ -8,12 +8,14 @@
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  exam_body_id      :integer
 #
 
 FactoryGirl.define do
   factory :exam_sitting do
-    name "MyString"
+    sequence(:name)           { |n| "Exam Sitting #{n}" }
     subject_course_id 1
+    exam_body_id 1
     date "2016-10-26"
   end
 

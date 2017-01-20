@@ -58,10 +58,10 @@
 #  trial_limit_in_seconds           :integer          default(0)
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
-#  student_number                   :string
 #  terms_and_conditions             :boolean          default(FALSE)
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
+#  date_of_birth                    :date
 #
 
 class User < ActiveRecord::Base
@@ -83,8 +83,8 @@ class User < ActiveRecord::Base
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
                   :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
-                  :trial_limit_in_days, :trial_ended_notification_sent_at, :student_number,
-                  :terms_and_conditions, :student_user_type_id
+                  :trial_limit_in_days, :trial_ended_notification_sent_at,
+                  :terms_and_conditions, :student_user_type_id, :date_of_birth
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -111,7 +111,6 @@ class User < ActiveRecord::Base
   has_many :subscription_transactions
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
-  has_many :user_exam_sittings
   belongs_to :user_group
   has_many :user_notifications
   has_one :referral_code
@@ -597,12 +596,8 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
   end
 
-  def exam_sittings
-    user_exam_sittings.map(&:exam_sitting_id)
-  end
-
-  def exam_sitting_courses
-    user_exam_sittings.map(&:subject_course_id)
+  def subject_course_user_log_course_ids
+    self.subject_course_user_logs.map(&:subject_course_id)
   end
 
   #######################################################

@@ -8,20 +8,23 @@
 #  date              :date
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  exam_body_id      :integer
 #
 
 class ExamSitting < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :date
+  attr_accessible :name, :subject_course_id, :date, :exam_body_id
 
   # Constants
 
   # relationships
+  belongs_to :exam_body
   belongs_to :subject_course
-  has_many :user_exam_sittings
 
   # validation
+  validates :exam_body_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -36,7 +39,11 @@ class ExamSitting < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.user_exam_sittings.empty?
+    true
+  end
+
+  def formatted_date
+    date.strftime("%B %Y")
   end
 
   protected

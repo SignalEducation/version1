@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161203135032) do
+ActiveRecord::Schema.define(version: 20170117125051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,7 +290,20 @@ ActiveRecord::Schema.define(version: 20161203135032) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.boolean  "active",                     default: false
+    t.string   "student_number"
+    t.integer  "exam_body_id"
+    t.date     "exam_date"
+    t.boolean  "registered",                 default: false
   end
+
+  create_table "exam_bodies", force: :cascade do |t|
+    t.string   "name"
+    t.string   "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "exam_bodies", ["name"], name: "index_exam_bodies_on_name", using: :btree
 
   create_table "exam_sittings", force: :cascade do |t|
     t.string   "name"
@@ -298,6 +311,7 @@ ActiveRecord::Schema.define(version: 20161203135032) do
     t.date     "date"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "exam_body_id"
   end
 
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
@@ -738,11 +752,11 @@ ActiveRecord::Schema.define(version: 20161203135032) do
     t.datetime "live_date"
     t.boolean  "certificate",                             default: false, null: false
     t.string   "hotjar_guid"
-    t.boolean  "enrollment_option",                       default: false
     t.integer  "subject_course_category_id"
     t.text     "email_content"
     t.string   "external_url_name"
     t.string   "external_url"
+    t.integer  "exam_body_id"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -892,20 +906,6 @@ ActiveRecord::Schema.define(version: 20161203135032) do
 
   add_index "tutor_applications", ["email"], name: "index_tutor_applications_on_email", using: :btree
 
-  create_table "user_exam_sittings", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "exam_sitting_id"
-    t.integer  "subject_course_id"
-    t.date     "date"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-  end
-
-  add_index "user_exam_sittings", ["date"], name: "index_user_exam_sittings_on_date", using: :btree
-  add_index "user_exam_sittings", ["exam_sitting_id"], name: "index_user_exam_sittings_on_exam_sitting_id", using: :btree
-  add_index "user_exam_sittings", ["subject_course_id"], name: "index_user_exam_sittings_on_subject_course_id", using: :btree
-  add_index "user_exam_sittings", ["user_id"], name: "index_user_exam_sittings_on_user_id", using: :btree
-
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -1000,10 +1000,10 @@ ActiveRecord::Schema.define(version: 20161203135032) do
     t.integer  "trial_limit_in_seconds",                       default: 0
     t.boolean  "free_trial",                                   default: false
     t.integer  "trial_limit_in_days",                          default: 0
-    t.string   "student_number"
     t.boolean  "terms_and_conditions",                         default: false
     t.integer  "student_user_type_id"
     t.boolean  "discourse_user",                               default: false
+    t.date     "date_of_birth"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

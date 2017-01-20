@@ -574,10 +574,30 @@ en:
         publishes_in_next_3_days: Publishes in the next 3 days
         see_all_static_pages: See All Static Pages
 
+    exam_bodies:
+      form:
+        name: Name
+        name_placeholder: Name of Examining Body
+        url: Url
+        url_placeholder: Home URL of Examining Body
+
+      index:
+        h1: Exam Bodies
+
+      show:
+        h1: Exam Body
+
+      edit:
+        h1: Edit Exam Body
+
+      new:
+        h1: New Exam Body
+
     exam_sittings:
       form:
         name: Name
         subject_course_id: Course
+        exam_body_id: Exam Body
         date: Date
         date_placeholder: "2015-01-01"
 
@@ -905,6 +925,7 @@ en:
         live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
         subject_course_category_id: Course Category
+        exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
@@ -926,7 +947,6 @@ en:
         group_id: Group
         is_cpd: Is this a CPD course?
         certificate: Completion Cert
-        enrollment_option: Enrollment
         cpd_hours: CPD Hours
         cpd_hours_placeholder: Required CPD Hours
         email_content: Welcome Email Content
@@ -970,6 +990,12 @@ en:
         course: Course
         started_at: Started At
         progress: Progress
+
+      form:
+        registered: Registered
+        exam_date: Select your Exam Date
+        student_number: Student Number
+        student_number_placeholder: Student Number
 
 
 
@@ -1084,8 +1110,6 @@ en:
         password_confirmation_placeholder: Password confirmation
         address: Address
         address_placeholder: Billing address
-        student_number: Student Number - If you have one
-        student_number_placeholder: Official Student Number
         first_description: Description 1
         first_description_placeholder: First paragraph
         second_description: Description 2
@@ -1120,6 +1144,8 @@ en:
         employee_guid: Employee GUID
         employee_guid_placeholder: Employee GUID
         profile_image: Profile Image
+        date_of_birth: Date of Birth
+        date_of_birth_placeholder: D.O.B
 
       edit:
         h1: Edit Account
@@ -1196,26 +1222,6 @@ en:
           subscription: Choose your subscription plan
           payment: Enter your payment details
 
-
-    user_exam_sittings:
-      form:
-        subject_course_id: Course
-        user_id: User
-        exam_sitting_id: Exam Sitting
-        date: Date
-        date_placeholder: "2015-01-01"
-
-      index:
-        h1: User Exam Sittings
-
-      show:
-        h1: User Exam Sitting
-
-      edit:
-        h1: Edit User Exam Sitting
-
-      new:
-        h1: New User Exam Sitting
 
 
 

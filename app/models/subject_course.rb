@@ -31,11 +31,11 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  enrollment_option                       :boolean          default(FALSE)
 #  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
+#  exam_body_id                            :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -49,13 +49,14 @@ class SubjectCourse < ActiveRecord::Base
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
                   :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
-                  :subject_course_category_id, :enrollment_option, :email_content,
+                  :subject_course_category_id, :email_content,
                   :external_url, :external_url_name, :quiz_count, :question_count,
-                  :video_count, :total_video_duration
+                  :video_count, :total_video_duration, :exam_body_id
 
   # Constants
 
   # relationships
+  belongs_to :exam_body
   belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
   belongs_to :subject_course_category
   has_and_belongs_to_many :groups
@@ -64,10 +65,6 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_jumbo_quizzes, through: :course_modules
   has_many :enrollments
-  has_many :exam_sittings
-  has_many :user_exam_sittings
-  has_one :question_bank
-  has_one :mock_exam
   has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
@@ -75,6 +72,9 @@ class SubjectCourse < ActiveRecord::Base
   has_many :products
   has_many :orders
   has_many :white_papers
+  has_one :exam_sitting
+  has_one :question_bank
+  has_one :mock_exam
 
 
   # validation
@@ -88,7 +88,7 @@ class SubjectCourse < ActiveRecord::Base
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true
-  validates :email_content, presence: true, on: :update, if: :enrollment_option
+  validates :email_content, presence: true, on: :update
 
 
   # callbacks

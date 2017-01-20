@@ -91,14 +91,12 @@ Rails.application.routes.draw do
     resources :courses, only: [:create] do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
-    get '/enrollments/:subject_course_name_url', to: 'enrollments#create', as: :new_enrollment
-    get '/orders/enrollment/:subject_course_name_url', to: 'enrollments#create_with_order', as: :new_order_enrollment
-
     post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
-    post '/enrollments/:subject_course_name_url', to: 'users#enrollment', as: :user_enrollment
-
+    get '/orders/enrollment/:subject_course_name_url', to: 'enrollments#create_with_order', as: :new_order_enrollment
+    get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
     get 'enrollments/:enrollment_id/pause', to: 'enrollments#pause', as: :pause_enrollment
     get 'enrollments/:enrollment_id/activate', to: 'enrollments#activate', as: :activate_enrollment
+    resources :enrollments, only: [:edit, :update, :create]
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
@@ -117,6 +115,7 @@ Rails.application.routes.draw do
     get '/dashboard/corporate_manager', to: 'dashboard#corporate_customer', as: :corporate_customer_dashboard
     get '/dashboard/corporate_student', to: 'dashboard#corporate_student', as: :corporate_student_dashboard
 
+    resources :exam_bodies
     resources :exam_sittings
     resources :groups, concerns: :supports_reordering
     resources :groups do
@@ -180,8 +179,6 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_notifications
-    resources :user_exam_sittings
-    post 'user_exam_sittings', to: 'user_exam_sittings#create', as: :create_user_exam_sittings
     resources :users, only: [:new, :create]
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]

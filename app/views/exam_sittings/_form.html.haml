@@ -6,6 +6,10 @@
       .input-group.input-group-lg.full-width
         =f.text_field :name, class: 'form-control', style: 'border-radius: 6px;', autofocus: true
       %br/
+      =f.label :exam_body_id, t('views.exam_sittings.form.exam_body_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :exam_body_id, @exam_bodies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %br/
       =f.label :subject_course_id, t('views.exam_sittings.form.subject_course_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
