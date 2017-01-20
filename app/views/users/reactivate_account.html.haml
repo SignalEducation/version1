@@ -1,5 +1,6 @@
 .hero-sign-up
-  =render partial: 'layouts/transparent_navbar'
+  .l-wrap-home
+    =render partial: 'layouts/transparent_navbar'
   .l-section
     .l-wrap
       .container-fluid
@@ -11,204 +12,94 @@
               Reactivate your membership
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
+#upgrade-subscription
+  =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {role: 'form'} do |f|
+    =f.hidden_field :subscription_plan_id
+    =f.hidden_field :user_id, value: @user.id
+    =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+    =f.hidden_field :stripe_customer_id, value: @user.stripe_customer_id
+    =f.hidden_field :stripe_token
+    =render partial: 'layouts/error_messages', locals: {thing: @new_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+    .l-wrap
+      .l-section
+        .container-fluid
+          .row
+            .col-sm-12
+              %h2.h3.text-center
+                %span.number
+                  1
+                Select a plan
+          .row
+            .plans
+              -@subscription_plans.each do |plan|
+                .col-sm-4
+                  .plan{class: plan_interval(plan.payment_frequency_in_months)}
+                    .currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                      -if plan.payment_frequency_in_months == 3
+                        .plan-popular
+                          %h3.h4.plan-title{class: 'color: #1c2324;'}
+                            Most Popular
+                      .plan-header
+                        %h3.h4.plan-title
+                          =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                      .plan-inner
+                        %h4.h3.plan-price
+                          =plan.currency.format_number(plan.price)
+                        %br/
+                        %p.plan-text
+                          =plan.unlimited_access
+                        %p.plan-text
+                          &middot;
+                        %p.plan-text
+                          =plan.cancel_anytime
+                      %label.plan-option
+                        %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
+                        Choose this plan
 
--if @valid_card
-  #upgrade-subscription
-    =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {role: 'form'} do |f|
-      =f.hidden_field :subscription_plan_id
-      =f.hidden_field :user_id, value: @user.id
-      =f.hidden_field :stripe_customer_id, value: @user.stripe_customer_id
-      =render partial: 'layouts/error_messages', locals: {thing: @new_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+    .l-section.is-bg-asphalt
       .l-wrap
-        .l-section
-          .container-fluid
-            .row
-              .col-sm-12
-                %h2.h3.text-center
-                  %span.number
-                    1
-                  Select a plan
-            .row
-              .plans
-                -@subscription_plans.each do |plan|
-                  .col-sm-4
-                    .plan{class: plan_interval(plan.payment_frequency_in_months)}
-                      .currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
-                        -if plan.payment_frequency_in_months == 3
-                          .plan-popular
-                            %h3.h4.plan-title{class: 'color: #1c2324;'}
-                              Most Popular
-                        .plan-header
-                          %h3.h4.plan-title
-                            =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                        .plan-inner
-                          %h4.h3.plan-price
-                            =plan.currency.format_number(plan.price)
-                          %br/
-                          %p.plan-text
-                            =plan.unlimited_access
-                          %p.plan-text
-                            &middot;
-                          %p.plan-text
-                            =plan.cancel_anytime
-                        %label.plan-option
-                          %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                          Choose this plan
+        .container-fluid
+          .row
+            .col-sm-12.col-md-6.col-md-offset-3
+              %h2.h3.text-center
+                %span.number
+                  2
+                Payment details
+          =render partial: 'subscription_payment_cards/reactivate_account_card_form', locals: {f: f}
 
-      .l-section.is-bg-asphalt
-        .l-wrap
-          .container-fluid
-            .l-margin-top
-              .row
-                .col-sm-12.text-center
-                  .form-group
-                    -if current_user == @user
-                      =f.submit 'Reactivated Account', class: 'btn btn-red upgrade-sub'
-                    -else
-                      =link_to t('views.users.upgrade_subscription.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
+:javascript
 
-  :javascript
+  var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
 
-    var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
+  function choosePlan(theThing) {
+    $('.option[type="radio"]:checked').prop('checked', false);
+    $(theThing).find('.option[type="radio"]').prop('checked', true);
+    $('#subscription_subscription_plan_id')
+      .val($(theThing).parent().attr('data-plan-id'));
+  }
 
-    function choosePlan(theThing) {
-      $('.option[type="radio"]:checked').prop('checked', false);
-      $(theThing).find('.option[type="radio"]').prop('checked', true);
-      $('#subscription_subscription_plan_id')
-        .val($(theThing).parent().attr('data-plan-id'));
-    }
-
-    function showPlans() {
-      //var country_id = $('#user_country_id').val();
-      var country_id = #{@country.id};
-      var currency = 'EUR';
-      $('.currency').addClass('hide');
-      for (var i = 0; i < countries.length; i++) {
-        if (countries[i][0] == country_id) {
-          currency = countries[i][1];
-        }
+  function showPlans() {
+    //var country_id = $('#user_country_id').val();
+    var country_id = #{@country.id};
+    var currency = 'EUR';
+    $('.currency').addClass('hide');
+    for (var i = 0; i < countries.length; i++) {
+      if (countries[i][0] == country_id) {
+        currency = countries[i][1];
       }
-      choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[1]);
     }
+    choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[1]);
+  }
 
-    $(document).on('ready', function() {
-      showPlans();
-      $('.option').bind('click', function(event) {
-        event.stopPropagation();
-        choosePlan(this.parentElement);
-      });
+  $(document).on('ready', function() {
+    showPlans();
+    $('.option').bind('click', function(event) {
+      event.stopPropagation();
+      choosePlan(this.parentElement);
+    });
 
-      $(".plan-option").bind('click', function(event) {
-        event.preventDefault();
-        choosePlan(this);
-      });
-    })
-
-
-
--else
-
-  #upgrade-subscription
-    =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {role: 'form'} do |f|
-      =f.hidden_field :subscription_plan_id
-      =f.hidden_field :user_id, value: @user.id
-      =f.hidden_field :stripe_customer_id, value: @user.stripe_customer_id
-      =f.hidden_field :stripe_token
-      =render partial: 'layouts/error_messages', locals: {thing: @new_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
-      .l-wrap
-        .l-section
-          .container-fluid
-            .row
-              .col-sm-12
-                %h2.h3.text-center
-                  %span.number
-                    1
-                  Select a plan
-            .row
-              .plans
-                -@subscription_plans.each do |plan|
-                  .col-sm-4
-                    .plan{class: plan_interval(plan.payment_frequency_in_months)}
-                      .currency{class: plan.currency.iso_code, id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
-                        -if plan.payment_frequency_in_months == 3
-                          .plan-popular
-                            %h3.h4.plan-title{class: 'color: #1c2324;'}
-                              Most Popular
-                        .plan-header
-                          %h3.h4.plan-title
-                            =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                        .plan-inner
-                          %h4.h3.plan-price
-                            =plan.currency.format_number(plan.price)
-                          %br/
-                          %p.plan-text
-                            =plan.unlimited_access
-                          %p.plan-text
-                            &middot;
-                          %p.plan-text
-                            =plan.cancel_anytime
-                        %label.plan-option
-                          %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                          Choose this plan
-
-      .l-section.is-bg-asphalt
-        .l-wrap
-          .container-fluid
-            .row
-              .col-sm-12.col-md-6.col-md-offset-3
-                %h2.h3.text-center
-                  %span.number
-                    2
-                  Payment details
-            =render partial: 'subscription_payment_cards/form', locals: {f: f}
-            .l-margin-top
-              .row
-                .col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
-                  .form-group
-                    %label
-                      Coupon Code
-                    =text_field_tag :coupon, nil, placeholder: 'Valid Coupon Code', class: 'form-control', default: nil
-
-
-                  .form-group
-                    -if current_user == @user
-                      =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
-                    -else
-                      =link_to t('views.users.upgrade_subscription.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
-
-  :javascript
-
-    var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
-
-    function choosePlan(theThing) {
-      $('.option[type="radio"]:checked').prop('checked', false);
-      $(theThing).find('.option[type="radio"]').prop('checked', true);
-      $('#subscription_subscription_plan_id')
-        .val($(theThing).parent().attr('data-plan-id'));
-    }
-
-    function showPlans() {
-      //var country_id = $('#user_country_id').val();
-      var country_id = #{@country.id};
-      var currency = 'EUR';
-      $('.currency').addClass('hide');
-      for (var i = 0; i < countries.length; i++) {
-        if (countries[i][0] == country_id) {
-          currency = countries[i][1];
-        }
-      }
-      choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[1]);
-    }
-
-    $(document).on('ready', function() {
-      showPlans();
-      $('.option').bind('click', function(event) {
-        event.stopPropagation();
-        choosePlan(this.parentElement);
-      });
-
-      $(".plan-option").bind('click', function(event) {
-        event.preventDefault();
-        choosePlan(this);
-      });
-    })
+    $(".plan-option").bind('click', function(event) {
+      event.preventDefault();
+      choosePlan(this);
+    });
+  })

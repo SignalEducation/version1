@@ -45,9 +45,10 @@
     .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       .form-group.l-margin-top
         -if current_user == @user
-          =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
+          =f.submit t('views.users.upgrade_subscription.reactivate_account'), class: 'btn btn-red upgrade-sub'
         -else
-          =link_to t('views.users.upgrade_subscription.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
+          =link_to t('views.users.reactivate_account.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
+
 
 
 :javascript
@@ -59,7 +60,6 @@
       $("#hidden_term_and_conditions").val('false');
     }
   });
-
 
   Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
 
@@ -89,7 +89,6 @@
   }
 
   $(document).on('ready', function() {
-    $(".spinner").hide();
     $('.creditCardNumber').keyup(function() {
       $(this).val(function(i, v) {
         var v = v.replace(/[^\d]/g, '').match(/.{1,4}/g);
@@ -109,7 +108,7 @@
     //$('#new_user').submit(function(event) {
     $('.payment-errors').closest("form").submit(function(event) {
       var $form = $(this);
-      //console.log($form);
+      console.log($form);
       // If we're in the student-signups page, make sure we have a subscription plan chosen
       if ((window.location.pathname == '/en/student_sign_ups' || window.location.pathname == '/en/student_sign_up') && isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {
         alert('Please choose a subscription plan');
@@ -138,14 +137,11 @@
         // response contains id and card, which contains additional card details
         var token = response.id;
         // Insert the token into the form so it gets submitted to the server
-        $('#user_subscriptions_attributes_0_stripe_token').val(token);
+        $('#subscription_stripe_token').val(token);
         $('#subscription_payment_card_stripe_token').val(token);
         // Kill the credit card details
         $form.find('[data-stripe]').remove();
         $form.find('.payment-errors').remove();
-        $('.coupon-section').hide();
-        $('.payment-heading').hide();
-        $(".spinner").show();
         // and submit the form
         $form.get(0).submit();
       }
