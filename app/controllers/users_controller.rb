@@ -374,7 +374,13 @@ class UsersController < ApplicationController
     @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
-    currency_id = @user.country.currency_id
+
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : @user.country
+
+    currency_id = @country.currency_id
+
+
     @subscription_plans = SubscriptionPlan
                           .where('price > 0.0')
                           .includes(:currency)
