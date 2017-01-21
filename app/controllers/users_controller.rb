@@ -525,6 +525,8 @@ class UsersController < ApplicationController
 
   def reactivation_complete
     @subscription = current_user.active_subscription
+    @subject_course_user_logs = current_user.subject_course_user_logs
+    @groups = Group.for_public.all_active.all_in_order
   end
 
   def change_plan
