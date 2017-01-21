@@ -15,45 +15,66 @@
     .l-section
       .container-fluid
         .row
-          .col-md-10.col-md-offset-1
-            .forgot-password-modal
-              %h2.text-center
+          .col-md-12
+            .col-md-6.l-margin-top
+              %h4
+                Complaints
+              %p
+                LearnSignal is committed to providing a high-quality service.  If anything is wrong, we would like to hear from you.  Any complaints that you have should be made as soon as they occur so that we may correct the problem with minimum interference to your study.
+              %p
+                After you have completed the form below, you should receive immediate confirmation of your submission.  You should expect an individual response within 48 hours.  After this, all communication will be replied to within five days until the issue is resolved.  Should you encounter any problem with this process, you can email unresolved@learnsignal.com.  Please include a copy of any previous correspondence.
+
+              .visible-xs.visible-sm.l-margin-bottom-big
+                %a{data: {remodal: {target: 'complaints-modal'}}, class: 'btn btn-cyan btn-wide'}
+                  Complaints Process
+
+            .col-md-6.l-margin-top
+              %h4
+                Contact Us
+              %p
+                Below are collection of Frequently Asked Questions.  Please have a look at these before submitting your question.  Also you could check the LearnSignal Community for further discussions on a variety of topics, including exam related and platform related questions.
+
+              %p
+                If you couldn’t find the answer to your question in either of these places, we would love to help.  Please click on the button below and one of the members of our support team will be in touch with you shortly.
+              .visible-xs.visible-sm.l-margin-bottom-big
+                %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'btn btn-purple btn-wide'}
+                  Contact Us
+
+
+          .col-md-12.hidden-xs.hidden-sm
+            .col-md-6.l-margin-top
+              %a{data: {remodal: {target: 'complaints-modal'}}, class: 'btn btn-cyan btn-wide'}
                 Complaints Process
-              =form_tag(complaints_url, {class: 'form', role: 'form'}) do
-                .col-md-8.col-md-offset-2.l-margin-top-small
-                  .col-md-6
-                    =label_tag :full_name, 'Full Name'
-                    =text_field_tag :full_name, nil, class: 'form-control'
-                    %br/
-                  .col-md-6
-                    =label_tag :email, 'Email'
-                    =email_field_tag :email_address, nil, class: 'form-control'
 
-                  .col-md-12
-                    =label_tag :subject, 'Subject'
-                    =text_field_tag :subject, nil, class: 'form-control'
-                    %br/
-                    =label_tag :body, 'Please Describe Your Issue'
-                    =text_area_tag :body, nil, class: 'form-control'
+            .col-md-6.l-margin-top
+              %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'btn btn-purple btn-wide'}
+                Contact Us
 
-                .col-md-8.col-md-offset-2.l-margin-top-big
+          .col-md-12.l-margin-top-huge
+            %h2.text-center
+              FAQ
+
+
+
+
+        .col-md-10.col-md-offset-1
+          %hr/
+          %h4.text-center.l-margin-top-big
+            Sign up for the LearnSignal newsletter
+          %br/
+          .col-md-8.col-md-offset-2
+            #response
+            =form_tag('/info_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+              .form-horizontal
+                .row
                   .col-sm-12
-                    =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+                    .input-group
+                      =hidden_field_tag(:list_id, 'a716c282e2')
+                      =email_field(:email, :address, {id: 'email', placeholder: 'Enter your email', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'})
+                      %span.input-group-btn
+                        =submit_tag 'Sign Up', class: 'btn btn-red', name: nil
 
-        .row
-          .col-md-10.col-md-offset-1
-            %hr/
-            %h4.text-center.l-margin-top-big
-              Sign up for the LearnSignal newsletter
-            %br/
-            .col-md-8.col-md-offset-2
-              #response
-              =form_tag('/info_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-                .form-horizontal
-                  .row
-                    .col-sm-12
-                      .input-group
-                        =hidden_field_tag(:list_id, 'a716c282e2')
-                        =email_field(:email, :address, {id: 'email', placeholder: 'Enter your email', class: 'form-control', style: 'border-bottom-left-radius: 4px; border-top-left-radius: 4px;'})
-                        %span.input-group-btn
-                          =submit_tag 'Sign Up', class: 'btn btn-red', name: nil
+
+=render partial: 'complaints_form_modal'
+=render partial: 'contact_us_form_modal'
+

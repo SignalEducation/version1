@@ -135,7 +135,8 @@ Rails.application.routes.draw do
     post '/subscribe', to: 'library#subscribe'
     post '/home_page_subscribe', to: 'home_pages#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
-    post '/complaints', to: 'footer_pages#zendesk'
+    post '/complaints_zendesk', to: 'footer_pages#complaints_zendesk'
+    post '/contact_us_zendesk', to: 'footer_pages#contact_us_zendesk'
 
 
 

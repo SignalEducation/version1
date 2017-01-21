@@ -43,7 +43,8 @@ class CorporateRequestsController < ApplicationController
     @corporate_request = CorporateRequest.new(allowed_params)
     if @corporate_request.save
       redirect_to submission_complete_url
-      Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request.id)
+
+      #TODO Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request.id)
     else
       redirect_to request.referrer
     end
