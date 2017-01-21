@@ -12,4 +12,13 @@ class MandrillWorker
       mc.send(method_name, *template_args)
     end
   end
+
+  def admin_perform(method_name, *template_args)
+    @user = User.find_by_email('philip@learnsignal.com')
+    if @user && @user.email
+      mc = MandrillClient.new(@user, @corporate)
+      mc.send(method_name, *template_args)
+    end
+  end
+
 end

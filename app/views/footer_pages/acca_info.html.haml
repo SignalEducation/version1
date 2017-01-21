@@ -1,0 +1,23 @@
+.hero-library
+  .l-wrap-home
+    =render partial: 'layouts/transparent_navbar'
+  .l-section
+    .l-wrap
+      .container-fluid
+        .row
+          .col-md-6.col-md-offset-3
+            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
+              ACCA at LearnSignal
+            %p.h5.h-white.text-center
+
+
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.is-bg-asphalt
+  .l-wrap
+    .l-section-small
+      .container-fluid
+        .row
+          .col-md-10.col-md-offset-1
+            %h2.text-center.l-margin-bottom
+

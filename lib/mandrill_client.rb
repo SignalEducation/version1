@@ -107,6 +107,17 @@ class MandrillClient
   end
 
 
+  def send_tutor_application_email(first_name, last_name, email, info, description)
+    msg = message_stub.merge({"subject" => "New Tutor Application"})
+    msg["global_merge_vars"] << { "name" => "FIRSTNAME", "content" => first_name }
+    msg["global_merge_vars"] << { "name" => "LASTNAME", "content" => last_name }
+    msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
+    msg["global_merge_vars"] << { "name" => "INFO", "content" => info }
+    msg["global_merge_vars"] << { "name" => "DESCRIPTION", "content" => description }
+    send_template('tutor-application-email', msg)
+  end
+
+
 
 
 

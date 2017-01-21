@@ -1070,7 +1070,7 @@ en:
         last_name_placeholder: Name
         email: Email
         email_placeholder: tutor@example.com
-        info: Where can we learn more about you (Twitter, Linked In, Website)
+        info: Where can we learn more about you (LinkedIn, Website)
         info_placeholder: asdf
         description: What would you like to teach? Please give us a short description.
         description_placeholder: asdf

@@ -15,8 +15,8 @@ class FooterPagesController < ApplicationController
     seo_title_maker('Privacy Policy', 'Privacy Policy of learnsignal.com. This Application collects some Personal Data from its Users.', nil)
   end
 
-  def careers
-    seo_title_maker('Careers', 'Here at LearnSignal, we like proactive innovators who produce great work and play an impactful role in interesting projects.', nil)
+  def acca_info
+    seo_title_maker('ACCA at LearnSignal', '', nil)
   end
 
   def contact

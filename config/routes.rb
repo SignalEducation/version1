@@ -173,7 +173,7 @@ Rails.application.routes.draw do
     resources :tutor_applications
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'business', to: 'footer_pages#business', as: :business
-    get 'careers', to: 'footer_pages#careers'
+    get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
