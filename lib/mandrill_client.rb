@@ -114,7 +114,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
     msg["global_merge_vars"] << { "name" => "INFO", "content" => info }
     msg["global_merge_vars"] << { "name" => "DESCRIPTION", "content" => description }
-    send_template('tutor-application-email', msg)
+    send_template('new-tutor-application', msg)
   end
 
 
