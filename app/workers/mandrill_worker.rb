@@ -5,16 +5,14 @@ class MandrillWorker
   sidekiq_options queue: 'high'
 
   def perform(user_id, method_name, *template_args)
-    @user = User.find_by_id(user_id)
-    @corporate = CorporateCustomer.find_by_id(@user.corporate_customer_id)
-    if @user && @user.email
-      mc = MandrillClient.new(@user, @corporate)
-      mc.send(method_name, *template_args)
+    if method_name == 'send_tutor_application_email'
+      @user = User.find_by_email('philip@learnsignal.com')
+      @corporate = CorporateCustomer.find_by_id(@user.corporate_customer_id)
+    else
+      @user = User.find_by_id(user_id)
+      @corporate = CorporateCustomer.find_by_id(@user.corporate_customer_id)
     end
-  end
 
-  def admin_perform(method_name, *template_args)
-    @user = User.find_by_email('philip@learnsignal.com')
     if @user && @user.email
       mc = MandrillClient.new(@user, @corporate)
       mc.send(method_name, *template_args)

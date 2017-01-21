@@ -40,7 +40,7 @@ class TutorApplicationsController < ApplicationController
     if @tutor_application.save
       flash[:success] = I18n.t('controllers.tutor_applications.create.flash.success')
       redirect_to action: :new
-      MandrillWorker.admin_perform('send_tutor_application_email', @tutor_application.first_name, @tutor_application.last_name, @tutor_application.email, @tutor_application.info, @tutor_application.description) unless Rails.env.test?
+      MandrillWorker.perform_async('send_tutor_application_email', @tutor_application.first_name, @tutor_application.last_name, @tutor_application.email, @tutor_application.info, @tutor_application.description) unless Rails.env.test?
     else
       render action: :new
     end
