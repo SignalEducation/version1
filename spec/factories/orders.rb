@@ -28,6 +28,7 @@ FactoryGirl.define do
     live_mode false
     current_status "MyString"
     coupon_code "MyString"
+    terms_and_conditions true
   end
 
 end
