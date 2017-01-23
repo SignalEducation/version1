@@ -190,4 +190,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct))
   end
 
+  def check_for_enrollment_email_conditions
+    #sibling_logs = self.student_exam_track.subject_course_user_log.cme_user_logs.all_completed.with_elements_active
+
+    #if sibling_logs
+
+    #end
+  end
+
 end

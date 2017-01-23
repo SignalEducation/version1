@@ -4,7 +4,7 @@ class ConditionalMandrillMailsProcessor
   end
 
   DAYS_IN_A_ROW = 9
-  DAYS_WITHOUT_UPDATE = 5
+  DAYS_WITHOUT_UPDATE = 3
 
   def self.process_study_streak(start_calculation_from)
     last_log_date = start_calculation_from == 'today' ? Time.now.end_of_day : 1.day.ago.end_of_day
@@ -66,9 +66,7 @@ class ConditionalMandrillMailsProcessor
         days = DAYS_WITHOUT_UPDATE
         course_parent_url = log.subject_course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
         url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{log.subject_course.name_url}"
-        MandrillWorker.perform_async(log.user.id,
-                                     "send_we_havent_seen_you_in_a_while_email",
-                                     url, course_name, days) if log
+        MandrillWorker.perform_async(log.user.id, "send_we_havent_seen_you_in_a_while_email", url, course_name, days) if log
       end
     end
   end
