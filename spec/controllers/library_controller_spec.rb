@@ -117,7 +117,7 @@ RSpec.describe LibraryController, type: :controller do
       it "returns http success because purchased by user" do
 
         #TODO Change this to use the Stripe Mock Gem
-        student_order = Order.create!(product_id: product_1.id, subject_course_id: subject_course_3.id, user_id: individual_student_user.id, current_status: 'paid', stripe_guid: 'MyString', stripe_customer_id: 'MyString', live_mode: false)
+        student_order = Order.create!(product_id: product_1.id, subject_course_id: subject_course_3.id, user_id: individual_student_user.id, current_status: 'paid', stripe_guid: 'MyString', stripe_customer_id: 'MyString', live_mode: false, terms_and_conditions: true)
 
         get :diploma_show, subject_course_name_url: subject_course_3.name_url
         expect(response).to have_http_status(:success)
