@@ -15,6 +15,7 @@
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
+#  terms_and_conditions      :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -27,6 +28,7 @@ FactoryGirl.define do
     live_mode false
     current_status "MyString"
     coupon_code "MyString"
+    terms_and_conditions true
   end
 
 end

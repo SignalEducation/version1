@@ -57,6 +57,7 @@ en:
       or: or
       review: Review
       save: Save
+      continue: Continue
       download: Download Now
       create_account: Create Account
       upload: Upload
@@ -1218,6 +1219,7 @@ en:
         stripe_com_logo: "Stripe.com logo"
         secure_server: "Secure server"
         upgrade_subscription: Upgrade Subscription
+        reactivate_account: Reactivate Account
         h2:
           subscription: Choose your subscription plan
           payment: Enter your payment details

@@ -15,6 +15,7 @@
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
+#  terms_and_conditions      :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -36,6 +37,7 @@ describe Order do
   # relationships
   it { should belong_to(:product) }
   it { should belong_to(:subject_course) }
+  it { should belong_to(:mock_exam) }
   it { should belong_to(:user) }
 
   # validation
@@ -43,6 +45,8 @@ describe Order do
   it { should validate_numericality_of(:product_id) }
 
   it { should_not validate_presence_of(:subject_course_id) }
+
+  it { should validate_presence_of(:terms_and_conditions) }
 
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
@@ -60,11 +64,16 @@ describe Order do
 
   # scopes
   it { expect(Order).to respond_to(:all_in_order) }
+  it { expect(Order).to respond_to(:all_for_course) }
+  it { expect(Order).to respond_to(:all_for_product) }
+  it { expect(Order).to respond_to(:all_for_user) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
+
+  it { should respond_to(:stripe_token) }
 
 
 end
