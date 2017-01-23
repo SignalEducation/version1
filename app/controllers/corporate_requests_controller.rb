@@ -43,7 +43,8 @@ class CorporateRequestsController < ApplicationController
     @corporate_request = CorporateRequest.new(allowed_params)
     if @corporate_request.save
       redirect_to submission_complete_url
-      Mailers::OperationalMailers::SendCorporateEnquiryWorker.perform_async(@corporate_request.id)
+
+      MandrillWorker.perform_async('send_corporate_request_email', @corporate_request.name, @corporate_request.company, @corporate_request.email, @corporate_request.phone_number)
     else
       redirect_to request.referrer
     end

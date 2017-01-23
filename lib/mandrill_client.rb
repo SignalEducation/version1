@@ -107,6 +107,26 @@ class MandrillClient
   end
 
 
+  def send_tutor_application_email(first_name, last_name, email, info, description)
+    msg = message_stub.merge({"subject" => "New Tutor Application"})
+    msg["global_merge_vars"] << { "name" => "FIRSTNAME", "content" => first_name }
+    msg["global_merge_vars"] << { "name" => "LASTNAME", "content" => last_name }
+    msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
+    msg["global_merge_vars"] << { "name" => "INFO", "content" => info }
+    msg["global_merge_vars"] << { "name" => "DESCRIPTION", "content" => description }
+    send_template('new-tutor-application', msg)
+  end
+
+  def send_corporate_request_email(name, company, email, phone_number)
+    msg = message_stub.merge({"subject" => "New Business Account Enquiry"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
+    msg["global_merge_vars"] << { "name" => "COMPANY", "content" => company }
+    msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
+    msg["global_merge_vars"] << { "name" => "PHONENUMBER", "content" => phone_number }
+    send_template('new-business-account-enquiry', msg)
+  end
+
+
 
 
 

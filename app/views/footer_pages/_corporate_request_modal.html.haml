@@ -1,0 +1,40 @@
+.remodal{"data-remodal-id" => "complaints-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          Make an enquiry
+        %hr/
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top.text-left
+      =form_for(:corporate_request, url: corporate_requests_path, method: 'POST', html: {class: 'form-horizontal', role: 'form'}, name: 'corporate_request_form') do |f|
+        .col-md-12
+          .col-md-6
+            =f.label :name, t('views.corporate_requests.form.name'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :name, placeholder: t('views.corporate_requests.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+            %br/
+            =f.label :company, t('views.corporate_requests.form.company'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :company, placeholder: t('views.corporate_requests.form.company_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+          .col-md-6
+            =f.label :email, t('views.corporate_requests.form.email'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :email, placeholder: t('views.corporate_requests.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            =f.label :phone_number, t('views.corporate_requests.form.phone_number'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :phone_number, placeholder: t('views.corporate_requests.form.phone_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+        .col-sm-12.l-margin-top
+          .col-sm-12
+            =f.submit t('views.general.actual_submit'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
+:javascript
+
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['corporate_request_form'].submit();
+  });

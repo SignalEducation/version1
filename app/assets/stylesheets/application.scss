@@ -2511,6 +2511,9 @@ a.box {
       background-size: contain;
     }
   }
+  &.box-faq {
+
+  }
   &.box-enrollment {
     text-align: center;
     margin-top: $gutter;
@@ -5408,3 +5411,39 @@ footer nav ul li a{
 }
 
 
+
+.faq-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    cursor: pointer;
+  }
+}
+.faq-inner {
+  padding: $gutter/1.5 $gutter/1.5;
+}
+.narrow {
+  height: 100px;
+}
+
+.faq-title {
+  &.h6 {
+    margin-top: 2px;
+  }
+}
+.closed {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

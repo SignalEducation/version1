@@ -1,0 +1,36 @@
+.remodal{"data-remodal-id" => "complaints-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          Complaints Process
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top.text-left
+      =form_tag(complaints_zendesk_url, {class: 'form', role: 'form', name: 'complaints_zendesk_form'}) do
+        .col-md-12
+          .col-md-6
+            =label_tag :full_name, 'Name'
+            =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name'
+            %br/
+          .col-md-6
+            =label_tag :email, 'Email'
+            =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address'
+
+          .col-md-12
+            =label_tag :subject, 'Subject'
+            =text_field_tag :subject, nil, class: 'form-control', placeholder: 'What is the issue'
+            %br/
+            =label_tag :body, 'Please Describe Your Issue'
+            =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue'
+
+        .col-sm-12.l-margin-top
+          .col-sm-12
+            =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
+:javascript
+
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['complaints_zendesk_form'].submit();
+  });
