@@ -117,6 +117,15 @@ class MandrillClient
     send_template('new-tutor-application', msg)
   end
 
+  def send_corporate_request_email(name, company, email, phone_number)
+    msg = message_stub.merge({"subject" => "New Business Account Enquiry"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
+    msg["global_merge_vars"] << { "name" => "COMPANY", "content" => company }
+    msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
+    msg["global_merge_vars"] << { "name" => "PHONENUMBER", "content" => phone_number }
+    send_template('new-business-account-enquiry', msg)
+  end
+
 
 
 
