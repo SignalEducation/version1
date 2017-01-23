@@ -44,7 +44,7 @@ class CorporateRequestsController < ApplicationController
     if @corporate_request.save
       redirect_to submission_complete_url
 
-      MandrillWorker.perform_async('send_corporate_request_email', @corporate_request.name, @corporate_request.company, @corporate_request.email, @corporate_request.phone_number)
+      MandrillWorker.perform_async('send_corporate_request_email', @corporate_request.name, @corporate_request.company, @corporate_request.email, @corporate_request.phone_number) unless Rails.env.test?
     else
       redirect_to request.referrer
     end

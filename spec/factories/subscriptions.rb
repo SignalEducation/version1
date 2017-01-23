@@ -29,6 +29,7 @@ FactoryGirl.define do
     complimentary         false
     current_status        'active'
     livemode              false
+    terms_and_conditions              true
   end
 
 end
