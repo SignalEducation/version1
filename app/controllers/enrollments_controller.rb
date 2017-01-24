@@ -87,7 +87,7 @@ class EnrollmentsController < ApplicationController
     end
     course_parent_url = @course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
     url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
-    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url)
+    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
   end
 
   def create_with_order
@@ -103,7 +103,7 @@ class EnrollmentsController < ApplicationController
       course_parent_url = @course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
       unless Rails.env.test?
         url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
-        MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url)
+        MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
       end
       redirect_to diploma_course_url(@course.name_url)
     end

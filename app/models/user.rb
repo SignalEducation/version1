@@ -143,7 +143,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :set_trial_limit_in_days, :create_on_discourse
-  after_create :create_on_discourse
+  after_create :create_free_trial_email_workers
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -835,6 +835,12 @@ class User < ActiveRecord::Base
       free_trial_days = ENV["free_trial_days"].to_i
     end
     self.update_attributes(trial_limit_in_days: free_trial_days)
+  end
+
+  def create_free_trial_email_workers
+    new_subscription_url = new_subscription_url
+    FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
+    FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
   end
 
 end

@@ -4,7 +4,7 @@ class ConditionalMandrillMailsProcessor
   end
 
   DAYS_IN_A_ROW = 9
-  DAYS_WITHOUT_UPDATE = 5
+  DAYS_WITHOUT_UPDATE = 3
 
   def self.process_study_streak(start_calculation_from)
     last_log_date = start_calculation_from == 'today' ? Time.now.end_of_day : 1.day.ago.end_of_day
@@ -66,9 +66,7 @@ class ConditionalMandrillMailsProcessor
         days = DAYS_WITHOUT_UPDATE
         course_parent_url = log.subject_course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
         url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{log.subject_course.name_url}"
-        MandrillWorker.perform_async(log.user.id,
-                                     "send_we_havent_seen_you_in_a_while_email",
-                                     url, course_name, days) if log
+        MandrillWorker.perform_async(log.user.id, "send_we_havent_seen_you_in_a_while_email", url, course_name, days) if log
       end
     end
   end
@@ -88,9 +86,6 @@ class ConditionalMandrillMailsProcessor
 
     users = free_trial_product_users + free_trial_users
 
-    free_days_expired = "We just wanted to let you know that your free trial of #{ENV["free_trial_days"].to_s} days has ended!"
-    free_minutes_expired = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
-
 
     users.each do |user|
       if !user.subscriptions.any? &&
@@ -98,17 +93,6 @@ class ConditionalMandrillMailsProcessor
          user.trial_ended_notification_sent_at.nil? &&
          user.active?
 
-        if user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i
-          reason_text = free_minutes_expired
-        else
-          reason_text = free_days_expired
-        end
-
-        MandrillWorker.perform_async(user.id,
-                                     "send_free_trial_ended_email",
-                                     url_helpers.user_new_subscription_url(user_id: user.id, host: 'www.learnsignal.com'),
-                                     reason_text
-                                    )
 
         if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
           new_user_type_id = StudentUserType.default_no_access_user_type.id
