@@ -37,7 +37,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
                   :corporate_customer_id, :course_module_jumbo_quiz_id,
                   :quiz_attempts_attributes, :seconds_watched, :is_question_bank,
-                  :question_bank_id
+                  :question_bank_id, :updated_at, :created_at
 
   # Constants
 
@@ -200,8 +200,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
           new_log_ids << log.id if log.updated_at > (time - 1.day) && log != self
         end
       end
-      if new_log_ids.empty?
-        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.enrollment.id, Time.now, 'send_study_streak_email',scul.subject_course.name)
+      if new_log_ids.empty? && scul.last_element.next_element
+        url = Rails.application.routes.default_url_options[:host] + "/courses/#{scul.subject_course.name_url}/#{scul.last_element.next_element.course_module.name_url}/#{scul.last_element.next_element.name_url}"
+        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.enrollment.id, time.to_i, 'send_study_streak_email', url, scul.subject_course.name)
       end
     end
   end

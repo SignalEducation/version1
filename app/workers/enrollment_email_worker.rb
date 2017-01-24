@@ -8,8 +8,8 @@ class EnrollmentEmailWorker
     @user = User.where(email: email).first
     @enrollment = Enrollment.find(enrollment_id)
     @corporate = nil
-    if @user && @user.email && @user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-      if @enrollment.subject_course_user_log.("percentage_complete < 100") && !@enrollment.updated_at > datetime_triggered + 2.hours
+    if @user && @user.email && @user.individual_student?
+      if !@enrollment.subject_course_user_log.completed && (@enrollment.updated_at.to_i < datetime_triggered + 2.hours.to_i)
         mc = MandrillClient.new(@user, @corporate)
         mc.send(method_name, *template_args)
       end

@@ -106,12 +106,11 @@ class MandrillClient
     send_template('we-havent-seen-you-in-a-while', msg)
   end
 
-  def send_study_streak_email(url, course_name, days)
+  def send_study_streak_email(url, course_name)
     msg = message_stub.merge({"subject" => "#{course_name} Study"})
     msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
     msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
-    msg["global_merge_vars"] << { "name" => "DAYS_SINCE_LAST_SEEN", "content" => days }
-    send_template('we-havent-seen-you-in-a-while', msg)
+    send_template('study-streak', msg)
   end
 
 
