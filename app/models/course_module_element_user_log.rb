@@ -59,7 +59,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # callbacks
   before_create :set_latest_attempt, :set_booleans
   before_save :set_count_of_questions_taken_and_correct
-  after_create :calculate_score
+  after_create :calculate_score, :check_for_enrollment_email_conditions
   after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
   after_update :create_or_update_student_exam_track
   after_commit :add_to_user_trial_limit
@@ -191,11 +191,19 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def check_for_enrollment_email_conditions
-    #sibling_logs = self.student_exam_track.subject_course_user_log.cme_user_logs.all_completed.with_elements_active
-
-    #if sibling_logs
-
-    #end
+    new_log_ids = []
+    time = Proc.new{Time.now}.call
+    if self.student_exam_track && self.student_exam_track.subject_course_user_log && self.student_exam_track.subject_course_user_log.enrollment
+      scul = self.student_exam_track.subject_course_user_log
+      scul.student_exam_tracks.each do |set|
+        set.cme_user_logs.each do |log|
+          new_log_ids << log.id if log.updated_at > (time - 1.day) && log != self
+        end
+      end
+      if new_log_ids.empty?
+        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.enrollment.id, Time.now, 'send_study_streak_email',scul.subject_course.name)
+      end
+    end
   end
 
 end
