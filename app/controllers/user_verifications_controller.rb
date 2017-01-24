@@ -10,7 +10,7 @@ class UserVerificationsController < ApplicationController
     elsif @user
       UserSession.create(@user)
       redirect_to account_verified_url
-      subscribe_to_mailchimp(@user.email) if @user.individual_student?
+      #subscribe_to_mailchimp(@user.email) if @user.individual_student?
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
       redirect_to subscription_groups_url
@@ -42,9 +42,11 @@ class UserVerificationsController < ApplicationController
   end
 
   def subscribe_to_mailchimp(email)
-    mailchimp = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
-    list_id = ENV['learnsignal_mailchimp_list_id']
-    mailchimp.lists.subscribe(list_id, {email: email, double_optin: false})
+    if Rails.env.production?
+      mailchimp = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
+      list_id = ENV['learnsignal_mailchimp_list_id']
+      mailchimp.lists.subscribe(list_id, {email: email, double_optin: false})
+    end
   end
 
 
