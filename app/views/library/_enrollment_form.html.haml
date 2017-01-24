@@ -7,7 +7,7 @@
             =@course.name
         .col-sm-4.col-xs-12.text-center
 
-          -if @course.exam_body
+          -if @course.exam_body && @course.exam_sitting
             %a{data: {remodal: {target: 'modal'}}, class: 'btn btn-cyan btn-wide'}
               Enroll
           -else
