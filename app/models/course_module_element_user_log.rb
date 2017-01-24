@@ -37,7 +37,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
                   :corporate_customer_id, :course_module_jumbo_quiz_id,
                   :quiz_attempts_attributes, :seconds_watched, :is_question_bank,
-                  :question_bank_id, :updated_at, :created_at
+                  :question_bank_id
 
   # Constants
 
