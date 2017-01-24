@@ -16,6 +16,7 @@
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
 #  active                :boolean          default(FALSE)
+#  terms_and_conditions  :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -47,6 +48,8 @@ describe Subscription do
   # validation
   it { should validate_presence_of(:user_id).on(:update) }
 
+  it { should validate_presence_of(:terms_and_conditions).on(:update) }
+
   it { should_not validate_presence_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:subscription_plan_id) }
@@ -65,6 +68,7 @@ describe Subscription do
   # scopes
   it { expect(Subscription).to respond_to(:all_in_order) }
   it { expect(Subscription).to respond_to(:all_of_status) }
+  it { expect(Subscription).to respond_to(:all_active) }
 
   # class methods
   it { expect(Subscription).to respond_to(:create_using_stripe_subscription) }

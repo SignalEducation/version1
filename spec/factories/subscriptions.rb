@@ -16,6 +16,7 @@
 #  stripe_customer_data  :text
 #  livemode              :boolean          default(FALSE)
 #  active                :boolean          default(FALSE)
+#  terms_and_conditions  :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -28,6 +29,7 @@ FactoryGirl.define do
     complimentary         false
     current_status        'active'
     livemode              false
+    terms_and_conditions              true
   end
 
 end

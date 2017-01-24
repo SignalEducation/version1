@@ -15,6 +15,7 @@
 #  updated_at                :datetime         not null
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
+#  terms_and_conditions      :boolean          default(FALSE)
 #
 
 class OrdersController < ApplicationController
@@ -49,8 +50,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-
-    if current_user && params[:order] && params[:order][:subject_course_id] && params[:order][:stripe_token]
+    if current_user && params[:order] && params[:order][:subject_course_id] && params[:order][:stripe_token] && params[:order][:terms_and_conditions]
 
       user = current_user
       subject_course_id = params[:order][:subject_course_id]
@@ -63,6 +63,7 @@ class OrdersController < ApplicationController
       @order = Order.new(allowed_params)
       @order.user_id = user.id
       @order.product_id = product.id
+      @order.terms_and_conditions = params[:order][:terms_and_conditions]
 
       stripe_order = Stripe::Order.create(
           currency: currency.iso_code,
@@ -174,7 +175,7 @@ class OrdersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token, :mock_exam_id)
+    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token, :mock_exam_id, :terms_and_conditions)
   end
 
 end

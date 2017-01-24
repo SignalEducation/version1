@@ -21,16 +21,28 @@
             Expiry Year
           =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
     .row{style: "margin-bottom: 15px;"}
-      .col-sm-12
-        .col-sm-6{style: 'padding-left: 0px;'}
-          =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
-        .col-sm-6
-          %p.note{style: "text-align: left; margin-bottom: 0px; margin-top: 13px;"}
-            =t('views.users.upgrade_subscription.secure_server')
+      .col-sm-8.l-margin-top-big
+        .form-group
+          .checkbox
+            %label
+              %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
+                =t('views.general.terms_and_conditions')
+      .col-sm-4.l-margin-top
+        =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
+        %p.note{style: "text-align: left; margin-bottom: 0px; margin-top: 13px;"}
+          =t('views.users.upgrade_subscription.secure_server')
 
 
 
   :javascript
+
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#terms_and_conditions').prop('checked') == true) {
+        $("#hidden_term_and_conditions").val('true');
+      } else if($('#terms_and_conditions').prop('checked') == false) {
+        $("#hidden_term_and_conditions").val('false');
+      }
+    });
 
     Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
 

@@ -15,8 +15,8 @@
         %br/
         %br/
         .col-sm-6{style: 'padding-left: 0px;'}
-          %a.contactModal{href: '#', data: {toggle: 'modal', target: '#contactModal'}, class: 'btn btn-red btn-wide'}
-            ='Start Free Trial'
+          %a{data: {remodal: {target: 'complaints-modal'}}, class: 'btn btn-red btn-wide'}
+            ='Start Your Trial'
 
   %section#advance_career{style: 'padding: 40px 0 40px 0;'}
     .l-wrap-home
@@ -74,4 +74,4 @@
               Start Your Free Business Account
               %span.ico-arrow-right-r
 
-=render partial: 'layouts/contact_modal'
+=render partial: 'corporate_request_modal'

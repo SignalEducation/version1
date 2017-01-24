@@ -738,7 +738,7 @@ class User < ActiveRecord::Base
   end
 
   #User reactivating their account by adding a new subscription and card
-  def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, coupon_code)
+  def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, terms_and_conditions, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
     old_sub = user.active_subscription
@@ -784,6 +784,7 @@ class User < ActiveRecord::Base
       # mass-assign-protected attributes
       new_sub.stripe_guid = result[:id]
       new_sub.next_renewal_date = Time.at(result[:current_period_end])
+      new_sub.terms_and_conditions = terms_and_conditions
       new_sub.stripe_customer_id = user.stripe_customer_id
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
       new_sub.save(validate: false)
@@ -791,80 +792,6 @@ class User < ActiveRecord::Base
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
-      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        new_user_type_id = StudentUserType.default_sub_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
-
-      return new_sub
-    end
-  rescue ActiveRecord::RecordInvalid => exception
-    Rails.logger.error("ERROR: Subscription#reactivation - AR.Transaction failed.  Details: #{exception.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  rescue => e
-    Rails.logger.error("ERROR: Subscription#reactivation - failed to create Subscription at Stripe.  Details: #{e.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-
-  end
-
-  #User reactivating their account by adding a new subscription and no card
-  def resubscribe_account_without_token(user_id, new_plan_id, reactivate_account_url = nil)
-    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    user = User.find_by_id(user_id)
-    old_sub = user.active_subscription
-
-    # compare the currencies of the old and new plans,
-    unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-    end
-    # make sure new plan is active
-    unless new_subscription_plan.active?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-    end
-    # make sure the current subscription is in "good standing"
-    unless %w(canceled).include?(old_sub.current_status)
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-    end
-    # only individual students are allowed to upgrade their plan
-    unless user.individual_student?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-    end
-
-    #### if we're here, then we're good to go.
-    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid)
-
-    stripe_subscription.prorate = true
-    stripe_subscription.trial_end = 'now'
-    result = stripe_subscription.save # saves it on stripe
-
-    #### if we are here, the subscription creation on Stripe was successful
-    #### Now we need to create a new Subscription in our DB.
-    ActiveRecord::Base.transaction do
-      new_sub = Subscription.new(
-          user_id: user_id,
-          corporate_customer_id: user.corporate_customer_id,
-          subscription_plan_id: new_subscription_plan.id,
-          complimentary: false,
-          active: true,
-          livemode: (result[:plan][:livemode]),
-          current_status: result[:status],
-      )
-      # mass-assign-protected attributes
-      new_sub.stripe_guid = result[:id]
-      new_sub.next_renewal_date = Time.at(result[:current_period_end])
-      new_sub.stripe_customer_id = user.stripe_customer_id
-      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-      new_sub.save(validate: false)
-
-      old_sub.update_attribute(:active, false)
-      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
         new_user_type_id = StudentUserType.default_sub_user_type.id
       elsif user.student_user_type_id == StudentUserType.default_product_user_type.id

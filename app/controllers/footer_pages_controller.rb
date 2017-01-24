@@ -1,10 +1,11 @@
 class FooterPagesController < ApplicationController
 
   before_action :get_variables, except: [:missing_page]
+  before_action :get_zendesk, only: [:complaints_zendesk, :contact_us_zendesk]
 
   def business
     @groups = Group.all_active.for_public.all_in_order
-    seo_title_maker('Why LearnSignal Training', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
+    seo_title_maker('Business Training Solutions', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
   end
 
   def why_learn_signal
@@ -15,8 +16,8 @@ class FooterPagesController < ApplicationController
     seo_title_maker('Privacy Policy', 'Privacy Policy of learnsignal.com. This Application collects some Personal Data from its Users.', nil)
   end
 
-  def careers
-    seo_title_maker('Careers', 'Here at LearnSignal, we like proactive innovators who produce great work and play an impactful role in interesting projects.', nil)
+  def acca_info
+    seo_title_maker('ACCA at LearnSignal', '', nil)
   end
 
   def contact
@@ -74,16 +75,7 @@ class FooterPagesController < ApplicationController
     end
   end
 
-  def zendesk
-    require 'zendesk_api'
-    @client = ZendeskAPI::Client.new do |config|
-      config.url = "https://learnsignal.zendesk.com/api/v2"
-      config.username = "james@learnsignal.com/token"
-      config.token = ENV['learnsignal_zendesk_api_key'].to_s
-      config.retry = true
-      require 'logger'
-      config.logger = Logger.new(STDOUT)
-    end
+  def complaints_zendesk
     options = {:subject => params[:subject], :comment => { :value => params[:body] }, :requester => { :email => params[:email], :name => params[:full_name] }}
     request = ZendeskAPI::Ticket.create(@client, options)
     if request.created_at
@@ -94,7 +86,31 @@ class FooterPagesController < ApplicationController
     redirect_to contact_url
   end
 
+  def contact_us_zendesk
+    options = {:subject => "Basic Contact Us", :comment => { :value => params[:question] }, :requester => { :email => params[:email], :name => params[:full_name] }}
+    request = ZendeskAPI::Ticket.create(@client, options)
+    if request.created_at
+      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    else
+      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
+    end
+    redirect_to contact_url
+  end
+
   protected
+
+  def get_zendesk
+    require 'zendesk_api'
+    @client = ZendeskAPI::Client.new do |config|
+      config.url = "https://learnsignal.zendesk.com/api/v2"
+      config.username = "james@learnsignal.com/token"
+      config.token = ENV['learnsignal_zendesk_api_key'].to_s
+      config.retry = true
+      require 'logger'
+      config.logger = Logger.new(STDOUT)
+    end
+
+  end
 
   def get_variables
     @navbar = false
