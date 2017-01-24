@@ -95,7 +95,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "TEXT", "content" => text }
     msg["global_merge_vars"] << { "name" => "LINK", "content" => url }
     msg["global_merge_vars"] << { "name" => "CONTACTLINK", "content" => contact_link }
-    send_template('enrollment-welcome-email', msg)
+    send_template('enrollment-welcome-email-2017', msg)
   end
 
   def send_we_havent_seen_you_in_a_while_email(url, course_name, days)
