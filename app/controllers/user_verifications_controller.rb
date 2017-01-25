@@ -10,7 +10,7 @@ class UserVerificationsController < ApplicationController
     elsif @user
       UserSession.create(@user)
       redirect_to account_verified_url
-      subscribe_to_mailchimp(@user.email, @user.first_name, @user.last_name) if @user.individual_student?
+      #subscribe_to_mailchimp(@user.email, @user.first_name, @user.last_name) if @user.individual_student?
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
       redirect_to subscription_groups_url
