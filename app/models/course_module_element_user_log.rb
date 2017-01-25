@@ -202,7 +202,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       end
       if new_log_ids.empty? && scul.last_element.next_element
 
-        url = course_url(subject_course_name_url: scul.name_url, course_module_name_url: scul.last_element.next_element.course_module.name_url, course_module_element_name_url: scul.last_element.next_element.name_url)
+        url = course_url(subject_course_name_url: scul.subject_course.name_url, course_module_name_url: scul.last_element.next_element.course_module.name_url, course_module_element_name_url: scul.last_element.next_element.name_url)
 
         EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.enrollment.id, time.to_i, 'send_study_streak_email', url, scul.subject_course.name)
       end
