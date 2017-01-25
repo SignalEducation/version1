@@ -44,7 +44,7 @@ class EnrollmentsController < ApplicationController
 
     if @enrollment.save
       @user.update_attribute(:date_of_birth, dob) if params[:date_of_birth]
-      send_welcome_email
+      send_welcome_email(@course.id)
       redirect_to course_special_link(@course.first_active_cme)
     else
       flash[:error] = 'The data entered for the enrolment was not valid. Please try again!'
@@ -81,14 +81,18 @@ class EnrollmentsController < ApplicationController
 
   end
 
-  def send_welcome_email
+  def send_welcome_email(course_id)
+    @course = SubjectCourse.find(course_id)
     if @course.email_content
       content = @course.email_content
     else
       content = @course.short_description
     end
-    course_parent_url = @course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
-    url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
+    if @course.subject_course_category == SubjectCourseCategory.default_subscription_category
+      url = subscription_course_url(@course.name_url)
+    else
+      url = diploma_course_url(@course.name_url)
+    end
     MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
   end
 
