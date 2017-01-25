@@ -9,13 +9,12 @@
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Edit Enrollment
 
-      -name = @enrollment.subject_course.exam_body.name
       -if @enrollment.registered
         =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form'}) do |f|
           .col-sm-12
             .row
               .col-sm-8.col-sm-offset-2
-                =f.label :student_number, "Enter your #{name} Student Number", class: 'control-label'
+                =f.label :student_number, "Enter your #{@exam_body.name} Student Number", class: 'control-label'
                 .input-group.input-group-lg.full-width
                   =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
                 %br/
@@ -42,7 +41,7 @@
           .col-sm-12
             .row
               .col-sm-8.col-sm-offset-2
-                -question = name.to_s + '?'
+                -question = @exam_body.name.to_s + '?'
                 %label
                   ='Have you registered with the'
                   =question
@@ -50,7 +49,7 @@
 
                 %br/
                 %br/
-                =f.label :student_number, "Enter your #{name} Student Number", class: 'control-label'
+                =f.label :student_number, "Enter your #{@exam_body.name} Student Number", class: 'control-label'
                 .input-group.input-group-lg.full-width
                   =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'student_number'
 

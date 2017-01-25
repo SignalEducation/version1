@@ -54,7 +54,9 @@ class EnrollmentsController < ApplicationController
 
   def edit
     @enrollment = Enrollment.find(params[:id])
-    @exam_sittings = ExamSitting.where(subject_course_id: @enrollment.subject_course.id).all_in_order
+    @subject_course = @enrollment.subject_course if @enrollment
+    @exam_body = @subject_course.exam_body if @subject_course
+    @exam_sittings = ExamSitting.where(subject_course_id: @subject_course.id).all_in_order
   end
 
   def update
