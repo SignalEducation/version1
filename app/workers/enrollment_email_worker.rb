@@ -4,12 +4,17 @@ class EnrollmentEmailWorker
 
   sidekiq_options queue: 'medium'
 
-  def perform(email, enrollment_id, datetime_triggered, method_name, *template_args)
+  def perform(email, scul_id, datetime_triggered, method_name)
     @user = User.where(email: email).first
-    @enrollment = Enrollment.find(enrollment_id)
+    @subject_course_user_log = SubjectCourseUserLog.find(scul_id)
+    @enrollment = @subject_course_user_log.enrollment
     @corporate = nil
+    @course_name = @subject_course_user_log.subject_course.name
+    @url = Rails.application.routes.url_helpers.course_url(subject_course_name_url: @subject_course_user_log.subject_course.name_url, course_module_name_url: @subject_course_user_log.last_element.next_element.course_module.name_url, course_module_element_name_url: @subject_course_user_log.last_element.next_element.name_url, host: Rails.env.test? ? "www.example.com" : Rails.application.routes.default_url_options[:host])
+
+    template_args = [@url, @course_name]
     if @user && @user.email && @user.individual_student?
-      if !@enrollment.subject_course_user_log.completed && (@enrollment.updated_at.to_i < datetime_triggered + 2.hours.to_i)
+      if !@subject_course_user_log.completed && (@enrollment.updated_at.to_i < datetime_triggered + 2.hours.to_i)
         mc = MandrillClient.new(@user, @corporate)
         mc.send(method_name, *template_args)
       end
