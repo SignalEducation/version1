@@ -143,7 +143,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :set_trial_limit_in_days, :create_on_discourse
-  after_create :create_free_trial_email_workers
+  #after_create :create_free_trial_email_workers
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }

@@ -117,7 +117,7 @@ class MandrillClient
 
   #Free Trial Emails
   def send_free_trial_ending_email(new_subscription_url, days_left)
-    msg = message_stub.merge({"subject" => "You're free trial with learn signal has just ended"})
+    msg = message_stub.merge({"subject" => "Free Trial Status"})
     msg["global_merge_vars"] << { "name" => "DAYSLEFT", "content" => days_left }
     msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
     send_template('free-trial-ending', msg)
