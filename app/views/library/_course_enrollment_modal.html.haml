@@ -66,8 +66,8 @@
         .col-sm-12.l-margin-top-big
           %p
             Not an ACCA member ? You can register for the exam
-            =link_to url_for(@course.external_url), target: '_blank' do
-              here
+            %a{href: "#{@course.external_url}", target: '_blank'}
+              ='here'
           %p
             The ACCA is the world's most progressive and supportive accountancy body, driving your career towards even greater opportunity. Join the fastest-growing gateway to the accountancy profession and build your success story.
 
