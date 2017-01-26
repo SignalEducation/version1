@@ -37,39 +37,44 @@
 
 
       -else
-        =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form'}) do |f|
-          .col-sm-12
-            .row
-              .col-sm-8.col-sm-offset-2
-                -question = @exam_body.name.to_s + '?'
-                %label
-                  ='Have you registered with the'
-                  =question
-                  =f.check_box :registered
 
-                %br/
-                %br/
-                =f.label :student_number, "Enter your #{@exam_body.name} Student Number", class: 'control-label'
-                .input-group.input-group-lg.full-width
-                  =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'student_number'
+        -if @enrollment.exam_body && @exam_sittings.any?
+          =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form'}) do |f|
+            .col-sm-12
+              .row
+                .col-sm-8.col-sm-offset-2
+                  -question = @exam_body.name.to_s + '?'
+                  %label
+                    ='Have you registered with the'
+                    =question
+                    =f.check_box :registered
 
-                %br/
-                =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
-                .input-group.input-group-lg.full-width
-                  =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
-
-                %br/
-                #custom_exam_date
-                  %label{class: 'control-label'}
-                    ='Enter Online Exam Date'
+                  %br/
+                  %br/
+                  =f.label :student_number, "Enter your #{@exam_body.name} Student Number", class: 'control-label'
                   .input-group.input-group-lg.full-width
-                    %input{type: "text", placeholder: 'Select Date ', value: f.object.exam_date, class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'}
+                    =f.text_field :student_number, placeholder: t('views.enrollments.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'student_number'
+
+                  %br/
+                  =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =f.collection_select :exam_date, @exam_sittings, :date, :date, {prompt: t('views.general.select'), include_blank: 'Online Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
+
+                  %br/
+                  #custom_exam_date
+                    %label{class: 'control-label'}
+                      ='Enter Online Exam Date'
+                    .input-group.input-group-lg.full-width
+                      %input{type: "text", placeholder: 'Select Date ', value: f.object.exam_date, class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'}
+            %br/
+            .row
+              =f.submit t('views.general.save'), class: 'btn btn-red', id: 'enroll_now'
+              =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-cyan'
+
+        -else
 
 
-          %br/
-          .row
-            =f.submit t('views.general.save'), class: 'btn btn-red', id: 'enroll_now'
-            =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-cyan'
+
 
 -if @enrollment.registered
   :javascript
