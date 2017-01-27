@@ -726,6 +726,17 @@ class User < ActiveRecord::Base
     users
   end
 
+  def self.to_csv(options = {})
+    attributes = %w{first_name last_name email id}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
   # Should only be used from the console, it is to fix issues where free_trial subscriptions were canceled but no new plan was created
   def create_free_trial_subscription
     if self.subscriptions.first.free_trial? && self.subscriptions.first.current_status == 'canceled'

@@ -121,6 +121,42 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
+  def self.to_csv(options = {})
+    attributes = %w{name subject_area new_enrollments total_enrollments  paused_enrollments completed_enrollments}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
+      end
+    end
+  end
+
+  def subject_area
+    if self.parent
+      self.parent.name
+    else
+      '-'
+    end
+  end
+
+  def new_enrollments
+    time_now = Proc.new{Time.now}.call
+    self.enrollments.where(created_at > (time_now - 7.days)).count
+  end
+
+  def paused_enrollments
+    self.enrollments.all_paused.count
+  end
+
+  def completed_enrollments
+    self.enrollments.all_completed.count
+  end
+
+  def total_enrollments
+    self.enrollments.count
+  end
+
   # instance methods
   def users_allowed_access
     self.orders.map(&:user_id) if self.subject_course_category_id == SubjectCourseCategory.all_product.first.id
