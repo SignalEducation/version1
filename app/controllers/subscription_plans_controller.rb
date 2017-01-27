@@ -23,7 +23,7 @@
 class SubscriptionPlansController < ApplicationController
 
   before_action :logged_in_required, except: [:public_index]
-  before_action except: [:public_index]do
+  before_action except: [:public_index] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -34,7 +34,12 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def public_index
-    @currency_id = IpAddress.get_country(request.remote_ip).try(:currency_id)
+
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+
+    @currency_id = country.currency_id
+
     @student_subscription_plans = SubscriptionPlan
                                                             .where('price > 0.0')
                                                             .where(livemode: true)
