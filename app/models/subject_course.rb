@@ -132,30 +132,6 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  def subject_area
-    if self.parent
-      self.parent.name
-    else
-      '-'
-    end
-  end
-
-  def new_enrollments
-    time_now = Proc.new{Time.now}.call
-    self.enrollments.where(created_at > (time_now - 7.days)).count
-  end
-
-  def paused_enrollments
-    self.enrollments.all_paused.count
-  end
-
-  def completed_enrollments
-    self.enrollments.all_completed.count
-  end
-
-  def total_enrollments
-    self.enrollments.count
-  end
 
   # instance methods
   def users_allowed_access
@@ -333,6 +309,31 @@ class SubjectCourse < ActiveRecord::Base
       StudentExamTracksWorker.perform_async(set.id)
     end
     SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
+  end
+
+  def subject_area
+    if self.parent
+      self.parent.name
+    else
+      '-'
+    end
+  end
+
+  def new_enrollments
+    time_now = Proc.new{Time.now}.call
+    self.enrollments.where(created_at > (time_now - 7.days)).count
+  end
+
+  def paused_enrollments
+    self.enrollments.all_paused.count
+  end
+
+  def completed_enrollments
+    self.enrollments.all_completed.count
+  end
+
+  def total_enrollments
+    self.enrollments.count
   end
 
   protected
