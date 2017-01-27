@@ -1,6 +1,5 @@
 class EnrollmentEmailWorker
   include Sidekiq::Worker
-  delegate :url_helpers, to: 'Rails.application.routes'
   require 'mandrill_client'
 
   sidekiq_options queue: 'medium'
@@ -12,7 +11,7 @@ class EnrollmentEmailWorker
     @corporate = nil
     @course_name = @subject_course_user_log.subject_course.name
     if @subject_course_user_log.last_element.next_element.class == CourseModuleElement
-      @url = url_helpers.course_path(subject_course_name_url: @subject_course_user_log.subject_course.name_url, course_module_name_url: @subject_course_user_log.last_element.course_module.name_url, course_module_element_name_url: @subject_course_user_log.last_element.next_element.name_url, host: ENV['learnsignal_v3_server_email_domain'])
+      @url = Rails.application.routes.url_helpers.course_url(subject_course_name_url: @subject_course_user_log.subject_course.name_url, course_module_name_url: @subject_course_user_log.last_element.course_module.name_url, course_module_element_name_url: @subject_course_user_log.last_element.next_element.name_url, host: ENV['learnsignal_v3_server_email_domain'])
     else
       if @subject_course_user_log.subject_course.subject_course_category == SubjectCourseCategory.default_subscription_category
         @url = url_helpers.subscription_course_url(subject_course_name_url: @subject_course_user_log.subject_course.name_url, host: Rails.env.test? ? "www.example.com" : Rails.application.routes.default_url_options[:host])
