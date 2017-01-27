@@ -142,7 +142,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_trial_limit_in_days, :create_on_discourse
+  after_create :set_trial_limit_in_days, :create_on_discourse, :create_free_trial_email_workers
   #after_create :create_free_trial_email_workers
 
   # scopes
@@ -838,7 +838,7 @@ class User < ActiveRecord::Base
   end
 
   def create_free_trial_email_workers
-    new_subscription_url = new_subscription_url
+    new_subscription_url = Rails.application.routes.url_helpers.new_subscription_url(host: ENV['learnsignal_v3_server_email_domain'])
     FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
     FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
   end
