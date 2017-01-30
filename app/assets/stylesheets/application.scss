@@ -5410,8 +5410,6 @@ footer nav ul li a{
 
 }
 
-
-
 .faq-box {
   display: block;
   background: $white;
@@ -5446,4 +5444,40 @@ footer nav ul li a{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+.admin-nav {
+  //display: block;
+  background: $white;
+  position: relative;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+}
+
+.admin-nav-block {
+  color: $white;
+  list-style: none;
+  padding: 0;
+  margin: $gutter 0 0 0;
+  @include font-size(1.2);
+  @include breakpoint(md-min) {
+    @include font-size(1.4);
+  }
+  & li {
+    position: relative;
+    display: inline-block;
+    color: $colour-7;
+    margin: $gutter/2;
+  }
+  & a {
+    color: $colour-7;
+    text-decoration: none;
+    margin-left: $gutter/1.5;
+    @include opacity(0.8);
+    &:hover {
+      @include opacity(1);
+    }
+  }
 }

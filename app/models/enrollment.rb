@@ -43,6 +43,11 @@ class Enrollment < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
   scope :all_active, -> { where(active: true) }
+  scope :all_paused, -> { where(active: false) }
+
+  scope :all_completed, ->() {
+    joins(:subject_course_user_log).where('subject_course_user_logs.percentage_complete > 99')
+  }
 
   # class methods
 

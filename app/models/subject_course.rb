@@ -107,6 +107,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
   scope :in_category, lambda { |cat_id| where(subject_course_category_id: cat_id) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
@@ -120,6 +121,18 @@ class SubjectCourse < ActiveRecord::Base
       SubjectCourse.all_active.all_in_order
     end
   end
+
+  def self.to_csv(options = {})
+    attributes = %w{name subject_area new_enrollments total_enrollments  paused_enrollments completed_enrollments}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
+      end
+    end
+  end
+
 
   # instance methods
   def users_allowed_access
@@ -297,6 +310,31 @@ class SubjectCourse < ActiveRecord::Base
       StudentExamTracksWorker.perform_async(set.id)
     end
     SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
+  end
+
+  def subject_area
+    if self.parent
+      self.parent.name
+    else
+      '-'
+    end
+  end
+
+  def new_enrollments
+    time_now = Proc.new{Time.now}.call
+    self.enrollments.where(created_at > (time_now - 7.days)).count
+  end
+
+  def paused_enrollments
+    self.enrollments.all_paused.count
+  end
+
+  def completed_enrollments
+    self.enrollments.all_completed.count
+  end
+
+  def total_enrollments
+    self.enrollments.count
   end
 
   protected

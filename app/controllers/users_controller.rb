@@ -249,7 +249,6 @@ class UsersController < ApplicationController
     @user.trial_limit_in_days = 0
 
     if @user.valid? && @user.save
-      #TODO The Email needs to be replaced welcome to Course X at LearnSignal, ACCA Requirements Enroll in Course X email campaign
       MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
 
       user = User.get_and_activate(@user.account_activation_code)
@@ -360,12 +359,16 @@ class UsersController < ApplicationController
     @navbar = false
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
-    currency_id = @user.country.currency_id
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : @user.country
+    @currency_id = @country.currency_id
+
+
     @subscription_plans = SubscriptionPlan
                           .where('price > 0.0')
                           .includes(:currency)
                           .for_students
-                          .in_currency(currency_id)
+                          .in_currency(@currency_id)
                           .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
                           .all_active
                           .all_in_order

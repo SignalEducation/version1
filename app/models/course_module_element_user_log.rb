@@ -59,7 +59,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # callbacks
   before_create :set_latest_attempt, :set_booleans
   before_save :set_count_of_questions_taken_and_correct
-  after_create :calculate_score
+  after_create :calculate_score, :check_for_enrollment_email_conditions
   after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
   after_update :create_or_update_student_exam_track
   after_commit :add_to_user_trial_limit

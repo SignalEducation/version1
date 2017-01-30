@@ -1,0 +1,4 @@
+-headers = ['Name', 'Email']
+=CSV.generate_line headers
+-@users.each do |user|
+  =CSV.generate_line([user.full_name, user.email])

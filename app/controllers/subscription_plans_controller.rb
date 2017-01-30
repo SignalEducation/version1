@@ -23,7 +23,7 @@
 class SubscriptionPlansController < ApplicationController
 
   before_action :logged_in_required, except: [:public_index]
-  before_action except: [:public_index]do
+  before_action except: [:public_index] do
     ensure_user_is_of_type(['admin'])
   end
   before_action :get_variables
@@ -34,21 +34,13 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def public_index
-    @currency_id = IpAddress.get_country(request.remote_ip).try(:currency_id)
-    @student_subscription_plans = SubscriptionPlan
-                                                            .where('price > 0.0')
-                                                            .where(livemode: true)
-                                                            .where(subscription_plan_category_id: nil)
-                                                            .includes(:currency)
-                                                            .for_students
-                                                            .in_currency(@currency_id)
-                                                            .all_active
-                                                            .all_in_order
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @currency_id = country.currency_id
+    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(livemode: true).where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
     @student_plan_1 = @student_subscription_plans[0]
     @student_plan_2 = @student_subscription_plans[1]
     @student_plan_3 = @student_subscription_plans[2]
-
-
     seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
   end
 

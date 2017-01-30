@@ -2,6 +2,7 @@
 require 'mailchimp'
 require 'prawn'
 require 'mandrill'
+require 'csv'
 
 class ApplicationController < ActionController::Base
 
