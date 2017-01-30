@@ -109,6 +109,7 @@ Rails.application.routes.draw do
     resources :currencies, concerns: :supports_reordering
 
     get '/dashboard/export_users', to: 'dashboard#export_users', as: :export_users
+    get '/dashboard/export_users_monthly', to: 'dashboard#export_users_monthly', as: :export_users_monthly
     get '/dashboard/export_course', to: 'dashboard#export_courses', as: :export_courses
 
     get '/dashboard/student', to: 'dashboard#student', as: :student_dashboard

@@ -151,6 +151,8 @@ class User < ActiveRecord::Base
   scope :sort_by_email, -> { order(:email) }
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_recent_registration, -> { order(created_at: :desc) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :all_students, -> { where(user_group_id: UserGroup.default_student_user_group.id) }
 
   # class methods
   def self.all_admins

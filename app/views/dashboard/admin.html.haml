@@ -31,13 +31,11 @@
 
         .col-md-10.col-md-offset-1.l-margin-top-big
           .col-md-6
-            = link_to 'User List', export_users_path(format: :xls), class: 'btn btn-cyan btn-wide'
+            = link_to 'Total Users', export_users_path(format: :xls), class: 'btn btn-cyan btn-wide'
           .col-md-6
-            = link_to 'Course List', export_courses_path(format: :xls), class: 'btn btn-purple btn-wide'
+            = link_to 'Courses List', export_courses_path(format: :xls), class: 'btn btn-purple btn-wide'
 
         .col-md-10.col-md-offset-1.l-margin-top
           .col-md-6
-            =link_to 'Enrollments', '#', class: 'btn btn-purple btn-wide'
-          .col-md-6
-            =link_to 'Mailchimp Users', '#', class: 'btn btn-red btn-wide'
+            =link_to 'Monthly Users', export_users_monthly_path(format: :xls), class: 'btn btn-red btn-wide'
 

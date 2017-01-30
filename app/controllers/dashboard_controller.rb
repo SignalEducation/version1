@@ -8,7 +8,17 @@ class DashboardController < ApplicationController
   end
 
   def export_users
-    @users = User.all_in_order
+    @users = User.sort_by_recent_registration.all_students
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @users.to_csv() }
+      format.xls { send_data @users.to_csv(col_sep: "\t", headers: true) }
+    end
+  end
+
+  def export_users_monthly
+    @users = User.sort_by_recent_registration.this_month.all_students
 
     respond_to do |format|
       format.html

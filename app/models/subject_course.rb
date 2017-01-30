@@ -107,6 +107,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
   scope :in_category, lambda { |cat_id| where(subject_course_category_id: cat_id) }
+  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
   # class methods
   def self.get_by_name_url(the_name_url)
