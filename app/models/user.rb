@@ -142,8 +142,8 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_trial_limit_in_days, :create_on_discourse, :create_free_trial_email_workers
-  #after_create :create_free_trial_email_workers
+  after_create :set_trial_limit_in_days, :create_on_discourse
+  after_create :create_free_trial_email_workers
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
 
   def process_free_trial_limit_reached
     text = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
-    MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: self.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
+    #MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: self.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
     if self.student_user_type_id == StudentUserType.default_free_trial_user_type.id
       new_user_type_id = StudentUserType.default_no_access_user_type.id
     elsif self.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
@@ -849,7 +849,7 @@ class User < ActiveRecord::Base
   end
 
   def create_free_trial_email_workers
-    new_subscription_url = Rails.application.routes.url_helpers.new_subscription_url(host: ENV['learnsignal_v3_server_email_domain'])
+    new_subscription_url = Rails.application.routes.url_helpers.user_new_subscription_url(user_id: self.id, host: ENV['learnsignal_v3_server_email_domain'])
     FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
     FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
   end
