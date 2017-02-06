@@ -17,6 +17,8 @@
 #  created_at                           :datetime
 #  updated_at                           :datetime
 #  complimentary                        :boolean          default(FALSE)
+#  customer_support                     :boolean          default(FALSE)
+#  marketing_support                    :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

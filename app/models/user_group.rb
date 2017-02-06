@@ -17,6 +17,8 @@
 #  created_at                           :datetime
 #  updated_at                           :datetime
 #  complimentary                        :boolean          default(FALSE)
+#  customer_support                     :boolean          default(FALSE)
+#  marketing_support                    :boolean          default(FALSE)
 #
 
 class UserGroup < ActiveRecord::Base
@@ -27,7 +29,8 @@ class UserGroup < ActiveRecord::Base
   attr_accessible :name, :description, :individual_student, :tutor, :content_manager,
                   :blogger, :corporate_customer, :site_admin,
                   :subscription_required_at_sign_up, :corporate_student,
-                  :subscription_required_to_see_content, :complimentary
+                  :subscription_required_to_see_content, :complimentary,
+                  :customer_support, :marketing_support
   # Constants
   FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary)
   CORPORATE_STUDENTS = 2
@@ -73,6 +76,14 @@ class UserGroup < ActiveRecord::Base
 
   def self.default_content_manager_user_group
     where(individual_student: false, complimentary: false, corporate_student: false, tutor: false, content_manager: true, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+  end
+
+  def self.default_customer_support_user_group
+    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: true, marketing_support: false).first
+  end
+
+  def self.default_marketing_support_user_group
+    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: true, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: true).first
   end
 
   # instance methods

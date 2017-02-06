@@ -59,6 +59,18 @@
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label
+                =f.check_box :customer_support
+                =t('views.user_groups.form.customer_support')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :marketing_support
+                =t('views.user_groups.form.marketing_support')
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
                 =f.check_box :subscription_required_at_sign_up
                 =t('views.user_groups.form.subscription_required_at_sign_up')
         .form-group
