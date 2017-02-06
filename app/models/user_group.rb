@@ -32,7 +32,7 @@ class UserGroup < ActiveRecord::Base
                   :subscription_required_to_see_content, :complimentary,
                   :customer_support, :marketing_support
   # Constants
-  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary)
+  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary customer_support marketing_support)
   CORPORATE_STUDENTS = 2
   CORPORATE_CUSTOMERS = 3
 
