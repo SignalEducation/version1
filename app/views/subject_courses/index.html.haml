@@ -9,13 +9,17 @@
       .container-fluid
         .row.l-margin-bottom
           .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              -if current_user.admin? || current_user.content_manager?
-                =t('views.subject_courses.index.h1')
-              -else
-                =t('views.subject_courses.index.your_courses')
+            %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+              Courses
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12
+            =render partial: 'layouts/stats_navbar'
+
         .row.l-margin-top.l-margin-bottom
           .col-md-4.col-sm-4.l-margin-top
+            =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+          .col-md-offset-4.col-md-4.l-margin-top
             =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
               .form-group.input-group.input-group-lg
                 =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
@@ -58,8 +62,6 @@
                         %td
                           =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-red'
                 =will_paginate @subject_courses, renderer: BootstrapPagination::Rails
-                .l-margin-top-big.l-margin-bottom
-                  =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
 
 

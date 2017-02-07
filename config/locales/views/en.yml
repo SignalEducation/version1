@@ -818,6 +818,8 @@ en:
         active: Active
         currency: Currency
         subject_course: Course
+        type: Type
+        currency: Currency
 
       index:
         h1: Products
@@ -1134,6 +1136,7 @@ en:
         account_activated_at: Activated at
         active: Active
         user_group_id: User group
+        subscription_status: Status
         password_reset_requested_at: Password reset requested at
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID

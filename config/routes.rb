@@ -112,7 +112,7 @@ Rails.application.routes.draw do
     get '/dashboard/export_users_monthly', to: 'dashboard#export_users_monthly', as: :export_users_monthly
     get '/dashboard/export_course', to: 'dashboard#export_courses', as: :export_courses
 
-    get '/dashboard/student', to: 'dashboard#student', as: :student_dashboard
+    get '/dashboard', to: 'dashboard#student', as: :student_dashboard
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
     get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
     get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard

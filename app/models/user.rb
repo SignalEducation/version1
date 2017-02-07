@@ -152,6 +152,8 @@ class User < ActiveRecord::Base
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_recent_registration, -> { order(created_at: :desc) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
+  scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_students, -> { where(user_group_id: UserGroup.default_student_user_group.id) }
 
   # class methods

@@ -4,7 +4,10 @@ class DashboardController < ApplicationController
   before_action :get_variables
 
   def admin
-
+    @users = User.this_week.all_students
+    @conversions = Subscription.this_week.all_active.all_of_status('active')
+    @active_users = User.active_this_week.all_students
+    @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
   end
 
   def export_users

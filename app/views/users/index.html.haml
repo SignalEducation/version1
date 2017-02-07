@@ -3,63 +3,56 @@
     =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
-    .container-fluid.l-padding-side-3x
-      .row.l-margin-bottom.l-margin-top
-        .col-md-6.col-sm-6.col-xs-6
-          %h1.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
-            =t('views.users.index.h1')
-        .col-md-6.col-sm-6.col-xs-6.l-margin-bottom.l-margin-top.text-right
-          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Users
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'layouts/stats_navbar'
+
       .row.l-margin-top.l-margin-bottom
         .col-md-4.col-sm-4.l-margin-top
+          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+        .col-md-offset-4.col-md-4.l-margin-top
           =form_tag(users_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
               =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
               .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
                 %span.glyphicon.glyphicon-search
-        .col-md-offset-4.col-md-4.l-margin-top
-          =form_tag(users_url, method: :get, role: 'form') do
-            =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
 
         .col-md-12.l-margin-top-big
           .corporate-box-item.table-box
             .table-responsive
-              .col-sm-6.user-pagination.text-right
-                =will_paginate @users, renderer: BootstrapPagination::Rails
-
-              %table.table.table-bordered
-                %tr
-                  %th
-                    =t('views.users.form.full_name')
-                    %br/
-                    =t('views.users.form.email')
-                  %th=t('views.users.form.active')
-                  %th=t('views.users.form.email_verified')
-                  %th=t('views.users.form.corporate_customer_id')
-                  %th
-                  -user_group_id_tracker = nil
+              %table.table{style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th=t('views.users.form.full_name')
+                    %th=t('views.users.form.email')
+                    %th=t('views.users.form.email_verified')
+                    %th=t('views.users.form.user_group_id')
+                    %th=t('views.users.form.subscription_status')
+                    %th
+                    %th
+                %tbody
                   -@users.each do |user|
-                    -if (params[:sort_by].to_s.blank? || params[:sort_by].to_s == 'user_group') && user.user_group_id != user_group_id_tracker
-                      -user_group_id_tracker = user.user_group_id
-                      %tr
-                        %td{colspan: 8}
-                          -if user.user_group
-                            .h2=link_to user.user_group.name, user.user_group
-                          -else
-                            .h2=t('views.general.missing_data_error')
                     %tr
-                      %td
-                        =user.full_name
-                        %br/
-                        =user.email
-                      %td=tick_or_cross(user.active)
+                      %td=user.full_name
+                      %td=user.email
                       %td
                         =tick_or_cross(user.email_verified)
-                        -if !user.email_verified && user.email_verification_code
+                        -#if !user.email_verified && user.email_verification_code
                           =link_to 'Resend Email', admin_resend_verification_mail_url(user.email_verification_code), class: 'btn btn-red btn-small'
-                      %td=user.corporate_customer.try(:organisation_name)
+                      %td=user.user_group.try(:name)
+                      %td=user.user_subscription_status if user.individual_student?
                       %td
                         =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
+                      %td
                         =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
-                        -if user.destroyable?
+                        -#if user.destroyable?
                           =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+
+              .col-sm-10.user-pagination
+                =will_paginate @users, renderer: BootstrapPagination::Rails
+

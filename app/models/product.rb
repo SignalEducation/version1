@@ -58,6 +58,10 @@ class Product < ActiveRecord::Base
     false
   end
 
+  def type
+    self.mock_exam ? 'Mock Exam' : 'Diploma'
+  end
+
   def create_on_stripe
     stripe_product = Stripe::Product.create(name: self.name, shippable: false, active: self.active)
     self.live_mode = stripe_product.livemode

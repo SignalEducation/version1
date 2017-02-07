@@ -7,27 +7,52 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Admin Dashboard
+            Overview
       .row.l-margin-top.l-margin-bottom
         .col-md-12
-          .admin-nav
-            %ul.admin-nav-block
-              %li
-                =link_to 'Overview', admin_dashboard_url
-              %li
-                =link_to 'Users', tutors_url
-              %li
-                =link_to 'Courses', tutors_url
-              %li
-                =link_to 'Products', tutors_url
-              %li
-                =link_to 'Subscription Plans', tutors_url
+          =render partial: 'layouts/stats_navbar'
 
 
       .row.l-margin-top.l-margin-bottom-huge
-        %hr/
-        %h1.l-margin-bottom.text-left.h-separator.h-separator-left{style: 'letter-spacing:1.5px;'}
-          Reports
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@users.count
+              .h6
+                New Users
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@conversions.count
+              .h6
+                New Conversions
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@active_users.count
+              .h6
+                Active Users
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@completed_cmes.count
+              .h6
+                CMEs Completed
+
+
+      .row.l-margin-top.l-margin-bottom-huge
+        .col-md-10.col-sm-offset-1
+          %hr/
+        .col-md-12
+          %h3.l-margin-top
+            Reports
 
         .col-md-10.col-md-offset-1.l-margin-top-big
           .col-md-6
