@@ -3,11 +3,11 @@
     %li
       =link_to 'Overview', user_url(@user)
     %li
-      =link_to 'Personal', users_url
+      =link_to 'Personal', user_personal_details_url(@user)
     %li
-      =link_to 'Subscription', subject_courses_url
+      =link_to 'Subscription', user_subscription_status_url(@user)
     %li
-      =link_to 'Enrollments', products_url
+      =link_to 'Enrollments', user_enrollments_details_url(@user)
     %li
-      =link_to 'Purchases', products_url
+      =link_to 'Purchases', user_purchases_details_url(@user)
 

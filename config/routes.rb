@@ -184,7 +184,12 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_notifications
-    resources :users, only: [:new, :create]
+    resources :users, only: [:new, :create] do
+      get  '/user_personal_details', to: :user_personal_details, as: :personal_details
+      get  '/user_subscription_status', to: :user_subscription_status, as: :subscription_status
+      get  '/user_enrollments_details', to: :user_enrollments_details, as: :enrollments_details
+      get  '/user_purchases_details', to: :user_purchases_details, as: :purchases_details
+    end
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do

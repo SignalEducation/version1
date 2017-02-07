@@ -109,19 +109,20 @@ class UsersController < ApplicationController
   end
 
   def user_personal_details
+    render 'users/admin_view/user_personal_details'
 
   end
 
   def user_subscription_status
-
+    render 'users/admin_view/user_subscription_status'
   end
 
   def user_enrollments_details
-
+    render 'users/admin_view/user_enrollments_details'
   end
 
   def user_purchases_details
-
+    render 'users/admin_view/user_purchases_details'
   end
 
   def new
