@@ -104,8 +104,23 @@ class UsersController < ApplicationController
 
   end
 
-  def show
-    #TODO admin viewing a user
+  def show #(Admin Overview)
+
+  end
+
+  def user_personal_details
+
+  end
+
+  def user_subscription_status
+
+  end
+
+  def user_enrollments_details
+
+  end
+
+  def user_purchases_details
 
   end
 

@@ -1,0 +1,13 @@
+.admin-nav
+  %ul.admin-nav-block
+    %li
+      =link_to 'Overview', user_url(@user)
+    %li
+      =link_to 'Personal', users_url
+    %li
+      =link_to 'Subscription', subject_courses_url
+    %li
+      =link_to 'Enrollments', products_url
+    %li
+      =link_to 'Purchases', products_url
+
