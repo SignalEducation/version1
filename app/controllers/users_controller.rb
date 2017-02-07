@@ -105,12 +105,13 @@ class UsersController < ApplicationController
   end
 
   def show #(Admin Overview)
+    @user_sessions_count = @user.login_count
+    @enrollments = @user.enrollments
 
   end
 
   def user_personal_details
     render 'users/admin_view/user_personal_details'
-
   end
 
   def user_subscription_status

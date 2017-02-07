@@ -11,3 +11,70 @@
         .row.l-margin-top.l-margin-bottom
           .col-md-12
             =render partial: 'user_tabs'
+
+        .row.l-margin-top-huge.l-margin-bottom-huge
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =@user_sessions_count
+                .h6
+                  Sessions
+
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =@enrollments.count
+                .h6
+                  Enrollments
+
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =humanize_datetime(@user.created_at)
+                .h6
+                  Signed Up
+
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =humanize_datetime(@user.last_login_at)
+                .h6
+                  Last Active
+
+        .row.l-margin-top.l-margin-bottom-huge
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =tick_or_cross(@user.active_subscription)
+                .h6
+                  Active Subscription
+
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =@user.id
+                .h6
+                  User ID
+
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =@user.enrollments.first.student_number || '-'
+                .h6
+                  Student Number
+
+          .col-md-3.col-sm-3.col-xs-6
+            .stats-box
+              .stats-box-inner
+                .h3
+                  =tick_or_cross(@user.corporate_user?)
+                .h6
+                  Corporate User
+

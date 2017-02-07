@@ -11,3 +11,41 @@
         .row.l-margin-top.l-margin-bottom
           .col-md-12
             =render partial: 'user_tabs'
+
+
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            .corporate-box-item
+              .col-sm-10.l-margin-top
+                .col-sm-6
+                  .h3
+                    Email
+                  .h6
+                    =@user.email
+
+                .col-sm-6
+                  .h3
+                    ="D.O.B"
+                  .h6
+                    =@user.date_of_birth || '--------'
+
+              .col-sm-2.l-margin-top
+                =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
+
+
+              .col-sm-10.l-margin-top-huge
+                .col-sm-6
+                  .h3
+                    First Name
+                  .h6
+                    =@user.first_name
+
+                .col-sm-6
+                  .h3
+                    Last Name
+                  .h6
+                    =@user.last_name
+
+
+
+
