@@ -11,3 +11,49 @@
         .row.l-margin-top.l-margin-bottom
           .col-md-12
             =render partial: 'user_tabs'
+
+
+
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            -@enrollments.each do |enrollment|
+
+              .corporate-box-item
+                .col-sm-12.l-margin-top
+                  .col-sm-4
+                    .h3
+                      Email
+                    .h6
+                      =enrollment.subject_course.name
+
+                  .col-sm-4
+                    .h3
+                      Created At
+                    .h6
+                      =humanize_datetime(enrollment.created_at)
+
+                  .col-sm-4
+                    .h3
+                      Active
+                    .h6
+                      =tick_or_cross(enrollment.active)
+
+                .col-sm-12.l-margin-top
+                  .col-sm-4
+                    .h3
+                      Student Number
+                    .h6
+                      =enrollment.student_number || '------'
+
+                  .col-sm-4
+                    .h3
+                      Progress
+                    .h6
+                      =enrollment.subject_course_user_log.percentage_complete.to_s + '%'
+
+                  .col-sm-4
+                    .h3
+                      Exam Date
+                    .h6
+                      =enrollment.exam_date || '------'
+

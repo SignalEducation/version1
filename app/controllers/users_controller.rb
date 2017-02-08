@@ -125,6 +125,9 @@ class UsersController < ApplicationController
 
   def user_purchases_details
     @user = User.where(id: params[:user_id]).first
+    @orders = @user.orders
+    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
+    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
     render 'users/admin_view/user_purchases_details'
   end
 

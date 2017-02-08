@@ -53,7 +53,7 @@
                     .h6
                       =@user.minutes_left
 
-        -elsif @user.valid_subscription
+        -elsif @user.subscriptions.any?
           .row.l-margin-top.l-margin-bottom
             .col-md-12
               .corporate-box-item
