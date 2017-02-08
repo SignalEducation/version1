@@ -13,6 +13,20 @@
           =render partial: 'layouts/stats_navbar'
 
       .row.l-margin-top.l-margin-bottom
+        .col-md-6.col-sm-4.l-margin-top
+          =link_to 'New Product', new_product_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+          =link_to 'View Mock Exams', mock_exams_url, class: 'btn btn-cyan', title: t('views.general.new_tooltip')
+
+          =link_to 'New Mock Exam', new_mock_exam_url, class: 'btn btn-purple', title: t('views.general.new_tooltip')
+
+        .col-md-offset-2.col-md-4.l-margin-top
+          =form_tag(products_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
+
         .col-md-12.l-margin-top-big
           .no-image-box-item.table-box
             .table-responsive
@@ -22,7 +36,7 @@
                   %tr
                     %th=t('views.products.form.name')
                     %th=t('views.products.form.active')
-                    %th=t('views.products.form.currency')
+                    %th=t('views.products.form.price')
                     %th=t('views.products.form.type')
                     %th
                     %th
@@ -31,13 +45,22 @@
                     %tr{id: product.id}
                       %td=product.name
                       %td=tick_or_cross(product.active)
-                      %td=product.currency.leading_symbol
+                      %td=number_in_local_currency(product.price, product.currency_id)
                       %td=product.type
                       %td
-                        =link_to t('views.general.view'), product_url(product), class: 'btn btn-purple btn-small'
-                        =link_to t('views.general.edit'), edit_product_url(product), class: 'btn btn-cyan btn-small'
+                        =link_to 'Edit', edit_product_url(product), class: 'btn btn-cyan btn-small'
+                        -if product.mock_exam
+                          =link_to 'Edit Mock Exam', edit_mock_exam_url(product.mock_exam), class: 'btn btn-purple btn-small'
+                        -else
+                          =link_to 'Edit Diploma', edit_subject_course_url(product.subject_course), class: 'btn btn-purple btn-small'
                         -if product.destroyable?
                           =link_to t('views.general.delete'), product, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
-      .row
-        =link_to t('views.general.new'), new_product_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+:javascript
+  $(document).ready(function() {
+    $("#search").on('blur', function() {
+      $(this).parents('form').submit();
+    });
+
+  });

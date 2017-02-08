@@ -25,7 +25,11 @@ class ProductsController < ApplicationController
   before_action :get_variables
 
   def index
-    @products = Product.paginate(per_page: 50, page: params[:page])
+    @all_products = Product.paginate(per_page: 50, page: params[:page])
+    @products = params[:search].to_s.blank? ?
+        @products = @all_products.all_in_order :
+        @products = @all_products.search(params[:search])
+
   end
 
   def show
@@ -77,7 +81,6 @@ class ProductsController < ApplicationController
     @currencies = Currency.all_in_order
     @product_category = SubjectCourseCategory.all_product.first
     @subject_courses = SubjectCourse.all_active.all_in_order
-    #@subject_courses = SubjectCourse.all_active.all_in_order.in_category(@product_category.id)
     seo_title_maker(@product.try(:name) || 'Products', '', true)
   end
 

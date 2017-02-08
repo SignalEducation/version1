@@ -58,6 +58,15 @@ class Product < ActiveRecord::Base
     false
   end
 
+  def self.search(search)
+    if search
+      where('name ILIKE ?', "%#{search}%")
+    else
+      Product.all_active.all_in_order
+    end
+  end
+
+
   def type
     self.mock_exam ? 'Mock Exam' : 'Diploma'
   end
