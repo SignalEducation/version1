@@ -11,3 +11,123 @@
         .row.l-margin-top.l-margin-bottom
           .col-md-12
             =render partial: 'user_tabs'
+
+        -if @user.free_trial_student?
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              .corporate-box-item
+                .col-sm-10.l-margin-top
+                  .col-sm-6
+                    .h3
+                      Free Trial
+                    .h6
+                      =@user.free_member?.to_s.capitalize
+
+                  .col-sm-6
+                    .h3
+                      Trial Limit in Days
+                    .h6
+                      =@user.trial_limit_in_days
+
+                .col-sm-2.l-margin-top
+                  =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
+
+
+                .col-sm-10.l-margin-top-big
+                  .col-sm-6
+                    .h3
+                      Trial Expired
+                    .h6
+                      =@user.expired_free_member?.to_s.capitalize
+
+                  .col-sm-6
+                    .h3
+                      Remaining Trial Days
+                    .h6
+                      =@user.days_left
+
+                .col-sm-10.l-margin-top-big
+                  .col-sm-6
+                    .h3
+                      Remaining Trial Minutes
+                    .h6
+                      =@user.minutes_left
+
+        -elsif @user.valid_subscription
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              .corporate-box-item
+                .col-sm-9.l-margin-top
+                  .col-sm-6
+                    .h3
+                      Account Status
+                    .h6
+                      =@user.user_subscription_status
+
+                  .col-sm-6
+                    .h3
+                      Subscription Created At
+                    .h6
+                      =humanize_datetime(@subscription.created_at)
+
+                .col-sm-3.l-margin-top
+                  =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
+                    .btn.btn-red.l-margin-bottom
+                      ='Cancel Subscription'
+
+
+                .col-sm-9.l-margin-top-big
+                  .col-sm-6
+                    .h3
+                      Subscription Plan
+                    .h6
+                      =@subscription.subscription_plan.name
+
+                  .col-sm-6
+                    .h3
+                      Billing Interval
+                    .h6
+                      =t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")
+
+                .col-sm-9.l-margin-top-big
+                  .col-sm-6
+                    .h3
+                      Last Payment Date
+                    .h6
+                      -if @subscription.invoices.any?
+                        =humanize_datetime(@subscription.invoices.last.created_at)
+                      -else
+                        ='------'
+                  .col-sm-6
+                    .h3
+                      Next Payment Date
+                    .h6
+                      =@subscription.next_renewal_date
+
+                .col-sm-9.l-margin-top-big
+                  .col-sm-6
+                    .h3
+                      Stripe Subscription ID
+                    .h6
+                      =@subscription.stripe_guid
+                  .col-sm-6
+                    .h3
+                      Stripe Subscription Status
+                    .h6
+                      =@subscription.current_status.to_s.capitalize
+
+                .col-sm-9.l-margin-top-big
+                  .col-sm-6
+                    .h3
+                      Valid Payment Card
+                    .h6
+                      =@default_card.status ? 'True' : 'False'
+                  .col-sm-6
+                    .h3
+                      Subscription Set To Cancel At
+                    .h6
+                      -if @user.canceled_pending?
+                        =@subscription.next_renewal_date.to_s
+                      -else
+                        ='--------'
+

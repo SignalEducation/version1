@@ -384,6 +384,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def minutes_left
+    free_trial_minutes = ENV['free_trial_limit_in_seconds'].to_i
+    free_trial_minutes - self.trial_limit_in_seconds
+  end
+
   def check_and_free_trial_status
     if self.no_subscription_user && !self.days_or_seconds_valid?
       self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)

@@ -41,7 +41,10 @@
             .stats-box
               .stats-box-inner
                 .h3
-                  =humanize_datetime(@user.last_login_at)
+                  -if @user.last_login_at
+                    =humanize_datetime(@user.last_login_at)
+                  -else
+                    ='-'
                 .h6
                   Last Active
 
@@ -66,7 +69,10 @@
             .stats-box
               .stats-box-inner
                 .h3
-                  =@user.enrollments.first.student_number || '-'
+                  -if @user.enrollments.any?
+                    =@user.enrollments.first.student_number
+                  -else
+                    ='-'
                 .h6
                   Student Number
 
@@ -77,4 +83,17 @@
                   =tick_or_cross(@user.corporate_user?)
                 .h6
                   Corporate User
+
+        .row.l-margin-top.l-margin-bottom-huge
+          -if !@user.email_verified && @user.email_verification_code
+            .col-md-3.col-sm-3.col-xs-6
+              =link_to 'Resend Verification Email', admin_resend_verification_mail_url(@user.email_verification_code), class: 'btn btn-purple '
+
+          -if @user.destroyable?
+            .col-md-3.col-sm-3.col-xs-6
+              =link_to 'Delete User', @user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
+
+          .col-md-3.col-sm-3.col-xs-6
+          .col-md-3.col-sm-3.col-xs-6
+
 

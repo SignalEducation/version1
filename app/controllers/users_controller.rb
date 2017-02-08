@@ -76,15 +76,10 @@ class UsersController < ApplicationController
   before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
 
   def index
-    #TODO this needs a massive visual overhaul [pagination, search, filtering]
     @users = params[:search_term].to_s.blank? ?
-             @users = User.paginate(per_page: 50, page: params[:page]) :
-             @users = User.search_for(params[:search_term].to_s).
+             @users = User.sort_by_recent_registration.paginate(per_page: 50, page: params[:page]) :
+             @users = User.sort_by_recent_registration.search_for(params[:search_term].to_s).
                      paginate(per_page: 50, page: params[:page])
-    @users = params[:sort_by].to_s.blank? ?
-             @users.all_in_order :
-             @users = @users.sort_by(params[:sort_by].to_s)
-    @sort_choices = User::SORT_OPTIONS.map { |x| [x.humanize.camelcase, x] }
   end
 
   def account
@@ -105,24 +100,31 @@ class UsersController < ApplicationController
   end
 
   def show #(Admin Overview)
+    @user = User.where(id: params[:id]).first
     @user_sessions_count = @user.login_count
     @enrollments = @user.enrollments
-
   end
 
   def user_personal_details
+    @user = User.where(id: params[:user_id]).first
     render 'users/admin_view/user_personal_details'
   end
 
   def user_subscription_status
+    @user = User.where(id: params[:user_id]).first
+    @subscription = @user.active_subscription if @user.subscriptions.any?
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    @default_card = @subscription_payment_cards.all_default_cards.last
     render 'users/admin_view/user_subscription_status'
   end
 
   def user_enrollments_details
+    @user = User.where(id: params[:user_id]).first
     render 'users/admin_view/user_enrollments_details'
   end
 
   def user_purchases_details
+    @user = User.where(id: params[:user_id]).first
     render 'users/admin_view/user_purchases_details'
   end
 

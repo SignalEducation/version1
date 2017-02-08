@@ -42,16 +42,12 @@
                       %td=user.email
                       %td
                         =tick_or_cross(user.email_verified)
-                        -#if !user.email_verified && user.email_verification_code
-                          =link_to 'Resend Email', admin_resend_verification_mail_url(user.email_verification_code), class: 'btn btn-red btn-small'
                       %td=user.user_group.try(:name)
                       %td=user.user_subscription_status if user.individual_student?
                       %td
                         =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
                       %td
                         =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
-                        -#if user.destroyable?
-                          =link_to t('views.general.delete'), user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
               .col-sm-10.user-pagination
                 =will_paginate @users, renderer: BootstrapPagination::Rails
