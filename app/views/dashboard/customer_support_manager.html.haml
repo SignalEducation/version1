@@ -1,0 +1,66 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Overview
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'layouts/stats_navbar'
+
+
+      .row.l-margin-top.l-margin-bottom-huge
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@users.count
+              .h6
+                New Users
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@conversions.count
+              .h6
+                New Conversions
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@active_users.count
+              .h6
+                Active Users
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@completed_cmes.count
+              .h6
+                CMEs Completed
+
+
+      .row.l-margin-top.l-margin-bottom-huge
+        .col-md-10.col-sm-offset-1
+          %hr/
+        .col-md-12
+          %h3.l-margin-top
+            Reports
+
+        .col-md-10.col-md-offset-1.l-margin-top-big
+          .col-md-6
+            = link_to 'Total Users', export_users_path(format: :xls), class: 'btn btn-cyan btn-wide'
+          .col-md-6
+            = link_to 'Courses List', export_courses_path(format: :xls), class: 'btn btn-purple btn-wide'
+
+        .col-md-10.col-md-offset-1.l-margin-top
+          .col-md-6
+            =link_to 'Monthly Users', export_users_monthly_path(format: :xls), class: 'btn btn-red btn-wide'
+

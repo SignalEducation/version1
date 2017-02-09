@@ -55,7 +55,10 @@
                   .h3
                     Country
                   .h6
-                    =@user.country.name
+                    -if @user.country
+                      =@user.country.name
+                    -else
+                      ='-------'
 
                 .col-sm-6
                   .h3

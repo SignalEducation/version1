@@ -116,6 +116,8 @@ Rails.application.routes.draw do
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
     get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
     get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
+    get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard
+    get '/dashboard/customer_support_manager', to: 'dashboard#customer_support_manager', as: :customer_support_manager_dashboard
     get '/dashboard/corporate_manager', to: 'dashboard#corporate_customer', as: :corporate_customer_dashboard
     get '/dashboard/corporate_student', to: 'dashboard#corporate_student', as: :corporate_student_dashboard
 

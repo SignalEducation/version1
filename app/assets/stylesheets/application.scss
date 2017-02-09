@@ -5487,6 +5487,38 @@ footer nav ul li a{
     }
   }
 }
+.user-nav-block {
+  list-style: none;
+  padding: 0;
+  color: $colour-7;
+  @include font-size(1.6);
+  @include breakpoint(md-min) {
+    @include font-size(1.8);
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  & li {
+    position: relative;
+    display: inline-block;
+    padding: $gutter/2;
+    margin-left: 2%;
+    margin-right: 2%;
+    @include breakpoint(sm-min) {
+      padding: $gutter/2;
+      margin-left: 4%;
+      margin-right: 4%;
+    }
+  }
+  & a {
+    color: $colour-7;
+    text-decoration: none;
+    @include opacity(0.8);
+    @include font-size(1.6);
+    &:hover {
+      @include opacity(2);
+    }
+  }
+}
 
 .stats-box {
   display: block;

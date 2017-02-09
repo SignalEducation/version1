@@ -1,6 +1,19 @@
 class DashboardController < ApplicationController
 
   before_action :logged_in_required
+  before_action only: [:admin] do
+    ensure_user_is_of_type(['admin'])
+  end
+  before_action only: [:export_users, :export_users_monthly, :export_courses] do
+    ensure_user_is_of_type(['admin', 'marketing_manager'])
+  end
+  before_action only: [:tutor] do
+    ensure_user_is_of_type(['tutor'])
+  end
+  before_action only: [:customer_support_manager] do
+    ensure_user_is_of_type(['customer_support_manager'])
+  end
+
   before_action :get_variables
 
   def admin
@@ -42,6 +55,20 @@ class DashboardController < ApplicationController
 
   def content_manager
 
+  end
+
+  def marketing_manager
+    @users = User.this_week.all_students
+    @conversions = Subscription.this_week.all_active.all_of_status('active')
+    @active_users = User.active_this_week.all_students
+    @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
+  end
+
+  def customer_support_manager
+    @users = User.this_week.all_students
+    @conversions = Subscription.this_week.all_active.all_of_status('active')
+    @active_users = User.active_this_week.all_students
+    @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
   end
 
   def corporate_student

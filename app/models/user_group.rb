@@ -32,7 +32,7 @@ class UserGroup < ActiveRecord::Base
                   :subscription_required_to_see_content, :complimentary,
                   :customer_support, :marketing_support
   # Constants
-  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary customer_support marketing_support)
+  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary customer_support_manager marketing_manager)
   CORPORATE_STUDENTS = 2
   CORPORATE_CUSTOMERS = 3
 
@@ -83,7 +83,7 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_marketing_support_user_group
-    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: true, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: true).first
+    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: true).first
   end
 
   # instance methods
