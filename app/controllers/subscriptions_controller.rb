@@ -23,7 +23,7 @@ class SubscriptionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin individual_student))
+    ensure_user_is_of_type(%w(admin individual_student customer_support_manager))
   end
   before_action :get_subscription, except: :create
 
@@ -70,7 +70,12 @@ class SubscriptionsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
-    redirect_to account_url(anchor: 'subscriptions')
+    if current_user.individual_student?
+      redirect_to account_url(anchor: 'subscriptions')
+    else
+      redirect_to user_subscription_status_url(@subscription.user)
+    end
+
   end
 
   protected
@@ -84,7 +89,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def get_subscription
-    @subscription = current_user.admin? ?
+    @subscription = (current_user.admin? || current_user.customer_support_manager?) ?
             Subscription.find_by_id(params[:id]) :
             current_user.subscriptions.find_by_id(params[:id])
   end

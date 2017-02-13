@@ -525,6 +525,14 @@ class User < ActiveRecord::Base
     self.user_group.try(:blogger)
   end
 
+  def customer_support_manager?
+    self.user_group.try(:customer_support)
+  end
+
+  def marketing_support_manager?
+    self.user_group.try(:marketing_support)
+  end
+
   def content_manager?
     self.user_group.try(:content_manager)
   end

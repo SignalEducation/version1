@@ -71,9 +71,14 @@
                       =humanize_datetime(@subscription.created_at)
 
                 .col-sm-3.l-margin-top
-                  =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
-                    .btn.btn-red.l-margin-bottom
-                      ='Cancel Subscription'
+                  -if !@subscription.current_status.include?('canceled')
+                    =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
+                      .btn.btn-red.l-margin-bottom
+                        ='Cancel Subscription'
+                  -elsif @user.canceled_pending?
+                    =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
+                  -elsif @user.canceled_member?
+                    =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 
 
                 .col-sm-9.l-margin-top-big

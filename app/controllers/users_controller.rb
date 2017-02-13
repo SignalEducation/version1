@@ -104,16 +104,19 @@ class UsersController < ApplicationController
   end
 
   def show #(Admin Overview)
+    @user = User.find(params[:id])
     @user_sessions_count = @user.login_count
     @enrollments = @user.enrollments
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end
 
   def user_personal_details
+    @user = User.find(params[:user_id])
     render 'users/admin_view/user_personal_details'
   end
 
   def user_subscription_status
+    @user = User.find(params[:user_id])
     @subscription = @user.active_subscription if @user.subscriptions.any?
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last
@@ -121,10 +124,12 @@ class UsersController < ApplicationController
   end
 
   def user_enrollments_details
+    @user = User.find(params[:user_id])
     render 'users/admin_view/user_enrollments_details'
   end
 
   def user_purchases_details
+    @user = User.find(params[:user_id])
     @orders = @user.orders
     @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
@@ -618,7 +623,7 @@ class UsersController < ApplicationController
   protected
 
   def get_variables
-    @user = params[:id].to_i > 0 && current_user.admin? ?
+    @user = params[:id].to_i > 0 && (current_user.admin? || current_user.customer_support_manager?) ?
                   @user = User.where(id: params[:id]).first :
                   current_user
 
