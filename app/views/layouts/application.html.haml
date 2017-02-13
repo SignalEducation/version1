@@ -82,7 +82,7 @@
           =render partial: 'layouts/navbar'
       =yield
       -if @footer
-        =render partial: 'layouts/footer'
+        =render partial: 'layouts/large_footer'
 
 
     -#General partials
@@ -102,6 +102,3 @@
 
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
-
-    -#TODO
-    =#render partial: 'layouts/contact_modal'
