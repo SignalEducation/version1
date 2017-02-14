@@ -76,7 +76,7 @@ class FooterPagesController < ApplicationController
   end
 
   def complaints_zendesk
-    options = {:subject => params[:subject], :comment => { :value => params[:body] }, :requester => { :email => params[:email], :name => params[:full_name] }}
+    options = {:subject => params[:subject], :comment => { :value => params[:body] }, :requester => { :email => params[:email_address], :name => params[:full_name] }}
     request = ZendeskAPI::Ticket.create(@client, options)
     if request.created_at
       flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
