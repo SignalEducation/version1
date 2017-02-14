@@ -1,26 +1,6 @@
 .margin-top
   -if flash[:success] || flash[:error] || flash[:warning]
     =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.white_papers.index.h1')
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .col-md-12
-        .table-box
-          -@white_papers.each do |paper|
-            .col-sm-6.col-md-3.col-lg-3
-              .box
-                =link_to public_white_paper_url(paper.try(:name_url)), class: 'box box-profile' do
-                  .box-inner
-                    =image_tag paper.try(:cover_image).try(:url), class: 'media-pic'
-                    %p
-                      =paper.try(:name)
 -if @mock_exams.any?
 
   .l-section-small.is-bg-asphalt
@@ -53,3 +33,23 @@
                           ='Purchase'
                           =mock_exam.try(:name)
 
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.white_papers.index.h1')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .col-md-12
+        .table-box
+          -@white_papers.each do |paper|
+            .col-sm-6.col-md-3.col-lg-3
+              .box
+                =link_to public_white_paper_url(paper.try(:name_url)), class: 'box box-profile' do
+                  .box-inner
+                    =image_tag paper.try(:cover_image).try(:url), class: 'media-pic'
+                    %p
+                      =paper.try(:name)

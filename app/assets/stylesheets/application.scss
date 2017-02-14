@@ -1808,6 +1808,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   }
 }
 .social-nav {
+  margin-top: $gutter;
   color: $white;
   list-style: none;
   padding: 0;
@@ -1822,7 +1823,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   & a {
     color: $white;
     text-decoration: none;
-    margin-left: $gutter/1.5;
+    //margin-left: $gutter/1.5;
     @include opacity(0.8);
     &:hover {
       @include opacity(1);
@@ -1852,15 +1853,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .footer-container {
   position: relative;
-  min-height: 150px;
-}
-.footer-container-lg {
-  position: relative;
-  min-height: 200px;
-}
-.foot-pull-down {
-  position: absolute;
-  bottom: 0;
+  min-height: 230px;
 }
 .foot-pull-down {
   position: absolute;
@@ -1868,7 +1861,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .foot-copyright {
   color: $white;
-  margin-top: $gutter;
+  margin-top: $gutter*3;
   @include opacity(0.8);
   @include font-size(1.2);
   @include breakpoint(md-min) {

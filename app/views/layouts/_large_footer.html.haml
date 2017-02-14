@@ -4,6 +4,17 @@
       .container-fluid
         .col-xs-12
           %ul.foot-list-large
+            -if @groups
+              -@groups.each do |group|
+                -if group.active_children.any?
+                  %li
+                    =link_to group.name, library_special_link(group)
+
+            -if @diplomas
+              -@diplomas.each do |diploma|
+                %li
+                  =link_to diploma.name, library_special_link(diploma)
+
             %li
               =link_to 'Lecturers', tutors_url
             %li
@@ -41,9 +52,19 @@
   .foot.navbar-footer
     .l-wrap
       .container-fluid
-
         .col-sm-6.col-sm-push-6
           %ul.foot-list-large
+            -if @groups
+              -@groups.each do |group|
+                -if group.active_children.any?
+                  %li
+                    =link_to group.name, library_special_link(group)
+
+            -if @diplomas
+              -@diplomas.each do |diploma|
+                %li
+                  =link_to diploma.name, library_special_link(diploma)
+
             %li
               =link_to 'Lecturers', tutors_url
             %li
@@ -83,44 +104,50 @@
     .l-wrap
       .container-fluid
         .col-md-3
-          .footer-container-lg
-            %p.foot-copyright.foot-pull-down.text-center
-              &copy; 2016 &mdash; 2017 LearnSignal
+          %ul.social-nav
+            %li
+              %a{href: 'https://twitter.com/learnsignal', target: '_blank'}
+                .span.fa.fa-twitter
+                =' Twitter'
+            %li
+              %a{href: 'https://www.linkedin.com/company/learnsignal', target: '_blank', style: 'margin-left: 25px;'}
+                .span.fa.fa-linkedin
+                =' Linkedin'
+
+          %p.foot-copyright
+            &copy; 2016 &mdash; 2017 LearnSignal
 
 
         .col-md-3
-          .footer-container-lg
-            %ul.social-nav.foot-pull-down
-              %li
-                %a{href: 'https://twitter.com/learnsignal', target: '_blank'}
-                  .span.fa.fa-twitter
-                  =' Twitter'
-              %li
-                %a{href: 'https://www.linkedin.com/company/learnsignal', target: '_blank'}
-                  .span.fa.fa-linkedin
-                  =' Linkedin'
+          %ul.foot-list-large
+            -if @groups
+              -@groups.each do |group|
+                -if group.active_children.any?
+                  %li
+                    =link_to group.name, library_special_link(group)
 
-
-
-        .col-md-3
-          .footer-container-lg
-            %ul.foot-list-large.foot-pull-down
-              %li
-                =link_to 'Lecturers', tutors_url
-              %li
-                =link_to 'Careers', new_tutor_application_url
-              %li
-                =link_to 'ACCA Info', acca_info_url
-              %li
-                =link_to 'Media', media_library_url
+            -if @diplomas
+              -@diplomas.each do |diploma|
+                %li
+                  =link_to diploma.name, library_special_link(diploma)
 
         .col-md-3
-          .footer-container-lg
-            %ul.foot-list-large.foot-pull-down
-              %li
-                =link_to 'Contact', contact_url
-              %li
-                =link_to 'Privacy Policy', privacy_policy_url
-              %li
-                =link_to 'Terms & Conditions', terms_and_conditions_url
+          %ul.foot-list-large
+            %li
+              =link_to 'Lecturers', tutors_url
+            %li
+              =link_to 'ACCA Info', acca_info_url
+            %li
+              =link_to 'Media', media_library_url
+
+        .col-md-3
+          %ul.foot-list-large
+            %li
+              =link_to 'Contact', contact_url
+            %li
+              =link_to 'Careers', new_tutor_application_url
+            %li
+              =link_to 'Privacy Policy', privacy_policy_url
+            %li
+              =link_to 'Terms & Conditions', terms_and_conditions_url
 

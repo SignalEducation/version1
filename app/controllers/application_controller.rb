@@ -88,6 +88,10 @@ class ApplicationController < ActionController::Base
   def set_navbar_and_footer
     @navbar = 'standard'
     @footer = 'standard'
+    @groups = Group.all_active.all_in_order.for_public
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @diplomas = @product_course_category.subject_courses if @product_course_category
+
   end
 
   def set_assets_from_subdomain
