@@ -24,15 +24,18 @@ class HomePagesController < ApplicationController
 
   def home
     #This is the main home_page
-    redirect_to dashboard_special_link(current_user) if current_user
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
-    @product_courses = @product_course_category.subject_courses if @product_course_category
-    @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
-    @groups = Group.all_active.for_public.all_in_order
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+    if current_user
+      redirect_to dashboard_special_link(current_user)
+    else
+      @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+      @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
+      @product_courses = @product_course_category.subject_courses if @product_course_category
+      @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
+      @groups = Group.all_active.for_public.all_in_order
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+    end
   end
 
   def group_index

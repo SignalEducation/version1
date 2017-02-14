@@ -42,7 +42,6 @@ describe InvoicesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for individual_student_user_invoice
   let!(:individual_student_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: individual_student_user.id) }
   let!(:corporate_student_user_invoice) { FactoryGirl.create(:invoice,
@@ -230,6 +229,64 @@ describe InvoicesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(blogger_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see invoice' do
+        get :show, id: blogger_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should return ERROR and redirect' do
+        get :show, id: corporate_student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see invoice' do
+        get :show, id: blogger_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should return ERROR and redirect' do
+        get :show, id: corporate_student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
     end
 
     describe "GET 'index'" do

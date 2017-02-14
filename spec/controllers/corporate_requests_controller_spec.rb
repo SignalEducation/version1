@@ -21,7 +21,6 @@ describe CorporateRequestsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for corporate_request_1
   let!(:corporate_request_1) { FactoryGirl.create(:corporate_request) }
   let!(:corporate_request_2) { FactoryGirl.create(:corporate_request) }
   let!(:valid_params) { FactoryGirl.attributes_for(:corporate_request) }
@@ -707,6 +706,212 @@ describe CorporateRequestsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(content_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see corporate_request_1' do
+        get :show, id: corporate_request_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see corporate_request_2' do
+        get :show, id: corporate_request_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_new_success_with_model('corporate_request')
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with corporate_request_1' do
+        get :edit, id: corporate_request_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with corporate_request_2' do
+        get :edit, id: corporate_request_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, corporate_request: valid_params
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(submission_complete_url)
+        expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
+
+      end
+
+      it 'should report error for invalid params' do
+        request.env['HTTP_REFERER'] = '/'
+        post :create, corporate_request: {valid_params.keys.first => ''}
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(request.referrer)
+        expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
+
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for corporate_request_1' do
+        put :update, id: corporate_request_1.id, corporate_request: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for corporate_request_2' do
+        put :update, id: corporate_request_2.id, corporate_request: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: corporate_request_1.id, corporate_request: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: corporate_request_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: corporate_request_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see corporate_request_1' do
+        get :show, id: corporate_request_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see corporate_request_2' do
+        get :show, id: corporate_request_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_new_success_with_model('corporate_request')
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with corporate_request_1' do
+        get :edit, id: corporate_request_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with corporate_request_2' do
+        get :edit, id: corporate_request_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, corporate_request: valid_params
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(submission_complete_url)
+        expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
+
+      end
+
+      it 'should report error for invalid params' do
+        request.env['HTTP_REFERER'] = '/'
+        post :create, corporate_request: {valid_params.keys.first => ''}
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(request.referrer)
+        expect(assigns('corporate_request'.to_sym).class.name).to eq('corporate_request'.classify)
+
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for corporate_request_1' do
+        put :update, id: corporate_request_1.id, corporate_request: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for corporate_request_2' do
+        put :update, id: corporate_request_2.id, corporate_request: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: corporate_request_1.id, corporate_request: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: corporate_request_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: corporate_request_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
     end
 
     describe "GET 'index'" do

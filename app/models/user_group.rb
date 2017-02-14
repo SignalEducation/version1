@@ -55,7 +55,7 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_complimentary_user_group
-    where(individual_student: false, complimentary: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, complimentary: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: false).first
   end
 
   def self.default_student_user_group

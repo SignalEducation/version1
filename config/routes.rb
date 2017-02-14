@@ -187,10 +187,10 @@ Rails.application.routes.draw do
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_notifications
     resources :users, only: [:new, :create] do
-      get  '/user_personal_details', to: :user_personal_details, as: :personal_details
-      get  '/user_subscription_status', to: :user_subscription_status, as: :subscription_status
-      get  '/user_enrollments_details', to: :user_enrollments_details, as: :enrollments_details
-      get  '/user_purchases_details', to: :user_purchases_details, as: :purchases_details
+      get  '/user_personal_details', action: :user_personal_details, as: :personal_details
+      get  '/user_subscription_status', action: :user_subscription_status, as: :subscription_status
+      get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
+      get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
     end
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]

@@ -33,6 +33,8 @@ describe UserNotificationsController, type: :controller do
   let!(:user_notification_7) { FactoryGirl.create(:user_notification, user_id: content_manager_user.id) }
   let!(:user_notification_8) { FactoryGirl.create(:user_notification, user_id: admin_user.id) }
   let!(:user_notification_9) { FactoryGirl.create(:user_notification, user_id: comp_user.id) }
+  let!(:user_notification_10) { FactoryGirl.create(:user_notification, user_id: customer_support_manager_user.id) }
+  let!(:user_notification_11) { FactoryGirl.create(:user_notification, user_id: marketing_manager_user.id) }
   let!(:valid_params) { FactoryGirl.attributes_for(:user_notification) }
 
   context 'Not logged in: ' do
@@ -679,6 +681,180 @@ describe UserNotificationsController, type: :controller do
 
   end
 
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_index_success_with_model('user_notifications', 1)
+      end
+    end
+
+    describe "GET 'show/x'" do
+      it 'should see user_notification_1' do
+        get :show, id: user_notification_10.id
+        expect_show_success_with_model('user_notification', user_notification_10.id)
+      end
+
+      # optional - some other object
+      it 'should bounce as not allowed' do
+        get :show, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/x'" do
+      it 'should respond OK with user_notification_1' do
+        get :edit, id: user_notification_10.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        get :edit, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/x'" do
+      it 'should respond OK to valid params for user_notification_2' do
+        put :update, id: user_notification_10.id, user_notification: valid_params
+        expect_update_success_with_model('user_notification', user_notifications_url)
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        put :update, id: user_notification_2.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: user_notification_10.id, user_notification: {valid_params.keys.first => ''}
+        expect_update_error_with_model('user_notification')
+        expect(assigns(:user_notification).id).to eq(user_notification_10.id)
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should get OK' do
+        delete :destroy, id: user_notification_10.id
+        expect_archive_success_with_model('user_notification', user_notification_10.id, user_notifications_url)
+      end
+
+      it 'should get bounced as not allowed' do
+        delete :destroy, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_index_success_with_model('user_notifications', 1)
+      end
+    end
+
+    describe "GET 'show/x'" do
+      it 'should see user_notification_1' do
+        get :show, id: user_notification_11.id
+        expect_show_success_with_model('user_notification', user_notification_11.id)
+      end
+
+      # optional - some other object
+      it 'should bounce as not allowed' do
+        get :show, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/x'" do
+      it 'should respond OK with user_notification_1' do
+        get :edit, id: user_notification_11.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        get :edit, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/x'" do
+      it 'should respond OK to valid params for user_notification_2' do
+        put :update, id: user_notification_11.id, user_notification: valid_params
+        expect_update_success_with_model('user_notification', user_notifications_url)
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        put :update, id: user_notification_2.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: user_notification_11.id, user_notification: {valid_params.keys.first => ''}
+        expect_update_error_with_model('user_notification')
+        expect(assigns(:user_notification).id).to eq(user_notification_11.id)
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should get OK' do
+        delete :destroy, id: user_notification_11.id
+        expect_archive_success_with_model('user_notification', user_notification_11.id, user_notifications_url)
+      end
+
+      it 'should get bounced as not allowed' do
+        delete :destroy, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a admin_user: ' do
 
     before(:each) do
@@ -689,7 +865,7 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 8)
+        expect_index_success_with_model('user_notifications', 10)
       end
     end
 

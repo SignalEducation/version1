@@ -18,7 +18,6 @@ describe VatCodesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for vat_code_1
   let!(:vat_code_1) { FactoryGirl.create(:vat_code) }
   let!(:vat_rate) { FactoryGirl.create(:vat_rate, vat_code_id: vat_code_1.id) }
   let!(:vat_code_2) { FactoryGirl.create(:vat_code) }
@@ -434,6 +433,108 @@ describe VatCodesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(content_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should bounce as not allowed' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should bounce as not allowed' do
+        get :show, id: vat_code_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as not allowed' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, vat_code: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should bounce as not allowed' do
+        put :update, id: vat_code_1.id, vat_code: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should bounce as not allowed' do
+        delete :destroy, id: vat_code_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should bounce as not allowed' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should bounce as not allowed' do
+        get :show, id: vat_code_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as not allowed' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, vat_code: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should bounce as not allowed' do
+        put :update, id: vat_code_1.id, vat_code: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should bounce as not allowed' do
+        delete :destroy, id: vat_code_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
     end
 
     describe "GET 'index'" do
