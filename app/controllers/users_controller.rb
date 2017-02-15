@@ -68,10 +68,10 @@ class UsersController < ApplicationController
 
   before_action :logged_in_required, except: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product, :profile, :profile_index]
   before_action :logged_out_required, only: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product]
-  before_action only: [:destroy] do
+  before_action only: [:destroy, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action only: [:index, :new, :create, :edit, :update, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details] do
+  before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details] do
     ensure_user_is_of_type(['admin', 'customer_support_manager'])
   end
 
@@ -178,10 +178,10 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
-      if current_user.admin?
-        redirect_to users_url
-      else
+      if current_user.individual_student?
         redirect_to account_url
+      else
+        redirect_to users_url
       end
     else
       render action: :edit
@@ -584,10 +584,10 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
     end
-    if current_user.admin?
-      redirect_to users_url
-    else
+    if current_user.individual_student?
       redirect_to account_url
+    else
+      redirect_to users_url
     end
   end
 

@@ -74,6 +74,7 @@ describe UsersController, type: :controller do
   let!(:country_1) { FactoryGirl.create(:uk) }
   let!(:country_2) { FactoryGirl.create(:ireland) }
   let!(:country_3) { FactoryGirl.create(:usa) }
+  let!(:upgrading_user) { FactoryGirl.create(:individual_student_user) }
   let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
   context 'Not logged in...' do
@@ -307,30 +308,12 @@ describe UsersController, type: :controller do
     end
 
     describe "new_paid_subscription" do
-      xit 'should respond OK and render upgrade page' do
-        get :new_paid_subscription, id: individual_student_user.id
+      it 'should respond OK and render new subscription page' do
+        get :new_subscription, user_id: upgrading_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response).to render_template(:new_paid_subscription)
         expect(response.status).to eq(200)
-        expect(response).to render_template(:new_paid_subscription)
-
-      end
-    end
-
-    describe "upgrade_from_free_trial as a referred sign_up user" do
-      xit 'allow upgrade as all necessary params are present' do
-        post :create, user: valid_params
-        expect_create_success_with_model('user', users_url)
-        expect(assigns(:user).password_change_required).to eq(true)
-        expect(ReferralCode.count).to eq(referral_codes + 1)
-
-
-      end
-    end
-
-    describe "upgrade_from_free_trial with wrong currency coupon" do
-      xit 'deny upgrade as currency of coupon and current sub dont match' do
+        expect(response).to render_template(:new_subscription)
 
       end
     end
@@ -1067,19 +1050,19 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: content_manager_user.id
+        get :show, id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should see my own profile even if I ask for another' do
-        get :show, id: admin_user.id
+        get :show, id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET account" do
       it 'should see my own profile' do
-        get :account, id: content_manager_user.id
+        get :account, id: marketing_manager_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1103,12 +1086,12 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: content_manager_user.id
+        get :edit, id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should only allow editing of own user' do
-        get :edit, id: admin_user.id
+        get :edit, id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -1129,22 +1112,22 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: content_manager_user.id, user: valid_params
+        put :update, id: marketing_manager_user.id, user: valid_params
         expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(content_manager_user.id)
+        expect(assigns(:user).id).to eq(marketing_manager_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
-        put :update, id: admin_user.id, user: valid_params
+        put :update, id: marketing_manager_user.id, user: valid_params
         expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(content_manager_user.id)
+        expect(assigns(:user).id).to eq(marketing_manager_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: content_manager_user.id, user: {email: 'a'}
+        put :update, id: marketing_manager_user.id, user: {email: 'a'}
         expect(response.status).to eq(200)
         expect_update_error_with_model('user')
-        expect(assigns(:user).id).to eq(content_manager_user.id)
+        expect(assigns(:user).id).to eq(marketing_manager_user.id)
       end
     end
 
@@ -1190,14 +1173,14 @@ describe UsersController, type: :controller do
       end
 
       it 'should see my own profile even if I ask for another' do
-        get :show, id: admin_user.id
-        expect_show_success_with_model('user', admin_user.id)
+        get :show, id: customer_support_manager_user.id
+        expect_show_success_with_model('user', customer_support_manager_user.id)
       end
     end
 
     describe "GET account" do
       it 'should see my own profile' do
-        get :account, id: individual_student_user.id
+        get :account, id: customer_support_manager_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1222,28 +1205,21 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
+        get :edit, id: customer_support_manager_user.id
+        expect_edit_success_with_model('user', customer_support_manager_user.id)
       end
 
-      it 'should only allow editing of own user' do
-        get :edit, id: admin_user.id
-        expect_edit_success_with_model('user', admin_user.id)
-      end
     end
 
     describe "POST 'admin create'" do
       it 'should report OK for valid params' do
-        referral_codes = ReferralCode.count
         post :create, user: valid_params
-        expect_create_success_with_model('user', users_url)
-        expect(assigns(:user).password_change_required).to eq(true)
-        expect(ReferralCode.count).to eq(referral_codes + 1)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, user: {email: 'abc'}
-        expect_create_error_with_model('user')
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -1261,7 +1237,7 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: admin_user.id, user: valid_params
+        put :update, id: individual_student_user.id, user: valid_params
         expect_update_success_with_model('user', users_url)
       end
 
@@ -1281,12 +1257,12 @@ describe UsersController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK if deleting normal user' do
         delete :destroy, id: individual_student_user.id
-        expect_delete_success_with_model('user', users_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be ERROR if deleting admin user' do
         delete :destroy, id: admin_user.id
-        expect_delete_error_with_model('user', users_url)
+        expect_bounce_as_not_allowed
       end
     end
 
