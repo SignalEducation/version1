@@ -7,9 +7,79 @@ RSpec.describe DashboardController, :type => :controller do
 
   context 'Not logged in: ' do
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not signed in" do
+        get :admin
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not signed in" do
+        get :export_users
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not signed in" do
+        get :export_users_monthly
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not signed in" do
+        get :content_manager
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not signed in" do
+        get :marketing_manager
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not signed in" do
+        get :customer_support_manager
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not signed in" do
+        get :corporate_student
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not signed in" do
+        get :corporate_customer
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET student" do
+      it "bounces user as not signed in" do
         get :student
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not signed in" do
+        get :tutor
         expect_bounce_as_not_signed_in
       end
     end
@@ -23,10 +93,81 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(individual_student_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
         get :student
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -39,10 +180,81 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(comp_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
         get :student
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -55,10 +267,83 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
         get :tutor
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:tutor)
+
       end
     end
 
@@ -71,10 +356,84 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(corporate_student_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
         get :corporate_student
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:corporate_student)
+
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
+
       end
     end
 
@@ -87,10 +446,85 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(corporate_customer_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
         get :corporate_customer
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:corporate_customer)
+
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:tutor)
+
       end
     end
 
@@ -103,13 +537,84 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(blogger_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
-        get :student
-        expect(response).to have_http_status(:success)
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
       end
     end
 
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
+
+      end
+    end
   end
 
   context 'Logged in as a content_manager_user: ' do
@@ -119,10 +624,239 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(content_manager_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:content_manager)
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
         get :student
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:marketing_manager)
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET admin" do
+      it "bounces user as not allowed" do
+        get :admin
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users" do
+      it "bounces user as not allowed" do
+        get :export_users
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_users_monthly" do
+      it "bounces user as not allowed" do
+        get :export_users_monthly
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET export_courses" do
+      it "bounces user as not allowed" do
+        get :export_courses
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:customer_support_manager)
+
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -135,13 +869,72 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(admin_user)
     end
 
-    describe "GET index" do
-      it "returns http success" do
+    describe "GET admin" do
+      it "bounces user as not allowed" do
         get :admin
         expect(response).to have_http_status(:success)
+        expect(response).to render_template(:admin)
       end
     end
 
+    describe "GET content_manager" do
+      it "bounces user as not allowed" do
+        get :content_manager
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:content_manager)
+      end
+    end
+
+    describe "GET marketing_manager" do
+      it "bounces user as not allowed" do
+        get :marketing_manager
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:marketing_manager)
+      end
+    end
+
+    describe "GET customer_support_manager" do
+      it "bounces user as not allowed" do
+        get :customer_support_manager
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:customer_support_manager)
+      end
+    end
+
+    describe "GET corporate_student" do
+      it "bounces user as not allowed" do
+        get :corporate_student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:corporate_student)
+      end
+    end
+
+    describe "GET corporate_customer" do
+      it "bounces user as not allowed" do
+        get :corporate_customer
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:corporate_customer)
+
+      end
+    end
+
+    describe "GET student" do
+      it "return http success" do
+        get :student
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:student)
+      end
+    end
+
+    describe "GET tutor" do
+      it "bounces user as not allowed" do
+        get :tutor
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:tutor)
+
+
+      end
+    end
   end
 
 end
