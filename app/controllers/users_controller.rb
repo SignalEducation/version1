@@ -178,10 +178,10 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
-      if current_user.individual_student?
-        redirect_to account_url
-      else
+      if current_user.admin? || current_user.customer_support_manager?
         redirect_to users_url
+      else
+        redirect_to account_url
       end
     else
       render action: :edit
@@ -584,10 +584,10 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
     end
-    if current_user.individual_student?
-      redirect_to account_url
-    else
+    if current_user.admin? || current_user.customer_support_manager?
       redirect_to users_url
+    else
+      redirect_to account_url
     end
   end
 
