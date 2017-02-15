@@ -159,16 +159,18 @@ describe UsersController, type: :controller do
         it 'signs up new student' do
           referral_codes = ReferralCode.count
           post :student_create, user: sign_up_params
+          user = assigns(:user)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url())
+          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(ReferralCode.count).to eq(referral_codes + 1)
         end
 
         it 'creates referred signup if user comes from referral link' do
           cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
           post :student_create, user: sign_up_params
+          user = assigns(:user)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(Subscription.all.count).to eq(0)
 
           expect(ReferredSignup.count).to eq(1)

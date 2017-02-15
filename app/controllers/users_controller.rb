@@ -628,7 +628,7 @@ class UsersController < ApplicationController
                   current_user
 
     @user_groups = UserGroup.where(site_admin: false).all_in_order
-
+    @countries = Country.all_in_order
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
