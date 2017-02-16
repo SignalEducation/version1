@@ -100,7 +100,7 @@ RSpec.describe UsersController, type: :routing do
     # special routes
 
     it 'routes /account to #show' do
-      expect(get: '/account').to route_to('users#show')
+      expect(get: '/account').to route_to('users#account')
     end
 
     xit 'routes /sign_up to #new' do
