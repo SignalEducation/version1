@@ -43,6 +43,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   before_destroy :check_dependencies
   after_create :start_course_intercom_event if Rails.env.production? || Rails.env.staging?
   after_save :update_enrollment
+  after_save :check_for_completion
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -142,6 +143,14 @@ class SubjectCourseUserLog < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def check_for_completion
+    unless Rails.env.test?
+      if self.completed && self.subject_course.survey_url
+        MandrillWorker.perform_async(self.user_id, 'send_survey_email', self.subject_course.survey_url)
+      end
     end
   end
 
